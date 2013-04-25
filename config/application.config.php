@@ -3,8 +3,7 @@ return array(
     'modules' => array(
         'Application',
         'ZfcBase', 'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'ZfcUserDoctrineORM', 'BjyAuthorize', 
-        'UnicaenApp', 'AssetManager',
-        'UnicaenAuth',
+        'UnicaenApp', 'AssetManager', 'UnicaenAuth',
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
