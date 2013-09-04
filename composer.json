@@ -6,7 +6,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.1.4",
+        "zendframework/zendframework": "2.*",
         "unicaen/unicaen-auth": "dev-trunk"
     },
     "minimum-stability": "dev"
