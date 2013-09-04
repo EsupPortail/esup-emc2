@@ -6,7 +6,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "unicaen/unicaen-app":  "dev-trunk",
+        "unicaen/unicaen-app": "dev-trunk",
         "unicaen/unicaen-auth": "dev-trunk"
     },
     "minimum-stability": "dev"
