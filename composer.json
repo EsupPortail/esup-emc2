@@ -1,6 +1,12 @@
 {
     "name": "unicaen/unicaen-skeleton-application",
     "description": "Squelette d'application Unicaen (ZF2)",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://dev.unicaen.fr/packagist"
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
         "unicaen/unicaen-app": "dev-trunk",
