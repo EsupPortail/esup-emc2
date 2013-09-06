@@ -1,6 +1,6 @@
 {
     "name": "unicaen/unicaen-skeleton-application",
-    "description": "Squelette d'application Unicaen (ZF2)",
+    "description": "Squelette d'application Unicaen ZF2",
     "repositories": [
         {
             "type": "composer",
