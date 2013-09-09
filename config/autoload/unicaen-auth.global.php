@@ -6,16 +6,6 @@
  * drop this config file in it and change the values as you wish.
  */
 $settings = array(
-    'bjyauthorize' => array(
-        // default role for unauthenticated users
-        'default_role' => false,
-    ),
-    /**
-     * Mot de passe sésame, chiffré avec l'algo Bcrypt
-     * $bcrypt = new \Zend\Crypt\Password\Bcrypt(); 
-     * echo $bcrypt->create('votreMotDePasseSesame');
-     */
-    'sesame_password' => false,
     /**
      * Flag indiquant si l'utilisateur authenitifié avec succès via l'annuaire LDAP doit
      * être enregistré/mis à jour dans la table des utilisateurs de l'appli.
