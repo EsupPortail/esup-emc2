@@ -1,19 +1,27 @@
 <?php
-return array(
-    'modules' => array(
-        'Application',
-        'ZfcBase', 'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'ZfcUserDoctrineORM', 'BjyAuthorize', 
-        'UnicaenApp', 'AssetManager',
-        'UnicaenAuth',
-    ),
-    'module_listener_options' => array(
-        'config_glob_paths'    => array(
-            'config/autoload/{,*.}{global,local}.php',
-        ),
-        'module_paths' => array(
-            './module',
-            './vendor',
-        ),
-    ),
-);
 
+$modules = [
+    'Application',
+    'ZfcBase', 'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'ZfcUserDoctrineORM', 'BjyAuthorize',
+    'UnicaenApp', 'UnicaenAuth',
+];
+
+if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {
+    $modules[] = 'ZendDeveloperTools';
+    $modules[] = 'UnicaenCode';
+}
+
+$moduleListenerOptions = [
+    'config_glob_paths'    => [
+        'config/autoload/{,*.}{global,local}.php',
+    ],
+    'module_paths' => [
+        './module',
+        './vendor',
+    ],
+];
+
+return [
+    'modules' => $modules,
+    'module_listener_options' => $moduleListenerOptions,
+];
