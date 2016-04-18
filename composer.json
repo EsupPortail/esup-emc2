@@ -8,8 +8,8 @@
         }
     ],
     "require": {
-        "unicaen/unicaen-app":                  "dev-trunk",
-        "unicaen/unicaen-auth":                 "dev-trunk",
+        "unicaen/unicaen-app":                  "1.2.1",
+        "unicaen/unicaen-auth":                 "1.0.5",
         "zendframework/zend-developer-tools":   "dev-master",
         "unicaen/unicaen-code":                 "dev-trunk"
     }
