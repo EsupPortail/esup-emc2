@@ -20,6 +20,16 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        /* Active un layout spécial si la requête est de type AJAX. Valable pour TOUS les modules de l'application. */
+        $eventManager->getSharedManager()->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch',
+            function (MvcEvent $e) {
+                $request = $e->getRequest();
+                if ($request instanceof HttpRequest && $request->isXmlHttpRequest()) {
+                    $e->getTarget()->layout('layout/ajax.phtml');
+                }
+            }
+        );
     }
 
     public function getConfig()
