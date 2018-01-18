@@ -9,7 +9,7 @@
     ],
     "require": {
         "unicaen/unicaen-app":                  "1.2.42",
-        "unicaen/unicaen-auth":                 "1.1.8",
+        "unicaen/unicaen-auth":                 "1.1.8"
     },
     "require-dev": {
         "unicaen/unicaen-code":                 "1.0.11",
