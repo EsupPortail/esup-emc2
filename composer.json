@@ -1,5 +1,5 @@
 {
-    "name": "unicaen/unicaen-skeleton-application",
+    "name": "unicaen/skeleton-application",
     "description": "Squelette d'application Unicaen (ZF2)",
     "repositories": [
         {
@@ -8,11 +8,11 @@
         }
     ],
     "require": {
-        "unicaen/unicaen-app":                  "1.2.42",
-        "unicaen/unicaen-auth":                 "1.1.8"
+        "unicaen/app":                  "1.2.42",
+        "unicaen/auth":                 "1.1.8"
     },
     "require-dev": {
-        "unicaen/unicaen-code":                 "1.0.11",
+        "unicaen/code":                         "1.0.11",
         "zendframework/zend-test":              ">=2.3",
         "phpunit/PHPUnit":                      ">=3.7",
         "zendframework/zend-developer-tools":   ">=1.0"
