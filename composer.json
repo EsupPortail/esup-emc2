@@ -4,15 +4,15 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://dev.unicaen.fr/packagist"
+            "url": "https://gest.unicaen.fr/packagist"
         }
     ],
     "require": {
-        "unicaen/app":                  "1.2.42",
-        "unicaen/auth":                 "1.1.8"
+        "unicaen/app":                  "^1.2",
+        "unicaen/auth":                 "^1.2"
     },
     "require-dev": {
-        "unicaen/code":                         "1.0.11",
+        "unicaen/code":                         "^1.0",
         "zendframework/zend-test":              ">=2.3",
         "phpunit/PHPUnit":                      ">=3.7",
         "zendframework/zend-developer-tools":   ">=1.0"
