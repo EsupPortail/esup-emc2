@@ -1,19 +1,34 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c] 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Application;
 
+use Application\Controller\FicheMetierController;
+use Application\Controller\IndexController;
+use UnicaenAuth\Guard\PrivilegeController;
+use Zend\Mvc\Router\Http\Literal;
+use Zend\Mvc\Router\Http\Segment;
+
 return [
+    'bjyauthorize' => [
+        'guards' => [
+            PrivilegeController::class => [
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'index',
+                        'afficher',
+                    ],
+                    'roles' => [
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router'          => [
         'routes' => [
             'home'        => [
-                'type'    => 'Zend\Mvc\Router\Http\Literal',
+                'type'    => Literal::class,
                 'options' => [
                     'route'    => '/',
                     'defaults' => [
@@ -21,34 +36,29 @@ return [
                         'action'     => 'index',
                     ],
                 ],
+                'may_terminate' => true,
             ],
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-            'application' => [
-                'type'          => 'Literal',
-                'options'       => [
-                    'route'    => '/application',
+            'fiche-metier' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/fiche-metier',
                     'defaults' => [
-                        '__NAMESPACE__' => 'Application\Controller',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
+                        'controller' => FicheMetierController::class,
+                        'action'     => 'index',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'  => [
-                    'default' => [
-                        'type'    => 'Segment',
+                'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
                         'options' => [
-                            'route'       => '/[:controller[/:action]]',
-                            'constraints' => [
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ],
-                            'defaults'    => [
+                            'route'    => '/afficher/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'afficher',
                             ],
                         ],
+                        'may_terminate' => true,
                     ],
                 ],
             ],
@@ -72,6 +82,7 @@ return [
     'controllers'     => [
         'invokables' => [
             'Application\Controller\Index' => Controller\IndexController::class,
+            FicheMetierController::class => FicheMetierController::class,
         ],
     ],
     'view_manager'    => [
