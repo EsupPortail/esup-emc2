@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  preecog:
+    container_name: preecog
+    build:
+      context: .
+      dockerfile: Dockerfile.php7.dev
+    ports:
+     - "8111:80"
+    volumes:
+     - .:/var/www/html/preecog
+     - /tmp:/tmp
+    working_dir: /var/www/html/preecog
