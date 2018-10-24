@@ -2,8 +2,10 @@
 
 namespace Application;
 
-use Application\Controller\FicheMetierController;
-use Application\Controller\IndexController;
+use Application\Controller\FicheMetier\FicheMetierController;
+use Application\Controller\Utilisateur\UtilisateurController;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -21,6 +23,37 @@ return [
                     'roles' => [
                     ],
                 ],
+                [
+                    'controller' => UtilisateurController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'roles' => [
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'doctrine' => [
+        'driver' => [
+            'orm_default' => [
+                'class' => MappingDriverChain::class,
+                'drivers' => [
+                    'Application\Entity\Db' => 'orm_default_xml_driver',
+                ],
+            ],
+            'orm_default_xml_driver' => [
+                'class' => XmlDriver::class,
+                'cache' => 'apc',
+                'paths' => [
+                    __DIR__ . '/../src/Application/Entity/Db/Mapping',
+                ],
+            ],
+        ],
+        'cache' => [
+            'apc' => [
+                'namespace' => 'PREECOG__' . __NAMESPACE__,
             ],
         ],
     ],
@@ -62,6 +95,16 @@ return [
                     ],
                 ],
             ],
+            'utilisateur-preecog' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/utilisateur',
+                    'defaults' => [
+                        'controller' => UtilisateurController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'service_manager' => [
@@ -83,6 +126,7 @@ return [
         'invokables' => [
             'Application\Controller\Index' => Controller\IndexController::class,
             FicheMetierController::class => FicheMetierController::class,
+            UtilisateurController::class => UtilisateurController::class,
         ],
     ],
     'view_manager'    => [
