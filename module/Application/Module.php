@@ -11,6 +11,9 @@ namespace Application;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\ArrayUtils;
+use Zend\Stdlib\Glob;
+use Zend\Config\Factory as ConfigFactory;
 
 class Module
 {
@@ -34,8 +37,17 @@ class Module
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        $configInit = [
+            __DIR__ . '/config/module.config.php'
+        ];
+        $configFiles = ArrayUtils::merge(
+            $configInit,
+            Glob::glob(__DIR__ . '/config/merged/{,*.}{config}.php', Glob::GLOB_BRACE)
+        );
+
+        return ConfigFactory::fromFiles($configFiles);
     }
+
 
     public function getAutoloaderConfig()
     {
