@@ -62,5 +62,6 @@ dl.dl-horizontal dt:after {
 
 a.action {
     width: 20em;
+    margin:10px;
     text-indent: 0em;
 }

@@ -5,12 +5,12 @@
  */
 
 use Application\Entity\Db\FicheMetier;
-
+use Application\Provider\Privilege\FicheMetierPrivileges;
 
 $this->headTitle("Index des fiches métiers");
 
-$canVoir = true;
-$canHistoriser = true;
+$canVoir            = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
+$canHistoriser      = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::HISTORISER));
 ?>
 
 <h1 class="page-header">
