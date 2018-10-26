@@ -59,3 +59,8 @@ dl.dl-horizontal dt {
 dl.dl-horizontal dt:after {
     content: " : ";
 }
+
+a.action {
+    width: 20em;
+    text-indent: 0em;
+}

@@ -3,7 +3,13 @@
 namespace Application;
 
 use Application\Controller\FicheMetier\FicheMetierController;
+use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\Utilisateur\UtilisateurController;
+use Application\Controller\Utilisateur\UtilisateurControllerFactory;
+use Application\Service\FicheMetier\FicheMetierService;
+use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\Service\User\UserService;
+use Application\Service\User\UserServiceFactory;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -19,6 +25,8 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'historiser',
+                        'restaurer',
                     ],
                     'roles' => [
                     ],
@@ -27,6 +35,7 @@ return [
                     'controller' => UtilisateurController::class,
                     'action' => [
                         'index',
+                        'rechercher-utilisateur'
                     ],
                     'roles' => [
                     ],
@@ -93,6 +102,26 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'utilisateur-preecog' => [
@@ -104,11 +133,36 @@ return [
                         'action' => 'index',
                     ],
                 ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'rechercher-utilisateur' => [
+                        'type'          => Literal::class,
+                        'options'       => [
+                            'route'       => '/rechercher-utilisateur',
+                            'defaults'    => [
+                                'controller' => UtilisateurController::class,
+                                'action' => 'rechercher-utilisateur',
+                            ],
+                        ],
+                    ],
+                    'rechercher-people' => [
+                        'type'          => Literal::class,
+                        'options'       => [
+                            'route'       => '/rechercher-people',
+                            'defaults'    => [
+                                'controller' => UtilisateurController::class,
+                                'action' => 'rechercher-people',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
     'service_manager' => [
         'factories' => [
+            UserService::class => UserServiceFactory::class,
+            FicheMetierService::class => FicheMetierServiceFactory::class,
 
         ],
     ],
@@ -125,9 +179,11 @@ return [
     'controllers'     => [
         'invokables' => [
             'Application\Controller\Index' => Controller\IndexController::class,
-            FicheMetierController::class => FicheMetierController::class,
-            UtilisateurController::class => UtilisateurController::class,
         ],
+        'factories' => [
+            FicheMetierController::class => FicheMetierControllerFactory::class,
+            UtilisateurController::class => UtilisateurControllerFactory::class,
+        ]
     ],
     'view_manager'    => [
         'template_path_stack' => [
