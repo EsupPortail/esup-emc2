@@ -3,6 +3,8 @@
 namespace Application\Service\Role;
 
 use Application\Entity\Db\Role;
+use Doctrine\ORM\NonUniqueResultException;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
 /**
@@ -26,5 +28,23 @@ class RoleService
     {
         $roles = $this->getEntityManager()->getRepository(Role::class)->findAll();
         return $roles;
+    }
+
+    /**
+     * @param int $id
+     * @return Role[]
+     */
+    public function getRole($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(Role::class)->createQueryBuilder("role")
+            ->andWhere("role.id = :id")
+            ->setParameter("id", $id);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs rôles partagent l'identifiant : ".$id);
+        }
+        return $result;
     }
 }

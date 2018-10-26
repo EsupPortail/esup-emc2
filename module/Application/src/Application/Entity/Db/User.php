@@ -26,5 +26,10 @@ class User extends AbstractUser
         }
         return false;
     }
+
+    public function removeRole($role)
+    {
+        $this->roles->removeElement($role);
+    }
 }
 

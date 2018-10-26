@@ -2,10 +2,12 @@
 
 namespace Application\Service\User;
 
+use Application\Entity\Db\Role;
 use Application\Entity\Db\Service;
 use Application\Entity\Db\User;
 use Application\Service\CommonServiceAbstract;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenApp\Util;
@@ -77,9 +79,10 @@ class UserService
     public function getUtilisateursByTexte($texte)
     {
         if (strlen($texte) < 2) return [];
-        $texte = Util::reduce($texte);
+//        $texte = Util::reduce($texte);
+        $texte = strtolower($texte);
         $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder("utilisateur")
-            ->andWhere("utilisateur.displayName LIKE :critere")
+            ->andWhere("LOWER(utilisateur.displayName) LIKE :critere")
             ->setParameter("critere", '%'.$texte.'%')
         ;
         $utilisateurs = $qb->getQuery()->getResult();
@@ -89,19 +92,21 @@ class UserService
     /**
      * @param User $utilisateur
      * @return User
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function updateUser($utilisateur)
     {
         $this->getEntityManager()->persist($utilisateur);
-        $this->getEntityManager()->flush($utilisateur);
+        try {
+            $this->getEntityManager()->flush($utilisateur);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un erreur est survenue lors de la mise à jour de l'utilisateur [".$utilisateur->getId()."]");
+        }
         return $utilisateur;
     }
 
     /**
      * @param string $username
      * @return User
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function exist($username)
     {
@@ -109,16 +114,19 @@ class UserService
             ->andWhere("utilisateur.username = :username")
             ->setParameter("username", $username)
         ;
-        $result = $qb->getQuery()->getOneOrNullResult();
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs utilisateurs partage le même username [".$username."] !");
+        }
         return $result;
     }
 
     /**
      * @param User $utilisateur
      * @return User
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function changeStatus($utilisateur)
+    public function changerStatus($utilisateur)
     {
         if ($utilisateur) {
             $status = $utilisateur->getState();
@@ -128,9 +136,59 @@ class UserService
             else {
                 $utilisateur->setState(1);
             }
-            $this->getEntityManager()->flush($utilisateur);
+            try {
+                $this->getEntityManager()->flush($utilisateur);
+            } catch (OptimisticLockException $e) {
+                throw new RuntimeException("Un erreur est survenue lors du changement de status de l'utilisateur [".$utilisateur->getId()."]");
+            }
         }
         return $utilisateur;
+    }
+
+    /**
+     * @param User $utilisateur
+     * @param Role $role
+     * @return User
+     */
+    public function addRole($utilisateur, $role) {
+        $role->addUser($utilisateur);
+        $utilisateur->addRole($role);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de l'ajout du rôle [".$role->getId()."] à l'utilisateur [".$utilisateur->getId()."]");
+        }
+        return $utilisateur;
+    }
+
+    /**
+     * @param User $utilisateur
+     * @param Role $role
+     * @return User
+     */
+    public function removeRole($utilisateur, $role)
+    {
+        $role->removeUser($utilisateur);
+        $utilisateur->removeRole($role);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème s'est produit lors du retrait du rôle [".$role->getId()."] à l'utilisateur [".$utilisateur->getId()."]");
+        }
+        return $utilisateur;
+    }
+
+    /**
+     * @param User $utilisateur
+     */
+    public function supprimer($utilisateur)
+    {
+        $this->getEntityManager()->remove($utilisateur);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la suppression de l'utilisateur [".$utilisateur->getId()."]");
+        }
     }
 }
 

@@ -6,8 +6,13 @@ use Application\Controller\FicheMetier\FicheMetierController;
 use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\Utilisateur\UtilisateurController;
 use Application\Controller\Utilisateur\UtilisateurControllerFactory;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\Service\MailService\MailService;
+use Application\Service\MailService\MailServiceFactory;
+use Application\Service\Role\RoleService;
+use Application\Service\Role\RoleServiceFactory;
 use Application\Service\User\UserService;
 use Application\Service\User\UserServiceFactory;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
@@ -24,18 +29,39 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'index',
+                    ],
+                    'roles' => [
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
                         'afficher',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
                     ],
-                    'roles' => [
+                    'privileges' => [
+                        FicheMetierPrivileges::HISTORISER,
                     ],
                 ],
                 [
                     'controller' => UtilisateurController::class,
                     'action' => [
                         'index',
-                        'rechercher-utilisateur'
+                        'rechercher-utilisateur',
+                        'rechercher-people',
+                        'add-role',
+                        'remove-role',
+                        'changer-status',
+                        'effacer'
                     ],
                     'roles' => [
                     ],
@@ -155,15 +181,58 @@ return [
                             ],
                         ],
                     ],
+                    'add-role' => [
+                        'type'          => Segment::class,
+                        'options'       => [
+                            'route'       => '/add-role/:utilisateur/:role',
+                            'defaults'    => [
+                                'controller' => UtilisateurController::class,
+                                'action' => 'add-role',
+                            ],
+                        ],
+                    ],
+                    'remove-role' => [
+                        'type'          => Segment::class,
+                        'options'       => [
+                            'route'       => '/remove-role/:utilisateur/:role',
+                            'defaults'    => [
+                                'controller' => UtilisateurController::class,
+                                'action' => 'remove-role',
+                            ],
+                        ],
+                    ],
+                    'changer-status' => [
+                        'type'          => Segment::class,
+                        'options'       => [
+                            'route'       => '/changer-status/:utilisateur',
+                            'defaults'    => [
+                                'controller' => UtilisateurController::class,
+                                'action' => 'changer-status',
+                            ],
+                        ],
+                    ],
+                    'effacer' => [
+                        'type'          => Segment::class,
+                        'options'       => [
+                            'route'       => '/effacer/:utilisateur',
+                            'defaults'    => [
+                                'controller' => UtilisateurController::class,
+                                'action' => 'effacer',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
     ],
     'service_manager' => [
+        'invokables' => [
+        ],
         'factories' => [
-            UserService::class => UserServiceFactory::class,
             FicheMetierService::class => FicheMetierServiceFactory::class,
-
+            MailService::class => MailServiceFactory::class,
+            RoleService::class => RoleServiceFactory::class,
+            UserService::class => UserServiceFactory::class,
         ],
     ],
     'translator'      => [

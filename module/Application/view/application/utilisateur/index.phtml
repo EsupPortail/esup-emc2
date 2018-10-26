@@ -14,7 +14,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
  */
 
 
-//$canAdd = $this->isAllowed(Privileges::getResourceId(Privileges::UTILISATEUR_AJOUT));
+$canAjouter = true;//$this->isAllowed(Privileges::getResourceId(Privileges::UTILISATEUR_AJOUT));
 //$canStatus = $this->isAllowed(Privileges::getResourceId(Privileges::UTILISATEUR_STATUS));
 
 ?>
@@ -25,28 +25,6 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<!--<div class="row">-->
-<!--    <a class="btn btn-info action"-->
-<!--       href="#recherche">-->
-<!--            <span class="glyphicon glyphicon-search"></span>-->
-<!--            Recherche d'utilisateur-->
-<!--    </a>-->
-<!---->
-<!--    --><?php //if($canAdd): ?>
-<!--        <a class="btn btn-info action"-->
-<!--           href="#ajout">-->
-<!--            <span class="glyphicon glyphicon-plus"></span>-->
-<!--            Ajout d'utilisateur-->
-<!--    </a>-->
-<!--    --><?php //endif; ?>
-<!---->
-<!--    <a class="btn btn-info action"-->
-<!--       href="#listing">-->
-<!--            <span class="glyphicon glyphicon-th-list"></span>-->
-<!--            Listing des utilisateurs-->
-<!--    </a>-->
-<!--</div>-->
-<!---->
 <a name="recherche"></a>
 <h2> Recherche d'utilisateur et affectation de rôles </h2>
 
@@ -61,176 +39,125 @@ use UnicaenApp\Form\Element\SearchAndSelect;
     <input type="submit" class="" value="Sélectionner l'utilisateur"/>
 </form>
 
-<?php var_dump($utilisateurs); ?>
-<!---->
-<!---->
-<?// if($utilisateur !== null): ?>
-<!--    <div class="panel panel-info">-->
-<!--        <div class="panel-heading">-->
-<!--            <h2> Information sur l'utilisateur selectionné </h2>-->
-<!--        </div>-->
-<!--        <div class="panel-body">-->
-<!--            <dl>-->
-<!--                <dt> Nom affiché dans l'application </dt>-->
-<!--                <dd> --><?php //echo $utilisateur->getDisplayName();?><!-- </dd>-->
-<!--                <dt> Adresse électronique associé </dt>-->
-<!--                <dd> --><?php //echo $utilisateur->getEmail();?><!-- </dd>-->
-<!--                <dt> Activité du compte </dt>-->
-<!--                <dd>-->
-<!--                    --><?php //if ($utilisateur->getState() == 1): ?>
-<!--                        Actif-->
-<!--                    --><?php //else: ?>
-<!--                        Désactivé-->
-<!--                    --><?php //endif; ?>
-<!--                </dd>-->
-<!--            </dl>-->
-<!--        </div>-->
-<!--    </div>-->
-<!---->
-<!--    <div class="panel panel-info">-->
-<!--        <div class="panel-heading">-->
-<!--            <h2> Information sur l'utilisateur selectionné </h2>-->
-<!--        </div>-->
-<!--        <div class="panel-body">-->
-<!---->
-<!--            <div class="col-md-6">-->
-<!--                <h3> Rôles affectés </h3>-->
-<!---->
-<!--                --><?php //foreach ($roles as $role) : ?>
-<!--                    <div id="affecte_--><?php //echo $role->getId(); ?><!--"-->
-<!--                         style="--><?php //if (array_search($role,$rolesDisponibles)!== false) echo 'display:none;'; ?><!--"-->
-<!--                    >-->
-<!--                        --><?php
-//                            $canRole = false;
-//                            if ($role->getRoleId() == Role::ROLE_REDACTEUR) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
-//                            if ($role->getRoleId() == Role::ROLE_VALIDATEUR) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
-//                            if ($role->getRoleId() == Role::ROLE_GESTIONNAIRE) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_GESTIONNAIRE));
-//                            if ($role->getRoleId() == ROLE::ROLE_ADMINISTRATEUR) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_ADMINISTRATEUR));
-//                        ?>
-<!--                        --><?php //if ($canRole): ?>
-<!--                            <span id="--><?php //echo $utilisateur->getId().'_'.$role->getId(); ?><!--"-->
-<!--                                  style="color:red;"-->
-<!--                                  class="remove-role glyphicon glyphicon-minus">-->
-<!--                            </span>-->
-<!--                        --><?php //endif; ?>
-<!--                        --><?php //echo $role->getRoleId(); ?>
-<!--                    </div>-->
-<!--                --><?php //endforeach; ?>
-<!---->
-<!--            </div>-->
-<!--            <div class="col-md-6">-->
-<!--                <h3> Rôles disponibles </h3>-->
-<!---->
-<!--                --><?php //foreach ($roles as $role) : ?>
-<!--                    <div id="disponible_--><?php //echo $role->getId(); ?><!--"-->
-<!--                         style="--><?php //if (array_search($role,$rolesAffectes) !== false) echo 'display:none;'; ?><!--"-->
-<!--                    >-->
-<!--                        --><?php
-//                        $canRole = false;
-//                        if ($role->getRoleId() == Role::ROLE_REDACTEUR) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
-//                        if ($role->getRoleId() == Role::ROLE_VALIDATEUR) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
-//                        if ($role->getRoleId() == Role::ROLE_GESTIONNAIRE) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_GESTIONNAIRE));
-//                        if ($role->getRoleId() == ROLE::ROLE_ADMINISTRATEUR) $canRole = $this->isAllowed(Privileges::getResourceId(Privileges::DROIT_ADMINISTRATEUR));
-//                        ?>
-<!--                        --><?php //if ($canRole): ?>
-<!--                        <span id="--><?php //echo $utilisateur->getId().'_'.$role->getId(); ?><!--"-->
-<!--                              style="color:green;"-->
-<!--                              class="add-role glyphicon glyphicon-plus">-->
-<!--                        </span>-->
-<!--                        --><?php //endif; ?>
-<!--                        --><?php //echo $role->getRoleId(); ?>
-<!--                    </div>-->
-<!--                --><?php //endforeach; ?>
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!---->
-<?php //endif; ?>
-<!---->
-<?php //if($canAdd): ?>
-<!--<a name="ajout"></a>-->
-<!--<h2> Ajout d'un nouvel utilisateur </h2>-->
-<!---->
-<!--<form method='post' class="form-inline " style="margin-bottom:10px;">-->
-<!--    --><?php
-//    $sas = new SearchAndSelect('ldap');
-//    $sas->setAttribute('placeholder','Recherchez un individu');
-//    $sas->setAttribute('class', 'individu-finder');
-//    $sas->setAutocompleteSource($this->url('rechercher-people', [], [], true));
-//    echo $this->formControlGroup($sas, 'formSearchAndSelect');
-//    ?>
-<!--    <input type="submit" class="" value="Ajouter l'utilisateur sélectionné"/>-->
-<!--</form>-->
-<?php //endif; ?>
-<!---->
-<!--<a name="listing"></a>-->
-<!--<h2> Listing des utilisateurs enregistrés </h2>-->
-<!---->
-<!--<table class="table table-extra-condensed">-->
-<!--    <thead>-->
-<!--        <tr>-->
-<!--            <th> Nom </th>-->
-<!--            <th> Rôles </th>-->
-<!--            <th> Status </th>-->
-<!--            <th> Actions </th>-->
-<!--        </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    --><?php //foreach ($utilisateurs as $utilisateur) : ?>
-<!--        <tr>-->
-<!--            <td> --><?php //echo $utilisateur->getDisplayName(); ?><!-- </td>-->
-<!--            <td>-->
-<!--                --><?php //if ($utilisateur->hasRole("Rédacteur")): ?>
-<!--                    <span title="Rédacteur">R</span>-->
-<!--                --><?php //else: ?>
-<!--                    <span style="color:white;">R</span>-->
-<!--                --><?php //endif; ?>
-<!--                --><?php //if ($utilisateur->hasRole("Validateur")): ?>
-<!--                    <span title="Validateur">V</span>-->
-<!--                --><?php //else: ?>
-<!--                    <span style="color:white;">V</span>-->
-<!--                --><?php //endif; ?>
-<!--                --><?php //if ($utilisateur->hasRole("Gestionnaire")): ?>
-<!--                    <span title="Gestionnaire">G</span>-->
-<!--                --><?php //else: ?>
-<!--                    <span style="color:white;">G</span>-->
-<!--                --><?php //endif; ?>
-<!--                --><?php //if ($utilisateur->hasRole("Administrateur")): ?>
-<!--                    <span title="Administrateur">A</span>-->
-<!--                --><?php //else: ?>
-<!--                    <span style="color:white;">A</span>-->
-<!--                --><?php //endif; ?><!--</td>-->
-<!--            <td id="status_--><?php //echo $utilisateur->getId();?><!--"> --><?php //if($utilisateur->getState() == 1) echo "Actif"; else echo "<i>Inactif</i>"; ?><!-- </td>-->
-<!--            <td>-->
-<!--                <a href="--><?php //echo $this->url('utilisateur', [], ["query" => ["id" => $utilisateur->getId()], "fragment" => "recherche"], true);?><!--"-->
-<!--                   title="Afficher les informations et éditer les rôles affectés"-->
-<!--                >-->
-<!--                    <span class="glyphicon glyphicon-pencil"></span>-->
-<!--                </a>-->
-<!--                --><?php //if($canStatus): ?>
-<!--                <span title="Modifier le status du compte"-->
-<!--                      id="--><?php //echo $utilisateur->getId(); ?><!--"-->
-<!--                      class="status-refresh glyphicon glyphicon-refresh"-->
-<!--                    >-->
-<!--                </span>-->
-<!--                --><?php //endif; ?>
-<!--            </td>-->
-<!--        </tr>-->
-<!--    --><?php //endforeach; ?>
-<!--    </tbody>-->
-<!--</table>-->
+<?php if($canAjouter): ?>
+<a name="ajout"></a>
+<h2> Ajout d'un nouvel utilisateur </h2>
+
+<form method='post' class="form-inline " style="margin-bottom:10px;">
+    <?php
+    $sas = new SearchAndSelect('ldap');
+    $sas->setAttribute('placeholder','Recherchez un individu');
+    $sas->setAttribute('class', 'individu-finder');
+    $sas->setAutocompleteSource($this->url('utilisateur-preecog/rechercher-people', [], [], true));
+    echo $this->formControlGroup($sas, 'formSearchAndSelect');
+    ?>
+    <input type="submit" class="" value="Ajouter l'utilisateur sélectionné"/>
+</form>
+<?php endif; ?>
+
+<? if($utilisateur !== null): ?>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2> Information sur l'utilisateur selectionné </h2>
+        </div>
+        <div class="panel-body">
+            <div  class="pull-left">
+                <dl>
+                    <dt> Nom affiché dans l'application </dt>
+                    <dd> <?php echo $utilisateur->getDisplayName();?> </dd>
+                    <dt> Adresse électronique associé </dt>
+                    <dd> <?php echo $utilisateur->getEmail();?> </dd>
+                    <dt> Activité du compte </dt>
+                    <dd>
+                        <?php if ($utilisateur->getState() == 1): ?>
+                            Actif
+                        <?php else: ?>
+                            Désactivé
+                        <?php endif; ?>
+                    </dd>
+                </dl>
+            </div>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('utilisateur-preecog/changer-status', ['utilisateur' => $utilisateur->getId()], [], true); ?>"
+                   class="btn btn-warning action">
+                    <span class="glyphicon glyphicon-refresh"></span> Changer le status
+                </a>
+
+                <br/>
+
+                <a href="<?php echo $this->url('utilisateur-preecog/effacer', ['utilisateur' => $utilisateur->getId()], [], true); ?>"
+                   class="btn btn-danger action">
+                    <span class="glyphicon glyphicon-remove"></span> Supprimer le compte
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2> Information sur l'utilisateur selectionné </h2>
+        </div>
+        <div class="panel-body">
+
+            <div class="col-md-6">
+                <h3> Rôles affectés </h3>
+
+                <?php foreach ($roles as $role) : ?>
+                    <div id="affecte_<?php echo $role->getId(); ?>"
+                         style="<?php if (array_search($role,$rolesDisponibles)!== false) echo 'display:none;'; ?>"
+                    >
+                        <?php
+                            $canRole = false;
+                            if ($role->getRoleId() == Role::ADMIN_TECH) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
+                            if ($role->getRoleId() == Role::ADMIN_FONC) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
+                        ?>
+                        <?php if ($canRole): ?>
+                            <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"
+                                  style="color:red;"
+                                  class="remove-role glyphicon glyphicon-minus">
+                            </span>
+                        <?php endif; ?>
+                        <?php echo $role->getRoleId(); ?>
+                    </div>
+                <?php endforeach; ?>
+
+            </div>
+            <div class="col-md-6">
+                <h3> Rôles disponibles </h3>
+
+                <?php foreach ($roles as $role) : ?>
+                    <div id="disponible_<?php echo $role->getId(); ?>"
+                         style="<?php if (array_search($role,$rolesAffectes) !== false) echo 'display:none;'; ?>"
+                    >
+                        <?php
+                        $canRole = false;
+                        if ($role->getRoleId() == Role::ADMIN_TECH) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
+                        if ($role->getRoleId() == Role::ADMIN_FONC) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
+                        ?>
+                        <?php if ($canRole): ?>
+                        <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"
+                              style="color:green;"
+                              class="add-role glyphicon glyphicon-plus">
+                        </span>
+                        <?php endif; ?>
+                        <?php echo $role->getRoleId(); ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 
 <script>
     $(document).ready(function () {
         $(".remove-role").click(function () {
-            var id = $(this).attr("id");
-            var splits = id.split("_");
-            var role = splits[1];
-            var individu = splits[0];
-            // alert("Retrait User:" + individu + " Role:" + role);
+            let id = $(this).attr("id");
+            let splits = id.split("_");
+            let role = splits[1];
+            let individu = splits[0];
 
-            var url = "utilisateur/remove-role/" + individu + "/" + role;
+            let url = "utilisateur/remove-role/" + individu + "/" + role;
             $("#affecte_" + role).hide();
             $("#disponible_" + role).show();
 
@@ -242,13 +169,12 @@ use UnicaenApp\Form\Element\SearchAndSelect;
     });
     $(document).ready(function () {
         $(".add-role").click(function () {
-            var id = $(this).attr("id");
-            var splits = id.split("_");
-            var role = splits[1];
-            var individu = splits[0];
-            // alert("Ajout User:" + individu + " Role:" + role);
+            let id = $(this).attr("id");
+            let splits = id.split("_");
+            let role = splits[1];
+            let individu = splits[0];
 
-            var url = "utilisateur/add-role/" + individu + "/" + role;
+            let url = "utilisateur/add-role/" + individu + "/" + role;
             $("#affecte_" + role).show();
             $("#disponible_" + role).hide();
 
@@ -258,35 +184,4 @@ use UnicaenApp\Form\Element\SearchAndSelect;
             });
         });
     });
-
-    $(document).ready(function () {
-        $("span.status-refresh").click(function () {
-            var utilisateur = $(this).attr("id");
-            var url = "utilisateur/change-status/" + utilisateur;
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                success:
-                    function (retour) {
-                        $("td#status_" + utilisateur).html(retour);
-                    }
-            });
-        });
-    });
 </script>
-
-<style>
-    span.status-refresh {
-        color: #337ab7;
-    }
-
-    span.status-refresh:hover {
-        cursor:pointer;
-    }
-
-    a.action{
-        margin:10px;
-        width: 20em;
-    }
-</style>

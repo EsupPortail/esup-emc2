@@ -9,12 +9,15 @@ use UnicaenAuth\Entity\Db\UserInterface;
  */
 class Role extends AbstractRole
 {
+    const ADMIN_TECH = 'ADMIN_TECH';
+    const ADMIN_FONC = 'ADMIN_FONC';
+
     /** @var \Doctrine\Common\Collections\Collection */
-    private $privileges;
+    private $privilege;
 
     public function __construct()
     {
-        $this->privileges = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->privilege = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -51,7 +54,7 @@ class Role extends AbstractRole
      */
     public function addPrivilege(Privilege $privilege)
     {
-        $this->privileges[] = $privilege;
+        $this->privilege[] = $privilege;
         return $this;
     }
 
@@ -60,7 +63,7 @@ class Role extends AbstractRole
      */
     public function removePrivilege(Privilege $privilege)
     {
-        $this->privileges->removeElement($privilege);
+        $this->privilege->removeElement($privilege);
     }
 
     /**
@@ -68,7 +71,7 @@ class Role extends AbstractRole
      */
     public function getPrivileges()
     {
-        return $this->privileges;
+        return $this->privilege;
     }
 }
 
