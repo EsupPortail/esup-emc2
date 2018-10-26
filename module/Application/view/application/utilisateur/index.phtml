@@ -3,6 +3,7 @@
 use Application\Entity\Db\Role;
 use Application\Entity\Db\User;
 use Application\Provider\Privilege\Privileges;
+use Application\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenApp\Form\Element\SearchAndSelect;
 
 /**
@@ -13,9 +14,10 @@ use UnicaenApp\Form\Element\SearchAndSelect;
  * @var Role[] $rolesDisponibles
  */
 
-
-$canAjouter = true;//$this->isAllowed(Privileges::getResourceId(Privileges::UTILISATEUR_AJOUT));
-//$canStatus = $this->isAllowed(Privileges::getResourceId(Privileges::UTILISATEUR_STATUS));
+$canAfficher    = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::AFFICHER));
+$canAjouter     = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::AJOUTER));
+$canStatus      = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::CHANGER_STATUS));
+$canRole        = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::MODIFIER_ROLE));
 
 ?>
 
@@ -78,17 +80,21 @@ $canAjouter = true;//$this->isAllowed(Privileges::getResourceId(Privileges::UTIL
                 </dl>
             </div>
             <div class="pull-right">
-                <a href="<?php echo $this->url('utilisateur-preecog/changer-status', ['utilisateur' => $utilisateur->getId()], [], true); ?>"
-                   class="btn btn-warning action">
-                    <span class="glyphicon glyphicon-refresh"></span> Changer le status
-                </a>
+                <?php if ($canStatus) : ?>
+                    <a href="<?php echo $this->url('utilisateur-preecog/changer-status', ['utilisateur' => $utilisateur->getId()], [], true); ?>"
+                       class="btn btn-warning action">
+                        <span class="glyphicon glyphicon-refresh"></span> Changer le status
+                    </a>
+                <?php endif; ?>
 
                 <br/>
 
+                <?php if ($canAjouter) : ?>
                 <a href="<?php echo $this->url('utilisateur-preecog/effacer', ['utilisateur' => $utilisateur->getId()], [], true); ?>"
                    class="btn btn-danger action">
                     <span class="glyphicon glyphicon-remove"></span> Supprimer le compte
                 </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -106,11 +112,11 @@ $canAjouter = true;//$this->isAllowed(Privileges::getResourceId(Privileges::UTIL
                     <div id="affecte_<?php echo $role->getId(); ?>"
                          style="<?php if (array_search($role,$rolesDisponibles)!== false) echo 'display:none;'; ?>"
                     >
-                        <?php
-                            $canRole = false;
-                            if ($role->getRoleId() == Role::ADMIN_TECH) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
-                            if ($role->getRoleId() == Role::ADMIN_FONC) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
-                        ?>
+<!--                        --><?php
+//                            $canRole = false;
+//                            if ($role->getRoleId() == Role::ADMIN_TECH) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
+//                            if ($role->getRoleId() == Role::ADMIN_FONC) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
+//                        ?>
                         <?php if ($canRole): ?>
                             <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"
                                   style="color:red;"
@@ -129,11 +135,11 @@ $canAjouter = true;//$this->isAllowed(Privileges::getResourceId(Privileges::UTIL
                     <div id="disponible_<?php echo $role->getId(); ?>"
                          style="<?php if (array_search($role,$rolesAffectes) !== false) echo 'display:none;'; ?>"
                     >
-                        <?php
-                        $canRole = false;
-                        if ($role->getRoleId() == Role::ADMIN_TECH) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
-                        if ($role->getRoleId() == Role::ADMIN_FONC) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
-                        ?>
+<!--                        --><?php
+//                        $canRole = false;
+//                        if ($role->getRoleId() == Role::ADMIN_TECH) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
+//                        if ($role->getRoleId() == Role::ADMIN_FONC) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
+//                        ?>
                         <?php if ($canRole): ?>
                         <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"
                               style="color:green;"
