@@ -65,3 +65,7 @@ a.action {
     margin:10px;
     text-indent: 0em;
 }
+
+.pointer:hover {
+    cursor: pointer;
+}

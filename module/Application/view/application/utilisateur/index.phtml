@@ -112,15 +112,10 @@ $canRole        = $this->isAllowed(UtilisateurPrivileges::getResourceId(Utilisat
                     <div id="affecte_<?php echo $role->getId(); ?>"
                          style="<?php if (array_search($role,$rolesDisponibles)!== false) echo 'display:none;'; ?>"
                     >
-<!--                        --><?php
-//                            $canRole = false;
-//                            if ($role->getRoleId() == Role::ADMIN_TECH) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_REDACTEUR));
-//                            if ($role->getRoleId() == Role::ADMIN_FONC) $canRole = true;//$this->isAllowed(Privileges::getResourceId(Privileges::DROIT_VALIDATEUR));
-//                        ?>
                         <?php if ($canRole): ?>
                             <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"
                                   style="color:red;"
-                                  class="remove-role glyphicon glyphicon-minus">
+                                  class="remove-role glyphicon glyphicon-minus-sign pointer">
                             </span>
                         <?php endif; ?>
                         <?php echo $role->getRoleId(); ?>
@@ -143,7 +138,7 @@ $canRole        = $this->isAllowed(UtilisateurPrivileges::getResourceId(Utilisat
                         <?php if ($canRole): ?>
                         <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"
                               style="color:green;"
-                              class="add-role glyphicon glyphicon-plus">
+                              class="add-role glyphicon glyphicon-plus-sign pointer">
                         </span>
                         <?php endif; ?>
                         <?php echo $role->getRoleId(); ?>

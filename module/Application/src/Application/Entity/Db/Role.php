@@ -9,8 +9,9 @@ use UnicaenAuth\Entity\Db\UserInterface;
  */
 class Role extends AbstractRole
 {
-    const ADMIN_TECH = 'ADMIN_TECH';
-    const ADMIN_FONC = 'ADMIN_FONC';
+    const ADMIN_TECH = 'Administrateur technique';
+    const ADMIN_FONC = 'Administrateur fonctionnel';
+    const UTILISATEUR = 'Utilisateur';
 
     /** @var \Doctrine\Common\Collections\Collection */
     private $privilege;
