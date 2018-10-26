@@ -20,19 +20,19 @@ class UtilisateurControllerFactory {
          * @var MailService $mailService
          * @var EntityManager $entityManager
          */
-        $roleService = $controllerManager->getServiceLocator()->get(RoleService::class);
-        $ldapService = $controllerManager->getServiceLocator()->get('LdapServicePeople');
+//        $roleService = $controllerManager->getServiceLocator()->get(RoleService::class);
+//        $ldapService = $controllerManager->getServiceLocator()->get('LdapServicePeople');
         $userService = $controllerManager->getServiceLocator()->get(UserService::class);
-        $mailService = $controllerManager->getServiceLocator()->get(MailService::class);
+//        $mailService = $controllerManager->getServiceLocator()->get(MailService::class);
         $entityManager= $controllerManager->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 
         /** @var UtilisateurController $controller */
         $controller = new UtilisateurController();
-        $controller->setRoleService($roleService);
+//        $controller->setRoleService($roleService);
         $controller->setUserService($userService);
-        $controller->setEntityManager($entityManager);
-        $controller->setLdapPeopleService($ldapService);
-        $controller->setMailService($mailService);
+//        $controller->setEntityManager($entityManager);
+//        $controller->setLdapPeopleService($ldapService);
+//        $controller->setMailService($mailService);
 
 
         return $controller;

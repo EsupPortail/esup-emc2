@@ -3,7 +3,7 @@
 $modules = [
     'ZfcBase', 'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'ZfcUserDoctrineORM',
     'BjyAuthorize', 'AssetManager',
-    'UnicaenApp', 'UnicaenAuth',
+    'UnicaenApp', 'UnicaenAuth', 'UnicaenLdap',
     'Application',
 ];
 

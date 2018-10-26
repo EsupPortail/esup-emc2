@@ -7,20 +7,40 @@ use Application\Entity\Db\User;
 use Application\Service\CommonServiceAbstract;
 use Doctrine\ORM\NonUniqueResultException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenApp\Util;
 
 /**
  * @author PROUX-DELROUYRE Guillaume <guillaume.proux-delrouyre at unicaen.fr>
  * @author jean-Philippe Metivier <jean-philippe.metivier at unicaen.fr>
  */
-class UserService extends CommonServiceAbstract
+class UserService
 {
+    use EntityManagerAwareTrait;
     /**
      * @return string
      */
     public function getEntityClass()
     {
         return User::class;
+    }
+
+    /**
+     * @param int $id
+     * @return User
+     */
+    public function getUtilisateur($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder("utilisateur")
+            ->andWhere("utilisateur.id = :id")
+            ->setParameter("id", $id);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs utilisateurs partagent l'identifiant : ".$id);
+        }
+        return $result;
     }
 
     /**
@@ -64,42 +84,6 @@ class UserService extends CommonServiceAbstract
         ;
         $utilisateurs = $qb->getQuery()->getResult();
         return $utilisateurs;
-    }
-
-    /**
-     * @param Service $service
-     * @return User[]
-     */
-    public function getRedacteursByService($service)
-    {
-        $users = [];
-        if ($service != null) {
-            $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder("utilisateur")
-                ->join("utilisateur.serviceRed", "service")
-                ->andWhere("service.id = :service")
-                ->setParameter("service", $service->getId())
-            ;
-            $users = $qb->getQuery()->getResult();
-        }
-        return $users;
-    }
-
-    /**
-     * @param Service $service
-     * @return User[]
-     */
-    public function getValidateursByService($service)
-    {
-        $users = [];
-        if ($service != null) {
-            $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder("utilisateur")
-                ->join("utilisateur.serviceVal", "service")
-                ->andWhere("service.id = :service")
-                ->setParameter("service", $service->getId())
-            ;
-            $users = $qb->getQuery()->getResult();
-        }
-        return $users;
     }
 
     /**

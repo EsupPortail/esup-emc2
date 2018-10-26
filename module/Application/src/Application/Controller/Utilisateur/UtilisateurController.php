@@ -69,21 +69,21 @@ class UtilisateurController extends AbstractActionController {
 //            $this->redirect()->toRoute(null, [], $params, true);
 //        }
 //
-//        $utilisateurId = $this->params()->fromQuery("id");
-//        if ($utilisateurId !== null) {
-//            /** @var User $utilisateur */
-//            $utilisateur = $this->getUserService()->find($utilisateurId);
+        $utilisateurId = $this->params()->fromQuery("id");
+        if ($utilisateurId !== null) {
+            /** @var User $utilisateur */
+            $utilisateur = $this->getUserService()->getUtilisateur($utilisateurId);
 //            if ($utilisateur !== null) {
 //                $rolesAffectes = $utilisateur->getRoles()->toArray();
 //                $rolesDisponibles = array_diff($roles, $rolesAffectes);
 //            }
-//        }
-//
-//        $utilisateurs = $this->getUserService()->getUtilisateurs();
+        }
+
+        $utilisateurs = $this->getUserService()->getUtilisateursByTexte("Mét");
 
         return new ViewModel([
-//            'utilisateur' => $utilisateur,
-//            'utilisateurs' => $utilisateurs,
+            'utilisateur' => $utilisateur,
+            'utilisateurs' => $utilisateurs,
 //            'roles' => $roles,
 //            'rolesAffectes' => $rolesAffectes,
 //            'rolesDisponibles' => $rolesDisponibles,
@@ -170,27 +170,27 @@ class UtilisateurController extends AbstractActionController {
     /**
      * @return JsonModel
      */
-//    public function rechercherUtilisateurAction()
-//    {
-//        if (($term = $this->params()->fromQuery('term'))) {
-//            $utilisateurs = $this->getUserService()->getUtilisateursByTexte($term);
-//            $result = [];
-//            /** @var User $utilisateur */
-//            foreach ($utilisateurs as $utilisateur) {
-//                $result[] = array(
-//                    'id'    => $utilisateur->getId(),
-//                    'label' => $utilisateur->getDisplayName(),
-//                    'extra' => $utilisateur->getEmail(),
-//                );
-//            }
-//            usort($result, function($a, $b) {
-//                return strcmp($a['label'], $b['label']);
-//            });
-//
-//            return new JsonModel($result);
-//        }
-//        exit;
-//    }
+    public function rechercherUtilisateurAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $utilisateurs = $this->getUserService()->getUtilisateursByTexte($term);
+            $result = [];
+            /** @var User $utilisateur */
+            foreach ($utilisateurs as $utilisateur) {
+                $result[] = array(
+                    'id'    => $utilisateur->getId(),
+                    'label' => $utilisateur->getDisplayName(),
+                    'extra' => $utilisateur->getEmail(),
+                );
+            }
+            usort($result, function($a, $b) {
+                return strcmp($a['label'], $b['label']);
+            });
+
+            return new JsonModel($result);
+        }
+        exit;
+    }
 
     /**
      * @return JsonModel

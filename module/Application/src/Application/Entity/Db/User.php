@@ -4,9 +4,6 @@ namespace Application\Entity\Db;
 
 use UnicaenAuth\Entity\Db\AbstractUser;
 
-/**
- * User
- */
 class User extends AbstractUser
 {
     public function __construct()
