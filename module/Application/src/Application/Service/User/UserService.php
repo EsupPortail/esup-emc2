@@ -3,14 +3,13 @@
 namespace Application\Service\User;
 
 use Application\Entity\Db\Role;
-use Application\Entity\Db\Service;
 use Application\Entity\Db\User;
-use Application\Service\CommonServiceAbstract;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenApp\Util;
+use UnicaenAuth\Service\Traits\UserContextServiceAwareTrait;
 
 /**
  * @author PROUX-DELROUYRE Guillaume <guillaume.proux-delrouyre at unicaen.fr>
@@ -19,6 +18,7 @@ use UnicaenApp\Util;
 class UserService
 {
     use EntityManagerAwareTrait;
+    use UserContextServiceAwareTrait;
     /**
      * @return string
      */
@@ -189,6 +189,13 @@ class UserService
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la suppression de l'utilisateur [".$utilisateur->getId()."]");
         }
+    }
+
+    public function getConnectedUser()
+    {
+        $userId = $this->serviceUserContext->getDbUser()->getId();
+        $user = $this->getUtilisateur($userId);
+        return $user;
     }
 }
 

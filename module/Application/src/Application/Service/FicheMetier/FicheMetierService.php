@@ -3,6 +3,8 @@
 namespace Application\Service\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
+use Application\Service\User\UserServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
@@ -10,6 +12,7 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class FicheMetierService {
     use EntityManagerAwareTrait;
+    use UserServiceAwareTrait;
 
     /**
      * @param string $order an attribute use to sort
@@ -71,6 +74,28 @@ class FicheMetierService {
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la restauration de la fiche métier [".$fiche->getId()."].");
         }
+        return $fiche;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @return FicheMetier
+     */
+    public function creer($fiche)
+    {
+        $connectedUtilisateur = $this->getUserService()->getConnectedUser();
+
+        $fiche->setHistoCreation(new DateTime());
+        $fiche->setHistoCreateur($connectedUtilisateur);
+        $fiche->setHistoModification(new DateTime());
+        $fiche->setHistoModificateur($connectedUtilisateur);
+        $this->getEntityManager()->persist($fiche);
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la création de la fiche.");
+        }
+
         return $fiche;
     }
 }
