@@ -7,10 +7,25 @@
         </id>
 
         <field name="libelle"           type="string" length="256"      column="libelle"            nullable="false"/>
+        <field name="environnement"     type="string" length="2000"     column="description_environnement"            nullable="false"/>
+
+        <many-to-one target-entity="Application\Entity\Db\Affectation"  field="affectation">
+            <join-column name="affectation" referenced-column-name="id"/>
+        </many-to-one>
+
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
 
+        <many-to-one target-entity="Application\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="id"/>
+        </many-to-one>
 
 
     </entity>

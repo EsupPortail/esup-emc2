@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Service\Affectation\AffectationService;
+use Application\Service\Affectation\AffectationServiceFactory;
 use Application\Service\MailService\MailService;
 use Application\Service\MailService\MailServiceFactory;
 use Application\Service\Role\RoleService;
@@ -62,6 +64,7 @@ return [
         'factories' => [
             MailService::class => MailServiceFactory::class,
             RoleService::class => RoleServiceFactory::class,
+            AffectationService::class => AffectationServiceFactory::class,
         ],
     ],
     'controllers'     => [

@@ -1,6 +1,20 @@
+<?php
+
+/**
+ * @var FicheMetier $fiche
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+
+$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
+?>
+
 <h1 class="page-header">
-    Fiche métier : XXX
+    Fiche métier : <?php echo $fiche->getLibelle(); ?> <br/>
+    Affectation : <?php echo $fiche->getAffectation(); ?>
 </h1>
+
 
 <div class="panel panel-info">
     <div class="panel-heading">
@@ -45,18 +59,16 @@
     </div>
     <div class="panel-body">
 
-        <h3> Description du poste</h3>
 
+        <?php if($canEditer) : ?>
+            <a href="<?php echo $this->url('fiche-metier/editer',['id' => $fiche->getId(), 'section' => 'environnement'], [], true); ?>"
+               class="btn btn-primary action ajax-modal">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Éditer la description
+            </a>
+        <?php endif; ?>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-            magna aliqua. Erat nam at lectus urna duis convallis. Risus viverra adipiscing at in tellus integer. Ac turpis
-            egestas maecenas pharetra.
-        </p>
-        <p>
-            Amet volutpat consequat mauris nunc. Vestibulum lectus mauris ultrices eros in.
-            Scelerisque eu ultrices vitae auctor eu augue ut lectus. Amet cursus sit amet dictum sit amet justo donec enim.
-            Tellus id interdum velit laoreet id donec. Dui vivamus arcu felis bibendum ut tristique. Facilisis volutpat
-            est velit egestas dui id ornare arcu odio.
+            <?php echo $fiche->getEnvironnement(); ?>
         </p>
 
         <h3> Positionnement dans l'établissement</h3>
@@ -101,7 +113,7 @@
         <h3> Mission principale </h3>
 
         <ul>
-            <li>faire mission A avec brio </li>
+            <li>faire mission A </li>
             <li>assister à la mission B </li>
             <li>encadrer les X personnes de la mission C </li>
         </ul>
@@ -109,6 +121,7 @@
         <h3> Activités associées </h3>
 
         <h4> Direction et gestion </h4>
+
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
             magna aliqua. Erat nam at lectus urna duis convallis. Risus viverra adipiscing at in tellus integer. Ac turpis
