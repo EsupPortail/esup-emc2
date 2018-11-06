@@ -9,13 +9,29 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Activite;
+use Application\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+    use UserServiceAwareTrait;
+
     public function indexAction()
     {
-        return new ViewModel();
+        $identity = $this->getUserService()->getConnectedUser();
+        return new ViewModel([
+            'user' => $identity,
+        ]);
+    }
+
+    public function creerAction()
+    {
+        $activite = new Activite();
+
+        return new ViewModel([
+
+        ]);
     }
 }

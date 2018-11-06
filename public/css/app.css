@@ -66,6 +66,13 @@ a.action {
     text-indent: 0em;
 }
 
+a.mini {
+    width: 4em;
+    margin:5px;
+    padding:5px;
+    text-indent: 0em;
+}
+
 .pointer:hover {
     cursor: pointer;
 }

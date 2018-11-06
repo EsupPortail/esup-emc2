@@ -1,0 +1,26 @@
+<?php
+
+/** @var $form */
+?>
+
+<!--<h1 class="page-header">-->
+<!--    Ajout d'une activité existante-->
+<!--</h1>-->
+
+
+<div>
+    <?php echo $this->form()->openTag($form); ?>
+    <?php echo $this->formControlGroup($form->get('activite')); ?>
+    <?php echo $this->formControlGroup($form->get('submit')); ?>
+    <?php echo $this->form()->closeTag(); ?>
+</div>
+
+<br/>
+
+<div class="alert-info preview">
+    Aucune prévisualisation.
+</div>
+
+<script>
+
+</script>
