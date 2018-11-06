@@ -71,7 +71,7 @@ $canEditer = true;
 
 
         <?php foreach ($activites as $ficheActivite): ?>
-        <h3> <?php echo $ficheActivite->getPosition() . " -> ".$ficheActivite->getActivite()->getLibelle(); ?> </h3>
+        <h3> <?php echo $ficheActivite->getActivite()->getLibelle(); ?> </h3>
         <div class="row">
             <div class="col-md-1">
                 <a class="btn btn-default mini"
