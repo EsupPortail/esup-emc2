@@ -3,12 +3,14 @@
 namespace Application\Service\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierType;
 use Application\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Zend\Mvc\Controller\AbstractController;
 
 class FicheMetierService {
     use EntityManagerAwareTrait;
@@ -46,6 +48,7 @@ class FicheMetierService {
         }
         return $result;
     }
+
 
     /**
      * @param FicheMetier $fiche
@@ -97,5 +100,62 @@ class FicheMetierService {
         }
 
         return $fiche;
+    }
+
+    /**
+     * @return FicheMetierType[]
+     */
+    public function getFichesMetiersTypes()
+    {
+        $qb = $this->getEntityManager()->getRepository(FicheMetierType::class)->createQueryBuilder('fiche')
+            ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param int $id
+     * @return FicheMetierType
+     */
+    public function getFicheMetierType($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(FicheMetierType::class)->createQueryBuilder('fiche')
+            ->andWhere('fiche.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs fiche métier type partagent sur le même identifiant [".$id."].");
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractController $controller
+     * @param string $name
+     * @param bool $notNull
+     * @return FicheMetierType
+     */
+    public function getRequestedFicheMetierType($controller, $name, $notNull = false)
+    {
+        $ficheId = $controller->params()->fromRoute($name);
+        $fiche = $this->getFicheMetierType($ficheId);
+        if($notNull && !$fiche) throw new RuntimeException("Aucune fiche de trouvée avec l'identifiant [".$ficheId."]");
+
+        return $fiche;
+    }
+
+
+    public function updateFicheMetierType($ficheMetierType)
+    {
+        try {
+            $this->getEntityManager()->flush($ficheMetierType);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche métier.", $e);
+        }
+        return $ficheMetierType;
     }
 }

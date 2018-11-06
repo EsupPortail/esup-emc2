@@ -4,10 +4,20 @@ namespace Application;
 
 use Application\Controller\FicheMetier\FicheMetierController;
 use Application\Controller\FicheMetier\FicheMetierControllerFactory;
+use Application\Controller\FicheMetier\FicheMetierTypeController;
+use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
 use Application\Form\FicheMetier\FicheMetierCreationHydratorFactory;
+use Application\Form\FicheMetierType\ActiviteExistanteForm;
+use Application\Form\FicheMetierType\ActiviteExistanteFormFactory;
+use Application\Form\FicheMetierType\LibelleForm;
+use Application\Form\FicheMetierType\LibelleFormFactory;
+use Application\Form\FicheMetierType\LibelleHydrator;
+use Application\Form\FicheMetierType\MissionsPrincipalesForm;
+use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
+use Application\Form\FicheMetierType\MissionsPrincipalesHydrator;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
@@ -54,6 +64,29 @@ return [
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::EDITER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierTypeController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'roles' => [
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierTypeController::class,
+                    'action' => [
+                        'afficher',
+                        'editer-libelle',
+                        'editer-missions-principales',
+                        'retirer-activite',
+                        'deplacer-activite',
+                        'ajouter-nouvelle-activite',
+                        'ajouter-activite-existante',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::AFFICHER,
                     ],
                 ],
             ],
@@ -126,28 +159,93 @@ return [
                     ]
                 ],
             ],
-        ],
-    ],
-
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'fiche-metier' => [
-                        'order' => -10,
-                        'label' => 'Fiche métier',
-                        'title' => "Fiche métier",
-                        'route' => 'fiche-metier',
-                        'roles' => [], //PrivilegeController::getResourceId(__NAMESPACE__ . '\Controller\Administration', 'index'),
-                        'pages' => [
-//                            [
-//                                'label' => "Droits et privilèges",
-//                                'route' => 'droits',
-//                                'roles' => [],//'resource' => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'index'),
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-user',
-//                            ],
+            'fiche-metier-type' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/fiche-metier-type',
+                    'defaults' => [
+                        'controller' => FicheMetierTypeController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'afficher',
+                            ],
                         ],
+                        'may_terminate' => true,
+                    ],
+                    'editer-libelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/editer-libelle/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'editer-libelle',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'editer-missions-principales' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/editer-missions-principales/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'editer-missions-principales',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'retirer-activite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-activite/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'retirer-activite',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'deplacer-activite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/deplacer-activite/:id/:direction',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'deplacer-activite',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-nouvelle-activite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-nouvelle-activite/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'ajouter-nouvelle-activite',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-activite-existante' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-activite-existante/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'ajouter-activite-existante',
+                            ],
+                        ],
+                        'may_terminate' => true,
                     ],
                 ],
             ],
@@ -164,14 +262,22 @@ return [
     'controllers'     => [
         'factories' => [
             FicheMetierController::class => FicheMetierControllerFactory::class,
+            FicheMetierTypeController::class => FicheMetierTypeControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
+            ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             FicheMetierCreationForm::class => FicheMetierCreationFormFactory::class,
+            LibelleForm::class => LibelleFormFactory::class,
+            MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            MissionsPrincipalesHydrator::class => MissionsPrincipalesHydrator::class,
+            LibelleHydrator::class => LibelleHydrator::class,
+        ],
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
         ]

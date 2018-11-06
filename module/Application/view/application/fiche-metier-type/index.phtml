@@ -1,0 +1,61 @@
+<?php
+
+use Application\Entity\Db\FicheMetierType;
+
+/**
+ * @var FicheMetierType[] $fiches
+ */
+
+$this->headTitle('Index des fiches métiers types');
+
+
+$canVoir = true;
+?>
+
+<h1 class="page-header">
+    Index des fiches métiers types
+    <span class="badge"><?php echo count($fiches); ?></span>
+</h1>
+
+
+<a href=""
+   class="btn btn-primary action"
+>
+    <i class="fas fa-plus-square"></i> Ajouter une fiche métier type
+</a>
+
+
+<br/>
+<br/>
+
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th> Id </th>
+        <th> Libellé </th>
+        <th> Affectation </th>
+        <th> Dernière modification </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tbody>
+        <?php foreach($fiches as $fiche): ?>
+            <tr>
+                <td> <?php echo $fiche->getId(); ?> </td>
+                <td> <?php echo $fiche->getLibelle(); ?> </td>
+                <td></td>
+                <td></td>
+                <td>
+                    <?php if ($canVoir) : ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
+                           title="Afficher la fiche metier type">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

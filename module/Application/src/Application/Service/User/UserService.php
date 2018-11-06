@@ -193,7 +193,9 @@ class UserService
 
     public function getConnectedUser()
     {
-        $userId = $this->serviceUserContext->getDbUser()->getId();
+        $dbUser = $this->serviceUserContext->getDbUser();
+        if (!$dbUser) return null;
+        $userId = $dbUser->getId();
         $user = $this->getUtilisateur($userId);
         return $user;
     }

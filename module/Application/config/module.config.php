@@ -69,9 +69,10 @@ return [
     ],
     'controllers'     => [
         'invokables' => [
-            'Application\Controller\Index' => Controller\IndexController::class,
+            //'Application\Controller\Index' => Controller\IndexController::class,
         ],
         'factories' => [
+            'Application\Controller\Index' => Controller\IndexControllerFactory::class,
         ]
     ],
 
@@ -89,6 +90,24 @@ return [
                 'base_dir' => __DIR__ . '/../language',
                 'pattern'  => '%s.mo',
             ],
+        ],
+    ],
+
+    'public_files' => [
+        'inline_scripts' => [
+            '100_' => 'js/jquery.ui.datepicker-fr.js',
+            '110_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js',
+            '111_' => 'https://gest.unicaen.fr/public/bootstrap-confirmation-2.4.0/bootstrap-confirmation.min.js',
+            '112_' => 'vendor/font-awesome-5.0.9/fontawesome-all.min.js',
+            '124_' => 'vendor/vakata-jstree-3.3.4/dist/jstree.min.js',
+            '150_' => 'js/tinymce/js/tinymce/tinymce.js',
+            '151_' => 'js/form_fiche.js',
+        ],
+        'stylesheets' => [
+            '050_bootstrap-theme' => '',
+            '111_' => 'https://gest.unicaen.fr/public/open-sans-gh-pages/open-sans.css',
+            '113_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css',
+            '121_' => 'vendor/vakata-jstree-3.3.4/dist/themes/proton/style.min.css',
         ],
     ],
 ];
