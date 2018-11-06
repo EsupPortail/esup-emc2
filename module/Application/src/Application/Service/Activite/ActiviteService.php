@@ -184,6 +184,17 @@ class ActiviteService {
         }
     }
 
+    public function compacting($fiche) {
+        $activites = $this->getActivitesByFicheMetierType($fiche);
+
+        $position = 1;
+        foreach ($activites as $activite) {
+            $activite->setPosition($position);
+            $this->updateFicheMetierTypeActivite($activite);
+            $position++;
+        }
+    }
+
     public function createFicheMetierTypeActivite($fiche, $activite)
     {
         $activites = $this->getActivitesByFicheMetierType($fiche);
@@ -221,5 +232,7 @@ class ActiviteService {
         } catch (OptimisticLockException $e) {
             throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
         }
+
+        $this->compacting($couple->getFiche());
     }
 }
