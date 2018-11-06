@@ -109,11 +109,7 @@ class FicheMetierTypeController extends  AbstractActionController{
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
 
-                $couple = new FicheMetierTypeActivite();
-                $couple->setFiche($fiche);
-                $couple->setActivite($activite);
-                $couple->setPosition(0);
-                $this->getActiviteService()->createFicheMetierTypeActivite($couple);
+                $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
 
                 $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
             }
@@ -142,12 +138,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
 //            if ($form->isValid()) {
                 $activite = $this->getActiviteService()->getActivite($data['activite']);
-
-                $couple = new FicheMetierTypeActivite();
-                $couple->setFiche($fiche);
-                $couple->setActivite($activite);
-                $couple->setPosition(0);
-                $this->getActiviteService()->createFicheMetierTypeActivite($couple);
+                $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
 //            }
         }
 
@@ -173,10 +164,8 @@ class FicheMetierTypeController extends  AbstractActionController{
         $coupleId = $this->params()->fromRoute('id');
         $couple = $this->getActiviteService()->getFicheMetierTypeActivite($coupleId);
 
-        $position = $couple->getPosition();
-        if ($direction === 'up')    $position = max(0, $position-1);
-        if ($direction === 'down')  $position = $position+1;
-        $couple->setPosition($position);
+        if ($direction === 'up')    $this->getActiviteService()->moveUp($couple);
+        if ($direction === 'down')  $this->getActiviteService()->moveDown($couple);
 
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 

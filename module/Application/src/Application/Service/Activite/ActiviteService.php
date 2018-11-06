@@ -133,8 +133,66 @@ class ActiviteService {
         return $result;
     }
 
-    public function createFicheMetierTypeActivite($couple)
+    /**
+     * @param FicheMetierTypeActivite$couple
+     */
+    public function moveUp($couple) {
+        $currentPosition = $couple->getPosition();
+        if ($currentPosition !== 1) {
+            $activites = $this->getActivitesByFicheMetierType($couple->getFiche());
+
+            $swapWith = null;
+            foreach ($activites as $activite) {
+                if ($activite->getPosition() === $currentPosition - 1) {
+                    $swapWith = $activite;
+                    break;
+                }
+            }
+
+            if ($swapWith) {
+                $swapWith->setPosition($currentPosition);
+                $couple->setPosition($currentPosition-1);
+                $this->updateFicheMetierTypeActivite($swapWith);
+                $this->updateFicheMetierTypeActivite($couple);
+            }
+        }
+    }
+
+    /**
+     * @param FicheMetierTypeActivite$couple
+     */
+    public function moveDown($couple) {
+        $currentPosition = $couple->getPosition();
+        $activites = $this->getActivitesByFicheMetierType($couple->getFiche());
+
+        if ($currentPosition < count($activites)) {
+
+            $swapWith = null;
+            foreach ($activites as $activite) {
+                if ($activite->getPosition() === $currentPosition + 1) {
+                    $swapWith = $activite;
+                    break;
+                }
+            }
+
+            if ($swapWith) {
+                $swapWith->setPosition($currentPosition);
+                $couple->setPosition($currentPosition+1);
+                $this->updateFicheMetierTypeActivite($swapWith);
+                $this->updateFicheMetierTypeActivite($couple);
+            }
+        }
+    }
+
+    public function createFicheMetierTypeActivite($fiche, $activite)
     {
+        $activites = $this->getActivitesByFicheMetierType($fiche);
+
+        $couple = new FicheMetierTypeActivite();
+        $couple->setFiche($fiche);
+        $couple->setActivite($activite);
+        $couple->setPosition(count($activites) + 1);
+
         $this->getEntityManager()->persist($couple);
         try {
             $this->getEntityManager()->flush($couple);

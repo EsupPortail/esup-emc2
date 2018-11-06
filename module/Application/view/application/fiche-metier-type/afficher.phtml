@@ -36,7 +36,7 @@ $canEditer = true;
     </div>
     <div class="panel-body">
         <?php if ($canEditer) : ?>
-            <a  class="btn btn-primary action"
+            <a  class="btn btn-primary action ajax-modal"
                 href="<?php echo $this->url('fiche-metier-type/editer-missions-principales', ['id' => $fiche->getId()], [] , true); ?>">
                 <i class="fas fa-pencil-alt"></i>
                 Éditer missions principales
@@ -71,9 +71,7 @@ $canEditer = true;
 
 
         <?php foreach ($activites as $ficheActivite): ?>
-        <?php
-        ?>
-        <h3> <?php echo $ficheActivite->getPosition() . " - " .$ficheActivite->getActivite()->getLibelle(); ?> </h3>
+        <h3> <?php echo $ficheActivite->getPosition() . " -> ".$ficheActivite->getActivite()->getLibelle(); ?> </h3>
         <div class="row">
             <div class="col-md-1">
                 <a class="btn btn-default mini"
@@ -112,5 +110,12 @@ $canEditer = true;
             event.div.modal('hide');
             window.location.reload();
         });
+
+        $('.modal').bind('shown', function() {
+            $('textarea.tinymce-modal').tinymce({
+                // TinyMCE Options
+            });
+        });
     });
+
 </script>
