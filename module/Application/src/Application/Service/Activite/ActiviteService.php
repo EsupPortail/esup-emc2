@@ -235,4 +235,23 @@ class ActiviteService {
 
         $this->compacting($couple->getFiche());
     }
+
+    public function getActiviteDisponible($fiche) {
+        //select a.id, a.libelle, f.id
+        //from activite a
+        //left join fiche_metier_type_activite f on a.id = f.activite and f.fiche=1
+        //where f.id IS NULL;
+
+//        $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+//            ->leftJoin('activite.id', 'fiche_activite', 'on' )
+
+        //select *
+        //from activite a
+        //where a.id not in (
+        //select a.id from fiche_metier_type_activite f
+        //join activite a on f.activite = a.id where f.fiche = 1
+        //)
+
+
+    }
 }

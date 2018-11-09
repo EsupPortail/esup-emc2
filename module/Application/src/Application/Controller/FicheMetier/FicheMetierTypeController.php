@@ -3,14 +3,12 @@
 namespace Application\Controller\FicheMetier;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
 use Application\Form\FicheMetierType\LibelleForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -142,9 +140,19 @@ class FicheMetierTypeController extends  AbstractActionController{
 //            }
         }
 
+        $activites = $this->getActiviteService()->getActivites();
+        $options = [];
+        foreach($activites as $activite) {
+            $options[$activite->getId()] = [
+                "title" => $activite->getLibelle(),
+                "description" => $activite->getDescription(),
+            ];
+        }
+
         return new ViewModel([
             'title' => 'Ajouter une activité existante',
             'form' => $form,
+            'options' => $options,
         ]);
     }
 
