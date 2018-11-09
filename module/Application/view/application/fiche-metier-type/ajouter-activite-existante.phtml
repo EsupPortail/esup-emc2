@@ -17,10 +17,29 @@
 
 <br/>
 
-<div class="alert-info preview">
+<div id="none" class="alert-info preview">
     Aucune prévisualisation.
 </div>
 
-<script>
+<?php foreach ($options as $key => $infos) :?>
+    <div style='display:none;' class="preview alert-info" id="<?php echo $key;?>">
+        <h3><?php echo $infos["title"]; ?></h3>
+        <?php echo $infos["description"]; ?>
+    </div>
+<?php endforeach; ?>
 
+<script>
+    $(function() {
+        $("select#activite").change(function () {
+            let text = $("select#activite option:selected").val();
+            $("div.preview").hide();
+            if (text.length > 0) {
+                $("div#" + text).show();
+            } else {
+
+                $("div#none").show();
+            }
+
+        });
+    });
 </script>
