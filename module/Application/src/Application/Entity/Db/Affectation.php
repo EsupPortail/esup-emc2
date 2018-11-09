@@ -8,6 +8,8 @@ class Affectation {
     private $id;
     /** @var string */
     private $libelle;
+    /** @var string */
+    private $description;
 
     /**
      * @return int
@@ -32,6 +34,24 @@ class Affectation {
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return Affectation
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
         return $this;
     }
 
