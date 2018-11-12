@@ -7,7 +7,6 @@
         </id>
 
         <field name="libelle"           type="string" length="256"      column="libelle"            nullable="false"/>
-        <field name="environnement"     type="string" length="2000"     column="description_environnement"            nullable="false"/>
 
         <many-to-one target-entity="Application\Entity\Db\Affectation"  field="affectation">
             <join-column name="affectation" referenced-column-name="id"/>

@@ -1,6 +1,25 @@
+body {
+    background-color: lightgray;
+}
+
+h1 {
+    color: darkgray;
+    font-weight: lighter;
+}
+
+div.main {
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
 p {
     text-align: justify;
-    text-indent: 2em;
+    //text-indent: 2em;
+}
+
+p.noindent {
+    text-indent: 0em;
 }
 
 
@@ -75,4 +94,11 @@ a.mini {
 
 .pointer:hover {
     cursor: pointer;
+}
+
+div.preview {
+    background-color: #fffee8;
+    border: 2px solid #ffc681;
+    border-radius: 5px;
+    padding: 2px;
 }
