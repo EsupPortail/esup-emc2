@@ -4,6 +4,9 @@ namespace Application;
 
 use Application\Controller\Affectation\AffectationController;
 use Application\Controller\Affectation\AffectationControllerFactory;
+use Application\Form\Affectation\AffectationForm;
+use Application\Form\Affectation\AffectationFormFactory;
+use Application\Form\Affectation\AffectationHydrator;
 use Application\Provider\Privilege\AffectationPrivileges;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
@@ -26,11 +29,27 @@ return [
                     'controller' => AffectationController::class,
                     'action' => [
                         'creer',
+                    ],
+                    'privileges' => [
+                        AffectationPrivileges::AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => AffectationController::class,
+                    'action' => [
                         'editer',
-                        'effacer',
                     ],
                     'privileges' => [
                         AffectationPrivileges::EDITER,
+                    ],
+                ],
+                [
+                    'controller' => AffectationController::class,
+                    'action' => [
+                        'effacer',
+                    ],
+                    'privileges' => [
+                        AffectationPrivileges::EFFACER,
                     ],
                 ],
             ],
@@ -39,7 +58,7 @@ return [
 
     'router'          => [
         'routes' => [
-            'activite' => [
+            'affectation' => [
                 'type'  => Literal::class,
                 'options' => [
                     'route'    => '/affectation',
@@ -98,10 +117,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            AffectationForm::class => AffectationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokable' => [
+            AffectationHydrator::class => AffectationHydrator::class,
         ]
     ]
 

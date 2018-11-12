@@ -1,20 +1,32 @@
 <div class="jumbotron">
     <h1>Prévisionnelle des emplois, des effectifs et des compétences</h1>
     <h2>Outil de gestion</h2>
-    <p>PrEECoG est un outil permettant la rédaction et la gestion des fiches métiers ... </p>
 
-    <?php var_dump($individu); ?>
+    <div class="col-md-4">
+        <img style="width:200px;" src="img/PrEECoG.svg">
+    </div>
+    <p class="noindent">PrEECoG est un outil permettant la rédaction et la gestion des fiches métiers</p>
+
+    <br/>
+    <br/>
+
+<!--    --><?php //var_dump($individu); ?>
 
 <!--    <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>-->
 
-<!--    --><?php //if ($identity): ?>
-<!--        <h4>-->
-<!--            Bienvenue <strong>--><?php //echo $identity['db']->getDisplayName(); ?><!--</strong>-->
-<!--        </h4>-->
-<!--    --><?php //else: ?>
-<!--        <a class="btn btn-success btn-large" href="--><?php //echo $this->url('zfcuser/login') ?><!--">-->
-<!--            <span class="glyphicon glyphicon-user"></span>-->
-<!--            --><?php //echo $this->translate('Se connecter') ?>
-<!--        </a>-->
-<!--    --><?php //endif; ?>
+    <?php if ($user): ?>
+    <p>
+        Vous êtes connecté&middot;e en tant que <strong><?php echo $user->getDisplayName(); ?></strong>.
+    </p>
+    <?php else: ?>
+
+
+
+        <a class="btn btn-success btn-large" href="<?php echo $this->url('zfcuser/login') ?>">
+            <span class="glyphicon glyphicon-user"></span>
+            <?php echo $this->translate('Se connecter') ?>
+        </a>
+
+    <br/>
+    <?php endif; ?>
 </div>

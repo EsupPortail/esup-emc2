@@ -2,7 +2,11 @@
 
 namespace Application\Entity\Db;
 
-class Affectation {
+use UnicaenApp\Entity\HistoriqueAwareTrait;
+
+class Affectation
+{
+    use HistoriqueAwareTrait;
 
     /** @var int */
     private $id;
