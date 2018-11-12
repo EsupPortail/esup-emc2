@@ -14,8 +14,6 @@ class FicheMetier
     private $libelle;
     /** @var Affectation */
     private $affectation;
-    /** @var string */
-    private $environnement;
 
     public function getId()
     {
@@ -57,27 +55,4 @@ class FicheMetier
         $this->affectation = $affectation;
         return $this;
     }
-
-
-
-    /**
-     * @return string
-     */
-    public function getEnvironnement()
-    {
-        return $this->environnement;
-    }
-
-    /**
-     * @param string $environnement
-     * @return FicheMetier
-     */
-    public function setEnvironnement($environnement)
-    {
-        $this->environnement = $environnement;
-        return $this;
-    }
-
-
-
 }

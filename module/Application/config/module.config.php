@@ -77,6 +77,9 @@ return [
     ],
 
     'view_manager'    => [
+        'template_map'             => [
+            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+        ],
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
@@ -109,5 +112,8 @@ return [
             '113_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css',
             '121_' => 'vendor/vakata-jstree-3.3.4/dist/themes/proton/style.min.css',
         ],
+        'images' => [
+            '100_' => 'img/PrEECoG.svg',
+        ]
     ],
 ];

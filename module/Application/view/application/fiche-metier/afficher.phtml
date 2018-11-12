@@ -68,7 +68,21 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </a>
         <?php endif; ?>
         <p>
-            <?php echo $fiche->getEnvironnement(); ?>
+            <?php if ($fiche->getAffectation() !== null) : ?>
+                <?php if ($fiche->getAffectation()->getDescription() !== null) :?>
+                    <?php echo $fiche->getAffectation()->getDescription(); ?>
+                <?php else: ?>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getAffectation()->getLibelle(); ?></em>.
+                    </div>
+                <?php endif; ?>
+            <?php else : ?>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucune affectation de renseignée.
+                </div>
+            <?php endif; ?>
         </p>
 
         <h3> Positionnement dans l'établissement</h3>

@@ -3,6 +3,7 @@
 namespace Application;
 
 use Application\Provider\Privilege\ActivitePrivileges;
+use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 
 return [
@@ -35,6 +36,13 @@ return [
                                 'label' => 'Les activités',
                                 'route' => 'activite',
                                 'privileges' => ActivitePrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Les affectations',
+                                'route' => 'affectation',
+                                'privileges' => AffectationPrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
