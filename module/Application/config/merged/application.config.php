@@ -2,14 +2,14 @@
 
 namespace Application;
 
-use Application\Controller\Activite\ActiviteController;
-use Application\Controller\Activite\ActiviteControllerFactory;
-use Application\Form\Activite\ActiviteForm;
-use Application\Form\Activite\ActiviteFormFactory;
-use Application\Form\Activite\ActiviteHydrator;
-use Application\Provider\Privilege\ActivitePrivileges;
-use Application\Service\Activite\ActiviteService;
-use Application\Service\Activite\ActiviteServiceFactory;
+use Application\Controller\Application\ApplicationController;
+use Application\Controller\Application\ApplicationControllerFactory;
+use Application\Form\Application\ApplicationForm;
+use Application\Form\Application\ApplicationFormFactory;
+use Application\Form\Application\ApplicationHydrator;
+use Application\Provider\Privilege\ApplicationPrivileges;
+use Application\Service\Application\ApplicationService;
+use Application\Service\Application\ApplicationServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -19,23 +19,41 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => ActiviteController::class,
+                    'controller' => ApplicationController::class,
                     'action' => [
                         'index',
+                        'afficher',
                     ],
                     'privileges' => [
-                        ActivitePrivileges::AFFICHER,
+                        ApplicationPrivileges::AFFICHER,
                     ],
                 ],
                 [
-                    'controller' => ActiviteController::class,
+                    'controller' => ApplicationController::class,
+                    'action' => [
+                        'changer-status',
+                        'editer',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::EDITER,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationController::class,
                     'action' => [
                         'creer',
-                        'editer',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationController::class,
+                    'action' => [
                         'effacer',
                     ],
                     'privileges' => [
-                        ActivitePrivileges::EDITER,
+                        ApplicationPrivileges::EFFACER,
                     ],
                 ],
             ],
@@ -44,23 +62,43 @@ return [
 
     'router'          => [
         'routes' => [
-            'activite' => [
+            'application' => [
                 'type'  => Literal::class,
                 'options' => [
-                    'route'    => '/activite',
+                    'route'    => '/application',
                     'defaults' => [
-                        'controller' => ActiviteController::class,
+                        'controller' => ApplicationController::class,
                         'action'     => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:id',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'changer-status' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/changer-status/:id',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action'     => 'changer-status',
+                            ],
+                        ],
+                    ],
                     'editer' => [
                         'type'  => Segment::class,
                         'options' => [
                             'route'    => '/editer/:id',
                             'defaults' => [
-                                'controller' => ActiviteController::class,
+                                'controller' => ApplicationController::class,
                                 'action'     => 'editer',
                             ],
                         ],
@@ -70,7 +108,7 @@ return [
                         'options' => [
                             'route'    => '/effacer/:id',
                             'defaults' => [
-                                'controller' => ActiviteController::class,
+                                'controller' => ApplicationController::class,
                                 'action'     => 'effacer',
                             ],
                         ],
@@ -80,7 +118,7 @@ return [
                         'options' => [
                             'route'    => '/creer',
                             'defaults' => [
-                                'controller' => ActiviteController::class,
+                                'controller' => ApplicationController::class,
                                 'action'     => 'creer',
                             ],
                         ],
@@ -94,22 +132,22 @@ return [
         'invokables' => [
         ],
         'factories' => [
-            ActiviteService::class => ActiviteServiceFactory::class,
+            ApplicationService::class => ApplicationServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            ActiviteController::class => ActiviteControllerFactory::class,
+            ApplicationController::class => ApplicationControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            ActiviteForm::class => ActiviteFormFactory::class,
+            ApplicationForm::class => ApplicationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokable' => [
-            ActiviteHydrator::class => ActiviteHydrator::class,
+            ApplicationHydrator::class => ApplicationHydrator::class,
         ]
     ]
 

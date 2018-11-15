@@ -1,30 +1,28 @@
 <?php
 
-namespace Application\Service\Activite;
+namespace Application\Service\Application;
 
+Trait ApplicationServiceAwareTrait {
 
-Trait ActiviteServiceAwareTrait {
-
-    /** @var ActiviteService */
-    private $activiteService;
+    /** @var ApplicationService */
+    private $applicationService;
 
     /**
-     * @return ActiviteService
+     * @return ApplicationService
      */
-    public function getActiviteService()
+    public function getApplicationService()
     {
-        return $this->activiteService;
+        return $this->applicationService;
     }
 
     /**
-     * @param ActiviteService $activiteService
-     * @return ActiviteService
+     * @param ApplicationService $applicationService
+     * @return ApplicationService
      */
-    public function setActiviteService($activiteService)
+    public function setApplicationService($applicationService)
     {
-        $this->activiteService = $activiteService;
-        return $this->activiteService;
+        $this->applicationService = $applicationService;
+        return $this->applicationService;
     }
-
 
 }

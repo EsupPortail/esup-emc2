@@ -1,22 +1,22 @@
 <?php
 
-namespace Application\Controller\Activite;
+namespace Application\Controller\Application;
 
-use Application\Service\Activite\ActiviteService;
+use Application\Service\Application\ApplicationService;
 use Zend\Mvc\Controller\ControllerManager;
 
-class ActiviteControllerFactory {
+class ApplicationControllerFactory {
 
     public function __invoke(ControllerManager $controllerManager)
     {
         /**
-         * @var ActiviteService $activiteService
+         * @var ApplicationService $applicationService
          */
-        $activiteService = $controllerManager->getServiceLocator()->get(ActiviteService::class);
+        $applicationService = $controllerManager->getServiceLocator()->get(ApplicationService::class);
 
-        /** @var ActiviteController $controller */
-        $controller = new ActiviteController();
-        $controller->setActiviteService($activiteService);
+        /** @var ApplicationController $controller */
+        $controller = new ApplicationController();
+        $controller->setApplicationService($applicationService);
         return $controller;
     }
 }

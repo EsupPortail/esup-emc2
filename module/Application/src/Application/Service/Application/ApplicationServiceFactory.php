@@ -1,29 +1,25 @@
 <?php
 
-namespace Application\Service\Activite;
+namespace Application\Service\Application;
 
-use Application\Service\User\UserService;
 use Doctrine\ORM\EntityManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ActiviteServiceFactory {
+class ApplicationServiceFactory {
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @return ActiviteService
+     * @return ApplicationService
      */
     public function __invoke(ServiceLocatorInterface $serviceLocator) {
         /**
          * @var EntityManager $entityManager
-         * @var UserService $userService
          */
         $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        $userService = $serviceLocator->get(UserService::class);
 
-        /** @var ActiviteService $service */
-        $service = new ActiviteService();
+        /** @var ApplicationService $service */
+        $service = new ApplicationService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
 
         return $service;
     }

@@ -1,5 +1,5 @@
 body {
-    background-color: lightgray;
+    background-color: #eeeeee;
 }
 
 h1 {
@@ -11,6 +11,10 @@ div.main {
     background-color: white;
     border-radius: 5px;
     padding: 10px;
+}
+
+div.jumbotron#preecog {
+    background-color: white;
 }
 
 p {

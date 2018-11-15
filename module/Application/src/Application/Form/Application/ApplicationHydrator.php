@@ -1,14 +1,14 @@
 <?php
 
-namespace Application\Form\Affectation;
+namespace Application\Form\Application;
 
-use Application\Entity\Db\Affectation;
+use Application\Entity\Db\Application;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class AffectationHydrator implements HydratorInterface {
+class ApplicationHydrator implements HydratorInterface {
 
     /**
-     * @param Affectation $object
+     * @param Application $object
      * @return array
      */
     public function extract($object)
@@ -16,14 +16,15 @@ class AffectationHydrator implements HydratorInterface {
         $data = [
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
+            'url' => $object->getUrl(),
         ];
         return $data;
     }
 
     /**
      * @param array $data
-     * @param Affectation $object
-     * @return Affectation
+     * @param Application $object
+     * @return Application
      */
     public function hydrate(array $data, $object)
     {
@@ -32,6 +33,11 @@ class AffectationHydrator implements HydratorInterface {
             $object->setDescription(null);
         } else {
             $object->setDescription($data['description']);
+        }
+        if ($data['url'] === null || $data['url'] === '') {
+            $object->setUrl(null);
+        } else {
+            $object->setUrl($data['url']);
         }
         return $object;
     }

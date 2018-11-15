@@ -1,17 +1,17 @@
 <?php
 
-namespace Application\Form\Affectation;
+namespace Application\Form\Application;
 
 use Zend\Form\FormElementManager;
 
-class AffectationFormFactory {
+class ApplicationFormFactory {
 
     public function __invoke(FormElementManager $manager)
     {
-        /** @var AffectationHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AffectationHydrator::class);
+        /** @var ApplicationHydrator $hydrator */
+        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(ApplicationHydrator::class);
 
-        $form = new AffectationForm();
+        $form = new ApplicationForm();
         $form->init();
         $form->setHydrator($hydrator);
 
