@@ -9,20 +9,18 @@ use Application\Entity\Db\Activite;
 $this->headTitle('Index des activités');
 ?>
 
-<h1 class="page-header">
+<h1>
     Activité
     <span class="badge"> <?php echo count($activites); ?> </span>
 </h1>
 
-
+<div class="main">
     <a href="<?php echo $this->url('activite/creer', [], [], true); ?>"
        class="btn btn-primary action zajax-modal"
        data-event="modal-closed"
        >
         <i class="fas fa-plus-square"></i> Ajouter une activité
     </a>
-
-<br/><br/>
 
 <table class="table table-condensed">
     <thead>
@@ -58,6 +56,7 @@ $this->headTitle('Index des activités');
     </tbody>
 </table>
 
+</div>
 
 <script>
     $(function() {

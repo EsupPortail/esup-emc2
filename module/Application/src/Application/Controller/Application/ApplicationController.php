@@ -1,36 +1,35 @@
 <?php
 
-namespace Application\Controller\Activite;
+namespace Application\Controller\Application;
 
-use Application\Entity\Db\Activite;
-use Application\Form\Activite\ActiviteForm;
-use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Entity\Db\Application;
+use Application\Form\Application\ApplicationForm;
+use Application\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class ActiviteController  extends AbstractActionController {
-    use ActiviteServiceAwareTrait;
+class ApplicationController  extends AbstractActionController {
+    use ApplicationServiceAwareTrait;
 
     public function indexAction()
     {
-        /** @var Activite[] $activites */
-        $activites = $this->getActiviteService()->getActivites('id');
+        /** @var Application[] $activites */
+        $applications = $this->getApplicationService()->getApplications('id');
 
         return new ViewModel([
-            'activites' => $activites,
+            'applications' => $applications,
         ]);
     }
 
     public function creerAction()
     {
-        /** @var Activite $activite */
-        $activite = new Activite();
+        /** @var Application $application */
+        $application = new Application();
 
-        /** @var ActiviteForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/creer',[],[], true));
-        $form->bind($activite);
+        /** @var ApplicationForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationForm::class);
+        $form->bind($application);
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -38,8 +37,8 @@ class ActiviteController  extends AbstractActionController {
             $form->setData($data);
 
             if ($form->isValid()) {
-                $this->getActiviteService()->create($activite);
-                $this->redirect()->toRoute('activite');
+                $this->getApplicationService()->create($application);
+                $this->redirect()->toRoute('application');
             }
         }
 
@@ -50,14 +49,13 @@ class ActiviteController  extends AbstractActionController {
 
     public function editerAction()
     {
-        /** @var Activite $activite */
-        $activiteId = $this->params()->fromRoute('id');
-        $activite = $this->getActiviteService()->getActivite($activiteId);
+        /** @var Application $application */
+        $applicationId = $this->params()->fromRoute('id');
+        $application = $this->getApplicationService()->getApplication($applicationId);
 
-        /** @var ActiviteForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/editer',['id' => $activite->getId()],[], true));
-        $form->bind($activite);
+        /** @var ApplicationForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationForm::class);
+        $form->bind($application);
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -65,8 +63,8 @@ class ActiviteController  extends AbstractActionController {
             $form->setData($data);
 
             if ($form->isValid()) {
-                $this->getActiviteService()->update($activite);
-                $this->redirect()->toRoute('activite');
+                $this->getApplicationService()->update($application);
+                $this->redirect()->toRoute('application');
             }
         }
 
@@ -77,11 +75,35 @@ class ActiviteController  extends AbstractActionController {
 
     public function effacerAction()
     {
-        /** @var Activite $activite */
-        $activiteId = $this->params()->fromRoute('id');
-        $activite = $this->getActiviteService()->getActivite($activiteId);
+        /** @var Application $application */
+        $applicationId = $this->params()->fromRoute('id');
+        $application = $this->getApplicationService()->getApplication($applicationId);
 
-        $this->getActiviteService()->delete($activite);
-        $this->redirect()->toRoute('activite');
+        $this->getApplicationService()->delete($application);
+        $this->redirect()->toRoute('application');
+    }
+
+    public function changerStatusAction()
+    {
+        /** @var Application $application */
+        $applicationId = $this->params()->fromRoute('id');
+        $application = $this->getApplicationService()->getApplication($applicationId);
+
+        $application->setActif( !$application->isActif() );
+
+        $this->getApplicationService()->update($application);
+        $this->redirect()->toRoute('application');
+    }
+
+    public function afficherAction()
+    {
+        /** @var Application $application */
+        $applicationId = $this->params()->fromRoute('id');
+        $application = $this->getApplicationService()->getApplication($applicationId);
+
+        return new ViewModel([
+            'title' => "Affichage de la description de l'application",
+            'application' => $application,
+        ]);
     }
 }

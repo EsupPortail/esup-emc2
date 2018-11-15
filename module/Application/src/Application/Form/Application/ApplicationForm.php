@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Form\Affectation;
+namespace Application\Form\Application;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
-class AffectationForm extends Form {
+class ApplicationForm extends Form {
 
     public function init()
     {
@@ -35,12 +35,23 @@ class AffectationForm extends Form {
                 'class' => 'type2 form-control',
             ]
         ]);
+        // url
+        $this->add([
+            'type' => Text::class,
+            'name' => 'url',
+            'options' => [
+                'label' => "Adresse de l'application :",
+            ],
+            'attributes' => [
+                'id' => 'url',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer l\'affectation',
+                'label' => '<i class="fas fa-save"></i> Enregistrer l\'application',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

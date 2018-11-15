@@ -2,7 +2,7 @@
 
 namespace Application\Provider\Privilege;
 
-class AppplicationPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+class ApplicationPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
 {
     const AFFICHER          = 'application-afficher-application';
     const AJOUTER           = 'application-ajouter-application';
