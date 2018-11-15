@@ -5,6 +5,7 @@ $modules = [
     'BjyAuthorize', 'AssetManager',
     'UnicaenApp', 'UnicaenAuth', 'UnicaenLdap',
     'Application',
+    'Mailing',
 ];
 
 if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {
