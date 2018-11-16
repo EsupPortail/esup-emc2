@@ -9,9 +9,11 @@ use UnicaenAuth\Provider\Privilege\Privileges;
  */
 class MailingPrivileges extends Privileges
 {
+    const HISTORIQUE                               = 'mailing-historique-mailing';
     const AFFICHER                                 = 'mailing-afficher-mailing';
-//    const INDICATEUR_EXPORTATION                   = 'indicateur-exportation';
-//    const INDICATEUR_RAFRAICHISSEMENT              = 'indicateur-rafraichissement';
-//    const INDICATEUR_EDITION                       = 'indicateur-edition';
+    const ENVOI_TEST                               = 'mailing-test-mailing';
+    const ENVOI                                    = 'mailing-envoi-mailing';
+    const RE_ENVOI                                 = 'mailing-reenvoi-mailing';
+    const EFFACER                                  = 'mailing-effacer-mailing';
 
 }

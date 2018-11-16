@@ -1,12 +1,19 @@
 <?php
 
-use Mailing\Entity\Db\Mail;
+use Mailing\Model\Db\Mail;
+use Mailing\Provider\Privilege\MailingPrivileges;
 
 /**
  * @var Mail[] $mails
  */
 
 $this->headTitle("Index des mails envoyées");
+
+$canTest        = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::ENVOI_TEST));
+$canAfficher    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::AFFICHER));
+$canReEnvoi     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::RE_ENVOI));
+$canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::EFFACER));
+
 ?>
 
 
@@ -14,43 +21,61 @@ $this->headTitle("Index des mails envoyées");
     Index des mails envoyées
 </h1>
 
-<a
-        href="<?php echo $this->url('administration/mail-test', [], [] ,true);?>"
-        class="btn btn-primary action"
->
-    Envoie d'un mail de test
-</a>
+<div class="main">
 
-<table class="table table-extra-condensed">
-    <thead>
-        <tr>
-<!--            <th> Id </th>-->
-            <th> Status </th>
-            <th> Date d'envoi </th>
-            <th> Destinataires </th>
-            <th> Redir </th>
-            <th> Sujet </th>
-            <th> Action </th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($mails as $mail) : ?>
-        <tr>
-<!--            <td> --><?php //echo $mail->getId(); ?><!-- </td>-->
-            <td> <?php echo htmlStatus($mail->getStatus()); ?> </td>
-            <td> <?php echo $mail->getDateEnvoi()->format("H:i:s d/m/Y"); ?> </td>
-            <td> <small><?php echo implode("<br/>",explode(",",$mail->getDestinatires())); ?></small> </td>
-            <td> <?php echo htmlRedirection($mail->getRedir()); ?> </td>
-            <td> <small><?php echo $mail->getSujet(); ?> </small> </td>
-            <td>
-                <a class="ajax-modal" href="<?php echo $this->url('administration/mails/affiche', ['mail' => $mail->getId()], [], true); ?>">
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                </a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+    <?php if ($canTest) : ?>
+    <a
+            href="<?php echo $this->url('mailing/mail-test', [], [] ,true);?>"
+            class="btn btn-primary action"
+    >
+        <i class="far fa-envelope"></i>
+        Envoie d'un mail de test
+    </a>
+    <?php endif; ?>
+
+    <table class="table table-extra-condensed">
+        <thead>
+            <tr>
+    <!--            <th> Id </th>-->
+                <th> Status </th>
+                <th> Date d'envoi </th>
+                <th> Destinataires </th>
+                <th> Redir </th>
+                <th> Sujet </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($mails as $mail) : ?>
+            <tr>
+    <!--            <td> --><?php //echo $mail->getId(); ?><!-- </td>-->
+                <td> <?php echo htmlStatus($mail->getStatusEnvoi()); ?> </td>
+                <td> <?php echo $mail->getDateEnvoi()->format("H:i:s d/m/Y"); ?> </td>
+                <td> <small><?php echo implode("<br/>",explode(",",$mail->getDestinatires())); ?></small> </td>
+                <td> <?php echo htmlRedirection($mail->isRedirection()); ?> </td>
+                <td> <small><?php echo $mail->getSujet(); ?> </small> </td>
+                <td>
+                    <?php if ($canAfficher) : ?>
+                        <a class="ajax-modal" href="<?php echo $this->url('mailing/afficher', ['id' => $mail->getId()], [], true); ?>">
+                            <i class="fas fa-eye"        title="Voir le mail"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canReEnvoi) : ?>
+                        <a  href="<?php echo $this->url('mailing/re-envoi', ['id' => $mail->getId()], [], true); ?>">
+                            <i class="far fa-envelope"   title="Envoyer à nouveau le mail"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacer) : ?>
+                        <a  href="<?php echo $this->url('mailing/effacer', ['id' => $mail->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer le mail de l'historique"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
 <?php
     function htmlStatus($status) {
@@ -71,7 +96,7 @@ $this->headTitle("Index des mails envoyées");
     }
 
     function htmlRedirection($redir) {
-        if ($redir === 1) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
+        if ($redir === true) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
         else return "";
     }
 ?>

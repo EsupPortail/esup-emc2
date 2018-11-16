@@ -1,6 +1,6 @@
 <?php
 
-use Mailing\Entity\Db\Mail;
+use Mailing\Model\Db\Mail;
 
 /**
  * @var Mail $mail
@@ -15,9 +15,9 @@ use Mailing\Entity\Db\Mail;
     <dt> Date d'envoi </dt>
     <dd> <?php echo $mail->getDateEnvoi()->format('H:i:s d/m/Y'); ?> </dd>
     <dt> Status </dt>
-    <dd> <?php echo htmlStatus($mail->getStatus()); ?> </dd>
+    <dd> <?php echo htmlStatus($mail->getStatusEnvoi()); ?> </dd>
     <dt> Redirection </dt>
-    <dd> <?php echo htmlRedirection($mail->getRedir()); ?> </dd>
+    <dd> <?php echo htmlRedirection($mail->isRedirection()); ?> </dd>
     <dt> Sujet </dt>
     <dd> <?php echo $mail->getSujet(); ?> </dd>
 </dl>
@@ -44,7 +44,7 @@ function htmlStatus($status) {
 }
 
 function htmlRedirection($redir) {
-    if ($redir === 1) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
+    if ($redir === true) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
     else return "";
 }
 ?>

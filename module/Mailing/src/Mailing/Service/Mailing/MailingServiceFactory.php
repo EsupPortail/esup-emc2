@@ -1,9 +1,8 @@
 <?php
 
-namespace Application\Service;
+namespace Mailing\Service\Mailing;
 
 use Doctrine\ORM\EntityManager;
-use Mailing\Service\MailingService;
 use UnicaenApp\Options\ModuleOptions;
 use Zend\Mail\Transport\Smtp;
 use Zend\Mail\Transport\SmtpOptions;

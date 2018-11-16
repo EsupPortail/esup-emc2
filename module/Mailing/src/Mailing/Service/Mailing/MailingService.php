@@ -1,11 +1,11 @@
 <?php
 
-namespace Mailing\Service;
+namespace Mailing\Service\Mailing;
 
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
-use Mailing\Entity\Db\Mail;
+use Mailing\Model\Db\Mail;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mail\Message;
@@ -75,10 +75,18 @@ class MailingService {
         $this->sendMail($adresse, "Mail de test", "Ceci est un mail de test.");
     }
 
+    /**
+     * @param Mail $mail
+     */
+    public function reEnvoi($mail)
+    {
+        $this->sendMail(explode(",",$mail->getDestinatires()), $mail->getSujet(), $mail->getCorps());
+    }
+
     public function sendMail($to, $subject, $texte, $attachement_path = null) {
 
         $message = (new Message())->setEncoding('UTF-8');
-        $message->setFrom('ne_pas_repondre@unicaen.fr', "Application de gestion et d'aide aux étudiants en situation de handicap");
+        $message->setFrom('ne_pas_repondre@unicaen.fr', "PrEECoG");
         if (!is_array($to)) $to = [ $to ];
         if ($this->doNotSend) {
             $message->addTo($this->redirectTo);
@@ -86,13 +94,27 @@ class MailingService {
             $message->addTo($to);
         }
 
-        $sujet = '[GAETHAN] ' . $subject;
+
+
+
+        $mail = new Mail();
+        $mail->setDateEnvoi(new DateTime());
+        $mail->setStatusEnvoi(Mail::PENDING);
+        $mail->setDestinatires(is_array($to)?implode(",",$to):$to);
+        $mail->setRedir($this->doNotSend);
+        $mail->setSujet($subject);
+        $mail->setCorps($texte);
+        $this->create($mail);
+
+
+        $sujet = '[PrEECoG] ' . $subject;
         if ($this->doNotSend) {
             $sujet .= ' {REDIR}';
         }
         $message->setSubject($sujet);
 
-        $texte = "<p>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application GAETHAN. </p>" . $texte;
+
+        $texte = "<p>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application PrEECoG. </p>" . $texte;
 
         if ($this->doNotSend) {
             $texte .= "<br/><br/><hr/><br/>";
@@ -102,15 +124,6 @@ class MailingService {
             $texte .= "</ul>";
 
         }
-
-        $mail = new Mail();
-        $mail->setDateEnvoi(new DateTime());
-        $mail->setStatus(Mail::PENDING);
-        $mail->setDestinatires(is_array($to)?implode(",",$to):$to);
-        $mail->setRedir($this->doNotSend);
-        $mail->setSujet($sujet);
-        $mail->setCorps($texte);
-        $this->create($mail);
 
         $parts = [];
 
@@ -220,7 +233,7 @@ class MailingService {
      */
     public function changerStatus($mail, $status)
     {
-        $mail->setStatus($status);
+        $mail->setStatusEnvoi($status);
         $mail = $this->update($mail);
         return $mail;
     }
