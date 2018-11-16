@@ -1,6 +1,6 @@
 <?php
 
-namespace Mailing\Service;
+namespace Mailing\Service\Mailing;
 
 trait MailingServiceAwareTrait
 {

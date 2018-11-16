@@ -1,6 +1,6 @@
 <?php
 
-namespace Mailing\Entity\Db;
+namespace Mailing\Model\Db;
 
 use DateTime;
 
@@ -16,7 +16,7 @@ class Mail {
     /** @var DateTime */
     private $dateEnvoi;
     /** @var int */
-    private $status;
+    private $statusEnvoi;
     /** @var string */
     private $destinataires;
     /** @var boolean */
@@ -55,18 +55,18 @@ class Mail {
     /**
      * @return int
      */
-    public function getStatus()
+    public function getStatusEnvoi()
     {
-        return $this->status;
+        return $this->statusEnvoi;
     }
 
     /**
-     * @param int $status
+     * @param int $statusEnvoi
      * @return Mail
      */
-    public function setStatus($status)
+    public function setStatusEnvoi($statusEnvoi)
     {
-        $this->status = $status;
+        $this->statusEnvoi = $statusEnvoi;
         return $this;
     }
 

@@ -1,13 +1,14 @@
 <?php
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
-use Doctrine\DBAL\Driver\OCI8\Driver as OCI8;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Mailing\Controller\Mailing\MailingController;
 use Mailing\Controller\Mailing\MailingControllerFactory;
 use Mailing\Provider\Privilege\MailingPrivileges;
-use Mailing\Service\MailingService;
+use Mailing\Service\Mailing\MailingService;
+use Mailing\Service\Mailing\MailingServiceFactory;
 use Zend\Mvc\Router\Http\Literal;
+use Zend\Mvc\Router\Http\Segment;
 
 return array(
     'bjyauthorize'    => [
@@ -19,32 +20,72 @@ return array(
                         'index',
                     ],
                     'privileges' => [
+                        MailingPrivileges::HISTORIQUE,
+
+                    ],
+                ],
+                [
+                    'controller' => MailingController::class,
+                    'action'     => [
+                        'afficher',
+                    ],
+                    'privileges' => [
                         MailingPrivileges::AFFICHER,
+
+                    ],
+                ],
+                [
+                    'controller' => MailingController::class,
+                    'action'     => [
+                        'mail-test',
+                    ],
+                    'privileges' => [
+                        MailingPrivileges::ENVOI_TEST,
+
+                    ],
+                ],
+                [
+                    'controller' => MailingController::class,
+                    'action'     => [
+                        're-envoi',
+                    ],
+                    'privileges' => [
+                        MailingPrivileges::RE_ENVOI,
+
+                    ],
+                ],
+                [
+                    'controller' => MailingController::class,
+                    'action'     => [
+                        'effacer',
+                    ],
+                    'privileges' => [
+                        MailingPrivileges::EFFACER,
 
                     ],
                 ],
             ],
         ],
     ],
-    'doctrine'     => [
-        'driver'     => [
-            'orm_default'        => [
-                'class'   => MappingDriverChain::class,
+    'doctrine' => [
+        'driver' => [
+            'orm_default' => [
+                'class' => MappingDriverChain::class,
                 'drivers' => [
-                    'Indicateur\Model' => 'orm_default_xml_driver',
+                    'Mailing\Model\Db' => 'orm_default_xml_driver',
                 ],
             ],
             'orm_default_xml_driver' => [
                 'class' => XmlDriver::class,
-                'cache' => 'array',
+                'cache' => 'apc',
                 'paths' => [
-                    __DIR__ . '/../src/Indicateur/Model/Db/Mapping',
+                    __DIR__ . '/../src/Mailing/Model/Db/Mapping',
                 ],
             ],
         ],
-        'connection'    => [
-            'orm_default' => [
-                'driver_class' => OCI8::class,
+        'cache' => [
+            'apc' => [
+                'namespace' => 'PREECOG__' . __NAMESPACE__,
             ],
         ],
     ],
@@ -77,6 +118,50 @@ return array(
                     ],
                 ],
                 'child_routes'  => [
+                    'mail-test' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/mail-test',
+                            'defaults' => [
+                                'controller' => MailingController::class,
+                                'action'     => 'mail-test',
+                            ],
+                        ],
+                    ],
+                    'afficher' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/afficher/:id',
+                            'defaults' => [
+                                'controller' => MailingController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'effacer' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/effacer/:id',
+                            'defaults' => [
+                                'controller' => MailingController::class,
+                                'action'     => 'effacer',
+                            ],
+                        ],
+                    ],
+                    're-envoi' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/re-envoi/:id',
+                            'defaults' => [
+                                'controller' => MailingController::class,
+                                'action'     => 're-envoi',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -94,7 +179,7 @@ return array(
     ],
     'service_manager' => [
         'factories' => [
-            MailingService::class => \Application\Service\MailingServiceFactory::class,
+            MailingService::class => MailingServiceFactory::class,
         ],
 
     ],
