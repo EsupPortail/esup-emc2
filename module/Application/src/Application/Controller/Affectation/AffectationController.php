@@ -27,7 +27,7 @@ class AffectationController extends AbstractActionController {
 
         /** @var AffectationForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(AffectationForm::class);
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/creer',[],[], true));
+        $form->setAttribute('action', $this->url()->fromRoute('affectation/creer',[],[], true));
         $form->bind($affectation);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -37,11 +37,12 @@ class AffectationController extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getAffectationService()->create($affectation);
-                $this->redirect()->toRoute('affectation');
+//                $this->redirect()->toRoute('affectation');
             }
         }
 
         return new ViewModel([
+            'title' => 'Ajouter une affectation',
             'form' => $form,
         ]);
     }
@@ -54,7 +55,7 @@ class AffectationController extends AbstractActionController {
 
         /** @var AffectationForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(AffectationForm::class);
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/editer',['id' => $activite->getId()],[], true));
+        $form->setAttribute('action', $this->url()->fromRoute('affectation/editer',['id' => $affectation->getId()],[], true));
         $form->bind($affectation);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -64,11 +65,12 @@ class AffectationController extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getAffectationService()->update($affectation);
-                $this->redirect()->toRoute('affectation');
+//                $this->redirect()->toRoute('affectation');
             }
         }
 
         return new ViewModel([
+            'title' => 'Éditer une affectation',
             'form' => $form,
         ]);
     }

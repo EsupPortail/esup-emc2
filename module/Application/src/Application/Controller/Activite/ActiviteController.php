@@ -29,7 +29,7 @@ class ActiviteController  extends AbstractActionController {
 
         /** @var ActiviteForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/creer',[],[], true));
+        $form->setAttribute('action', $this->url()->fromRoute('activite/creer',[],[], true));
         $form->bind($activite);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -39,11 +39,12 @@ class ActiviteController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
-                $this->redirect()->toRoute('activite');
+//                $this->redirect()->toRoute('activite');
             }
         }
 
         return new ViewModel([
+            'title' => 'Ajouter une activité',
             'form' => $form,
         ]);
     }
@@ -56,7 +57,7 @@ class ActiviteController  extends AbstractActionController {
 
         /** @var ActiviteForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/editer',['id' => $activite->getId()],[], true));
+        $form->setAttribute('action', $this->url()->fromRoute('activite/editer',['id' => $activite->getId()],[], true));
         $form->bind($activite);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -66,11 +67,12 @@ class ActiviteController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getActiviteService()->update($activite);
-                $this->redirect()->toRoute('activite');
+//                $this->redirect()->toRoute('activite');
             }
         }
 
         return new ViewModel([
+            'title' => 'Éditer une activité',
             'form' => $form,
         ]);
     }

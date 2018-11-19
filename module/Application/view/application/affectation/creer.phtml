@@ -3,10 +3,34 @@
 /** @var $form */
 ?>
 
-<h1 class="page-header">
-    Création d'une affectation
-</h1>
+<!--<h1 class="page-header">-->
+<!--    Création d'une affectation-->
+<!--</h1>-->
 
 <?php
     echo $this->form($form);
 ?>
+
+<script>
+    $(document).ready(function() {
+        // tinymce.remove();
+        tinymce.init({
+            selector: '.type2',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: 'both',
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: false,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+    });
+</script>

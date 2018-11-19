@@ -9,9 +9,6 @@ $canEditer      = $this->isAllowed(AffectationPrivileges::getResourceId(Affectat
 $canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(AffectationPrivileges::EDITER));
 
 ?>
-
-
-
     <h1>
        Index des affectations
        <span class="badge">
@@ -24,8 +21,9 @@ $canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(Affectat
 
     <?php if($canAjouter) : ?>
         <a
-            class="btn btn-primary action"
+            class="btn btn-primary action ajax-modal"
             href="<?php echo $this->url('affectation/creer', [], [], true); ?>"
+            data-event="modification"
         >
             <i class="fas fa-plus"></i>
             Ajouter une affectation
@@ -50,7 +48,7 @@ $canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(Affectat
                 <td> <?php echo $affectation->getLibelle(); ?>
                     <br/>
                     <?php if ($affectation->getDescription()): ?>
-                        <div class="preview">
+                        <div class="alert alert-info">
                             <?php echo $affectation->getDescription(); ?>
                         </div>
                     <?php else: ?>
@@ -68,7 +66,9 @@ $canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(Affectat
                 </td>
                 <td>
                     <?php if ($canEditer): ?>
-                        <a href="<?php echo $this->url('affectation/editer', ['id' => $affectation->getId()], [], true); ?>" class="zajax-modal">
+                        <a href="<?php echo $this->url('affectation/editer', ['id' => $affectation->getId()], [], true); ?>"
+                           class="ajax-modal"
+                           data-event="modification">
                             <i class="fas fa-pencil-alt" title="Éditer l'activité"></i>
                         </a>
                     <?php endif; ?>
@@ -84,3 +84,13 @@ $canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(Affectat
         </tbody>
     </table>
 </div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

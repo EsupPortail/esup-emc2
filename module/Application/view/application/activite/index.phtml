@@ -16,8 +16,8 @@ $this->headTitle('Index des activités');
 
 <div class="main">
     <a href="<?php echo $this->url('activite/creer', [], [], true); ?>"
-       class="btn btn-primary action zajax-modal"
-       data-event="modal-closed"
+       class="btn btn-primary action ajax-modal"
+       data-event="modification"
        >
         <i class="fas fa-plus-square"></i> Ajouter une activité
     </a>
@@ -44,7 +44,10 @@ $this->headTitle('Index des activités');
                     <?php echo $activite->getHistoModificateur()->getDisplayName(); ?>
                 </td>
                 <td>
-                    <a href="<?php echo $this->url('activite/editer', ['id' => $activite->getId()], [], true); ?>" class="zajax-modal">
+                    <a href="<?php echo $this->url('activite/editer', ['id' => $activite->getId()], [], true); ?>"
+                       class="ajax-modal"
+                       data-event="modification"
+                    >
                         <i class="fas fa-pencil-alt" title="Éditer l'activité"></i>
                     </a>
                     <a href="<?php echo $this->url('activite/effacer', ['id' => $activite->getId()], [], true); ?>">
@@ -60,9 +63,10 @@ $this->headTitle('Index des activités');
 
 <script>
     $(function() {
-        $("body").on("modal-closed", function (event) {
+        $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
     });
+
 </script>
