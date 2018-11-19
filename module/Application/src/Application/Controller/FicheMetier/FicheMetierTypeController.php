@@ -69,7 +69,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         /** @var MissionsPrincipalesForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(MissionsPrincipalesForm::class);
-//        $form->setAttribute('action', $this->url()->fromRoute('activite/editer',['id' => $activite->getId()],[], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-missions-principales',['id' => $fiche->getId()],[], true));
         $form->bind($fiche);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -79,11 +79,12 @@ class FicheMetierTypeController extends  AbstractActionController{
 
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [] , true);
+                //$this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [] , true);
             }
         }
 
         return new ViewModel([
+            'title' => 'Modification des missions principales',
             'form' => $form,
         ]);
     }
@@ -96,6 +97,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         /** @var MissionsPrincipalesForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-nouvelle-activite',['id' => $fiche->getId()],[], true));
         $form->bind($activite);
 
         /** @var Request $request */
@@ -108,12 +110,12 @@ class FicheMetierTypeController extends  AbstractActionController{
                 $this->getActiviteService()->create($activite);
 
                 $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
-
-                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
+                //$this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
             }
         }
 
         return new ViewModel([
+            'title' => 'Ajout d\'une nouvelle activité',
             'form' => $form,
         ]);
 

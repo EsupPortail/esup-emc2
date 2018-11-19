@@ -29,6 +29,7 @@ class ApplicationController  extends AbstractActionController {
 
         /** @var ApplicationForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('application/creer', [], [], true));
         $form->bind($application);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -38,11 +39,12 @@ class ApplicationController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getApplicationService()->create($application);
-                $this->redirect()->toRoute('application');
+                //$this->redirect()->toRoute('application');
             }
         }
 
         return new ViewModel([
+            'title' => 'Ajouter une application',
             'form' => $form,
         ]);
     }
@@ -55,6 +57,7 @@ class ApplicationController  extends AbstractActionController {
 
         /** @var ApplicationForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('application/editer', ['id' => $application->getId()], [], true));
         $form->bind($application);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -64,11 +67,12 @@ class ApplicationController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getApplicationService()->update($application);
-                $this->redirect()->toRoute('application');
+                //$this->redirect()->toRoute('application');
             }
         }
 
         return new ViewModel([
+            'title' => 'Éditer une application',
             'form' => $form,
         ]);
     }
@@ -102,7 +106,7 @@ class ApplicationController  extends AbstractActionController {
         $application = $this->getApplicationService()->getApplication($applicationId);
 
         return new ViewModel([
-            'title' => "Affichage de la description de l'application",
+            'title' => "Description de l'application",
             'application' => $application,
         ]);
     }

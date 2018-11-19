@@ -49,11 +49,11 @@ class AffectationService {
      */
     public function create($affectation)
     {
-        $this->getEntityManager()->persist($affectation);
         $affectation->setHistoCreation(new DateTime());
         $affectation->setHistoCreateur($this->getUserService()->getConnectedUser());
         $affectation->setHistoModification(new DateTime());
         $affectation->setHistoModificateur($this->getUserService()->getConnectedUser());
+        $this->getEntityManager()->persist($affectation);
         try {
             $this->getEntityManager()->flush($affectation);
         } catch (OptimisticLockException $e) {
