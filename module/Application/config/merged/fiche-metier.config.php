@@ -15,6 +15,7 @@ use Application\Form\FicheMetierType\ActiviteExistanteFormFactory;
 use Application\Form\FicheMetierType\LibelleForm;
 use Application\Form\FicheMetierType\LibelleFormFactory;
 use Application\Form\FicheMetierType\LibelleHydrator;
+use Application\Form\FicheMetierType\LibelleHydratorFactory;
 use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
 use Application\Form\FicheMetierType\MissionsPrincipalesHydrator;
@@ -276,10 +277,10 @@ return [
     'hydrators' => [
         'invokables' => [
             MissionsPrincipalesHydrator::class => MissionsPrincipalesHydrator::class,
-            LibelleHydrator::class => LibelleHydrator::class,
         ],
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
+            LibelleHydrator::class => LibelleHydratorFactory::class,
         ]
     ]
 

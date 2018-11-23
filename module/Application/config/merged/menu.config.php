@@ -6,6 +6,7 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\MetierPrivileges;
 
 return [
     'navigation' => [
@@ -51,6 +52,13 @@ return [
                                 'label' => 'Les applications',
                                 'route' => 'application',
                                 'privileges' => ApplicationPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Les métiers',
+                                'route' => 'metier',
+                                'privileges' => MetierPrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
