@@ -2,8 +2,11 @@
 
 namespace Application\Controller\FicheMetier;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
+use Application\Form\Agent\AgentForm;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Http\Request;
@@ -13,6 +16,7 @@ use Zend\View\Model\ViewModel;
 class FicheMetierController extends AbstractActionController
 {
     use FicheMetierServiceAwareTrait;
+    use AgentServiceAwareTrait;
 
     public function indexAction() {
 
@@ -86,6 +90,46 @@ class FicheMetierController extends AbstractActionController
 
         return new ViewModel([
            'form' => $form,
+        ]);
+    }
+
+    /** ACTION ASSOCIÉES À L'AGENT ************************************************************************************/
+
+    public function afficherAgentAction() {
+
+        $ficheId = $this->params()->fromRoute('id');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
+        $agent = $fiche->getAgent();
+
+        return new ViewModel([
+           'agent' => $agent,
+        ]);
+    }
+
+    public function saisieManuelleAgentAction() {
+
+        $ficheId = $this->params()->fromRoute('id');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
+
+        $agent = $fiche->getAgent();
+        /** @var AgentForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(AgentForm::class);
+        $form->bind($agent);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentService()->create($agent);
+                $this->getFicheMetierService()->update($fiche);
+                $this->redirect()->toRoute('fiche-metier/afficher-agent', ['id' => $ficheId], [], true);
+            }
+        }
+
+        return new ViewModel([
+            'form' => $form,
         ]);
     }
 }

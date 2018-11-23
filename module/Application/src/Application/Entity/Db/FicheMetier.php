@@ -14,6 +14,8 @@ class FicheMetier
     private $libelle;
     /** @var Affectation */
     private $affectation;
+    /** @var Agent */
+    private $agent;
 
     public function getId()
     {
@@ -55,4 +57,24 @@ class FicheMetier
         $this->affectation = $affectation;
         return $this;
     }
+
+    /**
+     * @return Agent
+     */
+    public function getAgent()
+    {
+        return $this->agent;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return FicheMetier
+     */
+    public function setAgent($agent)
+    {
+        $this->agent = $agent;
+        return $this;
+    }
+
+
 }

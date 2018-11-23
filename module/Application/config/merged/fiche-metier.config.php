@@ -6,6 +6,9 @@ use Application\Controller\FicheMetier\FicheMetierController;
 use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\FicheMetier\FicheMetierTypeController;
 use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
+use Application\Form\Agent\AgentForm;
+use Application\Form\Agent\AgentFormFactory;
+use Application\Form\Agent\AgentHydrator;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
@@ -20,6 +23,8 @@ use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
 use Application\Form\FicheMetierType\MissionsPrincipalesHydrator;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Service\Agent\AgentService;
+use Application\Service\Agent\AgentServiceFactory;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -42,6 +47,8 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                        'afficher-agent',
+                        'saisie-manuelle-agent',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -157,7 +164,30 @@ return [
                                 'action'     => 'creer',
                             ],
                         ],
-                    ]
+                    ],
+
+                    'afficher-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-agent/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'afficher-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'saisie-manuelle-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/saisie-manuelle-agent/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'saisie-manuelle-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                 ],
             ],
             'fiche-metier-type' => [
@@ -258,6 +288,7 @@ return [
         ],
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
+            AgentService::class => AgentServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -267,16 +298,21 @@ return [
         ],
     ],
     'form_elements' => [
+        'invokables' => [
+        ],
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             FicheMetierCreationForm::class => FicheMetierCreationFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
             MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
+
+            AgentForm::class => AgentFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokables' => [
             MissionsPrincipalesHydrator::class => MissionsPrincipalesHydrator::class,
+            AgentHydrator::class => AgentHydrator::class,
         ],
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
