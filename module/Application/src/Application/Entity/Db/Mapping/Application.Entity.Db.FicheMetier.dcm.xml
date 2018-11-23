@@ -26,6 +26,9 @@
             <join-column name="histo_destructeur_id" referenced-column-name="id"/>
         </many-to-one>
 
+        <many-to-one field="agent" target-entity="Application\Entity\Db\Agent">
+            <join-column name="agent" referenced-column-name="id" />
+        </many-to-one>
 
     </entity>
 </doctrine-mapping>

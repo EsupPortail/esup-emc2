@@ -1,0 +1,69 @@
+<?php
+
+use Application\Entity\Db\Agent;
+
+/**
+ * @var Agent $agent
+ */
+
+$this->headTitle("Information sur l'agent");
+
+?>
+
+<h1 class="page-header">
+    Information sur l'agent
+</h1>
+
+<a class="btn btn-primary action disabled">
+    <i class="far fa-arrow-alt-circle-down"></i>
+    Importer de LDAP
+</a>
+
+<a class="btn btn-primary action disabled">
+    <i class="far fa-arrow-alt-circle-down"></i>
+    Importer de Octopus
+</a>
+
+<a
+    class="btn btn-primary action"
+    href="<?php echo $this->url('fiche-metier/saisie-manuelle-agent', ['id' => 1], [] , true); ?>"
+>
+    <i class="fas fa-pencil-alt"></i>
+    Saisie manuelle
+</a>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>Description de l'agent</h2>
+    </div>
+    <div class="panel-body">
+
+        <?php if($agent) : ?>
+            <dl class="dl-horizontal">
+                <dt> Prénom </dt>
+                <dd>
+                    <?php echo $agent->getPrenom(); ?>
+                </dd>
+                <dt> Nom </dt>
+                <dd>
+                    <?php echo $agent->getNom(); ?>
+                </dd>
+                <dt> Date de début </dt>
+                <dd>
+                    <?php echo ($agent->getDateDebut())?$agent->getDateDebut()->format('d/m/Y'):'---'; ?>
+
+                <dt> Date de fin </dt>
+                <dd>
+                    <?php echo ($agent->getDateFin())?$agent->getDateFin()->format('d/m/Y'):'---'; ?>
+                </dd>
+                <dt> Quotité travaillée </dt>
+                <dd>
+                    <?php echo $agent->getQuotite(); ?> %
+                </dd>
+            </dl>
+        <?php else: ?>
+            <div class="alert alert-warning"> <i class="fas fa-exclamation-triangle"></i> Aucun agent de renseigné. </div>
+        <?php endif; ?>
+    </div>
+</div>

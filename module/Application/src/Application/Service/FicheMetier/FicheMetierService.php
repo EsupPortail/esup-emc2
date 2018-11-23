@@ -103,6 +103,25 @@ class FicheMetierService {
     }
 
     /**
+     * @param FicheMetier $fiche
+     * @return FicheMetier
+     */
+    public function update($fiche)
+    {
+        $connectedUtilisateur = $this->getUserService()->getConnectedUser();
+
+        $fiche->setHistoModification(new DateTime());
+        $fiche->setHistoModificateur($connectedUtilisateur);
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche.");
+        }
+
+        return $fiche;
+    }
+
+    /**
      * @return FicheMetierType[]
      */
     public function getFichesMetiersTypes()
@@ -158,4 +177,6 @@ class FicheMetierService {
         }
         return $ficheMetierType;
     }
+
+
 }

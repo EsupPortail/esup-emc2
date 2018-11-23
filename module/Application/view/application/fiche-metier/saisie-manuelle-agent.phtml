@@ -1,0 +1,25 @@
+<?php
+
+use Application\Form\Agent\AgentForm;
+
+/**
+ * @var AgentForm $form
+ */
+
+$this->headTitle("Saisie manuelle d'un agent");
+?>
+
+<h1 class="page-header">
+    Saisie manuelle d'un agent
+</h1>
+
+<div class="main">
+
+    <p>
+        <i class="fas fa-exclamation-triangle"></i> Les champs étoilés sont obligatoires.
+    </p>
+
+    <?php
+        echo $this->form($form);
+    ?>
+</div>
