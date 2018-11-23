@@ -44,7 +44,7 @@ $canVoir = true;
         <?php foreach($fiches as $fiche): ?>
             <tr>
                 <td> <?php echo $fiche->getId(); ?> </td>
-                <td> <?php echo $fiche->getLibelle(); ?> </td>
+                <td> <?php echo $fiche->getMetier()->getLibelle(); ?> </td>
                 <td></td>
                 <td></td>
                 <td>

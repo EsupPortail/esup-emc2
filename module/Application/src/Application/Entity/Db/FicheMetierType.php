@@ -8,8 +8,8 @@ class FicheMetierType {
 
     /** @var int */
     private $id;
-    /** @var string */
-    private $libelle;
+    /** @var Metier */
+    private $metier;
     /** @var string */
     private $missionsPrincipales;
 
@@ -22,20 +22,20 @@ class FicheMetierType {
     }
 
     /**
-     * @return string
+     * @return Metier
      */
-    public function getLibelle()
+    public function getMetier()
     {
-        return $this->libelle;
+        return $this->metier;
     }
 
     /**
-     * @param string $libelle
+     * @param Metier $metier
      * @return FicheMetierType
      */
-    public function setLibelle($libelle)
+    public function setMetier($metier)
     {
-        $this->libelle = $libelle;
+        $this->metier = $metier;
         return $this;
     }
 

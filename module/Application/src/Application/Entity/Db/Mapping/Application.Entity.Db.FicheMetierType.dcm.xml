@@ -6,37 +6,13 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"               type="string" length="255"      column="libelle"                            nullable="false"/>
+        <!--<one-to-many field="metier" target-entity="Application\Entity\Db\Metier" mapped-by="id" />-->
+        <many-to-one target-entity="Application\Entity\Db\Metier" field="metier">
+            <join-column name="metier" referenced-column-name="id" />
+        </many-to-one>
         <field name="missionsPrincipales"   type="string" length="2047"     column="missions_principales"               nullable="false"/>
 
-        <!--<many-to-many target-entity="Application\Entity\Db\Activite" field="activites">-->
-            <!--<join-table name="fiche_type_metier_activite">-->
-                <!--<join-columns>-->
-                    <!--<join-column name="fiche_metier_type" referenced-column-name="id"/>-->
-                <!--</join-columns>-->
-                <!--<inverse-join-columns>-->
-                    <!--<join-column name="activite" referenced-column-name="id"/>-->
-                <!--</inverse-join-columns>-->
-            <!--</join-table>-->
-        <!--</many-to-many>-->
 
-        <!--<many-to-one target-entity="Application\Entity\Db\FicheMetierTypeActivite" field="activites"/>-->
-
-        <!--<one-to-many target-entity="Application\Entity\Db\FicheMetierTypeActivite" mapped-by="id" field="activites"/>-->
-
-        <!--<field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>-->
-        <!--<field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>-->
-        <!--<field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>-->
-
-        <!--<many-to-one target-entity="Application\Entity\Db\User"  field="histoCreateur">-->
-            <!--<join-column name="histo_createur_id" referenced-column-name="id"/>-->
-        <!--</many-to-one>-->
-        <!--<many-to-one target-entity="Application\Entity\Db\User"  field="histoModificateur">-->
-            <!--<join-column name="histo_modificateur_id" referenced-column-name="id"/>-->
-        <!--</many-to-one>-->
-        <!--<many-to-one target-entity="Application\Entity\Db\User"  field="histoDestructeur">-->
-            <!--<join-column name="histo_destructeur_id" referenced-column-name="id"/>-->
-        <!--</many-to-one>-->
 
 
     </entity>

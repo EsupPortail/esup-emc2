@@ -1,0 +1,77 @@
+<?php
+
+use Application\Entity\Db\Metier;
+use Application\Provider\Privilege\MetierPrivileges;
+
+/**
+ * @var Metier[] $metiers
+ */
+
+$canAfficher    = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::AFFICHER));
+$canAjouter     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::AJOUTER));
+$canEditer      = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::EDITER));
+$canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::EFFACER));
+
+$this->headTitle("Index des métiers");
+?>
+
+<h1>
+    Index des métiers
+    <span class="badge">
+        <?php echo count($metiers); ?>
+    </span>
+</h1>
+
+<div class="main">
+    <a href="<?php echo $this->url('metier/creer', [], [], true);?>"
+       class="btn btn-primary action ajax-modal"
+       data-event="modification"
+    >
+        <i class="fas fa-plus-square"></i>
+        Ajouter un métier
+    </a>
+
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Id</th>
+                <th> Libelle</th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($metiers as $metier): ?>
+                <tr>
+                    <td> <?php echo $metier->getId(); ?> </td>
+                    <td> <?php echo $metier->getLibelle(); ?> </td>
+                    <td>
+                        <?php if ($canEditer) : ?>
+                            <a href="<?php echo $this->url('metier/editer', ['id' => $metier->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                                <i class="fas fa-pencil-alt" title="Éditer l'application"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacer) : ?>
+                            <a href="<?php echo $this->url('metier/effacer', ['id' => $metier->getId()], [], true); ?>">
+                                <i class="fas fa-trash-alt"  title="Supprimer l'application"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

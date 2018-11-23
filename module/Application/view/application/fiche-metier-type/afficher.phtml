@@ -13,11 +13,12 @@ $this->headTitle("Affichage de la fiche métier type : ".$fiche->getId());
 
 $canEditer = true;
 
+
 ?>
 
 <h1 class="page-header">
     Fiche métier type #<?php echo $fiche->getId(); ?> :
-    <em><?php echo $fiche->getLibelle(); ?></em>
+    <em><?php echo $fiche->getMetier()->getLibelle(); ?></em>
 
     <?php if ($canEditer) : ?>
         <a  class="btn btn-primary action ajax-modal"
