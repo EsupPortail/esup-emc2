@@ -1,0 +1,119 @@
+<?php
+
+use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\FicheMetierTypeActivite;
+
+/**
+ * @var FicheMetierType $fiche
+ * @var FicheMetierTypeActivite[] $activites
+ */
+
+
+$this->headTitle("Affichage de la fiche métier type : ".$fiche->getId());
+
+$canEditer = true;
+
+?>
+
+<h1 class="page-header">
+    Fiche métier type #<?php echo $fiche->getId(); ?> :
+    <em><?php echo $fiche->getLibelle(); ?></em>
+
+    <?php if ($canEditer) : ?>
+        <a  class="btn btn-primary action ajax-modal"
+            data-event="modification"
+            href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [] , true); ?>">
+            <i class="fas fa-pencil-alt"></i>
+            Éditer libellé
+        </a>
+        <br/>
+    <?php endif; ?>
+</h1>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Missions principales </h2>
+    </div>
+    <div class="panel-body">
+        <?php if ($canEditer) : ?>
+            <a  class="btn btn-primary action ajax-modal"
+                href="<?php echo $this->url('fiche-metier-type/editer-missions-principales', ['id' => $fiche->getId()], [] , true); ?>"
+                data-event="modification"
+            >
+                <i class="fas fa-pencil-alt"></i>
+                Éditer missions principales
+            </a>
+            <br/>
+        <?php endif; ?>
+        <?php echo $fiche->getMissionsPrincipales(); ?>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Activités associées <span class="badge">
+                <?php echo count($activites); ?>
+            </span></h2>
+    </div>
+    <div class="panel-body">
+        <?php if ($canEditer) : ?>
+            <a  class="btn btn-primary action ajax-modal"
+                href="<?php echo $this->url('fiche-metier-type/ajouter-nouvelle-activite', ['id' => $fiche->getId()], [] , true); ?>"
+                data-event="modification"
+            >
+                <i class="far fa-plus-square"></i>
+                Ajouter une nouvelle activité
+            </a>
+            <a  class="btn btn-primary action ajax-modal"
+                data-event="modification"
+                href="<?php echo $this->url('fiche-metier-type/ajouter-activite-existante', ['id' => $fiche->getId()], [] , true); ?>">
+                <i class="fas fa-plus-square"></i>
+                Ajouter une activité existante
+            </a>
+            <br/>
+        <?php endif; ?>
+
+
+        <?php foreach ($activites as $ficheActivite): ?>
+        <h3> <?php echo $ficheActivite->getActivite()->getLibelle(); ?> </h3>
+        <div class="row">
+            <div class="col-md-1">
+                <a class="btn btn-default mini"
+                   title="Éditer l'activité"
+                   href="<?php echo $this->url('activite/editer', ['id' => $ficheActivite->getActivite()->getId()], [], true); ?>">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a class="btn btn-default mini"
+                   title="Retirer l'activité"
+                   href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $ficheActivite->getId()], [], true); ?>"
+                >
+                    <i class="fas fa-times"></i>
+                </a>
+                <a class="btn btn-default mini"
+                   title="Déplacer l'activité vers le haut"
+                   href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $ficheActivite->getId(), 'direction' => 'up'], [], true); ?>"
+                >
+                    <i class="fas fa-angle-up"></i>
+                </a>
+                <a class="btn btn-default mini"
+                   title="Déplacer l'activité vers le bas"
+                   href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $ficheActivite->getId(), 'direction' => 'down'], [], true); ?>">
+                    <i class="fas fa-angle-down"></i>
+                </a>
+            </div>
+            <div class="col-md-11"> <?php echo $ficheActivite->getActivite()->getDescription(); ?> </div>
+        </div>
+        <?php endforeach;?>
+    </div>
+</div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

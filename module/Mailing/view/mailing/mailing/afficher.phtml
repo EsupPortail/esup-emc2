@@ -1,0 +1,64 @@
+<?php
+
+use Mailing\Model\Db\Mail;
+
+/**
+ * @var Mail $mail
+ */
+
+?>
+
+<dl class="dl-horizontal">
+    <dt> Destinataires </dt>
+    <dd> <?php echo$mail->getDestinatires(); ?></dd>
+<!--    <dd> --><?php //echo implode("<br/>",explode(",",$mail->getDestinatires())); ?><!--</dd>-->
+    <dt> Date d'envoi </dt>
+    <dd> <?php echo $mail->getDateEnvoi()->format('H:i:s d/m/Y'); ?> </dd>
+    <dt> Status </dt>
+    <dd> <?php echo htmlStatus($mail->getStatusEnvoi()); ?> </dd>
+    <dt> Redirection </dt>
+    <dd> <?php echo htmlRedirection($mail->isRedirection()); ?> </dd>
+    <dt> Sujet </dt>
+    <dd> <?php echo $mail->getSujet(); ?> </dd>
+</dl>
+
+<?php echo $mail->getCorps() ?>
+
+
+<?php
+function htmlStatus($status) {
+    switch ($status) {
+        case Mail::PENDING :
+            $text = '<span class="badge badge-warning"> PENDING </span>';
+            return $text;
+        case Mail::SUCCESS :
+            $text = '<span class="badge badge-success"> SUCCESS </span>';
+            return $text;
+        case Mail::FAILURE :
+            $text = '<span class="badge badge-danger"> FAILURE </span>';
+            return $text;
+        default :
+            $text = '<span class="badge"> FAILURE </span>';
+            return $text;
+    }
+}
+
+function htmlRedirection($redir) {
+    if ($redir === true) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
+    else return "";
+}
+?>
+
+<style>
+    .badge-warning {
+        background-color: #f89406;
+    }
+
+    .badge-success {
+        background-color: #468847;
+    }
+
+    .badge-danger {
+        background-color: #b94a48;
+    }
+</style>

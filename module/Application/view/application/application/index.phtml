@@ -1,0 +1,97 @@
+<?php
+
+use Application\Entity\Db\Application;
+use Application\Provider\Privilege\ApplicationPrivileges;
+
+/**
+ * @var Application[] $applications
+ */
+
+$canAfficher    = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::AFFICHER));
+$canAjouter     = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::AJOUTER));
+$canEditer      = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::EDITER));
+$canEffacer     = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::EFFACER));
+
+$this->headTitle("Index des applications");
+?>
+
+<h1>
+    Index des applications
+    <span class="badge">
+        <?php echo count($applications); ?>
+    </span>
+</h1>
+
+<div class="main">
+    <a href="<?php echo $this->url('application/creer', [], [], true);?>"
+       class="btn btn-primary action ajax-modal"
+       data-event="modification"
+    >
+        <i class="fas fa-plus-square"></i>
+        Ajouter une application
+    </a>
+
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Id</th>
+                <th> Libelle</th>
+                <th> Liens </th>
+                <th> Actif </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($applications as $application): ?>
+                <tr>
+                    <td> <?php echo $application->getId(); ?> </td>
+                    <td> <?php echo $application->getLibelle(); ?> </td>
+                    <td> <a href="<?php echo $application->getUrl(); ?>"><?php echo $application->getUrl(); ?></a> </td>
+                    <td>
+                        <?if ($application->isActif()) : ?>
+                            <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
+<!--                        --><?php //else: ?>
+<!--                            <span class="badge" style="background-color: darkred;">&nbsp;</span>-->
+                        <?php endif;?>
+                    </td>
+                    <td>
+                        <?php if ($canAfficher) : ?>
+                            <a href="<?php echo $this->url('application/afficher', ['id' => $application->getId()], [], true); ?>" class="ajax-modal">
+                                <i class="fas fa-eye"        title="Voir l'application"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEditer) : ?>
+                            <a href="<?php echo $this->url('application/editer', ['id' => $application->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                                <i class="fas fa-pencil-alt" title="Éditer l'application"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEditer) : ?>
+                            <a href="<?php echo $this->url('application/changer-status', ['id' => $application->getId()], [], true); ?>">
+                                <i class="fas fa-power-off"  title="Activer/Desactiver l'application"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacer) : ?>
+                            <a href="<?php echo $this->url('application/effacer', ['id' => $application->getId()], [], true); ?>">
+                                <i class="fas fa-trash-alt"  title="Supprimer l'application"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

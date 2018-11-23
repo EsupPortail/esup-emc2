@@ -1,0 +1,96 @@
+<?php
+/** @var Affectation[] $affectations */
+
+use Application\Entity\Db\Affectation;
+use Application\Provider\Privilege\AffectationPrivileges;
+
+$canAjouter     = $this->isAllowed(AffectationPrivileges::getResourceId(AffectationPrivileges::EDITER));
+$canEditer      = $this->isAllowed(AffectationPrivileges::getResourceId(AffectationPrivileges::EDITER));
+$canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(AffectationPrivileges::EDITER));
+
+?>
+    <h1>
+       Index des affectations
+       <span class="badge">
+           <?php echo count($affectations); ?>
+       </span>
+    </h1>
+
+
+<div class="main">
+
+    <?php if($canAjouter) : ?>
+        <a
+            class="btn btn-primary action ajax-modal"
+            href="<?php echo $this->url('affectation/creer', [], [], true); ?>"
+            data-event="modification"
+        >
+            <i class="fas fa-plus"></i>
+            Ajouter une affectation
+        </a>
+    <?php endif; ?>
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Id </th>
+                <th> Affectation </th>
+                <th> Dernière modification </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($affectations as $affectation) : ?>
+            <tr>
+                <td> <?php echo $affectation->getId(); ?> </td>
+                <td> <?php echo $affectation->getLibelle(); ?>
+                    <br/>
+                    <?php if ($affectation->getDescription()): ?>
+                        <div class="alert alert-info">
+                            <?php echo $affectation->getDescription(); ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Aucune description de rédigée pour cet affectation.
+                        </div>
+                    <?php endif; ?>
+
+
+                </td>
+                <td>
+                    <?php echo $affectation->getHistoModification()->format('H:i d/m/Y'); ?> <br/>
+                    <?php echo $affectation->getHistoModificateur()->getDisplayName(); ?>
+                </td>
+                <td>
+                    <?php if ($canEditer): ?>
+                        <a href="<?php echo $this->url('affectation/editer', ['id' => $affectation->getId()], [], true); ?>"
+                           class="ajax-modal"
+                           data-event="modification">
+                            <i class="fas fa-pencil-alt" title="Éditer l'activité"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacer): ?>
+                    <a href="<?php echo $this->url('affectation/effacer', ['id' => $affectation->getId()], [], true); ?>">
+                        <i class="fas fa-trash-alt"  title="Supprimer l'activité"></i>
+                    </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

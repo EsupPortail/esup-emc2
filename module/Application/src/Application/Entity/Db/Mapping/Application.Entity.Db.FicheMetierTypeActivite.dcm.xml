@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\FicheMetierTypeActivite" table="fiche_metier_type_activite">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="position" column="position" type="integer" nullable="false" />
+
+        <many-to-one target-entity="Application\Entity\Db\FicheMetierType" field="fiche">
+            <join-column name="fiche" referenced-column-name="id" />
+        </many-to-one>
+
+        <many-to-one target-entity="Application\Entity\Db\Activite" field="activite">
+            <join-column name="activite" referenced-column-name="id" />
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

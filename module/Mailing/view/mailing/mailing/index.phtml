@@ -1,0 +1,116 @@
+<?php
+
+use Mailing\Model\Db\Mail;
+use Mailing\Provider\Privilege\MailingPrivileges;
+
+/**
+ * @var Mail[] $mails
+ */
+
+$this->headTitle("Index des mails envoyées");
+
+$canTest        = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::ENVOI_TEST));
+$canAfficher    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::AFFICHER));
+$canReEnvoi     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::RE_ENVOI));
+$canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::EFFACER));
+
+?>
+
+
+<h1 class="page-header">
+    Index des mails envoyées
+</h1>
+
+<div class="main">
+
+    <?php if ($canTest) : ?>
+    <a
+            href="<?php echo $this->url('mailing/mail-test', [], [] ,true);?>"
+            class="btn btn-primary action"
+    >
+        <i class="far fa-envelope"></i>
+        Envoie d'un mail de test
+    </a>
+    <?php endif; ?>
+
+    <table class="table table-extra-condensed">
+        <thead>
+            <tr>
+    <!--            <th> Id </th>-->
+                <th> Status </th>
+                <th> Date d'envoi </th>
+                <th> Destinataires </th>
+                <th> Redir </th>
+                <th> Sujet </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($mails as $mail) : ?>
+            <tr>
+    <!--            <td> --><?php //echo $mail->getId(); ?><!-- </td>-->
+                <td> <?php echo htmlStatus($mail->getStatusEnvoi()); ?> </td>
+                <td> <?php echo $mail->getDateEnvoi()->format("H:i:s d/m/Y"); ?> </td>
+                <td> <small><?php echo implode("<br/>",explode(",",$mail->getDestinatires())); ?></small> </td>
+                <td> <?php echo htmlRedirection($mail->isRedirection()); ?> </td>
+                <td> <small><?php echo $mail->getSujet(); ?> </small> </td>
+                <td>
+                    <?php if ($canAfficher) : ?>
+                        <a class="ajax-modal" href="<?php echo $this->url('mailing/afficher', ['id' => $mail->getId()], [], true); ?>">
+                            <i class="fas fa-eye"        title="Voir le mail"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canReEnvoi) : ?>
+                        <a  href="<?php echo $this->url('mailing/re-envoi', ['id' => $mail->getId()], [], true); ?>">
+                            <i class="far fa-envelope"   title="Envoyer à nouveau le mail"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacer) : ?>
+                        <a  href="<?php echo $this->url('mailing/effacer', ['id' => $mail->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer le mail de l'historique"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<?php
+    function htmlStatus($status) {
+        switch ($status) {
+            case Mail::PENDING :
+                $text = '<span class="badge badge-warning"> PENDING </span>';
+                return $text;
+            case Mail::SUCCESS :
+                $text = '<span class="badge badge-success"> SUCCESS </span>';
+                return $text;
+            case Mail::FAILURE :
+                $text = '<span class="badge badge-danger"> FAILURE </span>';
+                return $text;
+            default :
+                $text = '<span class="badge"> FAILURE </span>';
+                return $text;
+        }
+    }
+
+    function htmlRedirection($redir) {
+        if ($redir === true) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
+        else return "";
+    }
+?>
+
+<style>
+    .badge-warning {
+        background-color: #f89406;
+    }
+
+    .badge-success {
+        background-color: #468847;
+    }
+
+    .badge-danger {
+        background-color: #b94a48;
+    }
+</style>

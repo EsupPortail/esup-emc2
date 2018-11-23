@@ -1,0 +1,34 @@
+<?php
+/**
+ * @var string $role
+ * @var Service $service
+ */
+?>
+
+<p>
+Bonjour,
+</p>
+
+<p>
+    Vous venez d'être nommé&#183;e comme <strong><?php echo $role; ?></strong> du service <strong><?php echo $service->getLibelle(); ?></strong>.
+    Vous pouvez maintenant :
+    <ul>
+        <li> rédiger les fiches associées à ce service ;</li>
+        <li> éditer les fiches associées à ce service ;</li>
+        <li> demander la validation des fiches associées à ce service ;</li>
+    </ul>
+</p>
+
+<p>
+    Pour cela vous devez vous rendre sur l'application <strong>catalogue de services</strong> à l'adresse suivante
+    <a href="<?php echo $this->url('home'); ?>"><?php echo $this->url('home'); ?></a>.
+</p>
+
+<p>
+    Cordialement, <br/>
+    L'équipe du catalogue de services
+</p>
+
+<p>
+    <i>Merci de ne pas répondre à ce mail envoyé automatiquement par l'application.</i>
+</p>

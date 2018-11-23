@@ -1,38 +1,289 @@
+<?php
+
+/**
+ * @var FicheMetier $fiche
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+
+$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
+?>
+
 <h1 class="page-header">
-    Fiche métier : XXX
+    Fiche métier : <?php echo $fiche->getLibelle(); ?> <br/>
+    Affectation : <?php echo $fiche->getAffectation(); ?>
 </h1>
 
-<h2> Agent occupant le poste </h2>
 
-<h3> Missions principales </h3>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Agent occupant le poste </h2>
+    </div>
 
-<dl class="dl-horizontal">
-    <dt> Dénomination : </dt>
-        <dd> Pierre Dupont </dd>
-    <dt> Status de l'agent : </dt>
-        <dd> Stagiaire </dd>
-    <dt> Catégorie : </dt>
-        <dd> azerty </dd>
-    <dt> Corps ou Grade : </dt>
-        <dd> azerty </dd>
-    <dt> Date de début : </dt>
-        <dd> 01/01/2001 </dd>
-    <dt> Date de fin : </dt>
-        <dd> --- </dd>
-    <dt> Quotité travaillée :</dt>
-        <dd> 100 % </dd>
-    <dt> Numéro poste SIHAM : </dt>
-        <dd> azerty </dd>
-</dl>
+    <div class="panel-body">
 
-<h3> Missions complémentaires </h3>
+        <h3> Missions principales </h3>
 
-<ul>
-    <li> Référent qualité </li>
-    <li> Référent handicap </li>
-</ul>
+        <dl class="dl-horizontal">
+            <dt> Dénomination </dt>
+                <dd> Pierre Dupont </dd>
+            <dt> Status de l'agent  </dt>
+                <dd> Stagiaire </dd>
+            <dt> Catégorie </dt>
+                <dd> azerty </dd>
+            <dt> Corps ou Grade </dt>
+                <dd> azerty </dd>
+            <dt> Date de début </dt>
+                <dd> 01/01/2001 </dd>
+            <dt> Date de fin </dt>
+                <dd> --- </dd>
+            <dt> Quotité travaillée </dt>
+                <dd> 100 % </dd>
+            <dt> Numéro poste SIHAM </dt>
+                <dd> azerty </dd>
+        </dl>
 
-<h2> Environnement du poste de travail dans l'organisation : description du poste </h2>
-<h2> Description de la fiche métier</h2>
-<h2> Parcours de formation de base pour la prise de poste</h2>
-<h2> Spécificité du poste</h2>
+        <h3> Missions complémentaires </h3>
+
+        <ul>
+            <li> Référent qualité </li>
+            <li> Référent handicap </li>
+        </ul>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Environnement du poste de travail dans l'organisation </h2>
+    </div>
+    <div class="panel-body">
+
+
+        <?php if($canEditer) : ?>
+            <a href="<?php echo $this->url('fiche-metier/editer',['id' => $fiche->getId(), 'section' => 'environnement'], [], true); ?>"
+               class="btn btn-primary action ajax-modal">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Éditer la description
+            </a>
+        <?php endif; ?>
+        <p>
+            <?php if ($fiche->getAffectation() !== null) : ?>
+                <?php if ($fiche->getAffectation()->getDescription() !== null) :?>
+                    <?php echo $fiche->getAffectation()->getDescription(); ?>
+                <?php else: ?>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getAffectation()->getLibelle(); ?></em>.
+                    </div>
+                <?php endif; ?>
+            <?php else : ?>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucune affectation de renseignée.
+                </div>
+            <?php endif; ?>
+        </p>
+
+        <h3> Positionnement dans l'établissement</h3>
+
+        <dl class="dl-horizontal">
+            <dt> Numéro poste national </dt>
+                <dd class="SIHAM"> 123456789</dd>
+            <dt> Quotité du poste </dt>
+                <dd class="SIHAM"> 80 %</dd>
+            <dt> Affectation du poste </dt>
+                <dd class="SIHAM"> Service</dd>
+            <dt> Localisation du poste </dt>
+                <dd class="SIHAM"> Campus</dd>
+            <dt> Rattachement hiérarchique </dt>
+                <dd class="SIHAM"> Responsable de truc</dd>
+            <dt> Correspondance BAP </dt>
+                <dd class="SIHAM"> Z </dd>
+            <dt> Correspondance avec REFERENS, <br/> REME, bibliothèque </dt>
+                <dd class="SIHAM"> azerty</dd>
+            <dt> Domaine UNICAEN </dt>
+                <dd class="GPEEC"> Informaticien</dd>
+            <dt> Fonction </dt>
+                <dd class="GPEEC"> Responsable</dd>
+            <dt> Nombre de points NBI associés au <br/> poste SIHAM </dt>
+                <dd class="GPEEC"> 3,14</dd>
+            <dt> Régime indemnitaire </dt>
+                <dd class="GPEEC"> Titulaire</dd>
+            <dt> RIFSEEP (appartenance au groupe)</dt>
+                <dd class="GPEEC"> Catégorie B - 2ième groupe</dd>
+
+        </dl>
+
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Description de la fiche métier </h2>
+    </div>
+    <div class="panel-body">
+
+        <h3> Mission principale </h3>
+
+        <ul>
+            <li>faire mission A </li>
+            <li>assister à la mission B </li>
+            <li>encadrer les X personnes de la mission C </li>
+        </ul>
+
+        <h3> Activités associées </h3>
+
+        <h4> Direction et gestion </h4>
+
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+            magna aliqua. Erat nam at lectus urna duis convallis. Risus viverra adipiscing at in tellus integer. Ac turpis
+            egestas maecenas pharetra.
+        </p>
+
+        <h4> Centralisation des tâches </h4>
+        <p>
+            Amet volutpat consequat mauris nunc. Vestibulum lectus mauris ultrices eros in.
+            Scelerisque eu ultrices vitae auctor eu augue ut lectus. Amet cursus sit amet dictum sit amet justo donec enim.
+            Tellus id interdum velit laoreet id donec. Dui vivamus arcu felis bibendum ut tristique. Facilisis volutpat
+            est velit egestas dui id ornare arcu odio.
+        </p>
+
+        <h4> Dématérialisation des procédures </h4>
+        <p>
+            Vel quam elementum pulvinar etiam non quam lacus suspendisse. Dui nunc mattis enim ut tellus elementum sagittis.
+            Felis imperdiet proin fermentum leo vel orci porta non pulvinar. Commodo viverra maecenas accumsan lacus vel
+            facilisis. Eget velit aliquet sagittis id.
+        </p>
+
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Parcours de formation de base pour la prise de poste </h2>
+    </div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-md-4">
+                <h3> Compétences principales </h3>
+            </div>
+            <div class="col-md-4">
+                <h3> Accompagnement à la prise de poste </h3>
+            </div>
+            <div class="col-md-4">
+                <h3> Lien vers le référentiel </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4> Savoir & connaissances </h4>
+
+                <ul>
+                    <li> Connaître </li>
+                    <li> Savoir </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4> Lien vers le plan de formation </h4>
+
+                <ul>
+                    <li> Décrouvrir </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4> Savoir-faire & compétences opérationnelles </h4>
+
+                <ul>
+                    <li> Conduire des projets </li>
+                    <li> Maîtriser les outils </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4> Applications </h4>
+
+                <ul>
+                    <li> redmine </li>
+                    <li> Zimbra </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4> Savoir être & compétences comportementales </h4>
+
+                <ul>
+                    <li> Encadrer </li>
+                    <li> Prévenir </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4> Lien vers le plan de formation </h4>
+
+                <ul>
+                    <li> Former </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Spécificité du poste </h2>
+    </div>
+    <div class="panel-body">
+
+        <h3> Spécificité du poste </h3>
+        <p>
+            Enim diam vulputate ut pharetra sit amet aliquam. Arcu cursus vitae congue mauris rhoncus aenean.
+            Amet nulla facilisi morbi tempus iaculis.
+        </p>
+
+        <h3> Encadrement </h3>
+        <dl class="dl-horizontal">
+            <dt>Nombre de personnes encadrées </dt>
+                <dd> Encadrement au sens où le supérieur hiérarchique </dd>
+            <dt> Statut et catégorie des personnes <br/> encadrées </dt>
+                <dd>Titulaire ou contractuel
+                    Nombre A, B, C </dd>
+        </dl>
+
+        <h3> Relations internes à l'UNICAEN </h3>
+        <p>
+            Nulla facilisi cras fermentum odio eu feugiat pretium.
+        </p>
+
+        <h3> Relations externes à l'UNICAEN </h3>
+        <p>
+            Iaculis at erat pellentesque adipiscing commodo.
+        </p>
+
+        <h3> Contraintes particulières d'exercice </h3>
+        <p>
+            Mattis rhoncus urna neque viverra justo nec ultrices.
+        </p>
+
+        <h3> Moyens et outils mis à disposition</h3>
+        <p>
+            Id diam vel quam elementum pulvinar etiam.
+        </p>
+    </div>
+</div>
