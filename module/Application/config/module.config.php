@@ -2,25 +2,43 @@
 
 namespace Application;
 
-use Application\Controller\FicheMetierController;
-use Application\Controller\IndexController;
+use Application\Service\Affectation\AffectationService;
+use Application\Service\Affectation\AffectationServiceFactory;
+use Application\Service\MailService\MailService;
+use Application\Service\MailService\MailServiceFactory;
+use Application\Service\Role\RoleService;
+use Application\Service\Role\RoleServiceFactory;
+use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
         'guards' => [
-            PrivilegeController::class => [
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'index',
-                        'afficher',
-                    ],
-                    'roles' => [
-                    ],
+            PrivilegeController::class => [],
+        ],
+    ],
+
+    'doctrine' => [
+        'driver' => [
+            'orm_default' => [
+                'class' => MappingDriverChain::class,
+                'drivers' => [
+                    'Application\Entity\Db' => 'orm_default_xml_driver',
                 ],
+            ],
+            'orm_default_xml_driver' => [
+                'class' => XmlDriver::class,
+                'cache' => 'apc',
+                'paths' => [
+                    __DIR__ . '/../src/Application/Entity/Db/Mapping',
+                ],
+            ],
+        ],
+        'cache' => [
+            'apc' => [
+                'namespace' => 'PREECOG__' . __NAMESPACE__,
             ],
         ],
     ],
@@ -38,37 +56,35 @@ return [
                 ],
                 'may_terminate' => true,
             ],
-            'fiche-metier' => [
-                'type'  => Literal::class,
-                'options' => [
-                    'route'    => '/fiche-metier',
-                    'defaults' => [
-                        'controller' => FicheMetierController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'afficher' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'afficher',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                ],
-            ],
         ],
     ],
     'service_manager' => [
+        'invokables' => [
+        ],
         'factories' => [
-
+            MailService::class => MailServiceFactory::class,
+            RoleService::class => RoleServiceFactory::class,
+            AffectationService::class => AffectationServiceFactory::class,
         ],
     ],
+    'controllers'     => [
+        'invokables' => [
+            //'Application\Controller\Index' => Controller\IndexController::class,
+        ],
+        'factories' => [
+            'Application\Controller\Index' => Controller\IndexControllerFactory::class,
+        ]
+    ],
+
+    'view_manager'    => [
+        'template_map'             => [
+            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+        ],
+        'template_path_stack' => [
+            __DIR__ . '/../view',
+        ],
+    ],
+
     'translator'      => [
         'locale'                    => 'fr_FR', // en_US
         'translation_file_patterns' => [
@@ -79,15 +95,25 @@ return [
             ],
         ],
     ],
-    'controllers'     => [
-        'invokables' => [
-            'Application\Controller\Index' => Controller\IndexController::class,
-            FicheMetierController::class => FicheMetierController::class,
+
+    'public_files' => [
+        'inline_scripts' => [
+            '100_' => 'js/jquery.ui.datepicker-fr.js',
+            '110_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js',
+            '111_' => 'https://gest.unicaen.fr/public/bootstrap-confirmation-2.4.0/bootstrap-confirmation.min.js',
+            '112_' => 'vendor/font-awesome-5.0.9/fontawesome-all.min.js',
+            '124_' => 'vendor/vakata-jstree-3.3.4/dist/jstree.min.js',
+            '150_' => 'js/tinymce/js/tinymce/tinymce.js',
+            '151_' => 'js/form_fiche.js',
         ],
-    ],
-    'view_manager'    => [
-        'template_path_stack' => [
-            __DIR__ . '/../view',
+        'stylesheets' => [
+            '050_bootstrap-theme' => '',
+            '111_' => 'https://gest.unicaen.fr/public/open-sans-gh-pages/open-sans.css',
+            '113_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css',
+            '121_' => 'vendor/vakata-jstree-3.3.4/dist/themes/proton/style.min.css',
         ],
+        'images' => [
+            '100_' => 'img/PrEECoG.svg',
+        ]
     ],
 ];

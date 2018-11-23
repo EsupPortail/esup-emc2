@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\Application" table="application_informations">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
+        <field name="description"       type="string"   length="2048"     column="description"            nullable="true"   />
+        <field name="url"               type="string"   length="128"      column="url"                    nullable="false"  />
+        <field name="actif"             type="boolean"                    column="actif"                  nullable="false"  />
+
+    </entity>
+</doctrine-mapping>
