@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * @var AgentStatus[] $status
+ */
+
+use Application\Entity\Db\AgentStatus;
+
+
+$canAjouterRessource = true;
+$canEditerRessource = true;
+$canEffacerRessource = true;
+?>
+
+<h1 class="page-header">
+    Ressources associées aux ressources humaines
+</h1>
+
+<div class="main">
+    <h2>
+        Status des agents
+        <span class="badge">
+            <?php echo count($status); ?>
+        </span>
+    </h2>
+
+    <?php if ($canAjouterRessource) : ?>
+        <a
+            href="<?php echo $this->url('ressource-rh/creer-agent-status', [], [], true); ?>"
+            class="btn btn-primary action ajax-modal"
+            data-event="modification"
+        >
+            <i class="fas fa-plus"></i>
+            Ajouter un status
+        </a>
+    <?php endif; ?>
+
+
+    <?php if (count($status) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th> Id </th>
+                    <th> Libelle </th>
+                    <th> Action </th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($status as $statu) : ?>
+                <tr>
+                    <td> <?php echo $statu->getId(); ?> </td>
+                    <td> <?php echo $statu->getLibelle(); ?> </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/modifier-agent-status', ['id' => $statu->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/effacer-agent-status', ['id' => $statu->getId()], [], true); ?>" >
+                                <i class="fas fa-trash-alt" title="Effacer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+
+</div>
+
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

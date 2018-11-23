@@ -23,26 +23,33 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
     <div class="panel-body">
 
-        <h3> Missions principales </h3>
+        <?php $agent = $fiche->getAgent(); ?>
 
-        <dl class="dl-horizontal">
-            <dt> Dénomination </dt>
-                <dd> Pierre Dupont </dd>
-            <dt> Status de l'agent  </dt>
-                <dd> Stagiaire </dd>
-            <dt> Catégorie </dt>
-                <dd> azerty </dd>
-            <dt> Corps ou Grade </dt>
-                <dd> azerty </dd>
-            <dt> Date de début </dt>
-                <dd> 01/01/2001 </dd>
-            <dt> Date de fin </dt>
-                <dd> --- </dd>
-            <dt> Quotité travaillée </dt>
-                <dd> 100 % </dd>
-            <dt> Numéro poste SIHAM </dt>
-                <dd> azerty </dd>
-        </dl>
+        <?php if($agent === null) : ?>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aucun agent d'associé à ce poste
+            </div>
+        <?php else : ?>
+            <dl class="dl-horizontal">
+                <dt> Dénomination </dt>
+                    <dd> <?php echo $agent->getPrenom(); ?> <?php echo $agent->getNom(); ?> </dd>
+                <dt> Status de l'agent  </dt>
+                    <dd> TODO (Stagiaire, Titulaire, Contractuel) </dd>
+                <dt> Catégorie </dt>
+                    <dd> XXXX </dd>
+                <dt> Corps ou Grade </dt>
+                    <dd> XXX </dd>
+                <dt> Date de début </dt>
+                    <dd> <?php echo ($agent->getDateDebut())?$agent->getDateDebut()->format('d/m/Y'):'---'; ?> </dd>
+                <dt> Date de fin </dt>
+                    <dd> <?php echo ($agent->getDateFin())?$agent->getDateFin()->format('d/m/Y'):'---'; ?> </dd>
+                <dt> Quotité travaillée </dt>
+                    <dd> <?php echo $agent->getQuotite(); ?> % </dd>
+                <dt> Numéro poste SIHAM </dt>
+                    <dd> XXX </dd>
+            </dl>
+        <?php endif; ?>
 
         <h3> Missions complémentaires </h3>
 
