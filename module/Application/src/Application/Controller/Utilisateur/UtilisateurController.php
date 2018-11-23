@@ -180,7 +180,7 @@ class UtilisateurController extends AbstractActionController {
                 $result[] = array(
                     'id'    => $utilisateur->getId(),
                     'label' => $utilisateur->getDisplayName(),
-                    'extra' => $utilisateur->getEmail(),
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$utilisateur->getEmail()."</span>",
                 );
             }
             usort($result, function($a, $b) {
@@ -216,7 +216,7 @@ class UtilisateurController extends AbstractActionController {
                 $result[] = array(
                     'id'    => $people->getId(),     // identifiant unique de l'item
                     'label' => $label,               // libellé de l'item
-                    'extra' => $people->get('mail'), // infos complémentaires (facultatives) sur l'item
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$people->get('mail')."</span>", // infos complémentaires (facultatives) sur l'item
                 );
             }
             uasort($result, function($a, $b) {
