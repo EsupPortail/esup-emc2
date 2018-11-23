@@ -14,8 +14,8 @@ return [
         'app_infos' => [
             'nom'     => "PrEECoG",
             'desc'    => "Gestion Prévisionnelle des effectifs, des emplois et des compétences",
-            'version' => "0.0.1",
-            'date'    => "31/10/2018",
+            'version' => "0.0.2",
+            'date'    => "12/11/2018",
             'contact' => ['mail' => "dsi.applications@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],
             'mentionsLegales'        => "http://www.unicaen.fr/acces-direct/mentions-legales/",
             'informatiqueEtLibertes' => "http://www.unicaen.fr/acces-direct/informatique-et-libertes/",
