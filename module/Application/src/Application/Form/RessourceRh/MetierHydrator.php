@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Metier;
+namespace Application\Form\RessourceRh;
 
 use Application\Entity\Db\Metier;
 use Zend\Stdlib\Hydrator\HydratorInterface;

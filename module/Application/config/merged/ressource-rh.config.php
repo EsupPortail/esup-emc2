@@ -2,8 +2,12 @@
 
 namespace Application;
 
+use Application\Controller\Metier\MetierController;
 use Application\Controller\RessourceRh\RessourceRhController;
 use Application\Controller\RessourceRh\RessourceRhControllerFactory;
+use Application\Form\RessourceRh\MetierForm;
+use Application\Form\RessourceRh\MetierFormFactory;
+use Application\Form\RessourceRh\MetierHydrator;
 use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\AgentStatusFormFactory;
 use Application\Form\RessourceRh\AgentStatusHydrator;
@@ -13,6 +17,7 @@ use Application\Form\RessourceRh\CorpsHydrator;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Form\RessourceRh\CorrespondanceFormFactory;
 use Application\Form\RessourceRh\CorrespondanceHydrator;
+use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\RessourceRh\RessourceRhServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -27,17 +32,46 @@ return [
                     'controller' => RessourceRhController::class,
                     'action' => [
                         'index',
-                        'creer-agent-status',
-                        'modifier-agent-status',
-                        'effacer-agent-status',
-                        'creer-correspondance',
-                        'modifier-correspondance',
-                        'effacer-correspondance',
-                        'creer-corps',
-                        'modifier-corps',
-                        'effacer-corps',
                     ],
-                    'roles' => [],
+                    'privileges' => [
+                        RessourceRhPrivileges::AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => RessourceRhController::class,
+                    'action' => [
+                        'creer-agent-status',
+                        'creer-correspondance',
+                        'creer-corps',
+                        'creer-metier',
+                    ],
+                    'privileges' => [
+                        RessourceRhPrivileges::AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => RessourceRhController::class,
+                    'action' => [
+                        'modifier-agent-status',
+                        'modifier-correspondance',
+                        'modifier-corps',
+                        'modifier-metier',
+                    ],
+                    'privileges' => [
+                        RessourceRhPrivileges::MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => RessourceRhController::class,
+                    'action' => [
+                        'effacer-corps',
+                        'effacer-correspondance',
+                        'effacer-metier',
+                        'effacer-agent-status',
+                    ],
+                    'privileges' => [
+                        RessourceRhPrivileges::EFFACER,
+                    ],
                 ],
             ],
         ],
@@ -173,6 +207,49 @@ return [
                             ],
                         ],
                     ],
+                    'metier' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/metier',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-metier',
+                                    ],
+                                ],
+                            ],
+                            'effacer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/effacer/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'effacer-metier',
+                                    ],
+                                ],
+                            ],
+                            'creer' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/creer',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'creer-metier',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -195,6 +272,7 @@ return [
             AgentStatusForm::class => AgentStatusFormFactory::class,
             CorpsForm::class => CorpsFormFactory::class,
             CorrespondanceForm::class => CorrespondanceFormFactory::class,
+            MetierForm::class => MetierFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -202,6 +280,7 @@ return [
             AgentStatusHydrator::class => AgentStatusHydrator::class,
             CorpsHydrator::class => CorpsHydrator::class,
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
+            MetierHydrator::class => MetierHydrator::class,
         ]
     ]
 

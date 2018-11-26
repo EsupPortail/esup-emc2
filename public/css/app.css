@@ -93,6 +93,10 @@ a.action {
     text-indent: 0em;
 }
 
+th.action {
+    width: 8em;
+}
+
 a.mini {
     width: 4em;
     margin:5px;

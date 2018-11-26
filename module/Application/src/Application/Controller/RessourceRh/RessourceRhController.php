@@ -5,24 +5,24 @@ namespace Application\Controller\RessourceRh;
 use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Metier;
+use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
-use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class RessourceRhController extends AbstractActionController {
-    use MetierServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
 
     public function indexAction()
     {
         $status = $this->getRessourceRhService()->getAgentStatusListe('libelle');
         $correspondances = $this->getRessourceRhService()->getCorrespondances('libelle');
-        $metiers = $this->getMetierService()->getMetiers('libelle');
+        $metiers = $this->getRessourceRhService()->getMetiers('libelle');
         $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
 
         return new ViewModel([
@@ -228,4 +228,68 @@ class RessourceRhController extends AbstractActionController {
         $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
+    /** METIER ********************************************************************************************************/
+
+    public function creerMetierAction()
+    {
+        $metier = new Metier();
+
+        /** @var CorpsForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/metier/creer', [], [], true));
+        $form->bind($metier);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createMetier($metier);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Ajouter un nouveau métier',
+            'form' => $form,
+        ]);
+    }
+
+    public function modifierMetierAction()
+    {
+        $metierId = $this->params()->fromRoute('id');
+        $metier = $this->getRessourceRhService()->getMetier($metierId);
+
+        /** @var MetierForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/metier/modifier', [], [], true));
+        $form->bind($metier);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateMetier($metier);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Modifier un métier',
+            'form' => $form,
+        ]);
+    }
+
+    public function effacerMetierAction()
+    {
+        $metierId = $this->params()->fromRoute('id');
+        $metier = $this->getRessourceRhService()->getMetier($metierId);
+
+        if ($metier !== null) {
+            $this->getRessourceRhService()->deleteMetier($metier);
+        }
+
+        $this->redirect()->toRoute('ressource-rh', [], [], true);
+    }
 }

@@ -5,6 +5,7 @@ namespace Application\Service\RessourceRh;
 use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Metier;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
@@ -253,5 +254,84 @@ class RessourceRhService {
         }
     }
 
+    /** CORPS *********************************************************************************************************/
+
+    /**
+     * @param string $order
+     * @return Metier[]
+     */
+    public function getMetiers($order = null)
+    {
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+        ;
+
+        if ($order !== null) {
+            $qb = $qb->addOrderBy('metier.'.$order, 'ASC');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return Metier
+     */
+    public function getMetier($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+            ->andWhere('metier.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs métiers partagent le même identifiant [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Metier
+     */
+    public function createMetier($metier)
+    {
+        $this->getEntityManager()->persist($metier);
+        try {
+            $this->getEntityManager()->flush($metier);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la création d'un métier", $e);
+        }
+        return $metier;
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Metier
+     */
+    public function updateMetier($metier)
+    {
+        try {
+            $this->getEntityManager()->flush($metier);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un metier.", $e);
+        }
+        return $metier;
+    }
+
+    /**
+     * @param Metier $metier
+     */
+    public function deleteMetier($metier)
+    {
+        $this->getEntityManager()->remove($metier);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un metier", $e);
+        }
+    }
 
 }
