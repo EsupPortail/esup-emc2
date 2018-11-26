@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Metier;
+namespace Application\Form\RessourceRh;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
@@ -26,7 +26,7 @@ class MetierForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer l\'application',
+                'label' => '<i class="fas fa-save"></i> Enregistrer le métier',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

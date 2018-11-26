@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Metier;
+namespace Application\Form\RessourceRh;
 
 use Zend\Form\FormElementManager;
 

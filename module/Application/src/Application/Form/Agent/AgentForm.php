@@ -181,7 +181,7 @@ class AgentForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer l\'activité',
+                'label' => '<i class="fas fa-save"></i> Enregistrer l\'agent',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

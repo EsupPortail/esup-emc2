@@ -6,7 +6,6 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
-use Application\Provider\Privilege\MetierPrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 
 return [
@@ -36,6 +35,13 @@ return [
                             ],
                             [
                                 'label' => 'Métiers',
+                                'route' => 'ressource-rh',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Corps',
                                 'route' => 'ressource-rh',
                                 'privileges' => RessourceRhPrivileges::AFFICHER,
                                 'dropdown-header' => true,
