@@ -2,6 +2,7 @@
 
 namespace Application;
 
+use Application\Controller\RessourceRh\RessourceRhController;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
@@ -19,34 +20,40 @@ return [
                         'route' => 'ressource-rh',
                         'roles' => [],
                         'pages' => [
-                            [
-                                'label' => 'Status',
-                                'route' => 'ressource-rh',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'label' => 'Correspondances',
-                                'route' => 'ressource-rh',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'label' => 'Métiers',
-                                'route' => 'ressource-rh',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'label' => 'Corps',
-                                'route' => 'ressource-rh',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
+//                            [
+//                                'label' => 'Status',
+//                                'route' => 'ressource-rh',
+//                                'privileges' => RessourceRhPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'label' => 'Correspondances',
+//                                'route' => 'ressource-rh',
+//                                'privileges' => RessourceRhPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'label' => 'Métiers',
+//                                'route' => 'ressource-rh',
+//                                'privileges' => RessourceRhPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'label' => 'Corps',
+//                                //'route' => 'ressource-rh',
+//                                'module'     => 'Application',
+//                                'controller' => RessourceRhController::class,
+//                                'action'     => 'creer-corps',
+//                                'rel'        => [
+//                                    'id' => '1',
+//                                ],
+//                                'privileges' => RessourceRhPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
                         ],
                     ],
                     'fiche-metier' => [
