@@ -3,6 +3,7 @@
 namespace Application\Form\Agent;
 
 use Application\Entity\Db\AgentStatus;
+use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Form\Element\Date;
@@ -38,6 +39,17 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'nom',
+            ],
+        ]);
+        // numeroPoste
+        $this->add([
+            'type' => Text::class,
+            'name' => 'numeroPoste',
+            'options' => [
+                'label' => "Numero de poste :",
+            ],
+            'attributes' => [
+                'id' => 'numeroPoste',
             ],
         ]);
         // date de début
@@ -141,6 +153,29 @@ class AgentForm extends Form {
                 'id' => 'correspondance',
             ],
         ]);
+        // Status
+        $this->add([
+            'type' => ObjectSelect::class,
+            'name' => 'corps',
+            'options' => [
+                'label' => "Corps* :",
+                'empty_option' => "Sélectionner un corps ...",
+                'object_manager' => $this->getEntityManager(),
+                'target_class' => Corps::class,
+                'property' => 'libelle',
+                'find_method' => [
+                    'name' => 'findBy',
+                    'params' => [
+                        'criteria' => [],
+                        'orderBy' => ['libelle' => 'ASC'],
+                    ],
+                ],
+                'disable_inarray_validator' => true,
+            ],
+            'attributes' => [
+                'id' => 'corps',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -164,6 +199,9 @@ class AgentForm extends Form {
             'prenom' => [
                 'required' => true,
             ],
+            'numeroPoste' => [
+                'required' => false,
+            ],
             'quotite' => [
                 'required' => true,
             ],
@@ -174,6 +212,12 @@ class AgentForm extends Form {
                 'required' => false,
             ],
             'status' => [
+                'required' => true,
+            ],
+            'correspondance' => [
+                'required' => true,
+            ],
+            'corps' => [
                 'required' => true,
             ],
         ]));

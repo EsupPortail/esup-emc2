@@ -11,12 +11,16 @@
         <field name="dateDebut"         type="datetime"                 column="date_debut"               nullable="true"/>
         <field name="dateFin"           type="datetime"                 column="date_fin"                 nullable="true"/>
         <field name="quotite"           type="integer"                  column="quotite"                  nullable="true"/>
+        <field name="numeroPoste"       type="string" length="256"      column="numero_poste"             nullable="true"/>
 
         <many-to-one target-entity="Application\Entity\Db\AgentStatus" field="status">
             <join-column name="status" referenced-column-name="id" />
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Correspondance" field="correspondance">
             <join-column name="correspondance" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Corps" field="corps">
+            <join-column name="corps" referenced-column-name="id" />
         </many-to-one>
     </entity>
 </doctrine-mapping>

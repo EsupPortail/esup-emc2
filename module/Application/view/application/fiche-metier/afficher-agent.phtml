@@ -49,6 +49,10 @@ $this->headTitle("Information sur l'agent");
                 <dd>
                     <?php echo $agent->getNom(); ?>
                 </dd>
+                <dt> Numéro poste </dt>
+                <dd>
+                    <?php echo $agent->getNumeroPoste(); ?>
+                </dd>
                 <dt> Date de début </dt>
                 <dd>
                     <?php echo ($agent->getDateDebut())?$agent->getDateDebut()->format('d/m/Y'):'---'; ?>
@@ -68,6 +72,10 @@ $this->headTitle("Information sur l'agent");
                 <dt> Correspondance </dt>
                 <dd>
                     <?php echo $agent->getCorrespondance(); ?>
+                </dd>
+                <dt> Corps </dt>
+                <dd>
+                    <?php echo $agent->getCorps(); ?>
                 </dd>
             </dl>
         <?php else: ?>

@@ -12,6 +12,8 @@ class Agent {
     private $nom;
     /** @var string */
     private $prenom;
+    /** @var string */
+    private $numeroPoste;
 
     // categorie, corps, et grade (devrait correspondre à des infos en bases pour une meilleures structuration ...
 
@@ -25,6 +27,10 @@ class Agent {
     private $status;
     /** @var Correspondance */
     private $correspondance;
+    /** @var Corps */
+    private $corps;
+
+
 
     /**
      * @return int
@@ -157,6 +163,42 @@ class Agent {
     public function setCorrespondance($correspondance)
     {
         $this->correspondance = $correspondance;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumeroPoste()
+    {
+        return $this->numeroPoste;
+    }
+
+    /**
+     * @param string $numeroPoste
+     * @return Agent
+     */
+    public function setNumeroPoste($numeroPoste)
+    {
+        $this->numeroPoste = $numeroPoste;
+        return $this;
+    }
+
+    /**
+     * @return Corps
+     */
+    public function getCorps()
+    {
+        return $this->corps;
+    }
+
+    /**
+     * @param Corps $corps
+     * @return Agent
+     */
+    public function setCorps($corps)
+    {
+        $this->corps = $corps;
         return $this;
     }
 
