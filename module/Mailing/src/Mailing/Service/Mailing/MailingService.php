@@ -51,7 +51,7 @@ class MailingService {
             case "retrait" : $texte .= "<p>Vous venez de perdre le rôle de ".$role->getRoleId()." dans l'application PrEECoG.</p>";
                 break;
         }
-        $texte .= "<p>Pour vous connecter à celle-ci, suivez le lien suivant : <a href='".$this->rendererService->url('home', [], ['force_canonical' => true], true)."'>PrEECoG</a></p>.";
+        $texte .= "<p>Pour vous connecter à celle-ci, suivez le lien suivant : <a href='".$this->rendererService->url('home', [], ['force_canonical' => true], true)."'>PrEECoG</a>.</p>";
         $this->sendMail($mail, $titre, $texte);
     }
 
