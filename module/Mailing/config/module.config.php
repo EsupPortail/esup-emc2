@@ -90,20 +90,22 @@ return array(
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'mailing' => [
-                        'label'    => 'Mailing',
-                        'route'    => 'mailing',
-                        'resource' => MailingPrivileges::getResourceId(MailingPrivileges::AFFICHER),
-                        'order'    => 1,
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration-preecog' => [
+//                        'mailing' => [
+//                            'label'    => 'Mailingbis',
+//                            'route'    => 'mailing',
+//                            'resource' => MailingPrivileges::getResourceId(MailingPrivileges::AFFICHER),
+//                            'order'    => 1,
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

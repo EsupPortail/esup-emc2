@@ -2,58 +2,67 @@
 
 namespace Application;
 
-use Application\Controller\RessourceRh\RessourceRhController;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
-use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\UtilisateurPrivileges;
+use Mailing\Provider\Privilege\MailingPrivileges;
+
 
 return [
     'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
+                    'droits' => [
+                        'visible' => false,
+                    ],
                     'ressource' => [
                         'order' => 100,
                         'label' => 'Ressources RH',
                         'route' => 'ressource-rh',
                         'roles' => [],
                         'pages' => [
-//                            [
-//                                'label' => 'Status',
-//                                'route' => 'ressource-rh',
-//                                'privileges' => RessourceRhPrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                            [
-//                                'label' => 'Correspondances',
-//                                'route' => 'ressource-rh',
-//                                'privileges' => RessourceRhPrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                            [
-//                                'label' => 'Métiers',
-//                                'route' => 'ressource-rh',
-//                                'privileges' => RessourceRhPrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                            [
-//                                'label' => 'Corps',
-//                                //'route' => 'ressource-rh',
-//                                'module'     => 'Application',
-//                                'controller' => RessourceRhController::class,
-//                                'action'     => 'creer-corps',
-//                                'rel'        => [
-//                                    'id' => '1',
-//                                ],
-//                                'privileges' => RessourceRhPrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
+                        ],
+                    ],
+                    'administration-preecog' => [
+                        'order' => 1000,
+                        'label' => 'Administration',
+                        'title' => "Administration",
+                        'route' => 'administration',
+                        'roles' => [],
+                        'pages' => [
+                            [
+                                'label' => 'Mailing',
+                                'route' => 'mailing',
+                                'roles' => [], //'privileges' => MailingPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Utilisateurs',
+                                'route' => 'utilisateur',
+                                'roles' => [],// 'privileges' => UtilisateurPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            'roles'      => [
+                                'label'      => "Rôles",
+                                'title'      => "Gestion des rôles",
+                                'route'      => 'droits/roles',
+                                'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'roles'),
+                                'withtarget' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            'privileges' => [
+                                'label'      => "Privilèges",
+                                'title'      => "Gestion des privilèges",
+                                'route'      => 'droits/privileges',
+                                'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
+                                'withtarget' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
                         ],
                     ],
                     'fiche-metier' => [
