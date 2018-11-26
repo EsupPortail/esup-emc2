@@ -26,12 +26,7 @@ class IndexController extends AbstractActionController
         ]);
     }
 
-    public function creerAction()
-    {
-        $activite = new Activite();
-
-        return new ViewModel([
-
-        ]);
+    public function administrationAction() {
+        return new ViewModel();
     }
 }

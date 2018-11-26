@@ -136,54 +136,6 @@ return [
         ],
     ],
 
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'administration' => [
-                        'order' => 90,
-                        'label' => 'Administration',
-                        'title' => "Administration",
-                        'route' => 'utilisateur',
-                        'roles' => [], //PrivilegeController::getResourceId(__NAMESPACE__ . '\Controller\Administration', 'index'),
-                        'pages' => [
-                            [
-                                'label' => "Droits et privilèges",
-                                'route' => 'droits',
-                                'roles' => [],//'resource' => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'index'),
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-user',
-                            ],
-                            [
-                                'label' => "Gérer les rôles",
-                                'title' => "Gérer les rôles",
-                                'route' => 'droits/roles',
-                                'action' => 'roles',
-                                'roles' => [],//'resource' => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'roles'),
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                            [
-                                'label' => "Gérer les privilèges",
-                                'title' => "Gérer les privilèges",
-                                'route' => 'droits/privileges',
-                                'action' => 'privileges',
-                                'resource' => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                            [
-                                'label' => 'Logs',
-                                'route' => 'journal',
-                                'resource' => PrivilegeController::getResourceId(__NAMESPACE__ . '\Controller\Journal', 'index'),
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-archive'
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
-
     'service_manager' => [
         'factories' => [
             UserService::class => UserServiceFactory::class,
