@@ -7,6 +7,9 @@ use Application\Controller\RessourceRh\RessourceRhControllerFactory;
 use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\AgentStatusFormFactory;
 use Application\Form\RessourceRh\AgentStatusHydrator;
+use Application\Form\RessourceRh\CorpsForm;
+use Application\Form\RessourceRh\CorpsFormFactory;
+use Application\Form\RessourceRh\CorpsHydrator;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Form\RessourceRh\CorrespondanceFormFactory;
 use Application\Form\RessourceRh\CorrespondanceHydrator;
@@ -30,6 +33,9 @@ return [
                         'creer-correspondance',
                         'modifier-correspondance',
                         'effacer-correspondance',
+                        'creer-corps',
+                        'modifier-corps',
+                        'effacer-corps',
                     ],
                     'roles' => [],
                 ],
@@ -128,9 +134,46 @@ return [
                             ],
                         ],
                     ],
-
+                    'corps' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/corps',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'creer' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/creer',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'creer-corps',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-corps',
+                                    ],
+                                ],
+                            ],
+                            'effacer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/effacer/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'effacer-corps',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
-
             ],
         ],
     ],
@@ -150,12 +193,14 @@ return [
     'form_elements' => [
         'factories' => [
             AgentStatusForm::class => AgentStatusFormFactory::class,
+            CorpsForm::class => CorpsFormFactory::class,
             CorrespondanceForm::class => CorrespondanceFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokable' => [
             AgentStatusHydrator::class => AgentStatusHydrator::class,
+            CorpsHydrator::class => CorpsHydrator::class,
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
         ]
     ]

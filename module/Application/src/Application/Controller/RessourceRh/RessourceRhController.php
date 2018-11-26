@@ -3,8 +3,10 @@
 namespace Application\Controller\RessourceRh;
 
 use Application\Entity\Db\AgentStatus;
+use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Form\RessourceRh\AgentStatusForm;
+use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
@@ -21,11 +23,13 @@ class RessourceRhController extends AbstractActionController {
         $status = $this->getRessourceRhService()->getAgentStatusListe('libelle');
         $correspondances = $this->getRessourceRhService()->getCorrespondances('libelle');
         $metiers = $this->getMetierService()->getMetiers('libelle');
+        $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
 
         return new ViewModel([
             'status' => $status,
             'correspondances' => $correspondances,
             'metiers' => $metiers,
+            'corps' => $corps,
         ]);
     }
 
@@ -158,4 +162,70 @@ class RessourceRhController extends AbstractActionController {
 
         $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
+
+    /** CORPS *********************************************************************************************************/
+
+    public function creerCorpsAction()
+    {
+        $corps = new Corps();
+
+        /** @var CorpsForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(CorpsForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/corps/creer', [], [], true));
+        $form->bind($corps);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createCorps($corps);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Ajouter un nouveau corps',
+            'form' => $form,
+        ]);
+    }
+
+    public function modifierCorpsAction()
+    {
+        $corpsId = $this->params()->fromRoute('id');
+        $corps = $this->getRessourceRhService()->getCorps($corpsId);
+
+        /** @var CorpsForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(CorpsForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/corps/modifier', [], [], true));
+        $form->bind($corps);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateCorps($corps);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Modifier un corps',
+            'form' => $form,
+        ]);
+    }
+
+    public function effacerCorpsAction()
+    {
+        $corpsId = $this->params()->fromRoute('id');
+        $corps = $this->getRessourceRhService()->getCorps($corpsId);
+
+        if ($corps !== null) {
+            $this->getRessourceRhService()->deleteCorps($corps);
+        }
+
+        $this->redirect()->toRoute('ressource-rh', [], [], true);
+    }
+
 }

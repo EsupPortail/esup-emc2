@@ -34,20 +34,22 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             <dl class="dl-horizontal">
                 <dt> Dénomination </dt>
                     <dd> <?php echo $agent->getPrenom(); ?> <?php echo $agent->getNom(); ?> </dd>
+                <dt> Numéro poste SIHAM </dt>
+                <dd> <?php echo $agent->getNumeroPoste(); ?> </dd>
                 <dt> Status de l'agent  </dt>
-                    <dd> TODO (Stagiaire, Titulaire, Contractuel) </dd>
-                <dt> Catégorie </dt>
-                    <dd> XXXX </dd>
+                    <dd> <?php echo $agent->getStatus(); ?> </dd>
+                <dt> Correspondance  </dt>
+                <dd> <?php echo $agent->getCorrespondance(); ?> </dd>
                 <dt> Corps ou Grade </dt>
-                    <dd> XXX </dd>
+                    <dd> <?php echo $agent->getCorps(); ?> </dd>
+                <dt> Quotité travaillée </dt>
+                    <dd> <?php echo $agent->getQuotite(); ?> % </dd>
                 <dt> Date de début </dt>
                     <dd> <?php echo ($agent->getDateDebut())?$agent->getDateDebut()->format('d/m/Y'):'---'; ?> </dd>
                 <dt> Date de fin </dt>
                     <dd> <?php echo ($agent->getDateFin())?$agent->getDateFin()->format('d/m/Y'):'---'; ?> </dd>
-                <dt> Quotité travaillée </dt>
-                    <dd> <?php echo $agent->getQuotite(); ?> % </dd>
-                <dt> Numéro poste SIHAM </dt>
-                    <dd> XXX </dd>
+
+
             </dl>
         <?php endif; ?>
 
