@@ -22,7 +22,14 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
     Ressources associées aux ressources humaines
 </h1>
 
+
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'status']); ?>" class="btn btn-primary action">Status</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'correspondance']); ?>" class="btn btn-primary action">Correspondance</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'corps']); ?>" class="btn btn-primary action">Corps</a>
+
 <div class="main">
+    <a name="status"></a>
     <div class="col-md-8">
         <h2>
             Status des agents
@@ -83,7 +90,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 </div>
 
 <div class="main">
-
+    <a name="correspondance"></a>
     <div class="col-md-8">
         <h2>
             Liste des correspondances
@@ -149,7 +156,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 
 
 <div class="main">
-
+    <a name="metier"></a>
     <div class="col-md-8">
     <h2>
         Liste des métiers
@@ -206,7 +213,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 </div>
 
 <div class="main">
-
+    <a name="corps"></a>
     <div class="col-md-8">
         <h2>
             Liste des corps
