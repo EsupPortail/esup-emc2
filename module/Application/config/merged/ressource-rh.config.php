@@ -7,6 +7,9 @@ use Application\Controller\RessourceRh\RessourceRhControllerFactory;
 use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\AgentStatusFormFactory;
 use Application\Form\RessourceRh\AgentStatusHydrator;
+use Application\Form\RessourceRh\CorrespondanceForm;
+use Application\Form\RessourceRh\CorrespondanceFormFactory;
+use Application\Form\RessourceRh\CorrespondanceHydrator;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\RessourceRh\RessourceRhServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -24,6 +27,9 @@ return [
                         'creer-agent-status',
                         'modifier-agent-status',
                         'effacer-agent-status',
+                        'creer-correspondance',
+                        'modifier-correspondance',
+                        'effacer-correspondance',
                     ],
                     'roles' => [],
                 ],
@@ -44,37 +50,87 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'creer-agent-status' => [
-                        'type'  => Literal::class,
+                    'agent-status' => [
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/creer-agent-status',
-                            'defaults' => [
-                                'controller' => RessourceRhController::class,
-                                'action'     => 'creer-agent-status',
+                            'route'    => '/agent-status',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'creer' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/creer',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'creer-agent-status',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-agent-status',
+                                    ],
+                                ],
+                            ],
+                            'effacer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/effacer/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'effacer-agent-status',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
-                    'modifier-agent-status' => [
-                        'type'  => Segment::class,
+                    'correspondance' => [
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/modifier-agent-status/:id',
-                            'defaults' => [
-                                'controller' => RessourceRhController::class,
-                                'action'     => 'modifier-agent-status',
+                            'route'    => '/correspondance',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'creer' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/creer',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'creer-correspondance',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-correspondance',
+                                    ],
+                                ],
+                            ],
+                            'effacer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/effacer/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'effacer-correspondance',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
-                    'effacer-agent-status' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/effacer-agent-status/:id',
-                            'defaults' => [
-                                'controller' => RessourceRhController::class,
-                                'action'     => 'effacer-agent-status',
-                            ],
-                        ],
-                    ],
+
                 ],
+
             ],
         ],
     ],
@@ -94,11 +150,13 @@ return [
     'form_elements' => [
         'factories' => [
             AgentStatusForm::class => AgentStatusFormFactory::class,
+            CorrespondanceForm::class => CorrespondanceFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokable' => [
             AgentStatusHydrator::class => AgentStatusHydrator::class,
+            CorrespondanceHydrator::class => CorrespondanceHydrator::class,
         ]
     ]
 

@@ -3,10 +3,12 @@
 namespace Application\Form\Agent;
 
 use Application\Entity\Db\Agent;
+use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DateTime;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class AgentHydrator implements HydratorInterface {
+    use RessourceRhServiceAwareTrait;
 
     /**
      * @param Agent $object
@@ -15,11 +17,13 @@ class AgentHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'nom'       => $object->getNom(),
-            'prenom'    => $object->getPrenom(),
-            'dateDebut' => ($object->getDateDebut())?$object->getDateDebut()->format("d/m/Y"):"",
-            'dateFin'   => ($object->getDateFin())?$object->getDateFin()->format("d/m/Y"):"",
-            'quotite'   => $object->getQuotite(),
+            'nom'               => $object->getNom(),
+            'prenom'            => $object->getPrenom(),
+            'dateDebut'         => ($object->getDateDebut())?$object->getDateDebut()->format("d/m/Y"):"",
+            'dateFin'           => ($object->getDateFin())?$object->getDateFin()->format("d/m/Y"):"",
+            'quotite'           => $object->getQuotite(),
+            'status'            => $object->getStatus(),
+            'correspondance'    => $object->getCorrespondance(),
         ];
 
         return $data;
@@ -32,6 +36,9 @@ class AgentHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
+        $status = $this->getRessourceRhService()->getAgentStatus($data['status']);
+        $correspondance = $this->getRessourceRhService()->getCorrespondance($data['correspondance']);
+
         $object->setPrenom($data['prenom']);
         $object->setNom($data['nom']);
         $object->setQuotite($data['quotite']);
@@ -43,6 +50,8 @@ class AgentHydrator implements HydratorInterface {
             $date = DateTime::createFromFormat('d/m/Y', $data['dateFin']);
             $object->setDateFin($date);
         }
+        $object->setStatus($status);
+        $object->setCorrespondance($correspondance);
 
         return $object;
     }

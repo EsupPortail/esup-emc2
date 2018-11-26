@@ -11,8 +11,12 @@ div.main {
     background-color: white;
     border-radius: 5px;
     padding: 10px;
+    margin: 5px;
 }
 
+div.main h2 {
+    text-decoration: underline;
+}
 div.jumbotron#preecog {
     background-color: white;
 }

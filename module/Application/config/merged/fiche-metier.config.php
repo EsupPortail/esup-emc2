@@ -9,6 +9,7 @@ use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
+use Application\Form\Agent\AgentHydratorFactory;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
@@ -312,11 +313,11 @@ return [
     'hydrators' => [
         'invokables' => [
             MissionsPrincipalesHydrator::class => MissionsPrincipalesHydrator::class,
-            AgentHydrator::class => AgentHydrator::class,
         ],
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
             LibelleHydrator::class => LibelleHydratorFactory::class,
+            AgentHydrator::class => AgentHydratorFactory::class,
         ]
     ]
 

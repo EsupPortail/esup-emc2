@@ -2,10 +2,19 @@
 
 /**
  * @var AgentStatus[] $status
+ * @var Correspondance[] $correspondances
+ * @var Metier[] $metiers
  */
 
 use Application\Entity\Db\AgentStatus;
+use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Metier;
+use Application\Provider\Privilege\MetierPrivileges;
 
+$canAfficherMetier    = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::AFFICHER));
+$canAjouterMetier     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::AJOUTER));
+$canEditerMetier      = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::EDITER));
+$canEffacerMetier     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::EFFACER));
 
 $canAjouterRessource = true;
 $canEditerRessource = true;
@@ -17,24 +26,27 @@ $canEffacerRessource = true;
 </h1>
 
 <div class="main">
-    <h2>
-        Status des agents
-        <span class="badge">
-            <?php echo count($status); ?>
-        </span>
-    </h2>
+    <div class="col-md-8">
+        <h2>
+            Status des agents
+            <span class="badge">
+                <?php echo count($status); ?>
+            </span>
+        </h2>
+    </div>
 
-    <?php if ($canAjouterRessource) : ?>
-        <a
-            href="<?php echo $this->url('ressource-rh/creer-agent-status', [], [], true); ?>"
-            class="btn btn-primary action ajax-modal"
-            data-event="modification"
-        >
-            <i class="fas fa-plus"></i>
-            Ajouter un status
-        </a>
-    <?php endif; ?>
-
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a
+                href="<?php echo $this->url('ressource-rh/agent-status/creer', [], [], true); ?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification"
+            >
+                <i class="fas fa-plus"></i>
+                Ajouter un status
+            </a>
+        <?php endif; ?>
+    </div>
 
     <?php if (count($status) > 0) : ?>
         <table class="table table-condensed">
@@ -52,7 +64,7 @@ $canEffacerRessource = true;
                     <td> <?php echo $statu->getLibelle(); ?> </td>
                     <td>
                         <?php if ($canEditerRessource) : ?>
-                            <a href="<?php echo $this->url('ressource-rh/modifier-agent-status', ['id' => $statu->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('ressource-rh/agent-status/modifier', ['id' => $statu->getId()], [], true); ?>"
                                data-event="modification"
                                class="ajax-modal"
                             >
@@ -60,7 +72,7 @@ $canEffacerRessource = true;
                             </a>
                         <?php endif; ?>
                         <?php if ($canEffacerRessource) : ?>
-                            <a href="<?php echo $this->url('ressource-rh/effacer-agent-status', ['id' => $statu->getId()], [], true); ?>" >
+                            <a href="<?php echo $this->url('ressource-rh/agent-status/effacer', ['id' => $statu->getId()], [], true); ?>" >
                                 <i class="fas fa-trash-alt" title="Effacer le status"></i>
                             </a>
                         <?php endif; ?>
@@ -73,6 +85,128 @@ $canEffacerRessource = true;
 
 </div>
 
+<div class="main">
+
+    <div class="col-md-8">
+        <h2>
+            Liste des correspondances
+            <span class="badge">
+            <?php echo count($correspondances); ?>
+        </span>
+        </h2>
+    </div>
+
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/correspondance/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter une correspondance
+            </a>
+        <?php endif;?>
+    </div>
+
+
+    <?php if (count($correspondances) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Id </th>
+                <th> Référence </th>
+                <th> Libelle </th>
+                <th> Description </th>
+                <th> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($correspondances as $correspondance) : ?>
+                <tr>
+                    <td> <?php echo $correspondance->getId(); ?> </td>
+                    <td> <?php echo $correspondance->getReference(); ?> </td>
+                    <td> <?php echo $correspondance->getLibelle(); ?> </td>
+                    <td> <?php echo $correspondance->getDescription(); ?> </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/correspondance/modifier', ['id' => $correspondance->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/correspondance/effacer', ['id' => $correspondance->getId()], [], true); ?>" >
+                                <i class="fas fa-trash-alt" title="Effacer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+
+</div>
+
+
+<div class="main">
+
+    <div class="col-md-8">
+    <h2>
+        Liste des métiers
+        <span class="badge">
+            <?php echo count($metiers); ?>
+        </span>
+    </h2>
+    </div>
+
+    <div class="pull-right">
+        <?php if ($canAjouterMetier) : ?>
+            <a href="<?php echo $this->url('metier/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter un métier
+            </a>
+        <?php endif;?>
+    </div>
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id</th>
+            <th> Libelle</th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($metiers as $metier): ?>
+            <tr>
+                <td> <?php echo $metier->getId(); ?> </td>
+                <td> <?php echo $metier->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canEditerMetier) : ?>
+                        <a href="<?php echo $this->url('metier/editer', ['id' => $metier->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                            <i class="fas fa-pencil-alt" title="Éditer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacerMetier) : ?>
+                        <a href="<?php echo $this->url('metier/effacer', ['id' => $metier->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
 
 
 <script>

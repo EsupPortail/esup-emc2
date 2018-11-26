@@ -61,6 +61,14 @@ $this->headTitle("Information sur l'agent");
                 <dd>
                     <?php echo $agent->getQuotite(); ?> %
                 </dd>
+                <dt> Status </dt>
+                <dd>
+                    <?php echo $agent->getStatus(); ?>
+                </dd>
+                <dt> Correspondance </dt>
+                <dd>
+                    <?php echo $agent->getCorrespondance(); ?>
+                </dd>
             </dl>
         <?php else: ?>
             <div class="alert alert-warning"> <i class="fas fa-exclamation-triangle"></i> Aucun agent de renseigné. </div>

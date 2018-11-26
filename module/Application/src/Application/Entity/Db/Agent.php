@@ -21,6 +21,10 @@ class Agent {
     private $dateFin;
     /** @var integer */
     private $quotite;
+    /** @var AgentStatus */
+    private $status;
+    /** @var Correspondance */
+    private $correspondance;
 
     /**
      * @return int
@@ -117,6 +121,42 @@ class Agent {
     public function setQuotite($quotite)
     {
         $this->quotite = $quotite;
+        return $this;
+    }
+
+    /**
+     * @return AgentStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param AgentStatus $status
+     * @return Agent
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @return Correspondance
+     */
+    public function getCorrespondance()
+    {
+        return $this->correspondance;
+    }
+
+    /**
+     * @param Correspondance $correspondance
+     * @return Agent
+     */
+    public function setCorrespondance($correspondance)
+    {
+        $this->correspondance = $correspondance;
         return $this;
     }
 
