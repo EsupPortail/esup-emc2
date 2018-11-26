@@ -34,4 +34,11 @@ class AgentStatus {
         $this->libelle = $libelle;
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
+
+
 }

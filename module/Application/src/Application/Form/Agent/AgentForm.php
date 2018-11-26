@@ -2,7 +2,11 @@
 
 namespace Application\Form\Agent;
 
+use Application\Entity\Db\AgentStatus;
+use Application\Entity\Db\Correspondance;
+use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Form\Element\Date;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
@@ -10,6 +14,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class AgentForm extends Form {
+    use EntityManagerAwareTrait;
 
     public function init()
     {
@@ -90,6 +95,52 @@ class AgentForm extends Form {
                 'id' => 'quotite',
             ],
         ]);
+        // Status
+        $this->add([
+            'type' => ObjectSelect::class,
+            'name' => 'status',
+            'options' => [
+                'label' => "Status de l'agent* :",
+                'empty_option' => "Sélectionner un status ...",
+                'object_manager' => $this->getEntityManager(),
+                'target_class' => AgentStatus::class,
+                'property' => 'libelle',
+                'find_method' => [
+                    'name' => 'findBy',
+                    'params' => [
+                        'criteria' => [],
+                        'orderBy' => ['libelle' => 'ASC'],
+                    ],
+                ],
+                'disable_inarray_validator' => true,
+            ],
+            'attributes' => [
+                'id' => 'status',
+            ],
+        ]);
+        // Status
+        $this->add([
+            'type' => ObjectSelect::class,
+            'name' => 'correspondance',
+            'options' => [
+                'label' => "Correspondance* :",
+                'empty_option' => "Sélectionner une correspondance ...",
+                'object_manager' => $this->getEntityManager(),
+                'target_class' => Correspondance::class,
+                'property' => 'libelle',
+                'find_method' => [
+                    'name' => 'findBy',
+                    'params' => [
+                        'criteria' => [],
+                        'orderBy' => ['libelle' => 'ASC'],
+                    ],
+                ],
+                'disable_inarray_validator' => true,
+            ],
+            'attributes' => [
+                'id' => 'correspondance',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -121,6 +172,9 @@ class AgentForm extends Form {
             ],
             'dateFin' => [
                 'required' => false,
+            ],
+            'status' => [
+                'required' => true,
             ],
         ]));
     }

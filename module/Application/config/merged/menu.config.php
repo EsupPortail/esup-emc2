@@ -7,12 +7,42 @@ use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\MetierPrivileges;
+use Application\Provider\Privilege\RessourceRhPrivileges;
 
 return [
     'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
+                    'ressource' => [
+                        'order' => 100,
+                        'label' => 'Ressources RH',
+                        'route' => 'ressource-rh',
+                        'roles' => [],
+                        'pages' => [
+                            [
+                                'label' => 'Status',
+                                'route' => 'ressource-rh',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Correspondances',
+                                'route' => 'ressource-rh',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Métiers',
+                                'route' => 'ressource-rh',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                        ],
+                    ],
                     'fiche-metier' => [
 //                        'order' => -10,
                         'label' => 'Fiches',
@@ -52,13 +82,6 @@ return [
                                 'label' => 'Les applications',
                                 'route' => 'application',
                                 'privileges' => ApplicationPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'label' => 'Les métiers',
-                                'route' => 'metier',
-                                'privileges' => MetierPrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],

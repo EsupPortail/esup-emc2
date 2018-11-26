@@ -12,5 +12,11 @@
         <field name="dateFin"           type="datetime"                 column="date_fin"                 nullable="true"/>
         <field name="quotite"           type="integer"                  column="quotite"                  nullable="true"/>
 
+        <many-to-one target-entity="Application\Entity\Db\AgentStatus" field="status">
+            <join-column name="status" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Correspondance" field="correspondance">
+            <join-column name="correspondance" referenced-column-name="id" />
+        </many-to-one>
     </entity>
 </doctrine-mapping>
