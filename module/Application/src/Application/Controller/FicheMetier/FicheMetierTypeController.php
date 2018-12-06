@@ -53,14 +53,16 @@ class FicheMetierTypeController extends  AbstractActionController{
 
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [] , true);
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Modifier le libellé',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function editerMissionsPrincipalesAction()
@@ -83,10 +85,13 @@ class FicheMetierTypeController extends  AbstractActionController{
             }
         }
 
-        return new ViewModel([
-            'title' => 'Modification des missions principales',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer missions principales',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function ajouterNouvelleActiviteAction()
@@ -114,10 +119,13 @@ class FicheMetierTypeController extends  AbstractActionController{
             }
         }
 
-        return new ViewModel([
-            'title' => 'Ajout d\'une nouvelle activité',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajouter une nouvelle activité',
             'form' => $form,
         ]);
+        return $vm;
 
     }
 

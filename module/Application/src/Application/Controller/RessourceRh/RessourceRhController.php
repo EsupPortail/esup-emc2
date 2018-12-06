@@ -58,10 +58,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter un nouveau status',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function modifierAgentStatusAction()
@@ -84,10 +87,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
-            'title' => 'Modifier un status',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer un status',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerAgentStatusAction()
@@ -123,10 +129,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter une nouvelle correspondance',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function modifierCorrespondanceAction()
@@ -149,10 +158,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
-            'title' => 'Modifier une correspondance',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer une correspondance',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerCorrespondanceAction()
@@ -188,10 +200,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter un nouveau corps',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function modifierCorpsAction()
@@ -214,10 +229,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
-            'title' => 'Modifier un corps',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer un corps',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerCorpsAction()
@@ -253,10 +271,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter un nouveau métier',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function modifierMetierAction()
@@ -279,10 +300,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
-            'title' => 'Modifier un métier',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer un métier',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerMetierAction()
@@ -318,10 +342,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter une nouvelle famille de métiers',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function modifierFamilleAction()
@@ -344,10 +371,13 @@ class RessourceRhController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
-            'title' => 'Modifier une famille de métiers',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer une famille de métiers',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerFamilleAction()

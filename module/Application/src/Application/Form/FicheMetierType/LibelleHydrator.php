@@ -3,11 +3,11 @@
 namespace Application\Form\FicheMetierType;
 
 use Application\Entity\Db\FicheMetierType;
-use Application\Service\Metier\MetierServiceAwareTrait;
+use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class LibelleHydrator implements HydratorInterface {
-    use MetierServiceAwareTrait;
+    use RessourceRhServiceAwareTrait;
     /**
      * @param FicheMetierType $object
      * @return array
@@ -27,7 +27,7 @@ class LibelleHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $metier = $this->getMetierService()->getMetier($data['metier']);
+        $metier = $this->getRessourceRhService()->getMetier($data['metier']);
         $object->setMetier($metier);
         return $object;
     }
