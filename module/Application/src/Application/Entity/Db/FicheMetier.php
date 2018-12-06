@@ -17,6 +17,9 @@ class FicheMetier
     /** @var Agent */
     private $agent;
 
+    /** @var SpecificitePoste */
+    private $specificite;
+
     public function getId()
     {
         return $this->id;
@@ -75,6 +78,25 @@ class FicheMetier
         $this->agent = $agent;
         return $this;
     }
+
+    /**
+     * @return SpecificitePoste
+     */
+    public function getSpecificite()
+    {
+        return $this->specificite;
+    }
+
+    /**
+     * @param SpecificitePoste $specificite
+     * @return FicheMetier
+     */
+    public function setSpecificite($specificite)
+    {
+        $this->specificite = $specificite;
+        return $this;
+    }
+
 
 
 }

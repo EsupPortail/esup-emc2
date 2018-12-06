@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\SpecificitePoste" table="specificite_poste">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <!--<one-to-one field="fiche" target-entity="Application\Entity\Db\FicheMetier" mapped-by="id"/>-->
+
+
+        <field name="specificite"       type="string" length="2048"     column="specificite"            nullable="true"/>
+        <field name="encadrement"       type="string" length="2048"     column="encadrement"            nullable="true"/>
+        <field name="relationsInternes" type="string" length="2048"     column="relations_internes"     nullable="true"/>
+        <field name="relationsExternes" type="string" length="2048"     column="relations_externes"     nullable="true"/>
+        <field name="contraintes"       type="string" length="2048"     column="contraintes"            nullable="true"/>
+        <field name="moyens"            type="string" length="2048"     column="moyens"                 nullable="true"/>
+
+
+    </entity>
+</doctrine-mapping>

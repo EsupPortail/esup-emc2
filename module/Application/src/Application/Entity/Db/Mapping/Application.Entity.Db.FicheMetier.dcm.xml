@@ -30,5 +30,7 @@
             <join-column name="agent" referenced-column-name="id" />
         </many-to-one>
 
+
+        <!--<one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste" mapped-by="id"/>-->
     </entity>
 </doctrine-mapping>

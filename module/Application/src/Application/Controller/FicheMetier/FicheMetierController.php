@@ -5,9 +5,11 @@ namespace Application\Controller\FicheMetier;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\MissionComplementaire;
+use Application\Entity\Db\SpecificitePoste;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\MissionComplementaireForm;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
+use Application\Form\FicheMetier\SpecificitePosteForm;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -38,6 +40,7 @@ class FicheMetierController extends AbstractActionController
 
         return new ViewModel([
             'fiche' => $fiche,
+            'specificite' => $this->getFicheMetierService()->getSpecificitePoste(9),
         ]);
     }
 
@@ -216,5 +219,37 @@ class FicheMetierController extends AbstractActionController
 
         $this->getAgentService()->deleteMissionComplementaire($mission);
         $this->redirect()->toRoute('fiche-metier/afficher-agent', ['id' => $mission->getAgent()->getId()], [], true);
+    }
+
+    /** SPECIFICITE POSTE *********************************************************************************************/
+
+    public function editerSpecificitePosteAction()
+    {
+
+        $specificite = new SpecificitePoste();
+        $fiche = $this->getFicheMetierService()->getFicheMetier(1);
+
+        /** @var SpecificitePosteForm $form */
+        $form = $form = $this->getServiceLocator()->get('FormElementManager')->get(SpecificitePosteForm::class);
+        $form->bind($specificite);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $specificite->setFiche($fiche);
+                $this->getFicheMetierService()->createSpecificitePoste($specificite);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer spécificité du poste',
+            'form' => $form,
+        ]);
+        return $vm;
     }
 }
