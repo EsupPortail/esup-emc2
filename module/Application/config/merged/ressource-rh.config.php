@@ -5,6 +5,9 @@ namespace Application;
 use Application\Controller\Metier\MetierController;
 use Application\Controller\RessourceRh\RessourceRhController;
 use Application\Controller\RessourceRh\RessourceRhControllerFactory;
+use Application\Form\RessourceRh\MetierFamilleForm;
+use Application\Form\RessourceRh\MetierFamilleFormFactory;
+use Application\Form\RessourceRh\MetierFamilleHydrator;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
@@ -17,6 +20,7 @@ use Application\Form\RessourceRh\CorpsHydrator;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Form\RessourceRh\CorrespondanceFormFactory;
 use Application\Form\RessourceRh\CorrespondanceHydrator;
+use Application\Form\RessourceRh\MetierHydratorFactory;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\RessourceRh\RessourceRhServiceFactory;
@@ -44,6 +48,7 @@ return [
                         'creer-correspondance',
                         'creer-corps',
                         'creer-metier',
+                        'creer-famille',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AJOUTER,
@@ -56,6 +61,7 @@ return [
                         'modifier-correspondance',
                         'modifier-corps',
                         'modifier-metier',
+                        'modifier-famille',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::MODIFIER,
@@ -68,6 +74,7 @@ return [
                         'effacer-correspondance',
                         'effacer-metier',
                         'effacer-agent-status',
+                        'effacer-famille',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::EFFACER,
@@ -250,6 +257,45 @@ return [
                             ],
                         ],
                     ],
+                    'famille' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/famille',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'creer' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/creer',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'creer-famille',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-famille',
+                                    ],
+                                ],
+                            ],
+                            'effacer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/effacer/:id',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'effacer-famille',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -273,15 +319,19 @@ return [
             CorpsForm::class => CorpsFormFactory::class,
             CorrespondanceForm::class => CorrespondanceFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
+            MetierFamilleForm::class => MetierFamilleFormFactory::class,
         ],
     ],
     'hydrators' => [
-        'invokable' => [
+        'invokables' => [
             AgentStatusHydrator::class => AgentStatusHydrator::class,
             CorpsHydrator::class => CorpsHydrator::class,
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
-            MetierHydrator::class => MetierHydrator::class,
-        ]
+            MetierFamilleHydrator::class => MetierFamilleHydrator::class,
+        ],
+        'factories' => [
+            MetierHydrator::class => MetierHydratorFactory::class,
+        ],
     ]
 
 ];
