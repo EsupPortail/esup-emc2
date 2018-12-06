@@ -4,6 +4,7 @@
  * @var AgentStatus[] $status
  * @var Correspondance[] $correspondances
  * @var Metier[] $metiers
+ * @var MetierFamille[] $familles
  * @var Corps[] $corps
  */
 
@@ -11,6 +12,7 @@ use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Metier;
+use Application\Entity\Db\MetierFamille;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 
 $canAjouterRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AJOUTER));
@@ -26,6 +28,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'status']); ?>" class="btn btn-primary action">Status</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'correspondance']); ?>" class="btn btn-primary action">Correspondance</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille de métier</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'corps']); ?>" class="btn btn-primary action">Corps</a>
 
 <div class="main">
@@ -184,7 +187,8 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         <thead>
         <tr>
             <th> Id</th>
-            <th> Libelle</th>
+            <th> Libelle </th>
+            <th> Famille </th>
             <th class="action"> Action </th>
         </tr>
         </thead>
@@ -193,6 +197,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             <tr>
                 <td> <?php echo $metier->getId(); ?> </td>
                 <td> <?php echo $metier->getLibelle(); ?> </td>
+                <td> <?php echo $metier->getFamille()->getLibelle(); ?> </td>
                 <td>
                     <?php if ($canEditerRessource) : ?>
                         <a href="<?php echo $this->url('ressource-rh/metier/modifier', ['id' => $metier->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
@@ -209,8 +214,69 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         <?php endforeach; ?>
         </tbody>
     </table>
+</div>
+
+<div class="main">
+    <a name="famille"></a>
+    <div class="col-md-8">
+        <h2>
+            Liste des familles de métier
+            <span class="badge">
+            <?php echo count($familles); ?>
+        </span>
+        </h2>
+    </div>
+
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/famille/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter une famille de métier
+            </a>
+        <?php endif;?>
+    </div>
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id</th>
+            <th> Libelle </th>
+            <th> #metiers </th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($familles as $famille): ?>
+            <tr>
+                <td> <?php echo $famille->getId(); ?> </td>
+                <td> <?php echo $famille->getLibelle(); ?> </td>
+                <td>
+                    <?php echo count($famille->getMetiers()); ?>
+                </td>
+                <td>
+                    <?php if ($canEditerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/famille/modifier', ['id' => $famille->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                            <i class="fas fa-pencil-alt" title="Éditer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/famille/effacer', ['id' => $famille->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 
 </div>
+
 
 <div class="main">
     <a name="corps"></a>

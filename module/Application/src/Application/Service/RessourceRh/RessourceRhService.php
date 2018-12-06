@@ -6,6 +6,7 @@ use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Metier;
+use Application\Entity\Db\MetierFamille;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
@@ -331,6 +332,85 @@ class RessourceRhService {
             $this->getEntityManager()->flush();
         } catch (OptimisticLockException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un metier", $e);
+        }
+    }
+
+    /** Famille Metier ************************************************************************************************/
+
+    /**
+     * @return MetierFamille[]
+     */
+    public function getMetiersFamilles($order = null)
+    {
+        $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
+        ;
+
+        if ($order !== null) {
+            $qb = $qb->addOrderBy('famille.'.$order, 'ASC');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return MetierFamille
+     */
+    public function getMetierFamille($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
+            ->andWhere('famille.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs familles de métier partagent le même identifiant [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param MetierFamille $famille
+     * @return MetierFamille
+     */
+    public function createMetierFamille($famille)
+    {
+        $this->getEntityManager()->persist($famille);
+        try {
+            $this->getEntityManager()->flush($famille);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la création d'une famille de métier", $e);
+        }
+        return $famille;
+    }
+
+    /**
+     * @param MetierFamille $famille
+     * @return MetierFamille
+     */
+    public function updateMetierFamille($famille)
+    {
+        try {
+            $this->getEntityManager()->flush($famille);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'une famille de metier.", $e);
+        }
+        return $famille;
+    }
+
+    /**
+     * @param MetierFamille $famille
+     */
+    public function deleteMetierFamille($famille)
+    {
+        $this->getEntityManager()->remove($famille);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une famille de metier", $e);
         }
     }
 

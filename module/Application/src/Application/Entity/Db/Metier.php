@@ -8,6 +8,8 @@ class Metier {
     private $id;
     /** @var string */
     private $libelle;
+    /** @var MetierFamille */
+    private $famille;
 
     /**
      * @return int
@@ -31,5 +33,23 @@ class Metier {
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+    }
+
+    /**
+     * @return MetierFamille
+     */
+    public function getFamille()
+    {
+        return $this->famille;
+    }
+
+    /**
+     * @param MetierFamille $famille
+     * @return Metier
+     */
+    public function setFamille($famille)
+    {
+        $this->famille = $famille;
+        return $this;
     }
 }

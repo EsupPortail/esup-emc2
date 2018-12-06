@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\Metier" table="metier">
+    <entity name="Application\Entity\Db\MetierFamille" table="metier_famille">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
         <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
-        <many-to-one target-entity="Application\Entity\Db\MetierFamille" field="famille">
-            <join-column name="famille" referenced-column-name="id" />
-        </many-to-one>
+        <field name="couleur"           type="string"   length="64"       column="couleur"                nullable="true"  />
+
+        <one-to-many target-entity="Application\Entity\Db\Metier" field="metiers" mapped-by="famille"/>
+
     </entity>
 </doctrine-mapping>

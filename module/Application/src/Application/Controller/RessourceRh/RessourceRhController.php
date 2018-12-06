@@ -6,6 +6,8 @@ use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Metier;
+use Application\Entity\Db\MetierFamille;
+use Application\Form\RessourceRh\MetierFamilleForm;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\CorpsForm;
@@ -24,11 +26,13 @@ class RessourceRhController extends AbstractActionController {
         $correspondances = $this->getRessourceRhService()->getCorrespondances('libelle');
         $metiers = $this->getRessourceRhService()->getMetiers('libelle');
         $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
+        $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
 
         return new ViewModel([
             'status' => $status,
             'correspondances' => $correspondances,
             'metiers' => $metiers,
+            'familles' => $familles,
             'corps' => $corps,
         ]);
     }
@@ -288,6 +292,71 @@ class RessourceRhController extends AbstractActionController {
 
         if ($metier !== null) {
             $this->getRessourceRhService()->deleteMetier($metier);
+        }
+
+        $this->redirect()->toRoute('ressource-rh', [], [], true);
+    }
+
+    /** FAMILLE METIER ************************************************************************************************/
+
+    public function creerFamilleAction()
+    {
+        $famille = new MetierFamille();
+
+        /** @var CorpsForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierFamilleForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/famille/creer', [], [], true));
+        $form->bind($famille);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createMetierFamille($famille);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Ajouter une nouvelle famille de métiers',
+            'form' => $form,
+        ]);
+    }
+
+    public function modifierFamilleAction()
+    {
+        $familleId = $this->params()->fromRoute('id');
+        $famille = $this->getRessourceRhService()->getMetierFamille($familleId);
+
+        /** @var MetierForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierFamilleForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/famille/modifier', [], [], true));
+        $form->bind($famille);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateMetierFamille($famille);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Modifier une famille de métiers',
+            'form' => $form,
+        ]);
+    }
+
+    public function effacerFamilleAction()
+    {
+        $familleId = $this->params()->fromRoute('id');
+        $famille = $this->getRessourceRhService()->getMetierFamille($familleId);
+
+        if ($famille !== null) {
+            $this->getRessourceRhService()->deleteMetierFamille($famille);
         }
 
         $this->redirect()->toRoute('ressource-rh', [], [], true);
