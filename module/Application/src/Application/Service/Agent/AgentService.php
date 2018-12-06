@@ -3,6 +3,7 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\MissionComplementaire;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
@@ -85,6 +86,65 @@ class AgentService {
             $this->getEntityManager()->flush();
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Un problème a été recontré lors de la suppression de l'agent", $e);
+        }
+    }
+
+    /** MISSION COMP **************************************************************************************************/
+
+    public function getMissionComplementaire($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(MissionComplementaire::class)->createQueryBuilder('mission')
+            ->andWhere('mission.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs missions complémentaires partagent le même identifiant [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param MissionComplementaire $mission
+     * @return MissionComplementaire
+     */
+    public function createMissionComplementaire($mission)
+    {
+        $this->getEntityManager()->persist($mission);
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème a été recontré lors de la création de la mission complémentaire", $e);
+        }
+        return $mission;
+    }
+
+    /**
+     * @param MissionComplementaire $mission
+     * @return MissionComplementaire
+     */
+    public function updateMissionComplementaire($mission)
+    {
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème a été recontré lors de la mise à jour de la mission complémentaire", $e);
+        }
+        return $mission;
+    }
+
+    /**
+     * @param MissionComplementaire $mission
+     */
+    public function deleteMissionComplementaire($mission)
+    {
+        $this->getEntityManager()->remove($mission);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème a été recontré lors de la suppression de la mission complémentaire", $e);
         }
     }
 }

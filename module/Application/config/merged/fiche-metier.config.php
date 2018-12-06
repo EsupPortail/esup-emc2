@@ -10,6 +10,10 @@ use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
 use Application\Form\Agent\AgentHydratorFactory;
+use Application\Form\Agent\MissionComplementaireForm;
+use Application\Form\Agent\MissionComplementaireFormFactory;
+use Application\Form\Agent\MissionComplementaireHydrator;
+use Application\Form\Agent\MissionComplementaireHydratorFactory;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
@@ -50,6 +54,10 @@ return [
                         'afficher',
                         'afficher-agent',
                         'saisie-manuelle-agent',
+                        'lister-agents',
+                        'ajouter-mission-complementaire',
+                        'editer-mission-complementaire',
+                        'supprimer-mission-complementaire',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -166,7 +174,16 @@ return [
                             ],
                         ],
                     ],
-
+                    'agent' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/agent',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'lister-agents',
+                            ],
+                        ],
+                    ],
                     'afficher-agent' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -185,6 +202,39 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'saisie-manuelle-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-mission-complementaire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-mission-complementaire/:agent',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'ajouter-mission-complementaire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'editer-mission-complementaire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/editer-mission-complementaire/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'editer-mission-complementaire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer-mission-complementaire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-mission-complementaire/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'supprimer-mission-complementaire',
                             ],
                         ],
                         'may_terminate' => true,
@@ -308,6 +358,7 @@ return [
             MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
 
             AgentForm::class => AgentFormFactory::class,
+            MissionComplementaireForm::class => MissionComplementaireFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -318,6 +369,7 @@ return [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
             LibelleHydrator::class => LibelleHydratorFactory::class,
             AgentHydrator::class => AgentHydratorFactory::class,
+            MissionComplementaireHydrator::class => MissionComplementaireHydratorFactory::class,
         ]
     ]
 

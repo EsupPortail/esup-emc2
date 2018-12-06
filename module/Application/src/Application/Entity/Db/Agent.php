@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Agent {
 
@@ -30,7 +31,14 @@ class Agent {
     /** @var Corps */
     private $corps;
 
+    /** @var ArrayCollection */
+    private $missionsComplementaires;
 
+
+    public function __construct()
+    {
+        $this->missionsComplementaires = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -202,6 +210,32 @@ class Agent {
         return $this;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getMissionsComplementaires()
+    {
+        return $this->missionsComplementaires;
+    }
 
+    /**
+     * @param MissionComplementaire $mission
+     * @return Agent
+     */
+    public function addMissionsComplementaires($mission)
+    {
+        $this->missionsComplementaires->add($mission);
+        return $this;
+    }
+
+    /**
+     * @param MissionComplementaire $mission
+     * @return Agent
+     */
+    public function removeMissionsComplementaires($mission)
+    {
+        $this->missionsComplementaires->removeElement($mission);
+        return $this;
+    }
 
 }
