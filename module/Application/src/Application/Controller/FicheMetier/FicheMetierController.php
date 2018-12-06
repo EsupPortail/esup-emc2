@@ -167,10 +167,13 @@ class FicheMetierController extends AbstractActionController
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter une mission complementaire',
             'form' => $form,
         ]);
+        return $vm;
 
 
     }
@@ -197,10 +200,13 @@ class FicheMetierController extends AbstractActionController
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Éditer une mission complementaire',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function supprimerMissionComplementaireAction()

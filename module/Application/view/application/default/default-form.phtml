@@ -1,15 +1,14 @@
 <?php
 
-/** @var $form */
+/**
+ * @var Form $form
+ */
+
+use Zend\Form\Form;
+
 ?>
 
-<!--<h1 class="page-header">-->
-<!--    Création d'une activité-->
-<!--</h1>-->
-
-<?php
-    echo $this->form($form);
-?>
+<?php echo $this->form($form); ?>
 
 <script>
     $(document).ready(function() {
@@ -17,10 +16,10 @@
         tinymce.init({
             selector: '.type2',
             toolbar: 'newdocument undo redo | bold italic | bullist',
-            resize: 'both',
+            resize: true,
             language: 'fr_FR',
             plugins: 'lists',
-            statusbar: false,
+            statusbar: true,
             browser_spellcheck : true,
             branding: false,
             menu: {},
