@@ -8,6 +8,10 @@ use Application\Entity\Db\Agent;
 
 $this->headTitle("Information sur l'agent");
 
+$canAjouterMissionComplementaire = true;
+$canEditerMissionComplementaire  = true;
+$canEffacerMissionComplementaire = true;
+
 ?>
 
 <h1 class="page-header">
@@ -78,8 +82,54 @@ $this->headTitle("Information sur l'agent");
                     <?php echo $agent->getCorps(); ?>
                 </dd>
             </dl>
+
+            <br/>
+
+            Missions complémentaires
+            <span class="badge"> <?php echo count($agent->getMissionsComplementaires()); ?></span>
+
+        <?php if ($canAjouterMissionComplementaire): ?>
+                <a href="<?php echo $this->url('fiche-metier/ajouter-mission-complementaire', ['agent' => $agent->getId()], [], true); ?>"
+                   class="ajax-modal"
+                   data-event="modification"
+                   >
+                    <i class="fas fa-plus" title="Ajouter une mission complémentaire"></i>
+                </a>
+        <?php endif; ?>
+            <ul>
+                <?php foreach ($agent->getMissionsComplementaires() as $mission) : ?>
+                    <li>
+                        <?php echo $mission; ?> <?php echo $mission->getAgent()->getNom(); ?>
+                        <?php if ($canEditerMissionComplementaire): ?>
+                            <a href="<?php echo $this->url('fiche-metier/editer-mission-complementaire', ['id' => $mission->getId()], [], true); ?>"
+                               class="ajax-modal"
+                               data-event="modification"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer la mission complémentaire"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerMissionComplementaire): ?>
+                            <a href="<?php echo $this->url('fiche-metier/supprimer-mission-complementaire', ['id' => $mission->getId()], [], true); ?>">
+                                <i class="fas fa-trash-alt" title="Effacer la mission complémentaire"></i>
+                            </a>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         <?php else: ?>
             <div class="alert alert-warning"> <i class="fas fa-exclamation-triangle"></i> Aucun agent de renseigné. </div>
         <?php endif; ?>
     </div>
 </div>
+
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

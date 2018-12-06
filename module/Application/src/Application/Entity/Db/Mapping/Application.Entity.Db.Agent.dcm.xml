@@ -22,5 +22,7 @@
         <many-to-one target-entity="Application\Entity\Db\Corps" field="corps">
             <join-column name="corps" referenced-column-name="id" />
         </many-to-one>
+
+        <one-to-many target-entity="Application\Entity\Db\MissionComplementaire" field="missionsComplementaires" mapped-by="agent" />
     </entity>
 </doctrine-mapping>

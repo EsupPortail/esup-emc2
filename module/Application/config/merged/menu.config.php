@@ -73,6 +73,13 @@ return [
                         'roles' => [], //PrivilegeController::getResourceId(__NAMESPACE__ . '\Controller\Administration', 'index'),
                         'pages' => [
                             [
+                                'label' => 'Les agents',
+                                'route' => 'fiche-metier/agent',
+                                'privileges' => FicheMetierPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
                                 'label' => 'Les fiches métiers',
                                 'route' => 'fiche-metier',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
