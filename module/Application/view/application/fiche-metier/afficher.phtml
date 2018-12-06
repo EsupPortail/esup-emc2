@@ -2,9 +2,11 @@
 
 /**
  * @var FicheMetier $fiche
+ * @var SpecificitePoste $specificite
  */
 
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\SpecificitePoste;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 
 $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
@@ -53,12 +55,17 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </dl>
         <?php endif; ?>
 
-        <h3> Missions complémentaires </h3>
 
-        <ul>
-            <li> Référent qualité </li>
-            <li> Référent handicap </li>
-        </ul>
+
+        <?php if(! $agent->getMissionsComplementaires()->isEmpty()) : ?>
+
+            <h3> Missions complémentaires </h3>
+            <ul>
+            <?php foreach ($agent->getMissionsComplementaires() as $mission) : ?>
+                <li> <?php echo $mission; ?></li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -260,39 +267,52 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     </div>
     <div class="panel-body">
 
-        <h3> Spécificité du poste </h3>
-        <p>
-            Enim diam vulputate ut pharetra sit amet aliquam. Arcu cursus vitae congue mauris rhoncus aenean.
-            Amet nulla facilisi morbi tempus iaculis.
-        </p>
+        <?php if($canEditer) : ?>
+            <a href="<?php echo $this->url('fiche-metier/specificite',['id' => $fiche->getId()], [], true); ?>"
+               class="btn btn-primary action ajax-modal">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Éditer la spécificité du poste
+            </a>
+        <?php endif; ?>
 
-        <h3> Encadrement </h3>
-        <dl class="dl-horizontal">
-            <dt>Nombre de personnes encadrées </dt>
-                <dd> Encadrement au sens où le supérieur hiérarchique </dd>
-            <dt> Statut et catégorie des personnes <br/> encadrées </dt>
-                <dd>Titulaire ou contractuel
-                    Nombre A, B, C </dd>
-        </dl>
+        <?php if ($specificite->getSpecificite()) : ?>
+            <h3> Spécificité du poste </h3>
 
-        <h3> Relations internes à l'UNICAEN </h3>
-        <p>
-            Nulla facilisi cras fermentum odio eu feugiat pretium.
-        </p>
+            <?php echo $specificite->getSpecificite(); ?>
+        <?php endif; ?>
 
-        <h3> Relations externes à l'UNICAEN </h3>
-        <p>
-            Iaculis at erat pellentesque adipiscing commodo.
-        </p>
+        <?php if ($specificite->getEncadrement()) : ?>
+            <h3> Encadrement </h3>
 
-        <h3> Contraintes particulières d'exercice </h3>
-        <p>
-            Mattis rhoncus urna neque viverra justo nec ultrices.
-        </p>
+            <?php echo $specificite->getEncadrement(); ?>
+        <?php endif; ?>
 
-        <h3> Moyens et outils mis à disposition</h3>
-        <p>
-            Id diam vel quam elementum pulvinar etiam.
-        </p>
+        <?php if ($specificite->getRelationsInternes()) : ?>
+            <h3> Relations internes à l'unicaen </h3>
+
+            <?php echo $specificite->getRelationsInternes(); ?>
+        <?php endif; ?>
+
+        <?php if ($specificite->getRelationsExternes()) : ?>
+            <h3> Relations externes à l'unicaen </h3>
+
+            <?php echo $specificite->getRelationsExternes(); ?>
+        <?php endif; ?>
+
+        <?php if ($specificite->getContraintes()) : ?>
+            <h3> Contraintes particulières d'exercice </h3>
+
+            <?php echo $specificite->getContraintes(); ?>
+        <?php endif; ?>
+
+
+        <?php if ($specificite->getMoyens()) : ?>
+            <h3> Moyens et outils mis à disposition </h3>
+
+            <?php echo $specificite->getMoyens(); ?>
+        <?php endif; ?>
+
+
+
     </div>
 </div>

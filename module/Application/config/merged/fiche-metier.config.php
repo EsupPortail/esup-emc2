@@ -18,6 +18,8 @@ use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
 use Application\Form\FicheMetier\FicheMetierCreationHydratorFactory;
+use Application\Form\FicheMetier\SpecificitePosteForm;
+use Application\Form\FicheMetier\SpecificitePosteFormFactory;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteFormFactory;
 use Application\Form\FicheMetierType\LibelleForm;
@@ -58,6 +60,7 @@ return [
                         'ajouter-mission-complementaire',
                         'editer-mission-complementaire',
                         'supprimer-mission-complementaire',
+                        'editer-specificite-poste',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -130,6 +133,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'specificite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/specificite/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'editer-specificite-poste',
                             ],
                         ],
                         'may_terminate' => true,
@@ -359,6 +373,7 @@ return [
 
             AgentForm::class => AgentFormFactory::class,
             MissionComplementaireForm::class => MissionComplementaireFormFactory::class,
+            SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
         ],
     ],
     'hydrators' => [
