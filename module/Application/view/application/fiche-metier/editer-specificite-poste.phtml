@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @var Form $form
+ */
+
+use Zend\Form\Form;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function() {
+        // tinymce.remove();
+        tinymce.init({
+            selector: '.specificite',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'specificite',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('specificite').getContent());
+                    $('textarea#specificite').val(tinymce.get('specificite').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.encadrement',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'encadrement',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('encadrement').getContent());
+                    $('textarea#encadrement').val(tinymce.get('encadrement').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.relations_internes',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'relations_internes',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('relations_internes').getContent());
+                    $('textarea#relations_internes').val(tinymce.get('relations_internes').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.relations_externes',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'relations_externes',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('relations_externes').getContent());
+                    $('textarea#relations_externes').val(tinymce.get('relations_externes').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.contraintes',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'contraintes',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('contraintes').getContent());
+                    $('textarea#contraintes').val(tinymce.get('contraintes').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.moyens',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'moyens',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('moyens').getContent());
+                    $('textarea#moyens').val(tinymce.get('moyens').getContent());
+                });
+            }
+        });
+    });
+</script>

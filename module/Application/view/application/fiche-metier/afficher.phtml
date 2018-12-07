@@ -269,7 +269,9 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
         <?php if($canEditer) : ?>
             <a href="<?php echo $this->url('fiche-metier/specificite',['fiche' => $fiche->getId()], [], true); ?>"
-               class="btn btn-primary action ajax-modal">
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
                 <span class="glyphicon glyphicon-pencil"></span>
                 Éditer la spécificité du poste
             </a>
@@ -318,3 +320,15 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
     </div>
 </div>
+
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>
