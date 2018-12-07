@@ -238,6 +238,7 @@ class FicheMetierController extends AbstractActionController
 
         /** @var SpecificitePosteForm $form */
         $form = $form = $this->getServiceLocator()->get('FormElementManager')->get(SpecificitePosteForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/specificite', ['fiche' => $fiche->getId()], [], true));
         $form->bind($specificite);
 
         /** @var Request $request */
@@ -252,12 +253,10 @@ class FicheMetierController extends AbstractActionController
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        return new ViewModel([
             'title' => 'Éditer spécificité du poste',
             'form' => $form,
         ]);
-        return $vm;
+
     }
 }
