@@ -140,7 +140,7 @@ return [
                     'specificite' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/specificite/:id',
+                            'route'    => '/specificite/:fiche',
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'editer-specificite-poste',
