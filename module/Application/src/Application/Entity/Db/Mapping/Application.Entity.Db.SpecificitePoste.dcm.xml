@@ -6,7 +6,9 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <!--<one-to-one field="fiche" target-entity="Application\Entity\Db\FicheMetier" mapped-by="id"/>-->
+        <one-to-one field="fiche" target-entity="Application\Entity\Db\FicheMetier">
+            <join-column name="fiche_metier" referenced-column-name="id" />
+        </one-to-one>
 
 
         <field name="specificite"       type="string" length="2048"     column="specificite"            nullable="true"/>

@@ -40,7 +40,6 @@ class FicheMetierController extends AbstractActionController
 
         return new ViewModel([
             'fiche' => $fiche,
-            'specificite' => $this->getFicheMetierService()->getSpecificitePoste(9),
         ]);
     }
 
@@ -225,9 +224,17 @@ class FicheMetierController extends AbstractActionController
 
     public function editerSpecificitePosteAction()
     {
+        $ficheId = $this->params()->fromRoute('fiche');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
 
-        $specificite = new SpecificitePoste();
-        $fiche = $this->getFicheMetierService()->getFicheMetier(1);
+        $specificite = null;
+        if ($fiche->getSpecificite()) {
+            $specificite = $fiche->getSpecificite();
+        } else {
+            $specificite = new SpecificitePoste();
+            $fiche->setSpecificite($specificite);
+            $this->getFicheMetierService()->createSpecificitePoste($specificite);
+        }
 
         /** @var SpecificitePosteForm $form */
         $form = $form = $this->getServiceLocator()->get('FormElementManager')->get(SpecificitePosteForm::class);
@@ -240,7 +247,8 @@ class FicheMetierController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $specificite->setFiche($fiche);
-                $this->getFicheMetierService()->createSpecificitePoste($specificite);
+                $this->getFicheMetierService()->updateSpecificitePoste($specificite);
+                $this->getFicheMetierService()->update($fiche);
             }
         }
 

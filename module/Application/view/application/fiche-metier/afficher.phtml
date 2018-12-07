@@ -268,51 +268,53 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     <div class="panel-body">
 
         <?php if($canEditer) : ?>
-            <a href="<?php echo $this->url('fiche-metier/specificite',['id' => $fiche->getId()], [], true); ?>"
+            <a href="<?php echo $this->url('fiche-metier/specificite',['fiche' => $fiche->getId()], [], true); ?>"
                class="btn btn-primary action ajax-modal">
                 <span class="glyphicon glyphicon-pencil"></span>
                 Éditer la spécificité du poste
             </a>
         <?php endif; ?>
 
-        <?php if ($specificite->getSpecificite()) : ?>
-            <h3> Spécificité du poste </h3>
+        <?php if ($fiche->getSpecificite()) : ?>
+            <?php $specificite = $fiche->getSpecificite(); ?>
 
-            <?php echo $specificite->getSpecificite(); ?>
+            <?php if ($specificite->getSpecificite()) : ?>
+                <h3> Spécificité du poste </h3>
+
+                <?php echo $specificite->getSpecificite(); ?>
+            <?php endif; ?>
+
+            <?php if ($specificite->getEncadrement()) : ?>
+                <h3> Encadrement </h3>
+
+                <?php echo $specificite->getEncadrement(); ?>
+            <?php endif; ?>
+
+            <?php if ($specificite->getRelationsInternes()) : ?>
+                <h3> Relations internes à l'unicaen </h3>
+
+                <?php echo $specificite->getRelationsInternes(); ?>
+            <?php endif; ?>
+
+            <?php if ($specificite->getRelationsExternes()) : ?>
+                <h3> Relations externes à l'unicaen </h3>
+
+                <?php echo $specificite->getRelationsExternes(); ?>
+            <?php endif; ?>
+
+            <?php if ($specificite->getContraintes()) : ?>
+                <h3> Contraintes particulières d'exercice </h3>
+
+                <?php echo $specificite->getContraintes(); ?>
+            <?php endif; ?>
+
+
+            <?php if ($specificite->getMoyens()) : ?>
+                <h3> Moyens et outils mis à disposition </h3>
+
+                <?php echo $specificite->getMoyens(); ?>
+            <?php endif; ?>
         <?php endif; ?>
-
-        <?php if ($specificite->getEncadrement()) : ?>
-            <h3> Encadrement </h3>
-
-            <?php echo $specificite->getEncadrement(); ?>
-        <?php endif; ?>
-
-        <?php if ($specificite->getRelationsInternes()) : ?>
-            <h3> Relations internes à l'unicaen </h3>
-
-            <?php echo $specificite->getRelationsInternes(); ?>
-        <?php endif; ?>
-
-        <?php if ($specificite->getRelationsExternes()) : ?>
-            <h3> Relations externes à l'unicaen </h3>
-
-            <?php echo $specificite->getRelationsExternes(); ?>
-        <?php endif; ?>
-
-        <?php if ($specificite->getContraintes()) : ?>
-            <h3> Contraintes particulières d'exercice </h3>
-
-            <?php echo $specificite->getContraintes(); ?>
-        <?php endif; ?>
-
-
-        <?php if ($specificite->getMoyens()) : ?>
-            <h3> Moyens et outils mis à disposition </h3>
-
-            <?php echo $specificite->getMoyens(); ?>
-        <?php endif; ?>
-
-
 
     </div>
 </div>
