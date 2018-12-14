@@ -74,7 +74,7 @@ return [
                         'pages' => [
                             [
                                 'label' => 'Les agents',
-                                'route' => 'fiche-metier/agent',
+                                'route' => 'agent',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'

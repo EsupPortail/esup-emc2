@@ -6,14 +6,18 @@ use Application\Controller\FicheMetier\FicheMetierController;
 use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\FicheMetier\FicheMetierTypeController;
 use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
-use Application\Form\Agent\AgentForm;
-use Application\Form\Agent\AgentFormFactory;
-use Application\Form\Agent\AgentHydrator;
-use Application\Form\Agent\AgentHydratorFactory;
 use Application\Form\Agent\MissionComplementaireForm;
 use Application\Form\Agent\MissionComplementaireFormFactory;
 use Application\Form\Agent\MissionComplementaireHydrator;
 use Application\Form\Agent\MissionComplementaireHydratorFactory;
+use Application\Form\FicheMetier\AssocierAgentForm;
+use Application\Form\FicheMetier\AssocierAgentFormFactory;
+use Application\Form\FicheMetier\AssocierAgentHydrator;
+use Application\Form\FicheMetier\AssocierAgentHydratorFactory;
+use Application\Form\FicheMetier\AssocierMetierTypeForm;
+use Application\Form\FicheMetier\AssocierMetierTypeFormFactory;
+use Application\Form\FicheMetier\AssocierMetierTypeHydrator;
+use Application\Form\FicheMetier\AssocierMetierTypeHydratorFactory;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
@@ -30,10 +34,10 @@ use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
 use Application\Form\FicheMetierType\MissionsPrincipalesHydrator;
 use Application\Provider\Privilege\FicheMetierPrivileges;
-use Application\Service\Agent\AgentService;
-use Application\Service\Agent\AgentServiceFactory;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\View\Helper\PosteViewHelper;
+use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -61,6 +65,8 @@ return [
                         'editer-mission-complementaire',
                         'supprimer-mission-complementaire',
                         'editer-specificite-poste',
+                        'associer-metier-type',
+                        'associer-agent'
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -133,6 +139,28 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'associer-agent' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/associer-agent/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'associer-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'associer-metier-type' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/associer-metier-type/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'associer-metier-type',
                             ],
                         ],
                         'may_terminate' => true,
@@ -353,7 +381,6 @@ return [
         ],
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
-            AgentService::class => AgentServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -371,9 +398,10 @@ return [
             LibelleForm::class => LibelleFormFactory::class,
             MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
 
-            AgentForm::class => AgentFormFactory::class,
             MissionComplementaireForm::class => MissionComplementaireFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
+            AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,
+            AssocierAgentForm::class => AssocierAgentFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -383,9 +411,16 @@ return [
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
             LibelleHydrator::class => LibelleHydratorFactory::class,
-            AgentHydrator::class => AgentHydratorFactory::class,
             MissionComplementaireHydrator::class => MissionComplementaireHydratorFactory::class,
+            AssocierMetierTypeHydrator::class => AssocierMetierTypeHydratorFactory::class,
+            AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
         ]
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'specificitePoste' => SpecificitePosteViewHelper::class,
+            'poste' => PosteViewHelper::class,
+        ],
+    ],
 
 ];

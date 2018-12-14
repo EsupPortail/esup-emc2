@@ -6,7 +6,6 @@ use Application\Entity\Db\Affectation;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Submit;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
