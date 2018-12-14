@@ -1,0 +1,135 @@
+<?php
+
+use Application\Entity\Db\Agent;
+
+/**
+ * @var Agent $agent
+ */
+
+$this->headTitle("Information sur l'agent");
+
+$canAjouterMissionComplementaire = true;
+$canEditerMissionComplementaire  = true;
+$canEffacerMissionComplementaire = true;
+
+?>
+
+<h1 class="page-header">
+    Information sur l'agent
+</h1>
+
+<a class="btn btn-primary action disabled">
+    <i class="far fa-arrow-alt-circle-down"></i>
+    Importer de LDAP
+</a>
+
+<a class="btn btn-primary action disabled">
+    <i class="far fa-arrow-alt-circle-down"></i>
+    Importer de Octopus
+</a>
+
+<a
+    class="btn btn-primary action"
+    href="<?php echo $this->url('fiche-metier/saisie-manuelle-agent', ['id' => 1], [] , true); ?>"
+>
+    <i class="fas fa-pencil-alt"></i>
+    Saisie manuelle
+</a>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>Description de l'agent</h2>
+    </div>
+    <div class="panel-body">
+
+        <?php if($agent) : ?>
+            <dl class="dl-horizontal">
+                <dt> Prénom </dt>
+                <dd>
+                    <?php echo $agent->getPrenom(); ?>
+                </dd>
+                <dt> Nom </dt>
+                <dd>
+                    <?php echo $agent->getNom(); ?>
+                </dd>
+                <dt> Numéro poste </dt>
+                <dd>
+                    <?php echo $agent->getNumeroPoste(); ?>
+                </dd>
+                <dt> Date de début </dt>
+                <dd>
+                    <?php echo ($agent->getDateDebut())?$agent->getDateDebut()->format('d/m/Y'):'---'; ?>
+
+                <dt> Date de fin </dt>
+                <dd>
+                    <?php echo ($agent->getDateFin())?$agent->getDateFin()->format('d/m/Y'):'---'; ?>
+                </dd>
+                <dt> Quotité travaillée </dt>
+                <dd>
+                    <?php echo $agent->getQuotite(); ?> %
+                </dd>
+                <dt> Status </dt>
+                <dd>
+                    <?php echo $agent->getStatus(); ?>
+                </dd>
+                <dt> Correspondance </dt>
+                <dd>
+                    <?php echo $agent->getCorrespondance(); ?>
+                </dd>
+                <dt> Corps </dt>
+                <dd>
+                    <?php echo $agent->getCorps(); ?>
+                </dd>
+            </dl>
+
+            <br/>
+
+            Missions complémentaires
+            <span class="badge"> <?php echo count($agent->getMissionsComplementaires()); ?></span>
+
+        <?php if ($canAjouterMissionComplementaire): ?>
+                <a href="<?php echo $this->url('fiche-metier/ajouter-mission-complementaire', ['agent' => $agent->getId()], [], true); ?>"
+                   class="ajax-modal"
+                   data-event="modification"
+                   >
+                    <i class="fas fa-plus" title="Ajouter une mission complémentaire"></i>
+                </a>
+        <?php endif; ?>
+            <ul>
+                <?php foreach ($agent->getMissionsComplementaires() as $mission) : ?>
+                    <li>
+                        <?php echo $mission; ?> <?php echo $mission->getAgent()->getNom(); ?>
+                        <?php if ($canEditerMissionComplementaire): ?>
+                            <a href="<?php echo $this->url('fiche-metier/editer-mission-complementaire', ['id' => $mission->getId()], [], true); ?>"
+                               class="ajax-modal"
+                               data-event="modification"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer la mission complémentaire"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerMissionComplementaire): ?>
+                            <a href="<?php echo $this->url('fiche-metier/supprimer-mission-complementaire', ['id' => $mission->getId()], [], true); ?>">
+                                <i class="fas fa-trash-alt" title="Effacer la mission complémentaire"></i>
+                            </a>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <div class="alert alert-warning"> <i class="fas fa-exclamation-triangle"></i> Aucun agent de renseigné. </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

@@ -8,8 +8,11 @@ use Application\Entity\Db\MissionComplementaire;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\MissionComplementaireForm;
+use Application\Form\FicheMetier\AssocierAgentForm;
+use Application\Form\FicheMetier\AssocierMetierTypeForm;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\SpecificitePosteForm;
+use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -21,6 +24,7 @@ class FicheMetierController extends AbstractActionController
 {
     use FicheMetierServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use ActiviteServiceAwareTrait;
 
     public function indexAction() {
 
@@ -38,8 +42,14 @@ class FicheMetierController extends AbstractActionController
 
         if ($fiche === null) throw new RuntimeException("Aucune fiche ne porte l'identifiant [".$ficheId."]");
 
+        $activites = [];
+        if ($fiche->getMetierType()) {
+            $activites = $this->getActiviteService()->getActivitesByFicheMetierType($fiche->getMetierType());
+        }
+
         return new ViewModel([
             'fiche' => $fiche,
+            'activites' => $activites,
         ]);
     }
 
@@ -187,7 +197,7 @@ class FicheMetierController extends AbstractActionController
         $agent = $mission->getAgent();
 
         /** @var MissionComplementaireForm $form */
-        $form = $form = $this->getServiceLocator()->get('FormElementManager')->get(MissionComplementaireForm::class);
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(MissionComplementaireForm::class);
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/editer-mission-complementaire', ['id' => $mission->getId()], [], true));
         $form->bind($mission);
 
@@ -218,6 +228,72 @@ class FicheMetierController extends AbstractActionController
 
         $this->getAgentService()->deleteMissionComplementaire($mission);
         $this->redirect()->toRoute('fiche-metier/afficher-agent', ['id' => $mission->getAgent()->getId()], [], true);
+    }
+
+    /** FICHE METIER TYPE *********************************************************************************************/
+
+    public function associerMetierTypeAction()
+    {
+        $ficheId = $this->params()->fromRoute('fiche');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
+
+        /** @var AssocierMetierTypeForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(AssocierMetierTypeForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/associer-metier-type', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /**@var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fiche);
+            }
+        }
+
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Associer un metier type',
+            'form' => $form,
+        ]);
+        return $vm;
+
+    }
+
+    /** FICHE METIER TYPE *********************************************************************************************/
+
+    public function associerAgentAction()
+    {
+        $ficheId = $this->params()->fromRoute('fiche');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
+
+        /** @var AssocierAgentForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(AssocierAgentForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/associer-agent', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /**@var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fiche);
+            }
+        }
+
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Associer un agent',
+            'form' => $form,
+        ]);
+        return $vm;
+
     }
 
     /** SPECIFICITE POSTE *********************************************************************************************/

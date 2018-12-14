@@ -19,6 +19,10 @@ class FicheMetier
 
     /** @var SpecificitePoste */
     private $specificite;
+    /** @var FicheMetierType */
+    private $metierType;
+    /** @var Poste */
+    private $poste;
 
     public function getId()
     {
@@ -96,6 +100,43 @@ class FicheMetier
         $this->specificite = $specificite;
         return $this;
     }
+
+    /**
+     * @return FicheMetierType
+     */
+    public function getMetierType()
+    {
+        return $this->metierType;
+    }
+
+    /**
+     * @param FicheMetierType $metierType
+     * @return FicheMetier
+     */
+    public function setMetierType($metierType)
+    {
+        $this->metierType = $metierType;
+        return $this;
+    }
+
+    /**
+     * @return Poste
+     */
+    public function getPoste()
+    {
+        return $this->poste;
+    }
+
+    /**
+     * @param Poste $poste
+     * @return FicheMetier
+     */
+    public function setPoste($poste)
+    {
+        $this->poste = $poste;
+        return $this;
+    }
+
 
 
 

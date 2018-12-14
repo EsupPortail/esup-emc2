@@ -2,13 +2,19 @@
 
 /**
  * @var FicheMetier $fiche
+ * @var FicheMetierTypeActivite[] $activites
  * @var SpecificitePoste $specificite
  */
 
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 
+$canAssocierAgent = true;
+$canAssocierMetierType = true;
+
+$canEditerSpecificte = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
 $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
 ?>
 
@@ -20,10 +26,26 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2> Agent occupant le poste </h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h2> Agent occupant le poste </h2>
+            </div>
+            <div class="col-md-4">
+                <?php if($canAssocierAgent) : ?>
+                    <a href="<?php echo $this->url('fiche-metier/associer-agent',['fiche' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <i class="fas fa-plus-circle"></i>
+                        Associer un agent
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <div class="panel-body">
+
 
         <?php $agent = $fiche->getAgent(); ?>
 
@@ -50,14 +72,12 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     <dd> <?php echo ($agent->getDateDebut())?$agent->getDateDebut()->format('d/m/Y'):'---'; ?> </dd>
                 <dt> Date de fin </dt>
                     <dd> <?php echo ($agent->getDateFin())?$agent->getDateFin()->format('d/m/Y'):'---'; ?> </dd>
-
-
             </dl>
         <?php endif; ?>
 
 
 
-        <?php if(! $agent->getMissionsComplementaires()->isEmpty()) : ?>
+        <?php if($agent && ! $agent->getMissionsComplementaires()->isEmpty()) : ?>
 
             <h3> Missions complémentaires </h3>
             <ul>
@@ -71,19 +91,24 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2> Environnement du poste de travail dans l'organisation </h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h2> Environnement du poste de travail dans l'organisation </h2>
+            </div>
+            <div class="col-md-4">
+                <?php if($canAssocierAgent) : ?>
+                    <a href="" class="btn btn-primary action">
+                        <i class="fas fa-plus-circle"></i>
+                        Associer un poste
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
     <div class="panel-body">
 
-
-        <?php if($canEditer) : ?>
-            <a href="<?php echo $this->url('fiche-metier/editer',['id' => $fiche->getId(), 'section' => 'environnement'], [], true); ?>"
-               class="btn btn-primary action ajax-modal">
-                <span class="glyphicon glyphicon-pencil"></span>
-                Éditer la description
-            </a>
-        <?php endif; ?>
-        <p>
+        <div>
+            <h3> Affectation du poste </h3>
             <?php if ($fiche->getAffectation() !== null) : ?>
                 <?php if ($fiche->getAffectation()->getDescription() !== null) :?>
                     <?php echo $fiche->getAffectation()->getDescription(); ?>
@@ -94,230 +119,191 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     </div>
                 <?php endif; ?>
             <?php else : ?>
-                <div class="alert alert-danger">
+                <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle"></i>
                     Aucune affectation de renseignée.
                 </div>
             <?php endif; ?>
-        </p>
+        </div>
 
-        <h3> Positionnement dans l'établissement</h3>
+        <div>
+            <h3> Positionnement dans l'établissement</h3>
+            <?php if ($fiche->getPoste() === null) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucun poste n'est attaché à ce poste
+                </div>
+            <?php else: ?>
+                <?php echo $this->poste()->render($fiche->getPoste()); ?>
+            <?php endif; ?>
 
-        <dl class="dl-horizontal">
-            <dt> Numéro poste national </dt>
-                <dd class="SIHAM"> 123456789</dd>
-            <dt> Quotité du poste </dt>
-                <dd class="SIHAM"> 80 %</dd>
-            <dt> Affectation du poste </dt>
-                <dd class="SIHAM"> Service</dd>
-            <dt> Localisation du poste </dt>
-                <dd class="SIHAM"> Campus</dd>
-            <dt> Rattachement hiérarchique </dt>
-                <dd class="SIHAM"> Responsable de truc</dd>
-            <dt> Correspondance BAP </dt>
-                <dd class="SIHAM"> Z </dd>
-            <dt> Correspondance avec REFERENS, <br/> REME, bibliothèque </dt>
-                <dd class="SIHAM"> azerty</dd>
-            <dt> Domaine UNICAEN </dt>
-                <dd class="GPEEC"> Informaticien</dd>
-            <dt> Fonction </dt>
-                <dd class="GPEEC"> Responsable</dd>
-            <dt> Nombre de points NBI associés au <br/> poste SIHAM </dt>
-                <dd class="GPEEC"> 3,14</dd>
-            <dt> Régime indemnitaire </dt>
-                <dd class="GPEEC"> Titulaire</dd>
-            <dt> RIFSEEP (appartenance au groupe)</dt>
-                <dd class="GPEEC"> Catégorie B - 2ième groupe</dd>
+        </div>
 
-        </dl>
+
+
+
+
+
 
     </div>
 </div>
 
+<!-- FICHE METIER TYPE ------------------------------------------------------------------------------------------------>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h2> Description de la fiche métier </h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h2> Description de la fiche métier type </h2>
+            </div>
+            <div class="col-md-4">
+                <?php if($canAssocierMetierType) : ?>
+                    <a href="<?php echo $this->url('fiche-metier/associer-metier-type',['fiche' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <i class="fas fa-plus-circle"></i>
+                        Associer un metier type
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
     <div class="panel-body">
-
-        <h3> Mission principale </h3>
-
-        <ul>
-            <li>faire mission A </li>
-            <li>assister à la mission B </li>
-            <li>encadrer les X personnes de la mission C </li>
-        </ul>
-
-        <h3> Activités associées </h3>
-
-        <h4> Direction et gestion </h4>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-            magna aliqua. Erat nam at lectus urna duis convallis. Risus viverra adipiscing at in tellus integer. Ac turpis
-            egestas maecenas pharetra.
-        </p>
-
-        <h4> Centralisation des tâches </h4>
-        <p>
-            Amet volutpat consequat mauris nunc. Vestibulum lectus mauris ultrices eros in.
-            Scelerisque eu ultrices vitae auctor eu augue ut lectus. Amet cursus sit amet dictum sit amet justo donec enim.
-            Tellus id interdum velit laoreet id donec. Dui vivamus arcu felis bibendum ut tristique. Facilisis volutpat
-            est velit egestas dui id ornare arcu odio.
-        </p>
-
-        <h4> Dématérialisation des procédures </h4>
-        <p>
-            Vel quam elementum pulvinar etiam non quam lacus suspendisse. Dui nunc mattis enim ut tellus elementum sagittis.
-            Felis imperdiet proin fermentum leo vel orci porta non pulvinar. Commodo viverra maecenas accumsan lacus vel
-            facilisis. Eget velit aliquet sagittis id.
-        </p>
-
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2> Parcours de formation de base pour la prise de poste </h2>
-    </div>
-    <div class="panel-body">
-
-        <div class="row">
-            <div class="col-md-4">
-                <h3> Compétences principales </h3>
+        <?php if ($fiche->getMetierType() === null): ?>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aucune fiche de métier type d'associée à ce poste
             </div>
-            <div class="col-md-4">
-                <h3> Accompagnement à la prise de poste </h3>
-            </div>
-            <div class="col-md-4">
-                <h3> Lien vers le référentiel </h3>
-            </div>
-        </div>
+        <?php else: ?>
+            <div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <h4> Savoir & connaissances </h4>
+            <h3> Libelle du métier type </h3>
 
-                <ul>
-                    <li> Connaître </li>
-                    <li> Savoir </li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h4> Lien vers le plan de formation </h4>
+                <?php echo $fiche->getMetierType()->getMetier()->getLibelle(); ?>
 
-                <ul>
-                    <li> Décrouvrir </li>
-                </ul>
-            </div>
-            <div class="col-md-4">
+            <h3> Mission principale </h3>
+
+           <?php echo $fiche->getMetierType()->getMissionsPrincipales(); ?>
+
+            <h3> Activités associées </h3>
+
+                <?php foreach($activites as $activite) : ?>
+                    <h4>
+                        <?php echo $activite->getActivite()->getLibelle(); ?>
+                    </h4>
+                    <?php echo $activite->getActivite()->getDescription(); ?>
+                <?php endforeach; ?>
 
             </div>
-        </div>
+            <div>
+                <h3> Parcours de formation de base pour la prise de poste </h3>
 
-        <div class="row">
-            <div class="col-md-4">
-                <h4> Savoir-faire & compétences opérationnelles </h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4> Compétences principales </h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h4> Accompagnement à la prise de poste </h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h4> Lien vers le référentiel </h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5> Savoir & connaissances </h5>
 
-                <ul>
-                    <li> Conduire des projets </li>
-                    <li> Maîtriser les outils </li>
-                </ul>
+                            <ul>
+                                <li> Connaître </li>
+                                <li> Savoir </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5> Lien vers le plan de formation </h5>
+
+                            <ul>
+                                <li> Décrouvrir </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5> Savoir-faire & compétences opérationnelles </h5>
+
+                            <ul>
+                                <li> Conduire des projets </li>
+                                <li> Maîtriser les outils </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5> Applications </h5>
+
+                            <ul>
+                                <li> redmine </li>
+                                <li> Zimbra </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5> Savoir être & compétences comportementales </h5>
+
+                            <ul>
+                                <li> Encadrer </li>
+                                <li> Prévenir </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5> Lien vers le plan de formation </h5>
+
+                            <ul>
+                                <li> Former </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                    </div>
             </div>
-            <div class="col-md-4">
-                <h4> Applications </h4>
-
-                <ul>
-                    <li> redmine </li>
-                    <li> Zimbra </li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="col-md-4">
-                <h4> Savoir être & compétences comportementales </h4>
-
-                <ul>
-                    <li> Encadrer </li>
-                    <li> Prévenir </li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h4> Lien vers le plan de formation </h4>
-
-                <ul>
-                    <li> Former </li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2> Spécificité du poste </h2>
-    </div>
-    <div class="panel-body">
-
-        <?php if($canEditer) : ?>
-            <a href="<?php echo $this->url('fiche-metier/specificite',['fiche' => $fiche->getId()], [], true); ?>"
-               class="btn btn-primary action ajax-modal"
-               data-event="modification"
-            >
-                <span class="glyphicon glyphicon-pencil"></span>
-                Éditer la spécificité du poste
-            </a>
         <?php endif; ?>
+    </div>
+</div>
 
-        <?php if ($fiche->getSpecificite()) : ?>
-            <?php $specificite = $fiche->getSpecificite(); ?>
-
-            <?php if ($specificite->getSpecificite()) : ?>
-                <h3> Spécificité du poste </h3>
-
-                <?php echo $specificite->getSpecificite(); ?>
-            <?php endif; ?>
-
-            <?php if ($specificite->getEncadrement()) : ?>
-                <h3> Encadrement </h3>
-
-                <?php echo $specificite->getEncadrement(); ?>
-            <?php endif; ?>
-
-            <?php if ($specificite->getRelationsInternes()) : ?>
-                <h3> Relations internes à l'unicaen </h3>
-
-                <?php echo $specificite->getRelationsInternes(); ?>
-            <?php endif; ?>
-
-            <?php if ($specificite->getRelationsExternes()) : ?>
-                <h3> Relations externes à l'unicaen </h3>
-
-                <?php echo $specificite->getRelationsExternes(); ?>
-            <?php endif; ?>
-
-            <?php if ($specificite->getContraintes()) : ?>
-                <h3> Contraintes particulières d'exercice </h3>
-
-                <?php echo $specificite->getContraintes(); ?>
-            <?php endif; ?>
-
-
-            <?php if ($specificite->getMoyens()) : ?>
-                <h3> Moyens et outils mis à disposition </h3>
-
-                <?php echo $specificite->getMoyens(); ?>
-            <?php endif; ?>
+<!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-8">
+                <h2> Spécificité du poste </h2>
+            </div>
+            <div class="col-md-4">
+                <?php if($canEditerSpecificte) : ?>
+                    <a href="<?php echo $this->url('fiche-metier/specificite',['fiche' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <i class="fas fa-plus-circle"></i>
+                        Renseigner les spécificité
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php if ($fiche->getSpecificite() === null) : ?>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aucune spécificité attachée à ce poste.
+            </div>
+        <?php else: ?>
+            <?php echo $this->specificitePoste()->render($fiche->getSpecificite()); ?>
         <?php endif; ?>
-
     </div>
 </div>
 

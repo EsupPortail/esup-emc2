@@ -84,6 +84,11 @@ class Agent {
         return $this;
     }
 
+    public function getDenomination()
+    {
+        return $this->getPrenom().' '.$this->getNom();
+
+    }
     /**
      * @return DateTime
      */
