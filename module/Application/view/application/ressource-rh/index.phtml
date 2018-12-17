@@ -6,11 +6,13 @@
  * @var Metier[] $metiers
  * @var MetierFamille[] $familles
  * @var Corps[] $corps
+ * @var Domaine[] $domaines
  */
 
 use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
 use Application\Provider\Privilege\RessourceRhPrivileges;
@@ -30,8 +32,10 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille de métier</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'corps']); ?>" class="btn btn-primary action">Corps</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'domaine']); ?>" class="btn btn-primary action">Domaine</a>
 
 <div class="main">
+
     <a name="status"></a>
     <div class="col-md-8">
         <h2>
@@ -41,7 +45,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             </span>
         </h2>
     </div>
-
     <div class="pull-right">
         <?php if ($canAjouterRessource) : ?>
             <a
@@ -54,7 +57,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             </a>
         <?php endif; ?>
     </div>
-
     <?php if (count($status) > 0) : ?>
         <table class="table table-condensed">
             <thead>
@@ -89,7 +91,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             </tbody>
         </table>
     <?php endif; ?>
-
 </div>
 
 <div class="main">
@@ -102,7 +103,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         </span>
         </h2>
     </div>
-
     <div class="pull-right">
         <?php if ($canAjouterRessource) : ?>
             <a href="<?php echo $this->url('ressource-rh/correspondance/creer', [], [], true);?>"
@@ -114,8 +114,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             </a>
         <?php endif;?>
     </div>
-
-
     <?php if (count($correspondances) > 0) : ?>
         <table class="table table-condensed">
             <thead>
@@ -154,7 +152,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             </tbody>
         </table>
     <?php endif; ?>
-
 </div>
 
 
@@ -335,6 +332,63 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         </tbody>
     </table>
 
+</div>
+
+<div class="main">
+    <a name="domaine"></a>
+    <div class="col-md-8">
+        <h2>
+            Liste des domaines
+            <span class="badge">
+            <?php echo count($domaines); ?>
+        </span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/domaine/ajouter', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter un domaine
+            </a>
+        <?php endif;?>
+    </div>
+    <?php if (count($domaines) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Id </th>
+                <th> Libelle </th>
+                <th class="action"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($domaines as $domaine) : ?>
+                <tr>
+                    <td> <?php echo $domaine->getId(); ?> </td>
+                    <td> <?php echo $domaine->getLibelle(); ?> </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/domaine/modifier', ['domaine' => $domaine->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer le domaine"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/domaine/supprimer', ['domaine' => $domaine->getId()], [], true); ?>" >
+                                <i class="fas fa-trash-alt" title="Effacer le domaine"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
 </div>
 
 <script>
