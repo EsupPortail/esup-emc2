@@ -46,7 +46,7 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dt> Correspondance </dt>';
         $texte .= '<dd class="siham">'.$poste->getCorrespondance().'</dd>';
         $texte .= '<dt> Domaine UNICAEN </dt>';
-        $texte .= '<dd class="gpeec">'.$poste->getDomaine().'</dd>';
+        $texte .= '<dd class="gpeec">'.(($poste->getDomaine())?$poste->getDomaine()->getLibelle():"---").'</dd>';
         $texte .= '</dl>';
 
         return $texte;

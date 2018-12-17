@@ -5,6 +5,7 @@ namespace Application\Service\RessourceRh;
 use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
 use Doctrine\ORM\NonUniqueResultException;
@@ -338,6 +339,7 @@ class RessourceRhService {
     /** Famille Metier ************************************************************************************************/
 
     /**
+     * @param string $order
      * @return MetierFamille[]
      */
     public function getMetiersFamilles($order = null)
@@ -411,6 +413,86 @@ class RessourceRhService {
             $this->getEntityManager()->flush();
         } catch (OptimisticLockException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une famille de metier", $e);
+        }
+    }
+
+    /** Domaine *******************************************************************************************************/
+
+    /**
+     * @param string $order
+     * @return Domaine[]
+     */
+    public function getDomaines($order = null)
+    {
+        $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
+        ;
+
+        if ($order !== null) {
+            $qb = $qb->addOrderBy('domaine.'.$order, 'ASC');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return Domaine
+     */
+    public function getDomaine($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
+            ->andWhere('domaine.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs domaines partagent le même identifiant [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Domaine
+     */
+    public function createDomaine($domaine)
+    {
+        $this->getEntityManager()->persist($domaine);
+        try {
+            $this->getEntityManager()->flush($domaine);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la création d'un Domaine", $e);
+        }
+        return $domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Domaine
+     */
+    public function updateDomaine($domaine)
+    {
+        try {
+            $this->getEntityManager()->flush($domaine);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Domaine.", $e);
+        }
+        return $domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     */
+    public function deleteDomaine($domaine)
+    {
+        $this->getEntityManager()->remove($domaine);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Domaine", $e);
         }
     }
 
