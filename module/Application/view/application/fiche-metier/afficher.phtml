@@ -97,7 +97,10 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </div>
             <div class="col-md-4">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="" class="btn btn-primary action">
+                    <a href="<?php echo $this->url('fiche-metier/associer-poste',['fiche' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
                         <i class="fas fa-plus-circle"></i>
                         Associer un poste
                     </a>

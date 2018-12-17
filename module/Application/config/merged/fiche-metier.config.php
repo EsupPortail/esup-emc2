@@ -18,6 +18,10 @@ use Application\Form\FicheMetier\AssocierMetierTypeForm;
 use Application\Form\FicheMetier\AssocierMetierTypeFormFactory;
 use Application\Form\FicheMetier\AssocierMetierTypeHydrator;
 use Application\Form\FicheMetier\AssocierMetierTypeHydratorFactory;
+use Application\Form\FicheMetier\AssocierPosteForm;
+use Application\Form\FicheMetier\AssocierPosteFormFactory;
+use Application\Form\FicheMetier\AssocierPosteHydrator;
+use Application\Form\FicheMetier\AssocierPosteHydratorFactory;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
@@ -66,7 +70,8 @@ return [
                         'supprimer-mission-complementaire',
                         'editer-specificite-poste',
                         'associer-metier-type',
-                        'associer-agent'
+                        'associer-agent',
+                        'associer-poste',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -150,6 +155,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'associer-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'associer-poste' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/associer-poste/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'associer-poste',
                             ],
                         ],
                         'may_terminate' => true,
@@ -402,6 +418,7 @@ return [
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,
             AssocierAgentForm::class => AssocierAgentFormFactory::class,
+            AssocierPosteForm::class => AssocierPosteFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -414,6 +431,7 @@ return [
             MissionComplementaireHydrator::class => MissionComplementaireHydratorFactory::class,
             AssocierMetierTypeHydrator::class => AssocierMetierTypeHydratorFactory::class,
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
+            AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
         ]
     ],
     'view_helpers' => [

@@ -10,6 +10,7 @@ use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\MissionComplementaireForm;
 use Application\Form\FicheMetier\AssocierAgentForm;
 use Application\Form\FicheMetier\AssocierMetierTypeForm;
+use Application\Form\FicheMetier\AssocierPosteForm;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\SpecificitePosteForm;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -263,7 +264,7 @@ class FicheMetierController extends AbstractActionController
 
     }
 
-    /** FICHE METIER TYPE *********************************************************************************************/
+    /** AGENT *********************************************************************************************************/
 
     public function associerAgentAction()
     {
@@ -296,6 +297,38 @@ class FicheMetierController extends AbstractActionController
 
     }
 
+    /** POSTE *********************************************************************************************************/
+
+    public function associerPosteAction()
+    {
+        $ficheId = $this->params()->fromRoute('fiche');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
+
+        /** @var AssocierAgentForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(AssocierPosteForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/associer-poste', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /**@var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fiche);
+            }
+        }
+
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Associer un poste',
+            'form' => $form,
+        ]);
+        return $vm;
+
+    }
     /** SPECIFICITE POSTE *********************************************************************************************/
 
     public function editerSpecificitePosteAction()
