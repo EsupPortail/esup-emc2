@@ -2,12 +2,10 @@
 
 namespace Application\Controller\FicheMetier;
 
-use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\MissionComplementaire;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\Agent\AgentForm;
-use Application\Form\Agent\MissionComplementaireForm;
 use Application\Form\FicheMetier\AssocierAgentForm;
 use Application\Form\FicheMetier\AssocierMetierTypeForm;
 use Application\Form\FicheMetier\AssocierPosteForm;
@@ -106,129 +104,6 @@ class FicheMetierController extends AbstractActionController
         return new ViewModel([
            'form' => $form,
         ]);
-    }
-
-    /** ACTION ASSOCIÉES À L'AGENT ************************************************************************************/
-
-    public function afficherAgentAction() {
-
-        $ficheId = $this->params()->fromRoute('id');
-        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
-        $agent = $fiche->getAgent();
-
-        return new ViewModel([
-           'agent' => $agent,
-        ]);
-    }
-
-    public function saisieManuelleAgentAction() {
-
-        $ficheId = $this->params()->fromRoute('id');
-        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
-
-        $agent = $fiche->getAgent();
-        /** @var AgentForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AgentForm::class);
-        $form->bind($agent);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getAgentService()->create($agent);
-                $this->getFicheMetierService()->update($fiche);
-                $this->redirect()->toRoute('fiche-metier/afficher-agent', ['id' => $ficheId], [], true);
-            }
-        }
-
-        return new ViewModel([
-            'form' => $form,
-        ]);
-    }
-
-    public function listerAgentsAction()
-    {
-        $agents = $this->getAgentService()->getAgents();
-
-        return new ViewModel([
-            'agents' => $agents,
-        ]);
-    }
-
-    public function ajouterMissionComplementaireAction()
-    {
-        $agentId = $this->params()->fromRoute('agent');
-        $agent = $this->getAgentService()->getAgent($agentId);
-
-        $mission = new MissionComplementaire();
-
-        /** @var MissionComplementaireForm $form */
-        $form = $form = $this->getServiceLocator()->get('FormElementManager')->get(MissionComplementaireForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter-mission-complementaire', [], [], true));
-        $form->bind($mission);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $mission->setAgent($agent);
-                $this->getAgentService()->createMissionComplementaire($mission);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter une mission complementaire',
-            'form' => $form,
-        ]);
-        return $vm;
-
-
-    }
-
-    public function editerMissionComplementaireAction()
-    {
-        $missionId = $this->params()->fromRoute('id');
-        $mission = $this->getAgentService()->getMissionComplementaire($missionId);
-        $agent = $mission->getAgent();
-
-        /** @var MissionComplementaireForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(MissionComplementaireForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/editer-mission-complementaire', ['id' => $mission->getId()], [], true));
-        $form->bind($mission);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $mission->setAgent($agent);
-                $this->getAgentService()->updateMissionComplementaire($mission);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Éditer une mission complementaire',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function supprimerMissionComplementaireAction()
-    {
-        $missionId = $this->params()->fromRoute('id');
-        $mission = $this->getAgentService()->getMissionComplementaire($missionId);
-
-        $this->getAgentService()->deleteMissionComplementaire($mission);
-        $this->redirect()->toRoute('fiche-metier/afficher-agent', ['id' => $mission->getAgent()->getId()], [], true);
     }
 
     /** FICHE METIER TYPE *********************************************************************************************/

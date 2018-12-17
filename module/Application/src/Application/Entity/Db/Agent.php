@@ -31,7 +31,7 @@ class Agent {
     /** @var Corps */
     private $corps;
 
-    /** @var ArrayCollection */
+    /** @var string */
     private $missionsComplementaires;
 
 
@@ -216,7 +216,7 @@ class Agent {
     }
 
     /**
-     * @return ArrayCollection
+     * @return string
      */
     public function getMissionsComplementaires()
     {
@@ -224,23 +224,15 @@ class Agent {
     }
 
     /**
-     * @param MissionComplementaire $mission
+     * @param string $missionsComplementaires
      * @return Agent
      */
-    public function addMissionsComplementaires($mission)
+    public function setMissionsComplementaires($missionsComplementaires)
     {
-        $this->missionsComplementaires->add($mission);
+        $this->missionsComplementaires = $missionsComplementaires;
         return $this;
     }
 
-    /**
-     * @param MissionComplementaire $mission
-     * @return Agent
-     */
-    public function removeMissionsComplementaires($mission)
-    {
-        $this->missionsComplementaires->removeElement($mission);
-        return $this;
-    }
+
 
 }

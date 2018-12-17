@@ -11,6 +11,7 @@ use Application\Form\Poste\PosteHydratorFactory;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Service\Poste\PosteService;
 use Application\Service\Poste\PosteServiceFactory;
+use Application\View\Helper\PosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -139,6 +140,11 @@ return [
         'factories' => [
             PosteHydrator::class => PosteHydratorFactory::class,
         ]
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'poste' => PosteViewHelper::class,
+        ],
+    ],
 
 ];
