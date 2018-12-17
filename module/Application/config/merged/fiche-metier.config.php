@@ -6,10 +6,6 @@ use Application\Controller\FicheMetier\FicheMetierController;
 use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\FicheMetier\FicheMetierTypeController;
 use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
-use Application\Form\Agent\MissionComplementaireForm;
-use Application\Form\Agent\MissionComplementaireFormFactory;
-use Application\Form\Agent\MissionComplementaireHydrator;
-use Application\Form\Agent\MissionComplementaireHydratorFactory;
 use Application\Form\FicheMetier\AssocierAgentForm;
 use Application\Form\FicheMetier\AssocierAgentFormFactory;
 use Application\Form\FicheMetier\AssocierAgentHydrator;
@@ -34,13 +30,9 @@ use Application\Form\FicheMetierType\LibelleForm;
 use Application\Form\FicheMetierType\LibelleFormFactory;
 use Application\Form\FicheMetierType\LibelleHydrator;
 use Application\Form\FicheMetierType\LibelleHydratorFactory;
-use Application\Form\FicheMetierType\MissionsPrincipalesForm;
-use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
-use Application\Form\FicheMetierType\MissionsPrincipalesHydrator;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
-use Application\View\Helper\PosteViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
@@ -62,12 +54,6 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
-                        'afficher-agent',
-                        'saisie-manuelle-agent',
-                        'lister-agents',
-                        'ajouter-mission-complementaire',
-                        'editer-mission-complementaire',
-                        'supprimer-mission-complementaire',
                         'editer-specificite-poste',
                         'associer-metier-type',
                         'associer-agent',
@@ -232,71 +218,6 @@ return [
                             ],
                         ],
                     ],
-                    'agent' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/agent',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'lister-agents',
-                            ],
-                        ],
-                    ],
-                    'afficher-agent' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher-agent/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'afficher-agent',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'saisie-manuelle-agent' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/saisie-manuelle-agent/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'saisie-manuelle-agent',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'ajouter-mission-complementaire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-mission-complementaire/:agent',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'ajouter-mission-complementaire',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'editer-mission-complementaire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/editer-mission-complementaire/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer-mission-complementaire',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'supprimer-mission-complementaire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer-mission-complementaire/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'supprimer-mission-complementaire',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                 ],
             ],
             'fiche-metier-type' => [
@@ -412,9 +333,7 @@ return [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             FicheMetierCreationForm::class => FicheMetierCreationFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
-            MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
 
-            MissionComplementaireForm::class => MissionComplementaireFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,
             AssocierAgentForm::class => AssocierAgentFormFactory::class,
@@ -422,13 +341,9 @@ return [
         ],
     ],
     'hydrators' => [
-        'invokables' => [
-            MissionsPrincipalesHydrator::class => MissionsPrincipalesHydrator::class,
-        ],
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
             LibelleHydrator::class => LibelleHydratorFactory::class,
-            MissionComplementaireHydrator::class => MissionComplementaireHydratorFactory::class,
             AssocierMetierTypeHydrator::class => AssocierMetierTypeHydratorFactory::class,
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
@@ -437,7 +352,6 @@ return [
     'view_helpers' => [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
-            'poste' => PosteViewHelper::class,
         ],
     ],
 

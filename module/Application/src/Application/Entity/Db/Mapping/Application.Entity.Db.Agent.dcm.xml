@@ -12,6 +12,7 @@
         <field name="dateFin"           type="datetime"                 column="date_fin"                 nullable="true"/>
         <field name="quotite"           type="integer"                  column="quotite"                  nullable="true"/>
         <field name="numeroPoste"       type="string" length="256"      column="numero_poste"             nullable="true"/>
+        <field name="missionsComplementaires"       type="string" length="2048"      column="missions_complementaires"             nullable="true"/>
 
         <many-to-one target-entity="Application\Entity\Db\AgentStatus" field="status">
             <join-column name="status" referenced-column-name="id" />
@@ -23,6 +24,5 @@
             <join-column name="corps" referenced-column-name="id" />
         </many-to-one>
 
-        <one-to-many target-entity="Application\Entity\Db\MissionComplementaire" field="missionsComplementaires" mapped-by="agent" />
     </entity>
 </doctrine-mapping>

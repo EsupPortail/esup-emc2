@@ -11,6 +11,7 @@ use Application\Form\Agent\AgentHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
+use Application\View\Helper\AgentViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -32,7 +33,7 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'creer',
+                        'ajouter',
                     ],
                     'privileges' => [
                         AgentPrivileges::AJOUTER,
@@ -89,7 +90,7 @@ return [
                             'route'    => '/modifier/:id',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'editer',
+                                'action'     => 'modifier',
                             ],
                         ],
                     ],
@@ -136,9 +137,15 @@ return [
         ],
     ],
     'hydrators' => [
-        'invokable' => [
+        'factories' => [
             AgentHydrator::class => AgentHydratorFactory::class,
         ]
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'agent' => AgentViewHelper::class,
+        ],
+    ],
+
 
 ];

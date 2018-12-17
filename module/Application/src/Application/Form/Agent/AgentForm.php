@@ -176,6 +176,21 @@ class AgentForm extends Form {
                 'id' => 'corps',
             ],
         ]);
+
+        // description
+        $this->add([
+            'name' => 'description',
+            'type' => 'textarea',
+            'options' => [
+                'label' => 'Missions complémentaires : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+            ],
+            'attributes' => [
+                'class' => 'type2 form-control',
+            ]
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -219,6 +234,9 @@ class AgentForm extends Form {
             ],
             'corps' => [
                 'required' => true,
+            ],
+            'missions' => [
+                'required' => false,
             ],
         ]));
     }

@@ -26,6 +26,7 @@ class AgentHydrator implements HydratorInterface {
             'status'            => $object->getStatus(),
             'correspondance'    => $object->getCorrespondance(),
             'corps'             => $object->getCorps(),
+            'description'          => $object->getMissionsComplementaires(),
         ];
 
         return $data;
@@ -44,6 +45,7 @@ class AgentHydrator implements HydratorInterface {
 
         $object->setPrenom($data['prenom']);
         $object->setNom($data['nom']);
+        $object->setNumeroPoste($data['numeroPoste']);
         $object->setQuotite($data['quotite']);
         if ($data['dateDebut']) {
             $date = DateTime::createFromFormat('d/m/Y', $data['dateDebut']);
@@ -56,6 +58,7 @@ class AgentHydrator implements HydratorInterface {
         $object->setStatus($status);
         $object->setCorrespondance($correspondance);
         $object->setCorps($corps);
+        $object->setMissionsComplementaires($data['description']);
 
         return $object;
     }
