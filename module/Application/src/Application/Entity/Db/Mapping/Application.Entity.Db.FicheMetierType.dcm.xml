@@ -12,6 +12,15 @@
         </many-to-one>
         <field name="missionsPrincipales"   type="string" length="2047"     column="missions_principales"               nullable="false"/>
 
+        <field name="connaissances"             type="string" length="1024"     column="connaissances"                         nullable="true"/>
+        <field name="connaissancesFormation"    type="string" length="1024"     column="connaissances_formation"               nullable="true"/>
+
+        <field name="competencesOperationnelles"             type="string" length="1024"     column="competences_operationnelles"                         nullable="true"/>
+        <field name="competencesOperationnellesFormation"    type="string" length="1024"     column="competences_operationnelles_formation"               nullable="true"/>
+
+        <field name="competencesComportementales"             type="string" length="1024"     column="competences_comportementales"                         nullable="true"/>
+        <field name="competencesComportementalesFormation"    type="string" length="1024"     column="competences_comportementales_formation"               nullable="true"/>
+
 
 
 
