@@ -5,8 +5,10 @@ namespace Application\Controller\RessourceRh;
 use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
+use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\MetierFamilleForm;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\AgentStatusForm;
@@ -27,6 +29,7 @@ class RessourceRhController extends AbstractActionController {
         $metiers = $this->getRessourceRhService()->getMetiers('libelle');
         $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
         $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
+        $domaines = $this->getRessourceRhService()->getDomaines('libelle');
 
         return new ViewModel([
             'status' => $status,
@@ -34,6 +37,7 @@ class RessourceRhController extends AbstractActionController {
             'metiers' => $metiers,
             'familles' => $familles,
             'corps' => $corps,
+            'domaines' => $domaines,
         ]);
     }
 
@@ -391,4 +395,79 @@ class RessourceRhController extends AbstractActionController {
 
         $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
+
+    /** DOMAINE *******************************************************************************************************/
+
+    public function ajouterDomaineAction()
+    {
+        /** @var Domaine $domaine */
+        $domaine = new Domaine();
+
+        /** @var DomaineForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/domaine/ajouter', [], [], true));
+        $form->bind($domaine);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createDomaine($domaine);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajouter un domaine',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierDomaineAction()
+    {
+        /** @var Domaine $domaine */
+        $domaineId = $this->params()->fromRoute('domaine');
+        $domaine = $this->getRessourceRhService()->getDomaine($domaineId);
+
+        /** @var DomaineForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/domaine/modifier', ['domaine' => $domaine->getId()], [], true));
+        $form->bind($domaine);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateDomaine($domaine);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modifier un domaine',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function supprimerDomaineAction()
+    {
+        /** @var Domaine $domaine */
+        $domaineId = $this->params()->fromRoute('domaine');
+        $domaine = $this->getRessourceRhService()->getDomaine($domaineId);
+
+        if ($domaine !== null) {
+            $this->getRessourceRhService()->deleteDomaine($domaine);
+        }
+
+        $this->redirect()->toRoute('ressource-rh', [], [], true);
+    }
+
 }
