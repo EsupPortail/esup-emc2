@@ -16,7 +16,7 @@ class Poste {
     private $correspondance;
     /** @var Agent */
     private $rattachementHierarchique;
-    /** @var string */
+    /** @var Domaine */
     private $domaine;
 
     /**
@@ -118,7 +118,7 @@ class Poste {
     }
 
     /**
-     * @return string
+     * @return Domaine
      */
     public function getDomaine()
     {
@@ -126,7 +126,7 @@ class Poste {
     }
 
     /**
-     * @param string $domaine
+     * @param Domaine $domaine
      * @return Poste
      */
     public function setDomaine($domaine)

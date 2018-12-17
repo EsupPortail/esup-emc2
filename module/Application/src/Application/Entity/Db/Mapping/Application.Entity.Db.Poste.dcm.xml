@@ -8,7 +8,6 @@
 
         <field name="numeroPoste"       type="string" length="128"      column="numero_poste"             nullable="true"/>
         <field name="localisation"      type="string" length="128"      column="localisation"             nullable="true"/>
-        <field name="domaine"           type="integer"                  column="domaine"                  nullable="true"/>
 
         <many-to-one target-entity="Application\Entity\Db\Agent" field="rattachementHierarchique">
             <join-column name="rattachement_hierarchique" referenced-column-name="id" />
@@ -18,6 +17,9 @@
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Affectation" field="affectation">
             <join-column name="affectation" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
+            <join-column name="domaine" referenced-column-name="id" />
         </many-to-one>
 
     </entity>

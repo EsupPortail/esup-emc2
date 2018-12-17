@@ -6,6 +6,7 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\UtilisateurPrivileges;
 use Mailing\Provider\Privilege\MailingPrivileges;
 
@@ -73,9 +74,30 @@ return [
                         'roles' => [], //PrivilegeController::getResourceId(__NAMESPACE__ . '\Controller\Administration', 'index'),
                         'pages' => [
                             [
+                                'label' => 'Les activités',
+                                'route' => 'activite',
+                                'privileges' => ActivitePrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Les affectations',
+                                'route' => 'affectation',
+                                'privileges' => AffectationPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
                                 'label' => 'Les agents',
                                 'route' => 'agent',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Les applications',
+                                'route' => 'application',
+                                'privileges' => ApplicationPrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -94,26 +116,14 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'label' => 'Les activités',
-                                'route' => 'activite',
-                                'privileges' => ActivitePrivileges::AFFICHER,
+                                'label' => 'Les postes',
+                                'route' => 'poste',
+                                'privileges' => PostePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
-                            [
-                                'label' => 'Les affectations',
-                                'route' => 'affectation',
-                                'privileges' => AffectationPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'label' => 'Les applications',
-                                'route' => 'application',
-                                'privileges' => ApplicationPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
+
+
                         ],
                     ],
                 ],
