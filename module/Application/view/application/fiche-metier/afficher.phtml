@@ -80,8 +80,6 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
         </div>
     </div>
     <div class="panel-body">
-
-        <div>
             <h3> Affectation du poste </h3>
             <?php if ($fiche->getAffectation() !== null) : ?>
                 <?php if ($fiche->getAffectation()->getDescription() !== null) :?>
@@ -98,9 +96,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     Aucune affectation de renseignée.
                 </div>
             <?php endif; ?>
-        </div>
 
-        <div>
             <h3> Positionnement dans l'établissement</h3>
             <?php if ($fiche->getPoste() === null) : ?>
                 <div class="alert alert-warning">
@@ -110,15 +106,6 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             <?php else: ?>
                 <?php echo $this->poste()->render($fiche->getPoste()); ?>
             <?php endif; ?>
-
-        </div>
-
-
-
-
-
-
-
     </div>
 </div>
 
@@ -149,8 +136,6 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                 Aucune fiche de métier type d'associée à ce poste
             </div>
         <?php else: ?>
-            <div>
-
             <h3> Libelle du métier type </h3>
 
                 <?php echo $fiche->getMetierType()->getMetier()->getLibelle(); ?>
@@ -168,83 +153,45 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     <?php echo $activite->getActivite()->getDescription(); ?>
                 <?php endforeach; ?>
 
-            </div>
-            <div>
-                <h3> Parcours de formation de base pour la prise de poste </h3>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h4> Compétences principales </h4>
-                        </div>
-                        <div class="col-md-4">
-                            <h4> Accompagnement à la prise de poste </h4>
-                        </div>
-                        <div class="col-md-4">
-                            <h4> Lien vers le référentiel </h4>
-                        </div>
+            <h3> Parcours de formation de base pour la prise de poste </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4> Connaissances </h4>
+                        <?php echo $fiche->getMetierType()->getConnaissances(); ?>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h5> Savoir & connaissances </h5>
-
-                            <ul>
-                                <li> Connaître </li>
-                                <li> Savoir </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h5> Lien vers le plan de formation </h5>
-
-                            <ul>
-                                <li> Décrouvrir </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-
-                        </div>
+                    <div class="col-md-6">
+                        <h4> Plan de formation </h4>
+                        <?php echo $fiche->getMetierType()->getConnaissancesFormation(); ?>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h5> Savoir-faire & compétences opérationnelles </h5>
-
-                            <ul>
-                                <li> Conduire des projets </li>
-                                <li> Maîtriser les outils </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h5> Applications </h5>
-
-                            <ul>
-                                <li> redmine </li>
-                                <li> Zimbra </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4> Compétences opérationnelles </h4>
+                        <?php echo $fiche->getMetierType()->getCompetencesOperationnelles(); ?>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h5> Savoir être & compétences comportementales </h5>
-
-                            <ul>
-                                <li> Encadrer </li>
-                                <li> Prévenir </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h5> Lien vers le plan de formation </h5>
-
-                            <ul>
-                                <li> Former </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-
-                        </div>
+                    <div class="col-md-6">
+                        <h4> Plan de formation </h4>
+                        <?php echo $fiche->getMetierType()->getCompetencesOperationnellesFormation(); ?>
                     </div>
-            </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4> Compétences comportementales </h4>
+                        <?php echo $fiche->getMetierType()->getCompetencesComportementales(); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <h4> Plan de formation </h4>
+                        <?php echo $fiche->getMetierType()->getCompetencesComportementalesFormation(); ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4> Applications </h4>
+                    </div>
+                </div>
+
         <?php endif; ?>
     </div>
 </div>
