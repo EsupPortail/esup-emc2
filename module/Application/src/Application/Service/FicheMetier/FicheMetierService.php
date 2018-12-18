@@ -4,6 +4,7 @@ namespace Application\Service\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\SpecificitePoste;
 use Application\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -103,6 +104,25 @@ class FicheMetierService {
     }
 
     /**
+     * @param FicheMetier $fiche
+     * @return FicheMetier
+     */
+    public function update($fiche)
+    {
+        $connectedUtilisateur = $this->getUserService()->getConnectedUser();
+
+        $fiche->setHistoModification(new DateTime());
+        $fiche->setHistoModificateur($connectedUtilisateur);
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche.");
+        }
+
+        return $fiche;
+    }
+
+    /**
      * @return FicheMetierType[]
      */
     public function getFichesMetiersTypes()
@@ -157,5 +177,79 @@ class FicheMetierService {
             throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche métier.", $e);
         }
         return $ficheMetierType;
+    }
+
+    /** SPECIFICITE POSTE  ********************************************************************************************/
+
+    /**
+     * @return SpecificitePoste[]
+     */
+    public function getSpecificitesPostes() {
+        $qb = $this->getEntityManager()->getRepository(SpecificitePoste::class)->createQueryBuilder('specificite')
+            ->orderBy('specificite.id', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return SpecificitePoste
+     */
+    public function getSpecificitePoste($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(SpecificitePoste::class)->createQueryBuilder('specificite')
+            ->andWhere('specificite.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs spécificités partagent sur le même identifiant [".$id."].");
+        }
+        return $result;
+    }
+
+    /**
+     * @param SpecificitePoste $specificite
+     * @return SpecificitePoste
+     */
+    public function createSpecificitePoste($specificite)
+    {
+        $this->getEntityManager()->persist($specificite);
+        try {
+            $this->getEntityManager()->flush($specificite);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la création de la spécificité du poste.", $e);
+        }
+        return $specificite;
+    }
+
+    /**
+     * @param SpecificitePoste $specificite
+     * @return SpecificitePoste
+     */
+    public function updateSpecificitePoste($specificite)
+    {
+        try {
+            $this->getEntityManager()->flush($specificite);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la spécificité du poste.", $e);
+        }
+        return $specificite;
+    }
+
+    /**
+     * @param SpecificitePoste $specificite
+     */
+    public function deleteSpecificitePoste($specificite)
+    {
+        $this->getEntityManager()->remove($specificite);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la spécificité du poste.", $e);
+        }
     }
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\Agent" table="agent">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="nom"               type="string" length="256"      column="nom_usuel"                nullable="false"/>
+        <field name="prenom"            type="string" length="256"      column="prenom"                   nullable="false"/>
+        <field name="dateDebut"         type="datetime"                 column="date_debut"               nullable="true"/>
+        <field name="dateFin"           type="datetime"                 column="date_fin"                 nullable="true"/>
+        <field name="quotite"           type="integer"                  column="quotite"                  nullable="true"/>
+        <field name="numeroPoste"       type="string" length="256"      column="numero_poste"             nullable="true"/>
+        <field name="missionsComplementaires"       type="string" length="2048"      column="missions_complementaires"             nullable="true"/>
+
+        <many-to-one target-entity="Application\Entity\Db\AgentStatus" field="status">
+            <join-column name="status" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Correspondance" field="correspondance">
+            <join-column name="correspondance" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Corps" field="corps">
+            <join-column name="corps" referenced-column-name="id" />
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

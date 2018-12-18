@@ -1,0 +1,401 @@
+<?php
+
+/**
+ * @var AgentStatus[] $status
+ * @var Correspondance[] $correspondances
+ * @var Metier[] $metiers
+ * @var MetierFamille[] $familles
+ * @var Corps[] $corps
+ * @var Domaine[] $domaines
+ */
+
+use Application\Entity\Db\AgentStatus;
+use Application\Entity\Db\Corps;
+use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Domaine;
+use Application\Entity\Db\Metier;
+use Application\Entity\Db\MetierFamille;
+use Application\Provider\Privilege\RessourceRhPrivileges;
+
+$canAjouterRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AJOUTER));
+$canEditerRessource     = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::MODIFIER));
+$canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::EFFACER));
+?>
+
+<h1 class="page-header">
+    Ressources associées aux ressources humaines
+</h1>
+
+
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'status']); ?>" class="btn btn-primary action">Status</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'correspondance']); ?>" class="btn btn-primary action">Correspondance</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille de métier</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'corps']); ?>" class="btn btn-primary action">Corps</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'domaine']); ?>" class="btn btn-primary action">Domaine</a>
+
+<div class="main">
+
+    <a name="status"></a>
+    <div class="col-md-8">
+        <h2>
+            Status des agents
+            <span class="badge">
+                <?php echo count($status); ?>
+            </span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a
+                href="<?php echo $this->url('ressource-rh/agent-status/creer', [], [], true); ?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification"
+            >
+                <i class="fas fa-plus"></i>
+                Ajouter un status
+            </a>
+        <?php endif; ?>
+    </div>
+    <?php if (count($status) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th> Id </th>
+                    <th> Libelle </th>
+                    <th class="action"> Action </th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($status as $statu) : ?>
+                <tr>
+                    <td> <?php echo $statu->getId(); ?> </td>
+                    <td> <?php echo $statu->getLibelle(); ?> </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/agent-status/modifier', ['id' => $statu->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/agent-status/effacer', ['id' => $statu->getId()], [], true); ?>" >
+                                <i class="fas fa-trash-alt" title="Effacer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<div class="main">
+    <a name="correspondance"></a>
+    <div class="col-md-8">
+        <h2>
+            Liste des correspondances
+            <span class="badge">
+            <?php echo count($correspondances); ?>
+        </span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/correspondance/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter une correspondance
+            </a>
+        <?php endif;?>
+    </div>
+    <?php if (count($correspondances) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Id </th>
+                <th> Référence </th>
+                <th> Libelle </th>
+                <th> Description </th>
+                <th class="action"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($correspondances as $correspondance) : ?>
+                <tr>
+                    <td> <?php echo $correspondance->getId(); ?> </td>
+                    <td> <?php echo $correspondance->getReference(); ?> </td>
+                    <td> <?php echo $correspondance->getLibelle(); ?> </td>
+                    <td> <?php echo $correspondance->getDescription(); ?> </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/correspondance/modifier', ['id' => $correspondance->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/correspondance/effacer', ['id' => $correspondance->getId()], [], true); ?>" >
+                                <i class="fas fa-trash-alt" title="Effacer le status"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+
+<div class="main">
+    <a name="metier"></a>
+    <div class="col-md-8">
+    <h2>
+        Liste des métiers
+        <span class="badge">
+            <?php echo count($metiers); ?>
+        </span>
+    </h2>
+    </div>
+
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/metier/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter un métier
+            </a>
+        <?php endif;?>
+    </div>
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id</th>
+            <th> Libelle </th>
+            <th> Famille </th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($metiers as $metier): ?>
+            <tr>
+                <td> <?php echo $metier->getId(); ?> </td>
+                <td> <?php echo $metier->getLibelle(); ?> </td>
+                <td> <?php echo $metier->getFamille()->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canEditerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/metier/modifier', ['id' => $metier->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                            <i class="fas fa-pencil-alt" title="Éditer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/metier/effacer', ['id' => $metier->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<div class="main">
+    <a name="famille"></a>
+    <div class="col-md-8">
+        <h2>
+            Liste des familles de métier
+            <span class="badge">
+            <?php echo count($familles); ?>
+        </span>
+        </h2>
+    </div>
+
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/famille/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter une famille de métier
+            </a>
+        <?php endif;?>
+    </div>
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id</th>
+            <th> Libelle </th>
+            <th> #metiers </th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($familles as $famille): ?>
+            <tr>
+                <td> <?php echo $famille->getId(); ?> </td>
+                <td> <?php echo $famille->getLibelle(); ?> </td>
+                <td>
+                    <?php echo count($famille->getMetiers()); ?>
+                </td>
+                <td>
+                    <?php if ($canEditerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/famille/modifier', ['id' => $famille->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                            <i class="fas fa-pencil-alt" title="Éditer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/famille/effacer', ['id' => $famille->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer l'application"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="main">
+    <a name="corps"></a>
+    <div class="col-md-8">
+        <h2>
+            Liste des corps
+            <span class="badge">
+            <?php echo count($corps); ?>
+        </span>
+        </h2>
+    </div>
+
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/corps/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter un corps
+            </a>
+        <?php endif;?>
+    </div>
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id</th>
+            <th> Code</th>
+            <th> Libelle</th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($corps as $corp): ?>
+            <tr>
+                <td> <?php echo $corp->getId(); ?> </td>
+                <td> <?php echo $corp->getCode(); ?> </td>
+                <td> <?php echo $corp->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canEditerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/corps/modifier', ['id' => $corp->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                            <i class="fas fa-pencil-alt" title="Éditer le corps"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/corps/effacer', ['id' => $corp->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer le corps"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+
+<div class="main">
+    <a name="domaine"></a>
+    <div class="col-md-8">
+        <h2>
+            Liste des domaines
+            <span class="badge">
+            <?php echo count($domaines); ?>
+        </span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/domaine/ajouter', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter un domaine
+            </a>
+        <?php endif;?>
+    </div>
+    <?php if (count($domaines) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Id </th>
+                <th> Libelle </th>
+                <th class="action"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($domaines as $domaine) : ?>
+                <tr>
+                    <td> <?php echo $domaine->getId(); ?> </td>
+                    <td> <?php echo $domaine->getLibelle(); ?> </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/domaine/modifier', ['domaine' => $domaine->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <i class="fas fa-pencil-alt" title="Éditer le domaine"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/domaine/supprimer', ['domaine' => $domaine->getId()], [], true); ?>" >
+                                <i class="fas fa-trash-alt" title="Effacer le domaine"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

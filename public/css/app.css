@@ -1,3 +1,8 @@
+span.voir ::after {
+    /*content : "<i class='fas fa-eye' title='Afficher'></i>";*/
+    content : "VOIR";
+}
+
 body {
     background-color: #eeeeee;
 }
@@ -11,8 +16,12 @@ div.main {
     background-color: white;
     border-radius: 5px;
     padding: 10px;
+    margin: 5px;
 }
 
+div.main h2 {
+    text-decoration: underline;
+}
 div.jumbotron#preecog {
     background-color: white;
 }
@@ -85,8 +94,12 @@ dl.dl-horizontal dt:after {
 
 a.action {
     width: 20em;
-    margin:10px;
+    margin:1px;
     text-indent: 0em;
+}
+
+th.action {
+    width: 8em;
 }
 
 a.mini {
@@ -106,3 +119,4 @@ div.preview {
     border-radius: 5px;
     padding: 2px;
 }
+

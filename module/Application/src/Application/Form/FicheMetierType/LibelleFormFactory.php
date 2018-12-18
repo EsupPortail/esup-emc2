@@ -8,7 +8,7 @@ class LibelleFormFactory{
 
     public function __invoke(FormElementManager $manager)
     {
-        /** @var LibelleForm $hydrator */
+        /** @var LibelleHydrator $hydrator */
         $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(LibelleHydrator::class);
 
         $form = new LibelleForm();

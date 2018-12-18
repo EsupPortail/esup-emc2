@@ -4,9 +4,9 @@ namespace Application\Controller\Utilisateur;
 
 use Application\Entity\Db\Role;
 use Application\Entity\Db\User;
-use Application\Service\MailService\MailServiceAwareTrait;
 use Application\Service\Role\RoleServiceAwareTrait;
 use Application\Service\User\UserServiceAwareTrait;
+use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenLdap\Entity\People;
@@ -22,7 +22,7 @@ use Zend\View\Model\ViewModel;
  * @author jean-Philippe Metivier <jean-philippe.metivier at unicaen.fr>
  */
 class UtilisateurController extends AbstractActionController {
-    use MailServiceAwareTrait;
+    use MailingServiceAwareTrait;
     use RoleServiceAwareTrait;
     use UserServiceAwareTrait;
     use EntityManagerAwareTrait;
@@ -107,7 +107,7 @@ class UtilisateurController extends AbstractActionController {
 
             if ($utilisateur !== null && $role !== null) {
                 $this->getUserService()->addRole($utilisateur, $role);
-                $this->getMailService()->sendChangementRole("ajout", $role, $utilisateur);
+                $this->getMailingService()->notificationChangementRole($utilisateur, $role, "ajout");
             }
         }
 
@@ -137,7 +137,7 @@ class UtilisateurController extends AbstractActionController {
 
             if ($utilisateur !== null && $role !== null) {
                 $this->getUserService()->removeRole($utilisateur,$role);
-                $this->getMailService()->sendChangementRole("retrait", $role, $utilisateur);
+                $this->getMailingService()->notificationChangementRole($utilisateur, $role, "retrait");
             }
         }
 
@@ -180,7 +180,7 @@ class UtilisateurController extends AbstractActionController {
                 $result[] = array(
                     'id'    => $utilisateur->getId(),
                     'label' => $utilisateur->getDisplayName(),
-                    'extra' => $utilisateur->getEmail(),
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$utilisateur->getEmail()."</span>",
                 );
             }
             usort($result, function($a, $b) {
@@ -216,7 +216,7 @@ class UtilisateurController extends AbstractActionController {
                 $result[] = array(
                     'id'    => $people->getId(),     // identifiant unique de l'item
                     'label' => $label,               // libellé de l'item
-                    'extra' => $people->get('mail'), // infos complémentaires (facultatives) sur l'item
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$people->get('mail')."</span>", // infos complémentaires (facultatives) sur l'item
                 );
             }
             uasort($result, function($a, $b) {

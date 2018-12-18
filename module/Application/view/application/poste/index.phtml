@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @var Poste[] $postes
+ */
+
+use Application\Entity\Db\Poste;
+
+$canAjouterPoste    = true;
+$canAfficherPoste   = true;
+$canModifierPoste   = true;
+$canSupprimerPoste  = true;
+
+$this->headTitle("Index des postes")
+?>
+
+<h1>
+   Index des postes
+</h1>
+
+
+<div class="main">
+
+    <?php if ($canAjouterPoste) : ?>
+        <a href="<?php echo $this->url('poste/ajouter', [], [], true); ?>"
+           class="btn btn-primary action ajax-modal"
+           data-event="modification"
+        >
+            <i class="fas fa-plus"></i>
+            Ajouter un poste
+        </a>
+
+    <br/><br/>
+    <?php endif; ?>
+
+
+    <table class="table table-extra-condensed">
+        <thead>
+        <tr>
+            <th> Numero de poste </th>
+            <th> Affectation </th>
+            <th> Localisation </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($postes as $poste) : ?>
+            <tr>
+                <td> <?php echo $poste->getNumeroPoste(); ?> </td>
+                <td> <?php echo $poste->getAffectation(); ?> </td>
+                <td> <?php echo $poste->getLocalisation(); ?> </td>
+                <td>
+                    <?php if($canAfficherPoste) : ?>
+                        <a href="<?php echo $this->url('poste/afficher', ['poste' => $poste->getId()], [], true); ?>"
+                           class="ajax-modal"
+                        >
+                            <i class="fas fa-eye" title="Afficher le poste"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if($canModifierPoste) : ?>
+                        <a href="<?php echo $this->url('poste/modifier', ['poste' => $poste->getId()], [], true); ?>"
+                           class="ajax-modal"
+                           data-event="modification"
+                        >
+                            <i class="fas fa-pencil-alt" title="Modifier le poste"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if($canSupprimerPoste) : ?>
+                        <a href="<?php echo $this->url('poste/supprimer', ['poste' => $poste->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt" title="Supprimer le poste"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\Poste" table="poste">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="numeroPoste"       type="string" length="128"      column="numero_poste"             nullable="true"/>
+        <field name="localisation"      type="string" length="128"      column="localisation"             nullable="true"/>
+
+        <many-to-one target-entity="Application\Entity\Db\Agent" field="rattachementHierarchique">
+            <join-column name="rattachement_hierarchique" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Correspondance" field="correspondance">
+            <join-column name="correspondance" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Affectation" field="affectation">
+            <join-column name="affectation" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
+            <join-column name="domaine" referenced-column-name="id" />
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>
