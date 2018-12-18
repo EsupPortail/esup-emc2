@@ -26,6 +26,17 @@ class FicheMetierType {
     /** @var string */
     private $competencesComportementalesFormation;
 
+    /** @var ArrayCollection */
+    private $applications;
+    /** @var string */
+    private $applicationsFormation;
+
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
+
+
     /**
      * @return int
      */
@@ -178,6 +189,49 @@ class FicheMetierType {
         return $this;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
 
+    /**
+     * @param Application $application
+     * @return FicheMetierType
+     */
+    public function addApplication($application)
+    {
+        $this->applications->add($application);
+        return $this;
+    }
 
+    /**
+     * @param Application $application
+     * @return FicheMetierType
+     */
+    public function removeApplication($application)
+    {
+        $this->applications->removeElement($application);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationsFormation()
+    {
+        return $this->applicationsFormation;
+    }
+
+    /**
+     * @param string $formation
+     * @return FicheMetierType
+     */
+    public function setApplicationsFormation($formation)
+    {
+        $this->applicationsFormation = $formation;
+        return $this;
+    }
 }

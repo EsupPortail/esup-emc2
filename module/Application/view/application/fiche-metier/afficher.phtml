@@ -6,6 +6,7 @@
  * @var SpecificitePoste $specificite
  */
 
+use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\SpecificitePoste;
@@ -189,6 +190,16 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                 <div class="row">
                     <div class="col-md-6">
                         <h4> Applications </h4>
+                        <ul>
+                            <?php /** @var Application $application */ ?>
+                            <?php foreach($fiche->getMetierType()->getApplications() as $application) : ?>
+                                <li> <?php echo $application->getLibelle(); ?> </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h4> Plan de formation </h4>
+                        <?php echo $fiche->getMetierType()->getApplicationsFormation(); ?>
                     </div>
                 </div>
 
