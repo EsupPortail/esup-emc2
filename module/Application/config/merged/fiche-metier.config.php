@@ -26,6 +26,10 @@ use Application\Form\FicheMetier\SpecificitePosteForm;
 use Application\Form\FicheMetier\SpecificitePosteFormFactory;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteFormFactory;
+use Application\Form\FicheMetierType\ApplicationsForm;
+use Application\Form\FicheMetierType\ApplicationsFormFactory;
+use Application\Form\FicheMetierType\ApplicationsHydrator;
+use Application\Form\FicheMetierType\ApplicationsHydratorFactory;
 use Application\Form\FicheMetierType\FormationBaseForm;
 use Application\Form\FicheMetierType\FormationBaseFormFactory;
 use Application\Form\FicheMetierType\FormationBaseHydrator;
@@ -114,6 +118,7 @@ return [
                         'modifier-connaissances',
                         'modifier-operationnelle',
                         'modifier-comportementale',
+                        'modifier-application',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -354,6 +359,17 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'modifier-application' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-application/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'modifier-application',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                 ],
             ],
         ],
@@ -388,6 +404,7 @@ return [
             FormationBaseForm::class => FormationBaseFormFactory::class,
             FormationOperationnelleForm::class => FormationOperationnelleFormFactory::class,
             FormationComportementaleForm::class => FormationComportementaleFormFactory::class,
+            ApplicationsForm::class => ApplicationsFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -395,6 +412,7 @@ return [
             FormationBaseHydrator::class => FormationBaseHydrator::class,
             FormationOperationnelleHydrator::class => FormationOperationnelleHydrator::class,
             FormationComportementaleHydrator::class => FormationComportementaleHydrator::class,
+
         ],
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
@@ -402,6 +420,7 @@ return [
             AssocierMetierTypeHydrator::class => AssocierMetierTypeHydratorFactory::class,
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
+            ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
         ]
     ],
     'view_helpers' => [

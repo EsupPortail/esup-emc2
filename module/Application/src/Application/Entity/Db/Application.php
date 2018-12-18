@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Application {
 
     /** @var integer */

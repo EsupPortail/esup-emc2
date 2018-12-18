@@ -5,6 +5,7 @@ namespace Application\Controller\FicheMetier;
 use Application\Entity\Db\Activite;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
+use Application\Form\FicheMetierType\ApplicationsForm;
 use Application\Form\FicheMetierType\FormationBaseForm;
 use Application\Form\FicheMetierType\FormationComportementaleForm;
 use Application\Form\FicheMetierType\FormationOperationnelleForm;
@@ -257,6 +258,34 @@ class FicheMetierTypeController extends  AbstractActionController{
         /** @var FormationComportementaleForm $form */
         $form = $this->getServiceLocator()->get('FormElementManager')->get(FormationComportementaleForm::class);
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->updateFicheMetierType($fiche);
+//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
+            }
+        }
+
+        return new ViewModel([
+            'type' => 'comportementale',
+            'title' => 'Modification des compétences comportementales',
+            'form' => $form,
+        ]);
+    }
+
+    public function modifierApplicationAction() {
+
+        $ficheId = $this->params()->fromRoute('id');
+        $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
+
+        /** @var ApplicationsForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationsForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
         /** @var Request $request */
