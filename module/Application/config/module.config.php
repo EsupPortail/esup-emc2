@@ -4,8 +4,6 @@ namespace Application;
 
 use Application\Service\Affectation\AffectationService;
 use Application\Service\Affectation\AffectationServiceFactory;
-use Application\Service\MailService\MailService;
-use Application\Service\MailService\MailServiceFactory;
 use Application\Service\Role\RoleService;
 use Application\Service\Role\RoleServiceFactory;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
@@ -56,20 +54,29 @@ return [
                 ],
                 'may_terminate' => true,
             ],
+            'administration'        => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/administration',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action'     => 'administration',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
         ],
     ],
     'service_manager' => [
         'invokables' => [
         ],
         'factories' => [
-            MailService::class => MailServiceFactory::class,
             RoleService::class => RoleServiceFactory::class,
             AffectationService::class => AffectationServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'invokables' => [
-            //'Application\Controller\Index' => Controller\IndexController::class,
         ],
         'factories' => [
             'Application\Controller\Index' => Controller\IndexControllerFactory::class,

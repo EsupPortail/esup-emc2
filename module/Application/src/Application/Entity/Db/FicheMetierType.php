@@ -8,10 +8,34 @@ class FicheMetierType {
 
     /** @var int */
     private $id;
-    /** @var string */
-    private $libelle;
+    /** @var Metier */
+    private $metier;
     /** @var string */
     private $missionsPrincipales;
+
+    /** @var string */
+    private $connaissances;
+    /** @var string */
+    private $connaissancesFormation;
+    /** @var string */
+    private $competencesOperationnelles;
+    /** @var string */
+    private $competencesOperationnellesFormation;
+    /** @var string */
+    private $competencesComportementales;
+    /** @var string */
+    private $competencesComportementalesFormation;
+
+    /** @var ArrayCollection */
+    private $applications;
+    /** @var string */
+    private $applicationsFormation;
+
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
+
 
     /**
      * @return int
@@ -22,20 +46,20 @@ class FicheMetierType {
     }
 
     /**
-     * @return string
+     * @return Metier
      */
-    public function getLibelle()
+    public function getMetier()
     {
-        return $this->libelle;
+        return $this->metier;
     }
 
     /**
-     * @param string $libelle
+     * @param Metier $metier
      * @return FicheMetierType
      */
-    public function setLibelle($libelle)
+    public function setMetier($metier)
     {
-        $this->libelle = $libelle;
+        $this->metier = $metier;
         return $this;
     }
 
@@ -54,6 +78,160 @@ class FicheMetierType {
     public function setMissionsPrincipales($missionsPrincipales)
     {
         $this->missionsPrincipales = $missionsPrincipales;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnaissances()
+    {
+        return $this->connaissances;
+    }
+
+    /**
+     * @param string $connaissances
+     * @return FicheMetierType
+     */
+    public function setConnaissances($connaissances)
+    {
+        $this->connaissances = $connaissances;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnaissancesFormation()
+    {
+        return $this->connaissancesFormation;
+    }
+
+    /**
+     * @param string $connaissancesFormation
+     * @return FicheMetierType
+     */
+    public function setConnaissancesFormation($connaissancesFormation)
+    {
+        $this->connaissancesFormation = $connaissancesFormation;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompetencesOperationnelles()
+    {
+        return $this->competencesOperationnelles;
+    }
+
+    /**
+     * @param string $competencesOperationnelles
+     * @return FicheMetierType
+     */
+    public function setCompetencesOperationnelles($competencesOperationnelles)
+    {
+        $this->competencesOperationnelles = $competencesOperationnelles;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompetencesOperationnellesFormation()
+    {
+        return $this->competencesOperationnellesFormation;
+    }
+
+    /**
+     * @param string $competencesOperationnellesFormation
+     * @return FicheMetierType
+     */
+    public function setCompetencesOperationnellesFormation($competencesOperationnellesFormation)
+    {
+        $this->competencesOperationnellesFormation = $competencesOperationnellesFormation;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompetencesComportementales()
+    {
+        return $this->competencesComportementales;
+    }
+
+    /**
+     * @param string $competencesComportementales
+     * @return FicheMetierType
+     */
+    public function setCompetencesComportementales($competencesComportementales)
+    {
+        $this->competencesComportementales = $competencesComportementales;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompetencesComportementalesFormation()
+    {
+        return $this->competencesComportementalesFormation;
+    }
+
+    /**
+     * @param string $competencesComportementalesFormation
+     * @return FicheMetierType
+     */
+    public function setCompetencesComportementalesFormation($competencesComportementalesFormation)
+    {
+        $this->competencesComportementalesFormation = $competencesComportementalesFormation;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @param Application $application
+     * @return FicheMetierType
+     */
+    public function addApplication($application)
+    {
+        $this->applications->add($application);
+        return $this;
+    }
+
+    /**
+     * @param Application $application
+     * @return FicheMetierType
+     */
+    public function removeApplication($application)
+    {
+        $this->applications->removeElement($application);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationsFormation()
+    {
+        return $this->applicationsFormation;
+    }
+
+    /**
+     * @param string $formation
+     * @return FicheMetierType
+     */
+    public function setApplicationsFormation($formation)
+    {
+        $this->applicationsFormation = $formation;
         return $this;
     }
 }

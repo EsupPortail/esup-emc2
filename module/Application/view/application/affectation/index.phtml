@@ -25,12 +25,11 @@ $canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(Affectat
             href="<?php echo $this->url('affectation/creer', [], [], true); ?>"
             data-event="modification"
         >
-            <i class="fas fa-plus"></i>
+            <i class="fas fa-plus-square"></i>
             Ajouter une affectation
         </a>
+        <br/><br/>
     <?php endif; ?>
-
-    <br/>
 
     <table class="table table-condensed">
         <thead>
@@ -57,8 +56,6 @@ $canEffacer     = $this->isAllowed(AffectationPrivileges::getResourceId(Affectat
                             Aucune description de rédigée pour cet affectation.
                         </div>
                     <?php endif; ?>
-
-
                 </td>
                 <td>
                     <?php echo $affectation->getHistoModification()->format('H:i d/m/Y'); ?> <br/>

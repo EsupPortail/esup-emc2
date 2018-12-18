@@ -1,5 +1,6 @@
 <?php
 
+use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FicheMetierTypeActivite;
 
@@ -13,11 +14,12 @@ $this->headTitle("Affichage de la fiche métier type : ".$fiche->getId());
 
 $canEditer = true;
 
+
 ?>
 
 <h1 class="page-header">
     Fiche métier type #<?php echo $fiche->getId(); ?> :
-    <em><?php echo $fiche->getLibelle(); ?></em>
+    <em><?php echo $fiche->getMetier()->getLibelle(); ?></em>
 
     <?php if ($canEditer) : ?>
         <a  class="btn btn-primary action ajax-modal"
@@ -104,6 +106,99 @@ $canEditer = true;
             <div class="col-md-11"> <?php echo $ficheActivite->getActivite()->getDescription(); ?> </div>
         </div>
         <?php endforeach;?>
+    </div>
+</div>
+
+<div class="panel-info">
+    <div class="panel-heading">
+        <h2> Parcours de formation de base pour la prise de poste </h2>
+    </div>
+    <div class="panel-body">
+<!--        <div class="row">-->
+<!--            <div class="col-md-6">-->
+<!--                <h3> Compétences principales </h3>-->
+<!--            </div>-->
+<!--            <div class="col-md-6">-->
+<!--                <h3> Parcours d'accompagnement à la prise de poste </h3>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="row">
+            <div class="col-md-1">
+                <a class="btn btn-default mini ajax-modal"
+                   data-event="modification"
+                   href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true); ?>"
+                >
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h3> Connaissances </h3>
+                <?php echo $fiche->getConnaissances(); ?>
+            </div>
+            <div class="col-md-5">
+                <h3> Plan de formation </h3>
+                <?php echo $fiche->getConnaissancesFormation(); ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <a class="btn btn-default mini ajax-modal"
+                   data-event="modification"
+                   href="<?php echo $this->url('fiche-metier-type/modifier-operationnelle', ['id' => $fiche->getId()], [], true); ?>"
+                >
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h3> Compétences opérationnelles </h3>
+                <?php echo $fiche->getCompetencesOperationnelles(); ?>
+            </div>
+            <div class="col-md-5">
+                <h3> Plan de formation </h3>
+                <?php echo $fiche->getCompetencesOperationnellesFormation(); ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <a class="btn btn-default mini ajax-modal"
+                   data-event="modification"
+                   href="<?php echo $this->url('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true); ?>"
+                >
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h3> Compétences comportementales </h3>
+                <?php echo $fiche->getCompetencesComportementales(); ?>
+            </div>
+            <div class="col-md-5">
+                <h3> Plan de formation </h3>
+                <?php echo $fiche->getCompetencesComportementalesFormation(); ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <a class="btn btn-default mini ajax-modal"
+                   data-event="modification"
+                   href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true); ?>"
+                >
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h3> Applications </h3>
+                    <ul>
+                        <?php /** @var Application $application */ ?>
+                        <?php foreach($fiche->getApplications() as $application) : ?>
+                            <li> <?php echo $application->getLibelle(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+            </div>
+            <div class="col-md-5">
+                <h3> Plan de formation </h3>
+                <?php echo $fiche->getApplicationsFormation(); ?>
+            </div>
+        </div>
     </div>
 </div>
 

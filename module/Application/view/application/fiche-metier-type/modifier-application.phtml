@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @var Form $form
+ */
+
+use Zend\Form\Form;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function() {
+        // tinymce.remove();
+        tinymce.init({
+            selector: '.formation',
+            toolbar: 'newdocument undo redo | bold italic | bullist link',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists link',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'formation',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('formation').getContent());
+                    $('textarea#formation').val(tinymce.get('formation').getContent());
+                });
+            }
+        });
+    });
+</script>

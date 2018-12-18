@@ -23,16 +23,16 @@ $this->headTitle("Index des applications");
 </h1>
 
 <div class="main">
-    <a href="<?php echo $this->url('application/creer', [], [], true);?>"
-       class="btn btn-primary action ajax-modal"
-       data-event="modification"
-    >
-        <i class="fas fa-plus-square"></i>
-        Ajouter une application
-    </a>
-
-
-    <br/>
+    <?php if ($canAjouter) : ?>
+        <a  href="<?php echo $this->url('application/creer', [], [], true);?>"
+            class="btn btn-primary action ajax-modal"
+            data-event="modification"
+        >
+            <i class="fas fa-plus-square"></i>
+            Ajouter une application
+        </a>
+        <br/><br/>
+    <?php endif; ?>
 
     <table class="table table-condensed">
         <thead>
@@ -53,8 +53,6 @@ $this->headTitle("Index des applications");
                     <td>
                         <?if ($application->isActif()) : ?>
                             <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
-<!--                        --><?php //else: ?>
-<!--                            <span class="badge" style="background-color: darkred;">&nbsp;</span>-->
                         <?php endif;?>
                     </td>
                     <td>
@@ -93,5 +91,4 @@ $this->headTitle("Index des applications");
             window.location.reload();
         });
     });
-
 </script>

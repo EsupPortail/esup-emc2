@@ -6,21 +6,47 @@ use Application\Controller\FicheMetier\FicheMetierController;
 use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\FicheMetier\FicheMetierTypeController;
 use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
+use Application\Form\FicheMetier\AssocierAgentForm;
+use Application\Form\FicheMetier\AssocierAgentFormFactory;
+use Application\Form\FicheMetier\AssocierAgentHydrator;
+use Application\Form\FicheMetier\AssocierAgentHydratorFactory;
+use Application\Form\FicheMetier\AssocierMetierTypeForm;
+use Application\Form\FicheMetier\AssocierMetierTypeFormFactory;
+use Application\Form\FicheMetier\AssocierMetierTypeHydrator;
+use Application\Form\FicheMetier\AssocierMetierTypeHydratorFactory;
+use Application\Form\FicheMetier\AssocierPosteForm;
+use Application\Form\FicheMetier\AssocierPosteFormFactory;
+use Application\Form\FicheMetier\AssocierPosteHydrator;
+use Application\Form\FicheMetier\AssocierPosteHydratorFactory;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
 use Application\Form\FicheMetier\FicheMetierCreationHydratorFactory;
+use Application\Form\FicheMetier\SpecificitePosteForm;
+use Application\Form\FicheMetier\SpecificitePosteFormFactory;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteFormFactory;
+use Application\Form\FicheMetierType\ApplicationsForm;
+use Application\Form\FicheMetierType\ApplicationsFormFactory;
+use Application\Form\FicheMetierType\ApplicationsHydrator;
+use Application\Form\FicheMetierType\ApplicationsHydratorFactory;
+use Application\Form\FicheMetierType\FormationBaseForm;
+use Application\Form\FicheMetierType\FormationBaseFormFactory;
+use Application\Form\FicheMetierType\FormationBaseHydrator;
+use Application\Form\FicheMetierType\FormationComportementaleForm;
+use Application\Form\FicheMetierType\FormationComportementaleFormFactory;
+use Application\Form\FicheMetierType\FormationComportementaleHydrator;
+use Application\Form\FicheMetierType\FormationOperationnelleForm;
+use Application\Form\FicheMetierType\FormationOperationnelleFormFactory;
+use Application\Form\FicheMetierType\FormationOperationnelleHydrator;
 use Application\Form\FicheMetierType\LibelleForm;
 use Application\Form\FicheMetierType\LibelleFormFactory;
 use Application\Form\FicheMetierType\LibelleHydrator;
-use Application\Form\FicheMetierType\MissionsPrincipalesForm;
-use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
-use Application\Form\FicheMetierType\MissionsPrincipalesHydrator;
+use Application\Form\FicheMetierType\LibelleHydratorFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -41,6 +67,10 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                        'editer-specificite-poste',
+                        'associer-metier-type',
+                        'associer-agent',
+                        'associer-poste',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -84,6 +114,11 @@ return [
                         'deplacer-activite',
                         'ajouter-nouvelle-activite',
                         'ajouter-activite-existante',
+
+                        'modifier-connaissances',
+                        'modifier-operationnelle',
+                        'modifier-comportementale',
+                        'modifier-application',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -113,6 +148,50 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'associer-agent' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/associer-agent/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'associer-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'associer-poste' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/associer-poste/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'associer-poste',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'associer-metier-type' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/associer-metier-type/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'associer-metier-type',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'specificite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/specificite/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'editer-specificite-poste',
                             ],
                         ],
                         'may_terminate' => true,
@@ -156,7 +235,7 @@ return [
                                 'action'     => 'creer',
                             ],
                         ],
-                    ]
+                    ],
                 ],
             ],
             'fiche-metier-type' => [
@@ -247,6 +326,50 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'modifier-connaissances' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-connaissances/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'modifier-connaissances',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier-operationnelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-operationnelle/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'modifier-operationnelle',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier-comportementale' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-comportementale/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'modifier-comportementale',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier-application' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-application/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'modifier-application',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                 ],
             ],
         ],
@@ -266,21 +389,44 @@ return [
         ],
     ],
     'form_elements' => [
+        'invokables' => [
+        ],
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             FicheMetierCreationForm::class => FicheMetierCreationFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
-            MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
+
+            SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
+            AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,
+            AssocierAgentForm::class => AssocierAgentFormFactory::class,
+            AssocierPosteForm::class => AssocierPosteFormFactory::class,
+
+            FormationBaseForm::class => FormationBaseFormFactory::class,
+            FormationOperationnelleForm::class => FormationOperationnelleFormFactory::class,
+            FormationComportementaleForm::class => FormationComportementaleFormFactory::class,
+            ApplicationsForm::class => ApplicationsFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokables' => [
-            MissionsPrincipalesHydrator::class => MissionsPrincipalesHydrator::class,
-            LibelleHydrator::class => LibelleHydrator::class,
+            FormationBaseHydrator::class => FormationBaseHydrator::class,
+            FormationOperationnelleHydrator::class => FormationOperationnelleHydrator::class,
+            FormationComportementaleHydrator::class => FormationComportementaleHydrator::class,
+
         ],
         'factories' => [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
+            LibelleHydrator::class => LibelleHydratorFactory::class,
+            AssocierMetierTypeHydrator::class => AssocierMetierTypeHydratorFactory::class,
+            AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
+            AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
+            ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
         ]
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'specificitePoste' => SpecificitePosteViewHelper::class,
+        ],
+    ],
 
 ];

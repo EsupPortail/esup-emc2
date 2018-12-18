@@ -43,10 +43,13 @@ class ActiviteController  extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter une activité',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function editerAction()
@@ -67,14 +70,16 @@ class ActiviteController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getActiviteService()->update($activite);
-//                $this->redirect()->toRoute('activite');
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Éditer une activité',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerAction()

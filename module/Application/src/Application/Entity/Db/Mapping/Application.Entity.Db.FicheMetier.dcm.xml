@@ -26,6 +26,21 @@
             <join-column name="histo_destructeur_id" referenced-column-name="id"/>
         </many-to-one>
 
+        <many-to-one field="agent" target-entity="Application\Entity\Db\Agent">
+            <join-column name="agent" referenced-column-name="id" />
+        </many-to-one>
+
+        <many-to-one field="metierType" target-entity="Application\Entity\Db\FicheMetierType">
+            <join-column name="metier_type" referenced-column-name="id" />
+        </many-to-one>
+
+        <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste">
+            <join-column name="specificite" referenced-column-name="id" />
+        </one-to-one>
+
+        <many-to-one field="poste" target-entity="Application\Entity\Db\Poste">
+            <join-column name="poste" referenced-column-name="id" />
+        </many-to-one>
 
     </entity>
 </doctrine-mapping>

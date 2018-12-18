@@ -5,6 +5,10 @@ namespace Application\Controller\FicheMetier;
 use Application\Entity\Db\Activite;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
+use Application\Form\FicheMetierType\ApplicationsForm;
+use Application\Form\FicheMetierType\FormationBaseForm;
+use Application\Form\FicheMetierType\FormationComportementaleForm;
+use Application\Form\FicheMetierType\FormationOperationnelleForm;
 use Application\Form\FicheMetierType\LibelleForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -53,14 +57,16 @@ class FicheMetierTypeController extends  AbstractActionController{
 
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [] , true);
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Modifier le libellé',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function editerMissionsPrincipalesAction()
@@ -83,10 +89,13 @@ class FicheMetierTypeController extends  AbstractActionController{
             }
         }
 
-        return new ViewModel([
-            'title' => 'Modification des missions principales',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Éditer missions principales',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function ajouterNouvelleActiviteAction()
@@ -114,10 +123,13 @@ class FicheMetierTypeController extends  AbstractActionController{
             }
         }
 
-        return new ViewModel([
-            'title' => 'Ajout d\'une nouvelle activité',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajouter une nouvelle activité',
             'form' => $form,
         ]);
+        return $vm;
 
     }
 
@@ -180,5 +192,117 @@ class FicheMetierTypeController extends  AbstractActionController{
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 
         $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $couple->getFiche()->getId()], [], true);
+    }
+
+    public function modifierConnaissancesAction() {
+
+        $ficheId = $this->params()->fromRoute('id');
+        $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
+
+        /** @var FormationBaseForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(FormationBaseForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->updateFicheMetierType($fiche);
+//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
+            }
+        }
+
+        return new ViewModel([
+           'type' => 'connaissances',
+            'title' => 'Modification des connaissances',
+           'form' => $form,
+        ]);
+    }
+
+    public function modifierOperationnelleAction() {
+
+        $ficheId = $this->params()->fromRoute('id');
+        $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
+
+        /** @var FormationOperationnelleForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(FormationOperationnelleForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-operationnelle', ['id' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->updateFicheMetierType($fiche);
+//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
+            }
+        }
+
+        return new ViewModel([
+            'type' => 'operationnelle',
+            'title' => 'Modification des compétences opérationnelles',
+            'form' => $form,
+        ]);
+    }
+
+    public function modifierComportementaleAction() {
+
+        $ficheId = $this->params()->fromRoute('id');
+        $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
+
+        /** @var FormationComportementaleForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(FormationComportementaleForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->updateFicheMetierType($fiche);
+//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
+            }
+        }
+
+        return new ViewModel([
+            'type' => 'comportementale',
+            'title' => 'Modification des compétences comportementales',
+            'form' => $form,
+        ]);
+    }
+
+    public function modifierApplicationAction() {
+
+        $ficheId = $this->params()->fromRoute('id');
+        $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
+
+        /** @var ApplicationsForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationsForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->updateFicheMetierType($fiche);
+//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
+            }
+        }
+
+        return new ViewModel([
+            'type' => 'comportementale',
+            'title' => 'Modification des compétences comportementales',
+            'form' => $form,
+        ]);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Mailing\Service\Mailing;
 
+use Application\Entity\Db\Role;
+use Application\Entity\Db\User;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
@@ -31,6 +33,26 @@ class MailingService {
         $this->transport    = $transport;
         $this->redirectTo   = $redirectTo;
         $this->doNotSend    = $doNotSend;
+    }
+
+    /**
+     * @param User $utilisateur
+     * @param Role $role
+     * @param string $alteration (ajout, retrait)
+     */
+    public function notificationChangementRole($utilisateur, $role, $alteration)
+    {
+        $mail = $utilisateur->getEmail();
+        $titre = $alteration . " du rôle ". $role->getRoleId();
+        $texte  = "";
+        switch($alteration) {
+            case "ajout" : $texte .= "<p>Vous venez de recevoir le rôle de ".$role->getRoleId()." dans l'application PrEECoG.</p>";
+                break;
+            case "retrait" : $texte .= "<p>Vous venez de perdre le rôle de ".$role->getRoleId()." dans l'application PrEECoG.</p>";
+                break;
+        }
+        $texte .= "<p>Pour vous connecter à celle-ci, suivez le lien suivant : <a href='".$this->rendererService->url('home', [], ['force_canonical' => true], true)."'>PrEECoG</a>.</p>";
+        $this->sendMail($mail, $titre, $texte);
     }
 
 //    public function notifierMedecinDirecteurDemande($demande) {
@@ -114,7 +136,7 @@ class MailingService {
         $message->setSubject($sujet);
 
 
-        $texte = "<p>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application PrEECoG. </p>" . $texte;
+        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application PrEECoG. </i></p>" . $texte;
 
         if ($this->doNotSend) {
             $texte .= "<br/><br/><hr/><br/>";

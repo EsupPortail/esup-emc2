@@ -1,0 +1,18 @@
+<?php
+
+use Application\Entity\Db\Poste;
+
+/** @var Poste $poste */
+
+$this->headTitle("Poste numero ".$poste->getNumeroPoste());
+
+?>
+
+<!--<h1>-->
+<!--    Poste numero --><?php //echo $poste->getNumeroPoste(); ?>
+<!--</h1>-->
+
+
+<div class="main">
+    <?php echo $this->poste()->render($poste); ?>
+</div>

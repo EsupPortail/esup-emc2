@@ -41,10 +41,13 @@ class AffectationController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter une affectation',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function editerAction()
@@ -69,10 +72,13 @@ class AffectationController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Éditer une affectation',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerAction()

@@ -8,7 +8,8 @@ use Application\Entity\Db\FicheMetierType;
 
 $this->headTitle('Index des fiches métiers types');
 
-
+$canAjouter = true;
+$canEditer = true;
 $canVoir = true;
 ?>
 
@@ -18,35 +19,31 @@ $canVoir = true;
 </h1>
 
 
-<a href=""
-   class="btn btn-primary action"
->
-    <i class="fas fa-plus-square"></i> Ajouter une fiche métier type
-</a>
+<div class="main">
 
+    <?php if ($canAjouter) : ?>
+        <a href=""
+           class="btn btn-primary action"
+        >
+            <i class="fas fa-plus-square"></i>
+            Ajouter une fiche métier type
+        </a>
+        <br/> <br/>
+    <?php endif; ?>
 
-<br/>
-<br/>
-
-
-<table class="table table-condensed">
+    <table class="table table-condensed">
     <thead>
     <tr>
         <th> Id </th>
         <th> Libellé </th>
-        <th> Affectation </th>
-        <th> Dernière modification </th>
         <th> Action </th>
     </tr>
     </thead>
     <tbody>
-    <tbody>
         <?php foreach($fiches as $fiche): ?>
             <tr>
                 <td> <?php echo $fiche->getId(); ?> </td>
-                <td> <?php echo $fiche->getLibelle(); ?> </td>
-                <td></td>
-                <td></td>
+                <td> <?php echo $fiche->getMetier()->getLibelle(); ?> </td>
                 <td>
                     <?php if ($canVoir) : ?>
                         <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
@@ -60,3 +57,4 @@ $canVoir = true;
     </tbody>
 </table>
 
+</div>

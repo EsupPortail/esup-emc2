@@ -43,10 +43,13 @@ class ApplicationController  extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Ajouter une application',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function editerAction()
@@ -71,10 +74,13 @@ class ApplicationController  extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
             'title' => 'Éditer une application',
             'form' => $form,
         ]);
+        return $vm;
     }
 
     public function effacerAction()
