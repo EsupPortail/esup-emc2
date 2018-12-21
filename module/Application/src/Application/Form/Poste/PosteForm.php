@@ -115,6 +115,17 @@ class PosteForm extends Form {
                 'id' => 'domaine',
             ],
         ]);
+        // liens exterieur vers fiche de poste
+        $this->add([
+            'type' => Text::class,
+            'name' => 'lien',
+            'options' => [
+                'label' => "Lien externe ver la fiche de poste :",
+            ],
+            'attributes' => [
+                'id' => 'lien',
+            ],
+        ]);
 
         // button
         $this->add([
