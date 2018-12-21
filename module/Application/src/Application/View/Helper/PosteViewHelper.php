@@ -43,7 +43,7 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dd class="siham">'.$poste->getLocalisation().'</dd>';
         $texte .= '<dt> Rattachement hiérarchique </dt>';
         $texte .= '<dd class="siham">'.(($poste->getRattachementHierarchique())?$poste->getRattachementHierarchique()->getDenomination():"---").'</dd>';
-        $texte .= '<dt> Correspondance </dt>';
+        $texte .= '<dt> Catégorie </dt>';
         $texte .= '<dd class="siham">'.$poste->getCorrespondance().'</dd>';
         $texte .= '<dt> Domaine UNICAEN </dt>';
         $texte .= '<dd class="gpeec">'.(($poste->getDomaine())?$poste->getDomaine()->getLibelle():"---").'</dd>';
