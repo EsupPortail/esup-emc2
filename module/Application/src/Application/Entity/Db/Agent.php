@@ -3,7 +3,6 @@
 namespace Application\Entity\Db;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class Agent {
 
@@ -33,12 +32,6 @@ class Agent {
 
     /** @var string */
     private $missionsComplementaires;
-
-
-    public function __construct()
-    {
-        $this->missionsComplementaires = new ArrayCollection();
-    }
 
     /**
      * @return int
