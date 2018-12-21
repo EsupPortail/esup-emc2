@@ -22,6 +22,9 @@
         <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
             <join-column name="domaine" referenced-column-name="id" />
         </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Fonction" field="fonction">
+            <join-column name="fonction" referenced-column-name="id" />
+        </many-to-one>
 
     </entity>
 </doctrine-mapping>

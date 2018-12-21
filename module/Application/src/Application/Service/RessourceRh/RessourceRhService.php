@@ -6,6 +6,7 @@ use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
+use Application\Entity\Db\Fonction;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
 use Doctrine\ORM\NonUniqueResultException;
@@ -493,6 +494,86 @@ class RessourceRhService {
             $this->getEntityManager()->flush();
         } catch (OptimisticLockException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Domaine", $e);
+        }
+    }
+
+    /** Domaine *******************************************************************************************************/
+
+    /**
+     * @param string $order
+     * @return Fonction[]
+     */
+    public function getFonctions($order = null)
+    {
+        $qb = $this->getEntityManager()->getRepository(Fonction::class)->createQueryBuilder('fonction')
+        ;
+
+        if ($order !== null) {
+            $qb = $qb->addOrderBy('fonction.'.$order, 'ASC');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return Fonction
+     */
+    public function getFonction($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(Fonction::class)->createQueryBuilder('fonction')
+            ->andWhere('fonction.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs fonctions partagent le même identifiant [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param Fonction $fonction
+     * @return Fonction
+     */
+    public function createFonction($fonction)
+    {
+        $this->getEntityManager()->persist($fonction);
+        try {
+            $this->getEntityManager()->flush($fonction);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la création d'une Fonction", $e);
+        }
+        return $fonction;
+    }
+
+    /**
+     * @param Fonction $fonction
+     * @return Fonction
+     */
+    public function updateFonction($fonction)
+    {
+        try {
+            $this->getEntityManager()->flush($fonction);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'une Fonction.", $e);
+        }
+        return $fonction;
+    }
+
+    /**
+     * @param Fonction $fonction
+     */
+    public function deleteFonction($fonction)
+    {
+        $this->getEntityManager()->remove($fonction);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une Fonction", $e);
         }
     }
 

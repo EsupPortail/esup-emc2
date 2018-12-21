@@ -4,6 +4,7 @@ namespace Application\Form\Poste;
 
 use Application\Entity\Db\Affectation;
 use Application\Entity\Db\Domaine;
+use Application\Entity\Db\Fonction;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
@@ -115,6 +116,31 @@ class PosteForm extends Form {
                 'id' => 'domaine',
             ],
         ]);
+
+        // domaine
+        $this->add([
+            'type' => ObjectSelect::class,
+            'name' => 'fonction',
+            'options' => [
+                'label' => "Fonction :",
+                'empty_option' => "Sélectionner une fonction",
+                'object_manager' => $this->getEntityManager(),
+                'target_class' => Fonction::class,
+                'property' => 'libelle',
+                'find_method' => [
+                    'name' => 'findBy',
+                    'params' => [
+                        'criteria' => [],
+                        'orderBy' => ['libelle' => 'ASC'],
+                    ],
+                ],
+                'disable_inarray_validator' => true,
+            ],
+            'attributes' => [
+                'id' => 'fonction',
+            ],
+        ]);
+
         // liens exterieur vers fiche de poste
         $this->add([
             'type' => Text::class,
