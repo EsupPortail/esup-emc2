@@ -47,6 +47,8 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dd class="siham">'.$poste->getCorrespondance().'</dd>';
         $texte .= '<dt> Domaine UNICAEN </dt>';
         $texte .= '<dd class="gpeec">'.(($poste->getDomaine())?$poste->getDomaine()->getLibelle():"---").'</dd>';
+        $texte .= '<dt> Fonction </dt>';
+        $texte .= '<dd class="gpeec">'.(($poste->getFonction())?$poste->getFonction()->getLibelle():"---").'</dd>';
         if ($poste->getLien()) {
             $texte .= '<dt> Lien externe </dt>';
             $texte .= '<dd class="gpeec"><a href="'.$poste->getLien().'">'.$poste->getLien().'</a></dd>';

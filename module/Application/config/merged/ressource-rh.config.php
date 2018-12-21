@@ -8,6 +8,9 @@ use Application\Controller\RessourceRh\RessourceRhControllerFactory;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
+use Application\Form\RessourceRh\FonctionForm;
+use Application\Form\RessourceRh\FonctionFormFactory;
+use Application\Form\RessourceRh\FonctionHydrator;
 use Application\Form\RessourceRh\MetierFamilleForm;
 use Application\Form\RessourceRh\MetierFamilleFormFactory;
 use Application\Form\RessourceRh\MetierFamilleHydrator;
@@ -53,6 +56,7 @@ return [
                         'creer-metier',
                         'creer-famille',
                         'ajouter-domaine',
+                        'ajouter-fonction',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AJOUTER,
@@ -67,6 +71,7 @@ return [
                         'modifier-metier',
                         'modifier-famille',
                         'modifier-domaine',
+                        'modifier-fonction',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::MODIFIER,
@@ -81,6 +86,7 @@ return [
                         'effacer-agent-status',
                         'effacer-famille',
                         'supprimer-domaine',
+                        'supprimer-fonction',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::EFFACER,
@@ -341,6 +347,45 @@ return [
                             ],
                         ],
                     ],
+                    'fonction' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/fonction',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'ajouter-fonction',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:fonction',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-fonction',
+                                    ],
+                                ],
+                            ],
+                            'supprimer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/supprimer/:fonction',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'supprimer-fonction',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -366,6 +411,7 @@ return [
             MetierForm::class => MetierFormFactory::class,
             MetierFamilleForm::class => MetierFamilleFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
+            FonctionForm::class => FonctionFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -375,6 +421,7 @@ return [
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
             MetierFamilleHydrator::class => MetierFamilleHydrator::class,
             DomaineHydrator::class => DomaineHydrator::class,
+            FonctionHydrator::class => FonctionHydrator::class,
         ],
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,

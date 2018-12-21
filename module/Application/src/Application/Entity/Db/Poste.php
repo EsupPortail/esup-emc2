@@ -20,6 +20,8 @@ class Poste {
     private $domaine;
     /** @var string */
     private $lien;
+    /** @var Fonction */
+    private $fonction;
 
     /**
      * @return int
@@ -152,6 +154,24 @@ class Poste {
     public function setLien($lien)
     {
         $this->lien = $lien;
+        return $this;
+    }
+
+    /**
+     * @return Fonction
+     */
+    public function getFonction()
+    {
+        return $this->fonction;
+    }
+
+    /**
+     * @param Fonction $fonction
+     * @return Poste
+     */
+    public function setFonction($fonction)
+    {
+        $this->fonction = $fonction;
         return $this;
     }
 }
