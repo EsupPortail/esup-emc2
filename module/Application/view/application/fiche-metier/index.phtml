@@ -38,7 +38,6 @@ $canHistoriser      = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fich
         <tr>
             <th> Id </th>
             <th> Libellé </th>
-            <th> Affectation </th>
             <th> Dernière modification </th>
             <th> Action </th>
         </tr>
@@ -48,7 +47,6 @@ $canHistoriser      = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fich
         <tr>
             <td> <?php echo $ficheMetier->getId(); ?></td>
             <td> <?php echo $ficheMetier->getLibelle(); ?></td>
-            <td> <?php echo $ficheMetier->getAffectation(); ?></td>
             <td> <?php echo $ficheMetier->getHistoModification()->format('H:i:s d/m/Y'); ?></td>
             <td>
                 <?php if ($canVoir) : ?>

@@ -17,7 +17,6 @@ class FicheMetierCreationHydrator implements HydratorInterface {
     {
         $data = [
             'libelle' => $object->getLibelle(),
-            'affectation' => ($object->getAffectation())?$object->getAffectation()->getId():null,
             ];
 
         return $data;
@@ -33,7 +32,6 @@ class FicheMetierCreationHydrator implements HydratorInterface {
         $affectation = $this->getAffectationService()->getAffectation($data['affectation']);
 
         $object->setLibelle($data['libelle']);
-        $object->setAffectation($affectation);
         return $object;
     }
 
