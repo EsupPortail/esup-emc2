@@ -21,7 +21,6 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 
 <h1 class="page-header">
     Fiche métier : <?php echo $fiche->getLibelle(); ?> <br/>
-    Affectation : <?php echo $fiche->getAffectation(); ?>
 </h1>
 
 
@@ -82,13 +81,13 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     </div>
     <div class="panel-body">
             <h3> Affectation du poste </h3>
-            <?php if ($fiche->getAffectation() !== null) : ?>
-                <?php if ($fiche->getAffectation()->getDescription() !== null) :?>
-                    <?php echo $fiche->getAffectation()->getDescription(); ?>
+            <?php if ($fiche->getPoste() !== null && $fiche->getPoste()->getAffectation() !== null) : ?>
+                <?php if ($fiche->getPoste()->getAffectation()->getDescription() !== null) :?>
+                    <?php echo $fiche->getPoste()->getAffectation()->getDescription(); ?>
                 <?php else: ?>
                     <div class="alert alert-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getAffectation()->getLibelle(); ?></em>.
+                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getPoste()->getAffectation()->getLibelle(); ?></em>.
                     </div>
                 <?php endif; ?>
             <?php else : ?>
