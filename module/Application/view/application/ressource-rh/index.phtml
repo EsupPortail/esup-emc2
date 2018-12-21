@@ -28,7 +28,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 
 
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'status']); ?>" class="btn btn-primary action">Status</a>
-<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'correspondance']); ?>" class="btn btn-primary action">Correspondance</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'correspondance']); ?>" class="btn btn-primary action">Catégorie</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille de métier</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'corps']); ?>" class="btn btn-primary action">Corps</a>
@@ -97,7 +97,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
     <a name="correspondance"></a>
     <div class="col-md-8">
         <h2>
-            Liste des correspondances
+            Liste des catégorie
             <span class="badge">
             <?php echo count($correspondances); ?>
         </span>
@@ -110,7 +110,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                data-event="modification"
             >
                 <i class="fas fa-plus-square"></i>
-                Ajouter une correspondance
+                Ajouter une catégorie
             </a>
         <?php endif;?>
     </div>

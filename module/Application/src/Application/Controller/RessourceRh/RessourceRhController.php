@@ -136,7 +136,7 @@ class RessourceRhController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Ajouter une nouvelle correspondance',
+            'title' => 'Ajouter une nouvelle catégorie',
             'form' => $form,
         ]);
         return $vm;
@@ -165,7 +165,7 @@ class RessourceRhController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Éditer une correspondance',
+            'title' => 'Éditer une catégorie',
             'form' => $form,
         ]);
         return $vm;

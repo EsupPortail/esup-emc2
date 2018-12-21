@@ -71,7 +71,7 @@ class PosteForm extends Form {
             'type' => Select::class,
             'name' => 'correspondance',
             'options' => [
-                'label' => "Correspondance :",
+                'label' => "Catégorie :",
                 'value_options' => $this->generateCorrespondanceSelectOptions(),
             ],
             'attributes' => [
