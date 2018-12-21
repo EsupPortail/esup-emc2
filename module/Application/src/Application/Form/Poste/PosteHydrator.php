@@ -26,6 +26,7 @@ class PosteHydrator implements HydratorInterface {
             'correspondance'    => ($object->getCorrespondance())?$object->getCorrespondance()->getId():null,
             'rattachement'      => ($object->getRattachementHierarchique())?$object->getRattachementHierarchique()->getId():null,
             'domaine'           => ($object->getDomaine())?$object->getDomaine()->getId():null,
+            'lien'              => $object->getLien(),
         ];
         return $data;
     }
@@ -48,6 +49,7 @@ class PosteHydrator implements HydratorInterface {
         $object->setCorrespondance($correspondance);
         $object->setRattachementHierarchique($rattachement);
         $object->setDomaine($domaine);
+        $object->setLien($data['lien']);
 
         return $object;
     }

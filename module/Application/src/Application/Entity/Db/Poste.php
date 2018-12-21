@@ -18,6 +18,8 @@ class Poste {
     private $rattachementHierarchique;
     /** @var Domaine */
     private $domaine;
+    /** @var string */
+    private $lien;
 
     /**
      * @return int
@@ -135,5 +137,21 @@ class Poste {
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getLien()
+    {
+        return $this->lien;
+    }
 
+    /**
+     * @param string $lien
+     * @return Poste
+     */
+    public function setLien($lien)
+    {
+        $this->lien = $lien;
+        return $this;
+    }
 }
