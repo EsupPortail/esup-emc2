@@ -7,6 +7,7 @@ use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Fonction;
+use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
 use Doctrine\ORM\NonUniqueResultException;
@@ -574,6 +575,88 @@ class RessourceRhService {
             $this->getEntityManager()->flush();
         } catch (OptimisticLockException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une Fonction", $e);
+        }
+    }
+
+    /** Grade *******************************************************************************************************/
+
+    /**
+     * @param string $order
+     * @return Grade[]
+     */
+    public function getGrades($order = null)
+    {
+        $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
+        ;
+
+        if ($order !== null) {
+            $qb = $qb->addOrderBy('grade.'.$order, 'ASC');
+        } else {
+            $qb = $qb->addOrderBy('grade.corps, grade.rang', 'ASC');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return Grade
+     */
+    public function getGrade($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
+            ->andWhere('grade.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs grades partagent le même identifiant [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param Grade $grade
+     * @return Grade
+     */
+    public function createGrade($grade)
+    {
+        $this->getEntityManager()->persist($grade);
+        try {
+            $this->getEntityManager()->flush($grade);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la création d'un Grade", $e);
+        }
+        return $grade;
+    }
+
+    /**
+     * @param Grade $grade
+     * @return Grade
+     */
+    public function updateGrade($grade)
+    {
+        try {
+            $this->getEntityManager()->flush($grade);
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Grade.", $e);
+        }
+        return $grade;
+    }
+
+    /**
+     * @param Grade $grade
+     */
+    public function deleteGrade($grade)
+    {
+        $this->getEntityManager()->remove($grade);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Grade", $e);
         }
     }
 
