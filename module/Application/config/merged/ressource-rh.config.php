@@ -46,6 +46,7 @@ return [
                     'controller' => RessourceRhController::class,
                     'action' => [
                         'index',
+                        'get-grades-json',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AFFICHER,
@@ -400,6 +401,16 @@ return [
                         ],
                         'may_terminate' => false,
                         'child_routes' => [
+                            'get-grades' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/get-grades',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'get-grades-json',
+                                    ],
+                                ],
+                            ],
                             'ajouter' => [
                                 'type'  => Literal::class,
                                 'options' => [

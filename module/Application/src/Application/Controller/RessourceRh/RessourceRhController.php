@@ -21,6 +21,7 @@ use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class RessourceRhController extends AbstractActionController {
@@ -624,6 +625,25 @@ class RessourceRhController extends AbstractActionController {
         }
 
         $this->redirect()->toRoute('ressource-rh', [], [], true);
+    }
+
+    public function getGradesJsonAction()
+    {
+        $grades = $this->getRessourceRhService()->getGrades();
+
+        $result = [];
+        foreach ($grades as $grade) {
+            $result[$grade->getId()] = [
+                'id' => $grade->getId(),
+                'corps' => $grade->getCorps()->getId(),
+                'libelle' => $grade->getLibelle(),
+            ];
+        }
+        $jm = new JsonModel(
+            $result
+        );
+        return $jm;
+
     }
 
 }
