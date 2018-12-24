@@ -5,6 +5,7 @@ namespace Application\Form\Agent;
 use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Grade;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Form\Element\Date;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -150,7 +151,7 @@ class AgentForm extends Form {
                 'id' => 'correspondance',
             ],
         ]);
-        // Status
+        // Corps
         $this->add([
             'type' => ObjectSelect::class,
             'name' => 'corps',
@@ -171,6 +172,29 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'corps',
+            ],
+        ]);
+        // Grade
+        $this->add([
+            'type' => ObjectSelect::class,
+            'name' => 'grade',
+            'options' => [
+                'label' => "Grade* :",
+                'empty_option' => "Sélectionner un grade ...",
+                'object_manager' => $this->getEntityManager(),
+                'target_class' => Grade::class,
+                'property' => 'libelle',
+                'find_method' => [
+                    'name' => 'findBy',
+                    'params' => [
+                        'criteria' => [],
+                        'orderBy' => ['libelle' => 'ASC'],
+                    ],
+                ],
+                'disable_inarray_validator' => true,
+            ],
+            'attributes' => [
+                'id' => 'grade',
             ],
         ]);
 
@@ -230,6 +254,9 @@ class AgentForm extends Form {
                 'required' => true,
             ],
             'corps' => [
+                'required' => true,
+            ],
+            'grade' => [
                 'required' => true,
             ],
             'missions' => [

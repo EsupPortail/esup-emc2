@@ -29,6 +29,9 @@ class Agent {
     private $correspondance;
     /** @var Corps */
     private $corps;
+    /** @var Grade */
+    private $grade;
+
 
     /** @var string */
     private $missionsComplementaires;
@@ -225,6 +228,25 @@ class Agent {
         $this->missionsComplementaires = $missionsComplementaires;
         return $this;
     }
+
+    /**
+     * @return Grade
+     */
+    public function getGrade()
+    {
+        return $this->grade;
+    }
+
+    /**
+     * @param Grade $grade
+     * @return Agent
+     */
+    public function setGrade($grade)
+    {
+        $this->grade = $grade;
+        return $this;
+    }
+
 
 
 
