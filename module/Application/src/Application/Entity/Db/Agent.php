@@ -3,7 +3,6 @@
 namespace Application\Entity\Db;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class Agent {
 
@@ -30,15 +29,12 @@ class Agent {
     private $correspondance;
     /** @var Corps */
     private $corps;
+    /** @var Grade */
+    private $grade;
+
 
     /** @var string */
     private $missionsComplementaires;
-
-
-    public function __construct()
-    {
-        $this->missionsComplementaires = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -232,6 +228,25 @@ class Agent {
         $this->missionsComplementaires = $missionsComplementaires;
         return $this;
     }
+
+    /**
+     * @return Grade
+     */
+    public function getGrade()
+    {
+        return $this->grade;
+    }
+
+    /**
+     * @param Grade $grade
+     * @return Agent
+     */
+    public function setGrade($grade)
+    {
+        $this->grade = $grade;
+        return $this;
+    }
+
 
 
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\RessourceRh;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
-class FicheMetierCreationForm extends Form {
+class FonctionForm extends Form {
 
     public function init()
     {
-        //Champs texte obligatoire LIBELLE
+        // libelle
         $this->add([
             'type' => Text::class,
             'name' => 'libelle',
@@ -21,13 +21,12 @@ class FicheMetierCreationForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
-
-//        submit
+        // button
         $this->add([
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Créer la fiche métier',
+                'label' => '<i class="fas fa-save"></i> Enregistrer la fonction',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

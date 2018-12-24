@@ -53,7 +53,7 @@ class AgentController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('application/agent/modifier');
         $vm->setVariables([
             'title' => 'Ajouter un agent',
             'form' => $form,
@@ -83,7 +83,7 @@ class AgentController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('application/agent/modifier');
         $vm->setVariables([
             'title' => 'Modifier un agent',
             'form' => $form,

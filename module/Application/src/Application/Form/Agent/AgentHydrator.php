@@ -26,6 +26,7 @@ class AgentHydrator implements HydratorInterface {
             'status'            => $object->getStatus(),
             'correspondance'    => $object->getCorrespondance(),
             'corps'             => $object->getCorps(),
+            'grade'             => $object->getGrade(),
             'description'          => $object->getMissionsComplementaires(),
         ];
 
@@ -42,6 +43,7 @@ class AgentHydrator implements HydratorInterface {
         $status = $this->getRessourceRhService()->getAgentStatus($data['status']);
         $correspondance = $this->getRessourceRhService()->getCorrespondance($data['correspondance']);
         $corps = $this->getRessourceRhService()->getCorps($data['corps']);
+        $grade = $this->getRessourceRhService()->getGrade($data['grade']);
 
         $object->setPrenom($data['prenom']);
         $object->setNom($data['nom']);
@@ -58,6 +60,7 @@ class AgentHydrator implements HydratorInterface {
         $object->setStatus($status);
         $object->setCorrespondance($correspondance);
         $object->setCorps($corps);
+        $object->setGrade($grade);
         $object->setMissionsComplementaires($data['description']);
 
         return $object;
