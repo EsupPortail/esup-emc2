@@ -1,0 +1,43 @@
+<?php
+
+?>
+
+
+<?php
+
+
+
+echo $this->form($form);
+?>
+
+<script>
+    adaptForm();
+
+    $('select#corps').change(function() {
+        // console.log("Changement de corps : " + $(this).val());
+        adaptForm();
+    });
+
+    function adaptForm() {
+        let requestUrl = '<?php echo $this->url('ressource-rh/grade/get-grades'); ?>';
+
+        $.ajax({
+            url: requestUrl,
+        }).done(function(data) {
+            let corps = $('select#corps').find(":selected").val();
+            // console.log("Le corps selectionné est " + corps);
+            let selected = $('select#grade').find(":selected").val();
+            $('select#grade').find('option:not(:first)').remove();
+            $.each(data, function(index, value) {
+                if (value['corps'] == corps) {
+                    if (value['id'] == selected) {
+                        $("select#grade").append(new Option(value['libelle'], value['id'], false, true));
+                    } else {
+                        $("select#grade").append(new Option(value['libelle'], value['id'], false, false));
+                    }
+                }
+            });
+       });
+    }
+
+</script>
