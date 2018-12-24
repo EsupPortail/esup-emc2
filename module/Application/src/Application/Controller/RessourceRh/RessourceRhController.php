@@ -7,10 +7,12 @@ use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Fonction;
+use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\FonctionForm;
+use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\MetierFamilleForm;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\AgentStatusForm;
@@ -33,6 +35,7 @@ class RessourceRhController extends AbstractActionController {
         $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
         $domaines = $this->getRessourceRhService()->getDomaines('libelle');
         $fonctions = $this->getRessourceRhService()->getFonctions('libelle');
+        $grades = $this->getRessourceRhService()->getGrades();
 
         return new ViewModel([
             'status' => $status,
@@ -42,6 +45,7 @@ class RessourceRhController extends AbstractActionController {
             'corps' => $corps,
             'domaines' => $domaines,
             'fonctions' => $fonctions,
+            'grades' => $grades,
         ]);
     }
 
@@ -507,7 +511,7 @@ class RessourceRhController extends AbstractActionController {
 
     public function modifierFonctionAction()
     {
-        /** @var Domaine $domaine */
+        /** @var Fonction $fonction */
         $fonctionId = $this->params()->fromRoute('fonction');
         $fonction = $this->getRessourceRhService()->getFonction($fonctionId);
 
@@ -537,12 +541,86 @@ class RessourceRhController extends AbstractActionController {
 
     public function supprimerFonctionAction()
     {
-        /** @var Domaine $domaine */
+        /** @var Fonction $fonction */
         $fonctionId = $this->params()->fromRoute('fonction');
         $fonction = $this->getRessourceRhService()->getFonction($fonctionId);
 
-        if ($domaine !== null) {
+        if ($fonction !== null) {
             $this->getRessourceRhService()->deleteFonction($fonction);
+        }
+
+        $this->redirect()->toRoute('ressource-rh', [], [], true);
+    }
+
+    /** Grade ******************************************************************************************************/
+
+    public function ajouterGradeAction()
+    {
+        /** @var Grade $grade */
+        $grade = new Grade();
+
+        /** @var GradeForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(GradeForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/grade/ajouter', [], [], true));
+        $form->bind($grade);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createGrade($grade);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajouter un grade',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierGradeAction()
+    {
+        /** @var Grade $grade */
+        $gradeId = $this->params()->fromRoute('grade');
+        $grade = $this->getRessourceRhService()->getGrade($gradeId);
+
+        /** @var GradeForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(GradeForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/grade/modifier', ['grade' => $grade->getId()], [], true));
+        $form->bind($grade);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateGrade($grade);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modifier un grade',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function supprimerGradeAction()
+    {
+        /** @var Grade $grade */
+        $gradeId = $this->params()->fromRoute('grade');
+        $grade = $this->getRessourceRhService()->getGrade($gradeId);
+
+        if ($grade !== null) {
+            $this->getRessourceRhService()->deleteGrade($grade);
         }
 
         $this->redirect()->toRoute('ressource-rh', [], [], true);

@@ -6,6 +6,7 @@
  * @var Metier[] $metiers
  * @var MetierFamille[] $familles
  * @var Corps[] $corps
+ * @var Grade[] $grades
  * @var Domaine[] $domaines
  * @var Fonction[] $fonctions
  */
@@ -15,6 +16,7 @@ use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Fonction;
+use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
 use Application\Provider\Privilege\RessourceRhPrivileges;
@@ -34,6 +36,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille de métier</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'corps']); ?>" class="btn btn-primary action">Corps</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'grade']); ?>" class="btn btn-primary action">Grade</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'domaine']); ?>" class="btn btn-primary action">Domaine</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'fonction']); ?>" class="btn btn-primary action">Fonction</a>
 
@@ -277,7 +280,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 
 </div>
 
-
 <div class="main">
     <a name="corps"></a>
     <div class="col-md-8">
@@ -336,6 +338,68 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
     </table>
 
 </div>
+
+<div class="main">
+    <a name="grade"></a>
+    <div class="col-md-8">
+        <h2>
+            Liste des grades
+            <span class="badge">
+            <?php echo count($grades); ?>
+        </span>
+        </h2>
+    </div>
+
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/grade/ajouter', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <i class="fas fa-plus-square"></i>
+                Ajouter un grade
+            </a>
+        <?php endif;?>
+    </div>
+
+    <br/>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id</th>
+            <th> Corps</th>
+            <th> Libelle</th>
+            <th> Progression</th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($grades as $grade): ?>
+            <tr>
+                <td> <?php echo $grade->getId(); ?> </td>
+                <td> <?php echo $grade->getCorps()->getLibelle(); ?> </td>
+                <td> <?php echo $grade->getLibelle(); ?> </td>
+                <td> <?php echo $grade->getRang(); ?> </td>
+                <td>
+                    <?php if ($canEditerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/grade/modifier', ['grade' => $grade->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                            <i class="fas fa-pencil-alt" title="Éditer le grade"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canEffacerRessource) : ?>
+                        <a href="<?php echo $this->url('ressource-rh/grade/supprimer', ['grade' => $grade->getId()], [], true); ?>">
+                            <i class="fas fa-trash-alt"  title="Supprimer le grade"></i>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+
 
 <div class="main">
     <a name="domaine"></a>
