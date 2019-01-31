@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Octopus\Entity\Db\Structure" table="STRUCTURE">
+
+        <id name="id" type="integer" column="ID">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="code"              type="string"   length="10"       column="CODE"                 nullable="false"/>
+        <field name="sigle"             type="string"   length="30"       column="SIGLE"                nullable="true"/>
+        <field name="libelleCourt"      type="string"   length="50"       column="LIBELLE_COURT"        nullable="false"/>
+        <field name="libelleLong"       type="string"   length="1024"     column="LIBELLE_LONG"         nullable="false"/>
+        <field name="adresse"           type="string"   length="1024"     column="ADRESSE"              nullable="true"/>
+        <field name="telephone"         type="string"   length="20"       column="TELEPHONE"            nullable="true"/>
+        <field name="fax"               type="string"   length="20"       column="FAX"                  nullable="true"/>
+
+        <many-to-one target-entity="Octopus\Entity\Db\StructureType" field="type">
+            <join-column name="TYPE_ID" referenced-column-name="ID" />
+        </many-to-one>
+
+        <field name="codeUai"           type="string"   length="8"        column="CODE_UAI"             nullable="true"/>
+        <field name="logoContent"       type="string"   length="4096"     column="LOGO"                 nullable="true"/>
+        <field name="dateOuverture"     type="datetime"                   column="DATE_OUVERTURE"       nullable="true"/>
+        <field name="dateFermeture"     type="datetime"                   column="DATE_FERMETURE"       nullable="true"/>
+
+        <field name="histoCreation"     type="datetime"                   column="HISTO_CREATION"       nullable="false"/>
+        <field name="histoModification" type="datetime"                   column="HISTO_MODIFICATION"   nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                   column="HISTO_DESTRUCTION"    nullable="true"/>
+
+
+        <field name="typeSupann"        type="string"   length="4"        column="TYPE_SUPANN"          nullable="true"/>
+
+    </entity>
+</doctrine-mapping>
