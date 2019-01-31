@@ -27,7 +27,6 @@
         <field name="histoModification" type="datetime"                   column="HISTO_MODIFICATION"   nullable="false"/>
         <field name="histoDestruction"  type="datetime"                   column="HISTO_DESTRUCTION"    nullable="true"/>
 
-
         <field name="typeSupann"        type="string"   length="4"        column="TYPE_SUPANN"          nullable="true"/>
 
     </entity>

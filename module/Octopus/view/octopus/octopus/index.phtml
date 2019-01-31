@@ -3,6 +3,11 @@
 /**
  * @var \Octopus\Entity\Db\StructureType[] $structureTypes
  * @var \Octopus\Entity\Db\Structure[] $structures
+ *
+ * @var \Octopus\Entity\Db\ImmobilierLocal[] $locals
+ * @var \Octopus\Entity\Db\ImmobilierNiveau[] $niveaux
+ * @var \Octopus\Entity\Db\ImmobilierBatiment[] $batiments
+ * @var \Octopus\Entity\Db\ImmobilierSite[] $sites
  */
 ?>
 
@@ -78,4 +83,126 @@
 
 <div class="main">
     <h2> ImmobilierService </h2>
+
+    <h3> ImmobilierLocal <span class="badge"> <?php echo count($locals); ?></span> </h3>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Libelle </th>
+            <th> Site </th>
+            <th> Batiment </th>
+            <th> Niveau </th>
+            <th> Clef GestImmo </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $position = 0; ?>
+        <?php foreach ($locals as $local) : ?>
+            <tr>
+                <td> <?php echo $local->getLibelle(); ?> </td>
+                <td> <?php echo ($local->getNiveau() && $local->getNiveau()->getBatiment() && $local->getNiveau()->getBatiment()->getSite())?$local->getNiveau()->getBatiment()->getSite()->getLibelle():"---"; ?> </td>
+                <td> <?php echo ($local->getNiveau() && $local->getNiveau()->getBatiment())?$local->getNiveau()->getBatiment()->getLibelle():"---"; ?> </td>
+                <td> <?php echo ($local->getNiveau())?$local->getNiveau()->getLibelle():"---"; ?> </td>
+                <td> <?php echo $local->getClefGestimmo(); ?> </td>
+            </tr>
+
+            <?php $position += 1; ?>
+            <?php if ($position >= 5) : ?>
+                <tr><td colspan="5"> ... </td></tr>
+                <?php break; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h3> ImmobilierNiveaux <span class="badge"> <?php echo count($niveaux); ?></span> </h3>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Libelle </th>
+            <th> Code </th>
+            <th> Site </th>
+            <th> Batiment </th>
+            <th> Clef GestImmo </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $position = 0; ?>
+        <?php foreach ($niveaux as $niveau) : ?>
+            <tr>
+                <td> <?php echo $niveau->getLibelle(); ?> </td>
+                <td> <?php echo $niveau->getCode(); ?> </td>
+                <td> <?php echo ($niveau->getBatiment() && $niveau->getBatiment()->getSite())?$niveau->getBatiment()->getSite()->getLibelle():"---"; ?> </td>
+                <td> <?php echo ($niveau->getBatiment())?$niveau->getBatiment()->getLibelle():"---"; ?> </td>
+                <td> <?php echo $niveau->getClefGestimmo(); ?> </td>
+            </tr>
+
+            <?php $position += 1; ?>
+            <?php if ($position >= 5) : ?>
+                <tr><td colspan="5"> ... </td></tr>
+                <?php break; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h3> ImmobilierBatiment <span class="badge"> <?php echo count($batiments); ?></span> </h3>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Libelle </th>
+            <th> Code </th>
+            <th> Site </th>
+            <th> Clef GestImmo </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $position = 0; ?>
+        <?php foreach ($batiments as $batiment) : ?>
+            <tr>
+                <td> <?php echo $batiment->getLibelle(); ?> </td>
+                <td> <?php echo $batiment->getCode(); ?> </td>
+                <td> <?php echo ($batiment->getSite())?$batiment->getSite()->getLibelle():"---"; ?> </td>
+                <td> <?php echo $batiment->getClefGestimmo(); ?> </td>
+            </tr>
+
+            <?php $position += 1; ?>
+            <?php if ($position >= 5) : ?>
+                <tr><td colspan="4"> ... </td></tr>
+                <?php break; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h3> ImmobilierSite <span class="badge"> <?php echo count($sites); ?></span> </h3>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Libelle </th>
+            <th> Code </th>
+            <th> Clef GestImmo </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $position = 0; ?>
+        <?php foreach ($sites as $site) : ?>
+            <tr>
+                <td> <?php echo $site->getLibelle(); ?> </td>
+                <td> <?php echo $site->getCode(); ?> </td>
+                <td> <?php echo $site->getClefGestimmo(); ?> </td>
+            </tr>
+
+            <?php $position += 1; ?>
+            <?php if ($position >= 5) : ?>
+                <tr><td colspan="3"> ... </td></tr>
+                <?php break; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>

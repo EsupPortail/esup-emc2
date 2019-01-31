@@ -29,31 +29,11 @@ class StructureType {
     }
 
     /**
-     * @param string $code
-     * @return StructureType
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getLibelle()
     {
         return $this->libelle;
-    }
-
-    /**
-     * @param string $libelle
-     * @return StructureType
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-        return $this;
     }
 
     /**
@@ -64,13 +44,5 @@ class StructureType {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return StructureType
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-        return $this;
-    }
+
 }

@@ -6,6 +6,8 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Octopus\Controller\OctopusController;
 use Octopus\Controller\OctopusControllerFactory;
+use Octopus\Service\Immobilier\ImmobilierService;
+use Octopus\Service\Immobilier\ImmobilierServiceFactory;
 use Octopus\Service\Structure\StructureService;
 use Octopus\Service\Structure\StructureServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -66,13 +68,8 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-//            'doctrine.connection.orm_octopus'    => new \DoctrineORMModule\Service\DBALConnectionFactory('orm_octopus'),
-//            'doctrine.configuration.orm_octopus' => new \DoctrineORMModule\Service\ConfigurationFactory('orm_octopus'),
-//            'doctrine.entitymanager.orm_octopus' => new \DoctrineORMModule\Service\EntityManagerFactory('orm_octopus'),
-//            'doctrine.driver.orm_octopus'        => new \DoctrineModule\Service\DriverFactory('orm_octopus'),
-//            'doctrine.eventmanager.orm_octopus'  => new \DoctrineModule\Service\EventManagerFactory('orm_octopus'),
-
             StructureService::class => StructureServiceFactory::class,
+            ImmobilierService::class => ImmobilierServiceFactory::class,
         ],
     ],
     'controllers'     => [
