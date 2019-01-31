@@ -104,7 +104,7 @@ class StructureService {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('type')
             ->andWhere('type.libelleCourt LIKE :search')
             ->setParameter('search', '%'.$term.'%')
-            ->orderBy('type.libelle')
+            ->orderBy('type.libelleCourt')
         ;
 
         $result = $qb->getQuery()->getResult();

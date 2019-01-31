@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Octopus\Entity\Db\ImmobilierLocal" table="IMMOBILIER_LOCAL">
+
+        <id name="id" type="integer" column="ID">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="nom"               type="string"   length="255"      column="NOM"                  nullable="false"/>
+        <field name="libelle"           type="string"   length="255"      column="LIBELLE"              nullable="false"/>
+        <field name="libelleCourantFaible" type="string"   length="255"   column="LIBELLE_COURANT_FAIBLE" nullable="false"/>
+        <field name="clefSequoia"       type="string"   length="36"       column="CLE_SEQUOIA"          nullable="false"/>
+        <field name="clefGestimmo"      type="integer"                    column="CLE_GESTIMMO"         nullable="false"/>
+        <field name="affectation"       type="integer"                    column="AFFECTATION_ID"       nullable="false"/>
+
+        <many-to-one target-entity="Octopus\Entity\Db\ImmobilierNiveau" field="niveau">
+            <join-column name="NIVEAU_ID" referenced-column-name="ID" />
+        </many-to-one>
+
+        <many-to-one target-entity="Octopus\Entity\Db\Structure" field="structure">
+            <join-column name="STRUCTURE_ID" referenced-column-name="ID" />
+        </many-to-one>
+
+        <field name="surface"           type="integer"                    column="SURFACE"              nullable="false"/>
+        <field name="nbPlaces"          type="integer"                    column="NB_PLACES"            nullable="false"/>
+        <field name="accesHandi"        type="boolean"                    column="ACCES_HANDI"          nullable="false"/>
+        <field name="videoProjecteur"   type="boolean"                    column="VIDEO_PROJECTEUR"     nullable="false"/>
+        <field name="tableauBlanc"      type="boolean"                    column="TABLEAU_BLANC"        nullable="false"/>
+        <field name="posteInformatique" type="boolean"                    column="POSTE_INFORMATIQUE"   nullable="false"/>
+        <field name="sonorisation"      type="boolean"                    column="SONORISATION"         nullable="false"/>
+        <field name="sonorisationExceptionnelle" type="boolean"           column="SONORISATION_EXCEPTIONNELLE"            nullable="false"/>
+        <field name="occultation"       type="boolean"                    column="OCCULTATION"          nullable="false"/>
+        <field name="accesPmr"          type="boolean"                    column="ACCES_PMR"            nullable="false"/>
+        <field name="calendrier"        type="integer"                    column="CALENDRIER_ID"        nullable="false"/>
+
+        <field name="histoCreation"     type="datetime"                   column="HISTO_CREATION"       nullable="false"/>
+        <field name="histoModification" type="datetime"                   column="HISTO_MODIFICATION"   nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                   column="HISTO_DESTRUCTION"    nullable="true"/>
+
+
+    </entity>
+</doctrine-mapping>

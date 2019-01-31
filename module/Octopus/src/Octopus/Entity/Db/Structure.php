@@ -54,31 +54,11 @@ class Structure {
     }
 
     /**
-     * @param string $code
-     * @return Structure
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getSigle()
     {
         return $this->sigle;
-    }
-
-    /**
-     * @param string $sigle
-     * @return Structure
-     */
-    public function setSigle($sigle)
-    {
-        $this->sigle = $sigle;
-        return $this;
     }
 
     /**
@@ -90,31 +70,11 @@ class Structure {
     }
 
     /**
-     * @param string $libelleCourt
-     * @return Structure
-     */
-    public function setLibelleCourt($libelleCourt)
-    {
-        $this->libelleCourt = $libelleCourt;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getLibelleLong()
     {
         return $this->libelleLong;
-    }
-
-    /**
-     * @param string $libelleLong
-     * @return Structure
-     */
-    public function setLibelleLong($libelleLong)
-    {
-        $this->libelleLong = $libelleLong;
-        return $this;
     }
 
     /**
@@ -126,31 +86,11 @@ class Structure {
     }
 
     /**
-     * @param string $adresse
-     * @return Structure
-     */
-    public function setAdresse($adresse)
-    {
-        $this->adresse = $adresse;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getTelephone()
     {
         return $this->telephone;
-    }
-
-    /**
-     * @param string $telephone
-     * @return Structure
-     */
-    public function setTelephone($telephone)
-    {
-        $this->telephone = $telephone;
-        return $this;
     }
 
     /**
@@ -162,31 +102,11 @@ class Structure {
     }
 
     /**
-     * @param string $fax
-     * @return Structure
-     */
-    public function setFax($fax)
-    {
-        $this->fax = $fax;
-        return $this;
-    }
-
-    /**
      * @return StructureType
      */
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * @param StructureType $type
-     * @return Structure
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
     }
 
     /**
@@ -198,31 +118,11 @@ class Structure {
     }
 
     /**
-     * @param string $codeUai
-     * @return Structure
-     */
-    public function setCodeUai($codeUai)
-    {
-        $this->codeUai = $codeUai;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getLogoContent()
     {
         return $this->logoContent;
-    }
-
-    /**
-     * @param string $logoContent
-     * @return Structure
-     */
-    public function setLogoContent($logoContent)
-    {
-        $this->logoContent = $logoContent;
-        return $this;
     }
 
     /**
@@ -234,31 +134,11 @@ class Structure {
     }
 
     /**
-     * @param DateTime $dateOuverture
-     * @return Structure
-     */
-    public function setDateOuverture($dateOuverture)
-    {
-        $this->dateOuverture = $dateOuverture;
-        return $this;
-    }
-
-    /**
      * @return DateTime
      */
     public function getDateFermeture()
     {
         return $this->dateFermeture;
-    }
-
-    /**
-     * @param DateTime $dateFermeture
-     * @return Structure
-     */
-    public function setDateFermeture($dateFermeture)
-    {
-        $this->dateFermeture = $dateFermeture;
-        return $this;
     }
 
     /**
@@ -268,17 +148,5 @@ class Structure {
     {
         return $this->typeSupann;
     }
-
-    /**
-     * @param string $typeSupann
-     * @return Structure
-     */
-    public function setTypeSupann($typeSupann)
-    {
-        $this->typeSupann = $typeSupann;
-        return $this;
-    }
-
-
 
 }
