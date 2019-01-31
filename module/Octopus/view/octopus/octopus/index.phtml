@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @var \Octopus\Entity\Db\StructureType[] $structureTypes
+ * @var \Octopus\Entity\Db\Structure[] $structures
+ */
+?>
+
+<h1>
+    Octopus
+</h1>
+
+<div class="main">
+    <h2> StructureService </h2>
+
+    <h3> StructureType <span class="badge"> <?php echo count($structureTypes); ?></span> </h3>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Libelle </th>
+                <th> Code </th>
+                <th> Description </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $position = 0; ?>
+            <?php foreach ($structureTypes as $structureType) : ?>
+                <tr>
+                    <td> <?php echo $structureType->getLibelle(); ?> </td>
+                    <td> <?php echo $structureType->getCode(); ?> </td>
+                    <td> <?php echo $structureType->getDescription(); ?> </td>
+                </tr>
+
+                <?php $position += 1; ?>
+                <?php if ($position >= 5) : ?>
+                    <tr><td colspan="3"> ... </td></tr>
+                <?php break; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h3> Structure <span class="badge"> <?php echo count($structures); ?></span> </h3>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Libelle </th>
+            <th> Sigle </th>
+            <th> Type </th>
+            <th> Date </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php $position = 0; ?>
+        <?php foreach ($structures as $structure) : ?>
+            <tr>
+                <td> <?php echo $structure->getLibelleCourt(); ?> </td>
+                <td> <?php echo $structure->getSigle(); ?> </td>
+                <td> <?php echo $structure->getType()->getLibelle(); ?> </td>
+                <td>
+                <?php echo ($structure->getDateOuverture())?$structure->getDateOuverture()->format('d/m/Y'):" --- "; ?>
+                    &rarr;
+                <?php echo ($structure->getDateFermeture())?$structure->getDateFermeture()->format('d/m/Y'):" --- "; ?>
+                </td>
+            </tr>
+
+            <?php $position += 1; ?>
+            <?php if ($position >= 5) : ?>
+                <tr><td colspan="4"> ... </td></tr>
+                <?php break; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<div class="main">
+    <h2> ImmobilierService </h2>
+</div>
