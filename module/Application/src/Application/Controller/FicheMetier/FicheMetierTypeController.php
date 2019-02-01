@@ -3,6 +3,7 @@
 namespace Application\Controller\FicheMetier;
 
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\FicheMetierType;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
 use Application\Form\FicheMetierType\ApplicationsForm;
@@ -39,6 +40,36 @@ class FicheMetierTypeController extends  AbstractActionController{
             'fiche' => $fiche,
             'activites' => $activites,
         ]);
+    }
+
+    public function ajouterAction()
+    {
+        /** @var FicheMetierType $fiche */
+        $fiche = new FicheMetierType();
+
+        /** @var LibelleForm $form */
+        $form = $this->getServiceLocator()->get('FormElementManager')->get(LibelleForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [] , true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->createFicheMetierType($fiche);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajout d\'une fiche metier type',
+            'form' => $form,
+        ]);
+        return $vm;
+
     }
 
     public function editerLibelleAction()

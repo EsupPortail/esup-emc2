@@ -168,6 +168,21 @@ class FicheMetierService {
         return $fiche;
     }
 
+    /**
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
+     */
+    public function createFicheMetierType( $ficheMetierType)
+    {
+        $this->getEntityManager()->persist($ficheMetierType);
+        try {
+            $this->getEntityManager()->flush($ficheMetierType);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche métier.", $e);
+        }
+        return $ficheMetierType;
+
+    }
 
     public function updateFicheMetierType($ficheMetierType)
     {
@@ -252,4 +267,6 @@ class FicheMetierService {
             throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la spécificité du poste.", $e);
         }
     }
+
+
 }

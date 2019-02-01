@@ -43,6 +43,8 @@ use Application\Form\FicheMetierType\LibelleForm;
 use Application\Form\FicheMetierType\LibelleFormFactory;
 use Application\Form\FicheMetierType\LibelleHydrator;
 use Application\Form\FicheMetierType\LibelleHydratorFactory;
+use Application\Form\FicheMetierType\MissionsPrincipalesForm;
+use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
@@ -119,6 +121,7 @@ return [
                         'modifier-operationnelle',
                         'modifier-comportementale',
                         'modifier-application',
+                        'ajouter',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -249,6 +252,17 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -395,6 +409,7 @@ return [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             FicheMetierCreationForm::class => FicheMetierCreationFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
+            MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
 
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,

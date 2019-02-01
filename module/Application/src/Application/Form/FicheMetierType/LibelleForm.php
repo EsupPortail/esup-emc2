@@ -18,7 +18,7 @@ class LibelleForm extends Form {
             'type' => ObjectSelect::class,
             'name' => 'metier',
             'options' => [
-                'label' => "Service/composante/direction d'affectation :",
+                'label' => "Libellé du métier :",
                 'empty_option' => "Sélectionner un metier ...",
                 'object_manager' => $this->getEntityManager(),
                 'target_class' => Metier::class,
