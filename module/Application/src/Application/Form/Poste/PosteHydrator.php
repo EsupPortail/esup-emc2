@@ -6,12 +6,14 @@ use Application\Entity\Db\Poste;
 use Application\Service\Affectation\AffectationAwareServiceTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Octopus\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {
     use AffectationAwareServiceTrait;
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
+    use ImmobilierServiceAwareTrait;
 
     /**
      * @param Poste $object
@@ -19,9 +21,11 @@ class PosteHydrator implements HydratorInterface {
      */
     public function extract($object)
     {
+        $batiment = $this->getImmobiliserService()->getImmobilierBatiment($object->getLocalisation());
+
         $data = [
             'numero_poste'      => $object->getNumeroPoste(),
-            'localisation'      => $object->getLocalisation(),
+            'localisation'      => $batiment,
             'affectation'       => ($object->getAffectation())?$object->getAffectation()->getId():null,
             'correspondance'    => ($object->getCorrespondance())?$object->getCorrespondance()->getId():null,
             'rattachement'      => ($object->getRattachementHierarchique())?$object->getRattachementHierarchique()->getId():null,
@@ -46,7 +50,7 @@ class PosteHydrator implements HydratorInterface {
         $fonction = $this->getRessourceRhService()->getFonction($data['fonction']);
 
         $object->setNumeroPoste($data['numero_poste']);
-        $object->setLocalisation($data['localisation']);
+        $object->setLocalisation($data['localisation']['id']);
         $object->setAffectation($affectation);
         $object->setCorrespondance($correspondance);
         $object->setRattachementHierarchique($rattachement);

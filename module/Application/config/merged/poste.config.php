@@ -25,6 +25,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'rechercher-batiment',
                     ],
                     'privileges' => [
                         PostePrivileges::AFFICHER,
@@ -81,6 +82,16 @@ return [
                             'defaults' => [
                                 'controller' => PosteController::class,
                                 'action'     => 'modifier',
+                            ],
+                        ],
+                    ],
+                    'rechercher-batiment' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher-batiment',
+                            'defaults' => [
+                                'controller' => PosteController::class,
+                                'action'     => 'rechercher-batiment',
                             ],
                         ],
                     ],

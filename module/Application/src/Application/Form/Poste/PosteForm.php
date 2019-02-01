@@ -8,16 +8,20 @@ use Application\Entity\Db\Fonction;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
+use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
-class PosteForm extends Form {
+class PosteForm extends Form  {
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     use EntityManagerAwareTrait;
+    use ServiceLocatorAwareTrait;
+
 
     public function init()
     {
@@ -57,16 +61,15 @@ class PosteForm extends Form {
         ]);
 
         // localisation
-        $this->add([
-            'type' => Text::class,
-            'name' => 'localisation',
-            'options' => [
-                'label' => "Localisation :",
-            ],
-            'attributes' => [
-                'id' => 'localisation',
-            ],
-        ]);
+        $sas = new SearchAndSelect('localisation');
+        $sas->setLabel('Localisation du poste');
+        $sas->setAttribute('placeholder','Recherchez un batiment');
+        $sas->setAttribute('class', 'individu-finder');
+        $sas->setLabelOption('disable_html_escape', false);
+
+//        $sas->setAutocompleteSource($this->getUrl('poste-form/rechercher-batiment'));
+        $sas->setAutocompleteSource('/poste/rechercher-batiment');
+        $this->add($sas);
         // correspondance
         $this->add([
             'type' => Select::class,
