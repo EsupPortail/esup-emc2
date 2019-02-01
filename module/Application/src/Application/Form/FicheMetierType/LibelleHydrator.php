@@ -15,7 +15,7 @@ class LibelleHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'metier' => $object->getMetier()->getLibelle(),
+            'metier' => ($object->getMetier())?$object->getMetier()->getLibelle():null,
         ];
         return $data;
     }
