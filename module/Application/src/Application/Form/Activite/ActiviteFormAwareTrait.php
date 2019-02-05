@@ -17,11 +17,11 @@ trait ActiviteFormAwareTrait {
 
     /**
      * @param ActiviteForm $activiteForm
-     * @return ActiviteFormAwareTrait
+     * @return ActiviteForm
      */
     public function setActiviteForm($activiteForm)
     {
         $this->activiteForm = $activiteForm;
-        return $this;
+        return $this->activiteForm;
     }
 }
