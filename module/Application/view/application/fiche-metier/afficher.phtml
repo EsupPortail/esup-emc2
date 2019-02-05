@@ -19,6 +19,10 @@ $canEditerSpecificte = $this->isAllowed(FicheMetierPrivileges::getResourceId(Fic
 $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
 ?>
 
+<style>
+    a.action {width: 18em;}
+</style>
+
 <h1 class="page-header">
     Fiche métier : <?php echo $fiche->getLibelle(); ?> <br/>
 </h1>
@@ -27,10 +31,10 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <h2> Agent occupant le poste </h2>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?php if($canAssocierAgent) : ?>
                     <a href="<?php echo $this->url('fiche-metier/associer-agent',['fiche' => $fiche->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal"
@@ -38,6 +42,17 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     >
                         <i class="fas fa-plus-circle"></i>
                         Associer un agent
+                    </a>
+                <?php endif; ?>
+            </div>
+            <div class="col-md-3">
+                <?php if($canAssocierAgent) : ?>
+                    <a href="<?php echo $this->url('agent/ajouter',[], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <i class="fas fa-plus"></i>
+                        Ajouter un agent
                     </a>
                 <?php endif; ?>
             </div>
@@ -63,10 +78,10 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="row">
-            <div class="col-md-8">
-                <h2> Environnement du poste de travail dans l'organisation </h2>
+            <div class="col-md-6">
+                <h2> Environnement du poste de travail </h2>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?php if($canAssocierAgent) : ?>
                     <a href="<?php echo $this->url('fiche-metier/associer-poste',['fiche' => $fiche->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal"
@@ -74,6 +89,17 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     >
                         <i class="fas fa-plus-circle"></i>
                         Associer un poste
+                    </a>
+                <?php endif; ?>
+            </div>
+            <div class="col-md-3">
+                <?php if($canAssocierAgent) : ?>
+                    <a href="<?php echo $this->url('poste/ajouter',[], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <i class="fas fa-plus"></i>
+                        Ajouter un poste
                     </a>
                 <?php endif; ?>
             </div>
@@ -113,10 +139,10 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <h2> Description de la fiche métier type </h2>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <?php if($canAssocierMetierType) : ?>
                     <a href="<?php echo $this->url('fiche-metier/associer-metier-type',['fiche' => $fiche->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal"
@@ -124,6 +150,18 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     >
                         <i class="fas fa-plus-circle"></i>
                         Associer un metier type
+                    </a>
+                <?php endif; ?>
+            </div>
+            <div class="col-md-3">
+                <?php if($canAssocierMetierType) : ?>
+                    <a href="<?php echo $this->url('fiche-metier-type',['fiche' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <i class="fas fa-external-link-square-alt"></i>
+<!--                        <i class="fas fa-plus-circle"></i>-->
+                        Gestion des fiches types
                     </a>
                 <?php endif; ?>
             </div>
@@ -220,7 +258,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                        data-event="modification"
                     >
                         <i class="fas fa-plus-circle"></i>
-                        Renseigner les spécificité
+                        Renseigner les spécificités
                     </a>
                 <?php endif; ?>
             </div>
@@ -247,5 +285,4 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             window.location.reload();
         });
     });
-
 </script>

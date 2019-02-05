@@ -5,7 +5,7 @@ services:
     container_name: preecog
     build:
       context: .
-      dockerfile: Dockerfile.php7.dev
+      dockerfile: Dockerfile
     ports:
      - "8111:80"
     volumes:

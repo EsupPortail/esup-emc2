@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfc07f403e04b3d5970f0443758676ac",
+    "content-hash": "755305381140989078e604b92659e437",
     "packages": [
         {
             "name": "bjyoungblood/bjy-authorize",
@@ -762,12 +762,12 @@
             "version": "v2.5.14",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/doctrine2.git",
+                "url": "https://github.com/doctrine/orm.git",
                 "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/810a7baf81462a5ddf10e8baa8cb94b6eec02754",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/810a7baf81462a5ddf10e8baa8cb94b6eec02754",
                 "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754",
                 "shasum": ""
             },
@@ -1518,6 +1518,34 @@
             },
             "description": "Module Ldap des applications Unicaen",
             "time": "2018-02-26T08:32:18+00:00"
+        },
+        {
+            "name": "unicaen/octopus",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.unicaen.fr/lib/unicaen/octopus.git",
+                "reference": "9802714d7b5640ec1678c8d3d800a5a3986ae703"
+            },
+            "require": {
+                "bjyoungblood/bjy-authorize": ">=1.4",
+                "unicaen/app": "^1.3",
+                "zf-commons/zfc-user-doctrine-orm": ">=0.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "UnicaenOctopus": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "description": "Module de recupération des entités provenant octopus",
+            "time": "2019-02-01T12:57:45+00:00"
         },
         {
             "name": "zendframework/zend-authentication",
