@@ -10,7 +10,8 @@
     "require": {
         "unicaen/app":                  "^1.2",
         "unicaen/auth":                 "^1.2",
-        "unicaen/ldap": "^2.2"
+        "unicaen/ldap": "^2.2",
+        "unicaen/octopus": "^0.2.0"
     },
     "require-dev": {
         "unicaen/code":                         "^1.0",

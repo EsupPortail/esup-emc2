@@ -4,8 +4,9 @@ $modules = [
     'ZfcBase', 'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'ZfcUserDoctrineORM',
     'BjyAuthorize', 'AssetManager',
     'UnicaenApp', 'UnicaenAuth', 'UnicaenLdap',
-    'Application',
     'Mailing',
+    'Octopus',
+    'Application',
 ];
 
 if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {

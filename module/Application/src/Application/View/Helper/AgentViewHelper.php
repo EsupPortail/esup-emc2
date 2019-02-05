@@ -54,7 +54,7 @@ class AgentViewHelper extends AbstractHelper
         $texte .= '<dt> Corps </dt>';
         $texte .= '<dd> '. $agent->getCorps() .'</dd>';
         $texte .= '<dt> Grade </dt>';
-        $texte .= '<dd> '. $agent->getGrade()->getLibelle() .'</dd>';
+        $texte .= '<dd> '. $agent->getGrade() . '</dd>';
         $texte .= '</dl>';
         $texte .= '<br/>';
 

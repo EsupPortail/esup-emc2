@@ -22,8 +22,9 @@ $canVoir = true;
 <div class="main">
 
     <?php if ($canAjouter) : ?>
-        <a href=""
-           class="btn btn-primary action"
+        <a href="<?php echo $this->url('fiche-metier-type/ajouter', [], [], true); ?>"
+           class="btn btn-primary action ajax-modal"
+           data-event="modification"
         >
             <i class="fas fa-plus-square"></i>
             Ajouter une fiche métier type
@@ -58,3 +59,14 @@ $canVoir = true;
 </table>
 
 </div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

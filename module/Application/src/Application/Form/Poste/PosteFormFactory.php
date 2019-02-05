@@ -9,6 +9,15 @@ use Zend\Form\FormElementManager;
 
 class PosteFormFactory {
 
+    protected function getUrl(FormElementManager $manager, $name = null, $params = [], $options = [], $reuseMatchedParams = false)
+    {
+        $url = $manager->getServiceLocator()->get('viewhelpermanager')->get('url');
+
+        /* @var $url \Zend\View\Helper\Url */
+        return $url->__invoke($name, $params, $options, $reuseMatchedParams);
+    }
+
+
     public function __invoke(FormElementManager $manager)
     {
         /**
@@ -27,6 +36,7 @@ class PosteFormFactory {
         $form->setEntityManager($entityManager);
         $form->setAgentService($agentService);
         $form->setRessourceRhService($ressourceService);
+        //$url = $this->getUrl($manager,'poste/rechercher-batiment', [], [], true);
         $form->init();
         $form->setHydrator($hydrator);
 
