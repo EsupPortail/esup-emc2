@@ -4,6 +4,7 @@ namespace Application\Controller\Agent;
 
 use Application\Entity\Db\Agent;
 use Application\Form\Agent\AgentForm;
+use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -11,7 +12,10 @@ use Zend\View\Model\ViewModel;
 
 class AgentController extends AbstractActionController
 {
+    /** Trait utilisés pour les services */
     use AgentServiceAwareTrait;
+    /** Trait utilisés pour les formulaires */
+    use AgentFormAwareTrait;
 
     public function indexAction()
     {
@@ -38,7 +42,7 @@ class AgentController extends AbstractActionController
         $agent = new Agent();
 
         /** @var AgentForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AgentForm::class);
+        $form = $this->getAgentForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter', [], [], true));
         $form->bind($agent);
 
@@ -68,7 +72,7 @@ class AgentController extends AbstractActionController
         $agent = $this->getAgentService()->getAgent($agentId);
 
         /** @var AgentForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AgentForm::class);
+        $form = $this->getAgentForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/modifier', ['id' => $agent->getId()], [], true));
         $form->bind($agent);
 
