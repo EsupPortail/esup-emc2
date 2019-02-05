@@ -4,13 +4,18 @@ namespace Application\Controller\Affectation;
 
 use Application\Entity\Db\Affectation;
 use Application\Form\Affectation\AffectationForm;
+use Application\Form\Affectation\AffectationFormAwareTrait;
 use Application\Service\Affectation\AffectationAwareServiceTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class AffectationController extends AbstractActionController {
+    /** Trait utilisés pour les services */
     use AffectationAwareServiceTrait;
+    /** Trait utilisés pour les formulaires */
+    use AffectationFormAwareTrait;
+
 
     public function indexAction()
     {
@@ -26,9 +31,10 @@ class AffectationController extends AbstractActionController {
         $affectation = new Affectation();
 
         /** @var AffectationForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AffectationForm::class);
+        $form = $this->getAffectationForm();
         $form->setAttribute('action', $this->url()->fromRoute('affectation/creer',[],[], true));
         $form->bind($affectation);
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -57,9 +63,10 @@ class AffectationController extends AbstractActionController {
         $affectation = $this->getAffectationService()->getAffectation($affectationId);
 
         /** @var AffectationForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AffectationForm::class);
+        $form = $this->getAffectationForm();
         $form->setAttribute('action', $this->url()->fromRoute('affectation/editer',['id' => $affectation->getId()],[], true));
         $form->bind($affectation);
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
