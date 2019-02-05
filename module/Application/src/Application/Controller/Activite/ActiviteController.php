@@ -4,13 +4,17 @@ namespace Application\Controller\Activite;
 
 use Application\Entity\Db\Activite;
 use Application\Form\Activite\ActiviteForm;
+use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ActiviteController  extends AbstractActionController {
+    /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
+    /** Traits associé aux formulaires */
+    use ActiviteFormAwareTrait;
 
     public function indexAction()
     {
@@ -28,9 +32,10 @@ class ActiviteController  extends AbstractActionController {
         $activite = new Activite();
 
         /** @var ActiviteForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
+        $form = $this->getActiviteForm();
         $form->setAttribute('action', $this->url()->fromRoute('activite/creer',[],[], true));
         $form->bind($activite);
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -59,9 +64,10 @@ class ActiviteController  extends AbstractActionController {
         $activite = $this->getActiviteService()->getActivite($activiteId);
 
         /** @var ActiviteForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
+        $form = $this->getActiviteForm();
         $form->setAttribute('action', $this->url()->fromRoute('activite/editer',['id' => $activite->getId()],[], true));
         $form->bind($activite);
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {

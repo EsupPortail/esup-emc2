@@ -4,7 +4,7 @@ namespace Application\Controller\FicheMetier;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetierType;
-use Application\Form\Activite\ActiviteForm;
+use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
 use Application\Form\FicheMetierType\ApplicationsForm;
 use Application\Form\FicheMetierType\FormationBaseForm;
@@ -19,8 +19,11 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class FicheMetierTypeController extends  AbstractActionController{
+    /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    /** Traits associé aux formulaires */
+    use ActiviteFormAwareTrait;
 
     public function indexAction()
     {
@@ -136,7 +139,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $activite = new Activite();
 
         /** @var MissionsPrincipalesForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteForm::class);
+        $form = $this->getActiviteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-nouvelle-activite',['id' => $fiche->getId()],[], true));
         $form->bind($activite);
 
