@@ -22,6 +22,7 @@ class PosteController extends AbstractActionController {
         
         return new ViewModel([
             'postes' => $postes,
+            'immobilierService' => $this->getImmobiliserService(),
         ]);
     }
 

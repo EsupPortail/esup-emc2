@@ -12,6 +12,7 @@ use Application\Provider\Privilege\PostePrivileges;
 use Application\Service\Poste\PosteService;
 use Application\Service\Poste\PosteServiceFactory;
 use Application\View\Helper\PosteViewHelper;
+use Application\View\Helper\PosteViewHelperFactory;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -153,8 +154,8 @@ return [
         ]
     ],
     'view_helpers' => [
-        'invokables' => [
-            'poste' => PosteViewHelper::class,
+        'factories' => [
+            'poste' => PosteViewHelperFactory::class,
         ],
     ],
 
