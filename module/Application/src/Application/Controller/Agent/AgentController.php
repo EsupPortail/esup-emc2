@@ -5,17 +5,23 @@ namespace Application\Controller\Agent;
 use Application\Entity\Db\Agent;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormAwareTrait;
+use Application\Form\Agent\AgentImportFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Octopus\Entity\Db\Individu;
+use Octopus\Service\Individu\IndividuServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class AgentController extends AbstractActionController
 {
     /** Trait utilisés pour les services */
     use AgentServiceAwareTrait;
+    use IndividuServiceAwareTrait;
     /** Trait utilisés pour les formulaires */
     use AgentFormAwareTrait;
+    use AgentImportFormAwareTrait;
 
     public function indexAction()
     {
@@ -104,5 +110,47 @@ class AgentController extends AbstractActionController
         $this->getAgentService()->delete($agent);
 
         $this->redirect()->toRoute('agent', [], [], true);
+    }
+
+    public function importerAction()
+    {
+        $form = $this->getAgentImportForm();
+        $form->setAttribute('method','post');
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            var_dump($data);
+            //$this->redirect()->toRoute('agent/importer');
+        }
+
+        return new ViewModel([
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @return JsonModel
+     */
+    public function rechercherIndividuAction() {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $individus = $this->getIndividuService()->getIndividusByTerm($term);
+            $result = [];
+            /** @var Individu[] $individus */
+            foreach ($individus as $individu) {
+                $result[] = array(
+                    'id'    => $individu->getCIndividuChaine(),
+                    'label' => $individu->getPrenom()." ".$individu->getNomUsage(),
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$individu->getCSource()."</span>",
+                );
+            }
+            usort($result, function($a, $b) {
+                return strcmp($a['label'], $b['label']);
+            });
+
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

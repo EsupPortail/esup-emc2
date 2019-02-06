@@ -5,6 +5,7 @@ namespace Application\Form\Poste;
 use Application\Entity\Db\Affectation;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Fonction;
+use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
@@ -22,23 +23,7 @@ class PosteForm extends Form  {
     use EntityManagerAwareTrait;
     use ServiceLocatorAwareTrait;
 
-    private $autocomplete;
-
-    /**
-     * @return mixed
-     */
-    public function getAutocomplete()
-    {
-        return $this->autocomplete;
-    }
-
-    /**
-     * @param mixed $autocomplete
-     */
-    public function setAutocomplete($autocomplete)
-    {
-        $this->autocomplete = $autocomplete;
-    }
+    use AutocompleteAwareTrait;
 
     public function init()
     {
