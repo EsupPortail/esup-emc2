@@ -1,8 +1,6 @@
 <?php
 
-namespace Application\Service\RessourceRh;
-
-use Application\Form\RessourceRh\MetierForm;
+namespace Application\Form\RessourceRh;
 
 trait MetierFormAwareTrait {
 

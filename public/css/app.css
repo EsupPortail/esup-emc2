@@ -120,3 +120,9 @@ div.preview {
     padding: 2px;
 }
 
+span.octopus:after {
+    content: "octopus";
+    color: pink;
+    font-size: x-small;
+}
+
