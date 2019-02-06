@@ -22,6 +22,23 @@ class PosteForm extends Form  {
     use EntityManagerAwareTrait;
     use ServiceLocatorAwareTrait;
 
+    private $autocomplete;
+
+    /**
+     * @return mixed
+     */
+    public function getAutocomplete()
+    {
+        return $this->autocomplete;
+    }
+
+    /**
+     * @param mixed $autocomplete
+     */
+    public function setAutocomplete($autocomplete)
+    {
+        $this->autocomplete = $autocomplete;
+    }
 
     public function init()
     {
@@ -67,8 +84,7 @@ class PosteForm extends Form  {
         $sas->setAttribute('class', 'individu-finder');
         $sas->setLabelOption('disable_html_escape', false);
 
-//        $sas->setAutocompleteSource($this->getUrl('poste-form/rechercher-batiment'));
-        $sas->setAutocompleteSource('/poste/rechercher-batiment');
+        $sas->setAutocompleteSource($this->getAutocomplete());
         $this->add($sas);
         // correspondance
         $this->add([
