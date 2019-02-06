@@ -3,14 +3,16 @@
 namespace Application\Controller\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\MissionComplementaire;
 use Application\Entity\Db\SpecificitePoste;
-use Application\Form\Agent\AgentForm;
 use Application\Form\FicheMetier\AssocierAgentForm;
+use Application\Form\FicheMetier\AssocierAgentFormAwareTrait;
 use Application\Form\FicheMetier\AssocierMetierTypeForm;
-use Application\Form\FicheMetier\AssocierPosteForm;
+use Application\Form\FicheMetier\AssocierMetierTypeFormAwareTrait;
+use Application\Form\FicheMetier\AssocierPosteFormAwareTrait;
 use Application\Form\FicheMetier\FicheMetierCreationForm;
+use Application\Form\FicheMetier\FicheMetierCreationFormAwareTrait;
 use Application\Form\FicheMetier\SpecificitePosteForm;
+use Application\Form\FicheMetier\SpecificitePosteFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -21,9 +23,16 @@ use Zend\View\Model\ViewModel;
 
 class FicheMetierController extends AbstractActionController
 {
+    /** Traits utilisés pour les services */
     use FicheMetierServiceAwareTrait;
     use AgentServiceAwareTrait;
     use ActiviteServiceAwareTrait;
+    /** Traits utilisés pour les formulaires*/
+    use AssocierAgentFormAwareTrait;
+    use AssocierMetierTypeFormAwareTrait;
+    use AssocierPosteFormAwareTrait;
+    use FicheMetierCreationFormAwareTrait;
+    use SpecificitePosteFormAwareTrait;
 
     public function indexAction() {
 
@@ -85,7 +94,7 @@ class FicheMetierController extends AbstractActionController
     public function creerAction()
     {
         /** @var FicheMetierCreationForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(FicheMetierCreationForm::class);
+        $form = $this->getFicherMetierCreationForm();
         $fiche = new FicheMetier();
         $form->bind($fiche);
 
@@ -114,7 +123,7 @@ class FicheMetierController extends AbstractActionController
         $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
 
         /** @var AssocierMetierTypeForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AssocierMetierTypeForm::class);
+        $form = $this->getAssocierMetierTypeForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/associer-metier-type', ['fiche' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -147,7 +156,7 @@ class FicheMetierController extends AbstractActionController
         $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
 
         /** @var AssocierAgentForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AssocierAgentForm::class);
+        $form = $this->getAssocierAgentForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/associer-agent', ['fiche' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -163,10 +172,11 @@ class FicheMetierController extends AbstractActionController
 
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+//        $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Associer un agent',
             'form' => $form,
+            'agents' => $this->getAgentService()->getAgents(),
         ]);
         return $vm;
 
@@ -180,7 +190,7 @@ class FicheMetierController extends AbstractActionController
         $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
 
         /** @var AssocierAgentForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AssocierPosteForm::class);
+        $form = $this->getAssocierPosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/associer-poste', ['fiche' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -221,7 +231,7 @@ class FicheMetierController extends AbstractActionController
         }
 
         /** @var SpecificitePosteForm $form */
-        $form = $form = $this->getServiceLocator()->get('FormElementManager')->get(SpecificitePosteForm::class);
+        $form = $form = $this->getSpecificitePosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/specificite', ['fiche' => $fiche->getId()], [], true));
         $form->bind($specificite);
 

@@ -4,6 +4,7 @@ namespace Application\Controller\Poste;
 
 use Application\Entity\Db\Poste;
 use Application\Form\Poste\PosteForm;
+use Application\Form\Poste\PosteFormAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Octopus\Entity\Db\ImmobilierBatiment;
 use Octopus\Service\Immobilier\ImmobilierServiceAwareTrait;
@@ -13,8 +14,11 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class PosteController extends AbstractActionController {
+    /** Trait utilisés pour les services */
     use PosteServiceAwareTrait;
     use ImmobilierServiceAwareTrait;
+    /** Trait utilisés pour les formulaires */
+    use PosteFormAwareTrait;
 
     public function indexAction()
     {
@@ -44,7 +48,7 @@ class PosteController extends AbstractActionController {
         $poste = new Poste();
 
         /** @var PosteForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(PosteForm::class);
+        $form = $this->getPosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('poste/ajouter', [], [], true));
         $form->bind($poste);
 
@@ -74,7 +78,7 @@ class PosteController extends AbstractActionController {
         $poste = $this->getPosteService()->getPoste($posteId);
 
         /** @var PosteForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(PosteForm::class);
+        $form = $this->getPosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('poste/modifier', ['poste' => $poste->getId()], [], true));
         $form->bind($poste);
 
