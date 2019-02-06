@@ -48,7 +48,9 @@ $this->headTitle("Index des postes")
         <?php foreach ($postes as $poste) : ?>
             <tr>
                 <td> <?php echo $poste->getNumeroPoste(); ?> </td>
-                <td> <?php echo $poste->getAffectation(); ?> </td>
+                <td>
+                    <?php echo $poste->getAffectation(); ?>
+                </td>
                 <td> <?php echo $immobilierService->getImmobilierBatiment($poste->getLocalisation()); ?> </td>
                 <td>
                     <?php if($canAfficherPoste) : ?>
