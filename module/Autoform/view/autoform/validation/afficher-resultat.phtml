@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @var Autoform\Entity\Db\Formulaire $formulaire
+ * @var Autoform\Entity\Db\Validation $validation
+ * @var Autoform\Entity\Db\FormulaireReponse[] $fReponses
+ * @var Autoform\Entity\Db\ValidationReponse[] $vReponses
+ */
+
+$this->headTitle($formulaire->getLibelle() ." : ". $formulaire->getId())
+
+?>
+
+
+<!--<h1 class="page-header">-->
+<!--    --><?php //echo $formulaire->getLibelle(); ?><!-- <br/>-->
+<!--    --><?php //echo $demande->getEtudiant(); ?>
+<!--</h1>-->
+<!---->
+<div class="">
+
+        <?php
+            /** @var Autoform\Entity\Db\Categorie[] $categories */
+            $categories = $formulaire->getCategories();
+            $categories = array_filter($categories, function (Autoform\Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
+            usort($categories, function (Autoform\Entity\Db\Categorie $a, Autoform\Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+        ?>
+
+        <?php foreach ($categories as $categorie) : ?>
+
+            <?php
+                /** @var Autoform\Entity\Db\Champ[] $champs */
+                $champs = $categorie->getChamps();
+                $champs = array_filter($champs, function (Autoform\Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
+                usort($champs, function (Autoform\Entity\Db\Champ $a, Autoform\Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+
+                $results = [];
+                foreach ($champs as $champ) {
+                    $fReponse = isset($fReponses[$champ->getId()])?$fReponses[$champ->getId()]->getReponse():null;
+                    $vReponse = isset($vReponses[$champ->getId()])?$vReponses[$champ->getId()]->getValue():null;
+                    if ($fReponse && $vReponse) $results[$champ->getId()] = $fReponses[$champ->getId()];
+                }
+            ?>
+
+            <?php if (!empty($champs) && !empty($results)) : ?>
+
+                <h2> <?php echo $categorie->getLibelle(); ?> </h2>
+
+                <?php foreach ($champs as $champ) : ?>
+                    <?php if (isset($results[$champ->getId()])) : ?>
+                        <?php
+                            echo $this->champAsResult()->render($champ, $fReponses[$champ->getId()]->getReponse());
+                        ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+</div>

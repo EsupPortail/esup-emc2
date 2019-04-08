@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @var Autoform\Entity\Db\Formulaire[] $formulaires
+ *
+ * @see Autoform\Controller\FormulaireController::indexAction()
+ */
+
+$canCreer = true;
+$canModifier = true;
+$canHistoriser = true;
+$canDetruire = true;
+
+?>
+
+<h1 class="page-header">
+    Index des formualaires générés par Autoform
+</h1>
+
+<div class="main">
+    <p>
+        <?php echo count($formulaires); ?> formulaires d'enregistrés.
+    </p>
+
+    <a href="<?php echo $this->url('autoform/creer-formulaire', [], [], true); ?>"
+       class="btn btn-primary ajax-modal"
+       data-event="modification"
+    >
+        <i class="far fa-plus-square"></i>
+        Créer un nouveau formulaire
+    </a>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Libellé </th>
+                <th> Dernière modification </th>
+                <th> #Categorie </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($formulaires as $formulaire) : ?>
+                <tr>
+                    <td> <?php echo $formulaire->getLibelle(); ?> </td>
+                    <td> <?php echo $formulaire->getHistoModification()->format('d/m/Y à H:i'); ?> </td>
+                    <td> <?php echo count($formulaire->getCategories()); ?> </td>
+                    <td>
+                        <?php if ($canModifier) : ?>
+                            <a href="<?php echo $this->url('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true); ?>">
+                                <i class="fas fa-pencil-alt" title="Éditer le formulaire"></i>
+                            </a>
+                        <?php else: ?>
+                            <i class="fas fa-pencil-alt" style="color:lightgray;"></i>
+                        <?php endif; ?>
+                        <?php if ($canHistoriser) : ?>
+                            <?php if($formulaire->getHistoDestruction()) : ?>
+                                <a href="<?php echo $this->url('autoform/formulaire/restaurer', ['formulaire' => $formulaire->getId()], [], true); ?>">
+                                    <i class="fas fa-trash-restore" title="Restaurer le formulaire"></i>
+                                </a>
+                            <?php else : ?>
+                                <a href="<?php echo $this->url('autoform/formulaire/historiser', ['formulaire' => $formulaire->getId()], [], true); ?>">
+                                    <i class="fas fa-trash" title="Historiser le formulaire"></i>
+                                </a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if($formulaire->getHistoDestruction()) : ?>
+                                <i class="fas fa-trash-restore" style="color:lightgray;"></i>
+                            <?php else : ?>
+                                <i class="fas fa-trash" style="color:lightgray;"></i>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canDetruire) : ?>
+                            <a href="<?php echo $this->url('autoform/formulaire/detruire', ['formulaire' => $formulaire->getId()], [], true); ?>">
+                                <i class="fas fa-times" title="Détruire le formulaire"></i>
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

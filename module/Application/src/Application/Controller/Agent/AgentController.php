@@ -122,6 +122,9 @@ class AgentController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             var_dump($data);
+            $individu = $this->getIndividuService()->getIndividu($data['agent']['id']);
+
+            var_dump($individu);
             //$this->redirect()->toRoute('agent/importer');
         }
 
@@ -142,7 +145,7 @@ class AgentController extends AbstractActionController
                 $result[] = array(
                     'id'    => $individu->getCIndividuChaine(),
                     'label' => $individu->getPrenom()." ".$individu->getNomUsage(),
-                    'extra' => "<span class='badge' style='background-color: slategray;'>".$individu->getCSource()."</span>",
+                    'extra' => ($individu->getCSource())->__toString(),
                 );
             }
             usort($result, function($a, $b) {
