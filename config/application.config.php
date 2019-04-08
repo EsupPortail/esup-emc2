@@ -4,6 +4,7 @@ $modules = [
     'ZfcBase', 'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'ZfcUserDoctrineORM',
     'BjyAuthorize', 'AssetManager',
     'UnicaenApp', 'UnicaenAuth', 'UnicaenLdap',
+    'Autoform',
     'Mailing',
     'Octopus',
     'Application',

@@ -1,0 +1,69 @@
+<?php
+    /** @var \Application\Entity\Db\Demande $demande */
+?>
+
+<h1>
+    Avis d'aménagement des conditions d'examen, de concours et d'études pour les candidats présentant un handicap
+</h1>
+
+<h2> Année universitaire 2018/2019</h2>
+
+<p>
+    Loi n°2005-102 du 11 février 2005 pour l'égalité des droits et des chances, la participation et la citoyenneté des personnes handicapées.
+    Décret du N°2005-1617 du 21 décembre 2005 (B.O. N°3 du 19 janvier 2006).
+    Circulaire N°2011-220 du 27 décembre 2011 (B.O. N°2 du 12 janvier 2012).
+</p>
+
+<p>
+    Après étude du dossier (demande du candidat, certificat médical détaillé, avis du médecin du SUMPPS), le médecin
+    désigné par la CDAPH (médecin directeur du SUMPPS) rendra un avis, dans lequel il proposera des aménagements de
+    la scolarité et des conditions d'examen, qui seront adressés à l'étudiant et à la composante concernée.
+    La composante notifiera ensuite sa décision au candidat.
+</p>
+
+<hr/>
+
+<p>
+    Numéro étudiant : <?php echo $demande->getEtudiant()->getNumeroEtudiant(); ?> <br/>
+    Nom : <?php echo $demande->getEtudiant()->getNom(); ?> <br/>
+    Prénom : <?php echo $demande->getEtudiant()->getPrenom(); ?> <br/>
+</p>
+
+<p>
+    <?php
+        /** @var \Application\Entity\Db\EtudiantInfos $informations */
+        $informations = current($demande->getEtudiant()->getInformations()); ?>
+        Né&middot;e le : <?php echo $informations->getDateNaissance(); ?> <br/>
+        À : <?php echo $informations->getCommuneNaissance(); ?> <br/>
+</p>
+
+<p>
+    Composante : <?php echo ($demande->getComposante())?$demande->getComposante()->getLibelle():"Non renseignée"; ?> <br/>
+</p>
+
+<p>
+Je soussigné, <?php echo $demande->getEtudiant()->getPrenom(); ?> <?php echo $demande->getEtudiant()->getNom(); ?>, étudiant en
+<span style="color:red;"> DIPLOME </span> demande à bénéficier en raison de mon handicap des aménagements prévus ci-après.
+</p>
+
+<p>Les aménagements présentés au verso de cette feuille concernent aussi bien la scolarité que les examens. Il doit y avoir une
+    cohérence entre le handicap, les aménagements demandés par le candidat et les aménagements mis en oeuvre dans l'établissement
+    tout au long de l'année.
+</p>
+
+<div style="position:absolute; left:400px;">
+À ________________________, le  _________________________ <br/>
+Signature du candidat,
+</div>
+
+<div style="position:absolute; bottom:80px;">
+
+<hr style="width:95%" />
+
+<h2> Note aux étudiants </h2>
+
+<p style="width:95%">
+    Les informations médicales actualisées transmises, sous pli confidentiel, au médecin désigné par la Commission des Droits et de l'Autonomie
+    doivent lui permettre de rendre un avis argumenté.
+</p>
+</div>

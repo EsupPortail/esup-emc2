@@ -141,16 +141,16 @@ return [
             UserService::class => UserServiceFactory::class,
         ],
     ],
-    'translator'      => [
-        'locale'                    => 'fr_FR', // en_US
-        'translation_file_patterns' => [
-            [
-                'type'     => 'gettext',
-                'base_dir' => __DIR__ . '/../language',
-                'pattern'  => '%s.mo',
-            ],
-        ],
-    ],
+//    'translator'      => [
+//        'locale'                    => 'fr_FR', // en_US
+//        'translation_file_patterns' => [
+//            [
+//                'type'     => 'gettext',
+//                'base_dir' => __DIR__ . '/../language',
+//                'pattern'  => '%s.mo',
+//            ],
+//        ],
+//    ],
     'controllers'     => [
         'factories' => [
             UtilisateurController::class => UtilisateurControllerFactory::class,
