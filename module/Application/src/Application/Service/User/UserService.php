@@ -8,7 +8,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenApp\Util;
 use UnicaenAuth\Service\Traits\UserContextServiceAwareTrait;
 
 /**
@@ -198,6 +197,22 @@ class UserService
         $userId = $dbUser->getId();
         $user = $this->getUtilisateur($userId);
         return $user;
+    }
+
+    /**
+     * @param Role $role
+     * @return User[]
+     */
+    public function getUtilisateursByRole($role)
+    {
+        $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('user')
+            ->addSelect('role')->join('user.roles', 'role')
+            ->andWhere('role.roleId = :role')
+            ->setParameter('role', $role->getRoleId())
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }
 

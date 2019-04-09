@@ -12,6 +12,7 @@ class Role extends AbstractRole
     const ADMIN_TECH = 'Administrateur technique';
     const ADMIN_FONC = 'Administrateur fonctionnel';
     const UTILISATEUR = 'Utilisateur';
+    const GESTIONNAIRE = 'Gestionnaire de structure';
 
     /** @var \Doctrine\Common\Collections\Collection */
     private $privilege;

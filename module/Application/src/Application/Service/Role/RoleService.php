@@ -47,4 +47,18 @@ class RoleService
         }
         return $result;
     }
+
+    public function getRoleByCode($code)
+    {
+        $qb = $this->getEntityManager()->getRepository(Role::class)->createQueryBuilder("role")
+            ->andWhere("role.roleId = :code")
+            ->setParameter("code", $code);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs rôles partagent l'identifiant : ".$code);
+        }
+        return $result;
+    }
 }

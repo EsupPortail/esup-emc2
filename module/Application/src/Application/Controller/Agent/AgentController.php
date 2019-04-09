@@ -8,6 +8,7 @@ use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\Agent\AgentImportFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Octopus\Entity\Db\Individu;
+use Octopus\Entity\Db\IndividuAffectationType;
 use Octopus\Service\Individu\IndividuServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -124,7 +125,15 @@ class AgentController extends AbstractActionController
             var_dump($data);
             $individu = $this->getIndividuService()->getIndividu($data['agent']['id']);
 
-            var_dump($individu);
+            var_dump($individu->getNomUsage());
+            var_dump($individu->getPrenom());
+            foreach ($individu->getAffectations() as $affectation) {
+                if ($affectation->getType()->getId() < 5) {
+                    var_dump($affectation->getStructure()->getLibelleLong());
+                    var_dump($affectation->getDateDebut()->format('d/m/Y'));
+                    if ($affectation->getDateFin()) var_dump($affectation->getDateFin()->format('d/m/Y'));
+                }
+            }
             //$this->redirect()->toRoute('agent/importer');
         }
 
@@ -144,7 +153,7 @@ class AgentController extends AbstractActionController
             foreach ($individus as $individu) {
                 $result[] = array(
                     'id'    => $individu->getCIndividuChaine(),
-                    'label' => $individu->getPrenom()." ".$individu->getNomUsage(),
+                    'label' => $individu->getPrenom()." ".(($individu->getNomUsage())?$individu->getNomUsage():$individu->getNomFamille()),
                     'extra' => ($individu->getCSource())->__toString(),
                 );
             }
