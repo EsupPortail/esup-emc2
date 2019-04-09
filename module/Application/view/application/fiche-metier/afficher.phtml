@@ -107,13 +107,13 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     </div>
     <div class="panel-body">
             <h3> Affectation du poste </h3>
-            <?php if ($fiche->getPoste() !== null && $fiche->getPoste()->getAffectation() !== null) : ?>
-                <?php if ($fiche->getPoste()->getAffectation()->getDescription() !== null) :?>
-                    <?php echo $fiche->getPoste()->getAffectation()->getDescription(); ?>
+            <?php if ($fiche->getPoste() !== null && $fiche->getPoste()->getStructure() !== null) : ?>
+                <?php if ($fiche->getPoste()->getStructure()->getDescription() !== null) :?>
+                    <?php echo $fiche->getPoste()->getStructure()->getDescription(); ?>
                 <?php else: ?>
                     <div class="alert alert-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getPoste()->getAffectation()->getLibelle(); ?></em>.
+                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getPoste()->getStructure()->getLibelleCourt(); ?></em>.
                     </div>
                 <?php endif; ?>
             <?php else : ?>

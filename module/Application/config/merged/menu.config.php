@@ -3,13 +3,10 @@
 namespace Application;
 
 use Application\Provider\Privilege\ActivitePrivileges;
-use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
-use Application\Provider\Privilege\UtilisateurPrivileges;
-use Mailing\Provider\Privilege\MailingPrivileges;
-
+use Application\Provider\Privilege\StructurePrivileges;
 
 return [
     'navigation' => [
@@ -81,9 +78,9 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'label' => 'Les affectations',
-                                'route' => 'affectation',
-                                'privileges' => AffectationPrivileges::AFFICHER,
+                                'label' => 'Les structures',
+                                'route' => 'structure',
+                                'privileges' => StructurePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],

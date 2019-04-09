@@ -3,11 +3,9 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
-use Application\Service\Affectation\AffectationAwareServiceTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class FicheMetierCreationHydrator implements HydratorInterface {
-    use AffectationAwareServiceTrait;
 
     /**
      * @param FicheMetier $object
@@ -29,8 +27,6 @@ class FicheMetierCreationHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $affectation = $this->getAffectationService()->getAffectation($data['affectation']);
-
         $object->setLibelle($data['libelle']);
         return $object;
     }

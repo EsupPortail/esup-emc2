@@ -49,7 +49,7 @@ $this->headTitle("Index des postes")
             <tr>
                 <td> <?php echo $poste->getNumeroPoste(); ?> </td>
                 <td>
-                    <?php echo $poste->getAffectation(); ?>
+                    <?php echo $poste->getStructure(); ?>
                 </td>
                 <td> <?php echo $immobilierService->getImmobilierBatiment($poste->getLocalisation()); ?> </td>
                 <td>
