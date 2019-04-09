@@ -236,4 +236,12 @@ class Structure {
     public function hasGestionnaire($gestionnaire) {
         return $this->gestionnaires->contains($gestionnaire);
     }
+
+    public function __toString()
+    {
+        $text =  "";
+        $text .= "[".$this->getType()->getCode()."] ";
+        $text .= $this->getLibelleCourt();
+        return $text;
+    }
 }

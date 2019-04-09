@@ -16,8 +16,8 @@
         <many-to-one target-entity="Application\Entity\Db\Correspondance" field="correspondance">
             <join-column name="correspondance" referenced-column-name="id" />
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\Affectation" field="affectation">
-            <join-column name="affectation" referenced-column-name="id" />
+        <many-to-one target-entity="Application\Entity\Db\Structure" field="structure">
+            <join-column name="structure" referenced-column-name="id" />
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
             <join-column name="domaine" referenced-column-name="id" />

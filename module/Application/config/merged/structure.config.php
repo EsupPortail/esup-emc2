@@ -8,7 +8,7 @@ use Application\Form\Structure\StructureFormFactory;
 use Application\Form\Structure\StructureForm;
 use Application\Form\Structure\StructureHydrator;
 use Application\Form\Structure\StructureHydratorFactory;
-use Application\Provider\Privilege\AffectationPrivileges;
+use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\Structure\StructureService;
 use Application\Service\Structure\StructureServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -34,7 +34,7 @@ return [
                         'synchroniser',
                     ],
                     'privileges' => [
-                        AffectationPrivileges::AFFICHER,
+                        StructurePrivileges::AFFICHER,
                     ],
                 ],
             ],

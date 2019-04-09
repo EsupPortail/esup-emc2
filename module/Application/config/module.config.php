@@ -2,8 +2,6 @@
 
 namespace Application;
 
-use Application\Service\Affectation\AffectationService;
-use Application\Service\Affectation\AffectationServiceFactory;
 use Application\Service\Role\RoleService;
 use Application\Service\Role\RoleServiceFactory;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
@@ -72,7 +70,6 @@ return [
         ],
         'factories' => [
             RoleService::class => RoleServiceFactory::class,
-            AffectationService::class => AffectationServiceFactory::class,
         ],
     ],
     'controllers'     => [

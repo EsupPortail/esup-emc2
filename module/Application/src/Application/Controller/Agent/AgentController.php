@@ -8,7 +8,6 @@ use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\Agent\AgentImportFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Octopus\Entity\Db\Individu;
-use Octopus\Entity\Db\IndividuAffectationType;
 use Octopus\Service\Individu\IndividuServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
