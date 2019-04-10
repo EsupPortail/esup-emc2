@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @var \Application\Entity\Db\EntretienProfessionnel $entretien
+ */
+
+
+
+$this->headTitle('Édition de l\'entretien professionnel');
+?>
+
+<h1 class="page-header">
+    Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
+    <?php $entretien->getPersonnel()->getDisplayName(); ?>
+</h1>
+
+<div class="main">
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Informations sur l'entretien
+                </div>
+                <div class="panel-body">
+                    <dl>
+                        <dt> Année</dt>
+                        <dd> <?php echo $entretien->getAnnee(); ?> </dd>
+                        <dt> Agent</dt>
+                        <dd> <?php echo $entretien->getPersonnel()->getDisplayName(); ?> </dd>
+                        <dt> Responsable</dt>
+                        <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>
+                    </dl>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <a href="<?php echo $this->url('entretien-professionnel', [], [], true); ?>" class="btn btn-primary">
+                <span class="icon retour"></span>
+                Retourner à l'index
+            </a>
+        </div>
+    </div>
+
+    <h2> Formulaire d'entretien  </h2>
+
+    <div class="affichage-autoform">
+        Chargment des informations provenant du formulaire ...
+    </div>
+</div>
+
+<script>
+    //$( document ).ready(function() {
+    var url = <?php
+        /**
+         * @var Autoform\Entity\Db\Formulaire $formulaire
+         * @var string $retour
+         */
+        $formulaire = $entretien->getFormulaireInstance()->getFormulaire();
+        $retour = $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], ['force_canonical' => true], true);
+        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $entretien->getFormulaireInstance()->getId()], ['query' => ['retour' => $retour], 'force_canonical' => true], true);
+        echo "'".$url."'";
+        ?>;
+    console.log(url);
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        success:
+            function (retour) {
+                $("div.affichage-autoform").html(retour);
+            }
+    });
+    //});
+</script>
+
+
