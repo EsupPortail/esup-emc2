@@ -253,4 +253,9 @@ class FicheMetierController extends AbstractActionController
         ]);
 
     }
+
+    public function ficheTypeExterneAction() {
+        $ficheId = $this->params()->fromRoute('fiche');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
+    }
 }

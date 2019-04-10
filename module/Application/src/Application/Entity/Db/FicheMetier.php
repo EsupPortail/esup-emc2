@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class FicheMetier
@@ -21,6 +22,14 @@ class FicheMetier
     private $metierType;
     /** @var Poste */
     private $poste;
+
+    /** @var ArrayCollection */
+    private $fichesTypes;
+
+    public function __invoke()
+    {
+        $this->fichesTypes = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -117,6 +126,33 @@ class FicheMetier
         return $this;
     }
 
+    /**
+     * @return FicheTypeExterne[]
+     */
+    public function getFichesTypes()
+    {
+        return $this->fichesTypes->toArray();
+    }
+
+    /**
+     * @var FicheTypeExterne $type
+     * @return FicheMetier
+     */
+    public function addFicheTypeExterne($type)
+    {
+        $this->fichesTypes->add($type);
+        return $this;
+    }
+
+    /**
+     * @var FicheTypeExterne $type
+     * @return FicheMetier
+     */
+    public function removeFicheTypeExterne($type)
+    {
+        $this->fichesTypes->removeElement($type);
+        return $this;
+    }
 
 
 
