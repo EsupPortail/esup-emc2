@@ -24,6 +24,14 @@ return [
                         'pages' => [
                         ],
                     ],
+                    'entretien' => [
+                        'order' => 100,
+                        'label' => 'Entretiens Pro.',
+                        'route' => 'entretien-professionnel',
+                        'roles' => [],
+                        'pages' => [
+                        ],
+                    ],
                     'administration-preecog' => [
                         'order' => 1000,
                         'label' => 'Administration',
@@ -59,6 +67,14 @@ return [
                                 'route'      => 'droits/privileges',
                                 'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
                                 'withtarget' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            'autoform' => [
+                                'label'      => "Autoform",
+                                'title'      => "Module Autoform",
+                                'route'      => 'autoform',
+                                'roles'      => [],
+//                                'withtarget' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                         ],
