@@ -72,7 +72,7 @@ return [
                             'autoform' => [
                                 'label'      => "Autoform",
                                 'title'      => "Module Autoform",
-                                'route'      => 'autoform',
+                                'route'      => 'autoform/formulaires',
                                 'roles'      => [],
 //                                'withtarget' => true,
                                 'icon' => 'fas fa-angle-right'
