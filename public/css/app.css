@@ -193,7 +193,6 @@ div.panel h3 {
     border-radius: 5px 5px 0px 0px;
 }
 
-
 div.panel h4 {
     font-weight: bold;
     font-size: medium;
@@ -201,28 +200,27 @@ div.panel h4 {
     padding-top: 5px;
     padding-left: 15px;
     text-decoration: underline lightblue;
-
 }
 
-.panel-info {
-    border: 2px #123456 solid;
-    border-radius: 5px 5px 0px 0px;
-}
+/*.panel-info {*/
+/*    border: 2px #123456 solid;*/
+/*    border-radius: 5px 5px 0px 0px;*/
+/*}*/
 
-.panel-info > .panel-heading {
-    background-image: none;
-    background-color: lightblue;
-    color: #123456;
-    border-bottom: 2px #123456 solid;
-    border-radius: 5px 5px 0px 0px;
-}
+/*.panel-info > .panel-heading {*/
+/*    background-image: none;*/
+/*    background-color: lightblue;*/
+/*    color: #123456;*/
+/*    border-bottom: 2px #123456 solid;*/
+/*    border-radius: 5px 5px 0px 0px;*/
+/*}*/
 
-.panel-info > .panel-body {
-    background-image: none;
-    background-color: #EEFFFF;
-    color: black;
-    border-radius: 0;
-}
+/*.panel-info > .panel-body {*/
+/*    background-image: none;*/
+/*    background-color: #EEFFFF;*/
+/*    color: black;*/
+/*    border-radius: 0;*/
+/*}*/
 
 dl.dl-horizontal dt {
     width:25%;
