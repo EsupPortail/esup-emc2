@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @var Application\Entity\Db\Structure $structure
+ * @var Application\Entity\Db\User[] $gestionnaires
+ */
+
+$this->headTitle("Ajouter un gestionnaire")
+?>
+
+<?php if ($structure) : ?>
+    <form method="post" action="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [] ,true); ?>">
+        <p>
+        <select id="gestionnaire" name="gestionnaire" style="width:100%;">
+            <option value=""> Sélectionner un gestionnaire ...</option>
+            <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                <option value="<?php echo $gestionnaire->getId(); ?>">
+                    <?php echo $gestionnaire->getDisplayName(); ?>
+                    <?php echo $gestionnaire->getEmail(); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        </p>
+        <input type="submit" value="Ajouter ce gestionnaire" class="action btn btn-primary">
+    </form>
+<?php endif; ?>

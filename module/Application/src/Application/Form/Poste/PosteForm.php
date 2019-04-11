@@ -2,9 +2,10 @@
 
 namespace Application\Form\Poste;
 
-use Application\Entity\Db\Affectation;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Fonction;
+use Application\Entity\Db\Structure;
+use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
@@ -22,6 +23,7 @@ class PosteForm extends Form  {
     use EntityManagerAwareTrait;
     use ServiceLocatorAwareTrait;
 
+    use AutocompleteAwareTrait;
 
     public function init()
     {
@@ -36,27 +38,27 @@ class PosteForm extends Form  {
                 'id' => 'numero_poste',
             ],
         ]);
-        // affectation
+        // structure
         $this->add([
             'type' => ObjectSelect::class,
-            'name' => 'affectation',
+            'name' => 'structure',
             'options' => [
                 'label' => "Service/composante/direction d'affectation :",
-                'empty_option' => "Sélectionner une affectation",
+                'empty_option' => "Sélectionner une structure",
                 'object_manager' => $this->getEntityManager(),
-                'target_class' => Affectation::class,
-                'property' => 'libelle',
+                'target_class' => Structure::class,
+                'property' => 'libelleLong',
                 'find_method' => [
                     'name' => 'findBy',
                     'params' => [
                         'criteria' => [],
-                        'orderBy' => ['libelle' => 'ASC'],
+                        'orderBy' => ['libelleCourt' => 'ASC'],
                     ],
                 ],
                 'disable_inarray_validator' => true,
             ],
             'attributes' => [
-                'id' => 'affectation',
+                'id' => 'structure',
             ],
         ]);
 
@@ -67,9 +69,9 @@ class PosteForm extends Form  {
         $sas->setAttribute('class', 'individu-finder');
         $sas->setLabelOption('disable_html_escape', false);
 
-//        $sas->setAutocompleteSource($this->getUrl('poste-form/rechercher-batiment'));
-        $sas->setAutocompleteSource('/poste/rechercher-batiment');
+        $sas->setAutocompleteSource($this->getAutocomplete());
         $this->add($sas);
+
         // correspondance
         $this->add([
             'type' => Select::class,

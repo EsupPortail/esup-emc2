@@ -4,13 +4,17 @@ namespace Application\Controller\Application;
 
 use Application\Entity\Db\Application;
 use Application\Form\Application\ApplicationForm;
+use Application\Form\Application\ApplicationFormAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ApplicationController  extends AbstractActionController {
+    /** Trait utilisés pour les services */
     use ApplicationServiceAwareTrait;
+    /** Trait utilisées pour les formulaires */
+    use ApplicationFormAwareTrait;
 
     public function indexAction()
     {
@@ -28,9 +32,10 @@ class ApplicationController  extends AbstractActionController {
         $application = new Application();
 
         /** @var ApplicationForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationForm::class);
+        $form = $this->getApplicationForm();
         $form->setAttribute('action', $this->url()->fromRoute('application/creer', [], [], true));
         $form->bind($application);
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -59,9 +64,10 @@ class ApplicationController  extends AbstractActionController {
         $application = $this->getApplicationService()->getApplication($applicationId);
 
         /** @var ApplicationForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationForm::class);
+        $form = $this->getApplicationForm();
         $form->setAttribute('action', $this->url()->fromRoute('application/editer', ['id' => $application->getId()], [], true));
         $form->bind($application);
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {

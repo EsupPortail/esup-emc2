@@ -1,0 +1,56 @@
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<?php
+
+/**
+ * @var Form $form
+ * @var Agent[] $agents
+ */
+
+use Application\Entity\Db\Agent;
+use Zend\Form\Form;
+
+?>
+
+<?php //echo $this->form($form); ?>
+
+<?php echo $this->form()->openTag($form); ?>
+
+
+<strong>
+    Associer un agent à la fiche métier :
+</strong>
+
+<select title=""
+        class="filter selectpicker show-menu-arrow"
+        name="agent"
+        id="agent"
+        data-live-search="true"
+        data-width="100%"
+>
+
+
+    <option value="" data-subtext="">
+        Sélectionner un agent ...
+    </option>
+
+    <?php foreach ($agents as $agent): ?>
+
+        <?php
+        $current = ($form->getObject()->getAgent())?$form->getObject()->getAgent()->getId():null;
+        $value = $agent->getId();
+        $label = $agent->getDenomination();
+        $subtext = $agent->getNumeroPoste()?$agent->getNumeroPoste() : '';
+        ?>
+        <option value="<?php echo $value ?>" <?php echo ($current === $value ) ? 'selected' : '' ?> data-subtext="<?php echo $subtext ?>">
+            <?php echo $label ?>
+        </option>
+
+    <?php endforeach ?>
+</select>
+
+<br/>
+<br/>
+
+    <?php echo $this->formControlGroup($form->get('creer')); ?>
+<?php echo $this->form()->closeTag() ?>

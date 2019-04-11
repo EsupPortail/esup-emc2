@@ -8,6 +8,8 @@ use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
 use Application\Form\Agent\AgentHydratorFactory;
+use Application\Form\Agent\AgentImportForm;
+use Application\Form\Agent\AgentImportFormFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
@@ -34,6 +36,8 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'ajouter',
+                        'importer',
+                        'rechercher-individu',
                     ],
                     'privileges' => [
                         AgentPrivileges::AJOUTER,
@@ -113,7 +117,27 @@ return [
                                 'action'     => 'ajouter',
                             ],
                         ],
-                    ]
+                    ],
+                    'importer' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/importer',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'importer',
+                            ],
+                        ],
+                    ],
+                    'rechercher-individu' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher-individu',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'rechercher-individu',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -134,6 +158,7 @@ return [
     'form_elements' => [
         'factories' => [
             AgentForm::class => AgentFormFactory::class,
+            AgentImportForm::class => AgentImportFormFactory::class,
         ],
     ],
     'hydrators' => [

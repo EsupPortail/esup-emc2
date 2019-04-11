@@ -8,8 +8,8 @@ class Poste {
     private $id;
     /** @var string */
     private $numeroPoste;
-    /** @var Affectation */
-    private $affectation;
+    /** @var Structure */
+    private $structure;
     /** @var string */
     private $localisation;
     /** @var Correspondance */
@@ -50,20 +50,20 @@ class Poste {
     }
 
     /**
-     * @return Affectation
+     * @return Structure
      */
-    public function getAffectation()
+    public function getStructure()
     {
-        return $this->affectation;
+        return $this->structure;
     }
 
     /**
-     * @param Affectation $affectation
+     * @param Structure $structure
      * @return Poste
      */
-    public function setAffectation($affectation)
+    public function setStructure($structure)
     {
-        $this->affectation = $affectation;
+        $this->structure = $structure;
         return $this;
     }
 
