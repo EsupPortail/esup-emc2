@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\FicheTypeExterne" table="fiche_type_externe">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <many-to-one target-entity="Application\Entity\Db\FicheMetier"  field="ficheMetier">
+            <join-column name="fiche_metier" referenced-column-name="id"/>
+        </many-to-one>
+
+        <many-to-one target-entity="Application\Entity\Db\FicheMetierType"  field="ficheType">
+            <join-column name="fiche_type" referenced-column-name="id"/>
+        </many-to-one>
+
+        <field name="quotite"           type="integer"                  column="quotite"            nullable="false"/>
+        <field name="estPrincipale"     type="boolean"                  column="principale"         nullable="false"/>
+        <field name="activites"         type="string" length="128"      column="activites"          nullable="false"/>
+
+    </entity>
+</doctrine-mapping>
