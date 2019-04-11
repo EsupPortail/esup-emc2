@@ -51,7 +51,7 @@ $this->headTitle("Index des applications");
                     <td> <?php echo $application->getLibelle(); ?> </td>
                     <td> <a href="<?php echo $application->getUrl(); ?>"><?php echo $application->getUrl(); ?></a> </td>
                     <td>
-                        <?if ($application->isActif()) : ?>
+                        <?php if ($application->isActif()) : ?>
                             <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
                         <?php endif;?>
                     </td>
