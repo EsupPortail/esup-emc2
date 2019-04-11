@@ -2,6 +2,7 @@
 
 namespace Application\Controller\FicheMetier;
 
+use Application\Form\FicheMetier\AjouterFicheTypeForm;
 use Application\Form\FicheMetier\AssocierAgentForm;
 use Application\Form\FicheMetier\AssocierMetierTypeForm;
 use Application\Form\FicheMetier\AssocierPosteForm;
@@ -31,12 +32,14 @@ class FicheMetierControllerFactory {
          * @var AssocierPosteForm $associerPosteForm
          * @var FicheMetierCreationForm $ficheMetierCreationForm
          * @var SpecificitePosteForm $specificitePosteForm
+         * @var AjouterFicheTypeForm $ajouterFicheTypeForm
          */
         $associerAgentForm = $manager->getServiceLocator()->get('FormElementManager')->get(AssocierAgentForm::class);
         $associerMetierTypeForm = $manager->getServiceLocator()->get('FormElementManager')->get(AssocierMetierTypeForm::class);
         $associerPosteForm = $manager->getServiceLocator()->get('FormElementManager')->get(AssocierPosteForm::class);
         $ficheMetierCreationForm = $manager->getServiceLocator()->get('FormElementManager')->get(FicheMetierCreationForm::class);
         $specificitePosteForm = $manager->getServiceLocator()->get('FormElementManager')->get(SpecificitePosteForm::class);
+        $ajouterFicheTypeForm = $manager->getServiceLocator()->get('FormElementManager')->get(AjouterFicheTypeForm::class);
 
         /** @var FicheMetierController $controller */
         $controller = new FicheMetierController();
@@ -50,6 +53,7 @@ class FicheMetierControllerFactory {
         $controller->setAssocierPosteForm($associerPosteForm);
         $controller->setFicherMetierCreationForm($ficheMetierCreationForm);
         $controller->setSpecificitePosteForm($specificitePosteForm);
+        $controller->setAjouterFicheTypeForm($ajouterFicheTypeForm);
 
         return $controller;
     }

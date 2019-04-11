@@ -138,6 +138,10 @@ span.icon.retirer-user:before {
     content: "\f503";
 }
 
+span.icon.listing:before {
+    content: "\f0ae";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
