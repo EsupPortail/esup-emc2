@@ -31,9 +31,14 @@ class FicheMetierType {
     /** @var string */
     private $applicationsFormation;
 
+    /** @var ArrayCollection */
+    private $activites;
+
+
     public function __construct()
     {
         $this->applications = new ArrayCollection();
+        $this->activites = new ArrayCollection();
     }
 
 
@@ -232,6 +237,34 @@ class FicheMetierType {
     public function setApplicationsFormation($formation)
     {
         $this->applicationsFormation = $formation;
+        return $this;
+    }
+
+    /**
+     * @return FicheMetierTypeActivite[]
+     */
+    public function getActivites()
+    {
+        return $this->activites->toArray();
+    }
+
+    /**
+     * @param FicheMetierTypeActivite $activite
+     * @return FicheMetierType
+     */
+    public function addActivite($activite)
+    {
+        $this->activites->add($activite);
+        return $this;
+    }
+
+    /**
+     * @param FicheMetierTypeActivite $activite
+     * @return FicheMetierType
+     */
+    public function removeActivite($activite)
+    {
+        $this->activites->removeElement($activite);
         return $this;
     }
 }

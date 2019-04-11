@@ -6,7 +6,6 @@
  * @var SpecificitePoste $specificite
  */
 
-use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\SpecificitePoste;
@@ -139,105 +138,30 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 <?php /** @var \Application\Entity\Db\FicheTypeExterne $ficheType **/ ?>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h2>Fiche composée de <?php echo count($fiche->getFichesTypes()); ?> fiche(s) type(s).</h2>
-        <ul>
-            <?php foreach ($fiche->getFichesTypes() as $ficheType) : ?>
-                <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
-            <?php endforeach; ?>
-        </ul>
+        <div class="row">
+            <div class="col-md-8">
+            <h2>Fiche composée de <?php echo count($fiche->getFichesTypes()); ?> fiche(s) type(s).</h2>
+            <ul>
+                <?php foreach ($fiche->getFichesTypes() as $ficheType) : ?>
+                    <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
+                <?php endforeach; ?>
+            </ul>
+            </div>
+            <div class="col-md-4">
+                <a href="<?php echo $this->url('fiche-metier/ajouter-fiche-type', ['fiche' => $fiche->getId()], [], true); ?>"
+                   class="btn btn-primary action ajax-modal"
+                   data-event="modification"
+                >
+                    <span class="icon ajouter"></span>
+                    Ajouter une fiche type
+                    </a>
+            </div>
+        </div>
     </div>
 </div>
 
 <?php foreach ($fiche->getFichesTypes() as $ficheType) : ?>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="row">
-            <div class="col-md-6">
-                <h2> <?php echo $ficheType->getFicheType()->getMetier(); ?> </h2>
-            </div>
-            <div class="col-md-3 pull-right">
-                <?php if ($ficheType->getPrincipale()) :?>
-                    <strong>fiche type principale</strong>
-                <?php else : ?>
-                    <?php echo $ficheType->getQuotite(); ?>%
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-    <div class="panel-body">
-        <!-- MISSIONS PRINCIPALES -->
-        <?php if($ficheType->getPrincipale()): ?>
-            <h3> Missions principales </h3>
-            <?php echo $ficheType->getFicheType()->getMissionsPrincipales(); ?>
-        <?php endif; ?>
-
-        <!-- FORMATION -->
-        <?php if($ficheType->getPrincipale()): ?>
-            <h3> Parcours de formation de base pour la prise de poste  </h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4> Connaissances </h4>
-                    <?php echo $ficheType->getFicheType()->getConnaissances(); ?>
-                </div>
-                <div class="col-md-6">
-                    <h4> Plan de formation </h4>
-                    <?php echo$ficheType->getFicheType()->getConnaissancesFormation(); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4> Compétences opérationnelles </h4>
-                    <?php echo $ficheType->getFicheType()->getCompetencesOperationnelles(); ?>
-                </div>
-                <div class="col-md-6">
-                    <h4> Plan de formation </h4>
-                    <?php echo $ficheType->getFicheType()->getCompetencesOperationnellesFormation(); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4> Compétences comportementales </h4>
-                    <?php echo $ficheType->getFicheType()->getCompetencesComportementales(); ?>
-                </div>
-                <div class="col-md-6">
-                    <h4> Plan de formation </h4>
-                    <?php echo $ficheType->getFicheType()->getCompetencesComportementalesFormation(); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4> Applications </h4>
-                    <ul>
-                        <?php /** @var Application $application */ ?>
-                        <?php foreach($ficheType->getFicheType()->getApplications() as $application) : ?>
-                            <li> <?php echo $application->getLibelle(); ?> </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <h4> Plan de formation </h4>
-                    <?php echo $ficheType->getFicheType()->getApplicationsFormation(); ?>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <!-- ACTIVITE -->
-        <h3> Activités </h3>
-        <?php $activites = explode(";", $ficheType->getActivites()); ?>
-        <?php foreach ($activites as $activite): ?>
-            <p><?php echo $activite; ?></p>
-        <?php endforeach; ?>
-        <!--        --><?php //foreach($ficheType->getFicheType()->getActivites() as $activite) : ?>
-        <!--            --><?php //if (array_search($activite, $activites)) : ?>
-        <!--                <h4>-->
-        <!--                    --><?php //echo $activite->getActivite()->getLibelle(); ?>
-        <!--                </h4>-->
-        <!--                --><?php //echo $activite->getActivite()->getDescription(); ?>
-        <!--            --><?php //endif; ?>
-        <!--        --><?php //endforeach; ?>
-    </div>
-</div>
-
+    <?php echo $this->ficheTypeExterne()->render($ficheType);  ?>
 <?php endforeach; ?>
 
 

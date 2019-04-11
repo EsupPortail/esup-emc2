@@ -6,6 +6,10 @@ use Application\Controller\FicheMetier\FicheMetierController;
 use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\FicheMetier\FicheMetierTypeController;
 use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
+use Application\Form\FicheMetier\AjouterFicheTypeForm;
+use Application\Form\FicheMetier\AjouterFicheTypeFormFactory;
+use Application\Form\FicheMetier\AjouterFicheTypeHydrator;
+use Application\Form\FicheMetier\AjouterFicheTypeHydratorFactory;
 use Application\Form\FicheMetier\AssocierAgentForm;
 use Application\Form\FicheMetier\AssocierAgentFormFactory;
 use Application\Form\FicheMetier\AssocierAgentHydrator;
@@ -48,6 +52,7 @@ use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\View\Helper\FicheTypeExterneViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
@@ -73,6 +78,10 @@ return [
                         'associer-metier-type',
                         'associer-agent',
                         'associer-poste',
+                        'ajouter-fiche-type',
+                        'retirer-fiche-type',
+                        'modifier-fiche-type',
+                        'selectionner-activite',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::AFFICHER,
@@ -184,6 +193,50 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'associer-metier-type',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'retirer-fiche-type' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-fiche-type/:fiche/:fiche-type-externe',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'retirer-fiche-type',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier-fiche-type' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-fiche-type/:fiche/:fiche-type-externe',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'modifier-fiche-type',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'selectionner-activite' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/selectionner-activite/:fiche/:fiche-type-externe',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'selectionner-activite',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-fiche-type' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-fiche-type/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'ajouter-fiche-type',
                             ],
                         ],
                         'may_terminate' => true,
@@ -420,6 +473,8 @@ return [
             FormationOperationnelleForm::class => FormationOperationnelleFormFactory::class,
             FormationComportementaleForm::class => FormationComportementaleFormFactory::class,
             ApplicationsForm::class => ApplicationsFormFactory::class,
+
+            AjouterFicheTypeForm::class=>AjouterFicheTypeFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -436,11 +491,14 @@ return [
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
-        ]
+
+            AjouterFicheTypeHydrator::class => AjouterFicheTypeHydratorFactory::class,
+        ],
     ],
     'view_helpers' => [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
+            'ficheTypeExterne' => FicheTypeExterneViewHelper::class,
         ],
     ],
 
