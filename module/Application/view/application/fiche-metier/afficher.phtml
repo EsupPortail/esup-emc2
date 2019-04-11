@@ -6,7 +6,6 @@
  * @var SpecificitePoste $specificite
  */
 
-use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\SpecificitePoste;
@@ -135,114 +134,36 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     </div>
 </div>
 
-<!-- FICHE METIER TYPE ------------------------------------------------------------------------------------------------>
-<div class="panel panel-info">
+<!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
+<?php /** @var \Application\Entity\Db\FicheTypeExterne $ficheType **/ ?>
+<div class="panel panel-default">
     <div class="panel-heading">
         <div class="row">
-            <div class="col-md-6">
-                <h2> Description de la fiche métier type </h2>
+            <div class="col-md-8">
+            <h2>Fiche composée de <?php echo count($fiche->getFichesTypes()); ?> fiche(s) type(s).</h2>
+            <ul>
+                <?php foreach ($fiche->getFichesTypes() as $ficheType) : ?>
+                    <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
+                <?php endforeach; ?>
+            </ul>
             </div>
-            <div class="col-md-3">
-                <?php if($canAssocierMetierType) : ?>
-                    <a href="<?php echo $this->url('fiche-metier/associer-metier-type',['fiche' => $fiche->getId()], [], true); ?>"
-                       class="btn btn-primary action ajax-modal"
-                       data-event="modification"
-                    >
-                        <i class="fas fa-plus-circle"></i>
-                        Associer un metier type
+            <div class="col-md-4">
+                <a href="<?php echo $this->url('fiche-metier/ajouter-fiche-type', ['fiche' => $fiche->getId()], [], true); ?>"
+                   class="btn btn-primary action ajax-modal"
+                   data-event="modification"
+                >
+                    <span class="icon ajouter"></span>
+                    Ajouter une fiche type
                     </a>
-                <?php endif; ?>
-            </div>
-            <div class="col-md-3">
-                <?php if($canAssocierMetierType) : ?>
-                    <a href="<?php echo $this->url('fiche-metier-type',['fiche' => $fiche->getId()], [], true); ?>"
-                       class="btn btn-primary action ajax-modal"
-                       data-event="modification"
-                    >
-                        <i class="fas fa-external-link-square-alt"></i>
-<!--                        <i class="fas fa-plus-circle"></i>-->
-                        Gestion des fiches types
-                    </a>
-                <?php endif; ?>
             </div>
         </div>
     </div>
-    <div class="panel-body">
-        <?php if ($fiche->getMetierType() === null): ?>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                Aucune fiche de métier type d'associée à ce poste
-            </div>
-        <?php else: ?>
-            <h3> Libelle du métier type </h3>
-
-                <?php echo $fiche->getMetierType()->getMetier()->getLibelle(); ?>
-
-            <h3> Mission principale </h3>
-
-           <?php echo $fiche->getMetierType()->getMissionsPrincipales(); ?>
-
-            <h3> Activités associées </h3>
-
-                <?php foreach($activites as $activite) : ?>
-                    <h4>
-                        <?php echo $activite->getActivite()->getLibelle(); ?>
-                    </h4>
-                    <?php echo $activite->getActivite()->getDescription(); ?>
-                <?php endforeach; ?>
-
-
-            <h3> Parcours de formation de base pour la prise de poste </h3>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4> Connaissances </h4>
-                        <?php echo $fiche->getMetierType()->getConnaissances(); ?>
-                    </div>
-                    <div class="col-md-6">
-                        <h4> Plan de formation </h4>
-                        <?php echo $fiche->getMetierType()->getConnaissancesFormation(); ?>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4> Compétences opérationnelles </h4>
-                        <?php echo $fiche->getMetierType()->getCompetencesOperationnelles(); ?>
-                    </div>
-                    <div class="col-md-6">
-                        <h4> Plan de formation </h4>
-                        <?php echo $fiche->getMetierType()->getCompetencesOperationnellesFormation(); ?>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4> Compétences comportementales </h4>
-                        <?php echo $fiche->getMetierType()->getCompetencesComportementales(); ?>
-                    </div>
-                    <div class="col-md-6">
-                        <h4> Plan de formation </h4>
-                        <?php echo $fiche->getMetierType()->getCompetencesComportementalesFormation(); ?>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4> Applications </h4>
-                        <ul>
-                            <?php /** @var Application $application */ ?>
-                            <?php foreach($fiche->getMetierType()->getApplications() as $application) : ?>
-                                <li> <?php echo $application->getLibelle(); ?> </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h4> Plan de formation </h4>
-                        <?php echo $fiche->getMetierType()->getApplicationsFormation(); ?>
-                    </div>
-                </div>
-
-        <?php endif; ?>
-    </div>
 </div>
+
+<?php foreach ($fiche->getFichesTypes() as $ficheType) : ?>
+    <?php echo $this->ficheTypeExterne()->render($ficheType);  ?>
+<?php endforeach; ?>
+
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
 <div class="panel panel-info">

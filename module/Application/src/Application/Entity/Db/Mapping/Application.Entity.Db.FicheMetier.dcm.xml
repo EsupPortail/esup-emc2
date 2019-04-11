@@ -37,5 +37,10 @@
             <join-column name="poste" referenced-column-name="id" />
         </many-to-one>
 
+
+
+        <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="ficheMetier" field="fichesTypes"/>
+
+
     </entity>
 </doctrine-mapping>

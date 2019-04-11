@@ -3,7 +3,9 @@
 namespace Application\Controller\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
+use Application\Form\FicheMetier\AjouterFicheTypeFormAwareTrait;
 use Application\Form\FicheMetier\AssocierAgentForm;
 use Application\Form\FicheMetier\AssocierAgentFormAwareTrait;
 use Application\Form\FicheMetier\AssocierMetierTypeForm;
@@ -33,6 +35,7 @@ class FicheMetierController extends AbstractActionController
     use AssocierPosteFormAwareTrait;
     use FicheMetierCreationFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
+    use AjouterFicheTypeFormAwareTrait;
 
     public function indexAction() {
 
@@ -253,4 +256,111 @@ class FicheMetierController extends AbstractActionController
         ]);
 
     }
+
+    /** FicheTypeExterne **********************************************************************************************/
+
+    public function ajouterFicheTypeAction() {
+
+        $ficheId = $this->params()->fromRoute('fiche');
+        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
+
+
+        $ficheTypeExterne = new FicheTypeExterne();
+        $form = $this->getAjouterFicheTypeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter-fiche-type', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($ficheTypeExterne);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $ficheTypeExterne->setFicheMetier($fiche);
+                $this->getFicheMetierService()->createFicheTypeExterne($ficheTypeExterne);
+                //$this->redirect()->toRoute('fiche-metier/afficher',['fiche' => $fiche->getId()], [], true);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajout d\'une fiche type',
+            'form'  => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierFicheTypeAction()
+    {
+        $ficheMetierId = $this->params()->fromRoute('fiche');
+        $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheMetierId);
+        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
+        $ficheTypeExterne = $this->getFicheMetierService()->getFicheTypeExterne($ficheTypeExterneId);
+
+        $form = $this->getAjouterFicheTypeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/modifier-fiche-type', ['fiche' => $ficheMetier->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true));
+        $form->bind($ficheTypeExterne);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $ficheTypeExterne->setFicheMetier($ficheMetier);
+                $this->getFicheMetierService()->updateFicheTypeExterne($ficheTypeExterne);
+                //$this->redirect()->toRoute('fiche-metier/afficher',['fiche' => $fiche->getId()], [], true);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modification d\'une fiche type',
+            'form'  => $form,
+        ]);
+        return $vm;
+    }
+
+    public function retirerFicheTypeAction() {
+
+        $ficheMetierId = $this->params()->fromRoute('fiche');
+        $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheMetierId);
+        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
+        $ficheTypeExterne = $this->getFicheMetierService()->getFicheTypeExterne($ficheTypeExterneId);
+
+        if ($ficheTypeExterne && $ficheMetier) $this->getFicheMetierService()->deleteFicheTypeExterne($ficheTypeExterne);
+
+        $this->redirect()->toRoute('fiche-metier/afficher',['id' => $ficheMetier->getId()], [], true);
+    }
+
+    public function selectionnerActiviteAction() {
+        $ficheMetierId = $this->params()->fromRoute('fiche');
+        $ficheMetier = $this->getFicheMetierService()->getFicheMetier($ficheMetierId);
+        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
+        $ficheTypeExterne = $this->getFicheMetierService()->getFicheTypeExterne($ficheTypeExterneId);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            $result = [];
+            foreach ($data as $key => $value) {
+                if ($value === 'on') $result[] = $key;
+            }
+            $result = implode(";", $result);
+            $ficheTypeExterne->setActivites($result);
+            $this->getFicheMetierService()->updateFicheTypeExterne($ficheTypeExterne);
+        }
+
+        return new ViewModel([
+            'ficheMetier' => $ficheMetier,
+            'ficheTypeExterne' => $ficheTypeExterne,
+        ]);
+
+    }
+
+
 }
