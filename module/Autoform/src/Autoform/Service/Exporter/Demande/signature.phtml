@@ -1,0 +1,24 @@
+<?php
+/**
+ * @var \Application\Entity\Db\Demande $demande
+ */
+?>
+
+<hr/>
+
+<p>
+    L’équipe médicale plurielle du SUMPPS, composée des Drs CHIGOUESNEL, LE DAUPHIN, PICQUE,
+    SEMERARO et THIBAULT-LANDEMORE, désignés par la CDAPH, certifie que
+    <?php echo $demande->getEtudiant()->getPrenom(); ?> <?php echo $demande->getEtudiant()->getNom(); ?>
+    étudiant&middot;e en <span style="color:red;"> DIPLOME </span>,
+    peut bénéficier de l'application de ces dispositions
+</p>
+
+<div style="position:absolute; left:400px;">
+    À Caen, le <?php echo (new \DateTime())->format("d/m/Y"); ?> <br/>
+    Signature du médecin,
+
+    <br/>
+
+    <img width="300px" src="https://gest.unicaen.fr/gaethan/images/signatureDemande.png">
+</div>

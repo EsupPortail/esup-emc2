@@ -1,7 +1,152 @@
-span.voir ::after {
-    /*content : "<i class='fas fa-eye' title='Afficher'></i>";*/
-    content : "VOIR";
+span.id_prod{
+    background-color: darkgreen;
+    color: white;
+    border : white 2px solid;
+    border-radius : 5px;
+    padding : 0.5em;
+
+    font-weight:bold;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    text-align: center;
+    width: 10rem;
+
+    position:absolute;
+    top : 5px;
+    left :5px;
 }
+
+span.id_test{
+    background-color: darkblue;
+    border : white 2px solid;
+    border-radius : 5px;
+    padding : 0.5em;
+
+    color: white;
+    font-weight:bold;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    text-align: center;
+    width: 10rem;
+
+    position:absolute;
+    top : 5px;
+    left :5px;
+}
+
+span.id_dev{
+    background-color: darkred;
+    border : white 2px solid;
+    border-radius : 5px;
+    padding : 0.5em;
+
+    color: white;
+    font-weight:bold;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    text-align: center;
+    width: 10rem;
+
+    position:absolute;
+    top : 5px;
+    left :5px;
+}
+
+span.id_unkown{
+    background-color: darkorange;
+    border : white 2px solid;
+    border-radius : 5px;
+    padding : 0.5em;
+
+    color: black;
+    font-weight:bold;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    text-align: center;
+    width: 10rem;
+
+    position:absolute;
+    top : 5px;
+    left :5px;
+
+}
+
+div#navbar.production {
+    background-image: none;
+    background-color: #68000a;
+}
+
+/** ICON **************************************************************************************************************/
+
+span.icon:before {
+    font-family: "Font Awesome 5 Free";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+}
+
+span.icon.retour:before {
+    content: "\f104";
+}
+
+span.icon.voir:before {
+    content: "\f06e";
+}
+
+span.icon.pdf:before {
+    content: "\f1c1";
+}
+
+span.icon.ajouter:before {
+    content: "\f0fe";
+}
+
+span.icon.editer:before {
+    content: "\f303";
+}
+
+span.icon.historiser:before {
+    content: "\f1f8";
+}
+
+span.icon.restaurer:before {
+    content: "\f829";
+}
+
+span.icon.detruire:before {
+    content: "\f00d";
+}
+
+span.icon.monter:before {
+    content: "\f062";
+}
+
+span.icon.descendre:before {
+    content: "\f063";
+}
+
+span.icon.synchoniser:before {
+    content: "\f021";
+}
+
+span.icon.information:before {
+    content: "\f621";
+}
+
+span.icon.ajouter-user:before {
+    content: "\f234";
+}
+
+span.icon.retirer-user:before {
+    content: "\f503";
+}
+
+span.icon.listing:before {
+    content: "\f0ae";
+}
+
+div.survol:hover {
+    background-color: lightgoldenrodyellow;
+}
+
+/** AUTRE *************************************************************************************************************/
 
 body {
     background-color: #eeeeee;
@@ -52,7 +197,6 @@ div.panel h3 {
     border-radius: 5px 5px 0px 0px;
 }
 
-
 div.panel h4 {
     font-weight: bold;
     font-size: medium;
@@ -60,28 +204,27 @@ div.panel h4 {
     padding-top: 5px;
     padding-left: 15px;
     text-decoration: underline lightblue;
-
 }
 
-.panel-info {
-    border: 2px #123456 solid;
-    border-radius: 5px 5px 0px 0px;
-}
+/*.panel-info {*/
+/*    border: 2px #123456 solid;*/
+/*    border-radius: 5px 5px 0px 0px;*/
+/*}*/
 
-.panel-info > .panel-heading {
-    background-image: none;
-    background-color: lightblue;
-    color: #123456;
-    border-bottom: 2px #123456 solid;
-    border-radius: 5px 5px 0px 0px;
-}
+/*.panel-info > .panel-heading {*/
+/*    background-image: none;*/
+/*    background-color: lightblue;*/
+/*    color: #123456;*/
+/*    border-bottom: 2px #123456 solid;*/
+/*    border-radius: 5px 5px 0px 0px;*/
+/*}*/
 
-.panel-info > .panel-body {
-    background-image: none;
-    background-color: #EEFFFF;
-    color: black;
-    border-radius: 0;
-}
+/*.panel-info > .panel-body {*/
+/*    background-image: none;*/
+/*    background-color: #EEFFFF;*/
+/*    color: black;*/
+/*    border-radius: 0;*/
+/*}*/
 
 dl.dl-horizontal dt {
     width:25%;
@@ -118,5 +261,11 @@ div.preview {
     border: 2px solid #ffc681;
     border-radius: 5px;
     padding: 2px;
+}
+
+span.octopus:after {
+    content: "octopus";
+    color: pink;
+    font-size: x-small;
 }
 

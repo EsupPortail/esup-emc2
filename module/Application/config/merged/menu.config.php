@@ -3,13 +3,10 @@
 namespace Application;
 
 use Application\Provider\Privilege\ActivitePrivileges;
-use Application\Provider\Privilege\AffectationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
-use Application\Provider\Privilege\UtilisateurPrivileges;
-use Mailing\Provider\Privilege\MailingPrivileges;
-
+use Application\Provider\Privilege\StructurePrivileges;
 
 return [
     'navigation' => [
@@ -23,6 +20,14 @@ return [
                         'order' => 100,
                         'label' => 'Ressources RH',
                         'route' => 'ressource-rh',
+                        'roles' => [],
+                        'pages' => [
+                        ],
+                    ],
+                    'entretien' => [
+                        'order' => 100,
+                        'label' => 'Entretiens Pro.',
+                        'route' => 'entretien-professionnel',
                         'roles' => [],
                         'pages' => [
                         ],
@@ -64,6 +69,14 @@ return [
                                 'withtarget' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
+                            'autoform' => [
+                                'label'      => "Autoform",
+                                'title'      => "Module Autoform",
+                                'route'      => 'autoform/formulaires',
+                                'roles'      => [],
+//                                'withtarget' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
                         ],
                     ],
                     'fiche-metier' => [
@@ -81,9 +94,9 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'label' => 'Les affectations',
-                                'route' => 'affectation',
-                                'privileges' => AffectationPrivileges::AFFICHER,
+                                'label' => 'Les structures',
+                                'route' => 'structure',
+                                'privileges' => StructurePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],

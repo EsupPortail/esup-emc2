@@ -40,7 +40,7 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dt> Numéro poste national </dt>';
         $texte .= '<dd class="siham">'.$poste->getNumeroPoste().'</dd>';
         $texte .= '<dt> Affectation du poste </dt>';
-        $texte .= '<dd class="siham">'.$poste->getAffectation()->getLibelle().'</dd>';
+        $texte .= '<dd class="siham">'.$poste->getStructure().'</dd>';
         $texte .= '<dt> Localisation du poste </dt>';
 //        $texte .= '<dd class="siham">'.$poste->getLocalisation().'</dd>';
         $texte .= '<dd class="siham">'.$this->getImmobiliserService()->getImmobilierBatiment($poste->getLocalisation()).'</dd>';

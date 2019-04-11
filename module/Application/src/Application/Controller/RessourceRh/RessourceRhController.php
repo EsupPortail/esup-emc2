@@ -10,11 +10,19 @@ use Application\Entity\Db\Fonction;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
+use Application\Form\RessourceRh\AgentStatusFormAwareTrait;
+use Application\Form\RessourceRh\CorpsFormAwareTrait;
+use Application\Form\RessourceRh\CorrespondanceFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
+use Application\Form\RessourceRh\DomaineFormAwareTrait;
 use Application\Form\RessourceRh\FonctionForm;
+use Application\Form\RessourceRh\FonctionFormAwareTrait;
 use Application\Form\RessourceRh\GradeForm;
+use Application\Form\RessourceRh\GradeFormAwareTrait;
 use Application\Form\RessourceRh\MetierFamilleForm;
+use Application\Form\RessourceRh\MetierFamilleFormAwareTrait;
 use Application\Form\RessourceRh\MetierForm;
+use Application\Form\RessourceRh\MetierFormAwareTrait;
 use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
@@ -25,7 +33,17 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class RessourceRhController extends AbstractActionController {
+    /** Trait utilisés pour les services */
     use RessourceRhServiceAwareTrait;
+    /** Trait utilisés pour les formulaires */
+    use AgentStatusFormAwareTrait;
+    use CorpsFormAwareTrait;
+    use CorrespondanceFormAwareTrait;
+    use DomaineFormAwareTrait;
+    use FonctionFormAwareTrait;
+    use GradeFormAwareTrait;
+    use MetierFamilleFormAwareTrait;
+    use MetierFormAwareTrait;
 
     public function indexAction()
     {
@@ -57,7 +75,7 @@ class RessourceRhController extends AbstractActionController {
         $status = new AgentStatus();
 
         /** @var AgentStatusForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AgentStatusForm::class);
+        $form = $this->getAgentStatusForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/agent-status/creer', [], [], true));
         $form->bind($status);
 
@@ -86,7 +104,7 @@ class RessourceRhController extends AbstractActionController {
         $status = $this->getRessourceRhService()->getAgentStatus($statusId);
 
         /** @var AgentStatusForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(AgentStatusForm::class);
+        $form = $this->getAgentStatusForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/agent-status/modifier', [], [], true));
         $form->bind($status);
 
@@ -127,8 +145,8 @@ class RessourceRhController extends AbstractActionController {
     {
         $correspondance = new Correspondance();
 
-        /** @var AgentStatusForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(CorrespondanceForm::class);
+        /** @var CorrespondanceForm $form */
+        $form = $this->getCorrespondanceForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/correspondance/creer', [], [], true));
         $form->bind($correspondance);
 
@@ -156,8 +174,8 @@ class RessourceRhController extends AbstractActionController {
         $correspondanceId = $this->params()->fromRoute('id');
         $correspondance = $this->getRessourceRhService()->getCorrespondance($correspondanceId);
 
-        /** @var AgentStatusForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(CorrespondanceForm::class);
+        /** @var CorrespondanceForm $form */
+        $form = $this->getCorrespondanceForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/correspondance/modifier', [], [], true));
         $form->bind($correspondance);
 
@@ -199,7 +217,7 @@ class RessourceRhController extends AbstractActionController {
         $corps = new Corps();
 
         /** @var CorpsForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(CorpsForm::class);
+        $form = $this->getCorpsForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/corps/creer', [], [], true));
         $form->bind($corps);
 
@@ -228,7 +246,7 @@ class RessourceRhController extends AbstractActionController {
         $corps = $this->getRessourceRhService()->getCorps($corpsId);
 
         /** @var CorpsForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(CorpsForm::class);
+        $form = $this->getCorpsForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/corps/modifier', [], [], true));
         $form->bind($corps);
 
@@ -269,8 +287,8 @@ class RessourceRhController extends AbstractActionController {
     {
         $metier = new Metier();
 
-        /** @var CorpsForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierForm::class);
+        /** @var MetierForm $form */
+        $form = $this->getMetierForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/metier/creer', [], [], true));
         $form->bind($metier);
 
@@ -299,7 +317,7 @@ class RessourceRhController extends AbstractActionController {
         $metier = $this->getRessourceRhService()->getMetier($metierId);
 
         /** @var MetierForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierForm::class);
+        $form = $this->getMetierForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/metier/modifier', [], [], true));
         $form->bind($metier);
 
@@ -340,8 +358,8 @@ class RessourceRhController extends AbstractActionController {
     {
         $famille = new MetierFamille();
 
-        /** @var CorpsForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierFamilleForm::class);
+        /** @var MetierFamilleForm $form */
+        $form = $this->getMetierFamilleForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/famille/creer', [], [], true));
         $form->bind($famille);
 
@@ -369,8 +387,8 @@ class RessourceRhController extends AbstractActionController {
         $familleId = $this->params()->fromRoute('id');
         $famille = $this->getRessourceRhService()->getMetierFamille($familleId);
 
-        /** @var MetierForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(MetierFamilleForm::class);
+        /** @var MetierFamilleForm $form */
+        $form = $this->getMetierFamilleForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/famille/modifier', [], [], true));
         $form->bind($famille);
 
@@ -413,7 +431,7 @@ class RessourceRhController extends AbstractActionController {
         $domaine = new Domaine();
 
         /** @var DomaineForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
+        $form = $this->getDomaineForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/domaine/ajouter', [], [], true));
         $form->bind($domaine);
 
@@ -443,7 +461,7 @@ class RessourceRhController extends AbstractActionController {
         $domaine = $this->getRessourceRhService()->getDomaine($domaineId);
 
         /** @var DomaineForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
+        $form = $this->getDomaineForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/domaine/modifier', ['domaine' => $domaine->getId()], [], true));
         $form->bind($domaine);
 
@@ -487,7 +505,7 @@ class RessourceRhController extends AbstractActionController {
         $fonction = new Fonction();
 
         /** @var FonctionForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(FonctionForm::class);
+        $form = $this->getFonctionForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/fonction/ajouter', [], [], true));
         $form->bind($fonction);
 
@@ -517,7 +535,7 @@ class RessourceRhController extends AbstractActionController {
         $fonction = $this->getRessourceRhService()->getFonction($fonctionId);
 
         /** @var FonctionForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(FonctionForm::class);
+        $form = $this->getFonctionForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/fonction/modifier', ['fonction' => $fonction->getId()], [], true));
         $form->bind($fonction);
 
@@ -561,7 +579,7 @@ class RessourceRhController extends AbstractActionController {
         $grade = new Grade();
 
         /** @var GradeForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(GradeForm::class);
+        $form = $this->getGradeForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/grade/ajouter', [], [], true));
         $form->bind($grade);
 
@@ -591,7 +609,7 @@ class RessourceRhController extends AbstractActionController {
         $grade = $this->getRessourceRhService()->getGrade($gradeId);
 
         /** @var GradeForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(GradeForm::class);
+        $form = $this->getGradeForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/grade/modifier', ['grade' => $grade->getId()], [], true));
         $form->bind($grade);
 

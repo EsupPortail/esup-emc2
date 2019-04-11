@@ -2,16 +2,16 @@ $(function () {
 
     tinymce.init({
         selector: '.type2',
-        toolbar: 'newdocument undo redo | bold italic | bullist',
-        resize: true,
-        language: 'fr_FR',
         plugins: 'lists',
-        statusbar: false,
+        toolbar: 'newdocument undo redo | bold italic | bullist',
         browser_spellcheck : true,
+        language: 'fr_FR',
+        statusbar: false,
+        resize: false,
         branding: false,
         menu: {},
         setup: function (editor) {
-            editor.on("focusout", function () {
+            editor.on("a", function () {
                 if (this.inError) {
                     alertFlash("Le champ n'a PAS ETE enregistré !", 'error', 3000);
                     return;

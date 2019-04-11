@@ -1,0 +1,148 @@
+<?php
+
+use Application\Provider\Privilege\StructurePrivileges;
+
+$this->headTitle("Index des structures");
+
+/**
+ * @var Application\Entity\Db\Structure[] $structures
+ */
+
+$canDescription     = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER));
+$canEditer          = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER));
+$canHistoriser      = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::HISTORISER));
+$canDetruire        = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EFFACER));
+$canGestionnaire    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::GESTIONNAIRE));
+?>
+
+<h1 class="page-header">
+    Index des structures
+</h1>
+
+<div class="main">
+
+
+    <a href="<?php echo $this->url('structure/creer', [], [], true); ?>"
+       class="btn btn-primary action ajax-modal" data-event="modification"
+    >
+        <span class="icon ajouter"></span>
+        Ajouter une structure
+    </a>
+
+    <a href="<?php echo $this->url('structure/synchroniser', [], [], true); ?>"
+       class="btn btn-primary action"
+    >
+        <span class="icon synchoniser"></span>
+        Synchroniser
+    </a>
+
+    <h2>
+        Structures ouvertes
+        <span class="badge">
+            <?php echo count($structures); ?>
+        </span>
+    </h2>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Libellé court </th>
+                <th> Sigle </th>
+                <th> Type </th>
+                <th> Ouverture </th>
+                <th> Source </th>
+                <th> Gestionnaire </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($structures as $structure) : ?>
+                <tr>
+                    <td>
+                        <?php echo $structure->getLibelleCourt(); ?>
+                        <?php if ($structure->getLibelleLong()): ?>
+                            <sup><span class="icon information" title="<?php echo $structure->getLibelleLong(); ?>"></span></sup>
+                        <?php endif; ?>
+                    </td>
+                    <td> <?php echo ($structure->getSigle())?:"---"; ?> </td>
+                    <td> <?php echo $structure->getType()->getCode() ?> </td>
+                    <td> <?php echo $structure->getDateOuverture()->format('d/m/Y') ?> </td>
+                    <td>
+                        <?php //TODO source view helper ?>
+                        <?php echo $structure->getSource(); ?>
+                        <?php if ($structure->getIdSource()) : ?>
+                            <?php echo " - ". $structure->getIdSource() ; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (count($structure->getGestionnaires())) : ?>
+                            <?php
+                            $text = "";
+                            foreach ($structure->getGestionnaires() as $gestionnaire) $text .= $gestionnaire->getDisplayName()."\n";
+                            ?>
+                            <span title="<?php echo $text; ?>">
+                                <?php echo count($structure->getGestionnaires()); ?>
+                                <i class="fas fa-user"></i>
+                            </span>
+                        <?php else : ?>
+                            <strong style="color:darkred;">Aucun</strong>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ($canDescription) : ?>
+                            <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getId()], [], true); ?>"
+                               class="ajax-modal"
+                            >
+                                <span class="icon voir" title="Voir la description"></span></a>
+                        <?php endif; ?>
+                        <?php if ($canEditer) : ?>
+                            <a href="<?php echo $this->url('structure/modifier', ['structure' => $structure->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier la structure"></span></a>
+
+                        <?php endif; ?>
+                        <?php if ($canGestionnaire) : ?>
+                            <a
+                                    href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon ajouter-user"   title="Ajouter un gestionnaire"></span></a>
+                            <a
+                                    href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon retirer-user"   title="Retirer un gestionnaire"></span></a>
+                        <?php endif; ?>
+                        <?php if ($canHistoriser) : ?>
+                            <?php if($structure->estNonHistorise()) : ?>
+                                <a href="<?php echo $this->url('structure/historiser', ['structure' => $structure->getId()], [], true); ?>">
+                                    <span class="icon historiser" title="Historiser la structure"></span></a>
+                            <?php else : ?>
+                                <a href="<?php echo $this->url('structure/restaurer', ['structure' => $structure->getId()], [], true); ?>">
+                                <span class="icon restaurer" title="Restaurer la structure"></span></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canDetruire) : ?>
+                            <a href="<?php echo $this->url('structure/detruire', ['structure' => $structure->getId()], [], true); ?>">
+                                <span class="icon detruire" title="Supprimer définitivement la structure"></span></a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+

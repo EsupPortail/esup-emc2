@@ -32,11 +32,12 @@ class PosteFormFactory {
         /** @var PosteHydrator $hydrator */
         $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(PosteHydrator::class);
 
+
         $form = new PosteForm();
+        $form->setAutocomplete($manager->getServiceLocator()->get('view_renderer')->url('poste/rechercher-batiment',[],[], true));
         $form->setEntityManager($entityManager);
         $form->setAgentService($agentService);
         $form->setRessourceRhService($ressourceService);
-        //$url = $this->getUrl($manager,'poste/rechercher-batiment', [], [], true);
         $form->init();
         $form->setHydrator($hydrator);
 

@@ -1,0 +1,48 @@
+<?php
+
+namespace Autoform;
+
+/**
+ * @var Entity\Db\Formulaire $formulaire
+ * @var Entity\Db\int[] $reponses
+ * @var string $url
+ */
+
+?>
+
+    <form method="post" action="<?php echo $url; ?>" >
+        <?php
+            /** @var Entity\Db\Categorie[] $categories */
+            $categories = $formulaire->getCategories();
+            $categories = array_filter($categories, function (Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
+            usort($categories, function (Entity\Db\Categorie $a, Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+        ?>
+
+        <?php foreach ($categories as $categorie) : ?>
+
+            <?php
+                /** @var Entity\Db\Champ[] $champs */
+                $champs = $categorie->getChamps();
+                $champs = array_filter($champs, function (Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
+                usort($champs, function (Entity\Db\Champ $a, Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+            ?>
+
+            <?php if (!empty($champs)) : ?>
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h2> <?php echo $categorie->getLibelle(); ?> </h2>
+                    </div>
+                    <div class="panel-body">
+                        <?php foreach ($champs as $champ) : ?>
+                            <div> <?php echo $this->champAsInput()->render($champ, $reponses); ?> </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+        <?php endforeach; ?>
+
+        <input type="submit" value="Valider le formulaire" class="btn btn-primary"/>
+    </form>
+
