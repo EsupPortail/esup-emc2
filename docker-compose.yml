@@ -4,11 +4,14 @@ services:
   preecog:
     container_name: preecog
     build:
+      args:
+        PHP_VERSION: 7.0
       context: .
       dockerfile: Dockerfile
     ports:
-     - "8111:80"
+     - "8112:80"
+     - "8111:443"
     volumes:
-     - .:/var/www/html/preecog
+     - .:/app
      - /tmp:/tmp
-    working_dir: /var/www/html/preecog
+    working_dir: /app
