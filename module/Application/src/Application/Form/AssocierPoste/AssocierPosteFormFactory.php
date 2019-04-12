@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AssocierPoste;
 
 use Doctrine\ORM\EntityManager;
 use Zend\Form\FormElementManager;

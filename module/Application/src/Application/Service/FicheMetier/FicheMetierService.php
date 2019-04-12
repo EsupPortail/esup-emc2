@@ -275,70 +275,7 @@ class FicheMetierService {
         return $ficheMetierType;
     }
 
-    /** FICHE TYPE EXTERNE ********************************************************************************************/
 
-    /**
-     * @param FicheTypeExterne $ficheTypeExterne
-     * @return FicheTypeExterne
-     */
-    public function createFicheTypeExterne($ficheTypeExterne)
-    {
-        $this->getEntityManager()->persist($ficheTypeExterne);
-        try {
-            $this->getEntityManager()->flush($ficheTypeExterne);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de l'ajout d'une fiche metier externe.", $e);
-        }
-        return $ficheTypeExterne;
-    }
-
-    /**
-     * @param FicheTypeExterne $ficheTypeExterne
-     * @return FicheTypeExterne
-     */
-    public function updateFicheTypeExterne($ficheTypeExterne)
-    {
-        try {
-            $this->getEntityManager()->flush($ficheTypeExterne);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour d'une fiche metier externe.", $e);
-        }
-        return $ficheTypeExterne;
-    }
-
-    /**
-     * @param FicheTypeExterne $ficheTypeExterne
-     * @return FicheTypeExterne
-     */
-    public function deleteFicheTypeExterne($ficheTypeExterne)
-    {
-        $this->getEntityManager()->remove($ficheTypeExterne);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors du retrait d'une fiche metier externe.", $e);
-        }
-        return $ficheTypeExterne;
-    }
-
-
-    /**
-     * @param integer $id
-     * @return FicheTypeExterne
-     */
-    public function getFicheTypeExterne($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(FicheTypeExterne::class)->createQueryBuilder('externe')
-            ->andWhere('externe.id = :id')
-            ->setParameter('id', $id);
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieus FicheTypeExterne partagent le même identifiant [".$id."]",$e);
-        }
-        return $result;
-    }
 
 
 

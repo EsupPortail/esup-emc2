@@ -42,11 +42,11 @@ class FicheTypeExterneViewHelper extends AbstractHelper
         $texte .= '                   <h2>'.$ficheTypeExterne->getFicheType()->getMetier()->getLibelle().'</h2>';
         $texte .= '              </div>';
         $texte .= '              <div class="col-md-1 pull-right">';
-        $texte .= '                   <a href="'. $this->getView()->url('fiche-metier/modifier-fiche-type', ['fiche' => $ficheTypeExterne->getFicheMetier()->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true)   .'" class="ajax-modal" data-event="modification">';
+        $texte .= '                   <a href="'. $this->getView()->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $ficheTypeExterne->getFichePoste()->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true)   .'" class="ajax-modal" data-event="modification">';
         $texte .= '                   <span class="icon editer" title="Éditer la fiche type externe"></span></a>';
-        $texte .= '                   <a href="'. $this->getView()->url('fiche-metier/selectionner-activite', ['fiche' => $ficheTypeExterne->getFicheMetier()->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true) .'" class="ajax-modal" data-event="modification">';
+        $texte .= '                   <a href="'. $this->getView()->url('fiche-poste/selectionner-activite', ['fiche-poste' => $ficheTypeExterne->getFichePoste()->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true) .'" class="ajax-modal" data-event="modification">';
         $texte .= '                   <span class="icon listing" title="Sélectionner les activités associées"></span></a>';
-        $texte .= '                   <a href="'. $this->getView()->url('fiche-metier/retirer-fiche-type', ['fiche' => $ficheTypeExterne->getFicheMetier()->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true) .'">';
+        $texte .= '                   <a href="'. $this->getView()->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $ficheTypeExterne->getFichePoste()->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true) .'">';
         $texte .= '                   <span class="icon detruire" title="Retirer la fiche type externe"></span></a>';
         $texte .= '              </div>';
         $texte .= '              <div class="col-md-3 pull-right">';

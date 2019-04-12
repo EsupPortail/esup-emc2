@@ -1,14 +1,14 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\FichePosteCreation;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class FicheMetierCreationHydratorFactory {
+class FichePosteCreationHydratorFactory {
 
     public function __invoke(ServiceLocatorInterface $serviceLocator)
     {
-        $hydrator = new FicheMetierCreationHydrator();
+        $hydrator = new FichePosteCreationHydrator();
 
         return $hydrator;
     }

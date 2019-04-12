@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AssocierPoste;
 
 use Application\Entity\Db\Poste;
 use DoctrineModule\Form\Element\ObjectSelect;

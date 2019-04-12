@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AjouterFicheMetier;
 
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -8,7 +8,7 @@ use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
-class AjouterFicheTypeForm extends Form {
+class AjouterFicheMetierForm extends Form {
     use FicheMetierServiceAwareTrait;
 
     public function init()
@@ -57,7 +57,7 @@ class AjouterFicheTypeForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Associer un agent',
+                'label' => '<i class="fas fa-save"></i> Enregistrer l\'association',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

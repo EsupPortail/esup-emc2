@@ -1,19 +1,14 @@
 <?php
 
 /**
- * @var \Application\Entity\Db\FichePoste $ficheMetier
+ * @var \Application\Entity\Db\FichePoste $fichePoste
  * @var \Application\Entity\Db\FicheTypeExterne $ficheTypeExterne
  */
 
 $idActivites = explode(";",$ficheTypeExterne->getActivites());
 ?>
 
-Liste des activités de la fiche type <br/>
-<strong><?php echo $ficheTypeExterne->getFicheType()->getMetier(); ?></strong>
-
-<br/><br/>
-
-<form method="post" action="<?php echo $this->url('fiche-metier/selectionner-activite', ['fiche' => $ficheMetier->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true); ?>">
+<form method="post" action="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true); ?>">
 
     <?php $activites = $ficheTypeExterne->getFicheType()->getActivites() ; ?>
     <?php foreach ($activites as $activite) : ?>

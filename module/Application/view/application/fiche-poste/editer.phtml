@@ -69,7 +69,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </div>
             <div class="col-md-6">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('fiche-metier/associer-poste',['fiche' => $fiche->getId()], [], true); ?>"
+                    <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >
@@ -124,8 +124,8 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </ul>
             </div>
             <div class="col-md-4">
-                <a href="<?php echo $this->url('fiche-metier/ajouter-fiche-type', ['fiche' => $fiche->getId()], [], true); ?>"
-                   class="btn btn-primary action ajax-modal"
+                <a href="<?php echo $this->url('fiche-poste/ajouter-fiche-metier', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                   class="btn btn-primary action ajax-modal pull-right"
                    data-event="modification"
                 >
                     <span class="icon ajouter"></span>

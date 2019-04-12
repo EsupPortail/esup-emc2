@@ -4,10 +4,22 @@ namespace Application;
 
 use Application\Controller\FichePoste\FichePosteController;
 use Application\Controller\FichePoste\FichePosteControllerFactory;
+use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
+use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormFactory;
+use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydrator;
+use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydratorFactory;
 use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormFactory;
 use Application\Form\AssocierAgent\AssocierAgentHydrator;
 use Application\Form\AssocierAgent\AssocierAgentHydratorFactory;
+use Application\Form\AssocierPoste\AssocierPosteForm;
+use Application\Form\AssocierPoste\AssocierPosteFormFactory;
+use Application\Form\AssocierPoste\AssocierPosteHydrator;
+use Application\Form\AssocierPoste\AssocierPosteHydratorFactory;
+use Application\Form\FichePosteCreation\FichePosteCreationForm;
+use Application\Form\FichePosteCreation\FichePosteCreationFormFactory;
+use Application\Form\FichePosteCreation\FichePosteCreationHydrator;
+use Application\Form\FichePosteCreation\FichePosteCreationHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
@@ -32,7 +44,12 @@ return [
                         'restaurer',
                         'detruire',
                         'associer-agent',
+                        'associer-poste',
                         'editer-specificite',
+                        'ajouter-fiche-metier',
+                        'retirer-fiche-metier',
+                        'modifier-fiche-metier',
+                        'selectionner-activite',
                     ],
                     'roles' => [
                     ],
@@ -132,6 +149,62 @@ return [
                         ],
 
                     ],
+                    'associer-poste' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/associer-poste/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'associer-poste',
+                            ],
+                        ],
+
+                    ],
+                    'ajouter-fiche-metier' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/ajouter-fiche-metier/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'ajouter-fiche-metier',
+                            ],
+                        ],
+                    ],
+                    'modifier-fiche-metier' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/modifier-fiche-metier/:fiche-poste/:fiche-type-externe',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'modifier-fiche-metier',
+                            ],
+                        ],
+                    ],
+                    'retirer-fiche-metier' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/retirer-fiche-metier/:fiche-poste/:fiche-type-externe',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'retirer-fiche-metier',
+                            ],
+                        ],
+                    ],
+                    'selectionner-activite' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/selectionner-activite/:fiche-poste/:fiche-type-externe',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'selectionner-activite',
+                            ],
+                        ],
+                    ],
                     'editer-specificite' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
@@ -160,7 +233,10 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            AjouterFicheMetierForm::class => AjouterFicheMetierFormFactory::class,
             AssocierAgentForm::class => AssocierAgentFormFactory::class,
+            AssocierPosteForm::class => AssocierPosteFormFactory::class,
+            FichePosteCreationForm::class => FichePosteCreationFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
         ],
     ],
@@ -169,7 +245,10 @@ return [
             SpecificitePosteHydrator::class => SpecificitePosteHydrator::class,
         ],
         'factories' => [
+            AjouterFicheMetierHydrator::class => AjouterFicheMetierHydratorFactory::class,
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
+            AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
+            FichePosteCreationHydrator::class => FichePosteCreationHydratorFactory::class,
         ],
     ]
 

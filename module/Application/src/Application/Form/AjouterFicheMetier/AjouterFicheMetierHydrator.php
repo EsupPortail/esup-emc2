@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class AjouterFicheTypeHydrator implements HydratorInterface {
+class AjouterFicheMetierHydrator implements HydratorInterface {
     use FicheMetierServiceAwareTrait;
 
     /**
