@@ -2,13 +2,13 @@
 
 namespace Application\Form\FicheMetier;
 
-use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class FicheMetierCreationHydrator implements HydratorInterface {
 
     /**
-     * @param FicheMetier $object
+     * @param FichePoste $object
      * @return array
      */
     public function extract($object)
@@ -22,8 +22,8 @@ class FicheMetierCreationHydrator implements HydratorInterface {
 
     /**
      * @param array $data
-     * @param FicheMetier $object
-     * @return FicheMetier
+     * @param FichePoste $object
+     * @return FichePoste
      */
     public function hydrate(array $data, $object)
     {

@@ -5,7 +5,7 @@ namespace Application\Entity\Db;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
-class FicheMetier
+class FichePoste
 {
     use HistoriqueAwareTrait;
 
@@ -18,17 +18,15 @@ class FicheMetier
 
     /** @var SpecificitePoste */
     private $specificite;
-    /** @var FicheMetierType */
-    private $metierType;
     /** @var Poste */
     private $poste;
 
     /** @var ArrayCollection */
-    private $fichesTypes;
+    private $fichesMetiers;
 
     public function __invoke()
     {
-        $this->fichesTypes = new ArrayCollection();
+        $this->fichesMetiers = new ArrayCollection();
     }
 
     public function getId()
@@ -46,7 +44,7 @@ class FicheMetier
 
     /**
      * @param string $libelle
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function setLibelle($libelle)
     {
@@ -64,7 +62,7 @@ class FicheMetier
 
     /**
      * @param Agent $agent
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function setAgent($agent)
     {
@@ -82,29 +80,11 @@ class FicheMetier
 
     /**
      * @param SpecificitePoste $specificite
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function setSpecificite($specificite)
     {
         $this->specificite = $specificite;
-        return $this;
-    }
-
-    /**
-     * @return FicheMetierType
-     */
-    public function getMetierType()
-    {
-        return $this->metierType;
-    }
-
-    /**
-     * @param FicheMetierType $metierType
-     * @return FicheMetier
-     */
-    public function setMetierType($metierType)
-    {
-        $this->metierType = $metierType;
         return $this;
     }
 
@@ -118,7 +98,7 @@ class FicheMetier
 
     /**
      * @param Poste $poste
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function setPoste($poste)
     {
@@ -129,28 +109,28 @@ class FicheMetier
     /**
      * @return FicheTypeExterne[]
      */
-    public function getFichesTypes()
+    public function getFichesMetiers()
     {
-        return $this->fichesTypes->toArray();
+        return $this->fichesMetiers->toArray();
     }
 
     /**
      * @var FicheTypeExterne $type
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function addFicheTypeExterne($type)
     {
-        $this->fichesTypes->add($type);
+        $this->fichesMetiers->add($type);
         return $this;
     }
 
     /**
      * @var FicheTypeExterne $type
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function removeFicheTypeExterne($type)
     {
-        $this->fichesTypes->removeElement($type);
+        $this->fichesMetiers->removeElement($type);
         return $this;
     }
 

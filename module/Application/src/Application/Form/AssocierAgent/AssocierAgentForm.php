@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AssocierAgent;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Zend\Form\Element\Button;

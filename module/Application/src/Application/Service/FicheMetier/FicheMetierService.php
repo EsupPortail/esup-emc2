@@ -2,7 +2,7 @@
 
 namespace Application\Service\FicheMetier;
 
-use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
@@ -21,11 +21,11 @@ class FicheMetierService {
 
     /**
      * @param string $order an attribute use to sort
-     * @return FicheMetier[]
+     * @return FichePoste[]
      */
     public function getFichesMetiers($order = 'id')
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('ficheMetier')
             ->orderBy('ficheMetier.', $order)
         ;
 
@@ -35,11 +35,11 @@ class FicheMetierService {
 
     /**
      * @param int $id
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function getFicheMetier($id)
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('ficheMetier')
             ->andWhere('ficheMetier.id = :id')
             ->setParameter('id', $id)
         ;
@@ -54,8 +54,8 @@ class FicheMetierService {
 
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function historiser($fiche) {
         //TODO récupérer l'utilisateur connecté
@@ -70,8 +70,8 @@ class FicheMetierService {
     }
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function restaurer($fiche) {
         $fiche->dehistoriser();
@@ -84,8 +84,8 @@ class FicheMetierService {
     }
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function creer($fiche)
     {
@@ -106,8 +106,8 @@ class FicheMetierService {
     }
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function update($fiche)
     {

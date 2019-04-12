@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AssocierAgent;
 
-use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
@@ -10,7 +10,7 @@ class AssocierAgentHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
 
     /**
-     * @param FicheMetier $object
+     * @param FichePoste $object
      * @return array
      */
     public function extract($object)
@@ -21,9 +21,9 @@ class AssocierAgentHydrator implements HydratorInterface {
     }
 
     /**
-     * @param FicheMetier $object
+     * @param FichePoste $object
      * @param array $data
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function hydrate(array $data, $object)
     {

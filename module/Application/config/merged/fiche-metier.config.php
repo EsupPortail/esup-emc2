@@ -516,7 +516,6 @@ return [
 
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,
-            AssocierAgentForm::class => AssocierAgentFormFactory::class,
             AssocierPosteForm::class => AssocierPosteFormFactory::class,
 
             FormationBaseForm::class => FormationBaseFormFactory::class,
@@ -538,7 +537,6 @@ return [
             FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
             LibelleHydrator::class => LibelleHydratorFactory::class,
             AssocierMetierTypeHydrator::class => AssocierMetierTypeHydratorFactory::class,
-            AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
 

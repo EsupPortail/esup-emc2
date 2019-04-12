@@ -2,8 +2,6 @@
 
 /**
  * @var FichePoste $fiche
- * @var FicheMetierTypeActivite[] $activites
- * @var SpecificitePoste $specificite
  */
 
 use Application\Entity\Db\FichePoste;
@@ -33,25 +31,14 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             <div class="col-md-6">
                 <h2> Agent occupant le poste </h2>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('fiche-metier/associer-agent',['fiche' => $fiche->getId()], [], true); ?>"
-                       class="btn btn-primary action ajax-modal"
+                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >
-                        <i class="fas fa-plus-circle"></i>
+                        <span class="icon selectionner"></span>
                         Associer un agent
-                    </a>
-                <?php endif; ?>
-            </div>
-            <div class="col-md-3">
-                <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('agent/ajouter',[], [], true); ?>"
-                       class="btn btn-primary action ajax-modal"
-                       data-event="modification"
-                    >
-                        <i class="fas fa-plus"></i>
-                        Ajouter un agent
                     </a>
                 <?php endif; ?>
             </div>
@@ -140,9 +127,9 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-8">
-            <h2>Fiche composée de <?php echo count($fiche->getFichesTypes()); ?> fiche(s) type(s).</h2>
+            <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
             <ul>
-                <?php foreach ($fiche->getFichesTypes() as $ficheType) : ?>
+                <?php foreach ($fiche->getFichesMetiers() as $ficheType) : ?>
                     <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
                 <?php endforeach; ?>
             </ul>
@@ -160,7 +147,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     </div>
 </div>
 
-<?php foreach ($fiche->getFichesTypes() as $ficheType) : ?>
+<?php foreach ($fiche->getFichesMetiers() as $ficheType) : ?>
     <?php echo $this->ficheTypeExterne()->render($ficheType);  ?>
 <?php endforeach; ?>
 
