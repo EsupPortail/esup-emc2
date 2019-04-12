@@ -22,6 +22,7 @@ return [
                     'controller' => ActiviteController::class,
                     'action' => [
                         'index',
+                        'afficher',
                     ],
                     'privileges' => [
                         ActivitePrivileges::AFFICHER,
@@ -32,7 +33,9 @@ return [
                     'action' => [
                         'creer',
                         'editer',
-                        'effacer',
+                        'historiser',
+                        'restaurer',
+                        'detruire',
                     ],
                     'privileges' => [
                         ActivitePrivileges::EDITER,
@@ -55,23 +58,53 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
                     'editer' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/editer/:id',
+                            'route'    => '/editer/:activite',
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'editer',
                             ],
                         ],
                     ],
-                    'effacer' => [
+                    'historiser' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/effacer/:id',
+                            'route'    => '/historiser/:activite',
                             'defaults' => [
                                 'controller' => ActiviteController::class,
-                                'action'     => 'effacer',
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                    ],
+                    'detruire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'detruire',
                             ],
                         ],
                     ],
