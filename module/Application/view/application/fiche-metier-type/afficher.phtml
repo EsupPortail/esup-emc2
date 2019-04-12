@@ -25,7 +25,7 @@ $canEditer = true;
         <a  class="btn btn-primary action ajax-modal"
             data-event="modification"
             href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [] , true); ?>">
-            <i class="fas fa-pencil-alt"></i>
+            <span class="icon editer"></span>
             Éditer libellé
         </a>
         <br/>
@@ -42,7 +42,7 @@ $canEditer = true;
                 href="<?php echo $this->url('fiche-metier-type/editer-missions-principales', ['id' => $fiche->getId()], [] , true); ?>"
                 data-event="modification"
             >
-                <i class="fas fa-pencil-alt"></i>
+                <span class="icon editer"></span>
                 Éditer missions principales
             </a>
             <br/>
@@ -82,25 +82,25 @@ $canEditer = true;
             <div class="col-md-1">
                 <a class="btn btn-default mini"
                    title="Éditer l'activité"
-                   href="<?php echo $this->url('activite/editer', ['id' => $ficheActivite->getActivite()->getId()], [], true); ?>">
-                    <i class="fas fa-pencil-alt"></i>
+                   href="<?php echo $this->url('activite/editer', ['activite' => $ficheActivite->getActivite()->getId()], [], true); ?>">
+                    <span class="icon editer"></span>
                 </a>
                 <a class="btn btn-default mini"
                    title="Retirer l'activité"
                    href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $ficheActivite->getId()], [], true); ?>"
                 >
-                    <i class="fas fa-times"></i>
+                    <span class="icon detruire"></span>
                 </a>
                 <a class="btn btn-default mini"
                    title="Déplacer l'activité vers le haut"
                    href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $ficheActivite->getId(), 'direction' => 'up'], [], true); ?>"
                 >
-                    <i class="fas fa-angle-up"></i>
+                    <span class="icon monter"></span>
                 </a>
                 <a class="btn btn-default mini"
                    title="Déplacer l'activité vers le bas"
                    href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $ficheActivite->getId(), 'direction' => 'down'], [], true); ?>">
-                    <i class="fas fa-angle-down"></i>
+                    <span class="icon descendre"></span>
                 </a>
             </div>
             <div class="col-md-11"> <?php echo $ficheActivite->getActivite()->getDescription(); ?> </div>
@@ -109,29 +109,21 @@ $canEditer = true;
     </div>
 </div>
 
-<div class="panel-info">
+<div class="panel panel-info">
     <div class="panel-heading">
         <h2> Parcours de formation de base pour la prise de poste </h2>
     </div>
     <div class="panel-body">
-<!--        <div class="row">-->
-<!--            <div class="col-md-6">-->
-<!--                <h3> Compétences principales </h3>-->
-<!--            </div>-->
-<!--            <div class="col-md-6">-->
-<!--                <h3> Parcours d'accompagnement à la prise de poste </h3>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="row">
             <div class="col-md-1">
                 <a class="btn btn-default mini ajax-modal"
                    data-event="modification"
                    href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true); ?>"
                 >
-                    <i class="fas fa-pencil-alt"></i>
+                    <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <h3> Connaissances </h3>
                 <?php echo $fiche->getConnaissances(); ?>
             </div>
@@ -146,10 +138,10 @@ $canEditer = true;
                    data-event="modification"
                    href="<?php echo $this->url('fiche-metier-type/modifier-operationnelle', ['id' => $fiche->getId()], [], true); ?>"
                 >
-                    <i class="fas fa-pencil-alt"></i>
+                    <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <h3> Compétences opérationnelles </h3>
                 <?php echo $fiche->getCompetencesOperationnelles(); ?>
             </div>
@@ -164,10 +156,10 @@ $canEditer = true;
                    data-event="modification"
                    href="<?php echo $this->url('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true); ?>"
                 >
-                    <i class="fas fa-pencil-alt"></i>
+                    <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <h3> Compétences comportementales </h3>
                 <?php echo $fiche->getCompetencesComportementales(); ?>
             </div>
@@ -182,10 +174,10 @@ $canEditer = true;
                    data-event="modification"
                    href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true); ?>"
                 >
-                    <i class="fas fa-pencil-alt"></i>
+                    <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <h3> Applications </h3>
                     <ul>
                         <?php /** @var Application $application */ ?>
