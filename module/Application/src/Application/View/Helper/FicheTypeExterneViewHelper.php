@@ -106,7 +106,6 @@ class FicheTypeExterneViewHelper extends AbstractHelper
                 $texte .= '<li>'.$application->getLibelle().'</li>';
             }
             $texte .= '                  </ul>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getCompetencesComportementales();
             $texte .= '             </div>';
             $texte .= '             <div class="col-md-6">';
             $texte .= '                  <h4> Plan de formation </h4>';

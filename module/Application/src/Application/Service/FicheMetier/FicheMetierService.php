@@ -6,6 +6,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
+use Exception;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -173,8 +174,19 @@ class FicheMetierService {
      * @param FicheMetierType $ficheMetierType
      * @return FicheMetierType
      */
-    public function createFicheMetierType( $ficheMetierType)
+    public function createFicheMetierType($ficheMetierType)
     {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $ficheMetierType->setHistoCreation($date);
+        $ficheMetierType->setHistoCreateur($user);
+        $ficheMetierType->setHistoModification($date);
+        $ficheMetierType->setHistoModificateur($user);
+
         $this->getEntityManager()->persist($ficheMetierType);
         try {
             $this->getEntityManager()->flush($ficheMetierType);
@@ -185,12 +197,80 @@ class FicheMetierService {
 
     }
 
+    /**
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
+     */
     public function updateFicheMetierType($ficheMetierType)
     {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $ficheMetierType->setHistoModification($date);
+        $ficheMetierType->setHistoModificateur($user);
+
         try {
             $this->getEntityManager()->flush($ficheMetierType);
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche métier.", $e);
+        }
+        return $ficheMetierType;
+    }
+
+    /**
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
+     */
+    public function historiserFicheMetierType($ficheMetierType)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $ficheMetierType->setHistoDestruction($date);
+        $ficheMetierType->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($ficheMetierType);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de l'historisation de la fiche métier.", $e);
+        }
+        return $ficheMetierType;
+    }
+
+    /**
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
+     */
+    public function restaurationFicheMetierType($ficheMetierType)
+    {
+        $ficheMetierType->setHistoDestruction(null);
+        $ficheMetierType->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($ficheMetierType);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de la restauration de la fiche métier.", $e);
+        }
+        return $ficheMetierType;
+    }
+
+    /**
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
+     */
+    public function deleteFicheMetierType($ficheMetierType)
+    {
+        $this->getEntityManager()->remove($ficheMetierType);
+        try {
+            $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la fiche métier.", $e);
         }
         return $ficheMetierType;
     }
