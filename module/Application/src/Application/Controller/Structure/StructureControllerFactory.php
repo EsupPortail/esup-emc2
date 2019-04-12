@@ -5,7 +5,7 @@ namespace Application\Controller\Structure;
 use Application\Form\Structure\StructureForm;
 use Application\Service\Role\RoleService;
 use Application\Service\Structure\StructureService;
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Zend\Mvc\Controller\ControllerManager;
 
 class StructureControllerFactory {

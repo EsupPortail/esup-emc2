@@ -10,7 +10,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Utilisateur\Entity\Db\CategoriePrivilege" table="categorie_privilege">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="code" type="string" column="code" length="150" nullable="false"/>
+        <field name="libelle" type="string" column="libelle" length="200" nullable="false"/>
+        <field name="ordre" type="integer" column="ordre" nullable="false"/>
+
+        <one-to-many target-entity="Utilisateur\Entity\Db\Privilege" mapped-by="categorie_id" field="privileges"/>
+    </entity>
+</doctrine-mapping>

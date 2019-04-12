@@ -3,7 +3,7 @@
 namespace Application\Form\EntretienProfessionnel;
 
 use Application\Service\Role\RoleService;
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Zend\Form\FormElementManager;
 
 class EntretienProfessionnelFormFactory {

@@ -1,17 +1,17 @@
 <?php
 
-namespace Application\Controller\Utilisateur;
+namespace Utilisateur\Controller;
 
-use Application\Service\Role\RoleService;
-use Application\Service\User\UserService;
 use Doctrine\ORM\EntityManager;
 use Mailing\Service\Mailing\MailingService;
 use UnicaenLdap\Service\People;
+use Utilisateur\Service\Role\RoleService;
+use Utilisateur\Service\User\UserService;
 use Zend\Mvc\Controller\ControllerManager;
 
 class UtilisateurControllerFactory {
 
-    public function __invoke(ControllerManager $controllerManager)
+    public function __invoke(ControllerManager $manager)
     {
         /**
          * @var RoleService $roleService
@@ -20,10 +20,10 @@ class UtilisateurControllerFactory {
          * @var MailingService $mailService
          * @var EntityManager $entityManager
          */
-        $roleService = $controllerManager->getServiceLocator()->get(RoleService::class);
-        $ldapService = $controllerManager->getServiceLocator()->get('LdapServicePeople');
-        $userService = $controllerManager->getServiceLocator()->get(UserService::class);
-        $mailService = $controllerManager->getServiceLocator()->get(MailingService::class);
+        $roleService = $manager->getServiceLocator()->get(RoleService::class);
+        $ldapService = $manager->getServiceLocator()->get('LdapServicePeople');
+        $userService = $manager->getServiceLocator()->get(UserService::class);
+        $mailService = $manager->getServiceLocator()->get(MailingService::class);
 
         /** @var UtilisateurController $controller */
         $controller = new UtilisateurController();
@@ -31,7 +31,6 @@ class UtilisateurControllerFactory {
         $controller->setUserService($userService);
         $controller->setLdapPeopleService($ldapService);
         $controller->setMailingService($mailService);
-
 
         return $controller;
     }

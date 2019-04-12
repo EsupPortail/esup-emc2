@@ -1,20 +1,18 @@
 <?php
 
-namespace Application\Service\User;
+namespace Utilisateur\Service\User;
 
-use Application\Entity\Db\Role;
-use Application\Entity\Db\User;
+use Utilisateur\Entity\Db\Role;
+use Utilisateur\Entity\Db\User;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAuth\Service\Traits\UserContextServiceAwareTrait;
 
-/**
- * @author PROUX-DELROUYRE Guillaume <guillaume.proux-delrouyre at unicaen.fr>
- * @author jean-Philippe Metivier <jean-philippe.metivier at unicaen.fr>
- */
 class UserService
+     // TODO ? renommer User
+     // TODO extends \UnicaenAuth\Service\User
 {
     use EntityManagerAwareTrait;
     use UserContextServiceAwareTrait;
@@ -192,11 +190,20 @@ class UserService
 
     public function getConnectedUser()
     {
-        $dbUser = $this->serviceUserContext->getDbUser();
-        if (!$dbUser) return null;
-        $userId = $dbUser->getId();
-        $user = $this->getUtilisateur($userId);
-        return $user;
+        $identity = $this->serviceUserContext->getIdentity();
+        if ($identity) {
+            $userIdentity = current(array_filter($identity));
+            $userLogin = $userIdentity->getSupannAliasLogin();
+            $user = $this->getUtilisateurByUsername($userLogin);
+            return $user;
+        }
+        return null;
+    }
+
+    public function getConnectedRole()
+    {
+        $dbRole = $this->serviceUserContext->getSelectedIdentityRole();
+        return $dbRole;
     }
 
     /**
@@ -214,5 +221,7 @@ class UserService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+
 }
 

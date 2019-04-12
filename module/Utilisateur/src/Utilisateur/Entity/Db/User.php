@@ -1,10 +1,11 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Utilisateur\Entity\Db;
 
+//use UnicaenApp\Entity\UserInterface;
 use UnicaenAuth\Entity\Db\AbstractUser;
 
-class User extends AbstractUser
+class User extends AbstractUser //implements UserInterface
 {
     public function __construct()
     {

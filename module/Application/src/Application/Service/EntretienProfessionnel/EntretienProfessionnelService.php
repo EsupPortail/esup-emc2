@@ -3,7 +3,7 @@
 namespace Application\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\EntretienProfessionnel;
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;

@@ -5,7 +5,7 @@ namespace Application\Service\Activite;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FicheMetierTypeActivite;
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;

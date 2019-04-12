@@ -4,7 +4,7 @@ namespace Application\Service\Structure;
 
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureType;
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;

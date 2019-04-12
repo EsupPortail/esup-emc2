@@ -2,7 +2,7 @@
 
 namespace Application\Controller;
 
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Zend\Mvc\Controller\ControllerManager;
 
 class IndexControllerFactory {

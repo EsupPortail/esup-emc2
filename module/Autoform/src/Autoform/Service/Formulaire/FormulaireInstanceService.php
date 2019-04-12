@@ -2,7 +2,7 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;

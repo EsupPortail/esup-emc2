@@ -1,15 +1,18 @@
 <?php
 
-namespace Application;
+namespace Utilisateur;
 
-use Application\Controller\Utilisateur\UtilisateurController;
-use Application\Controller\Utilisateur\UtilisateurControllerFactory;
-use Application\Provider\Privilege\UtilisateurPrivileges;
-use Application\Service\User\UserService;
-use Application\Service\User\UserServiceFactory;
+use Utilisateur\Controller\UtilisateurController;
+use Utilisateur\Controller\UtilisateurControllerFactory;
+use Utilisateur\Provider\Privilege\UtilisateurPrivileges;
+use Utilisateur\Service\Role\RoleService;
+use Utilisateur\Service\Role\RoleServiceFactory;
+use Utilisateur\Service\User\UserService;
+use Utilisateur\Service\User\UserServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
+
 
 return [
     'bjyauthorize' => [
@@ -57,6 +60,25 @@ return [
             ],
         ],
     ],
+
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration' => [
+//                        'pages' => [
+//                            'utilisateur' => [
+//                                'label' => 'Utilisateur',
+//                                'route' => 'utilisateur-preecog',
+//                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::AFFICHER),
+//                                'order'    => 10,
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [
@@ -139,6 +161,7 @@ return [
     'service_manager' => [
         'factories' => [
             UserService::class => UserServiceFactory::class,
+            RoleService::class => RoleServiceFactory::class,
         ],
     ],
 //    'translator'      => [
