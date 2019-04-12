@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\SpecificitePoste;
 
 trait SpecificitePosteFormAwareTrait {
 

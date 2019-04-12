@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\SpecificitePoste;
 
 use Zend\Form\FormElementManager;
 
@@ -8,10 +8,10 @@ class SpecificitePosteFormFactory{
 
     public function __invoke(FormElementManager $manager)
     {
-        /** @var FicheMetierCreationHydrator $hydrator */
+        /** @var SpecificitePosteHydrator $hydrator */
         $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(SpecificitePosteHydrator::class);
 
-        /** @var FicheMetierCreationForm $form */
+        /** @var SpecificitePosteForm $form */
         $form = new SpecificitePosteForm();
         $form->setHydrator($hydrator);
         $form->init();

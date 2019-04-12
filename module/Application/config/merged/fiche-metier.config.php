@@ -170,17 +170,6 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'associer-agent' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/associer-agent/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'associer-agent',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'associer-poste' => [
                         'type' => Segment::class,
                         'options' => [
@@ -247,47 +236,7 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'specificite' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/specificite/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer-specificite-poste',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'historiser' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'historiser',
-                            ],
-                        ],
-                    ],
-                    'restaurer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'restaurer',
-                            ],
-                        ],
-                    ],
-                    'editer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/editer/:id/:section',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer',
-                            ],
-                        ],
-                    ],
+
                     'creer' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -514,7 +463,6 @@ return [
             LibelleForm::class => LibelleFormFactory::class,
             MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
 
-            SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,
             AssocierPosteForm::class => AssocierPosteFormFactory::class,
 
