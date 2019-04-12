@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Application\Entity\Db\Privilege" table="privilege">
+  <entity name="Utilisateur\Entity\Db\Privilege" table="privilege">
 
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
@@ -16,7 +16,7 @@
       </join-columns>
     </many-to-one>
 
-    <many-to-many field="role" target-entity="Application\Entity\Db\Role" inversed-by="privilege" fetch="LAZY">
+    <many-to-many field="role" target-entity="Utilisateur\Entity\Db\Role" inversed-by="privilege" fetch="LAZY">
       <join-table name="role_privilege">
         <join-columns>
           <join-column name="privilege_id" referenced-column-name="id"/>

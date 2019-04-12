@@ -53,18 +53,10 @@ return [
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right',
                             ],
-                            'roles'      => [
-                                'label'      => "Rôles",
-                                'title'      => "Gestion des rôles",
-                                'route'      => 'droits/roles',
-                                'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'roles'),
-                                'withtarget' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
                             'privileges' => [
                                 'label'      => "Privilèges",
                                 'title'      => "Gestion des privilèges",
-                                'route'      => 'droits/privileges',
+                                'route'      => 'privilege',
                                 'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
                                 'withtarget' => true,
                                 'icon' => 'fas fa-angle-right'

@@ -3,7 +3,7 @@
 namespace Autoform\Service\Validation;
 
 use Application\Entity\Db\User;
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Autoform\Entity\Db\Validation;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;

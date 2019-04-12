@@ -7,6 +7,7 @@ $modules = [
     'Autoform',
     'Mailing',
     'Octopus',
+    'Utilisateur',
     'Application',
 ];
 

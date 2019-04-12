@@ -2,7 +2,7 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Autoform\Service\Categorie\CategorieService;
 use Doctrine\ORM\EntityManager;
 use Zend\ServiceManager\ServiceLocatorInterface;

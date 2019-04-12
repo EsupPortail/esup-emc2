@@ -1,10 +1,9 @@
 <?php
 
-namespace Application\Service\User;
+namespace Utilisateur\Service\User;
 
 use Doctrine\ORM\EntityManager;
 use UnicaenAuth\Service\UserContext;
-use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class UserServiceFactory {
@@ -14,10 +13,6 @@ class UserServiceFactory {
      * @return UserService
      */
     public function __invoke(ServiceLocatorInterface $serviceLocator) {
-
-        if ($serviceLocator instanceof AbstractPluginManager) {
-            $serviceLocator = $serviceLocator->getServiceLocator();
-        }
 
         /**
          * @var EntityManager $entityManager

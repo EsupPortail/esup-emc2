@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * @var Role[] $roles
+ * @var array $privileges
+ */
+
+use Utilisateur\Entity\Db\Privilege;
+use Utilisateur\Entity\Db\Role;
+
+//var_dump($privileges);
+
+$this->headTitle("Gestion des privilèges");
+
+$nbRoles = count($roles);
+?>
+
+<h1 class="page-header">
+    Gestion des privilèges
+</h1>
+
+<div class="main">
+
+<table class="privilege">
+    <thead>
+        <tr>
+            <th class="action">
+                <span id="show"><span class="glyphicon glyphicon-eye-open"></span> Afficher les privilèges</span>
+                <br/>
+                <span id="hide"><span class="glyphicon glyphicon-eye-close"></span> Masquer les privilèges</span>
+            </th>
+            <?php foreach ($roles as $role) : ?>
+                <th class="role">
+                    <?php echo $role->getRoleId(); ?>
+                </th>
+            <?php endforeach; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $categorieId = 1; ?>
+        <?php foreach ($privileges as $libelleCategorie => $privilegesCategorie) : ?>
+            <tr>
+                <th id="<?php echo $categorieId; ?>" class="categorie" colspan="<?php echo (1+$nbRoles);?>"> <?php echo $libelleCategorie; ?></th>
+            </tr>
+                <?php /** @var Privilege $privilegeCategorie */ ?>
+                <?php foreach ($privilegesCategorie as $privilegeCategorie) : ?>
+                    <tr class="privilege <?php echo $categorieId; ?>">
+                        <th class="privilege">
+                            <?php echo $privilegeCategorie->getLibelle(); ?>
+                        </th>
+                        <?php foreach ($roles as $role) : ?>
+                            <td id="<?php echo $role->getId();?>_<?php echo $privilegeCategorie->getId();?>"
+                                class="affectation"
+                                title="<?php echo $role->getRoleId(); ?> > <?php echo $privilegeCategorie->getLibelle(); ?>"
+                            >
+                                <?php if( $privilegeCategorie->hasRole($role)) : ?>
+                                    <span class="glyphicon glyphicon-ok text-success"></span>
+                                <?php else: ?>
+                                    <span class="glyphicon glyphicon-remove text-danger"></span>
+                                <?php endif; ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+        <?php $categorieId++; ?>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+</div>
+
+<style>
+    th.categorie {
+        background-color: lightsteelblue;
+        border: 1px solid black;
+        height: 3rem;
+    }
+
+    th.privilege {
+        background-color: lightgoldenrodyellow;
+        border: 1px solid gray;
+        height: 2rem;
+        width: 30rem;
+    }
+
+    th.action {
+        width: 30rem;
+    }
+
+    th.role {
+        border: 1px solid gray;
+        width:4.5rem;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+    }
+
+    td.affectation {
+        border: 1px solid gray;
+        text-align: center;
+        height: 4.5rem;
+        width: 4.5rem;
+    }
+
+    span:hover {
+        cursor: pointer;
+    }
+    td.affectation:hover {
+        cursor: pointer;
+    }
+    th.categorie:hover {
+        cursor: row-resize;
+    }
+</style>
+
+<script>
+    // $("tr.privilege").hide();
+
+    $("th.categorie").click(function(){
+        let categorieId = $(this).attr("id");
+        $("tr."+ categorieId).toggle();
+    });
+
+    $("span#show").click(function(){
+        $("tr.privilege").show();
+    });
+
+    $("span#hide").click(function(){
+        $("tr.privilege").hide();
+    });
+
+    $("td").click(function(){
+        let id = $(this).attr("id");
+        var splits = id.split("_");
+        let role = splits[0];
+        let privilege = splits[1];
+
+        var url = "modifier-privilege/" + role + "/" + privilege;
+        $.ajax({
+            type: "POST",
+            url : url,
+            beforeSend:
+                function () {
+                    document.getElementById(id).innerHTML = "<img style='height:40px;' src='css/loading.gif'/>";
+                },
+            success:
+                function(retour){
+                    console.log(retour);
+                    var texte = "";
+                    if (retour["value"] == 1) texte = "<span class='glyphicon glyphicon-ok text-success'></span>";
+                    else var texte = "<span class='glyphicon glyphicon-remove text-danger'></span>";
+                    document.getElementById(id).innerHTML = texte;
+                }
+        });
+    });
+</script>

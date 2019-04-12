@@ -2,7 +2,7 @@
 
 namespace Application\Service\Activite;
 
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Doctrine\ORM\EntityManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -4,7 +4,7 @@ namespace Application\Form\EntretienProfessionnel;
 
 use Application\Entity\Db\Role;
 use Application\Service\Role\RoleServiceAwareTrait;
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use UnicaenApp\Form\Element\Date;
 use Zend\Form\Element\Button;

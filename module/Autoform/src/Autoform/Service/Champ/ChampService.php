@@ -2,7 +2,7 @@
 
 namespace Autoform\Service\Champ;
 
-use Application\Service\User\UserServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
 use DateTime;

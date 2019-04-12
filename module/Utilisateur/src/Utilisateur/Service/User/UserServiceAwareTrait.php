@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\User;
+namespace Utilisateur\Service\User;
 
 use RuntimeException;
 
@@ -26,8 +26,6 @@ trait UserServiceAwareTrait
         return $this;
     }
 
-
-
     /**
      * @return UserService
      * @throws RuntimeException
@@ -41,9 +39,9 @@ trait UserServiceAwareTrait
 
             $serviceLocator = $this->getServiceLocator();
             if (method_exists($serviceLocator, 'getServiceLocator')) {
-                $serviceLocator = $serviceLocator->getServiceLocator();
+                $serviceLocator = $container->getServiceLocator();
             }
-            $this->userService = $serviceLocator->get('UserService');
+            $this->userService = $container->get('UserService');
         }
         return $this->userService;
     }

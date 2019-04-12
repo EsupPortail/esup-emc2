@@ -2,7 +2,7 @@
 
 namespace Mailing\Controller\Mailing;
 
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Mailing\Service\Mailing\MailingService;
 use Zend\Mvc\Controller\ControllerManager;
 

@@ -1,6 +1,7 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Utilisateur\Entity\Db;
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenAuth\Entity\Db\AbstractRole;
 use UnicaenAuth\Entity\Db\UserInterface;
 
@@ -9,38 +10,40 @@ use UnicaenAuth\Entity\Db\UserInterface;
  */
 class Role extends AbstractRole
 {
-    const ADMIN_TECH = 'Administrateur technique';
-    const ADMIN_FONC = 'Administrateur fonctionnel';
-    const UTILISATEUR = 'Utilisateur';
-    const GESTIONNAIRE = 'Gestionnaire de structure';
-    const PERSONNEL = 'Personnel';
+    //TODO remove it form there
+    const ADMINTECH = 'Administrateur technique';
+    const COMPO     = 'Gestionnaire composante';
+    const RHS       = 'RHS';
+    const SUMPPS    = 'Médecin SUMPPS';
 
-    /** @var \Doctrine\Common\Collections\Collection */
+
+    /** @var ArrayCollection */
     private $privilege;
 
     public function __construct()
     {
-        $this->privilege = new \Doctrine\Common\Collections\ArrayCollection();
+        parent::__construct();
+        $this->privilege = new ArrayCollection();
     }
 
     /**
      * @param UserInterface $user
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Role
      */
     public function addUser(UserInterface $user)
     {
         $this->users[] = $user;
-        return $this->users;
+        return $this;
     }
 
     /**
      * @param UserInterface $user
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Role
      */
     public function removeUser(UserInterface $user)
     {
         $this->users->removeElement($user);
-        return $this->users;
+        return $this;
     }
 
     /**

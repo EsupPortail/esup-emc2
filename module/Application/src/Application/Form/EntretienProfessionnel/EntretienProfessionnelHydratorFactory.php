@@ -2,7 +2,7 @@
 
 namespace Application\Form\EntretienProfessionnel;
 
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Zend\Stdlib\Hydrator\HydratorPluginManager;
 
 class EntretienProfessionnelHydratorFactory {

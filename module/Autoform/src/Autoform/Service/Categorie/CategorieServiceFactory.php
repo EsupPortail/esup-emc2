@@ -2,7 +2,7 @@
 
 namespace Autoform\Service\Categorie;
 
-use Application\Service\User\UserService;
+use Utilisateur\Service\User\UserService;
 use Autoform\Service\Champ\ChampService;
 use Doctrine\ORM\EntityManager;
 use Zend\ServiceManager\ServiceLocatorInterface;

@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Controller\Utilisateur;
+namespace Utilisateur\Controller;
 
-use Application\Entity\Db\Role;
-use Application\Entity\Db\User;
-use Application\Service\Role\RoleServiceAwareTrait;
-use Application\Service\User\UserServiceAwareTrait;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
+use Utilisateur\Entity\Db\Role;
+use Utilisateur\Entity\Db\User;
+use Utilisateur\Service\Role\RoleServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenLdap\Entity\People;
@@ -18,9 +18,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
-/**
- * @author jean-Philippe Metivier <jean-philippe.metivier at unicaen.fr>
- */
 class UtilisateurController extends AbstractActionController {
     use MailingServiceAwareTrait;
     use RoleServiceAwareTrait;
@@ -39,6 +36,10 @@ class UtilisateurController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             if ($request->getPost()->toArray()['ldap']['id'] !== null) {
+                if ($request->getPost()->toArray()['ldap']['id'] === '') {
+                    $this->flashMessenger()->addErrorMessage("Aucun utilisateur de sélectionné !");
+                    $this->redirect()->toRoute(null, [], [], true);
+                }
                 $people = $this->ldapPeopleService->get($request->getPost()->toArray()['ldap']['id']);
 
                 $utilisateur = new User();
@@ -63,6 +64,10 @@ class UtilisateurController extends AbstractActionController {
                 return $this->redirect()->toUrl($this->url()->fromRoute(null, [], $params, true));
             }
             $data = $request->getPost()->toArray()['utilisateur'];
+            if ($data['id'] === '') {
+                $this->flashMessenger()->addErrorMessage("Aucun utilisateur de sélectionné !");
+                $this->redirect()->toRoute(null, [], [], true);
+            }
             $utilisateur = $this->getUserService()->getUtilisateur($data['id']);
             $params = [];
             if ($utilisateur !== null) $params = ["query" => ["id" => $data['id']]];
