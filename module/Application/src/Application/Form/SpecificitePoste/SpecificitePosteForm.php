@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\SpecificitePoste;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Form;

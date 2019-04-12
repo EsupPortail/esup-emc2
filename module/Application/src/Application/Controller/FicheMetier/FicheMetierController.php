@@ -119,40 +119,6 @@ class FicheMetierController extends AbstractActionController
 
     }
 
-    /** AGENT *********************************************************************************************************/
-
-    public function associerAgentAction()
-    {
-        $ficheId = $this->params()->fromRoute('fiche');
-        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
-
-        /** @var AssocierAgentForm $form */
-        $form = $this->getAssocierAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/associer-agent', ['fiche' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        /**@var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-            }
-        }
-
-
-        $vm = new ViewModel();
-//        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Associer un agent',
-            'form' => $form,
-            'agents' => $this->getAgentService()->getAgents(),
-        ]);
-        return $vm;
-
-    }
-
     /** POSTE *********************************************************************************************************/
 
     public function associerPosteAction()
@@ -185,46 +151,6 @@ class FicheMetierController extends AbstractActionController
         return $vm;
 
     }
-    /** SPECIFICITE POSTE *********************************************************************************************/
-
-    public function editerSpecificitePosteAction()
-    {
-        $ficheId = $this->params()->fromRoute('fiche');
-        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
-
-        $specificite = null;
-        if ($fiche->getSpecificite()) {
-            $specificite = $fiche->getSpecificite();
-        } else {
-            $specificite = new SpecificitePoste();
-            $fiche->setSpecificite($specificite);
-            $this->getFicheMetierService()->createSpecificitePoste($specificite);
-        }
-
-        /** @var SpecificitePosteForm $form */
-        $form = $form = $this->getSpecificitePosteForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/specificite', ['fiche' => $fiche->getId()], [], true));
-        $form->bind($specificite);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $specificite->setFiche($fiche);
-                $this->getFicheMetierService()->updateSpecificitePoste($specificite);
-                $this->getFicheMetierService()->update($fiche);
-            }
-        }
-
-        return new ViewModel([
-            'title' => 'Éditer spécificité du poste',
-            'form' => $form,
-        ]);
-
-    }
-
     /** FicheTypeExterne **********************************************************************************************/
 
     public function ajouterFicheTypeAction() {

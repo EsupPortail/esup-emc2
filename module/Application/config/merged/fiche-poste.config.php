@@ -8,6 +8,9 @@ use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormFactory;
 use Application\Form\AssocierAgent\AssocierAgentHydrator;
 use Application\Form\AssocierAgent\AssocierAgentHydratorFactory;
+use Application\Form\SpecificitePoste\SpecificitePosteForm;
+use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
+use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -29,6 +32,7 @@ return [
                         'restaurer',
                         'detruire',
                         'associer-agent',
+                        'editer-specificite',
                     ],
                     'roles' => [
                     ],
@@ -118,6 +122,7 @@ return [
                     ],
                     'associer-agent' => [
                         'type' => Segment::class,
+                        'may_terminate' => true,
                         'options' => [
                             'route'    => '/associer-agent/:fiche-poste',
                             'defaults' => [
@@ -125,7 +130,18 @@ return [
                                 'action'     => 'associer-agent',
                             ],
                         ],
+
+                    ],
+                    'editer-specificite' => [
+                        'type'  => Segment::class,
                         'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/editer-specificite/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'editer-specificite',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -145,9 +161,13 @@ return [
     'form_elements' => [
         'factories' => [
             AssocierAgentForm::class => AssocierAgentFormFactory::class,
+            SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            SpecificitePosteHydrator::class => SpecificitePosteHydrator::class,
+        ],
         'factories' => [
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
         ],

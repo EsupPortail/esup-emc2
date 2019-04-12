@@ -2,8 +2,11 @@
 
 namespace Application\Controller\FichePoste;
 
+use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
+use Application\Form\SpecificitePoste\SpecificitePosteForm;
+use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Zend\Http\Request;
@@ -16,6 +19,7 @@ class FichePosteController extends AbstractActionController {
     use FichePosteServiceAwareTrait;
     /** Form **/
     use AssocierAgentFormAwareTrait;
+    use SpecificitePosteFormAwareTrait;
 
     public function indexAction()
     {
@@ -69,6 +73,7 @@ class FichePosteController extends AbstractActionController {
         $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
+    /** Actions associés à l'édition d'une fiche de poste  ************************************************************/
     public function associerAgentAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
@@ -96,6 +101,41 @@ class FichePosteController extends AbstractActionController {
             'agents' => $this->getAgentService()->getAgents(),
         ]);
         return $vm;
+
+    }
+
+    public function editerSpecificiteAction()
+    {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
+        $specificite = $fiche->getSpecificite();
+        if ($specificite === null) {
+            $specificite = new SpecificitePoste();
+            $fiche->setSpecificite($specificite);
+            $this->getFichePosteService()->createSpecificitePoste($specificite);
+        }
+
+        /** @var SpecificitePosteForm $form */
+        $form = $form = $this->getSpecificitePosteForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/editer-specificite', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($specificite);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $specificite->setFiche($fiche);
+                $this->getFichePosteService()->updateSpecificitePoste($specificite);
+                $this->getFichePosteService()->update($fiche);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Éditer spécificité du poste',
+            'form' => $form,
+        ]);
 
     }
 }
