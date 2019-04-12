@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\FicheMetier" table="fiche_metier">
+    <entity name="Application\Entity\Db\FichePoste" table="fiche_poste">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
@@ -25,10 +25,6 @@
             <join-column name="agent" referenced-column-name="id" />
         </many-to-one>
 
-        <many-to-one field="metierType" target-entity="Application\Entity\Db\FicheMetierType">
-            <join-column name="metier_type" referenced-column-name="id" />
-        </many-to-one>
-
         <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste">
             <join-column name="specificite" referenced-column-name="id" />
         </one-to-one>
@@ -37,9 +33,7 @@
             <join-column name="poste" referenced-column-name="id" />
         </many-to-one>
 
-
-
-        <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="ficheMetier" field="fichesTypes"/>
+        <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="fichePoste" field="fichesMetiers"/>
 
 
     </entity>

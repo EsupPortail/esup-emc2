@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AssocierAgent;
 
 use Application\Service\Agent\AgentService;
 use Zend\ServiceManager\ServiceLocatorInterface;

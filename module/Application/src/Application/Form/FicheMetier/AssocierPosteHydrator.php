@@ -2,7 +2,7 @@
 
 namespace Application\Form\FicheMetier;
 
-use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
@@ -12,7 +12,7 @@ class AssocierPosteHydrator implements HydratorInterface {
     use PosteServiceAwareTrait;
 
     /**
-     * @param FicheMetier $object
+     * @param FichePoste $object
      * @return array
      */
     public function extract($object)
@@ -23,9 +23,9 @@ class AssocierPosteHydrator implements HydratorInterface {
     }
 
     /**
-     * @param FicheMetier $object
+     * @param FichePoste $object
      * @param array $data
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function hydrate(array $data, $object)
     {

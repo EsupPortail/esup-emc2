@@ -2,12 +2,11 @@
 
 namespace Application\Controller\FicheMetier;
 
-use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
+use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
 use Application\Form\FicheMetier\AjouterFicheTypeFormAwareTrait;
-use Application\Form\FicheMetier\AssocierAgentForm;
-use Application\Form\FicheMetier\AssocierAgentFormAwareTrait;
 use Application\Form\FicheMetier\AssocierMetierTypeForm;
 use Application\Form\FicheMetier\AssocierMetierTypeFormAwareTrait;
 use Application\Form\FicheMetier\AssocierPosteFormAwareTrait;
@@ -37,16 +36,7 @@ class FicheMetierController extends AbstractActionController
     use SpecificitePosteFormAwareTrait;
     use AjouterFicheTypeFormAwareTrait;
 
-    public function indexAction() {
-
-        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
-
-        return new ViewModel([
-            'fichesMetiers' => $fichesMetiers,
-        ]);
-    }
-
-    public function afficherAction() {
+       public function afficherAction() {
 
         $ficheId = $this->params()->fromRoute('id');
         $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
@@ -64,28 +54,6 @@ class FicheMetierController extends AbstractActionController
         ]);
     }
 
-    public function historiserAction()
-    {
-        $ficheId = $this->params()->fromRoute('id');
-        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
-
-        if ($fiche === null) throw new RuntimeException("Aucune fiche ne porte l'identifiant [".$ficheId."]");
-
-        $this->getFicheMetierService()->historiser($fiche);
-        $this->redirect()->toRoute('fiche-metier',[], [], true);
-    }
-
-    public function restaurerAction()
-    {
-        $ficheId = $this->params()->fromRoute('id');
-        $fiche = $this->getFicheMetierService()->getFicheMetier($ficheId);
-
-        if ($fiche === null) throw new RuntimeException("Aucune fiche ne porte l'identifiant [".$ficheId."]");
-
-        $this->getFicheMetierService()->restaurer($fiche);
-        $this->redirect()->toRoute('fiche-metier',[], [], true);
-    }
-
     public function editerAction()
     {
         $libelle = 'Environnement du poste de travail dans l\'organisation';
@@ -98,7 +66,7 @@ class FicheMetierController extends AbstractActionController
     {
         /** @var FicheMetierCreationForm $form */
         $form = $this->getFicherMetierCreationForm();
-        $fiche = new FicheMetier();
+        $fiche = new FichePoste();
         $form->bind($fiche);
 
         /** @var Request $request */
