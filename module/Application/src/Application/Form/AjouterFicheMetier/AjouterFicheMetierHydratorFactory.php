@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AjouterFicheMetier;
 
 use Application\Service\FicheMetier\FicheMetierService;
 use Zend\Stdlib\Hydrator\HydratorPluginManager;
 
-class AjouterFicheTypeHydratorFactory {
+class AjouterFicheMetierHydratorFactory {
 
     public function __invoke(HydratorPluginManager $manager)
     {
@@ -14,8 +14,8 @@ class AjouterFicheTypeHydratorFactory {
          */
         $ficheMetierService = $manager->getServiceLocator()->get(FicheMetierService::class);
 
-        /** @var AjouterFicheTypeHydrator $hydrator */
-        $hydrator = new AjouterFicheTypeHydrator();
+        /** @var AjouterFicheMetierHydrator $hydrator */
+        $hydrator = new AjouterFicheMetierHydrator();
         $hydrator->setFicheMetierService($ficheMetierService);
         return $hydrator;
     }

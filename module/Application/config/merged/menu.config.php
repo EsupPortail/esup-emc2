@@ -107,13 +107,6 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'label' => 'Les fiches métiers',
-                                'route' => 'fiche-metier',
-                                'privileges' => FicheMetierPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
                                 'label' => 'Les fiches de poste',
                                 'route' => 'fiche-poste',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,

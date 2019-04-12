@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\FichePosteCreation;
 
 use Application\Entity\Db\FichePoste;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class FicheMetierCreationHydrator implements HydratorInterface {
+class FichePosteCreationHydrator implements HydratorInterface {
 
     /**
      * @param FichePoste $object

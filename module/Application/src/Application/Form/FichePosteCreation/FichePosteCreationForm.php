@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\FichePosteCreation;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
-class FicheMetierCreationForm extends Form {
+class FichePosteCreationForm extends Form {
 
     public function init()
     {
@@ -27,7 +27,7 @@ class FicheMetierCreationForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Créer la fiche métier',
+                'label' => '<i class="fas fa-save"></i> Créer la fiche de poste',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

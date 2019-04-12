@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Application\Form\AssocierPoste;
 
 use Application\Service\Poste\PosteService;
 use Zend\ServiceManager\ServiceLocatorInterface;

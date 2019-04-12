@@ -24,8 +24,9 @@ $canDetruire = true;
 
 <div class="main">
 
+    <span class="TODO">REDIRIGER APRES CREATION VERS LA PAGE D EDITION ...</span><br/>
     <?php if ($canAjouter) : ?>
-        <a href="" class="btn btn-primary">
+        <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
             <span class="icon ajouter"></span>
             Ajouter une fiche de poste
         </a>
@@ -77,3 +78,13 @@ $canDetruire = true;
         </tbody>
     </table>
 </div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
