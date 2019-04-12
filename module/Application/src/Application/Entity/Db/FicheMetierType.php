@@ -3,8 +3,10 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class FicheMetierType {
+    use HistoriqueAwareTrait;
 
     /** @var int */
     private $id;

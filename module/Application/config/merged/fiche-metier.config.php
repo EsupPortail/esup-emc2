@@ -53,6 +53,7 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
 use Application\View\Helper\FicheTypeExterneViewHelper;
+use Application\View\Helper\FicheTypeViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
@@ -119,6 +120,11 @@ return [
                     'controller' => FicheMetierTypeController::class,
                     'action' => [
                         'afficher',
+                        'editer',
+                        'detruire',
+                        'historiser',
+                        'restaurer',
+
                         'editer-libelle',
                         'editer-missions-principales',
                         'retirer-activite',
@@ -327,6 +333,50 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'editer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/editer/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'editer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'detruire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierTypeController::class,
+                                'action'     => 'detruire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'editer-libelle' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -499,6 +549,7 @@ return [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
             'ficheTypeExterne' => FicheTypeExterneViewHelper::class,
+            'ficheMetierType'  => FicheTypeViewHelper::class,
         ],
     ],
 
