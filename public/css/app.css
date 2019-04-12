@@ -142,6 +142,10 @@ span.icon.listing:before {
     content: "\f0ae";
 }
 
+span.icon.selectionner:before {
+    content: "\f65e";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
