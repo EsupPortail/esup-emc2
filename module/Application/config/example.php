@@ -3,8 +3,8 @@
 namespace Application;
 
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Zend\Mvc\Router\Http\Literal;
+use Zend\Mvc\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

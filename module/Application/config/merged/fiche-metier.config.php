@@ -2,18 +2,12 @@
 
 namespace Application;
 
-use Application\Controller\FicheMetier\FicheMetierController;
-use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Controller\FicheMetier\FicheMetierTypeController;
 use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
 use Application\Form\FicheMetier\AjouterFicheTypeForm;
 use Application\Form\FicheMetier\AjouterFicheTypeFormFactory;
 use Application\Form\FicheMetier\AjouterFicheTypeHydrator;
 use Application\Form\FicheMetier\AjouterFicheTypeHydratorFactory;
-use Application\Form\FicheMetier\AssocierAgentForm;
-use Application\Form\FicheMetier\AssocierAgentFormFactory;
-use Application\Form\FicheMetier\AssocierAgentHydrator;
-use Application\Form\FicheMetier\AssocierAgentHydratorFactory;
 use Application\Form\FicheMetier\AssocierMetierTypeForm;
 use Application\Form\FicheMetier\AssocierMetierTypeFormFactory;
 use Application\Form\FicheMetier\AssocierMetierTypeHydrator;
@@ -26,8 +20,6 @@ use Application\Form\FicheMetier\FicheMetierCreationForm;
 use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
 use Application\Form\FicheMetier\FicheMetierCreationHydrator;
 use Application\Form\FicheMetier\FicheMetierCreationHydratorFactory;
-use Application\Form\FicheMetier\SpecificitePosteForm;
-use Application\Form\FicheMetier\SpecificitePosteFormFactory;
 use Application\Form\FicheMetierType\ActiviteExistanteForm;
 use Application\Form\FicheMetierType\ActiviteExistanteFormFactory;
 use Application\Form\FicheMetierType\ApplicationsForm;
@@ -63,51 +55,6 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'index',
-                    ],
-                    'roles' => [
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'afficher',
-                        'editer-specificite-poste',
-                        'associer-metier-type',
-                        'associer-agent',
-                        'associer-poste',
-                        'ajouter-fiche-type',
-                        'retirer-fiche-type',
-                        'modifier-fiche-type',
-                        'selectionner-activite',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::AFFICHER,
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'historiser',
-                        'restaurer',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::HISTORISER,
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'editer',
-                        'creer',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::EDITER,
-                    ],
-                ],
                 [
                     'controller' => FicheMetierTypeController::class,
                     'action' => [
@@ -148,158 +95,6 @@ return [
 
     'router'          => [
         'routes' => [
-            'fiche-metier' => [
-                'type'  => Literal::class,
-                'options' => [
-                    'route'    => '/fiche-metier',
-                    'defaults' => [
-                        'controller' => FicheMetierController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'afficher' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'afficher',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'associer-agent' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/associer-agent/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'associer-agent',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'associer-poste' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/associer-poste/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'associer-poste',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'associer-metier-type' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/associer-metier-type/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'associer-metier-type',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'retirer-fiche-type' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/retirer-fiche-type/:fiche/:fiche-type-externe',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'retirer-fiche-type',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'modifier-fiche-type' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-fiche-type/:fiche/:fiche-type-externe',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'modifier-fiche-type',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'selectionner-activite' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/selectionner-activite/:fiche/:fiche-type-externe',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'selectionner-activite',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'ajouter-fiche-type' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-fiche-type/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'ajouter-fiche-type',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'specificite' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/specificite/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer-specificite-poste',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'historiser' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'historiser',
-                            ],
-                        ],
-                    ],
-                    'restaurer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'restaurer',
-                            ],
-                        ],
-                    ],
-                    'editer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/editer/:id/:section',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer',
-                            ],
-                        ],
-                    ],
-                    'creer' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/creer',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'creer',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
             'fiche-metier-type' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -501,7 +296,6 @@ return [
     ],
     'controllers'     => [
         'factories' => [
-            FicheMetierController::class => FicheMetierControllerFactory::class,
             FicheMetierTypeController::class => FicheMetierTypeControllerFactory::class,
         ],
     ],
@@ -510,21 +304,16 @@ return [
         ],
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
-            FicheMetierCreationForm::class => FicheMetierCreationFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
             MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
 
-            SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
-            AssocierMetierTypeForm::class => AssocierMetierTypeFormFactory::class,
-            AssocierAgentForm::class => AssocierAgentFormFactory::class,
-            AssocierPosteForm::class => AssocierPosteFormFactory::class,
 
             FormationBaseForm::class => FormationBaseFormFactory::class,
             FormationOperationnelleForm::class => FormationOperationnelleFormFactory::class,
             FormationComportementaleForm::class => FormationComportementaleFormFactory::class,
             ApplicationsForm::class => ApplicationsFormFactory::class,
 
-            AjouterFicheTypeForm::class=>AjouterFicheTypeFormFactory::class,
+
         ],
     ],
     'hydrators' => [
@@ -535,14 +324,8 @@ return [
 
         ],
         'factories' => [
-            FicheMetierCreationHydrator::class => FicheMetierCreationHydratorFactory::class,
             LibelleHydrator::class => LibelleHydratorFactory::class,
-            AssocierMetierTypeHydrator::class => AssocierMetierTypeHydratorFactory::class,
-            AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
-            AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
-
-            AjouterFicheTypeHydrator::class => AjouterFicheTypeHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
