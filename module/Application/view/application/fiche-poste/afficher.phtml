@@ -67,13 +67,27 @@ $canAssocierMetierType = true;
 </div>
 
 <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
+
+<?php
+    $principal = $fiche->getFicheTypeExternePrincipale();
+
+    $fichesMetiers = $fiche->getFichesMetiers();
+    $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
+    usort($fiche->getFichesMetiers(), function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
+?>
+
+
 <?php /** @var FicheTypeExterne $ficheType **/ ?>
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="row">
             <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
             <ul>
-                <?php foreach ($fiche->getFichesMetiers() as $ficheType) : ?>
+                <?php if ($principal) : ?>
+                    <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
+                <?php endif; ?>
+
+                <?php foreach ($fichesMetiers as $ficheType) : ?>
                     <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
                 <?php endforeach; ?>
             </ul>
@@ -81,8 +95,9 @@ $canAssocierMetierType = true;
     </div>
 </div>
 
-<?php foreach ($fiche->getFichesMetiers() as $ficheType) : ?>
-    <?php echo $this->ficheTypeExterne()->render($ficheType);  ?>
+<?php if ($principal) echo $this->ficheTypeExterne()->render($principal, false);  ?>
+<?php foreach ($fichesMetiers as $ficheType) : ?>
+    <?php echo $this->ficheTypeExterne()->render($ficheType, false);  ?>
 <?php endforeach; ?>
 
 

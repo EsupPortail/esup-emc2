@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Exception\RuntimeException;
 
 class FichePoste
 {
@@ -134,6 +135,25 @@ class FichePoste
         return $this;
     }
 
+    /**
+     * @return FicheTypeExterne
+     */
+    public function getFicheTypeExternePrincipale() {
+        $res = [];
+        /** @var FicheTypeExterne $ficheMetier */
+        foreach ($this->fichesMetiers as $ficheMetier) {
+            if ($ficheMetier->getPrincipale()) {
+                $res[] = $ficheMetier;
+            }
+        }
+
+        $nb = count($res);
+        if ( $nb > 1) {
+            throw new RuntimeException("Plusieurs fiches metiers sont déclarées comme principale");
+        }
+        if ($nb === 1) return current($res);
+        return null;
+    }
 
 
 }

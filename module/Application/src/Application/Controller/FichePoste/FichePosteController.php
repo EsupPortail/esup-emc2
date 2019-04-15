@@ -186,7 +186,16 @@ class FichePosteController extends AbstractActionController {
             if ($form->isValid()) {
                 $ficheTypeExterne->setFichePoste($fiche);
                 $this->getFichePosteService()->createFicheTypeExterne($ficheTypeExterne);
-                //$this->redirect()->toRoute('fiche-metier/afficher',['fiche' => $fiche->getId()], [], true);
+
+                if ($ficheTypeExterne->getPrincipale()) {
+                    foreach ($fiche->getFichesMetiers() as $ficheMetier) {
+                        if ($ficheMetier !== $ficheTypeExterne && $ficheMetier->getPrincipale()) {
+                            $ficheMetier->setPrincipale(false);
+                            $this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
+                        }
+                    }
+                }
+
             }
         }
 
@@ -228,7 +237,15 @@ class FichePosteController extends AbstractActionController {
             if ($form->isValid()) {
                 $ficheTypeExterne->setFichePoste($fichePoste);
                 $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
-                //$this->redirect()->toRoute('fiche-metier/afficher',['fiche' => $fiche->getId()], [], true);
+
+                if ($ficheTypeExterne->getPrincipale()) {
+                    foreach ($fichePoste->getFichesMetiers() as $ficheMetier) {
+                        if ($ficheMetier !== $ficheTypeExterne && $ficheMetier->getPrincipale()) {
+                            $ficheMetier->setPrincipale(false);
+                            $this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
+                        }
+                    }
+                }
             }
         }
 

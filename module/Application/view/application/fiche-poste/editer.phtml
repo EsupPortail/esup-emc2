@@ -6,6 +6,7 @@
 
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 
@@ -111,6 +112,16 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
 </div>
 
 <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
+
+<?php
+$principal = $fiche->getFicheTypeExternePrincipale();
+
+$fichesMetiers = $fiche->getFichesMetiers();
+$fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
+usort($fiche->getFichesMetiers(), function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
+?>
+
+
 <?php /** @var \Application\Entity\Db\FicheTypeExterne $ficheType **/ ?>
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -118,7 +129,10 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             <div class="col-md-8">
             <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
             <ul>
-                <?php foreach ($fiche->getFichesMetiers() as $ficheType) : ?>
+                <?php if ($principal) : ?>
+                    <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
+                <?php endif; ?>
+                <?php foreach ($fichesMetiers as $ficheType) : ?>
                     <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
                 <?php endforeach; ?>
             </ul>
@@ -136,10 +150,10 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
     </div>
 </div>
 
-<?php foreach ($fiche->getFichesMetiers() as $ficheType) : ?>
+<?php if ($principal) echo $this->ficheTypeExterne()->render($principal);  ?>
+<?php foreach ($fichesMetiers as $ficheType) : ?>
     <?php echo $this->ficheTypeExterne()->render($ficheType);  ?>
 <?php endforeach; ?>
-
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
 <div class="panel panel-info">
