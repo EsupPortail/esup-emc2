@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "755305381140989078e604b92659e437",
+    "content-hash": "2de678a94c45c09132d296e2a58bbfa4",
     "packages": [
         {
             "name": "bjyoungblood/bjy-authorize",
@@ -1521,11 +1521,11 @@
         },
         {
             "name": "unicaen/octopus",
-            "version": "0.1",
+            "version": "0.5.8",
             "source": {
                 "type": "git",
                 "url": "https://git.unicaen.fr/lib/unicaen/octopus.git",
-                "reference": "9802714d7b5640ec1678c8d3d800a5a3986ae703"
+                "reference": "fd8d560e703d348a7df02a0d2d4699fd6042701d"
             },
             "require": {
                 "bjyoungblood/bjy-authorize": ">=1.4",
@@ -1545,7 +1545,7 @@
                 ]
             },
             "description": "Module de recupération des entités provenant octopus",
-            "time": "2019-02-01T12:57:45+00:00"
+            "time": "2019-03-22T16:16:39+00:00"
         },
         {
             "name": "zendframework/zend-authentication",
