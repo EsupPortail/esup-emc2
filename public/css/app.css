@@ -72,6 +72,17 @@ div#navbar.production {
     background-color: #68000a;
 }
 
+span.TODO {
+    background-color: deeppink;
+    /*animation: blinker 2s linear infinite;*/
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
 /** ICON **************************************************************************************************************/
 
 span.icon:before {
@@ -284,4 +295,10 @@ div.activite h3 {
     background-color: lightblue;
     color: #123456;
     border-radius: 5px 5px 0px 0px;
+}
+
+
+.modal-dialog {
+    width: 1000px;
+    margin: 30px auto;
 }
