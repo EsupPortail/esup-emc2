@@ -6,8 +6,8 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Application\Entity\Db\FicheMetier"  field="ficheMetier">
-            <join-column name="fiche_metier" referenced-column-name="id"/>
+        <many-to-one target-entity="Application\Entity\Db\FichePoste"  field="fichePoste">
+            <join-column name="fiche_poste" referenced-column-name="id"/>
         </many-to-one>
 
         <many-to-one target-entity="Application\Entity\Db\FicheMetierType"  field="ficheType">

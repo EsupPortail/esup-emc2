@@ -15,16 +15,18 @@
     <?php echo $this->form()->closeTag(); ?>
 </div>
 
-<br/>
+<hr/>
 
-<div id="none" class="alert-info preview">
+<div id="none" class="preview">
     Aucune prévisualisation.
 </div>
 
 <?php foreach ($options as $key => $infos) :?>
-    <div style='display:none;' class="preview alert-info" id="<?php echo $key;?>">
-        <h3><?php echo $infos["title"]; ?></h3>
-        <?php echo $infos["description"]; ?>
+    <div class="preview" style='display:none;' id="<?php echo $key;?>">
+        <div class="activite">
+            <h3><?php echo $infos["title"]; ?></h3>
+            <?php echo $infos["description"]; ?>
+        </div>
     </div>
 <?php endforeach; ?>
 

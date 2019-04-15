@@ -1,0 +1,21 @@
+<?php
+
+use Application\Entity\Db\Activite;
+
+/**
+ * @var Activite $activite
+ */
+
+?>
+
+<div class="activite">
+
+<h3>
+    <?php echo $activite->getLibelle(); ?>
+</h3>
+
+<div>
+    <?php echo $activite->getDescription(); ?>
+</div>
+
+</div>

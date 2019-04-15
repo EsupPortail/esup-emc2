@@ -6,7 +6,7 @@ class SpecificitePoste {
 
     /** @var integer */
     private $id;
-    /** @var FicheMetier */
+    /** @var FichePoste */
     private $fiche;
 
     /** @var string */
@@ -31,7 +31,7 @@ class SpecificitePoste {
     }
 
     /**
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function getFiche()
     {
@@ -39,7 +39,7 @@ class SpecificitePoste {
     }
 
     /**
-     * @param FicheMetier $fiche
+     * @param FichePoste $fiche
      * @return SpecificitePoste
      */
     public function setFiche($fiche)

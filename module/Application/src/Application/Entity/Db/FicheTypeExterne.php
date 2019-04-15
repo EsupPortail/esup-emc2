@@ -13,8 +13,8 @@ class FicheTypeExterne {
 
     /** @var integer */
     private $id;
-    /** @var FicheMetier */
-    private $ficheMetier;
+    /** @var FichePoste */
+    private $fichePoste;
     /** @var FicheMetierType */
     private $ficheType;
     /** @var integer */
@@ -33,20 +33,20 @@ class FicheTypeExterne {
     }
 
     /**
-     * @return FicheMetier
+     * @return FichePoste
      */
-    public function getFicheMetier()
+    public function getFichePoste()
     {
-        return $this->ficheMetier;
+        return $this->fichePoste;
     }
 
     /**
-     * @param FicheMetier $ficheMetier
+     * @param FichePoste $fichePoste
      * @return FicheTypeExterne
      */
-    public function setFicheMetier($ficheMetier)
+    public function setFichePoste($fichePoste)
     {
-        $this->ficheMetier = $ficheMetier;
+        $this->fichePoste = $fichePoste;
         return $this;
     }
 

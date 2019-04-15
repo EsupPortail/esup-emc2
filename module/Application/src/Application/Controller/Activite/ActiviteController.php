@@ -60,8 +60,7 @@ class ActiviteController  extends AbstractActionController {
     public function editerAction()
     {
         /** @var Activite $activite */
-        $activiteId = $this->params()->fromRoute('id');
-        $activite = $this->getActiviteService()->getActivite($activiteId);
+        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
 
         /** @var ActiviteForm $form */
         $form = $this->getActiviteForm();
@@ -88,13 +87,41 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function effacerAction()
+    public function historiserAction()
     {
         /** @var Activite $activite */
-        $activiteId = $this->params()->fromRoute('id');
-        $activite = $this->getActiviteService()->getActivite($activiteId);
+        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+
+        $this->getActiviteService()->historise($activite);
+        $this->redirect()->toRoute('activite');
+    }
+
+    public function restaurerAction()
+    {
+        /** @var Activite $activite */
+        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+
+        $this->getActiviteService()->restore($activite);
+        $this->redirect()->toRoute('activite');
+    }
+
+
+    public function detruireAction()
+    {
+        /** @var Activite $activite */
+        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
 
         $this->getActiviteService()->delete($activite);
         $this->redirect()->toRoute('activite');
+    }
+
+    public function afficherAction()
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+
+        return new ViewModel([
+            'title' => 'Visualisation d\'une activité',
+            'activite' => $activite,
+        ]);
     }
 }

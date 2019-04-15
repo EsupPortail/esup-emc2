@@ -5,12 +5,14 @@ namespace Application\Service\Activite;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FicheMetierTypeActivite;
+use Exception;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteService {
     use EntityManagerAwareTrait;
@@ -50,16 +52,36 @@ class ActiviteService {
     }
 
     /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return Activite
+     */
+    public function getRequestedActivite($controller, $paramName)
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $activite = $this->getActivite($id);
+        return $activite;
+    }
+
+
+    /**
      * @param Activite $activite
      * @return Activite
      */
     public function create($activite)
     {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $activite->setHistoCreation($date);
+        $activite->setHistoCreateur($user);
+        $activite->setHistoModification($date);
+        $activite->setHistoModificateur($user);
+
         $this->getEntityManager()->persist($activite);
-        $activite->setHistoCreation(new DateTime());
-        $activite->setHistoCreateur($this->getUserService()->getConnectedUser());
-        $activite->setHistoModification(new DateTime());
-        $activite->setHistoModificateur($this->getUserService()->getConnectedUser());
         try {
             $this->getEntityManager()->flush($activite);
         } catch (OptimisticLockException $e) {
@@ -74,8 +96,55 @@ class ActiviteService {
      */
     public function update($activite)
     {
-        $activite->setHistoModification(new DateTime());
-        $activite->setHistoModificateur($this->getUserService()->getConnectedUser());
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $activite->setHistoModification($date);
+        $activite->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($activite);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $activite;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return Activite
+     */
+    public function historise($activite)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $activite->setHistoDestruction($date);
+        $activite->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($activite);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $activite;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return Activite
+     */
+    public function restore($activite)
+    {
+        $activite->setHistoDestruction(null);
+        $activite->setHistoDestructeur(null);
+
         try {
             $this->getEntityManager()->flush($activite);
         } catch (OptimisticLockException $e) {
@@ -96,7 +165,6 @@ class ActiviteService {
             throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
         }
     }
-
 
     public function getFicheMetierTypeActivite($id)
     {

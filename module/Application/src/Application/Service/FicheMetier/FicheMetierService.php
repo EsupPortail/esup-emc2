@@ -2,10 +2,11 @@
 
 namespace Application\Service\FicheMetier;
 
-use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
+use Exception;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -20,11 +21,11 @@ class FicheMetierService {
 
     /**
      * @param string $order an attribute use to sort
-     * @return FicheMetier[]
+     * @return FichePoste[]
      */
     public function getFichesMetiers($order = 'id')
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('ficheMetier')
             ->orderBy('ficheMetier.', $order)
         ;
 
@@ -34,11 +35,11 @@ class FicheMetierService {
 
     /**
      * @param int $id
-     * @return FicheMetier
+     * @return FichePoste
      */
     public function getFicheMetier($id)
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('ficheMetier')
             ->andWhere('ficheMetier.id = :id')
             ->setParameter('id', $id)
         ;
@@ -53,8 +54,8 @@ class FicheMetierService {
 
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function historiser($fiche) {
         //TODO récupérer l'utilisateur connecté
@@ -69,8 +70,8 @@ class FicheMetierService {
     }
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function restaurer($fiche) {
         $fiche->dehistoriser();
@@ -83,8 +84,8 @@ class FicheMetierService {
     }
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function creer($fiche)
     {
@@ -105,8 +106,8 @@ class FicheMetierService {
     }
 
     /**
-     * @param FicheMetier $fiche
-     * @return FicheMetier
+     * @param FichePoste $fiche
+     * @return FichePoste
      */
     public function update($fiche)
     {
@@ -173,8 +174,19 @@ class FicheMetierService {
      * @param FicheMetierType $ficheMetierType
      * @return FicheMetierType
      */
-    public function createFicheMetierType( $ficheMetierType)
+    public function createFicheMetierType($ficheMetierType)
     {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $ficheMetierType->setHistoCreation($date);
+        $ficheMetierType->setHistoCreateur($user);
+        $ficheMetierType->setHistoModification($date);
+        $ficheMetierType->setHistoModificateur($user);
+
         $this->getEntityManager()->persist($ficheMetierType);
         try {
             $this->getEntityManager()->flush($ficheMetierType);
@@ -185,8 +197,21 @@ class FicheMetierService {
 
     }
 
+    /**
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
+     */
     public function updateFicheMetierType($ficheMetierType)
     {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $ficheMetierType->setHistoModification($date);
+        $ficheMetierType->setHistoModificateur($user);
+
         try {
             $this->getEntityManager()->flush($ficheMetierType);
         } catch (OptimisticLockException $e) {
@@ -195,144 +220,62 @@ class FicheMetierService {
         return $ficheMetierType;
     }
 
-    /** SPECIFICITE POSTE  ********************************************************************************************/
-
     /**
-     * @return SpecificitePoste[]
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
      */
-    public function getSpecificitesPostes() {
-        $qb = $this->getEntityManager()->getRepository(SpecificitePoste::class)->createQueryBuilder('specificite')
-            ->orderBy('specificite.id', 'ASC');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return SpecificitePoste
-     */
-    public function getSpecificitePoste($id)
+    public function historiserFicheMetierType($ficheMetierType)
     {
-        $qb = $this->getEntityManager()->getRepository(SpecificitePoste::class)->createQueryBuilder('specificite')
-            ->andWhere('specificite.id = :id')
-            ->setParameter('id', $id)
-        ;
-
         try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs spécificités partagent sur le même identifiant [".$id."].");
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
         }
-        return $result;
-    }
+        $ficheMetierType->setHistoDestruction($date);
+        $ficheMetierType->setHistoDestructeur($user);
 
-    /**
-     * @param SpecificitePoste $specificite
-     * @return SpecificitePoste
-     */
-    public function createSpecificitePoste($specificite)
-    {
-        $this->getEntityManager()->persist($specificite);
         try {
-            $this->getEntityManager()->flush($specificite);
+            $this->getEntityManager()->flush($ficheMetierType);
         } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de la création de la spécificité du poste.", $e);
+            throw new RuntimeException("Une erreur s'est produite lors de l'historisation de la fiche métier.", $e);
         }
-        return $specificite;
+        return $ficheMetierType;
     }
 
     /**
-     * @param SpecificitePoste $specificite
-     * @return SpecificitePoste
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
      */
-    public function updateSpecificitePoste($specificite)
+    public function restaurationFicheMetierType($ficheMetierType)
     {
+        $ficheMetierType->setHistoDestruction(null);
+        $ficheMetierType->setHistoDestructeur(null);
+
         try {
-            $this->getEntityManager()->flush($specificite);
+            $this->getEntityManager()->flush($ficheMetierType);
         } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la spécificité du poste.", $e);
+            throw new RuntimeException("Une erreur s'est produite lors de la restauration de la fiche métier.", $e);
         }
-        return $specificite;
+        return $ficheMetierType;
     }
 
     /**
-     * @param SpecificitePoste $specificite
+     * @param FicheMetierType $ficheMetierType
+     * @return FicheMetierType
      */
-    public function deleteSpecificitePoste($specificite)
+    public function deleteFicheMetierType($ficheMetierType)
     {
-        $this->getEntityManager()->remove($specificite);
+        $this->getEntityManager()->remove($ficheMetierType);
         try {
             $this->getEntityManager()->flush();
         } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la spécificité du poste.", $e);
+            throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la fiche métier.", $e);
         }
-    }
-
-    /** FICHE TYPE EXTERNE ********************************************************************************************/
-
-    /**
-     * @param FicheTypeExterne $ficheTypeExterne
-     * @return FicheTypeExterne
-     */
-    public function createFicheTypeExterne($ficheTypeExterne)
-    {
-        $this->getEntityManager()->persist($ficheTypeExterne);
-        try {
-            $this->getEntityManager()->flush($ficheTypeExterne);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de l'ajout d'une fiche metier externe.", $e);
-        }
-        return $ficheTypeExterne;
-    }
-
-    /**
-     * @param FicheTypeExterne $ficheTypeExterne
-     * @return FicheTypeExterne
-     */
-    public function updateFicheTypeExterne($ficheTypeExterne)
-    {
-        try {
-            $this->getEntityManager()->flush($ficheTypeExterne);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour d'une fiche metier externe.", $e);
-        }
-        return $ficheTypeExterne;
-    }
-
-    /**
-     * @param FicheTypeExterne $ficheTypeExterne
-     * @return FicheTypeExterne
-     */
-    public function deleteFicheTypeExterne($ficheTypeExterne)
-    {
-        $this->getEntityManager()->remove($ficheTypeExterne);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors du retrait d'une fiche metier externe.", $e);
-        }
-        return $ficheTypeExterne;
+        return $ficheMetierType;
     }
 
 
-    /**
-     * @param integer $id
-     * @return FicheTypeExterne
-     */
-    public function getFicheTypeExterne($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(FicheTypeExterne::class)->createQueryBuilder('externe')
-            ->andWhere('externe.id = :id')
-            ->setParameter('id', $id);
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieus FicheTypeExterne partagent le même identifiant [".$id."]",$e);
-        }
-        return $result;
-    }
 
 
 
