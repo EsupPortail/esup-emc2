@@ -72,6 +72,17 @@ div#navbar.production {
     background-color: #68000a;
 }
 
+span.TODO {
+    background-color: deeppink;
+    /*animation: blinker 2s linear infinite;*/
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
 /** ICON **************************************************************************************************************/
 
 span.icon:before {
@@ -140,6 +151,10 @@ span.icon.retirer-user:before {
 
 span.icon.listing:before {
     content: "\f0ae";
+}
+
+span.icon.selectionner:before {
+    content: "\f65e";
 }
 
 div.survol:hover {
@@ -250,6 +265,7 @@ a.mini {
     margin:5px;
     padding:5px;
     text-indent: 0em;
+    background-color: #ececec;
 }
 
 .pointer:hover {
@@ -257,9 +273,9 @@ a.mini {
 }
 
 div.preview {
-    background-color: #fffee8;
-    border: 2px solid #ffc681;
-    border-radius: 5px;
+    /*background-color: #fffee8;*/
+    /*border: 2px solid #ffc681;*/
+    /*border-radius: 5px;*/
     padding: 2px;
 }
 
@@ -269,3 +285,20 @@ span.octopus:after {
     font-size: x-small;
 }
 
+/** ACTIVITE *************************************************************************/
+
+div.activite h3 {
+    font-weight: bold;
+    font-size: large;
+    margin: 5px 0px 5px 5px;
+    padding: 5px 0px 5px 5px;
+    background-color: lightblue;
+    color: #123456;
+    border-radius: 5px 5px 0px 0px;
+}
+
+
+.modal-dialog {
+    width: 1000px;
+    margin: 30px auto;
+}

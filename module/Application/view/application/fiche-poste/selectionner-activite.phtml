@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @var \Application\Entity\Db\FichePoste $fichePoste
+ * @var \Application\Entity\Db\FicheTypeExterne $ficheTypeExterne
+ */
+
+$idActivites = explode(";",$ficheTypeExterne->getActivites());
+?>
+
+<form method="post" action="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true); ?>">
+
+    <?php $activites = $ficheTypeExterne->getFicheType()->getActivites() ; ?>
+    <?php foreach ($activites as $activite) : ?>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"
+                           id="<?php echo $activite->getActivite()->getId(); ?>"
+                           name="<?php echo $activite->getActivite()->getId(); ?>"
+                           <?php if (array_search($activite->getActivite()->getId(), $idActivites) !== false) echo " checked "; ?>
+                    >
+                    <?php echo $activite->getActivite()->getLibelle(); ?>
+                </label>
+            </div>
+    <?php endforeach; ?>
+
+    <input type="submit" class="btn btn-primary" value="Valider la sélection">
+</form>

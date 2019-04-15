@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @var FichePoste $fiche
+ */
+
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheTypeExterne;
+
+$canAssocierAgent = true;
+$canAssocierMetierType = true;
+
+?>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Agent occupant le poste </h2>
+    </div>
+
+    <div class="panel-body">
+
+        <?php $agent = $fiche->getAgent(); ?>
+
+        <?php if($agent === null) : ?>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aucun agent d'associé à ce poste
+            </div>
+        <?php else : ?>
+            <?php echo $this->agent()->render($agent); ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Environnement du poste de travail </h2>
+    </div>
+    <div class="panel-body">
+            <h3> Affectation du poste </h3>
+            <?php if ($fiche->getPoste() !== null && $fiche->getPoste()->getStructure() !== null) : ?>
+                <?php if ($fiche->getPoste()->getStructure()->getDescription() !== null) :?>
+                    <?php echo $fiche->getPoste()->getStructure()->getDescription(); ?>
+                <?php else: ?>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getPoste()->getStructure()->getLibelleCourt(); ?></em>.
+                    </div>
+                <?php endif; ?>
+            <?php else : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucune affectation de renseignée.
+                </div>
+            <?php endif; ?>
+
+            <h3> Positionnement dans l'établissement</h3>
+            <?php if ($fiche->getPoste() === null) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucun poste n'est attaché à ce poste
+                </div>
+            <?php else: ?>
+                <?php echo $this->poste()->render($fiche->getPoste()); ?>
+            <?php endif; ?>
+    </div>
+</div>
+
+<!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
+
+<?php
+    $principal = $fiche->getFicheTypeExternePrincipale();
+
+    $fichesMetiers = $fiche->getFichesMetiers();
+    $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
+    usort($fiche->getFichesMetiers(), function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
+?>
+
+
+<?php /** @var FicheTypeExterne $ficheType **/ ?>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
+            <ul>
+                <?php if ($principal) : ?>
+                    <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
+                <?php endif; ?>
+
+                <?php foreach ($fichesMetiers as $ficheType) : ?>
+                    <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<?php if ($principal) echo $this->ficheTypeExterne()->render($principal, false);  ?>
+<?php foreach ($fichesMetiers as $ficheType) : ?>
+    <?php echo $this->ficheTypeExterne()->render($ficheType, false);  ?>
+<?php endforeach; ?>
+
+
+<!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Spécificité du poste </h2>
+    </div>
+    <div class="panel-body">
+        <?php if ($fiche->getSpecificite() === null) : ?>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aucune spécificité attachée à ce poste.
+            </div>
+        <?php else: ?>
+            <?php echo $this->specificitePoste()->render($fiche->getSpecificite()); ?>
+        <?php endif; ?>
+    </div>
+</div>

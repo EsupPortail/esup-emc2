@@ -51,12 +51,48 @@ class FicheMetierTypeController extends  AbstractActionController{
     public function afficherAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
+//        $activites = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
+
+        return new ViewModel([
+            'title' => 'Visualisation d\'une fiche métier',
+            'fiche' => $fiche,
+//            'activites' => $activites,
+        ]);
+    }
+
+    public function editerAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
         $activites = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
 
         return new ViewModel([
             'fiche' => $fiche,
             'activites' => $activites,
         ]);
+    }
+
+    public function historiserAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
+        $this->getFicheMetierService()->historiserFicheMetierType($fiche);
+
+        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+    }
+
+    public function restaurerAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
+        $this->getFicheMetierService()->restaurationFicheMetierType($fiche);
+
+        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+    }
+
+    public function detruireAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
+        $this->getFicheMetierService()->deleteFicheMetierType($fiche);
+
+        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
     public function ajouterAction()
