@@ -297,3 +297,8 @@ div.activite h3 {
     border-radius: 5px 5px 0px 0px;
 }
 
+
+.modal-dialog {
+    width: 1000px;
+    margin: 30px auto;
+}

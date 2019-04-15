@@ -46,7 +46,14 @@ $canDetruire = true;
             <?php foreach ($fiches as $fiche) : ?>
                 <tr>
                     <td> <?php echo $fiche->getLibelle(); ?> </td>
-                    <td> <span class="TODO">TODO</span> </td>
+                    <td>
+                        <?php $principale = $fiche->getFicheTypeExternePrincipale();
+                         if($principale === null) : ?>
+                            Aucune fiche principale
+                        <?php else : ?>
+                            <?php echo $principale->getFicheType()->getMetier()->getLibelle(); ?>
+                        <?php endif; ?>
+                    </td>
                     <td> <?php echo $fiche->getHistoModification()->format('d/m/Y'); ?> </td>
                     <td> <?php echo $fiche->getHistoModificateur()->getDisplayName(); ?> </td>
                     <td>
