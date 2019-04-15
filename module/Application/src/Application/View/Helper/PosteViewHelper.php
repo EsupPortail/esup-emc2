@@ -43,8 +43,7 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dd class="siham">'.$poste->getStructure().'</dd>';
         $texte .= '<dt> Localisation du poste </dt>';
 //        $texte .= '<dd class="siham">'.$poste->getLocalisation().'</dd>';
-//        $texte .= '<dd class="siham">'.$this->getImmobiliserService()->getImmobilierBatiment($poste->getLocalisation()).'</dd>';
-        $texte .= '<dd class="siham">'.'<span class="TODO"> REPARER UNICAEN OCTOPUS </span>'.'</dd>';
+        $texte .= '<dd class="siham">'.$this->getImmobiliserService()->getImmobilierBatiment($poste->getLocalisation()).'</dd>';
         $texte .= '<dt> Rattachement hiérarchique </dt>';
         $texte .= '<dd class="siham">'.(($poste->getRattachementHierarchique())?$poste->getRattachementHierarchique()->getDenomination():"---").'</dd>';
         $texte .= '<dt> Catégorie </dt>';
