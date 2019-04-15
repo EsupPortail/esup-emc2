@@ -2,6 +2,7 @@
 
 namespace Application\Controller\FichePoste;
 
+use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
@@ -191,10 +192,21 @@ class FichePosteController extends AbstractActionController {
                     foreach ($fiche->getFichesMetiers() as $ficheMetier) {
                         if ($ficheMetier !== $ficheTypeExterne && $ficheMetier->getPrincipale()) {
                             $ficheMetier->setPrincipale(false);
-                            $this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
+                            //$this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
                         }
                     }
                 }
+
+                //comportement par defaut (ajout de toutes les activités)
+                /** @var FicheMetierType */
+                $activites = $ficheTypeExterne->getFicheType()->getActivites();
+                $tab = [];
+                foreach ($activites as $activite) {
+                    $tab[] = $activite->getActivite()->getId();
+                }
+                $text = implode(";",$tab);
+                $ficheTypeExterne->setActivites($text);
+                $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
 
             }
         }
