@@ -228,6 +228,30 @@ class StructureService
         return $structure;
     }
 
+    /**
+     * @return array
+     */
+    public function getStructuresAsOptions()
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->andWhere('structure.dateFermeture IS NULL')
+            ->andWhere('structure.histoDestruction IS NULL')
+            ->orderBy('structure.libelleLong')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+
+        $options = [];
+        $options[null] = "Sélectionner une structure ...";
+        /** @var Structure $item */
+        foreach ($result as $item) {
+            $options[$item->getId()] = $item->getLibelleLong();
+        }
+
+        return $options;
+    }
+
+
     public function synchroniseFromOctopus()
     {
         $structures_OCTOPUS = $this->getStructureService()->getStructures();
@@ -326,5 +350,4 @@ class StructureService
         if ($modification) $this->update($current);
         return $modification;
     }
-
 }
