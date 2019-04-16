@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Fonction;
+use Application\Entity\Db\Source;
 use Application\Provider\Privilege\FonctionPrivileges;
 
 /**
@@ -9,11 +10,12 @@ use Application\Provider\Privilege\FonctionPrivileges;
 
 $this->headTitle('Index dex fonctions');
 
-$canAjouter         = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::AFFICHER));
+$canAjouter         = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::AJOUTER));
 $canModifier        = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::EDITER));
 $canHistoriser      = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::HISTORISER));
 $canDelete          = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::EFFACER));
 $canSynchroniser    = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::SYNCHRONISER));
+$canVisualiser      = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::AFFICHER));
 ?>
 
 <h1 class="page-header">
@@ -23,7 +25,7 @@ $canSynchroniser    = $this->isAllowed(FonctionPrivileges::getResourceId(Fonctio
 <div class="main">
 
     <?php if ($canAjouter) : ?>
-        <a href="" class="btn btn-primary action">
+        <a href="<?php echo $this->url('fonction/creer', [], [], true); ?>" class="btn btn-primary action ajax-modal" data-event="modification">
             <span class="icon ajouter">
                 Ajouter une fonction
             </span>
@@ -76,7 +78,39 @@ $canSynchroniser    = $this->isAllowed(FonctionPrivileges::getResourceId(Fonctio
                         <?php endif; ?>
                     </td>
                     <td>
-
+                        <?php if ($canVisualiser) : ?>
+                            <a href="<?php echo $this->url('fonction/afficher', ['fonction' => $fonction->getId()], [], true); ?>" class="ajax-modal">
+                            <span class="icon voir" title="Visualiser la fonction"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+                        <?php if ($canModifier && $fonction->getSource() !== Source::Octopus) : ?>
+                            <a href="<?php echo $this->url('fonction/modifier', ['fonction' => $fonction->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                                <span class="icon editer" title="Modifier la fonction"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+                        <?php if ($canHistoriser && $fonction->getSource() !== Source::Octopus) : ?>
+                            <?php if ($fonction->estNonHistorise()) : ?>
+                                <a href="<?php echo $this->url('fonction/historiser', ['fonction' => $fonction->getId()], [], true); ?>">
+                                    <span class="icon historiser" title="Historiser la fonction"></span></a>
+                            <?php else : ?>
+                                <a href="<?php echo $this->url('fonction/restaurer', ['fonction' => $fonction->getId()], [], true); ?>" >
+                                    <span class="icon restaurer" title="Restaurer la fonction"></span></a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if ($fonction->estNonHistorise()) : ?>
+                                <span class="icon historiser" style="color:lightgrey;"></span>
+                            <?php else : ?>
+                                <span class="icon restaurer" style="color:lightgrey;"></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canDelete) : ?>
+                            <a href="<?php echo $this->url('fonction/detruire', ['fonction' => $fonction->getId()], [], true); ?>">
+                                <span class="icon detruire" title="Détruire la fonction"></span></a>
+                        <?php else : ?>
+                            <span class="icon detruire" style="color:lightgrey;"></span>
+                        <?php endif; ?>
                     </td>
                 </tr>
 
@@ -84,3 +118,14 @@ $canSynchroniser    = $this->isAllowed(FonctionPrivileges::getResourceId(Fonctio
         </tbody>
     </table>
 </div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+

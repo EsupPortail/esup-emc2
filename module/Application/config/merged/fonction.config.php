@@ -4,6 +4,9 @@ namespace Application;
 
 use Application\Controller\Fonction\FonctionController;
 use Application\Controller\Fonction\FonctionControllerFactory;
+use Application\Form\Fonction\FonctionForm;
+use Application\Form\Fonction\FonctionFormFactory;
+use Application\Form\Fonction\FonctionHydrator;
 use Application\Provider\Privilege\FonctionPrivileges;
 use Application\Service\Fonction\FonctionService;
 use Application\Service\Fonction\FonctionServiceFactory;
@@ -19,6 +22,7 @@ return [
                     'controller' => FonctionController::class,
                     'action' => [
                         'index',
+                        'afficher',
                         'creer',
                         'modifier',
                         'historiser',
@@ -54,6 +58,16 @@ return [
                             'defaults' => [
                                 'controller' => FonctionController::class,
                                 'action'     => 'creer',
+                            ],
+                        ],
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:fonction',
+                            'defaults' => [
+                                'controller' => FonctionController::class,
+                                'action'     => 'afficher',
                             ],
                         ],
                     ],
@@ -124,12 +138,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            //FonctionLibelleForm::class => FonctionLibelleFormFactory::class,
+            FonctionForm::class => FonctionFormFactory::class,
         ],
     ],
     'hydrators' => [
-        'factories' => [
-            //FonctionLibelleHydrator::class => FonctionLibelleHydratorFactory::class,
+        'invokables' => [
+            FonctionHydrator::class => FonctionHydrator::class,
         ]
     ]
 
