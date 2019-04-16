@@ -2,6 +2,7 @@
 
 namespace Application\Service\Structure;
 
+use Application\Entity\Db\Source;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureType;
 use Utilisateur\Service\User\UserServiceAwareTrait;
@@ -248,11 +249,15 @@ class StructureService
             }
         }
         foreach ($structures_PREECOG as $structure) {
-            $res = array_filter($structures_OCTOPUS,
-                function(\Octopus\Entity\Db\Structure $s) use ($structure) { return ($structure->getSource() === 'OCTOPUS' && $s->getId() == $structure->getIdSource()); });
-            if (empty($res)) {
-                $this->delete($structure);
-                $supprimees[] = $structure;
+            if ($structure->getSource() === Source::Octopus) {
+                $res = array_filter($structures_OCTOPUS,
+                    function (\Octopus\Entity\Db\Structure $s) use ($structure) {
+                        return ($structure->getSource() === 'OCTOPUS' && $s->getId() == $structure->getIdSource());
+                    });
+                if (empty($res)) {
+                    $this->delete($structure);
+                    $supprimees[] = $structure;
+                }
             }
         }
         return [
