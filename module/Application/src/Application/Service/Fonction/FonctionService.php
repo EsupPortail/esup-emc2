@@ -4,6 +4,7 @@ namespace Application\Service\Fonction;
 
 use Application\Entity\Db\Fonction;
 use Application\Entity\Db\FonctionLibelle;
+use Application\Entity\Db\Source;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
@@ -302,10 +303,41 @@ class FonctionService {
     {
         $fonctionType = $this->getFonctionService()->getFonctionTypeByNom(FonctionType::FONCTION_STRUCTURELLE);
         $fonctions_OCTOPUS = $this->getFonctionService()->getFonctionsByType($fonctionType);
+        $fonctions_PREECOG = $this->getFonctions();
 
-        foreach ($fonctions_OCTOPUS as $fonction_OCTOPUS) {
-            $fonction = $this->createFromOctopus($fonction_OCTOPUS);
+
+        $nouvelles = [];
+        $modifiees = [];
+        $supprimees = [];
+        foreach ($fonctions_OCTOPUS as $fonction) {
+            $res = array_filter($fonctions_PREECOG,
+                function(Fonction $s) use ($fonction) { return ($s->getSource() === 'OCTOPUS' && $s->getIdSource() == $fonction->getId()); });
+            if (! empty($res)) {
+                $modification = $this->updateFromOctopus(current($res), $fonction);
+                if ($modification) $modifiees[] = current($res);
+            } else {
+                //nouvelle structure
+                $nouvelle = $this->createFromOctopus($fonction);
+                $nouvelles[] = $nouvelle;
+            }
         }
+        foreach ($fonctions_PREECOG as $fonction) {
+            if ($fonction->getSource() === Source::Octopus) {
+                $res = array_filter($fonctions_OCTOPUS,
+                    function (\Octopus\Entity\Db\Fonction $s) use ($fonction) {
+                        return ($fonction->getSource() === 'OCTOPUS' && $s->getId() == $fonction->getIdSource());
+                    });
+                if (empty($res)) {
+                    $this->delete($fonction);
+                    $supprimees[] = $fonction;
+                }
+            }
+        }
+        return [
+            'nouvelles' => $nouvelles,
+            'modifiees' => $modifiees,
+            'supprimees' => $supprimees,
+        ];
     }
 
     /**
@@ -337,6 +369,35 @@ class FonctionService {
         return $fonction;
     }
 
+    /**
+     * @var Fonction $current
+     * @var \Octopus\Entity\Db\Fonction $fonction
+     * @return Fonction
+     */
+    private function updateFromOctopus($current, \Octopus\Entity\Db\Fonction $fonction)
+    {
+        $libelles = $current->getLibelles();
+        foreach ($libelles as $libelle) {
+            $current->removeLibelle($libelle);
+            $this->deleteLibelle($libelle);
+        }
+
+        foreach ($fonction->getLibelles() as $libelle_OCTOPUS) {
+            $libelle = new FonctionLibelle();
+            $libelle->setFonction($current);
+            $libelle->setLibelle($libelle_OCTOPUS->getLibelle());
+            $libelle->setGenre($libelle_OCTOPUS->getGenre());
+            $libelle->setDefault(($libelle_OCTOPUS->getDefault()) ? 'O' : 'N');
+            $libelle->setSource('OCTOPUS');
+            $libelle->setIdSource($libelle_OCTOPUS->getId());
+            $this->createLibelle($libelle);
+            $current->addLibelle($libelle);
+        }
+
+        $this->update($current);
+        return $current;
+    }
+
     public function getFonctionsAsOption()
     {
         $options = [];
@@ -348,4 +409,6 @@ class FonctionService {
 
         return $options;
     }
+
+
 }
