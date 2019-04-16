@@ -2,11 +2,11 @@
 
 namespace Application;
 
-use Application\Service\Role\RoleService;
-use Application\Service\Role\RoleServiceFactory;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use UnicaenAuth\Guard\PrivilegeController;
+use Utilisateur\Service\Role\RoleService;
+use Utilisateur\Service\Role\RoleServiceFactory;
 use Zend\Mvc\Router\Http\Literal;
 
 return [

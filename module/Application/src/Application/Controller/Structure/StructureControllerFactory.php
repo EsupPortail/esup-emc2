@@ -3,8 +3,8 @@
 namespace Application\Controller\Structure;
 
 use Application\Form\Structure\StructureForm;
-use Application\Service\Role\RoleService;
 use Application\Service\Structure\StructureService;
+use Utilisateur\Service\Role\RoleService;
 use Utilisateur\Service\User\UserService;
 use Zend\Mvc\Controller\ControllerManager;
 
