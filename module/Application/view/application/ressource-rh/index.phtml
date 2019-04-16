@@ -8,7 +8,6 @@
  * @var Corps[] $corps
  * @var Grade[] $grades
  * @var Domaine[] $domaines
- * @var Fonction[] $fonctions
  */
 
 use Application\Entity\Db\AgentStatus;
@@ -38,7 +37,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'corps']); ?>" class="btn btn-primary action">Corps</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'grade']); ?>" class="btn btn-primary action">Grade</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'domaine']); ?>" class="btn btn-primary action">Domaine</a>
-<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'fonction']); ?>" class="btn btn-primary action">Fonction</a>
 
 <div class="main">
 
@@ -457,64 +455,6 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         </table>
     <?php endif; ?>
 </div>
-
-<div class="main">
-    <a name="fonction"></a>
-    <div class="col-md-8">
-        <h2>
-            Liste des fonctions
-            <span class="badge">
-            <?php echo count($fonctions); ?>
-        </span>
-        </h2>
-    </div>
-    <div class="pull-right">
-        <?php if ($canAjouterRessource) : ?>
-            <a href="<?php echo $this->url('ressource-rh/fonction/ajouter', [], [], true);?>"
-               class="btn btn-primary action ajax-modal"
-               data-event="modification"
-            >
-                <i class="fas fa-plus-square"></i>
-                Ajouter une fonction
-            </a>
-        <?php endif;?>
-    </div>
-    <?php if (count($fonctions) > 0) : ?>
-        <table class="table table-condensed">
-            <thead>
-            <tr>
-                <th> Id </th>
-                <th> Libelle </th>
-                <th class="action"> Action </th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($fonctions as $fonction) : ?>
-                <tr>
-                    <td> <?php echo $fonction->getId(); ?> </td>
-                    <td> <?php echo $fonction->getLibelle(); ?> </td>
-                    <td>
-                        <?php if ($canEditerRessource) : ?>
-                            <a href="<?php echo $this->url('ressource-rh/fonction/modifier', ['fonction' => $fonction->getId()], [], true); ?>"
-                               data-event="modification"
-                               class="ajax-modal"
-                            >
-                                <i class="fas fa-pencil-alt" title="Éditer la fonction"></i>
-                            </a>
-                        <?php endif; ?>
-                        <?php if ($canEffacerRessource) : ?>
-                            <a href="<?php echo $this->url('ressource-rh/fonction/supprimer', ['fonction' => $fonction->getId()], [], true); ?>" >
-                                <i class="fas fa-trash-alt" title="Effacer la fonction"></i>
-                            </a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
-</div>
-
 
 <script>
     $(function() {

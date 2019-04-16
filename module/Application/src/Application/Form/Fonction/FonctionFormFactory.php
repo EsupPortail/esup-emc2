@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\Fonction;
 
 use Zend\Form\FormElementManager;
 
@@ -11,10 +11,9 @@ class FonctionFormFactory {
         /** @var FonctionHydrator $hydrator */
         $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(FonctionHydrator::class);
 
+        /** @var FonctionForm */
         $form = new FonctionForm();
-        $form->init();
         $form->setHydrator($hydrator);
-
         return $form;
     }
 }

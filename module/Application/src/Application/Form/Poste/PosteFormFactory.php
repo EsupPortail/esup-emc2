@@ -3,6 +3,7 @@
 namespace Application\Form\Poste;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\Fonction\FonctionService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Doctrine\ORM\EntityManager;
 use Zend\Form\FormElementManager;
@@ -23,10 +24,12 @@ class PosteFormFactory {
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
+         * @var FonctionService $fonctionService
          * @var RessourceRhService $ressourceService
          */
         $entityManager = $manager->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         $agentService  = $manager->getServiceLocator()->get(AgentService::class);
+        $fonctionService = $manager->getServiceLocator()->get(FonctionService::class);
         $ressourceService  = $manager->getServiceLocator()->get(RessourceRhService::class);
 
         /** @var PosteHydrator $hydrator */
@@ -37,6 +40,7 @@ class PosteFormFactory {
         $form->setAutocomplete($manager->getServiceLocator()->get('view_renderer')->url('poste/rechercher-batiment',[],[], true));
         $form->setEntityManager($entityManager);
         $form->setAgentService($agentService);
+        $form->setFonctionService($fonctionService);
         $form->setRessourceRhService($ressourceService);
         $form->init();
         $form->setHydrator($hydrator);

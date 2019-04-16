@@ -39,6 +39,7 @@ $this->headTitle("Index des postes")
         <thead>
         <tr>
             <th> Numero de poste </th>
+            <th> Fonction </th>
             <th> Affectation </th>
             <th> Localisation </th>
             <th> Action </th>
@@ -48,6 +49,7 @@ $this->headTitle("Index des postes")
         <?php foreach ($postes as $poste) : ?>
             <tr>
                 <td> <?php echo $poste->getNumeroPoste(); ?> </td>
+                <td> <?php echo $poste->getFonction(); ?> </td>
                 <td>
                     <?php echo $poste->getStructure(); ?>
                 </td>

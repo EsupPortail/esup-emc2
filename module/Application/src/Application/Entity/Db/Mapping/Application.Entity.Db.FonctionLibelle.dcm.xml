@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\Fonction" table="fonction">
+    <entity name="Application\Entity\Db\FonctionLibelle" table="fonction_libelle">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
+        <many-to-one target-entity="Application\Entity\Db\Fonction" field="fonction">
+            <join-column name="fonction" referenced-column-name="id" />
+        </many-to-one>
+
+        <field name="libelle"              type="string"   length="255"      column="libelle"                  nullable="false"/>
+        <field name="genre"                type="string"   length="1"        column="genre"                    nullable="false"/>
+        <field name="default"              type="string"   length="1"        column="defaut"                   nullable="false"/>
+
         <field name="source"               type="string"   length="64"       column="source"                   nullable="true"/>
         <field name="idSource"             type="string"   length="64"       column="id_source"                 nullable="true"/>
-
-        <one-to-many target-entity="Application\Entity\Db\FonctionLibelle" mapped-by="fonction" field="libelles"/>
 
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
@@ -25,6 +31,5 @@
         <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="id"/>
         </many-to-one>
-
     </entity>
 </doctrine-mapping>

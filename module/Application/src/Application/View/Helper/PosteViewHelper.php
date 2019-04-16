@@ -43,8 +43,7 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dd class="siham">'.$poste->getStructure().'</dd>';
         $texte .= '<dt> Localisation du poste </dt>';
 //        $texte .= '<dd class="siham">'.$poste->getLocalisation().'</dd>';
-//        $texte .= '<dd class="siham">'.$this->getImmobiliserService()->getImmobilierBatiment($poste->getLocalisation()).'</dd>';
-        $texte .= '<dd class="siham">'.'<span class="TODO"> REPARER UNICAEN OCTOPUS </span>'.'</dd>';
+        $texte .= '<dd class="siham">'.$this->getImmobiliserService()->getImmobilierBatiment($poste->getLocalisation()).'</dd>';
         $texte .= '<dt> Rattachement hiérarchique </dt>';
         $texte .= '<dd class="siham">'.(($poste->getRattachementHierarchique())?$poste->getRattachementHierarchique()->getDenomination():"---").'</dd>';
         $texte .= '<dt> Catégorie </dt>';
@@ -52,7 +51,8 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dt> Domaine UNICAEN </dt>';
         $texte .= '<dd class="gpeec">'.(($poste->getDomaine())?$poste->getDomaine()->getLibelle():"---").'</dd>';
         $texte .= '<dt> Fonction </dt>';
-        $texte .= '<dd class="gpeec">'.(($poste->getFonction())?$poste->getFonction()->getLibelle():"---").'</dd>';
+
+        $texte .= '<dd class="gpeec">'.($poste->getFonction())?:"---".'</dd>';
         if ($poste->getLien()) {
             $texte .= '<dt> Lien externe </dt>';
             $texte .= '<dd class="gpeec"><a href="'.$poste->getLien().'">'.$poste->getLien().'</a></dd>';

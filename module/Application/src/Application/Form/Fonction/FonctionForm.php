@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\Fonction;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
@@ -10,18 +10,26 @@ class FonctionForm extends Form {
 
     public function init()
     {
-        // libelle
         $this->add([
             'type' => Text::class,
-            'name' => 'libelle',
+            'name' => 'libelle_masculin',
             'options' => [
-                'label' => "Libelle :",
+                'label' => "Libellé masculin :",
             ],
             'attributes' => [
-                'id' => 'libelle',
+                'id' => 'libelle_masculin',
             ],
         ]);
-        // button
+        $this->add([
+            'type' => Text::class,
+            'name' => 'libelle_feminin',
+            'options' => [
+                'label' => "Libellé féminin :",
+            ],
+            'attributes' => [
+                'id' => 'libelle_feminin',
+            ],
+        ]);
         $this->add([
             'type' => Button::class,
             'name' => 'creer',
@@ -36,5 +44,6 @@ class FonctionForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
     }
 }
