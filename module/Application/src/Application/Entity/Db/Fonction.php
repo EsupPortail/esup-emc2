@@ -2,12 +2,25 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
+
 class Fonction {
+    use HistoriqueAwareTrait;
 
     /** @var integer */
     private $id;
     /** @var string */
-    private $libelle;
+    private $source;
+    /** @var string */
+    private $idSource;
+    /** @var ArrayCollection */
+    private $libelles;
+
+    public function __construct()
+    {
+        $this->libelles = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -20,20 +33,72 @@ class Fonction {
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getSource()
     {
-        return $this->libelle;
+        return $this->source;
     }
 
     /**
-     * @param string $libelle
+     * @param string $source
      * @return Fonction
      */
-    public function setLibelle($libelle)
+    public function setSource($source)
     {
-        $this->libelle = $libelle;
+        $this->source = $source;
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getIdSource()
+    {
+        return $this->idSource;
+    }
 
-};
+    /**
+     * @param string $idSource
+     * @return Fonction
+     */
+    public function setIdSource($idSource)
+    {
+        $this->idSource = $idSource;
+        return $this;
+    }
+
+    /**
+     * @return FonctionLibelle[]
+     */
+    public function getLibelles()
+    {
+        return $this->libelles->toArray();
+    }
+
+    /**
+     * @param FonctionLibelle $libelle
+     * @return Fonction
+     */
+    public function addLibelle($libelle)
+    {
+        $this->libelles->add($libelle);
+        return $this;
+    }
+
+    /**
+     * @param FonctionLibelle $libelle
+     * @return Fonction
+     */
+    public function removeLibelle($libelle)
+    {
+        $this->libelles->removeElement($libelle);
+        return $this;
+    }
+
+    public function __toString()
+    {
+        $tab = [];
+        foreach ($this->getLibelles() as $libelle) $tab[] = $libelle->getLibelle();
+        return implode("/", $tab);
+    }
+
+}

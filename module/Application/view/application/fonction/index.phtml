@@ -1,0 +1,86 @@
+<?php
+
+use Application\Entity\Db\Fonction;
+use Application\Provider\Privilege\FonctionPrivileges;
+
+/**
+ * @var Fonction[] $fonctions
+ */
+
+$this->headTitle('Index dex fonctions');
+
+$canAjouter         = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::AFFICHER));
+$canModifier        = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::EDITER));
+$canHistoriser      = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::HISTORISER));
+$canDelete          = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::EFFACER));
+$canSynchroniser    = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::SYNCHRONISER));
+?>
+
+<h1 class="page-header">
+    Index des fonctions
+</h1>
+
+<div class="main">
+
+    <?php if ($canAjouter) : ?>
+        <a href="" class="btn btn-primary action">
+            <span class="icon ajouter">
+                Ajouter une fonction
+            </span>
+        </a>
+    <?php endif; ?>
+
+    <?php if ($canSynchroniser) : ?>
+    <a href="<?php echo $this->url('fonction/synchroniser', [], [], true); ?>" class="btn btn-primary action">
+        <span class="icon synchoniser">
+            Synchroniser
+        </span>
+    </a>
+    <?php endif; ?>
+
+    <h2>
+        Fonctions
+        <span class="badge">
+            <?php echo count($fonctions); ?>
+        </span>
+    </h2>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Libellés </th>
+                <th> Source </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($fonctions as $fonction) : ?>
+                <tr>
+                    <td>
+                        <ul>
+                            <?php foreach ($fonction->getLibelles() as $libelle) : ?>
+                                <li>
+                                    <span class="badge" style="width:2em;background-color: <?php echo ($libelle->getDefault())?"green":"stalegray"; ?>;">
+                                        <?php echo $libelle->getGenre(); ?>
+                                    </span>
+                                    <?php echo $libelle->getLibelle(); ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </td>
+                    <td>
+                        <?php //TODO source view helper ?>
+                        <?php echo $fonction->getSource(); ?>
+                        <?php if ($fonction->getIdSource()) : ?>
+                            <?php echo " - ". $fonction->getIdSource() ; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

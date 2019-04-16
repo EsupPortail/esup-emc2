@@ -5,6 +5,7 @@ namespace Application;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\FonctionPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\StructurePrivileges;
 
@@ -22,6 +23,20 @@ return [
                         'route' => 'ressource-rh',
                         'roles' => [],
                         'pages' => [
+                            [
+                                'label' => 'Les fonctions',
+                                'route' => 'fonction',
+                                'privileges' => FonctionPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'label' => 'Les structures',
+                                'route' => 'structure',
+                                'privileges' => StructurePrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
                         ],
                     ],
                     'entretien' => [
@@ -82,13 +97,6 @@ return [
                                 'label' => 'Les activités',
                                 'route' => 'activite',
                                 'privileges' => ActivitePrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'label' => 'Les structures',
-                                'route' => 'structure',
-                                'privileges' => StructurePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],

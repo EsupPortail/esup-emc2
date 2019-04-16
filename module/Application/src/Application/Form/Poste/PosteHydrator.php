@@ -4,6 +4,7 @@ namespace Application\Form\Poste;
 
 use Application\Entity\Db\Poste;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Fonction\FonctionServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Octopus\Service\Immobilier\ImmobilierServiceAwareTrait;
@@ -11,6 +12,7 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
+    use FonctionServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     use ImmobilierServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -47,7 +49,7 @@ class PosteHydrator implements HydratorInterface {
         $correspondance = $this->getRessourceRhService()->getCorrespondance($data['correspondance']);
         $rattachement = $this->getAgentService()->getAgent($data['rattachement']);
         $domaine = $this->getRessourceRhService()->getDomaine($data['domaine']);
-        $fonction = $this->getRessourceRhService()->getFonction($data['fonction']);
+        $fonction = $this->getFonctionService()->getFonction($data['fonction']);
 
         $object->setNumeroPoste($data['numero_poste']);
         $object->setLocalisation($data['localisation']['id']);
