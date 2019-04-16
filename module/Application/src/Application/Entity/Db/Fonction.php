@@ -101,4 +101,17 @@ class Fonction {
         return implode("/", $tab);
     }
 
+    /**
+     * @param string $genre
+     * @return FonctionLibelle
+     */
+    public function getDefault($genre)
+    {
+        /** @var FonctionLibelle $libelle */
+        foreach ($this->libelles as $libelle) {
+            if ($libelle->getDefault() && $libelle->getGenre() === $genre) return $libelle;
+        }
+        return null;
+    }
+
 }
