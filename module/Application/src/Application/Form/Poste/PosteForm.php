@@ -7,6 +7,7 @@ use Application\Entity\Db\Fonction;
 use Application\Entity\Db\Structure;
 use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Fonction\FonctionServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Form\Element\SearchAndSelect;
@@ -21,6 +22,7 @@ class PosteForm extends Form  {
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     use EntityManagerAwareTrait;
+    use FonctionServiceAwareTrait;
     use ServiceLocatorAwareTrait;
 
     use AutocompleteAwareTrait;
@@ -94,7 +96,7 @@ class PosteForm extends Form  {
                 'value_options' => $this->generateRattachementSelectOptions(),
             ],
             'attributes' => [
-                'id' => 'agent',
+                'id' => 'rattachement',
             ],
         ]);
 
@@ -122,24 +124,13 @@ class PosteForm extends Form  {
             ],
         ]);
 
-        // domaine
+        // Fonction
         $this->add([
-            'type' => ObjectSelect::class,
+            'type' => Select::class,
             'name' => 'fonction',
             'options' => [
                 'label' => "Fonction :",
-                'empty_option' => "Sélectionner une fonction",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => Fonction::class,
-                'property' => 'libelle',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['libelle' => 'ASC'],
-                    ],
-                ],
-                'disable_inarray_validator' => true,
+                'value_options' => $this->getFonctionService()->getFonctionsAsOption(),
             ],
             'attributes' => [
                 'id' => 'fonction',
