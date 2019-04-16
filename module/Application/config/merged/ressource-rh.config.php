@@ -8,9 +8,6 @@ use Application\Controller\RessourceRh\RessourceRhControllerFactory;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
-use Application\Form\RessourceRh\FonctionForm;
-use Application\Form\RessourceRh\FonctionFormFactory;
-use Application\Form\RessourceRh\FonctionHydrator;
 use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\GradeFormFactory;
 use Application\Form\RessourceRh\GradeHydrator;
@@ -46,6 +43,11 @@ return [
                     'controller' => RessourceRhController::class,
                     'action' => [
                         'index',
+                        'index-corps-grade-status',
+                        'index-metier-et-famille',
+                        'index-correspondance',
+                        'index-domaine',
+                        'index-metier-et-famille',
                         'get-grades-json',
                     ],
                     'privileges' => [
@@ -117,6 +119,50 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'index-corps-grade-status' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-corps-grade-status',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'index-corps-grade-status',
+                            ],
+                        ],
+                    ],
+                    'index-metier-et-famille' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-metier-et-famille',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'index-metier-et-famille',
+                            ],
+                        ],
+                    ],
+                    'index-correspondance' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-correspondance',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'index-correspondance',
+                            ],
+                        ],
+                    ],
+                    'index-domaine' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-domaine',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'index-domaine',
+                            ],
+                        ],
+                    ],
                     'agent-status' => [
                         'type' => Literal::class,
                         'options' => [
@@ -468,7 +514,6 @@ return [
             MetierForm::class => MetierFormFactory::class,
             MetierFamilleForm::class => MetierFamilleFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
-            FonctionForm::class => FonctionFormFactory::class,
             GradeForm::class => GradeFormFactory::class,
         ],
     ],
@@ -479,7 +524,6 @@ return [
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
             MetierFamilleHydrator::class => MetierFamilleHydrator::class,
             DomaineHydrator::class => DomaineHydrator::class,
-            FonctionHydrator::class => FonctionHydrator::class,
         ],
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,

@@ -7,6 +7,7 @@ use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FonctionPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
+use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Provider\Privilege\StructurePrivileges;
 
 return [
@@ -24,6 +25,31 @@ return [
                         'roles' => [],
                         'pages' => [
                             [
+                                'order' => 1,
+                                'label' => 'Les corps, grades et status',
+                                'route' => 'ressource-rh/index-corps-grade-status',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 2,
+                                'label' => 'Les correspondances',
+                                'route' => 'ressource-rh/index-correspondance',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 3,
+                                'label' => 'Les domaines',
+                                'route' => 'ressource-rh/index-domaine',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 4,
                                 'label' => 'Les fonctions',
                                 'route' => 'fonction',
                                 'privileges' => FonctionPrivileges::AFFICHER,
@@ -31,12 +57,23 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
+                                'order' => 5,
+                                'label' => 'Les métiers et familles de métiers',
+                                'route' => 'ressource-rh/index-metier-et-famille',
+                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 6,
                                 'label' => 'Les structures',
                                 'route' => 'structure',
                                 'privileges' => StructurePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
+
+
                         ],
                     ],
                     'entretien' => [
