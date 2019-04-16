@@ -9,6 +9,7 @@ use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -24,6 +25,7 @@ class PosteForm extends Form  {
     use EntityManagerAwareTrait;
     use FonctionServiceAwareTrait;
     use ServiceLocatorAwareTrait;
+    use StructureServiceAwareTrait;
 
     use AutocompleteAwareTrait;
 
@@ -42,22 +44,11 @@ class PosteForm extends Form  {
         ]);
         // structure
         $this->add([
-            'type' => ObjectSelect::class,
+            'type' => Select::class,
             'name' => 'structure',
             'options' => [
                 'label' => "Service/composante/direction d'affectation :",
-                'empty_option' => "Sélectionner une structure",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => Structure::class,
-                'property' => 'libelleLong',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['libelleCourt' => 'ASC'],
-                    ],
-                ],
-                'disable_inarray_validator' => true,
+                'value_options' => $this->getStructureService()->getStructuresAsOptions(),
             ],
             'attributes' => [
                 'id' => 'structure',

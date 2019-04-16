@@ -44,22 +44,49 @@ class RessourceRhController extends AbstractActionController {
 
     public function indexAction()
     {
-        $status = $this->getRessourceRhService()->getAgentStatusListe('libelle');
+        return new ViewModel([]);
+    }
+
+    public function indexCorrespondanceAction()
+    {
         $correspondances = $this->getRessourceRhService()->getCorrespondances('libelle');
-        $metiers = $this->getRessourceRhService()->getMetiers('libelle');
+
+        return new ViewModel([
+            'correspondances' => $correspondances,
+        ]);
+    }
+
+    /** Sub part */
+    public function indexCorpsGradeStatusAction()
+    {
+        $status = $this->getRessourceRhService()->getAgentStatusListe('libelle');
         $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
-        $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
-        $domaines = $this->getRessourceRhService()->getDomaines('libelle');
         $grades = $this->getRessourceRhService()->getGrades();
 
         return new ViewModel([
             'status' => $status,
-            'correspondances' => $correspondances,
+            'corps'  => $corps,
+            'grades' => $grades,
+        ]);
+    }
+
+    public function indexMetierEtFamilleAction()
+    {
+        $metiers = $this->getRessourceRhService()->getMetiers('libelle');
+        $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
+
+        return new ViewModel([
             'metiers' => $metiers,
             'familles' => $familles,
-            'corps' => $corps,
+        ]);
+    }
+
+    public function indexDomaineAction()
+    {
+        $domaines = $this->getRessourceRhService()->getDomaines('libelle');
+
+        return new ViewModel([
             'domaines' => $domaines,
-            'grades' => $grades,
         ]);
     }
 
