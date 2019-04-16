@@ -2,7 +2,7 @@
 
 namespace Autoform\Service\Validation;
 
-use Application\Entity\Db\User;
+use Utilisateur\Entity\Db\User;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use Autoform\Entity\Db\Validation;
 use DateTime;

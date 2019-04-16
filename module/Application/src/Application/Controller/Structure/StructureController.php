@@ -2,14 +2,14 @@
 
 namespace Application\Controller\Structure;
 
-use Application\Entity\Db\Role;
 use Application\Entity\Db\Structure;
-use Application\Entity\Db\User;
 use Application\Form\Structure\StructureFormAwareTrait;
-use Application\Service\Role\RoleServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Utilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use Utilisateur\Entity\Db\Role;
+use Utilisateur\Entity\Db\User;
+use Utilisateur\Service\Role\RoleServiceAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

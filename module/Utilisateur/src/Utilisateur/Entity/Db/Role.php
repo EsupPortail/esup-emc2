@@ -11,10 +11,11 @@ use UnicaenAuth\Entity\Db\UserInterface;
 class Role extends AbstractRole
 {
     //TODO remove it form there
-    const ADMINTECH = 'Administrateur technique';
-    const COMPO     = 'Gestionnaire composante';
-    const RHS       = 'RHS';
-    const SUMPPS    = 'Médecin SUMPPS';
+    const GESTIONNAIRE = 'Gestionnaire de structure';
+    const ADMIN_TECH = 'Administrateur technique';
+    const ADMIN_FONC = 'Administrateur fonctionnel';
+    const UTILISATEUR = 'Utilisateur';
+    const PERSONNEL = 'Personnel';
 
 
     /** @var ArrayCollection */
