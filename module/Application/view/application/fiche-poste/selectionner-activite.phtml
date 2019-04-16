@@ -8,6 +8,9 @@
 $idActivites = explode(";",$ficheTypeExterne->getActivites());
 ?>
 
+<span id="tous_cocher" class="faux-bouton action">   Tous cocher</span>
+<span id="tous_decocher" class="faux-bouton action"> Tous décocher</span>
+
 <form method="post" action="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true); ?>">
 
     <?php $activites = $ficheTypeExterne->getFicheType()->getActivites() ; ?>
@@ -27,3 +30,40 @@ $idActivites = explode(";",$ficheTypeExterne->getActivites());
 
     <input type="submit" class="btn btn-primary" value="Valider la sélection">
 </form>
+
+<script>
+    $( "#tous_cocher" ).click(function() {
+        $("input[type=checkbox]").prop('checked', true);
+    });
+
+    $( "#tous_decocher" ).click(function() {
+        $("input[type=checkbox]").prop('checked', false);
+    });
+</script>
+
+<style>
+    span.faux-bouton {
+        background-color: rgb(51, 122, 183);
+        background-image: none;
+        border-radius: 4px;
+        border-color: rgb(46, 109, 164);
+        border-style: solid;
+        border-width: 1px;
+        box-sizing: border-box;
+        color: rgb(255, 255, 255);
+        cursor: pointer;
+        font-family: ubuntu, arial, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        margin: 1px;
+        padding: 6px;
+        text-align: center;
+        vertical-align: middle;
+        width:20em;
+
+    }
+    span.faux-bouton:hover{
+        background-color: #275a8b;
+    }
+</style>

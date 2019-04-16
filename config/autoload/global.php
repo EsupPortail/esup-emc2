@@ -30,6 +30,7 @@ return [
                 'result_cache'     => ($env === 'production' ? 'memcached' : 'array'),
                 'hydration_cache'  => ($env === 'production' ? 'memcached' : 'array'),
                 'generate_proxies' => ($env !== 'production'),
+                'driver'           => 'orm_octopus',
             ],
         ],
     ],
