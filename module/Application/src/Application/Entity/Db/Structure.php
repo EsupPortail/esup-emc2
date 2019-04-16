@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
+use Utilisateur\Entity\Db\User;
 
 class Structure {
     use HistoriqueAwareTrait;

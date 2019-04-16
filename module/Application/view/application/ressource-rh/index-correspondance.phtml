@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @var \Application\Entity\Db\Correspondance[] $correspondances
+ */
+
+use Application\Provider\Privilege\RessourceRhPrivileges;
+
+$this->headTitle('Index des correpondances');
+
+$canAjouterRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AJOUTER));
+$canEditerRessource     = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::MODIFIER));
+$canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::EFFACER));
+
+?>
+
+<h1 class="page-header">
+    Index des correspondances
+</h1>
+
+<div class="main">
+    <div class="col-md-8">
+        <h2>
+            Liste des catégorie
+            <span class="badge">
+            <?php echo count($correspondances); ?>
+        </span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/correspondance/creer', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une catégorie
+            </a>
+        <?php endif;?>
+    </div>
+    <?php if (count($correspondances) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Id </th>
+                <th> Référence </th>
+                <th> Libelle </th>
+                <th> Description </th>
+                <th class="action"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($correspondances as $correspondance) : ?>
+                <tr>
+                    <td> <?php echo $correspondance->getId(); ?> </td>
+                    <td> <?php echo $correspondance->getReference(); ?> </td>
+                    <td> <?php echo $correspondance->getLibelle(); ?> </td>
+                    <td> <?php echo $correspondance->getDescription(); ?> </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/correspondance/modifier', ['id' => $correspondance->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <span class="icon editer" title="Éditer la correspondance"></span></a>
+                        <?php else : ?>
+                                <span class="icon editer" style="color: lightgrey;"></span>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/correspondance/effacer', ['id' => $correspondance->getId()], [], true); ?>" >
+                                <span class="icon detruire" title="Effacer le status"></span></a>
+                        <?php else : ?>
+                                <span class="icon detruire" style="color: lightgrey;"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

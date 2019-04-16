@@ -5,6 +5,7 @@ namespace Application\Form\Poste;
 use Application\Service\Agent\AgentService;
 use Application\Service\Fonction\FonctionService;
 use Application\Service\RessourceRh\RessourceRhService;
+use Application\Service\Structure\StructureService;
 use Doctrine\ORM\EntityManager;
 use Zend\Form\FormElementManager;
 
@@ -25,11 +26,13 @@ class PosteFormFactory {
          * @var EntityManager $entityManager
          * @var AgentService $agentService
          * @var FonctionService $fonctionService
+         * @var StructureService $structureService
          * @var RessourceRhService $ressourceService
          */
         $entityManager = $manager->getServiceLocator()->get('doctrine.entitymanager.orm_default');
         $agentService  = $manager->getServiceLocator()->get(AgentService::class);
         $fonctionService = $manager->getServiceLocator()->get(FonctionService::class);
+        $structureService = $manager->getServiceLocator()->get(StructureService::class);
         $ressourceService  = $manager->getServiceLocator()->get(RessourceRhService::class);
 
         /** @var PosteHydrator $hydrator */
@@ -41,6 +44,7 @@ class PosteFormFactory {
         $form->setEntityManager($entityManager);
         $form->setAgentService($agentService);
         $form->setFonctionService($fonctionService);
+        $form->setStructureService($structureService);
         $form->setRessourceRhService($ressourceService);
         $form->init();
         $form->setHydrator($hydrator);

@@ -2,7 +2,7 @@
 
 namespace Application\Form\EntretienProfessionnel;
 
-use Application\Service\Role\RoleService;
+use Utilisateur\Service\Role\RoleService;
 use Utilisateur\Service\User\UserService;
 use Zend\Form\FormElementManager;
 
