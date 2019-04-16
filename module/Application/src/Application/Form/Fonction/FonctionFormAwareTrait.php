@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\Fonction;
 
 trait FonctionFormAwareTrait {
 
@@ -24,4 +24,6 @@ trait FonctionFormAwareTrait {
         $this->fonctionForm = $fonctionForm;
         return $this->fonctionForm;
     }
+
+
 }

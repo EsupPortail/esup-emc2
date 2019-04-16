@@ -15,8 +15,6 @@ use Application\Form\RessourceRh\CorpsFormAwareTrait;
 use Application\Form\RessourceRh\CorrespondanceFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormAwareTrait;
-use Application\Form\RessourceRh\FonctionForm;
-use Application\Form\RessourceRh\FonctionFormAwareTrait;
 use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\GradeFormAwareTrait;
 use Application\Form\RessourceRh\MetierFamilleForm;
@@ -40,7 +38,6 @@ class RessourceRhController extends AbstractActionController {
     use CorpsFormAwareTrait;
     use CorrespondanceFormAwareTrait;
     use DomaineFormAwareTrait;
-    use FonctionFormAwareTrait;
     use GradeFormAwareTrait;
     use MetierFamilleFormAwareTrait;
     use MetierFormAwareTrait;
@@ -53,7 +50,6 @@ class RessourceRhController extends AbstractActionController {
         $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
         $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
         $domaines = $this->getRessourceRhService()->getDomaines('libelle');
-        $fonctions = $this->getRessourceRhService()->getFonctions('libelle');
         $grades = $this->getRessourceRhService()->getGrades();
 
         return new ViewModel([
@@ -63,7 +59,6 @@ class RessourceRhController extends AbstractActionController {
             'familles' => $familles,
             'corps' => $corps,
             'domaines' => $domaines,
-            'fonctions' => $fonctions,
             'grades' => $grades,
         ]);
     }
@@ -492,80 +487,6 @@ class RessourceRhController extends AbstractActionController {
 
         if ($domaine !== null) {
             $this->getRessourceRhService()->deleteDomaine($domaine);
-        }
-
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
-    }
-
-    /** FONCTION ******************************************************************************************************/
-
-    public function ajouterFonctionAction()
-    {
-        /** @var Fonction $fonction */
-        $fonction = new Fonction();
-
-        /** @var FonctionForm $form */
-        $form = $this->getFonctionForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/fonction/ajouter', [], [], true));
-        $form->bind($fonction);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->createFonction($fonction);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter une fonction',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierFonctionAction()
-    {
-        /** @var Fonction $fonction */
-        $fonctionId = $this->params()->fromRoute('fonction');
-        $fonction = $this->getRessourceRhService()->getFonction($fonctionId);
-
-        /** @var FonctionForm $form */
-        $form = $this->getFonctionForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/fonction/modifier', ['fonction' => $fonction->getId()], [], true));
-        $form->bind($fonction);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->updateFonction($fonction);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier une fonction',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function supprimerFonctionAction()
-    {
-        /** @var Fonction $fonction */
-        $fonctionId = $this->params()->fromRoute('fonction');
-        $fonction = $this->getRessourceRhService()->getFonction($fonctionId);
-
-        if ($fonction !== null) {
-            $this->getRessourceRhService()->deleteFonction($fonction);
         }
 
         $this->redirect()->toRoute('ressource-rh', [], [], true);
