@@ -2,34 +2,25 @@
 
 namespace Application\Form\FicheMetierType;
 
-use Application\Entity\Db\Activite;
-use DoctrineModule\Form\Element\ObjectSelect;
+use Application\Service\Activite\ActiviteServiceAwareTrait;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
 class ActiviteExistanteForm extends Form {
+    use ActiviteServiceAwareTrait;
     use EntityManagerAwareTrait;
 
     public function init()
     {
+        $object = $this->getObject();
         $this->add([
-            'type' => ObjectSelect::class,
+            'type' => Select::class,
             'name' => 'activite',
             'options' => [
                 'label' => "Activité :",
-                'empty_option' => "Sélectionner une activité ...",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => Activite::class,
-                'property' => 'libelle',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['libelle' => 'ASC'],
-                    ],
-                ],
-                'disable_inarray_validator' => true,
+                'value_options' => $this->getActiviteService()->getActivitesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'activite',
