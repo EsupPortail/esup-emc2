@@ -21,6 +21,7 @@ use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -226,6 +227,10 @@ class FicheMetierTypeController extends  AbstractActionController{
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-activite-existante', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
+        /** @var Select $select */
+        $select = $form->get('activite');
+        $select->setValueOptions($this->getActiviteService()->getActivitesAsOptions($fiche));
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -261,7 +266,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->removeFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $couple->getFiche()->getId()], [], true);
+        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
     public function deplacerActiviteAction()
@@ -275,7 +280,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $couple->getFiche()->getId()], [], true);
+        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
     public function modifierConnaissancesAction() {
