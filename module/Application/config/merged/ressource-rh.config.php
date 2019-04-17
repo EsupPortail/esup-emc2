@@ -2,9 +2,17 @@
 
 namespace Application;
 
-use Application\Controller\Metier\MetierController;
 use Application\Controller\RessourceRh\RessourceRhController;
 use Application\Controller\RessourceRh\RessourceRhControllerFactory;
+use Application\Form\RessourceRh\AgentStatusForm;
+use Application\Form\RessourceRh\AgentStatusFormFactory;
+use Application\Form\RessourceRh\AgentStatusHydrator;
+use Application\Form\RessourceRh\CorpsForm;
+use Application\Form\RessourceRh\CorpsFormFactory;
+use Application\Form\RessourceRh\CorpsHydrator;
+use Application\Form\RessourceRh\CorrespondanceForm;
+use Application\Form\RessourceRh\CorrespondanceFormFactory;
+use Application\Form\RessourceRh\CorrespondanceHydrator;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
@@ -18,15 +26,6 @@ use Application\Form\RessourceRh\MetierFamilleHydrator;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
-use Application\Form\RessourceRh\AgentStatusForm;
-use Application\Form\RessourceRh\AgentStatusFormFactory;
-use Application\Form\RessourceRh\AgentStatusHydrator;
-use Application\Form\RessourceRh\CorpsForm;
-use Application\Form\RessourceRh\CorpsFormFactory;
-use Application\Form\RessourceRh\CorpsHydrator;
-use Application\Form\RessourceRh\CorrespondanceForm;
-use Application\Form\RessourceRh\CorrespondanceFormFactory;
-use Application\Form\RessourceRh\CorrespondanceHydrator;
 use Application\Form\RessourceRh\MetierHydratorFactory;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Service\RessourceRh\RessourceRhService;
@@ -284,10 +283,6 @@ return [
                         'type'  => Literal::class,
                         'options' => [
                             'route'    => '/metier',
-                            'defaults' => [
-                                'controller' => MetierController::class,
-                                'action'     => 'index',
-                            ],
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
