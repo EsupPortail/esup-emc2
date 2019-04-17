@@ -42,7 +42,8 @@ return [
     'router'          => [
         'routes' => [
             'home'        => [
-                'type'    => Literal::class,
+                'type'          => Literal::class,
+                'may_terminate' => true,
                 'options' => [
                     'route'    => '/',
                     'defaults' => [
@@ -50,7 +51,17 @@ return [
                         'action'     => 'index',
                     ],
                 ],
+            ],
+            'index-personnel' => [
+                'type'          => Literal::class,
                 'may_terminate' => true,
+                'options' => [
+                    'route'    => '/index-personnel',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action'     => 'index-personnel',
+                    ],
+                ],
             ],
             'administration'        => [
                 'type'    => Literal::class,
@@ -103,8 +114,8 @@ return [
     'public_files' => [
         'inline_scripts' => [
             '100_' => 'js/jquery.ui.datepicker-fr.js',
-            '110_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js',
-            '111_' => 'https://gest.unicaen.fr/public/bootstrap-confirmation-2.4.0/bootstrap-confirmation.min.js',
+            //'110_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js',
+            //'111_' => 'https://gest.unicaen.fr/public/bootstrap-confirmation-2.4.0/bootstrap-confirmation.min.js',
             '112_' => 'vendor/font-awesome-5.0.9/fontawesome-all.min.js',
             '124_' => 'vendor/vakata-jstree-3.3.4/dist/jstree.min.js',
             '150_' => 'js/tinymce/js/tinymce/tinymce.js',
@@ -112,8 +123,8 @@ return [
         ],
         'stylesheets' => [
             '050_bootstrap-theme' => '',
-            '111_' => 'https://gest.unicaen.fr/public/open-sans-gh-pages/open-sans.css',
-            '113_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css',
+            //'111_' => 'https://gest.unicaen.fr/public/open-sans-gh-pages/open-sans.css',
+            //'113_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css',
             '121_' => 'vendor/vakata-jstree-3.3.4/dist/themes/proton/style.min.css',
         ],
         'images' => [
