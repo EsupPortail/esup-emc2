@@ -9,7 +9,7 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\Activite;
+use Utilisateur\Entity\Db\Role;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -20,9 +20,27 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
+        /** @var Role $connectedRole */
+        $connectedRole = $this->getUserService()->getConnectedRole();
+
+        switch ($connectedRole->getRoleId()) {
+            case Role::PERSONNEL :
+                $this->redirect()->toRoute('index-personnel', [], [], true);
+                break;
+        }
+
         $identity = $this->getUserService()->getConnectedUser();
         return new ViewModel([
             'user' => $identity,
+        ]);
+    }
+
+    public function indexPersonnelAction() {
+
+        $user = $this->getUserService()->getConnectedUser();
+
+        return new ViewModel([
+           'user' => $user,
         ]);
     }
 
