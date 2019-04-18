@@ -3,6 +3,11 @@
 namespace Fichier\Entity\Db;
 
 class Nature {
+    const CV        = 'CV';
+    const MOTIV     = 'MOTIV';
+    const FORMATION = 'FORMATION';
+    const AUTRE     = 'AUTRE';
+
     /** @var integer */
     private $id;
     /** @var string */

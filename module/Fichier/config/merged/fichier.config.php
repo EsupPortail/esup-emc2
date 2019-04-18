@@ -2,7 +2,6 @@
 
 namespace Application;
 
-use Autoform\Provider\Privilege\IndexPrivileges;
 use Fichier\Controller\Fichier\FichierController;
 use Fichier\Controller\Fichier\FichierControllerFactory;
 use Fichier\Form\Upload\UploadForm;
@@ -12,6 +11,7 @@ use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Fichier\FichierServiceFactory;
 use Fichier\Service\Nature\NatureService;
 use Fichier\Service\Nature\NatureServiceFactory;
+use Fichier\View\Helper\FichierViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -44,10 +44,10 @@ return [
                 ],
                 'child_routes' => [
                     'upload' => [
-                        'type' => Literal::class,
+                        'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/upload',
+                            'route'    => '/upload[/:nature]',
                             'default' => [
                                 'controller' => FichierController::class,
                                 'action' => 'upload',
@@ -60,10 +60,10 @@ return [
                 ],
             ],
             'upload-fichier' => [
-                'type'          => Literal::class,
+                'type'          => Segment::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/upload-fichier',
+                    'route'    => '/upload-fichier[/:nature]',
                     'defaults' => [
                         'controller' => FichierController::class,
                         'action'     => 'upload',
@@ -115,6 +115,11 @@ return [
         'invokables' => [
             UploadHydrator::class => UploadHydrator::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'fichier' => FichierViewHelper::class,
+        ],
+    ],
 
 ];

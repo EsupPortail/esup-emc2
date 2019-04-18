@@ -115,7 +115,7 @@ return [
         'inline_scripts' => [
             '100_' => 'js/jquery.ui.datepicker-fr.js',
 //            '110_' => 'https://gest.unicaen.fr/public/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js',
-//            '111_' => 'https://gest.unicaen.fr/public/bootstrap-confirmation-2.4.0/bootstrap-confirmation.min.js',
+            '111_' => 'https://gest.unicaen.fr/public/bootstrap-confirmation-2.4.0/bootstrap-confirmation.min.js',
             '112_' => 'vendor/font-awesome-5.0.9/fontawesome-all.min.js',
             '120_' => 'vendor/bootstrap-select-1.13.2/dist/js/bootstrap-select.min.js',
             '124_' => 'vendor/vakata-jstree-3.3.4/dist/jstree.min.js',
