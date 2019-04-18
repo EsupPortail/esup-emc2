@@ -157,11 +157,26 @@ span.icon.selectionner:before {
     content: "\f65e";
 }
 
+span.icon.telecharger:before {
+    content: "\f019";
+}
+
+span.icon.televerser:before {
+    content: "\f093";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
 
 /** AUTRE *************************************************************************************************************/
+
+div.fichier-view-helper {
+    border: 2px black dashed;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+}
 
 body {
     background-color: #eeeeee;

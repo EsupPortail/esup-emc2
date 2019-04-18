@@ -8,6 +8,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentService {
     use EntityManagerAwareTrait;
@@ -45,6 +46,18 @@ class AgentService {
             throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$id."]");
         }
         return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return Agent
+     */
+    public function getRequestedAgent($controller, $paramName)
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $agent = $this->getAgent($id);
+        return $agent;
     }
 
     /**

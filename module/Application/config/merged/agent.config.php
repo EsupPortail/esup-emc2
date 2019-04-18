@@ -4,6 +4,8 @@ namespace Application;
 
 use Application\Controller\Agent\AgentController;
 use Application\Controller\Agent\AgentControllerFactory;
+use Application\Controller\AgentFichier\AgentFichierController;
+use Application\Controller\AgentFichier\AgentFichierControllerFactory;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
@@ -61,6 +63,16 @@ return [
                         AgentPrivileges::EDITER,
                     ],
                 ],
+                [
+                    'controller' => AgentFichierController::class,
+                    'action' => [
+                        'index',
+                        'upload'
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AFFICHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -78,6 +90,26 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'fichiers' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/fichiers/:agent',
+                            'defaults' => [
+                                'controller' => AgentFichierController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                    ],
+                    'upload-fichier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/upload-fichier/:agent/:nature',
+                            'defaults' => [
+                                'controller' => AgentFichierController::class,
+                                'action'     => 'upload',
+                            ],
+                        ],
+                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -153,6 +185,7 @@ return [
     'controllers'     => [
         'factories' => [
             AgentController::class => AgentControllerFactory::class,
+            AgentFichierController::class => AgentFichierControllerFactory::class,
         ],
     ],
     'form_elements' => [

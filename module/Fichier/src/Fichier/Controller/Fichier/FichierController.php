@@ -6,6 +6,7 @@ use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
+use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -17,10 +18,21 @@ class FichierController extends AbstractActionController {
 
     public function uploadAction()
     {
+        $natureCode = $this->params()->fromRoute('nature');
+        $nature = $this->getNatureService()->getNatureByCode($natureCode);
+
         $fichier = new Fichier();
         $form = $this->getUploadForm();
         $form->setAttribute('action', $this->url()->fromRoute('upload-fichier',[] , [], true));
         $form->bind($fichier);
+
+        if ($nature) {
+            /** @var Select $select */
+            $select = $form->get('nature');
+            $select->setValueOptions([ $nature->getId() => $nature->getLibelle()]);
+        }
+
+        /** !TODO! lorsque l'on est dans une modal on perd le tableau files ... */
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -66,7 +78,13 @@ class FichierController extends AbstractActionController {
 
     public function deleteAction() {
         $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+        $retour  = $this->params()->fromQuery('retour');
 
-        $this->getFichierService()->removeFichier($fichier);
+        if ($fichier) $this->getFichierService()->removeFichier($fichier);
+
+        if ($retour) {
+            $this->redirect()->toUrl($retour);
+        }
+
     }
 }

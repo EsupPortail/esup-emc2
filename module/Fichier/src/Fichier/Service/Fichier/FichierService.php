@@ -232,7 +232,7 @@ class FichierService {
 
     public function removeFichier(Fichier $fichier)
     {
-        $path = '/app/upload' . $fichier->getNomStockage();
+        $path = '/app/upload/' . $fichier->getNomStockage();
         $res = unlink($path);
         if ($res === false) {
             throw new RuntimeException("Un problème est survenue lors de l'effacement du fichier");

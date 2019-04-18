@@ -43,4 +43,22 @@ class NatureService {
         }
         return $result;
     }
+
+    /**
+     * @param string $code
+     * @return Nature
+     */
+    public function getNatureByCode($code)
+    {
+        $qb = $this->getEntityManager()->getRepository(Nature::class)->createQueryBuilder('nature')
+            ->andWhere('nature.code = :code')
+            ->setParameter('code', $code)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Nature partagent le même code [".$code."]", $e);
+        }
+        return $result;
+    }
 }

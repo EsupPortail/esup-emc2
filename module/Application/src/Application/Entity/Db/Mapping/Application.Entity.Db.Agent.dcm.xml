@@ -27,5 +27,16 @@
             <join-column name="grade" referenced-column-name="id" />
         </many-to-one>
 
+        <many-to-many field="fichiers" target-entity="Fichier\Entity\Db\Fichier" inversed-by="fichier" fetch="LAZY">
+            <join-table name="agent_fichier">
+                <join-columns>
+                    <join-column name="agent" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="fichier" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
     </entity>
 </doctrine-mapping>
