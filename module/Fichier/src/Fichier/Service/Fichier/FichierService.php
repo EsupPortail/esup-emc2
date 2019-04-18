@@ -186,20 +186,23 @@ class FichierService {
                 throw new RuntimeException("Possible file upload attack: " . $path);
             }
 
+            $uid = uniqid();
+
             $fichier = new Fichier();
             $fichier
+                ->setId($uid)
                 ->setNature($nature)
                 ->setTypeMime($typeFichier)
                 ->setNomOriginal($nomFichier)
                 ->setTaille($tailleFichier)
             ;
-            $fichier->setNomStockage($date->format('Ymd-His')."-".uniqid()."-".$nature->getCode()."-".$nomFichier);
+            $fichier->setNomStockage($date->format('Ymd-His')."-".$uid."-".$nature->getCode()."-".$nomFichier);
 
             $newPath = '/app/upload/' . $fichier->getNomStockage();
             $res = move_uploaded_file($path, $newPath);
 
             if ($res === false) {
-                throw new RuntimeException("Impossible de déplacer le fichier temporaire uploadé de $fromPath vers $newPath");
+                throw new RuntimeException("Impossible de déplacer le fichier temporaire uploadé de $path vers $newPath");
             }
 
             $this->create($fichier);
@@ -227,7 +230,15 @@ class FichierService {
         return $contenuFichier;
     }
 
-
+    public function removeFichier(Fichier $fichier)
+    {
+        $path = '/app/upload' . $fichier->getNomStockage();
+        $res = unlink($path);
+        if ($res === false) {
+            throw new RuntimeException("Un problème est survenue lors de l'effacement du fichier");
+        }
+        $this->delete($fichier);
+    }
 
 
 }

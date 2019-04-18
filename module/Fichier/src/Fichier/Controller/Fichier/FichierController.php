@@ -63,4 +63,10 @@ class FichierController extends AbstractActionController {
         echo $contenuFichier;
         exit;
     }
+
+    public function deleteAction() {
+        $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+
+        $this->getFichierService()->removeFichier($fichier);
+    }
 }
