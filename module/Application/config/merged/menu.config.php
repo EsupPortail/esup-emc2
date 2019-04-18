@@ -183,6 +183,14 @@ return [
 //                                'withtarget' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
+                            'fichier' => [
+                                'label'      => "Fichier",
+                                'title'      => "Module Fichier",
+                                'route'      => 'index-fichier',
+                                'roles'      => [],
+//                                'withtarget' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
                         ],
                     ],
                     'fiche-metier' => [
