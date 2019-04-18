@@ -3,6 +3,7 @@
 namespace Fichier\Service\Fichier;
 
 use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use Fichier\Entity\Db\Fichier;
@@ -11,6 +12,7 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Utilisateur\Entity\Db\User;
 use Utilisateur\Service\User\UserServiceAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class FichierService {
     use EntityManagerAwareTrait;
@@ -127,12 +129,42 @@ class FichierService {
     }
 
     /**
+     * @param integer $id
+     * @return Fichier
+     */
+    public function getFichier($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(Fichier::class)->createQueryBuilder('fichier')
+            ->andWhere('fichier.id = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Fichier partagent le même identifiant [".$id."]", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return Fichier
+     */
+    public function getRequestedFichier($controller, $paramName)
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $fichier = $this->getFichier($id);
+        return $fichier;
+    }
+
+    /**
      * Crée un fichier à partir des données d'upload fournies.
-     * @param array           $uploadResult Données résultant de l'upload de fichier
+     * @param array           $file Données résultant de l'upload de fichier
      * @param Nature          $nature       Version de fichier
      * @return Fichier fichier
      */
-    public function createFichierFromUpload( array $uploadResult, Nature $nature)
+    public function createFichierFromUpload($file, $nature)
     {
         /** @var DateTime $date */
         try {
@@ -142,7 +174,6 @@ class FichierService {
         }
 
         $fichier = null;
-        $file = current($uploadResult['files']);
 
         if (isset($file['name'])) {
 
@@ -155,12 +186,6 @@ class FichierService {
                 throw new RuntimeException("Possible file upload attack: " . $path);
             }
 
-//            try {
-//                $fichierId = Uuid::uuid4()->toString();
-//            } catch (Exception $e) {
-//                throw new RuntimeException("Un problème est survenu lors de la création d'identifiant d'un Fichier.", $e);
-//            }
-
             $fichier = new Fichier();
             $fichier
                 ->setNature($nature)
@@ -168,16 +193,40 @@ class FichierService {
                 ->setNomOriginal($nomFichier)
                 ->setTaille($tailleFichier)
             ;
-            // à faire en dernier car le formatter exploite des propriétés du Fichier
-            $uid = uniqid();
-            $fichier->setNomStockage($date->format('Ymd-His')."-".$uid."-".$nature->getCode()."-".$nomFichier);
+            $fichier->setNomStockage($date->format('Ymd-His')."-".uniqid()."-".$nature->getCode()."-".$nomFichier);
 
-            //TODO $this->moveUploadedFileForFichier($fichier, $path);
+            $newPath = '/app/upload/' . $fichier->getNomStockage();
+            $res = move_uploaded_file($path, $newPath);
+
+            if ($res === false) {
+                throw new RuntimeException("Impossible de déplacer le fichier temporaire uploadé de $fromPath vers $newPath");
+            }
+
             $this->create($fichier);
         }
-
         return $fichier;
     }
+
+    /**
+     * Retourne le contenu d'un Fichier sous la forme d'une chaîne de caractères.
+     *
+     * @param Fichier $fichier
+     * @return string
+     */
+    public function fetchContenuFichier(Fichier $fichier)
+    {
+        $filePath = '/app/upload/' . $fichier->getNomStockage();
+
+        if (! is_readable($filePath)) {
+            throw new RuntimeException(
+                "Le fichier suivant n'existe pas ou n'est pas accessible sur le serveur : " . $filePath);
+        }
+
+        $contenuFichier = file_get_contents($filePath);
+
+        return $contenuFichier;
+    }
+
 
 
 

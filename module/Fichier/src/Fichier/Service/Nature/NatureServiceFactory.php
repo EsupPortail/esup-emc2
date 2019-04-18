@@ -1,26 +1,22 @@
 <?php
 
-namespace Fichier\Service\Fichier;
+namespace Fichier\Service\Nature;
 
 use Doctrine\ORM\EntityManager;
-use Utilisateur\Service\User\UserService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class FichierServiceFactory {
+class NatureServiceFactory {
 
     public function __invoke(ServiceLocatorInterface $serviceLocator)
     {
         /**
          * @var EntityManager $entityManager
-         * @var UserService $userService
          */
         $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        $userService = $serviceLocator->get(UserService::class);
 
-        /** @var FichierService $service */
-        $service = new FichierService();
+        /** @var NatureService $service */
+        $service = new NatureService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
         return $service;
     }
 }
