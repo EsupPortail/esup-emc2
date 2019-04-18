@@ -7,7 +7,7 @@ use UnicaenApp\Entity\HistoriqueAwareTrait;
 class Fichier {
     use HistoriqueAwareTrait;
 
-    /** @var integer */
+    /** @var string */
     private $id;
     /** @var string */
     private $nomOriginal;
@@ -21,11 +21,21 @@ class Fichier {
     private $taille;
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param string $id
+     * @return Fichier
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**

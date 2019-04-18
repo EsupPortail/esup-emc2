@@ -25,6 +25,7 @@ return [
                     'action' => [
                         'upload',
                         'download',
+                        'delete',
                     ],
                     'roles' => [
                         'Administrateur technique'
@@ -77,6 +78,17 @@ return [
                     'defaults' => [
                         'controller' => FichierController::class,
                         'action'     => 'download',
+                    ],
+                ],
+            ],
+            'delete-fichier' => [
+                'type'          => Segment::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route'    => '/delete-fichier/:fichier',
+                    'defaults' => [
+                        'controller' => FichierController::class,
+                        'action'     => 'delete',
                     ],
                 ],
             ],
