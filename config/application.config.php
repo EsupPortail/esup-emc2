@@ -5,6 +5,7 @@ $modules = [
     'BjyAuthorize', 'AssetManager',
     'UnicaenApp', 'UnicaenAuth', 'UnicaenLdap',
     'Autoform',
+    'Fichier',
     'Mailing',
     'Octopus',
     'Utilisateur',
