@@ -3,6 +3,7 @@
 namespace Fichier\View\Helper;
 
 use Fichier\Entity\Db\Fichier;
+use UnicaenApp\Filter\BytesFormatter;
 use Zend\View\Helper\AbstractHelper;
 
 class FichierViewHelper extends AbstractHelper
@@ -37,7 +38,7 @@ class FichierViewHelper extends AbstractHelper
         $text .= "<dt>Nom du fichier</dt>";
         $text .= "<dd>". $fichier->getNomOriginal() . "</dd>";
         $text .= "<dt>Taille du fichier</dt>";
-        $text .= "<dd>". $fichier->getTaille()."</dd>";
+        $text .= "<dd>". (new BytesFormatter())->filter($fichier->getTaille())."</dd>";
         $text .= "<dt>Déposé</dt>";
         $text .= "<dd>". $fichier->getHistoModification()->format('d/m/Y à H:i') . " par " . $fichier->getHistoModificateur()->getDisplayName() ."</dd>";
         $text .= "</dl>";
