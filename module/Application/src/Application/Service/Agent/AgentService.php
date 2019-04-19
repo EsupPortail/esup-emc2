@@ -6,8 +6,10 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\MissionComplementaire;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use UnicaenApp\Entity\Ldap\People;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Utilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentService {
@@ -58,6 +60,39 @@ class AgentService {
         $id = $controller->params()->fromRoute($paramName);
         $agent = $this->getAgent($id);
         return $agent;
+    }
+
+    /**
+     * @param User $user
+     * @return Agent
+     */
+    public function getAgentByUser($user)
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere('agent.utilisateur = :user')
+            ->setParameter('user', $user)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Agent liés au même User [".$user->getId()."]", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param People $people
+     * @param User user
+     * @return Agent
+     */
+    public function createFromLDAP($people, $user)
+    {
+        $agent = new Agent();
+        $agent->setUtilisateur($user);
+        $agent->setNom($people->getNomUsuel());
+        $agent->setPrenom($people->getGivenName());
+
+        $this->create($agent);
     }
 
     /**

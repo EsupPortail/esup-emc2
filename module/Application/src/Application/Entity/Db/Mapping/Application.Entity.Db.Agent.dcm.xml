@@ -38,5 +38,9 @@
             </join-table>
         </many-to-many>
 
+        <many-to-one target-entity="Utilisateur\Entity\Db\User" field="utilisateur">
+            <join-column name="utilisateur" referenced-column-name="id" />
+        </many-to-one>
+
     </entity>
 </doctrine-mapping>
