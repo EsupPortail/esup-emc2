@@ -51,7 +51,7 @@ return [
                                 'order' => 300,
                                 'label' => 'Mes fichiers',
                                 'icon' => 'fas fa-angle-right',
-                                'route' => 'ressource-rh',
+                                'route' => 'agent/fichiers',
                                 'roles' => [
                                     'Personnel',
                                 ],

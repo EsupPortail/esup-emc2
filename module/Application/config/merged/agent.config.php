@@ -93,7 +93,7 @@ return [
                     'fichiers' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/fichiers/:agent',
+                            'route'    => '/fichiers[/:agent]',
                             'defaults' => [
                                 'controller' => AgentFichierController::class,
                                 'action'     => 'index',

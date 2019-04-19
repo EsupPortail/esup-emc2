@@ -8,6 +8,8 @@ use Fichier\Entity\Db\Nature;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
+use UnicaenApp\Exception\RuntimeException;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -17,12 +19,23 @@ class AgentFichierController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use FichierServiceAwareTrait;
     use NatureServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     use UploadFormAwareTrait;
 
     public function indexAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this,'agent');
+        if ($agent === null) {
+            $user = $this->getUserService()->getConnectedUser();
+            $agent = $this->getAgentService()->getAgentByUser($user);
+
+            if ($agent !== null) {
+                $this->redirect()->toRoute('agent/fichiers', ['agent' => $agent->getId()], [], true);
+            } else {
+                throw new RuntimeException("L'utilisateur connecté n'est pas associté à un agent !");
+            }
+        }
 
         /** @var Fichier $cv */
         $cv = $agent->fetchFile(Nature::CV);

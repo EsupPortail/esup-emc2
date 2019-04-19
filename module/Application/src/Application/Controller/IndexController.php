@@ -35,7 +35,7 @@ class IndexController extends AbstractActionController
                     $this->redirect()->toRoute('index-personnel', [], [], true);
                     break;
                 default :
-                    var_dump($connectedRole);
+                    //var_dump($connectedRole);
                     break;
             }
         }
@@ -53,8 +53,6 @@ class IndexController extends AbstractActionController
                 $this->redirect()->toRoute('home', [], [], true);
             }
         }
-
-
 
         return new ViewModel([
             'user' => $identity,
