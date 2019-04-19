@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
 use UnicaenApp\Exception\RuntimeException;
+use Utilisateur\Entity\Db\User;
 
 class Agent {
 
@@ -34,6 +35,8 @@ class Agent {
     private $corps;
     /** @var Grade */
     private $grade;
+    /** @var User */
+    private $utilisateur;
 
 
     /** @var string */
@@ -284,6 +287,26 @@ class Agent {
         $this->fichiers->removeElement($fichier);
         return $this;
     }
+
+    /**
+     * @return User
+     */
+    public function getUtilisateur()
+    {
+        return $this->utilisateur;
+    }
+
+    /**
+     * @param User $utilisateur
+     * @return Agent
+     */
+    public function setUtilisateur($utilisateur)
+    {
+        $this->utilisateur = $utilisateur;
+        return $this;
+    }
+
+
 
     /**
      * @param string $natureCode
