@@ -56,15 +56,18 @@ class IndexController extends AbstractActionController
 
         return new ViewModel([
             'user' => $identity,
+            'agent' => $agent,
         ]);
     }
 
     public function indexPersonnelAction() {
 
         $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($user);
 
         return new ViewModel([
            'user' => $user,
+            'agent' => $agent,
         ]);
     }
 

@@ -26,16 +26,16 @@ return [
                             'Personnel'
                         ],
                         'pages' => [
-                            'index-personnel' => [
-                                'visible' => true,
-                                'order' => 100,
-                                'label' => 'Mon accueil',
-                                'icon' => 'fas fa-angle-right',
-                                'route' => 'index-personnel',
-                                'roles' => [
-                                    'Personnel',
-                                ],
-                            ],
+//                            'index-personnel' => [
+//                                'visible' => true,
+//                                'order' => 100,
+//                                'label' => 'Mon accueil',
+//                                'icon' => 'fas fa-angle-right',
+//                                'route' => 'index-personnel',
+//                                'roles' => [
+//                                    'Personnel',
+//                                ],
+//                            ],
                             'entretien' => [
                                 'visible' => true,
                                 'order' => 200,
