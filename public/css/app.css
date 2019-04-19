@@ -165,6 +165,18 @@ span.icon.televerser:before {
     content: "\f093";
 }
 
+span.icon.entretiens:before {
+    content: "\f51c";
+}
+
+span.icon.fichiers:before {
+    content: "\f07c";
+}
+
+span.icon.donnees:before {
+    content: "\f2c2";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
