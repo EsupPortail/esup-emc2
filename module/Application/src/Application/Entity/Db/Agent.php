@@ -3,6 +3,10 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Fichier\Entity\Db\Fichier;
+use UnicaenApp\Exception\RuntimeException;
+use Utilisateur\Entity\Db\User;
 
 class Agent {
 
@@ -31,11 +35,20 @@ class Agent {
     private $corps;
     /** @var Grade */
     private $grade;
+    /** @var User */
+    private $utilisateur;
 
 
     /** @var string */
     private $missionsComplementaires;
 
+    /** @var ArrayCollection */
+    private $fichiers;
+
+    public function __construct()
+    {
+        $this->fichiers = new ArrayCollection();
+    }
     /**
      * @return int
      */
@@ -247,7 +260,80 @@ class Agent {
         return $this;
     }
 
+    /**
+     * @return Fichier[]
+     */
+    public function getFichiers()
+    {
+        return $this->fichiers->toArray();
+    }
+
+    /**
+     * @param Fichier $fichier
+     * @return Agent
+     */
+    public function addFichier($fichier)
+    {
+        $this->fichiers->add($fichier);
+        return $this;
+    }
+
+    /**
+     * @param Fichier $fichier
+     * @return Agent
+     */
+    public function removeFichier($fichier)
+    {
+        $this->fichiers->removeElement($fichier);
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUtilisateur()
+    {
+        return $this->utilisateur;
+    }
+
+    /**
+     * @param User $utilisateur
+     * @return Agent
+     */
+    public function setUtilisateur($utilisateur)
+    {
+        $this->utilisateur = $utilisateur;
+        return $this;
+    }
 
 
 
+    /**
+     * @param string $natureCode
+     * @return Fichier
+     */
+    public function fetchFile($natureCode)
+    {
+        $result = $this->fetchFiles($natureCode);
+        $nb = count($result);
+
+        if ($nb === 0) return null;
+        if ($nb > 1) throw new RuntimeException("Plusieurs fichiers de nature [] trouvés.");
+
+        return current($result);
+    }
+
+    /**
+     * @param string $natureCode
+     * @return Fichier[]
+     */
+    public function fetchFiles($natureCode)
+    {
+        $result = [];
+        /** @var Fichier $fichier */
+        foreach ($this->fichiers as $fichier) {
+            if ($fichier->getNature()->getCode() === $natureCode) $result[] = $fichier;
+        }
+        return $result;
+    }
 }

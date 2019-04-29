@@ -21,6 +21,7 @@ use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -51,12 +52,10 @@ class FicheMetierTypeController extends  AbstractActionController{
     public function afficherAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
-//        $activites = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
 
         return new ViewModel([
             'title' => 'Visualisation d\'une fiche métier',
             'fiche' => $fiche,
-//            'activites' => $activites,
         ]);
     }
 
@@ -101,7 +100,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = new FicheMetierType();
 
         /** @var LibelleForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(LibelleForm::class);
+        $form = $this->getLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [] , true));
         $form->bind($fiche);
 
@@ -130,7 +129,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
 
         /** @var MissionsPrincipalesForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(LibelleForm::class);
+        $form = $this->getLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-libelle',['id' => $fiche->getId()],[], true));
         $form->bind($fiche);
         /** @var Request $request */
@@ -158,7 +157,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
 
         /** @var MissionsPrincipalesForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(MissionsPrincipalesForm::class);
+        $form = $this->getMissionsPrincipalesForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-missions-principales',['id' => $fiche->getId()],[], true));
         $form->bind($fiche);
         /** @var Request $request */
@@ -187,7 +186,6 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
 
         $activite = new Activite();
-
         /** @var MissionsPrincipalesForm $form */
         $form = $this->getActiviteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-nouvelle-activite',['id' => $fiche->getId()],[], true));
@@ -198,12 +196,9 @@ class FicheMetierTypeController extends  AbstractActionController{
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
-
                 $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
-                //$this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
             }
         }
 
@@ -222,20 +217,21 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
 
         /** @var ActiviteExistanteForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ActiviteExistanteForm::class);
+        $form = $this->getActiviteExistanteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-activite-existante', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
+
+        /** @var Select $select */
+        $select = $form->get('activite');
+        $select->setValueOptions($this->getActiviteService()->getActivitesAsOptions($fiche));
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-
-//            if ($form->isValid()) {
-                $activite = $this->getActiviteService()->getActivite($data['activite']);
-                $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
-//            }
+            $activite = $this->getActiviteService()->getActivite($data['activite']);
+            $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
         }
 
         $activites = $this->getActiviteService()->getActivites();
@@ -261,7 +257,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->removeFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $couple->getFiche()->getId()], [], true);
+        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
     public function deplacerActiviteAction()
@@ -275,16 +271,16 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $couple->getFiche()->getId()], [], true);
+        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
-    public function modifierConnaissancesAction() {
-
+    public function modifierConnaissancesAction()
+    {
         $ficheId = $this->params()->fromRoute('id');
         $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
 
         /** @var FormationBaseForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(FormationBaseForm::class);
+        $form = $this->getFormationBaseForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -295,7 +291,6 @@ class FicheMetierTypeController extends  AbstractActionController{
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
             }
         }
 
@@ -312,7 +307,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
 
         /** @var FormationOperationnelleForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(FormationOperationnelleForm::class);
+        $form = $this->getFormationOperationnelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-operationnelle', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -323,7 +318,6 @@ class FicheMetierTypeController extends  AbstractActionController{
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
             }
         }
 
@@ -334,13 +328,13 @@ class FicheMetierTypeController extends  AbstractActionController{
         ]);
     }
 
-    public function modifierComportementaleAction() {
-
+    public function modifierComportementaleAction()
+    {
         $ficheId = $this->params()->fromRoute('id');
         $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
 
         /** @var FormationComportementaleForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(FormationComportementaleForm::class);
+        $form = $this->getFormationComportementaleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -351,7 +345,6 @@ class FicheMetierTypeController extends  AbstractActionController{
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
             }
         }
 
@@ -362,13 +355,13 @@ class FicheMetierTypeController extends  AbstractActionController{
         ]);
     }
 
-    public function modifierApplicationAction() {
-
+    public function modifierApplicationAction()
+    {
         $ficheId = $this->params()->fromRoute('id');
         $fiche = $this->getFicheMetierService()->getFicheMetierType($ficheId);
 
         /** @var ApplicationsForm $form */
-        $form = $this->getServiceLocator()->get('FormElementManager')->get(ApplicationsForm::class);
+        $form = $this->getApplicationsForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -379,7 +372,6 @@ class FicheMetierTypeController extends  AbstractActionController{
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-//                $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()]);
             }
         }
 

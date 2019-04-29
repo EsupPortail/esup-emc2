@@ -322,4 +322,33 @@ class ActiviteService {
 
 
     }
+
+    /**
+     * @param FicheMetierType $ficheMetier
+     * @return array
+     */
+    public function getActivitesAsOptions($ficheMetier = null)
+    {
+        $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+            ->andWhere('activite.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $activites = [];
+        if ($ficheMetier) {
+            $activites = [];
+            foreach ($ficheMetier->getActivites() as $activite) {
+                $activites[] = $activite->getActivite();
+            }
+        }
+
+        $options = [];
+        $options[null] = "Choississez une activité ... ";
+        /** @var Activite $item */
+        foreach ($result as $item) {
+            $res = array_filter($activites, function (Activite $a) use ($item) {return $a->getId() === $item->getId();});
+            if (empty($res)) $options[$item->getId()] = $item->getLibelle();
+        }
+        return $options;
+    }
 }

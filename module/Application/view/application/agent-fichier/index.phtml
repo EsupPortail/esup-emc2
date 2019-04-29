@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @var \Application\Entity\Db\Agent $agent
+ * @var \Fichier\Entity\Db\Fichier $cv
+ * @var \Fichier\Entity\Db\Fichier $motiv
+ * @var \Fichier\Entity\Db\Fichier $formations
+ */
+
+use Fichier\Entity\Db\Nature;
+
+$this->headTitle('Mes fichiers : '.$agent->getDenomination());
+
+?>
+
+<h1 class="page-header">
+    Mes fichiers : <?php echo $agent->getDenomination(); ?>
+</h1>
+
+<div class="main">
+    <h2> Curriculum Vitae </h2>
+
+    <?php if ($cv !== null) : ?>
+        <?php echo $this->fichier()->render($cv, $this->url('agent/fichiers', ['agent' => $agent->getId()], ['force_canonical' => true], true)); ?>
+    <?php else : ?>
+        <a href='<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId(), 'nature' => Nature::CV], [], true); ?>' class="btn btn-primary zajax-modal" data-event="modification">
+            <span class="icon televerser"></span>
+            Téléverser un fichier
+        </a>
+    <?php endif; ?>
+
+    <h2> Lettre de motivation </h2>
+
+    <?php if ($motiv !== null) : ?>
+        <?php echo $this->fichier()->render($motiv, $this->url('agent/fichiers', ['agent' => $agent->getId()], ['force_canonical' => true], true)); ?>
+    <?php else : ?>
+        <a href='<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId(), 'nature' => Nature::MOTIV], [], true); ?>' class="btn btn-primary zajax-modal" data-event="modification">
+            <span class="icon televerser"></span>
+            Téléverser un fichier
+        </a>
+    <?php endif; ?>
+
+    <h2> Justificatif de formation </h2>
+
+    <a href='<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId(), 'nature' => Nature::FORMATION], [], true); ?>' class="btn btn-primary zajax-modal" data-event="modification">
+        <span class="icon televerser"></span>
+        Téléverser un fichier
+    </a>
+
+
+
+
+    <?php if (!empty($formations)) : ?>
+        <?php foreach($formations as $formation) : ?>
+            <?php echo $this->fichier()->render($formation, $this->url('agent/fichiers', ['agent' => $agent->getId()], ['force_canonical' => true], true)); ?>
+        <?php endforeach; ?>
+    <?php else : ?>
+
+        <br/><br/>
+
+    Aucun justificatif de formation.
+
+    <?php endif; ?>
+
+
+
+</div>
