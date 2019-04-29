@@ -18,6 +18,68 @@ return [
                     'droits' => [
                         'visible' => false,
                     ],
+                    'index-personnel' => [
+//                        'visible' => false,
+                        'label' => 'Accueil',
+                        'route' => 'index-personnel',
+                        'roles' => [
+                            'Personnel'
+                        ],
+                        'pages' => [
+//                            'index-personnel' => [
+//                                'visible' => true,
+//                                'order' => 100,
+//                                'label' => 'Mon accueil',
+//                                'icon' => 'fas fa-angle-right',
+//                                'route' => 'index-personnel',
+//                                'roles' => [
+//                                    'Personnel',
+//                                ],
+//                            ],
+                            'entretien' => [
+                                'visible' => true,
+                                'order' => 200,
+                                'label' => 'Mes entretiens Pro.',
+                                'icon' => 'fas fa-angle-right',
+                                'route' => 'entretien-professionnel',
+                                'roles' => [
+                                    'Personnel',
+                                ],
+                            ],
+                            'fichier' => [
+                                'visible' => true,
+                                'order' => 300,
+                                'label' => 'Mes fichiers',
+                                'icon' => 'fas fa-angle-right',
+                                'route' => 'agent/fichiers',
+                                'roles' => [
+                                    'Personnel',
+                                ],
+                            ],
+                            'rgpd' => [
+                                'visible' => true,
+                                'order' => 400,
+                                'label' => 'Mes données',
+                                'icon' => 'fas fa-angle-right',
+                                'route' => 'ressource-rh',
+                                'roles' => [
+                                    'Personnel',
+                                ],
+                            ],
+
+                        ],
+//                        'visible' => false,
+//                        'pages' => [
+//                            [
+//                                'order' => 1,
+//                                'label' => 'Les corps, grades et status',
+//                                'route' => 'ressource-rh/index-corps-grade-status',
+//                                'privileges' => RessourceRhPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                        ]
+                    ],
                     'ressource' => [
                         'order' => 100,
                         'label' => 'Ressources RH',
@@ -117,6 +179,14 @@ return [
                                 'label'      => "Autoform",
                                 'title'      => "Module Autoform",
                                 'route'      => 'autoform/formulaires',
+                                'roles'      => [],
+//                                'withtarget' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            'fichier' => [
+                                'label'      => "Fichier",
+                                'title'      => "Module Fichier",
+                                'route'      => 'index-fichier',
                                 'roles'      => [],
 //                                'withtarget' => true,
                                 'icon' => 'fas fa-angle-right'

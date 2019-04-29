@@ -33,7 +33,28 @@ class Module
                 }
             }
         );
+        $e->getApplication()->getEventManager()->getSharedManager()->attach(
+            "*",
+            'authenticate.success',
+            array($this, 'onUserLogin'),
+            100
+        );
+
     }
+
+    public function onUserLogin( $e ) {
+        if (is_string($identity = $e->getIdentity())) {
+            // login de l'utilisateur authentifié
+            $username = $identity;
+            //...
+        } else {
+            // id de l'utilisateur authentifié dans la table
+            $id = $identity;
+            //...
+        }
+        //...
+    }
+
 
     public function getConfig()
     {

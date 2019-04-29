@@ -51,7 +51,9 @@ class PosteForm extends Form  {
                 'value_options' => $this->getStructureService()->getStructuresAsOptions(),
             ],
             'attributes' => [
-                'id' => 'structure',
+                'id'                => 'structure',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 
@@ -75,6 +77,8 @@ class PosteForm extends Form  {
             ],
             'attributes' => [
                 'id' => 'correspondance',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 
@@ -88,6 +92,8 @@ class PosteForm extends Form  {
             ],
             'attributes' => [
                 'id' => 'rattachement',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 

@@ -45,7 +45,7 @@ class FicheMetierTypeControllerFactory {
         $missionsPrincipalesForm = $manager->getServiceLocator()->get('FormElementManager')->get(MissionsPrincipalesForm::class);
 
 
-        /** @var FicheMetierControllerFactory.php $controller */
+        /** @var FicheMetierTypeController $controller */
         $controller = new FicheMetierTypeController();
 
         $controller->setActiviteService($activiteService);

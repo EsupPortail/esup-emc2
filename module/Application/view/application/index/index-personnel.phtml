@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @var \Application\Entity\Db\Agent $agent
+ * @var \Utilisateur\Entity\Db\User $user
+ */
+
+$this->headTitle('Accueil de '.$user->getDisplayName());
+
+?>
+
+<h1 class="page-header">
+    Accueil de <?php echo $user->getDisplayName(); ?>
+</h1>
+
+<div class="main">
+    <?php if ($agent !== null) : ?>
+        <div class="alert alert-success">
+            Votre compte est bien associé à un agent.
+        </div>
+    <?php else : ?>
+        <div class="alert alert-warning">
+            Votre compte n'est pas associé à un agent.
+        </div>
+    <?php endif; ?>
+
+
+<p class="lead">
+    Cette page d'accueil vous permet de :
+    <ul>
+        <li> consulter les entretiens professionnels que vous avez passés et de valider ceux-ci lors de leur passage ; </li>
+        <li> mettre en ligne des fichiers associés à votre carrière (CV, lettre de motivation, justificatif de formation, ...) ; </li>
+        <li> lister les données vous concernant que l'application PrEECoG stocke.</li>
+    </ul>
+</p>
+
+    <div class="col-md-4">
+    <?php if ($agent !== null) : ?>
+        <a href="" class="btn btn-primary action">
+            <span class="icon entretiens"></span>
+            Consulter mes entretiens pro.
+        </a>
+    <?php endif; ?>
+    </div>
+
+    <div class="col-md-4">
+    <?php if ($agent !== null) : ?>
+        <a href="<?php echo $this->url('agent/fichiers', ['agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+            <span class="icon fichiers"></span>
+            Consulter mes fichiers en ligne
+        </a>
+    <?php endif; ?>
+    </div>
+
+    <div class="col-md-4">
+    <a href="" class="btn btn-primary action">
+        <span class="icon donnees"></span>
+        Consulter mes données stockées
+    </a>
+    </div>
+
+    <br/>
+    <br/>
+</div>
