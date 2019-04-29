@@ -61,7 +61,7 @@ return [
                                 'order' => 400,
                                 'label' => 'Mes données',
                                 'icon' => 'fas fa-angle-right',
-                                'route' => 'ressource-rh',
+                                'route' => 'index-personnel',
                                 'roles' => [
                                     'Personnel',
                                 ],
@@ -242,8 +242,6 @@ return [
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
-
-
                         ],
                     ],
                 ],
