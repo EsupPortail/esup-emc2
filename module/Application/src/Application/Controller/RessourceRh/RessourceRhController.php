@@ -609,7 +609,6 @@ class RessourceRhController extends AbstractActionController {
             $result
         );
         return $jm;
-
     }
 
 }
