@@ -3,6 +3,7 @@
 namespace Application;
 
 use Application\Provider\Privilege\ActivitePrivileges;
+use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FonctionPrivileges;
@@ -68,29 +69,18 @@ return [
                             ],
 
                         ],
-//                        'visible' => false,
-//                        'pages' => [
-//                            [
-//                                'order' => 1,
-//                                'label' => 'Les corps, grades et status',
-//                                'route' => 'ressource-rh/index-corps-grade-status',
-//                                'privileges' => RessourceRhPrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                        ]
                     ],
                     'ressource' => [
                         'order' => 100,
                         'label' => 'Ressources RH',
                         'route' => 'ressource-rh',
-                        'roles' => [],
+                        'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                         'pages' => [
                             [
                                 'order' => 1,
                                 'label' => 'Les corps, grades et status',
                                 'route' => 'ressource-rh/index-corps-grade-status',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -98,7 +88,7 @@ return [
                                 'order' => 2,
                                 'label' => 'Les correspondances',
                                 'route' => 'ressource-rh/index-correspondance',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -106,7 +96,7 @@ return [
                                 'order' => 3,
                                 'label' => 'Les domaines',
                                 'route' => 'ressource-rh/index-domaine',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -114,7 +104,7 @@ return [
                                 'order' => 4,
                                 'label' => 'Les fonctions',
                                 'route' => 'fonction',
-                                'privileges' => FonctionPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -122,7 +112,7 @@ return [
                                 'order' => 5,
                                 'label' => 'Les métiers et familles de métiers',
                                 'route' => 'ressource-rh/index-metier-et-famille',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -130,7 +120,7 @@ return [
                                 'order' => 6,
                                 'label' => 'Les structures',
                                 'route' => 'structure',
-                                'privileges' => StructurePrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -142,7 +132,7 @@ return [
                         'order' => 100,
                         'label' => 'Entretiens Pro.',
                         'route' => 'entretien-professionnel',
-                        'roles' => [],
+                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER),
                         'pages' => [
                         ],
                     ],
@@ -151,7 +141,7 @@ return [
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',
-                        'roles' => [],
+                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
                         'pages' => [
                             [
                                 'label' => 'Mailing',
@@ -198,7 +188,7 @@ return [
                         'label' => 'Fiches',
 //                        'title' => "Fiche métier",
                         'route' => 'activite',
-                        'roles' => [], //PrivilegeController::getResourceId(__NAMESPACE__ . '\Controller\Administration', 'index'),
+                        'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER),
                         'pages' => [
                             [
                                 'label' => 'Les activités',
