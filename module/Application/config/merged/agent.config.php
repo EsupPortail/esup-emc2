@@ -6,6 +6,7 @@ use Application\Controller\Agent\AgentController;
 use Application\Controller\Agent\AgentControllerFactory;
 use Application\Controller\AgentFichier\AgentFichierController;
 use Application\Controller\AgentFichier\AgentFichierControllerFactory;
+use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
@@ -73,6 +74,15 @@ return [
                         AgentPrivileges::AFFICHER,
                     ],
                 ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'index-agent',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AFFICHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -97,6 +107,16 @@ return [
                             'defaults' => [
                                 'controller' => AgentFichierController::class,
                                 'action'     => 'index',
+                            ],
+                        ],
+                    ],
+                    'entretien-professionnel' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/entretien-professionnel[/:agent]',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'index-agent',
                             ],
                         ],
                     ],

@@ -27,22 +27,22 @@ return [
                             'Personnel'
                         ],
                         'pages' => [
-//                            'index-personnel' => [
-//                                'visible' => true,
-//                                'order' => 100,
-//                                'label' => 'Mon accueil',
-//                                'icon' => 'fas fa-angle-right',
-//                                'route' => 'index-personnel',
-//                                'roles' => [
-//                                    'Personnel',
-//                                ],
-//                            ],
+                            'index-personnel' => [
+                                'visible' => true,
+                                'order' => 100,
+                                'label' => 'Mon accueil',
+                                'icon' => 'fas fa-angle-right',
+                                'route' => 'index-personnel',
+                                'roles' => [
+                                    'Personnel',
+                                ],
+                            ],
                             'entretien' => [
                                 'visible' => true,
                                 'order' => 200,
                                 'label' => 'Mes entretiens Pro.',
                                 'icon' => 'fas fa-angle-right',
-                                'route' => 'entretien-professionnel',
+                                'route' => 'agent/entretien-professionnel',
                                 'roles' => [
                                     'Personnel',
                                 ],
@@ -57,16 +57,16 @@ return [
                                     'Personnel',
                                 ],
                             ],
-                            'rgpd' => [
-                                'visible' => true,
-                                'order' => 400,
-                                'label' => 'Mes données',
-                                'icon' => 'fas fa-angle-right',
-                                'route' => 'index-personnel',
-                                'roles' => [
-                                    'Personnel',
-                                ],
-                            ],
+//                            'rgpd' => [
+//                                'visible' => true,
+//                                'order' => 400,
+//                                'label' => 'Mes données',
+//                                'icon' => 'fas fa-angle-right',
+//                                'route' => 'index-personnel',
+//                                'roles' => [
+//                                    'Personnel',
+//                                ],
+//                            ],
 
                         ],
                     ],

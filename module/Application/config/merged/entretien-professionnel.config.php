@@ -28,6 +28,7 @@ return [
                         'historiser',
                         'restaurer',
                         'detruire',
+                        'afficher',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::AFFICHER,
@@ -58,6 +59,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'creer',
+                            ],
+                        ],
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/afficher/:entretien',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'afficher',
                             ],
                         ],
                     ],

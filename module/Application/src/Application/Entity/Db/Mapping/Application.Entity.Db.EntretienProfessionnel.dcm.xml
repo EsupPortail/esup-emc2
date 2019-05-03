@@ -6,8 +6,8 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="personnel">
-            <join-column name="personnel" referenced-column-name="id"/>
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent" referenced-column-name="id"/>
         </many-to-one>
 
         <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="responsable">

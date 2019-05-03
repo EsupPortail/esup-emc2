@@ -3,11 +3,13 @@
 namespace Application\Form\EntretienProfessionnel;
 
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class EntretienProfessionnelHydrator implements HydratorInterface {
+    use AgentServiceAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -18,7 +20,7 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
     {
         $data = [
             'responsable' => $object->getResponsable(),
-            'agent' => $object->getPersonnel(),
+            'agent' => $object->getAgent(),
             'annee' => $object->getAnnee(),
             'date_entretien' => $object->getDateEntretien(),
         ];
@@ -33,11 +35,11 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $reponsable = $this->getUserService()->getUtilisateur($data['responsable']);
-        $agent      = $this->getUserService()->getUtilisateur($data['agent']);
+        $agent      = $this->getAgentService()->getAgent($data['agent']);
         $date       = DateTime::createFromFormat('d/m/Y', $data['date_entretien']);
 
         $object->setResponsable($reponsable);
-        $object->setPersonnel($agent);
+        $object->setAgent($agent);
         $object->setAnnee($data['annee']);
         $object->setDateEntretien($date);
 

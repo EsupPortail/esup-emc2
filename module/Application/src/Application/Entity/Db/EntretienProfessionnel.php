@@ -12,8 +12,8 @@ class EntretienProfessionnel {
 
     /** @var integer */
     private $id;
-    /** @var User */
-    private $personnel;
+    /** @var Agent */
+    private $agent;
     /** @var User */
     private $responsable;
     /** @var string */
@@ -32,20 +32,20 @@ class EntretienProfessionnel {
     }
 
     /**
-     * @return User
+     * @return Agent
      */
-    public function getPersonnel()
+    public function getAgent()
     {
-        return $this->personnel;
+        return $this->agent;
     }
 
     /**
-     * @param User $personnel
+     * @param Agent $agent
      * @return EntretienProfessionnel
      */
-    public function setPersonnel($personnel)
+    public function setAgent($agent)
     {
-        $this->personnel = $personnel;
+        $this->agent = $agent;
         return $this;
     }
 
