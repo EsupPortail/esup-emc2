@@ -10,7 +10,7 @@ use Application\Entity\Db\FicheMetierTypeActivite;
  */
 
 
-$this->headTitle("Affichage de la fiche métier type : ".$fiche->getId());
+$this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
 
 $canEditer = true;
 
@@ -20,7 +20,7 @@ $canEditer = true;
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
-            Fiche métier type #<?php echo $fiche->getId(); ?> <br/>
+            Fiche métier #<?php echo $fiche->getId(); ?> <br/>
             <em><?php echo $fiche->getMetier()->getLibelle(); ?></em>
         </h1>
     </div>

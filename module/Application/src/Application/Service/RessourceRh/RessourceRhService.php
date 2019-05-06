@@ -346,6 +346,7 @@ class RessourceRhService {
     public function getMetiersFamilles($order = null)
     {
         $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
+            ->addSelect('metier')->join('famille.metiers', 'metier')
         ;
 
         if ($order !== null) {
@@ -579,4 +580,19 @@ class RessourceRhService {
         }
     }
 
+    public function getMetiersTypesAsOptions()
+    {
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+//            ->andWhere('fiche.histoDestruction IS NULL')
+            ->orderBy('metier.libelle', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+
+        $options = [];
+        /** @var Metier $metier */
+        foreach ($result as $metier) {
+            $options[$metier->getId()] = $metier->getLibelle();
+        }
+        return $options;
+    }
 }
