@@ -26,7 +26,7 @@ class MailingController extends AbstractActionController {
     {
         $mail = $this->getUserService()->getConnectedUser()->getEmail();
         $this->getMailingService()->sendTestMail($mail);
-        $this->redirect()->toRoute('mailing');
+        return $this->redirect()->toRoute('mailing');
     }
 
     public function afficherAction()
@@ -47,7 +47,7 @@ class MailingController extends AbstractActionController {
 
         $this->getMailingService()->delete($mail);
 
-        $this->redirect()->toRoute('mailing');
+        return $this->redirect()->toRoute('mailing');
     }
 
     public function reEnvoiAction()
@@ -57,6 +57,6 @@ class MailingController extends AbstractActionController {
 
         $this->getMailingService()->reEnvoi($mail);
 
-        $this->redirect()->toRoute('mailing');
+        return $this->redirect()->toRoute('mailing');
     }
 }

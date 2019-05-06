@@ -10,7 +10,6 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
-use Application\Form\FichePosteCreation\FichePosteCreationForm;
 use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
@@ -54,7 +53,6 @@ class FichePosteController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $fiche = $this->getFichePosteService()->create($fiche);
-                //$this->redirect()->toRoute('fiche-metier/editer', ['fiche-poste' => $fiche->getId()], [], true);
             }
         }
 
@@ -89,21 +87,21 @@ class FichePosteController extends AbstractActionController {
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $this->getFichePosteService()->historise($fiche);
-        $this->redirect()->toRoute('fiche-poste', [], [], true);
+        return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
     public function restaurerAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $this->getFichePosteService()->restore($fiche);
-        $this->redirect()->toRoute('fiche-poste', [], [], true);
+        return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
     public function detruireAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $this->getFichePosteService()->delete($fiche);
-        $this->redirect()->toRoute('fiche-poste', [], [], true);
+        return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
     /** AGENT *********************************************************************************************************/
@@ -228,7 +226,7 @@ class FichePosteController extends AbstractActionController {
 
         if ($ficheTypeExterne && $fichePoste) $this->getFichePosteService()->deleteFicheTypeExterne($ficheTypeExterne);
 
-        $this->redirect()->toRoute('fiche-poste/editer',['fiche-poste' => $fichePoste->getId()], [], true);
+        return $this->redirect()->toRoute('fiche-poste/editer',['fiche-poste' => $fichePoste->getId()], [], true);
     }
 
     public function modifierFicheMetierAction()

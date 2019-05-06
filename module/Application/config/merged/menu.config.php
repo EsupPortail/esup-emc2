@@ -219,7 +219,7 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'label' => 'Les fiches types',
+                                'label' => 'Les fiches métiers',
                                 'route' => 'fiche-metier-type',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
                                 'dropdown-header' => true,

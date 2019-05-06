@@ -75,7 +75,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
         $this->getFicheMetierService()->historiserFicheMetierType($fiche);
 
-        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
     public function restaurerAction()
@@ -83,7 +83,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
         $this->getFicheMetierService()->restaurationFicheMetierType($fiche);
 
-        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
     public function detruireAction()
@@ -91,7 +91,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
         $this->getFicheMetierService()->deleteFicheMetierType($fiche);
 
-        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
     public function ajouterAction()
@@ -168,7 +168,6 @@ class FicheMetierTypeController extends  AbstractActionController{
 
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-                //$this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [] , true);
             }
         }
 
@@ -257,7 +256,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->removeFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
     public function deplacerActiviteAction()
@@ -271,7 +270,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
     public function modifierConnaissancesAction()

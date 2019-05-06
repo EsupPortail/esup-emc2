@@ -83,7 +83,7 @@ class FichierController extends AbstractActionController {
         if ($fichier) $this->getFichierService()->removeFichier($fichier);
 
         if ($retour) {
-            $this->redirect()->toUrl($retour);
+            return $this->redirect()->toUrl($retour);
         }
 
     }

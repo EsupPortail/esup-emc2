@@ -38,7 +38,7 @@ class ValidationController extends AbstractActionController {
         $validation->setType($type);
 
         $this->getValidationService()->create($validation);
-        $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
     }
 
     public function afficherValidationAction()
@@ -59,7 +59,7 @@ class ValidationController extends AbstractActionController {
             $data = $request->getPost();
 
             $this->getValidationReponseService()->updateValidationReponse($instance, $validation, $data);
-            $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
+            return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
         }
 
         return new ViewModel([
@@ -89,7 +89,7 @@ class ValidationController extends AbstractActionController {
             $data = $request->getPost();
 
             $this->getValidationReponseService()->updateValidationReponse($instance, $validation, $data);
-            $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
+            return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
         }
 
         return new ViewModel([
@@ -106,20 +106,20 @@ class ValidationController extends AbstractActionController {
     {
         $validation = $this->getValidationService()->getRequestedValidation($this, 'validation');
         $this->getValidationService()->historise($validation);
-        $this->redirect()->toRoute('autoform/validations', [], [], true);
+        return $this->redirect()->toRoute('autoform/validations', [], [], true);
     }
 
     public function restaurerAction()
     {
         $validation = $this->getValidationService()->getRequestedValidation($this, 'validation');
         $this->getValidationService()->restaure($validation);
-        $this->redirect()->toRoute('autoform/validations', [], [], true);
+        return $this->redirect()->toRoute('autoform/validations', [], [], true);
     }
 
     public function detruireAction()
     {
         $validation = $this->getValidationService()->getRequestedValidation($this, 'validation');
         $this->getValidationService()->delete($validation);
-        $this->redirect()->toRoute('autoform/validations', [], [], true);
+        return $this->redirect()->toRoute('autoform/validations', [], [], true);
     }
 }
