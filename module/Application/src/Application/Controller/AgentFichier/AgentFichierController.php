@@ -31,7 +31,7 @@ class AgentFichierController extends AbstractActionController {
             $agent = $this->getAgentService()->getAgentByUser($user);
 
             if ($agent !== null) {
-                $this->redirect()->toRoute('agent/fichiers', ['agent' => $agent->getId()], [], true);
+                return $this->redirect()->toRoute('agent/fichiers', ['agent' => $agent->getId()], [], true);
             } else {
                 throw new RuntimeException("L'utilisateur connecté n'est pas associté à un agent !");
             }
@@ -83,7 +83,7 @@ class AgentFichierController extends AbstractActionController {
                 $agent->addFichier($fichier);
                 $this->getAgentService()->update($agent);
 
-                $this->redirect()->toRoute('agent/fichiers', ['agent' => $agent->getId()], [], true);
+                return $this->redirect()->toRoute('agent/fichiers', ['agent' => $agent->getId()], [], true);
             }
         }
 

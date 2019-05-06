@@ -36,7 +36,6 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
 
     <table class="table table-condensed">
         <thead>
-<!--            <th> Id </th>-->
             <th> Activité </th>
             <th> Modification </th>
             <th> Modificateur </th>
@@ -45,7 +44,6 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
         <tbody>
             <?php foreach($activites as $activite) : ?>
                 <tr>
-<!--                    <td> --><?php //echo $activite->getId(); ?><!-- </td>-->
                     <td>
                         <?php echo $activite->getLibelle(); ?> <br/>
                     </td>
@@ -89,7 +87,6 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
             <?php endforeach; ?>
         </tbody>
     </table>
-
 </div>
 
 <script>

@@ -158,7 +158,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteAgentStatus($status);
         }
 
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     /** CORRESPONDANCE ************************************************************************************************/
@@ -229,7 +229,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteCorrespondance($correspondance);
         }
 
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     /** CORPS *********************************************************************************************************/
@@ -300,7 +300,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteCorps($corps);
         }
 
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     /** METIER ********************************************************************************************************/
@@ -371,7 +371,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteMetier($metier);
         }
 
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     /** FAMILLE METIER ************************************************************************************************/
@@ -442,7 +442,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteMetierFamille($famille);
         }
 
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     /** DOMAINE *******************************************************************************************************/
@@ -516,7 +516,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteDomaine($domaine);
         }
 
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     /** Grade ******************************************************************************************************/
@@ -590,7 +590,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteGrade($grade);
         }
 
-        $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     public function getGradesJsonAction()

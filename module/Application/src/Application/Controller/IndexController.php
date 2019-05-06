@@ -32,7 +32,7 @@ class IndexController extends AbstractActionController
         if ($connectedRole) {
             switch ($connectedRole->getRoleId()) {
                 case Role::PERSONNEL :
-                    $this->redirect()->toRoute('index-personnel', [], [], true);
+                    return $this->redirect()->toRoute('index-personnel', [], [], true);
                     break;
                 default :
                     //var_dump($connectedRole);
@@ -50,7 +50,7 @@ class IndexController extends AbstractActionController
                 $personnel = $this->getRoleService()->getRoleByCode(Role::PERSONNEL);
                 $this->getAgentService()->createFromLDAP($people, $identity);
                 $this->getUserService()->addRole($identity, $personnel);
-                $this->redirect()->toRoute('home', [], [], true);
+                return $this->redirect()->toRoute('home', [], [], true);
             }
         }
 
