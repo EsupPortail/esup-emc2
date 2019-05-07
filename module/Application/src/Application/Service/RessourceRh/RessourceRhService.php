@@ -346,7 +346,7 @@ class RessourceRhService {
     public function getMetiersFamilles($order = null)
     {
         $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
-            ->addSelect('metier')->join('famille.metiers', 'metier')
+            ->addSelect('metier')->leftJoin('famille.metiers', 'metier')
         ;
 
         if ($order !== null) {
