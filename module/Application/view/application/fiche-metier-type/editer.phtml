@@ -97,8 +97,9 @@ $canEditer = true;
         <h3> <?php echo $ficheActivite->getActivite()->getLibelle(); ?> </h3>
         <div class="row">
             <div class="col-md-1">
-                <a class="btn btn-default mini"
+                <a class="btn btn-default mini ajax-modal"
                    title="Éditer l'activité"
+                   data-event="modification"
                    href="<?php echo $this->url('activite/editer', ['activite' => $ficheActivite->getActivite()->getId()], [], true); ?>">
                     <span class="icon editer"></span>
                 </a>
