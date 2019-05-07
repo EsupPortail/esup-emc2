@@ -69,12 +69,22 @@
                     </div>
                     <?php  echo $this->appLink($this->appInfos()->nom) ?>
                 </div>
+
         <div class="navbar-collapse bs-navbar-collapse collapse">
+
+            <?php //echo $this->navigation('navigation')
+//                ->menu()
+//                ->setUlClass('nav navbar-nav')
+//                ->setPartial('layout/navigation.phtml');
+            ?>
             <?php echo $this->navigation()->menuPrincipal('navigation'); ?>
+
             <p class="navbar-text navbar-right">
                 <?php echo $this->appConnection(); ?>
             </p>
-        </div><!--/.nav-collapse -->
+
+        </div>
+
     </div>
 </div>
 

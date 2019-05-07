@@ -72,7 +72,7 @@ return [
                     ],
                     'ressource' => [
                         'order' => 100,
-                        'label' => 'Ressources RH',
+                        'label' => 'Ressources',
                         'route' => 'ressource-rh',
                         'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                         'pages' => [
@@ -110,7 +110,7 @@ return [
                             ],
                             [
                                 'order' => 5,
-                                'label' => 'Les métiers et familles de métiers',
+                                'label' => 'Les métiers et familles professionnelles',
                                 'route' => 'ressource-rh/index-metier-et-famille',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
@@ -130,7 +130,7 @@ return [
                     ],
                     'entretien' => [
                         'order' => 100,
-                        'label' => 'Entretiens Pro.',
+                        'label' => 'Entretiens',
                         'route' => 'entretien-professionnel',
                         'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER),
                         'pages' => [
@@ -141,14 +141,15 @@ return [
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',
+
                         'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
                         'pages' => [
                             [
                                 'label' => 'Mailing',
                                 'route' => 'mailing',
                                 'roles' => [], //'privileges' => MailingPrivileges::AFFICHER,
-                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
+
                             ],
                             [
                                 'label' => 'Utilisateurs',
@@ -163,6 +164,7 @@ return [
                                 'route'      => 'privilege',
                                 'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
                                 'withtarget' => true,
+                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                             'autoform' => [
@@ -171,6 +173,7 @@ return [
                                 'route'      => 'autoform/formulaires',
                                 'roles'      => [],
 //                                'withtarget' => true,
+                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                             'fichier' => [
@@ -179,6 +182,7 @@ return [
                                 'route'      => 'index-fichier',
                                 'roles'      => [],
 //                                'withtarget' => true,
+                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                         ],
