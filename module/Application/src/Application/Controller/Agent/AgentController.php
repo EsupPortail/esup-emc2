@@ -106,6 +106,17 @@ class AgentController extends AbstractActionController
         return $this->redirect()->toRoute('agent', [], [], true);
     }
 
+    public function afficherStatutsAction()
+    {
+        $agent   = $this->getAgentService()->getRequestedAgent($this, 'agent');
+        $statuts = $agent->getStatuts();
+
+        return new ViewModel([
+            'title' => 'Statuts de l\'agent '.$agent->getDenomination(),
+            'status' => $statuts,
+        ]);
+    }
+
     public function importerAction()
     {
         $form = $this->getAgentImportForm();

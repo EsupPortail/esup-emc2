@@ -29,6 +29,8 @@ class Agent {
     private $quotite;
     /** @var AgentStatus */
     private $status;
+    /** @var ArrayCollection (AgentStatut)*/
+    private $statuts;
     /** @var Correspondance */
     private $correspondance;
     /** @var Corps */
@@ -47,6 +49,7 @@ class Agent {
 
     public function __construct()
     {
+        $this->statuts  = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
     }
     /**
@@ -167,6 +170,34 @@ class Agent {
     public function setStatus($status)
     {
         $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @return AgentStatut[]
+     */
+    public function getStatuts()
+    {
+        return $this->statuts->toArray();
+    }
+
+    /**
+     * @param AgentStatut $statut
+     * @return Agent
+     */
+    public function addStatut($statut)
+    {
+        $this->statuts->add($statut);
+        return $this;
+    }
+
+    /**
+     * @param AgentStatut $statut
+     * @return Agent
+     */
+    public function removeStatut($statut)
+    {
+        $this->statuts->removeElement($statut);
         return $this;
     }
 
@@ -335,5 +366,20 @@ class Agent {
             if ($fichier->getNature()->getCode() === $natureCode) $result[] = $fichier;
         }
         return $result;
+    }
+
+    /**
+     * @return AgentStatut[]
+     */
+    public function getStatutsActifs()
+    {
+        $statutsActifs = [];
+        foreach ($this->statuts as $statut) {
+            if ($statut->isActif()) {
+                $statutsActifs[] = $statut;
+            }
+        }
+
+        return $statutsActifs;
     }
 }

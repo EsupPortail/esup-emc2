@@ -3,6 +3,8 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Exception;
+use UnicaenApp\Exception\RuntimeException;
 
 class AgentStatut {
     /** @var integer */
@@ -45,8 +47,8 @@ class AgentStatut {
     /** @var boolean */
     private $detacheIn;
     /** @var boolean */
-    private $detacheOut
-    /** @var boolean */;
+    private $detacheOut;
+    /** @var boolean */
     private $dispo;
     /** @var boolean */
     private $heberge;
@@ -416,15 +418,15 @@ class AgentStatut {
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
-    public function getDispo()
+    public function isDispo()
     {
         return $this->dispo;
     }
 
     /**
-     * @param mixed $dispo
+     * @param boolean $dispo
      * @return AgentStatut
      */
     public function setDispo($dispo)
@@ -487,5 +489,20 @@ class AgentStatut {
         return $this;
     }
 
-    
+    /**
+     * @return bool
+     */
+    public function isActif()
+    {
+        if ($this->fin === null) return true;
+
+        try {
+            $today = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException('Problème de récupération de la date');
+
+        }
+        return $today < $this->fin;
+    }
+
 }

@@ -199,7 +199,7 @@ return [
                                 'route' => 'activite',
                                 'privileges' => ActivitePrivileges::AFFICHER,
                                 'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
+                                'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'label' => 'Les agents',
