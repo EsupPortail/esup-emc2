@@ -1,0 +1,28 @@
+<?php
+
+    /**
+     * @var Application\Entity\Db\MetierFamille[] $familles
+     * @var Application\Entity\Db\Metier $metier
+     */
+
+?>
+
+<form method="post" action="">
+    <select name="metier" id="metier" class="selectpicker show-tick" data-live-search="true" style="width:1000px;" placeholder="ezaezaeaz">
+<!--        <option> Choisir un métier ... </option>-->
+        <?php foreach ($familles as $famille) : ?>
+            <optgroup label="<?php echo $famille->getLibelle(); ?>">
+                <?php $metiers = $famille->getMetiers() ; ?>
+                <?php foreach ($metiers as $metierOpt) : ?>
+                    <option value="<?php $metierOpt->getId()?>" <?php if($metier) echo ($metier->getId() === $metierOpt->getId())?"selected":""; ?> >
+                        <?php echo $metierOpt->getLibelle(); ?>
+                    </option>
+                <?php endforeach; ?>
+            </optgroup>
+        <?php endforeach; ?>
+    </select>
+</form>
+
+<script>
+
+</script>

@@ -2,6 +2,7 @@
 
 namespace Application\Form\EntretienProfessionnel;
 
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Utilisateur\Entity\Db\Role;
 use Utilisateur\Service\Role\RoleServiceAwareTrait;
 use Utilisateur\Service\User\UserServiceAwareTrait;
@@ -14,6 +15,7 @@ use Zend\InputFilter\Factory;
 
 class EntretienProfessionnelForm extends Form {
     use RoleServiceAwareTrait;
+    use AgentServiceAwareTrait;
     use UserServiceAwareTrait;
 
     public function init()
@@ -28,12 +30,11 @@ class EntretienProfessionnelForm extends Form {
         }
 
         /** Récupétation des personnels **/
-        $rolePersonnel    = $this->getRoleService()->getRoleByCode(Role::PERSONNEL);
-        $personnels    = $this->getUserService()->getUtilisateursByRole($rolePersonnel);
+        $agents = $this->getAgentService()->getAgents();
         $personnelsOpt = [];
         $personnelsOpt[ null ] = 'Sélectionnaire un personnel ... ';
-        foreach ($personnels as $personnel) {
-            $personnelsOpt[$personnel->getId()] = $personnel->getDisplayName();
+        foreach ($agents as $agent) {
+            $personnelsOpt[$agent->getId()] = $agent->getPrenom(). " ".$agent->getNom();
         }
 
         /** Année Scolaire **/

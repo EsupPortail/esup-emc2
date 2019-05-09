@@ -12,6 +12,7 @@ use Application\Form\FicheMetierType\LibelleForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\FicheMetier\FicheMetierService;
+use Application\Service\RessourceRh\RessourceRhService;
 use Zend\Mvc\Controller\ControllerManager;
 
 class FicheMetierTypeControllerFactory {
@@ -21,9 +22,11 @@ class FicheMetierTypeControllerFactory {
         /**
          * @var ActiviteService $activiteService
          * @var FicheMetierService $ficheMetierService
+         * @var RessourceRhService $ressourceRhService
          */
         $activiteService = $manager->getServiceLocator()->get(ActiviteService::class);
         $ficheMetierService = $manager->getServiceLocator()->get(FicheMetierService::class);
+        $ressourceRhService = $manager->getServiceLocator()->get(RessourceRhService::class);
 
         /**
          * @var ActiviteForm $activiteForm
@@ -50,6 +53,7 @@ class FicheMetierTypeControllerFactory {
 
         $controller->setActiviteService($activiteService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setRessourceRhService($ressourceRhService);
 
         $controller->setActiviteForm($activiteForm);
         $controller->setActiviteExistanteForm($activiteExistanteForm);

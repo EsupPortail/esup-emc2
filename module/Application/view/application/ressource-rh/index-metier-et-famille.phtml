@@ -16,11 +16,11 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 ?>
 
 <h1 class="page-header">
-    Index des métiers et familles de métiers
+    Index des métiers et familles professionnelles
 </h1>
 
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
-<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille de métier</a>
+<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille professionnelle</a>
 
 
 <div class="main">
@@ -84,7 +84,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
     <a name="famille"></a>
     <div class="col-md-8">
         <h2>
-            Liste des familles de métier
+            Liste des familles professionnelles
             <span class="badge">
             <?php echo count($familles); ?>
         </span>
@@ -97,7 +97,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                data-event="modification"
             >
                 <span class="icon ajouter"></span>
-                Ajouter une famille de métier
+                Ajouter une famille professionnelle
             </a>
         <?php endif;?>
     </div>

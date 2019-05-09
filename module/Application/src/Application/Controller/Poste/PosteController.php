@@ -110,7 +110,7 @@ class PosteController extends AbstractActionController {
             $this->getPosteService()->delete($poste);
         }
 
-        $this->redirect()->toRoute('poste', [], [], true);
+        return $this->redirect()->toRoute('poste', [], [], true);
     }
 
     /**

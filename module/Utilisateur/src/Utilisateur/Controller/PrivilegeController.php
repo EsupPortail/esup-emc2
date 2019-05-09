@@ -42,7 +42,6 @@ class PrivilegeController extends AbstractActionController {
         return new JsonModel([
             'value' => $value,
         ]);
-        //$this->redirect()->toRoute("roles", [], ["query" => $queryParams], true);
     }
 
 

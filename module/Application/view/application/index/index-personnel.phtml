@@ -36,7 +36,7 @@ $this->headTitle('Accueil de '.$user->getDisplayName());
 
     <div class="col-md-4">
     <?php if ($agent !== null) : ?>
-        <a href="" class="btn btn-primary action">
+        <a href="<?php echo $this->url('agent/entretien-professionnel', ['agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
             <span class="icon entretiens"></span>
             Consulter mes entretiens pro.
         </a>
@@ -53,7 +53,7 @@ $this->headTitle('Accueil de '.$user->getDisplayName());
     </div>
 
     <div class="col-md-4">
-    <a href="" class="btn btn-primary action">
+    <a href="" class="btn btn-primary action disabled">
         <span class="icon donnees"></span>
         Consulter mes données stockées
     </a>

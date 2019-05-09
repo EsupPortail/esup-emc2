@@ -6,6 +6,8 @@ use Application\Controller\Agent\AgentController;
 use Application\Controller\Agent\AgentControllerFactory;
 use Application\Controller\AgentFichier\AgentFichierController;
 use Application\Controller\AgentFichier\AgentFichierControllerFactory;
+use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
+use Application\Entity\Db\AgentStatut;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
@@ -15,6 +17,7 @@ use Application\Form\Agent\AgentImportFormFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
+use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
@@ -73,6 +76,15 @@ return [
                         AgentPrivileges::AFFICHER,
                     ],
                 ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'index-agent',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AFFICHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -97,6 +109,16 @@ return [
                             'defaults' => [
                                 'controller' => AgentFichierController::class,
                                 'action'     => 'index',
+                            ],
+                        ],
+                    ],
+                    'entretien-professionnel' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/entretien-professionnel[/:agent]',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'index-agent',
                             ],
                         ],
                     ],
@@ -202,6 +224,7 @@ return [
     'view_helpers' => [
         'invokables' => [
             'agent' => AgentViewHelper::class,
+            'agentStatut' => AgentStatutViewHelper::class,
         ],
     ],
 

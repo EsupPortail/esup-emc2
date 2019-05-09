@@ -118,7 +118,7 @@ $principal = $fiche->getFicheTypeExternePrincipale();
 
 $fichesMetiers = $fiche->getFichesMetiers();
 $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
-usort($fiche->getFichesMetiers(), function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
+usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
 ?>
 
 
@@ -127,7 +127,7 @@ usort($fiche->getFichesMetiers(), function (FicheTypeExterne $a, FicheTypeExtern
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-8">
-            <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
+            <h2>Fiche composée de <?php echo count($fichesMetiers); ?> fiche(s) type(s).</h2>
             <ul>
                 <?php if ($principal) : ?>
                     <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
