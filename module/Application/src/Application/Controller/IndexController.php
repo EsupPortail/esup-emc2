@@ -41,6 +41,8 @@ class IndexController extends AbstractActionController
         }
 
         $identity = $this->getUserService()->getConnectedUser();
+        if ($identity) {
+        }
 
         // !TODO bouger cela pour faire plus propre ...
         $agent = $this->getAgentService()->getAgentByUser($identity);
