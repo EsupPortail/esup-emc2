@@ -6,18 +6,14 @@
 
 $this->headTitle('Index des entretiens professionnel');
 
+$canAfficherEntretien = true;
 ?>
 
 <h1 class="page-header">
-    Index des entretiens professionnels
+    Liste des entretiens professionnels
 </h1>
 
 <div class="main">
-
-    <a href="<?php echo $this->url('entretien-professionnel/creer', [], [], true); ?>" class="btn btn-primary action">
-        <span class="icon ajouter action"></span>
-        Créer un entretien professionnel
-    </a>
 
     <h2> Liste des entretiens enregistrés </h2>
 
@@ -44,17 +40,19 @@ $this->headTitle('Index des entretiens professionnel');
                 <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
                 <td> <?php echo $entretien->getHistoModification()->format('d/m/Y'); ?> </td>
                 <td>
-                    <a href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>">
-                        <span class="icon editer"></span></a>
-                    <?php if ($entretien->estNonHistorise()) : ?>
-                    <a href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>">
-                        <span class="icon historiser"></span></a>
-                    <?php else : ?>
-                        <a href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>">
-                            <span class="icon restaurer"></span></a>
+                    <?php if ($canAfficherEntretien) : ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true); ?>" class="ajax-modal">
+                            <span class="icon voir"></span></a>
                     <?php endif; ?>
-                    <a href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>">
-                        <span class="icon detruire"></span></a>
+<!--                    --><?php //if ($entretien->estNonHistorise()) : ?>
+<!--                    <a href="--><?php //echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?><!--">-->
+<!--                        <span class="icon historiser"></span></a>-->
+<!--                    --><?php //else : ?>
+<!--                        <a href="--><?php //echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?><!--">-->
+<!--                            <span class="icon restaurer"></span></a>-->
+<!--                    --><?php //endif; ?>
+<!--                    <a href="--><?php //echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?><!--">-->
+<!--                        <span class="icon detruire"></span></a>-->
                 </td>
             </tr>
             <?php endforeach; ?>

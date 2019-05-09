@@ -7,6 +7,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class ApplicationService {
     use EntityManagerAwareTrait;
@@ -42,6 +43,17 @@ class ApplicationService {
             throw new RuntimeException('Plusieurs applications portent le même identifiant ['.$id.']', $e);
         }
         return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string paramName
+     * @return Application
+     */
+    public function getRequestedApplication($controller, $paramName)
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        return $this->getApplication($id);
     }
 
     /**

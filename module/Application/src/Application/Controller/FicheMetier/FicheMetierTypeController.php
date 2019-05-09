@@ -21,6 +21,7 @@ use Application\Form\FicheMetierType\MissionsPrincipalesForm;
 use Application\Form\FicheMetierType\MissionsPrincipalesFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -30,6 +31,7 @@ class FicheMetierTypeController extends  AbstractActionController{
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use RessourceRhServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;
@@ -75,7 +77,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
         $this->getFicheMetierService()->historiserFicheMetierType($fiche);
 
-        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
     public function restaurerAction()
@@ -83,7 +85,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
         $this->getFicheMetierService()->restaurationFicheMetierType($fiche);
 
-        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
     public function detruireAction()
@@ -91,7 +93,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetierType($this, 'id', true);
         $this->getFicheMetierService()->deleteFicheMetierType($fiche);
 
-        $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
     public function ajouterAction()
@@ -103,6 +105,7 @@ class FicheMetierTypeController extends  AbstractActionController{
         $form = $this->getLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [] , true));
         $form->bind($fiche);
+//        $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -117,7 +120,9 @@ class FicheMetierTypeController extends  AbstractActionController{
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Ajout d\'une fiche metier type',
+            'title' => 'Ajout d\'une fiche metier',
+//            'familles' => $familles,
+//            'metier' => $this->getRessourceRhService()->getMetier(11),
             'form' => $form,
         ]);
         return $vm;
@@ -168,7 +173,6 @@ class FicheMetierTypeController extends  AbstractActionController{
 
             if ($form->isValid()) {
                 $this->getFicheMetierService()->updateFicheMetierType($fiche);
-                //$this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [] , true);
             }
         }
 
@@ -257,7 +261,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->removeFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
     public function deplacerActiviteAction()
@@ -271,7 +275,7 @@ class FicheMetierTypeController extends  AbstractActionController{
 
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 
-        $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
+        return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
     public function modifierConnaissancesAction()

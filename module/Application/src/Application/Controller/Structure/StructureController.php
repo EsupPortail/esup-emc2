@@ -44,7 +44,7 @@ class StructureController extends AbstractActionController {
             if ($form->isValid()) {
                 $structure->setSource("PrEECoG");
                 $this->getStructureService()->create($structure);
-                $this->redirect()->toRoute('structure', [], [], true);
+                return $this->redirect()->toRoute('structure', [], [], true);
             }
         }
 
@@ -71,7 +71,7 @@ class StructureController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getStructureService()->update($structure);
-                $this->redirect()->toRoute('structure', [], [], true);
+                return $this->redirect()->toRoute('structure', [], [], true);
             }
         }
 
@@ -98,33 +98,33 @@ class StructureController extends AbstractActionController {
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
         $this->getStructureService()->historise($structure);
-        $this->redirect()->toRoute('structure',[], [], true);
+        return $this->redirect()->toRoute('structure',[], [], true);
     }
 
     public function restaurerAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
         $this->getStructureService()->restore($structure);
-        $this->redirect()->toRoute('structure',[], [], true);
+        return $this->redirect()->toRoute('structure',[], [], true);
     }
 
     public function detruireAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
         $this->getStructureService()->delete($structure);
-        $this->redirect()->toRoute('structure',[], [], true);
+        return $this->redirect()->toRoute('structure',[], [], true);
     }
 
     public function synchroniserAction()
     {
         $result = $this->getStructureService()->synchroniseFromOctopus();
-        $this->redirect()->toRoute('structure',[], [], true);
+        return $this->redirect()->toRoute('structure',[], [], true);
     }
 
     public function synchroniserCronAction()
     {
+        //TODO !!!
         $result = $this->getStructureService()->synchroniseFromOctopus();
-        //mailing
     }
 
     public function ajouterGestionnaireAction()

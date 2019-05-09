@@ -2,7 +2,6 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetierType;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Zend\View\Helper\AbstractHelper;

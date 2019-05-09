@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\AgentStatut" table="agent_statut">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="sourceName"        type="string" length="64"       column="source_name"              nullable="true"/>
+        <field name="sourceId"          type="integer"                  column="source_id"                nullable="true"/>
+
+        <field name="idOrigine"         type="string" length="256"      column="id_origine"               nullable="true"/>
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Structure"  field="structure">
+            <join-column name="structure_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="debut"         type="datetime"                     column="debut"                   nullable="false"/>
+        <field name="fin"           type="datetime"                     column="fin"                     nullable="true"/>
+
+        <field name="titulaire"     type="boolean"                      column="titulaire"               nullable="true"/>
+        <field name="cdi"           type="boolean"                      column="cdi"                     nullable="true"/>
+        <field name="cdd"           type="boolean"                      column="cdd"                     nullable="true"/>
+        <field name="vacataire"     type="boolean"                      column="vacataire"               nullable="true"/>
+        <field name="enseignant"    type="boolean"                      column="enseignant"              nullable="true"/>
+        <field name="administratif" type="boolean"                      column="administratif"           nullable="true"/>
+        <field name="chercheur"     type="boolean"                      column="chercheur"               nullable="true"/>
+        <field name="etudiant"      type="boolean"                      column="etudiant"                nullable="true"/>
+        <field name="auditeurLibre" type="boolean"                      column="auditeur_libre"          nullable="true"/>
+        <field name="doctorant"     type="boolean"                      column="doctorant"               nullable="true"/>
+        <field name="detacheIn"     type="boolean"                      column="detache_in"              nullable="true"/>
+        <field name="detacheOut"    type="boolean"                      column="detache_out"             nullable="true"/>
+        <field name="dispo"         type="boolean"                      column="dispo"                   nullable="true"/>
+        <field name="heberge"       type="boolean"                      column="heberge"                 nullable="true"/>
+        <field name="emerite"       type="boolean"                      column="emerite"                 nullable="true"/>
+        <field name="retraite"      type="boolean"                      column="retraite"                nullable="true"/>
+
+    </entity>
+</doctrine-mapping>

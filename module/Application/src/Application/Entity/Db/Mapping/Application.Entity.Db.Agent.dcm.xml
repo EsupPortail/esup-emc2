@@ -17,6 +17,9 @@
         <many-to-one target-entity="Application\Entity\Db\AgentStatus" field="status">
             <join-column name="status" referenced-column-name="id" />
         </many-to-one>
+
+        <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
+
         <many-to-one target-entity="Application\Entity\Db\Correspondance" field="correspondance">
             <join-column name="correspondance" referenced-column-name="id" />
         </many-to-one>

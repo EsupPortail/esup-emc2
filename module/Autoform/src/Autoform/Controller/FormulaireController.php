@@ -108,7 +108,7 @@ class FormulaireController extends AbstractActionController {
         $formulaire = $this->getFormulaireService()->getRequestedFormulaire($this, 'formulaire');
         $this->getFormulaireService()->historise($formulaire);
 
-        $this->redirect()->toRoute('autoform/formulaires', [], [] , true);
+        return $this->redirect()->toRoute('autoform/formulaires', [], [] , true);
     }
 
     public function restaurerAction() {
@@ -116,7 +116,7 @@ class FormulaireController extends AbstractActionController {
         $formulaire = $this->getFormulaireService()->getRequestedFormulaire($this, 'formulaire');
         $this->getFormulaireService()->restaure($formulaire);
 
-        $this->redirect()->toRoute('autoform/formulaires', [], [] , true);
+        return $this->redirect()->toRoute('autoform/formulaires', [], [] , true);
     }
 
     public function detruireAction() {
@@ -124,7 +124,7 @@ class FormulaireController extends AbstractActionController {
         $formulaire = $this->getFormulaireService()->getRequestedFormulaire($this, 'formulaire');
         $this->getFormulaireService()->delete($formulaire);
 
-        $this->redirect()->toRoute('autoform/formulaires', [], [] , true);
+        return $this->redirect()->toRoute('autoform/formulaires', [], [] , true);
     }
 
     public function ajouterCategorieAction() {
@@ -191,7 +191,7 @@ class FormulaireController extends AbstractActionController {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this, 'categorie');
         $this->getCategorieService()->historise($categorie);
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     public function restaurerCategorieAction() {
@@ -199,7 +199,7 @@ class FormulaireController extends AbstractActionController {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this, 'categorie');
         $this->getCategorieService()->restaure($categorie);
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     public function detruireCategorieAction() {
@@ -208,7 +208,7 @@ class FormulaireController extends AbstractActionController {
         $this->getCategorieService()->delete($categorie);
         $this->getFormulaireService()->compacter($formulaire);
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     public function bougerCategorieAction() {
@@ -221,7 +221,7 @@ class FormulaireController extends AbstractActionController {
             $this->getCategorieService()->swapCategories($categorie, current($categories));
         }
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     public function ajouterChampAction() {
@@ -290,7 +290,7 @@ class FormulaireController extends AbstractActionController {
         $champ = $this->getChampService()->getRequestedChamp($this, 'champ');
         $this->getChampService()->historise($champ);
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     public function restaurerChampAction() {
@@ -298,7 +298,7 @@ class FormulaireController extends AbstractActionController {
         $champ = $this->getChampService()->getRequestedChamp($this, 'champ');
         $this->getChampService()->restaure($champ);
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     public function detruireChampAction() {
@@ -308,7 +308,7 @@ class FormulaireController extends AbstractActionController {
         $this->getChampService()->delete($champ);
         $this->getCategorieService()->compacter($categorie);
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     public function bougerChampAction() {
@@ -321,7 +321,7 @@ class FormulaireController extends AbstractActionController {
             $this->getChampService()->swapChamps($champ, current($champs));
         }
 
-        $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
 
     /**
@@ -339,9 +339,9 @@ class FormulaireController extends AbstractActionController {
             $instance = $this->getFormulaireInstanceService()->create($instance);
 
             if ($retour) {
-                $this->redirect()->toUrl($retour);
+                return $this->redirect()->toUrl($retour);
             } else {
-                $this->redirect()->toRoute('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], [], true);
+                return $this->redirect()->toRoute('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], [], true);
             }
         }
 
@@ -352,9 +352,9 @@ class FormulaireController extends AbstractActionController {
 
             $this->getFormulaireReponseService()->updateFormulaireReponse($formulaire, $instance, $data);
             if ($retour) {
-                $this->redirect()->toUrl($retour);
+                return $this->redirect()->toUrl($retour);
             } else {
-                $this->redirect()->toRoute('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], [], true);
+                return $this->redirect()->toRoute('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], [], true);
             }
         }
 

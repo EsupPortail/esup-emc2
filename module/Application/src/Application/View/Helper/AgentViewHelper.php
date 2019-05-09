@@ -49,6 +49,10 @@ class AgentViewHelper extends AbstractHelper
         $texte .= '<dd>'. $agent->getQuotite().'% </dd>';
         $texte .= '<dt> Status </dt>';
         $texte .= '<dd> '. $agent->getStatus() .'</dd>';
+        $texte .= '<dt> Statuts </dt> <br/>';
+        foreach ($agent->getStatutsActifs() as $statut) {
+            $texte .= '<dd> '. $this->getView()->agentStatut()->render($statut, ['show_agent' => false]) .'</dd>';
+        }
         $texte .= '<dt> Correspondance </dt>';
         $texte .= '<dd> '. $agent->getCorrespondance() .'</dd>';
         $texte .= '<dt> Corps </dt>';

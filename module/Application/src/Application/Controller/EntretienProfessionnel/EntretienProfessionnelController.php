@@ -4,15 +4,21 @@ namespace Application\Controller\EntretienProfessionnel;
 
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use UnicaenApp\Exception\RuntimeException;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class EntretienProfessionnelController extends AbstractActionController {
+    use AgentServiceAwareTrait;
+    use UserServiceAwareTrait;
+
     use EntretienProfessionnelFormAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use FormulaireServiceAwareTrait;
@@ -23,6 +29,29 @@ class EntretienProfessionnelController extends AbstractActionController {
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels();
 
         return new ViewModel([
+            'entretiens' => $entretiens,
+        ]);
+    }
+
+    public function indexAgentAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this,'agent');
+
+        if ($agent === null) {
+            $user = $this->getUserService()->getConnectedUser();
+            $agent = $this->getAgentService()->getAgentByUser($user);
+
+            if ($agent !== null) {
+                return $this->redirect()->toRoute('agent/entretien-professionnel', ['agent' => $agent->getId()], [], true);
+            } else {
+                throw new RuntimeException("L'utilisateur connecté n'est pas associté à un agent !");
+            }
+        }
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
+
+        return new ViewModel([
+            'agent' => $agent,
             'entretiens' => $entretiens,
         ]);
     }
@@ -47,7 +76,7 @@ class EntretienProfessionnelController extends AbstractActionController {
                 $this->getFormulaireInstanceService()->create($instance);
                 $entretien->setFormulaireInstance($instance);
                 $this->getEntretienProfessionnelService()->create($entretien);
-                $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true);
+                return $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true);
             }
         }
 
@@ -58,6 +87,16 @@ class EntretienProfessionnelController extends AbstractActionController {
             'form'  => $form,
         ]);
         return $vm;
+    }
+
+    public function afficherAction()
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+
+        return new ViewModel([
+            'title' => 'Entretien professionnel '.$entretien->getAnnee().' de '.$entretien->getAgent()->getDenomination(),
+            'entretien' => $entretien,
+        ]);
     }
 
     public function modifierAction()
@@ -73,21 +112,21 @@ class EntretienProfessionnelController extends AbstractActionController {
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->historise($entretien);
-        $this->redirect()->toRoute('entretien-professionnel', [], [], true);
+        return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
     }
 
     public function restaurerAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->restore($entretien);
-        $this->redirect()->toRoute('entretien-professionnel', [], [], true);
+        return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
     }
 
     public function detruireAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->delete($entretien);
-        $this->redirect()->toRoute('entretien-professionnel', [], [], true);
+        return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
     }
 
 

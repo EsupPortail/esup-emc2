@@ -38,7 +38,7 @@ class UtilisateurController extends AbstractActionController {
             if ($request->getPost()->toArray()['ldap']['id'] !== null) {
                 if ($request->getPost()->toArray()['ldap']['id'] === '') {
                     $this->flashMessenger()->addErrorMessage("Aucun utilisateur de sélectionné !");
-                    $this->redirect()->toRoute(null, [], [], true);
+                    return $this->redirect()->toRoute(null, [], [], true);
                 }
                 $people = $this->ldapPeopleService->get($request->getPost()->toArray()['ldap']['id']);
 
@@ -66,12 +66,12 @@ class UtilisateurController extends AbstractActionController {
             $data = $request->getPost()->toArray()['utilisateur'];
             if ($data['id'] === '') {
                 $this->flashMessenger()->addErrorMessage("Aucun utilisateur de sélectionné !");
-                $this->redirect()->toRoute(null, [], [], true);
+                return $this->redirect()->toRoute(null, [], [], true);
             }
             $utilisateur = $this->getUserService()->getUtilisateur($data['id']);
             $params = [];
             if ($utilisateur !== null) $params = ["query" => ["id" => $data['id']]];
-            $this->redirect()->toRoute(null, [], $params, true);
+            return $this->redirect()->toRoute(null, [], $params, true);
         }
 
         $utilisateurId = $this->params()->fromQuery("id");
@@ -160,7 +160,7 @@ class UtilisateurController extends AbstractActionController {
 
         $params = [];
         if ($utilisateur !== null) $params = ["query" => ["id" => $utilisateur->getId()]];
-        $this->redirect()->toRoute('utilisateur-preecog', [], $params, true);
+        return $this->redirect()->toRoute('utilisateur-preecog', [], $params, true);
     }
 
     public function effacerAction() {
@@ -169,7 +169,7 @@ class UtilisateurController extends AbstractActionController {
         $utilisateur = $this->getUserService()->getUtilisateur($utilisateurId);
         $this->getUserService()->supprimer($utilisateur);
 
-        $this->redirect()->toRoute('utilisateur-preecog', [], [], true);
+        return $this->redirect()->toRoute('utilisateur-preecog', [], [], true);
     }
 
     /**

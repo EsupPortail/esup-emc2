@@ -23,8 +23,7 @@ class AgentController extends AbstractActionController
     use AgentFormAwareTrait;
     use AgentImportFormAwareTrait;
 
-    public function indexAction()
-    {
+    public function indexAction() {
         $agents = $this->getAgentService()->getAgents();
         return  new ViewModel([
             'agents' => $agents,
@@ -33,8 +32,7 @@ class AgentController extends AbstractActionController
 
     public function afficherAction() {
 
-        $agentId = $this->params()->fromRoute('id');
-        $agent = $this->getAgentService()->getAgent($agentId);
+        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
@@ -73,9 +71,7 @@ class AgentController extends AbstractActionController
 
     public function modifierAction() {
 
-        /** @var Agent $agent */
-        $agentId = $this->params()->fromRoute('id');
-        $agent = $this->getAgentService()->getAgent($agentId);
+        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
 
         /** @var AgentForm $form */
         $form = $this->getAgentForm();
@@ -103,13 +99,22 @@ class AgentController extends AbstractActionController
 
     public function supprimerAction() {
 
-        /** @var Agent $agent */
-        $agentId = $this->params()->fromRoute('id');
-        $agent = $this->getAgentService()->getAgent($agentId);
+        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
 
         $this->getAgentService()->delete($agent);
 
-        $this->redirect()->toRoute('agent', [], [], true);
+        return $this->redirect()->toRoute('agent', [], [], true);
+    }
+
+    public function afficherStatutsAction()
+    {
+        $agent   = $this->getAgentService()->getRequestedAgent($this, 'agent');
+        $statuts = $agent->getStatuts();
+
+        return new ViewModel([
+            'title' => 'Statuts de l\'agent '.$agent->getDenomination(),
+            'status' => $statuts,
+        ]);
     }
 
     public function importerAction()
@@ -133,7 +138,6 @@ class AgentController extends AbstractActionController
                     if ($affectation->getDateFin()) var_dump($affectation->getDateFin()->format('d/m/Y'));
                 }
             }
-            //$this->redirect()->toRoute('agent/importer');
         }
 
         return new ViewModel([

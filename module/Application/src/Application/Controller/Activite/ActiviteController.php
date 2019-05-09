@@ -44,7 +44,6 @@ class ActiviteController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
-//                $this->redirect()->toRoute('activite');
             }
         }
 
@@ -93,7 +92,7 @@ class ActiviteController  extends AbstractActionController {
         $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
 
         $this->getActiviteService()->historise($activite);
-        $this->redirect()->toRoute('activite');
+        return $this->redirect()->toRoute('activite');
     }
 
     public function restaurerAction()
@@ -102,7 +101,7 @@ class ActiviteController  extends AbstractActionController {
         $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
 
         $this->getActiviteService()->restore($activite);
-        $this->redirect()->toRoute('activite');
+        return $this->redirect()->toRoute('activite');
     }
 
 
@@ -112,7 +111,7 @@ class ActiviteController  extends AbstractActionController {
         $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
 
         $this->getActiviteService()->delete($activite);
-        $this->redirect()->toRoute('activite');
+        return $this->redirect()->toRoute('activite');
     }
 
     public function afficherAction()

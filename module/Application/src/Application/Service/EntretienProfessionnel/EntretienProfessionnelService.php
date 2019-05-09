@@ -2,6 +2,7 @@
 
 namespace Application\Service\EntretienProfessionnel;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
@@ -171,6 +172,22 @@ class EntretienProfessionnelService {
         $id = $controller->params()->fromRoute($paramName);
         $entretien = $this->getEntretienProfessionnel($id);
         return $entretien;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensProfessionnelsParAgent($agent)
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->andWhere('entretien.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->orderBy('entretien.annee, entretien.id', 'ASC')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }

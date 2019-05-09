@@ -3,8 +3,6 @@
 namespace Application\Form\Poste;
 
 use Application\Entity\Db\Domaine;
-use Application\Entity\Db\Fonction;
-use Application\Entity\Db\Structure;
 use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
@@ -118,6 +116,8 @@ class PosteForm extends Form  {
             ],
             'attributes' => [
                 'id' => 'domaine',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 
@@ -131,6 +131,8 @@ class PosteForm extends Form  {
             ],
             'attributes' => [
                 'id' => 'fonction',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 
@@ -143,6 +145,8 @@ class PosteForm extends Form  {
             ],
             'attributes' => [
                 'id' => 'lien',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 

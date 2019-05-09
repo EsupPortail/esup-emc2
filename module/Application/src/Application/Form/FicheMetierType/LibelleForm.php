@@ -2,38 +2,29 @@
 
 namespace Application\Form\FicheMetierType;
 
-use Application\Entity\Db\Metier;
-use DoctrineModule\Form\Element\ObjectSelect;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
 class LibelleForm extends Form {
-    use EntityManagerAwareTrait;
+    use RessourceRhServiceAwareTrait;
 
     public function init()
     {
         // libelle
         $this->add([
-            'type' => ObjectSelect::class,
+            'type' => Select::class,
             'name' => 'metier',
             'options' => [
                 'label' => "Libellé du métier :",
                 'empty_option' => "Sélectionner un metier ...",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => Metier::class,
-                'property' => 'libelle',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['libelle' => 'ASC'],
-                    ],
-                ],
-                'disable_inarray_validator' => true,
+                'value_options' => $this->getRessourceRhService()->getMetiersTypesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'metier',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         // button

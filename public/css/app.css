@@ -83,6 +83,15 @@ span.TODO {
     }
 }
 
+div.modal div.modal-header {
+    background-color: #337ab7;
+    color: white;
+}
+
+div.modal div.modal-footer {
+    display: none;
+}
+
 /** ICON **************************************************************************************************************/
 
 span.icon:before {
@@ -175,6 +184,10 @@ span.icon.fichiers:before {
 
 span.icon.donnees:before {
     content: "\f2c2";
+}
+
+span.icon.power:before {
+    content: "\f011";
 }
 
 div.survol:hover {

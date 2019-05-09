@@ -3,6 +3,7 @@
 namespace Application;
 
 use Application\Provider\Privilege\ActivitePrivileges;
+use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FonctionPrivileges;
@@ -26,22 +27,22 @@ return [
                             'Personnel'
                         ],
                         'pages' => [
-//                            'index-personnel' => [
-//                                'visible' => true,
-//                                'order' => 100,
-//                                'label' => 'Mon accueil',
-//                                'icon' => 'fas fa-angle-right',
-//                                'route' => 'index-personnel',
-//                                'roles' => [
-//                                    'Personnel',
-//                                ],
-//                            ],
+                            'index-personnel' => [
+                                'visible' => true,
+                                'order' => 100,
+                                'label' => 'Mon accueil',
+                                'icon' => 'fas fa-angle-right',
+                                'route' => 'index-personnel',
+                                'roles' => [
+                                    'Personnel',
+                                ],
+                            ],
                             'entretien' => [
                                 'visible' => true,
                                 'order' => 200,
                                 'label' => 'Mes entretiens Pro.',
                                 'icon' => 'fas fa-angle-right',
-                                'route' => 'entretien-professionnel',
+                                'route' => 'agent/entretien-professionnel',
                                 'roles' => [
                                     'Personnel',
                                 ],
@@ -56,41 +57,30 @@ return [
                                     'Personnel',
                                 ],
                             ],
-                            'rgpd' => [
-                                'visible' => true,
-                                'order' => 400,
-                                'label' => 'Mes données',
-                                'icon' => 'fas fa-angle-right',
-                                'route' => 'ressource-rh',
-                                'roles' => [
-                                    'Personnel',
-                                ],
-                            ],
+//                            'rgpd' => [
+//                                'visible' => true,
+//                                'order' => 400,
+//                                'label' => 'Mes données',
+//                                'icon' => 'fas fa-angle-right',
+//                                'route' => 'index-personnel',
+//                                'roles' => [
+//                                    'Personnel',
+//                                ],
+//                            ],
 
                         ],
-//                        'visible' => false,
-//                        'pages' => [
-//                            [
-//                                'order' => 1,
-//                                'label' => 'Les corps, grades et status',
-//                                'route' => 'ressource-rh/index-corps-grade-status',
-//                                'privileges' => RessourceRhPrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                        ]
                     ],
                     'ressource' => [
                         'order' => 100,
-                        'label' => 'Ressources RH',
+                        'label' => 'Ressources',
                         'route' => 'ressource-rh',
-                        'roles' => [],
+                        'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                         'pages' => [
                             [
                                 'order' => 1,
                                 'label' => 'Les corps, grades et status',
                                 'route' => 'ressource-rh/index-corps-grade-status',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -98,7 +88,7 @@ return [
                                 'order' => 2,
                                 'label' => 'Les correspondances',
                                 'route' => 'ressource-rh/index-correspondance',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -106,7 +96,7 @@ return [
                                 'order' => 3,
                                 'label' => 'Les domaines',
                                 'route' => 'ressource-rh/index-domaine',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -114,15 +104,15 @@ return [
                                 'order' => 4,
                                 'label' => 'Les fonctions',
                                 'route' => 'fonction',
-                                'privileges' => FonctionPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
                                 'order' => 5,
-                                'label' => 'Les métiers et familles de métiers',
+                                'label' => 'Les métiers et familles professionnelles',
                                 'route' => 'ressource-rh/index-metier-et-famille',
-                                'privileges' => RessourceRhPrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -130,7 +120,7 @@ return [
                                 'order' => 6,
                                 'label' => 'Les structures',
                                 'route' => 'structure',
-                                'privileges' => StructurePrivileges::AFFICHER,
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -140,9 +130,9 @@ return [
                     ],
                     'entretien' => [
                         'order' => 100,
-                        'label' => 'Entretiens Pro.',
+                        'label' => 'Entretiens',
                         'route' => 'entretien-professionnel',
-                        'roles' => [],
+                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER),
                         'pages' => [
                         ],
                     ],
@@ -151,14 +141,15 @@ return [
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',
-                        'roles' => [],
+
+                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
                         'pages' => [
                             [
                                 'label' => 'Mailing',
                                 'route' => 'mailing',
                                 'roles' => [], //'privileges' => MailingPrivileges::AFFICHER,
-                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
+
                             ],
                             [
                                 'label' => 'Utilisateurs',
@@ -173,6 +164,7 @@ return [
                                 'route'      => 'privilege',
                                 'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
                                 'withtarget' => true,
+                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                             'autoform' => [
@@ -181,6 +173,7 @@ return [
                                 'route'      => 'autoform/formulaires',
                                 'roles'      => [],
 //                                'withtarget' => true,
+                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                             'fichier' => [
@@ -189,6 +182,7 @@ return [
                                 'route'      => 'index-fichier',
                                 'roles'      => [],
 //                                'withtarget' => true,
+                                'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                         ],
@@ -198,14 +192,14 @@ return [
                         'label' => 'Fiches',
 //                        'title' => "Fiche métier",
                         'route' => 'activite',
-                        'roles' => [], //PrivilegeController::getResourceId(__NAMESPACE__ . '\Controller\Administration', 'index'),
+                        'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER),
                         'pages' => [
                             [
                                 'label' => 'Les activités',
                                 'route' => 'activite',
                                 'privileges' => ActivitePrivileges::AFFICHER,
                                 'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
+                                'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'label' => 'Les agents',
@@ -229,7 +223,7 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'label' => 'Les fiches types',
+                                'label' => 'Les fiches métiers',
                                 'route' => 'fiche-metier-type',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
                                 'dropdown-header' => true,
@@ -242,8 +236,6 @@ return [
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
-
-
                         ],
                     ],
                 ],

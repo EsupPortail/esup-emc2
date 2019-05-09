@@ -275,9 +275,4 @@ class FicheMetierService {
         return $ficheMetierType;
     }
 
-
-
-
-
-
 }

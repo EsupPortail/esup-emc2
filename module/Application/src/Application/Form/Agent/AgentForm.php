@@ -103,6 +103,8 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'quotite',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         // Status
@@ -126,6 +128,8 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'status',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         // Status
@@ -149,6 +153,8 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'correspondance',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         // Corps
@@ -172,6 +178,8 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'corps',
+                //'class'             => 'bootstrap-selectpicker show-tick',
+                //'data-live-search'  => 'true',
             ],
         ]);
         // Grade
@@ -195,6 +203,8 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'grade',
+                //'class'             => 'bootstrap-selectpicker show-tick',
+                //'data-live-search'  => 'true',
             ],
         ]);
 

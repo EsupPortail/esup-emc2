@@ -19,7 +19,7 @@ class ApplicationController  extends AbstractActionController {
     public function indexAction()
     {
         /** @var Application[] $activites */
-        $applications = $this->getApplicationService()->getApplications('id');
+        $applications = $this->getApplicationService()->getApplications('libelle');
 
         return new ViewModel([
             'applications' => $applications,
@@ -44,7 +44,6 @@ class ApplicationController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getApplicationService()->create($application);
-                //$this->redirect()->toRoute('application');
             }
         }
 
@@ -76,7 +75,6 @@ class ApplicationController  extends AbstractActionController {
 
             if ($form->isValid()) {
                 $this->getApplicationService()->update($application);
-                //$this->redirect()->toRoute('application');
             }
         }
 
@@ -91,31 +89,25 @@ class ApplicationController  extends AbstractActionController {
 
     public function effacerAction()
     {
-        /** @var Application $application */
-        $applicationId = $this->params()->fromRoute('id');
-        $application = $this->getApplicationService()->getApplication($applicationId);
+        $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
         $this->getApplicationService()->delete($application);
-        $this->redirect()->toRoute('application');
+        return $this->redirect()->toRoute('application');
     }
 
     public function changerStatusAction()
     {
-        /** @var Application $application */
-        $applicationId = $this->params()->fromRoute('id');
-        $application = $this->getApplicationService()->getApplication($applicationId);
+        $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
         $application->setActif( !$application->isActif() );
 
         $this->getApplicationService()->update($application);
-        $this->redirect()->toRoute('application');
+        return $this->redirect()->toRoute('application');
     }
 
     public function afficherAction()
     {
-        /** @var Application $application */
-        $applicationId = $this->params()->fromRoute('id');
-        $application = $this->getApplicationService()->getApplication($applicationId);
+        $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
         return new ViewModel([
             'title' => "Description de l'application",
