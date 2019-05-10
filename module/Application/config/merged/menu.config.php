@@ -78,8 +78,8 @@ return [
                         'pages' => [
                             [
                                 'order' => 1,
-                                'label' => 'Les corps, grades et status',
-                                'route' => 'ressource-rh/index-corps-grade-status',
+                                'label' => 'Les corps et grades',
+                                'route' => 'ressource-rh/index-corps-grade',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'

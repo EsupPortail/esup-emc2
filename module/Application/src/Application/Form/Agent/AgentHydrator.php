@@ -23,7 +23,6 @@ class AgentHydrator implements HydratorInterface {
             'dateDebut'         => ($object->getDateDebut())?$object->getDateDebut()->format("d/m/Y"):"",
             'dateFin'           => ($object->getDateFin())?$object->getDateFin()->format("d/m/Y"):"",
             'quotite'           => $object->getQuotite(),
-            'status'            => $object->getStatus(),
             'correspondance'    => $object->getCorrespondance(),
             'corps'             => $object->getCorps(),
             'grade'             => $object->getGrade(),
@@ -40,7 +39,6 @@ class AgentHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $status = $this->getRessourceRhService()->getAgentStatus($data['status']);
         $correspondance = $this->getRessourceRhService()->getCorrespondance($data['correspondance']);
         $corps = $this->getRessourceRhService()->getCorps($data['corps']);
         $grade = $this->getRessourceRhService()->getGrade($data['grade']);

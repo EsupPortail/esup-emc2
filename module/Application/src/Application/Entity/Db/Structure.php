@@ -26,7 +26,7 @@ class Structure {
     private $dateFermeture;
     /** @var string */
     private $source;
-    /** @var string */
+    /** @var integer */
     private $idSource;
     /** @var string */
     private $description;
@@ -174,7 +174,7 @@ class Structure {
     }
 
     /**
-     * @return string
+     * @return integer
      */
     public function getIdSource()
     {
@@ -182,7 +182,7 @@ class Structure {
     }
 
     /**
-     * @param string $idSource
+     * @param integer $idSource
      * @return Structure
      */
     public function setIdSource($idSource)

@@ -9,5 +9,6 @@
         <field name="code"              type="string"   length="64"       column="code"                   nullable="false"  />
         <field name="libelle"           type="string"   length="256"      column="libelle"                nullable="false"  />
 
+        <one-to-many target-entity="Application\Entity\Db\Grade" mapped-by="corps" field="grades"/>
     </entity>
 </doctrine-mapping>

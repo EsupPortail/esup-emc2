@@ -11,10 +11,10 @@
 
         <field name="idOrigine"         type="string" length="256"      column="id_origine"               nullable="true"/>
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
-            <join-column name="agent_id" referenced-column-name="id"/>
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Structure"  field="structure">
-            <join-column name="structure_id" referenced-column-name="id"/>
+            <join-column name="structure_id" referenced-column-name="source_id"/>
         </many-to-one>
         <field name="debut"         type="datetime"                     column="debut"                   nullable="false"/>
         <field name="fin"           type="datetime"                     column="fin"                     nullable="true"/>

@@ -2,7 +2,6 @@
 
 namespace Application\Controller\RessourceRh;
 
-use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Form\RessourceRh\DomaineForm;
@@ -22,7 +21,6 @@ class RessourceRhControllerFactory {
         $ressourceService    = $manager->getServiceLocator()->get(RessourceRhService::class);
 
         /**
-         * @var AgentStatusForm $agentStatusForm
          * @var CorpsForm $corpsForm
          * @var CorrespondanceForm $correspondanceForm
          * @var DomaineForm $domaineForm
@@ -30,7 +28,6 @@ class RessourceRhControllerFactory {
          * @var MetierFamilleForm $metierFamilleForm
          * @var MetierForm $metierForm
          */
-        $agentStatusForm    = $manager->getServiceLocator()->get('FormElementManager')->get(AgentStatusForm::class);
         $corpsForm          = $manager->getServiceLocator()->get('FormElementManager')->get(CorpsForm::class);
         $correspondanceForm = $manager->getServiceLocator()->get('FormElementManager')->get(CorrespondanceForm::class);
         $domaineForm        = $manager->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
@@ -43,7 +40,6 @@ class RessourceRhControllerFactory {
 
         $controller->setRessourceRhService($ressourceService);
 
-        $controller->setAgentStatusForm($agentStatusForm);
         $controller->setCorpsForm($corpsForm);
         $controller->setCorrespondanceForm($correspondanceForm);
         $controller->setDomaineForm($domaineForm);
