@@ -2,8 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\Structure" table="structure">
 
-        <id name="id" type="integer" column="id">
-            <generator strategy="IDENTITY"/>
+        <id name="idSource" type="integer" column="source_id">
         </id>
 
         <field name="libelleCourt"      type="string" length="128"      column="libelle_court"                nullable="false"/>
@@ -21,7 +20,6 @@
 <!--            <join-column name="source" referenced-column-name="id"/>-->
 <!--        </many-to-one>-->
         <field name="source"            type="string" length="32"       column="source"                        nullable="true"/>
-        <field name="idSource"          type="string" length="128"               column="source_id"     nullable="false"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

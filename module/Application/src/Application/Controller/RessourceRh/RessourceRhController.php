@@ -2,15 +2,12 @@
 
 namespace Application\Controller\RessourceRh;
 
-use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
-use Application\Entity\Db\Fonction;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
-use Application\Form\RessourceRh\AgentStatusFormAwareTrait;
 use Application\Form\RessourceRh\CorpsFormAwareTrait;
 use Application\Form\RessourceRh\CorrespondanceFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
@@ -21,7 +18,6 @@ use Application\Form\RessourceRh\MetierFamilleForm;
 use Application\Form\RessourceRh\MetierFamilleFormAwareTrait;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormAwareTrait;
-use Application\Form\RessourceRh\AgentStatusForm;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
@@ -34,7 +30,6 @@ class RessourceRhController extends AbstractActionController {
     /** Trait utilisés pour les services */
     use RessourceRhServiceAwareTrait;
     /** Trait utilisés pour les formulaires */
-    use AgentStatusFormAwareTrait;
     use CorpsFormAwareTrait;
     use CorrespondanceFormAwareTrait;
     use DomaineFormAwareTrait;
@@ -57,16 +52,12 @@ class RessourceRhController extends AbstractActionController {
     }
 
     /** Sub part */
-    public function indexCorpsGradeStatusAction()
+    public function indexCorpsGradeAction()
     {
-        $status = $this->getRessourceRhService()->getAgentStatusListe('libelle');
         $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
-        $grades = $this->getRessourceRhService()->getGrades();
 
         return new ViewModel([
-            'status' => $status,
             'corps'  => $corps,
-            'grades' => $grades,
         ]);
     }
 
@@ -88,77 +79,6 @@ class RessourceRhController extends AbstractActionController {
         return new ViewModel([
             'domaines' => $domaines,
         ]);
-    }
-
-    /** AGENT STATUS **************************************************************************************************/
-
-    public function creerAgentStatusAction()
-    {
-        $status = new AgentStatus();
-
-        /** @var AgentStatusForm $form */
-        $form = $this->getAgentStatusForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/agent-status/creer', [], [], true));
-        $form->bind($status);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->createAgentStatus($status);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter un nouveau status',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierAgentStatusAction()
-    {
-        $statusId = $this->params()->fromRoute('id');
-        $status = $this->getRessourceRhService()->getAgentStatus($statusId);
-
-        /** @var AgentStatusForm $form */
-        $form = $this->getAgentStatusForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/agent-status/modifier', [], [], true));
-        $form->bind($status);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->updateAgentStatus($status);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Éditer un status',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function effacerAgentStatusAction()
-    {
-        $statusId = $this->params()->fromRoute('id');
-        $status = $this->getRessourceRhService()->getAgentStatus($statusId);
-
-        if ($status !== null) {
-            $this->getRessourceRhService()->deleteAgentStatus($status);
-        }
-
-        return $this->redirect()->toRoute('ressource-rh', [], [], true);
     }
 
     /** CORRESPONDANCE ************************************************************************************************/
@@ -300,7 +220,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteCorps($corps);
         }
 
-        return $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh/index-corps-grade', [], [], true);
     }
 
     /** METIER ********************************************************************************************************/
@@ -590,7 +510,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteGrade($grade);
         }
 
-        return $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh/index-corps-grade', [], [], true);
     }
 
     public function getGradesJsonAction()

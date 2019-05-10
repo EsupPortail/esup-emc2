@@ -8,6 +8,7 @@
 
         <field name="libelle"           type="string"   length="256"      column="libelle"                nullable="false"  />
         <field name="rang"              type="integer"                    column="rang"                   nullable="true"  />
+
         <many-to-one target-entity="Application\Entity\Db\Corps" field="corps">
             <join-column name="corps" referenced-column-name="id" />
         </many-to-one>

@@ -40,76 +40,10 @@ class AgentController extends AbstractActionController
         ]);
     }
 
-    public function ajouterAction() {
-
-        /** @var Agent $agent */
-        $agent = new Agent();
-
-        /** @var AgentForm $form */
-        $form = $this->getAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter', [], [], true));
-        $form->bind($agent);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getAgentService()->create($agent);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/agent/modifier');
-        $vm->setVariables([
-            'title' => 'Ajouter un agent',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierAction() {
-
-        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
-
-        /** @var AgentForm $form */
-        $form = $this->getAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier', ['id' => $agent->getId()], [], true));
-        $form->bind($agent);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getAgentService()->update($agent);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/agent/modifier');
-        $vm->setVariables([
-            'title' => 'Modifier un agent',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function supprimerAction() {
-
-        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
-
-        $this->getAgentService()->delete($agent);
-
-        return $this->redirect()->toRoute('agent', [], [], true);
-    }
-
     public function afficherStatutsAction()
     {
         $agent   = $this->getAgentService()->getRequestedAgent($this, 'agent');
-        $statuts = $agent->getStatuts();
+        $statuts = $agent->getStatus();
 
         return new ViewModel([
             'title' => 'Statuts de l\'agent '.$agent->getDenomination(),

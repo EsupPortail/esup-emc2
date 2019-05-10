@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Corps {
 
     /** @var integer */
@@ -10,6 +12,13 @@ class Corps {
     private $code;
     /** @var string */
     private $libelle;
+    /** @var ArrayCollection (Grade) */
+    private $grades;
+
+    public function __construct()
+    {
+        $this->grades = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -65,6 +74,37 @@ class Corps {
         return $this;
     }
 
+    /**
+     * @return Grade[]
+     */
+    public function getGrades()
+    {
+        return $this->grades->toArray();
+    }
+
+    /**
+     * @param Grade $grade
+     * @return Corps
+     */
+    public function addGrade($grade)
+    {
+        $this->grades->add($grade);
+        return $this;
+    }
+
+    /**
+     * @param Grade $grade
+     * @return Corps
+     */
+    public function removeGrade($grade)
+    {
+        $this->grades->removeElement($grade);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return "(".$this->getCode().") ".$this->getLibelle();

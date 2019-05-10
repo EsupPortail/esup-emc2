@@ -3,7 +3,6 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\MissionComplementaire;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Entity\Ldap\People;
@@ -194,5 +193,26 @@ class AgentService {
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Un problème a été recontré lors de la suppression de la mission complémentaire", $e);
         }
+    }
+
+    /**
+     * @param int $supannId
+     * @return Agent
+     */
+    public function getAgentBySupannId($supannId)
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere('agent.sourceName = :harp')
+            ->andWhere('agent.sourceId = :supannId')
+            ->setParameter('harp', 'HARP')
+            ->setParameter('supannId', $supannId);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$id."]");
+        }
+        return $result;
+
     }
 }

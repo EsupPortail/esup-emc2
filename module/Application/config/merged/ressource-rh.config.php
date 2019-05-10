@@ -4,9 +4,7 @@ namespace Application;
 
 use Application\Controller\RessourceRh\RessourceRhController;
 use Application\Controller\RessourceRh\RessourceRhControllerFactory;
-use Application\Form\RessourceRh\AgentStatusForm;
-use Application\Form\RessourceRh\AgentStatusFormFactory;
-use Application\Form\RessourceRh\AgentStatusHydrator;
+
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorpsFormFactory;
 use Application\Form\RessourceRh\CorpsHydrator;
@@ -42,7 +40,7 @@ return [
                     'controller' => RessourceRhController::class,
                     'action' => [
                         'index',
-                        'index-corps-grade-status',
+                        'index-corps-grade',
                         'index-metier-et-famille',
                         'index-correspondance',
                         'index-domaine',
@@ -56,7 +54,6 @@ return [
                 [
                     'controller' => RessourceRhController::class,
                     'action' => [
-                        'creer-agent-status',
                         'creer-correspondance',
                         'creer-corps',
                         'creer-metier',
@@ -72,7 +69,6 @@ return [
                 [
                     'controller' => RessourceRhController::class,
                     'action' => [
-                        'modifier-agent-status',
                         'modifier-correspondance',
                         'modifier-corps',
                         'modifier-metier',
@@ -91,7 +87,6 @@ return [
                         'effacer-corps',
                         'effacer-correspondance',
                         'effacer-metier',
-                        'effacer-agent-status',
                         'effacer-famille',
                         'supprimer-domaine',
                         'supprimer-fonction',
@@ -118,14 +113,14 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'index-corps-grade-status' => [
+                    'index-corps-grade' => [
                         'type' => Literal::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/index-corps-grade-status',
+                            'route'    => '/index-corps-grade',
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
-                                'action'     => 'index-corps-grade-status',
+                                'action'     => 'index-corps-grade',
                             ],
                         ],
                     ],
@@ -159,45 +154,6 @@ return [
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
                                 'action'     => 'index-domaine',
-                            ],
-                        ],
-                    ],
-                    'agent-status' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route'    => '/agent-status',
-                        ],
-                        'may_terminate' => false,
-                        'child_routes' => [
-                            'creer' => [
-                                'type'  => Literal::class,
-                                'options' => [
-                                    'route'    => '/creer',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'creer-agent-status',
-                                    ],
-                                ],
-                            ],
-                            'modifier' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/modifier/:id',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'modifier-agent-status',
-                                    ],
-                                ],
-                            ],
-                            'effacer' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/effacer/:id',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'effacer-agent-status',
-                                    ],
-                                ],
                             ],
                         ],
                     ],
@@ -503,7 +459,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentStatusForm::class => AgentStatusFormFactory::class,
             CorpsForm::class => CorpsFormFactory::class,
             CorrespondanceForm::class => CorrespondanceFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
@@ -514,7 +469,6 @@ return [
     ],
     'hydrators' => [
         'invokables' => [
-            AgentStatusHydrator::class => AgentStatusHydrator::class,
             CorpsHydrator::class => CorpsHydrator::class,
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
             MetierFamilleHydrator::class => MetierFamilleHydrator::class,

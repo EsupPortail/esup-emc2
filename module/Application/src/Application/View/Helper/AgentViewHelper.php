@@ -3,7 +3,6 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\Poste;
 use Zend\View\Helper\AbstractHelper;
 
 class AgentViewHelper extends AbstractHelper
@@ -34,38 +33,33 @@ class AgentViewHelper extends AbstractHelper
      */
     public function render($agent)
     {
-        $texte  = '<dl class="dl-horizontal">';
+        $texte  = '';
+        $texte .= '<h3>Présentation de l\'agent </h3>';
+
+        $texte .= '<dl class="dl-horizontal">';
         $texte .= '<dt> Prénom </dt>';
         $texte .= '<dd> '. $agent->getPrenom() . '</dd>';
         $texte .= '<dt> Nom </dt>';
-        $texte .= '<dd> '. $agent->getNom() .'</dd>';
-        $texte .= '<dt> Numéro poste </dt>';
-        $texte .= '<dd> '.$agent->getNumeroPoste() .'</dd>';
-        $texte .= '<dt> Date de début </dt>';
-        $texte .= '<dd>'. (($agent->getDateDebut())?$agent->getDateDebut()->format('d/m/Y'):'---').'</dd>';
-        $texte .= '<dt> Date de fin </dt>';
-        $texte .= '<dd>'. (($agent->getDateFin())?$agent->getDateFin()->format('d/m/Y'):'---').'</dd>';
+        $texte .= '<dd> '. $agent->getNomUsuel() .'</dd>';
         $texte .= '<dt> Quotité travaillée </dt>';
-        $texte .= '<dd>'. $agent->getQuotite().'% </dd>';
-        $texte .= '<dt> Status </dt>';
-        $texte .= '<dd> '. $agent->getStatus() .'</dd>';
-        $texte .= '<dt> Statuts </dt> <br/>';
-        foreach ($agent->getStatutsActifs() as $statut) {
-            $texte .= '<dd> '. $this->getView()->agentStatut()->render($statut, ['show_agent' => false]) .'</dd>';
-        }
+        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
         $texte .= '<dt> Correspondance </dt>';
-        $texte .= '<dd> '. $agent->getCorrespondance() .'</dd>';
+        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
         $texte .= '<dt> Corps </dt>';
-        $texte .= '<dd> '. $agent->getCorps() .'</dd>';
+        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
         $texte .= '<dt> Grade </dt>';
-        $texte .= '<dd> '. $agent->getGrade() . '</dd>';
+        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
         $texte .= '</dl>';
-        $texte .= '<br/>';
 
-         if ($agent->getMissionsComplementaires() !== null) {
-             $texte .= '<h3>Missions complémentaires</h3>';
-             $texte .= $agent->getMissionsComplementaires();
-         }
+        $texte .= '<h3>Statuts</h3>';
+        foreach ($agent->getStatuts() as $statut) {
+            $texte .= $this->getView()->agentStatut()->render($statut, ['show_agent' => false]);
+        }
+
+         $texte .= '<h3>Missions complémentaires</h3>';
+//         if ($agent->getMissionsComplementaires() !== null) {
+//             $texte .= $agent->getMissionsComplementaires();
+//         }
 
         return $texte;
     }

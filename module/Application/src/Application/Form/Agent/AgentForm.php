@@ -2,7 +2,6 @@
 
 namespace Application\Form\Agent;
 
-use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Grade;
@@ -103,31 +102,6 @@ class AgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'quotite',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
-        // Status
-        $this->add([
-            'type' => ObjectSelect::class,
-            'name' => 'status',
-            'options' => [
-                'label' => "Status de l'agent* :",
-                'empty_option' => "Sélectionner un status ...",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => AgentStatus::class,
-                'property' => 'libelle',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['libelle' => 'ASC'],
-                    ],
-                ],
-                'disable_inarray_validator' => true,
-            ],
-            'attributes' => [
-                'id' => 'status',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ],
