@@ -8,13 +8,20 @@ use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
+use Application\Entity\Db\MissionSpecifique;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenAuth\Entity\Db\User;
+use Utilisateur\Service\User\UserServiceAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class RessourceRhService {
     use EntityManagerAwareTrait;
+    use UserServiceAwareTrait;
 
     /** CORRESPONDANCE ************************************************************************************************/
 
@@ -515,5 +522,166 @@ class RessourceRhService {
             $options[$metier->getId()] = $metier->getLibelle();
         }
         return $options;
+    }
+
+    /** MISSION SPECIFIQUE ********************************************************************************************/
+
+    /**
+     * @return MissionSpecifique[]
+     */
+    public function getMissionsSpecifiques() {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
+            ->orderBy('mission.libelle', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return MissionSpecifique
+     */
+    public function getMissionSpecifique($id) {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
+            ->andWhere('mission.id = :id')
+            ->setParameter('id', $id);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs MissionSpecifique partagent le même id [".$id."]", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return MissionSpecifique
+     */
+    public function getRequestedMissionSpecifique($controller, $paramName)
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $mission = $this->getMissionSpecifique($id);
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function createMissionSpecifique($mission)
+    {
+        /** @var User $user */
+        $user = $this->getUserService()->getConnectedUser();
+        /** @var DateTime $date */
+        try {
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+        }
+
+        $mission->setHistoCreation($date);
+        $mission->setHistoCreateur($user);
+        $mission->setHistoModification($date);
+        $mission->setHistoModificateur($user);
+
+        $this->getEntityManager()->persist($mission);
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function updateMissionSpecifique($mission)
+    {
+        /** @var User $user */
+        $user = $this->getUserService()->getConnectedUser();
+        /** @var DateTime $date */
+        try {
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+        }
+
+        $mission->setHistoModification($date);
+        $mission->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function historiseMissionSpecifique($mission)
+    {
+        /** @var User $user */
+        $user = $this->getUserService()->getConnectedUser();
+        /** @var DateTime $date */
+        try {
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+        }
+
+        $mission->setHistoDestruction($date);
+        $mission->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function restoreMissionSpecifique($mission)
+    {
+        $mission->setHistoDestruction(null);
+        $mission->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function deleteMissionSpecifique($mission)
+    {
+
+        $this->getEntityManager()->remove($mission);
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
     }
 }

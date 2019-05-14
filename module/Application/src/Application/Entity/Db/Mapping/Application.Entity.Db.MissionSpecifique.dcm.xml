@@ -3,6 +3,7 @@
     <entity name="Application\Entity\Db\MissionSpecifique" table="mission_specifique">
 
         <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
         </id>
 
         <field name="libelle"           type="string" length="256"      column="libelle"                  nullable="false"/>

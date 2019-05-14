@@ -5,6 +5,10 @@ namespace Application;
 use Application\Controller\RessourceRh\RessourceRhController;
 use Application\Controller\RessourceRh\RessourceRhControllerFactory;
 
+use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
+use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
+use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
+use Application\Form\MissionSpecifique\MissionSpecifiqueHydratorFactory;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorpsFormFactory;
 use Application\Form\RessourceRh\CorpsHydrator;
@@ -45,6 +49,7 @@ return [
                         'index-correspondance',
                         'index-domaine',
                         'index-metier-et-famille',
+                        'index-mission-specifique',
                         'get-grades-json',
                     ],
                     'privileges' => [
@@ -61,6 +66,7 @@ return [
                         'ajouter-domaine',
                         'ajouter-fonction',
                         'ajouter-grade',
+                        'ajouter-mission-specifique',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AJOUTER,
@@ -76,6 +82,10 @@ return [
                         'modifier-domaine',
                         'modifier-fonction',
                         'modifier-grade',
+
+                        'modifier-mission-specifique',
+                        'historiser-mission-specifique',
+                        'restaurer-mission-specifique',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::MODIFIER,
@@ -91,6 +101,7 @@ return [
                         'supprimer-domaine',
                         'supprimer-fonction',
                         'supprimer-grade',
+                        'supprimer-mission-specifique',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::EFFACER,
@@ -154,6 +165,17 @@ return [
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
                                 'action'     => 'index-domaine',
+                            ],
+                        ],
+                    ],
+                    'index-mission-specifique' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-mission-specifique',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'index-mission-specifique',
                             ],
                         ],
                     ],
@@ -440,6 +462,65 @@ return [
                             ],
                         ],
                     ],
+                    'mission-specifique' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/mission-specifique',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'ajouter-mission-specifique',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:mission',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-mission-specifique',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:mission',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'historiser-mission-specifique',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:mission',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'restaurer-mission-specifique',
+                                    ],
+                                ],
+                            ],
+                            'supprimer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/supprimer/:mission',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'supprimer-mission-specifique',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -465,6 +546,7 @@ return [
             MetierFamilleForm::class => MetierFamilleFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
             GradeForm::class => GradeFormFactory::class,
+            MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -473,10 +555,12 @@ return [
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
             MetierFamilleHydrator::class => MetierFamilleHydrator::class,
             DomaineHydrator::class => DomaineHydrator::class,
+//            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydrator::class,
         ],
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,
             GradeHydrator::class => GradeHydratorFactory::class,
+            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
         ],
     ]
 

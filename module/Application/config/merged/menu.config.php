@@ -109,6 +109,14 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
+                                'order' => 4,
+                                'label' => 'Les missions spécifiques',
+                                'route' => 'ressource-rh/index-mission-specifique',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
                                 'order' => 5,
                                 'label' => 'Les métiers et familles professionnelles',
                                 'route' => 'ressource-rh/index-metier-et-famille',
