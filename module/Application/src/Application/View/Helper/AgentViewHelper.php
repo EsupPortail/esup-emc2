@@ -56,10 +56,13 @@ class AgentViewHelper extends AbstractHelper
             $texte .= $this->getView()->agentStatut()->render($statut, ['show_agent' => false]);
         }
 
-         $texte .= '<h3>Missions complémentaires</h3>';
-//         if ($agent->getMissionsComplementaires() !== null) {
-//             $texte .= $agent->getMissionsComplementaires();
-//         }
+        $texte .= '<h3>Missions complémentaires</h3>';
+
+        $texte .= '<ul>';
+        foreach ($agent->getMissions() as $mission) {
+            $texte .= '<li>'. $mission->getLibelle().'</li>';
+        }
+        $texte .= '</ul>';
 
         return $texte;
     }
