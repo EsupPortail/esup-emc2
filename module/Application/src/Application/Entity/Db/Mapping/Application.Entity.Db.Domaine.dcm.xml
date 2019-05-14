@@ -8,5 +8,17 @@
 
         <field name="libelle"           type="string" length="256"      column="libelle"                nullable="false"/>
 
+        <one-to-many target-entity="Application\Entity\Db\Metier" field="metiers" mapped-by="domaine"/>
+
+<!--        <many-to-many field="familles" target-entity="Application\Entity\Db\MetierFamille" inversed-by="famille" fetch="LAZY">-->
+<!--            <join-table name="famille_domaine">-->
+<!--                <join-columns>-->
+<!--                    <join-column name="domaine_id" referenced-column-name="id"/>-->
+<!--                </join-columns>-->
+<!--                <inverse-join-columns>-->
+<!--                    <join-column name="famille_id" referenced-column-name="id"/>-->
+<!--                </inverse-join-columns>-->
+<!--            </join-table>-->
+<!--        </many-to-many>-->
     </entity>
 </doctrine-mapping>

@@ -10,6 +10,8 @@ class Metier {
     private $libelle;
     /** @var MetierFamille */
     private $famille;
+    /** @var Domaine */
+    private $domaine;
 
     /**
      * @return int
@@ -50,6 +52,24 @@ class Metier {
     public function setFamille($famille)
     {
         $this->famille = $famille;
+        return $this;
+    }
+
+    /**
+     * @return Domaine
+     */
+    public function getDomaine()
+    {
+        return $this->domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Metier
+     */
+    public function setDomaine($domaine)
+    {
+        $this->domaine = $domaine;
         return $this;
     }
 

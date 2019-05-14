@@ -93,14 +93,6 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'order' => 3,
-                                'label' => 'Les domaines',
-                                'route' => 'ressource-rh/index-domaine',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
                                 'order' => 4,
                                 'label' => 'Les fonctions',
                                 'route' => 'fonction',
@@ -118,8 +110,8 @@ return [
                             ],
                             [
                                 'order' => 5,
-                                'label' => 'Les métiers et familles professionnelles',
-                                'route' => 'ressource-rh/index-metier-et-famille',
+                                'label' => 'Métiers, familles et domaines',
+                                'route' => 'ressource-rh/index-metier-famille-domaine',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
