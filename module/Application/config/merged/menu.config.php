@@ -6,10 +6,8 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
-use Application\Provider\Privilege\FonctionPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
-use Application\Provider\Privilege\StructurePrivileges;
 
 return [
     'navigation' => [
@@ -112,6 +110,14 @@ return [
                                 'order' => 5,
                                 'label' => 'Métiers, familles et domaines',
                                 'route' => 'ressource-rh/index-metier-famille-domaine',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 5,
+                                'label' => 'Cartographie',
+                                'route' => 'ressource-rh/cartographie',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
