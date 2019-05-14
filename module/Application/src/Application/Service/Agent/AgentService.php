@@ -210,7 +210,7 @@ class AgentService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$id."]");
+            throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$supannId."]");
         }
         return $result;
 

@@ -91,7 +91,7 @@ class AgentController extends AbstractActionController
                 $result[] = array(
                     'id'    => $individu->getCIndividuChaine(),
                     'label' => $individu->getPrenom()." ".(($individu->getNomUsage())?$individu->getNomUsage():$individu->getNomFamille()),
-                    'extra' => ($individu->getCSource())->__toString(),
+                    'extra' => $individu->getCSource()->__toString(),
                 );
             }
             usort($result, function($a, $b) {

@@ -10,7 +10,7 @@
         <many-to-one target-entity="Application\Entity\Db\Metier" field="metier">
             <join-column name="metier" referenced-column-name="id" />
         </many-to-one>
-        <field name="missionsPrincipales"   type="string" length="2047"     column="missions_principales"               nullable="false"/>
+        <field name="missionsPrincipales"   type="string" length="4096"     column="missions_principales"               nullable="false"/>
 
         <field name="connaissances"             type="string" length="1024"     column="connaissances"                         nullable="true"/>
         <field name="connaissancesFormation"    type="string" length="1024"     column="connaissances_formation"               nullable="true"/>
