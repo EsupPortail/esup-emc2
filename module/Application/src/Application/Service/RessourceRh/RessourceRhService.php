@@ -538,6 +538,19 @@ class RessourceRhService {
     }
 
     /**
+     * @return MissionSpecifique[]
+     */
+    public function getMisssionsSpecifiquesAsOption()
+    {
+        $missions = $this->getMissionsSpecifiques();
+        $options = [];
+        foreach ($missions as $mission) {
+            $options[$mission->getId()] = $mission->getLibelle();
+        }
+        return $options;
+    }
+
+    /**
      * @param integer $id
      * @return MissionSpecifique
      */

@@ -190,6 +190,14 @@ span.icon.power:before {
     content: "\f011";
 }
 
+span.icon.plus:before {
+    content: "\f067";
+}
+
+span.icon.minus:before {
+    content: "\f068";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
