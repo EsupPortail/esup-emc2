@@ -14,6 +14,9 @@ use Application\Form\Agent\AgentHydrator;
 use Application\Form\Agent\AgentHydratorFactory;
 use Application\Form\Agent\AgentImportForm;
 use Application\Form\Agent\AgentImportFormFactory;
+use Application\Form\Agent\AssocierMissionSpecifiqueFactoryForm;
+use Application\Form\Agent\AssocierMissionSpecifiqueForm;
+use Application\Form\Agent\AssocierMissionSpecifiqueHydrator;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
@@ -32,6 +35,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+
                     ],
                     'privileges' => [
                         AgentPrivileges::AFFICHER,
@@ -64,6 +68,15 @@ return [
                     ],
                     'privileges' => [
                         AgentPrivileges::EDITER,
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'associer-mission-specifique',
+                        'deassocier-mission-specifique',
+                    ],
+                    'roles' => [
                     ],
                 ],
                 [
@@ -102,6 +115,26 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'associer-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/associer-mission-specifique/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'associer-mission-specifique',
+                            ],
+                        ],
+                    ],
+                    'deassocier-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/deassocier-mission-specifique/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'deassocier-mission-specifique',
+                            ],
+                        ],
+                    ],
                     'fichiers' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -214,12 +247,16 @@ return [
         'factories' => [
             AgentForm::class => AgentFormFactory::class,
             AgentImportForm::class => AgentImportFormFactory::class,
+            AssocierMissionSpecifiqueForm::class => AssocierMissionSpecifiqueFactoryForm::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            AssocierMissionSpecifiqueHydrator::class => AssocierMissionSpecifiqueHydrator::class,
+        ],
         'factories' => [
             AgentHydrator::class => AgentHydratorFactory::class,
-        ]
+        ],
     ],
     'view_helpers' => [
         'invokables' => [
