@@ -8,6 +8,8 @@ use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierFamille;
+use Application\Entity\Db\MissionSpecifique;
+use Application\Form\MissionSpecifique\MissionSpecifiqueFormAwareTrait;
 use Application\Form\RessourceRh\CorpsFormAwareTrait;
 use Application\Form\RessourceRh\CorrespondanceFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
@@ -36,6 +38,7 @@ class RessourceRhController extends AbstractActionController {
     use GradeFormAwareTrait;
     use MetierFamilleFormAwareTrait;
     use MetierFormAwareTrait;
+    use MissionSpecifiqueFormAwareTrait;
 
     public function indexAction()
     {
@@ -530,5 +533,90 @@ class RessourceRhController extends AbstractActionController {
         );
         return $jm;
     }
+
+    /** MISSION SPECIFIQUE ********************************************************************************************/
+
+    public function indexMissionSpecifiqueAction()
+    {
+        $missions = $this->getRessourceRhService()->getMissionsSpecifiques();
+
+        return new ViewModel([
+            'missions' => $missions,
+        ]);
+    }
+
+    public function ajouterMissionSpecifiqueAction()
+    {
+        $mission = new MissionSpecifique();
+        $form = $this->getMissionSpecifiqueForm();
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/mission-specifique/ajouter', [], [], true));
+        $form->bind($mission);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createMissionSpecifique($mission);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+           'title' => 'Ajouter une mission spécifique',
+           'form' => $form,
+        ]);
+
+        return $vm;
+    }
+
+    public function modifierMissionSpecifiqueAction()
+    {
+        $mission = $this->getRessourceRhService()->getRequestedMissionSpecifique($this, 'mission');
+        $form = $this->getMissionSpecifiqueForm();
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/mission-specifique/modifier', ['mission' => $mission->getId()], [], true));
+        $form->bind($mission);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateMissionSpecifique($mission);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modifier une mission spécifique',
+            'form' => $form,
+        ]);
+
+        return $vm;
+    }
+
+    public function historiserMissionSpecifiqueAction()
+    {
+        $mission = $this->getRessourceRhService()->getRequestedMissionSpecifique($this, 'mission');
+        $this->getRessourceRhService()->historiseMissionSpecifique($mission);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    public function restaurerMissionSpecifiqueAction() {
+        $mission = $this->getRessourceRhService()->getRequestedMissionSpecifique($this, 'mission');
+        $this->getRessourceRhService()->restoreMissionSpecifique($mission);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    public function supprimerMissionSpecifiqueAction() {
+        $mission = $this->getRessourceRhService()->getRequestedMissionSpecifique($this, 'mission');
+        $this->getRessourceRhService()->deleteMissionSpecifique($mission);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
 
 }
