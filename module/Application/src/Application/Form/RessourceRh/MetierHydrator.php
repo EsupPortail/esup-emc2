@@ -17,6 +17,7 @@ class MetierHydrator implements HydratorInterface {
     {
         $data = [
             'famille' => $object->getFamille(),
+            'domaine' => $object->getDomaine(),
             'libelle' => $object->getLibelle(),
         ];
         return $data;
@@ -30,9 +31,11 @@ class MetierHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $famille = $this->getRessourceRhService()->getMetierFamille($data['famille']);
+        $domaine = $this->getRessourceRhService()->getDomaine($data['domaine']);
 
         $object->setLibelle($data['libelle']);
         $object->setFamille($famille);
+        $object->setDomaine($domaine);
         return $object;
     }
 

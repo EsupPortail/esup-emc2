@@ -45,12 +45,11 @@ return [
                     'action' => [
                         'index',
                         'index-corps-grade',
-                        'index-metier-et-famille',
+                        'index-metier-famille-domaine',
                         'index-correspondance',
-                        'index-domaine',
-                        'index-metier-et-famille',
                         'index-mission-specifique',
                         'get-grades-json',
+                        'cartographie',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AFFICHER,
@@ -135,14 +134,14 @@ return [
                             ],
                         ],
                     ],
-                    'index-metier-et-famille' => [
+                    'index-metier-famille-domaine' => [
                         'type' => Literal::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/index-metier-et-famille',
+                            'route'    => '/index-metier-famille-domaine',
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
-                                'action'     => 'index-metier-et-famille',
+                                'action'     => 'index-metier-famille-domaine',
                             ],
                         ],
                     ],
@@ -154,17 +153,6 @@ return [
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
                                 'action'     => 'index-correspondance',
-                            ],
-                        ],
-                    ],
-                    'index-domaine' => [
-                        'type' => Literal::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/index-domaine',
-                            'defaults' => [
-                                'controller' => RessourceRhController::class,
-                                'action'     => 'index-domaine',
                             ],
                         ],
                     ],
@@ -461,6 +449,18 @@ return [
                                 ],
                             ],
                         ],
+                    ],
+                    'cartographie' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/cartographie',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'cartographie',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
                     ],
                     'mission-specifique' => [
                         'type' => Literal::class,

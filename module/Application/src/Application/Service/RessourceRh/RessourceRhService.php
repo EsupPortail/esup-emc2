@@ -285,6 +285,16 @@ class RessourceRhService {
         return $result;
     }
 
+    public function getMetiersFamillesAsOptions()
+    {
+        $familles = $this->getMetiersFamilles('libelle');
+        $options = [];
+        foreach ($familles as $famille) {
+            $options[$famille->getId()] = $famille->getLibelle();
+        }
+        return $options;
+    }
+
     /**
      * @param integer $id
      * @return MetierFamille
@@ -363,6 +373,16 @@ class RessourceRhService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function getDomainesAsOptions()
+    {
+        $domaines = $this->getDomaines('libelle');
+        $options = [];
+        foreach ($domaines as $domaine) {
+            $options[$domaine->getId()] = $domaine->getLibelle();
+        }
+        return $options;
     }
 
     /**
@@ -696,5 +716,19 @@ class RessourceRhService {
         }
 
         return $mission;
+    }
+
+    /**
+     * @return Metier[]
+     */
+    public function getCartographie()
+    {
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+            ->addSelect('famille')->join('metier.famille', 'famille')
+            ->addSelect('domaine')->join('metier.domaine', 'domaine')
+            ->orderBy('famille.libelle, domaine.libelle, metier.libelle');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

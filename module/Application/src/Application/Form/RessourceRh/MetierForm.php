@@ -3,38 +3,47 @@
 namespace Application\Form\RessourceRh;
 
 use Application\Entity\Db\MetierFamille;
+use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
 class MetierForm extends Form {
-    use EntityManagerAwareTrait;
+    use RessourceRhServiceAwareTrait;
 
     public function init()
     {
-        // Status
+        //Famille professionnelle
         $this->add([
-            'type' => ObjectSelect::class,
+            'type' => Select::class,
             'name' => 'famille',
             'options' => [
-                'label' => "Famille de métier* :",
-                'empty_option' => "Sélectionner une famille de métier ...",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => MetierFamille::class,
-                'property' => 'libelle',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['libelle' => 'ASC'],
-                    ],
-                ],
-                'disable_inarray_validator' => true,
+                'label' => "Famille professionnelle* :",
+                'empty_option' => "Sélectionner une famille ...",
+                'value_options' => $this->getRessourceRhService()->getMetiersFamillesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'famille',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
+        //Domaine
+        $this->add([
+            'type' => Select::class,
+            'name' => 'domaine',
+            'options' => [
+                'label' => "Domaine* :",
+                'empty_option' => "Sélectionner un domaine ...",
+                'value_options' => $this->getRessourceRhService()->getDomainesAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'domaine',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         // libelle

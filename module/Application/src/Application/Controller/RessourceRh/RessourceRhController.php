@@ -64,22 +64,15 @@ class RessourceRhController extends AbstractActionController {
         ]);
     }
 
-    public function indexMetierEtFamilleAction()
+    public function indexMetierFamilleDomaineAction()
     {
         $metiers = $this->getRessourceRhService()->getMetiers('libelle');
         $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
+        $domaines = $this->getRessourceRhService()->getDomaines('libelle');
 
         return new ViewModel([
             'metiers' => $metiers,
             'familles' => $familles,
-        ]);
-    }
-
-    public function indexDomaineAction()
-    {
-        $domaines = $this->getRessourceRhService()->getDomaines('libelle');
-
-        return new ViewModel([
             'domaines' => $domaines,
         ]);
     }
@@ -618,5 +611,12 @@ class RessourceRhController extends AbstractActionController {
         return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
     }
 
+
+    public function cartographieAction() {
+        $metiers = $this->getRessourceRhService()->getCartographie();
+        return new ViewModel([
+            'metiers' => $metiers,
+        ]);
+    }
 
 }

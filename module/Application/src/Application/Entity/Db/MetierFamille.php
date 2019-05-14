@@ -15,6 +15,8 @@ class MetierFamille {
 
     /** @var ArrayCollection */
     private $metiers;
+//    /** @var ArrayCollection */
+//    private $domaines;
 
     /**
      * MetierFamille constructor.
@@ -22,6 +24,7 @@ class MetierFamille {
     public function __construct()
     {
         $this->metiers = new ArrayCollection();
+//        $this->domaines = new ArrayCollection();
     }
 
     /**
@@ -96,4 +99,31 @@ class MetierFamille {
         return $this;
     }
 
+//    /**
+//     * @return Domaine[]
+//     */
+//    public function getDomaines()
+//    {
+//        return $this->domaines->toArray();
+//    }
+//
+//    /**
+//     * @param Domaine $domaine
+//     * @return MetierFamille
+//     */
+//    public function addDomaine($domaine)
+//    {
+//        $this->domaines->add($domaine);
+//        return $this;
+//    }
+//
+//    /**
+//     * @param Domaine $domaine
+//     * @return MetierFamille
+//     */
+//    public function removeDomaine($domaine)
+//    {
+//        $this->domaines->removeElement($domaine);
+//        return $this;
+//    }
 }
