@@ -21,10 +21,13 @@ class Agent {
 
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
+    /** @var ArrayCollection (MissionSpecifique) */
+    private $missions;
 
     public function __construct()
     {
         $this->statuts = new ArrayCollection();
+        $this->missions = new ArrayCollection();
     }
 
     /**
@@ -140,4 +143,50 @@ class Agent {
         return $this->statuts->toArray();
     }
 
+    /**
+     * @param AgentStatut
+     * @return Agent
+     */
+    public function addStatut($statut)
+    {
+        $this->statuts->add($statut);
+        return $this;
+    }
+
+    /**
+     * @param AgentStatut
+     * @return Agent
+     */
+    public function removeStatut($statut)
+    {
+        $this->statuts->removeElement($statut);
+        return $this;
+    }
+
+    /**
+     * @return MissionSpecifique[]
+     */
+    public function getMissions() {
+        return $this->missions->toArray();
+    }
+
+    /**
+     * @param MissionSpecifique
+     * @return Agent
+     */
+    public function addMission($mission)
+    {
+        $this->missions->add($mission);
+        return $this;
+    }
+
+    /**
+     * @param MissionSpecifique
+     * @return Agent
+     */
+    public function removeMission($mission)
+    {
+        $this->missions->removeElement($mission);
+        return $this;
+    }
 }
