@@ -7,11 +7,11 @@
         </id>
 
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
-            <join-column name="agent" referenced-column-name="id"/>
+            <join-column name="agent" referenced-column-name="c_individu"/>
         </many-to-one>
 
         <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="responsable">
-            <join-column name="responsable" referenced-column-name="id"/>
+            <join-column name="responsable" referenced-column-name="c_individu"/>
         </many-to-one>
 
         <field name="annee"             type="string" length="16"       column="annee"              nullable="false"/>

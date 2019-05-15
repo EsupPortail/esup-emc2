@@ -18,6 +18,8 @@
                 <th> Famille professionnelle </th>
                 <th> Domaine </th>
                 <th> Métier </th>
+                <th> #Fiche métier</th>
+<!--                <th> #Fiche poste </th>-->
             </tr>
         </thead>
         <tbody>
@@ -26,6 +28,8 @@
                 <td> <?php echo $metier->getFamille()->getLibelle(); ?></td>
                 <td> <?php echo $metier->getDomaine()->getLibelle(); ?></td>
                 <td> <?php echo $metier->getLibelle(); ?></td>
+                <td> <?php echo count($metier->getFichesMetiers()); ?> </td>
+<!--                <td> --><?php //echo count($metier->getFichesPostes()); ?><!-- </td>-->
             </tr>
             <?php endforeach; ?>
         </tbody>

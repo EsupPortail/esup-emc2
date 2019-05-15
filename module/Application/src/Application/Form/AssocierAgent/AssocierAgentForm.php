@@ -48,7 +48,7 @@ class AssocierAgentForm extends Form {
         $options = [];
         $options[0] = "Sélectionner un agent ... ";
         foreach ($agents as $agent) {
-            $options[$agent->getId()] = $agent->getDenomination() . ' ('.$agent->getNumeroPoste().')';
+            $options[$agent->getId()] = $agent->getDenomination(); /* . ' ('.$agent->getNumeroPoste().')';*/
         }
         return $options;
 
