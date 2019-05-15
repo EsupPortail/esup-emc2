@@ -3,13 +3,13 @@
 namespace Application\Controller\FicheMetier;
 
 use Application\Form\Activite\ActiviteForm;
-use Application\Form\FicheMetierType\ActiviteExistanteForm;
-use Application\Form\FicheMetierType\ApplicationsForm;
-use Application\Form\FicheMetierType\FormationBaseForm;
-use Application\Form\FicheMetierType\FormationComportementaleForm;
-use Application\Form\FicheMetierType\FormationOperationnelleForm;
-use Application\Form\FicheMetierType\LibelleForm;
-use Application\Form\FicheMetierType\MissionsPrincipalesForm;
+use Application\Form\FicheMetier\ActiviteExistanteForm;
+use Application\Form\FicheMetier\ApplicationsForm;
+use Application\Form\FicheMetier\FormationBaseForm;
+use Application\Form\FicheMetier\FormationComportementaleForm;
+use Application\Form\FicheMetier\FormationOperationnelleForm;
+use Application\Form\FicheMetier\LibelleForm;
+use Application\Form\FicheMetier\MissionsPrincipalesForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\RessourceRh\RessourceRhService;
