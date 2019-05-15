@@ -17,8 +17,6 @@ class Metier {
 
     /** @var ArrayCollection (FicheMetierType) */
     private $fichesMetiers;
-    /** @var ArrayCollection (FichePoste) */
-    private $fichesPostes;
 
     public function __construct()
     {
@@ -96,14 +94,6 @@ class Metier {
     public function getFichesMetiers()
     {
         return $this->fichesMetiers;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getFichesPostes()
-    {
-        return $this->fichesPostes;
     }
 
 }
