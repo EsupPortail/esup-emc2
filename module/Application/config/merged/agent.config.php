@@ -7,7 +7,6 @@ use Application\Controller\Agent\AgentControllerFactory;
 use Application\Controller\AgentFichier\AgentFichierController;
 use Application\Controller\AgentFichier\AgentFichierControllerFactory;
 use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
-use Application\Entity\Db\AgentStatut;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;

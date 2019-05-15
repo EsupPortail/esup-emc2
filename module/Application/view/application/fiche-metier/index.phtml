@@ -1,76 +1,94 @@
 <?php
 
+use Application\Entity\Db\FicheMetierType;
+
 /**
- * @var FichePoste[] $fichesMetiers
+ * @var FicheMetierType[] $fiches
  */
 
-use Application\Entity\Db\FichePoste;
-use Application\Provider\Privilege\FicheMetierPrivileges;
+$this->headTitle('Index des fiches métiers');
 
-$this->headTitle("Index des fiches métiers");
-
-$canAjouter         = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AJOUTER));
-$canVoir            = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
-$canHistoriser      = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::HISTORISER));
+$canAjouter = true;
+$canEditer = true;
+$canVoir = true;
+$canHistoriser = true;
+$canDetruire = true;
 ?>
 
 <h1 class="page-header">
     Index des fiches métiers
-    <span class="badge"><?php echo count($fichesMetiers); ?></span>
+    <span class="badge"><?php echo count($fiches); ?></span>
 </h1>
 
 
 <div class="main">
 
-    <?php if($canAjouter) : ?>
-        <a href="<?php echo $this->url('fiche-metier/creer', [], [], true); ?>"
-           class="btn btn-primary action"
+    <?php if ($canAjouter) : ?>
+        <a href="<?php echo $this->url('fiche-metier-type/ajouter', [], [], true); ?>"
+           class="btn btn-primary action ajax-modal"
+           data-event="modification"
         >
-            <i class="fas fa-plus-square"></i>
+            <span class="icon ajouter"></span>
             Ajouter une fiche métier
         </a>
         <br/> <br/>
     <?php endif; ?>
 
-
-<table class="table table-condensed">
+    <table class="table table-condensed">
     <thead>
-        <tr>
-            <th> Id </th>
-            <th> Libellé </th>
-            <th> Dernière modification </th>
-            <th> Action </th>
-        </tr>
+    <tr>
+        <th> Libellé </th>
+        <th> Action </th>
+    </tr>
     </thead>
     <tbody>
-        <?php foreach($fichesMetiers as $ficheMetier) : ?>
-        <tr>
-            <td> <?php echo $ficheMetier->getId(); ?></td>
-            <td> <?php echo $ficheMetier->getLibelle(); ?></td>
-            <td> <?php echo $ficheMetier->getHistoModification()->format('H:i:s d/m/Y'); ?></td>
-            <td>
-                <?php if ($canVoir) : ?>
-                    <a href="<?php echo $this->url('fiche-metier/afficher', ['id' => $ficheMetier->getId()], [], true); ?>"
-                       title="Afficher la fiche metier">
-                        <i class='fas fa-eye' title='Afficher la fiche'></i>
-                    </a>
-                <?php endif; ?>
-                <?php if ($canHistoriser) : ?>
-                    <?php if ($ficheMetier->getHistoDestruction() === null) : ?>
-                        <a href="<?php echo $this->url('fiche-metier/historiser', ['id' => $ficheMetier->getId()], [], true); ?>"
-                           title="Historiser la fiche metier">
-                            <i class='fas fa-trash-alt' title='Historiser la fiche'></i>
-                        </a>
-                    <?php else : ?>
-                        <a href="<?php echo $this->url('fiche-metier/restaurer', ['id' => $ficheMetier->getId()], [], true); ?>"
-                           title="Restaurer la fiche metier">
-                            <span class="glyphicon glyphicon-leaf"></span>
-                        </a>
+        <?php foreach($fiches as $fiche): ?>
+            <tr>
+                <td> <?php echo $fiche->getMetier()->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canVoir) : ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
+                           title="Afficher la fiche métier"
+                           class="ajax-modal"
+                        >
+                            <span class="icon voir"></span></a>
                     <?php endif; ?>
-                <?php endif; ?>
-            </td>
-        </tr>
+                    <?php if ($canEditer) : ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true); ?>"
+                           title="Éditer la fiche metier">
+                            <span class="icon editer"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser) : ?>
+                    <?php if($fiche->estNonHistorise()) :?>
+                            <a href="<?php echo $this->url('fiche-metier-type/historiser', ['id' => $fiche->getId()], [], true); ?>"
+                               title="Historiser la fiche metier">
+                                <span class="icon historiser"></span></a>
+                    <?php else: ?>
+                            <a href="<?php echo $this->url('fiche-metier-type/restaurer', ['id' => $fiche->getId()], [], true); ?>"
+                               title="Restaurer la fiche metier">
+                                <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruire) : ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/detruire', ['id' => $fiche->getId()], [], true); ?>"
+                           title="Détruire la fiche metier">
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
 </div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>

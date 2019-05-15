@@ -88,7 +88,7 @@ class AgentService {
     {
         $agent = new Agent();
         $agent->setUtilisateur($user);
-        $agent->setNom($people->getNomUsuel());
+        $agent->setNomUsuel($people->getNomUsuel());
         $agent->setPrenom($people->getGivenName());
 
         $this->create($agent);
