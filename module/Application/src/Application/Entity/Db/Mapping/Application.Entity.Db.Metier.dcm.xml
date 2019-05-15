@@ -16,6 +16,6 @@
             <join-column name="domaine" referenced-column-name="id" />
         </many-to-one>
 
-        <one-to-many target-entity="Application\Entity\Db\FicheMetierType" mapped-by="metier" field="fichesMetiers"/>
+        <one-to-many target-entity="Application\Entity\Db\FicheMetier" mapped-by="metier" field="fichesMetiers"/>
     </entity>
 </doctrine-mapping>

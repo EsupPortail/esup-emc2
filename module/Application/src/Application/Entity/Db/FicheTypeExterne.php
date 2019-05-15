@@ -15,7 +15,7 @@ class FicheTypeExterne {
     private $id;
     /** @var FichePoste */
     private $fichePoste;
-    /** @var FicheMetierType */
+    /** @var FicheMetier */
     private $ficheType;
     /** @var integer */
     private $quotite;
@@ -51,7 +51,7 @@ class FicheTypeExterne {
     }
 
     /**
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function getFicheType()
     {
@@ -59,7 +59,7 @@ class FicheTypeExterne {
     }
 
     /**
-     * @param FicheMetierType $ficheType
+     * @param FicheMetier $ficheType
      * @return FicheTypeExterne
      */
     public function setFicheType($ficheType)

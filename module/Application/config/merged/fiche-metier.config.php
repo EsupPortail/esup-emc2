@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\FicheMetier\FicheMetierTypeController;
-use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
+use Application\Controller\FicheMetier\FicheMetierController;
+use Application\Controller\FicheMetier\FicheMetierControllerFactory;
 use Application\Form\FicheMetier\AjouterFicheTypeForm;
 use Application\Form\FicheMetier\AjouterFicheTypeFormFactory;
 use Application\Form\FicheMetier\AjouterFicheTypeHydrator;
@@ -56,7 +56,7 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => FicheMetierTypeController::class,
+                    'controller' => FicheMetierController::class,
                     'action' => [
                         'index',
                     ],
@@ -64,7 +64,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FicheMetierTypeController::class,
+                    'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
                         'editer',
@@ -100,7 +100,7 @@ return [
                 'options' => [
                     'route'    => '/fiche-metier-type',
                     'defaults' => [
-                        'controller' => FicheMetierTypeController::class,
+                        'controller' => FicheMetierController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -111,7 +111,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -122,7 +122,7 @@ return [
                         'options' => [
                             'route'    => '/afficher/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
                             ],
                         ],
@@ -133,7 +133,7 @@ return [
                         'options' => [
                             'route'    => '/editer/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'editer',
                             ],
                         ],
@@ -144,7 +144,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -155,7 +155,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -166,7 +166,7 @@ return [
                         'options' => [
                             'route'    => '/detruire/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'detruire',
                             ],
                         ],
@@ -177,7 +177,7 @@ return [
                         'options' => [
                             'route'    => '/editer-libelle/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'editer-libelle',
                             ],
                         ],
@@ -188,7 +188,7 @@ return [
                         'options' => [
                             'route'    => '/editer-missions-principales/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'editer-missions-principales',
                             ],
                         ],
@@ -199,7 +199,7 @@ return [
                         'options' => [
                             'route'    => '/retirer-activite/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'retirer-activite',
                             ],
                         ],
@@ -210,7 +210,7 @@ return [
                         'options' => [
                             'route'    => '/deplacer-activite/:id/:direction',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'deplacer-activite',
                             ],
                         ],
@@ -221,7 +221,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter-nouvelle-activite/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter-nouvelle-activite',
                             ],
                         ],
@@ -232,7 +232,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter-activite-existante/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter-activite-existante',
                             ],
                         ],
@@ -243,7 +243,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-connaissances/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-connaissances',
                             ],
                         ],
@@ -254,7 +254,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-operationnelle/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-operationnelle',
                             ],
                         ],
@@ -265,7 +265,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-comportementale/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-comportementale',
                             ],
                         ],
@@ -276,7 +276,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-application/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-application',
                             ],
                         ],
@@ -296,7 +296,7 @@ return [
     ],
     'controllers'     => [
         'factories' => [
-            FicheMetierTypeController::class => FicheMetierTypeControllerFactory::class,
+            FicheMetierController::class => FicheMetierControllerFactory::class,
         ],
     ],
     'form_elements' => [

@@ -2,7 +2,7 @@
 
 namespace Application\Controller\FichePoste;
 
-use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
@@ -52,7 +52,7 @@ class FichePosteController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $fiche = $this->getFichePosteService()->create($fiche);
+                $this->getFichePosteService()->create($fiche);
             }
         }
 
@@ -196,7 +196,7 @@ class FichePosteController extends AbstractActionController {
                 }
 
                 //comportement par defaut (ajout de toutes les activités)
-                /** @var FicheMetierType */
+                /** @var FicheMetier */
                 $activites = $ficheTypeExterne->getFicheType()->getActivites();
                 $tab = [];
                 foreach ($activites as $activite) {

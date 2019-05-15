@@ -2,14 +2,14 @@
 
 namespace Application\Form\FicheMetierType;
 
-use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\FicheMetier;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class ApplicationsHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
     /**
-     * @param FicheMetierType $object
+     * @param FicheMetier $object
      * @return array
      */
     public function extract($object)
@@ -28,8 +28,8 @@ class ApplicationsHydrator implements HydratorInterface {
 
     /**
      * @param array $data
-     * @param FicheMetierType $object
-     * @return FicheMetierType
+     * @param FicheMetier $object
+     * @return FicheMetier
      */
     public function hydrate(array $data, $object)
     {

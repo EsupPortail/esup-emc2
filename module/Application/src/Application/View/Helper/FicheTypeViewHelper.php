@@ -2,7 +2,7 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Zend\View\Helper\AbstractHelper;
 
@@ -10,24 +10,24 @@ class FicheTypeViewHelper extends AbstractHelper
 {
 
     /**
-     * @param FicheMetierType $ficheMetierType
+     * @param FicheMetier $ficheMetier
      * @return string
      */
-    public function render($ficheMetierType)
+    public function render($ficheMetier)
     {
-        $activites = $ficheMetierType->getActivites();
+        $activites = $ficheMetier->getActivites();
         usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() < $b->getPosition();});
 
         $texte  = '';
 
-        $texte .= '<h2>'.$ficheMetierType->getMetier()->getLibelle().'</h2>';
+        $texte .= '<h2>'.$ficheMetier->getMetier()->getLibelle().'</h2>';
 
         $texte .= '    <div class="panel panel-info">';
         $texte .= '         <div class="panel-heading">';
         $texte .= '              <h2>Missions principales</h2>';
         $texte .= '         </div>';
         $texte .= '         <div class="panel-body">';
-        $texte .= '              ' . $ficheMetierType->getMissionsPrincipales();
+        $texte .= '              ' . $ficheMetier->getMissionsPrincipales();
         $texte .= '         </div>';
         $texte .= '    </div>';
 
@@ -57,33 +57,33 @@ class FicheTypeViewHelper extends AbstractHelper
         $texte .= '         <div class="row">';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Connaissances </h4>';
-        $texte .= '                  ' . $ficheMetierType->getConnaissances();
+        $texte .= '                  ' . $ficheMetier->getConnaissances();
         $texte .= '             </div>';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Plan de formation </h4>';
-        $texte .= '                  ' . $ficheMetierType->getConnaissancesFormation();
+        $texte .= '                  ' . $ficheMetier->getConnaissancesFormation();
         $texte .= '             </div>';
         $texte .= '         </div>';
 
         $texte .= '         <div class="row">';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Compétences opérationnelles </h4>';
-        $texte .= '                  ' . $ficheMetierType->getCompetencesOperationnelles();
+        $texte .= '                  ' . $ficheMetier->getCompetencesOperationnelles();
         $texte .= '             </div>';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Plan de formation </h4>';
-        $texte .= '                  ' . $ficheMetierType->getCompetencesOperationnellesFormation();
+        $texte .= '                  ' . $ficheMetier->getCompetencesOperationnellesFormation();
         $texte .= '             </div>';
         $texte .= '         </div>';
 
         $texte .= '         <div class="row">';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Compétences comportementales </h4>';
-        $texte .= '                  ' . $ficheMetierType->getCompetencesComportementales();
+        $texte .= '                  ' . $ficheMetier->getCompetencesComportementales();
         $texte .= '             </div>';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Plan de formation </h4>';
-        $texte .= '                  ' . $ficheMetierType->getCompetencesComportementalesFormation();
+        $texte .= '                  ' . $ficheMetier->getCompetencesComportementalesFormation();
         $texte .= '             </div>';
         $texte .= '         </div>';
 
@@ -92,7 +92,7 @@ class FicheTypeViewHelper extends AbstractHelper
         $texte .= '                  <h4> Applications </h4>';
         $texte .= '                  <ul>';
 
-                                    foreach ($ficheMetierType->getApplications() as $application) {
+                                    foreach ($ficheMetier->getApplications() as $application) {
                                         $texte .= '<li>'.$application->getLibelle().'</li>';
                                     }
 
@@ -100,7 +100,7 @@ class FicheTypeViewHelper extends AbstractHelper
         $texte .= '             </div>';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Plan de formation </h4>';
-        $texte .= '                  ' . $ficheMetierType->getApplicationsFormation();
+        $texte .= '                  ' . $ficheMetier->getApplicationsFormation();
         $texte .= '             </div>';
         $texte .= '         </div>';
         $texte .= '         </div>';

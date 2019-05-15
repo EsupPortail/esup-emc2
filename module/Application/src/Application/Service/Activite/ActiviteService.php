@@ -3,7 +3,7 @@
 namespace Application\Service\Activite;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Exception;
 use Utilisateur\Service\User\UserServiceAwareTrait;
@@ -166,6 +166,10 @@ class ActiviteService {
         }
     }
 
+    /**
+     * @param $id
+     * @return FicheMetierTypeActivite
+     */
     public function getFicheMetierTypeActivite($id)
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetierTypeActivite::class)->createQueryBuilder('activite')
@@ -182,7 +186,7 @@ class ActiviteService {
     }
 
     /**
-     * @param FicheMetierType $fiche
+     * @param FicheMetier $fiche
      * @return FicheMetierTypeActivite[]
      */
     public function getActivitesByFicheMetierType($fiche)
@@ -292,6 +296,9 @@ class ActiviteService {
 
     }
 
+    /**
+     * @param FicheMetierTypeActivite $couple
+     */
     public function removeFicheMetierTypeActivite($couple)
     {
         $this->getEntityManager()->remove($couple);
@@ -304,27 +311,8 @@ class ActiviteService {
         $this->compacting($couple->getFiche());
     }
 
-    public function getActiviteDisponible($fiche) {
-        //select a.id, a.libelle, f.id
-        //from activite a
-        //left join fiche_metier_type_activite f on a.id = f.activite and f.fiche=1
-        //where f.id IS NULL;
-
-//        $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
-//            ->leftJoin('activite.id', 'fiche_activite', 'on' )
-
-        //select *
-        //from activite a
-        //where a.id not in (
-        //select a.id from fiche_metier_type_activite f
-        //join activite a on f.activite = a.id where f.fiche = 1
-        //)
-
-
-    }
-
     /**
-     * @param FicheMetierType $ficheMetier
+     * @param FicheMetier $ficheMetier
      * @return array
      */
     public function getActivitesAsOptions($ficheMetier = null)
