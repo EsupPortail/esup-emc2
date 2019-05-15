@@ -5,7 +5,7 @@ namespace Application\Entity\Db;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
-class FicheMetierType {
+class FicheMetier {
     use HistoriqueAwareTrait;
 
     /** @var int */

@@ -71,7 +71,7 @@ class AjouterFicheMetierForm extends Form {
 
     private function generateFicheTypeOptions()
     {
-        $fiches = $this->getFicheMetierService()->getFichesMetiersTypes();
+        $fiches = $this->getFicheMetierService()->getFichesMetiers();
         $options = [];
         $options[0] = "Sélectionner une fiche type ... ";
         foreach ($fiches as $fiche) {

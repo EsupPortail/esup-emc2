@@ -92,6 +92,7 @@ class AgentService {
         $agent->setPrenom($people->getGivenName());
 
         $this->create($agent);
+        return $agent;
     }
 
     /**

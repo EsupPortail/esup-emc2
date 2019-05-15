@@ -15,7 +15,7 @@ use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Zend\Mvc\Controller\ControllerManager;
 
-class FicheMetierTypeControllerFactory {
+class FicheMetierControllerFactory {
 
     public function __invoke(ControllerManager $manager)
     {
@@ -48,8 +48,8 @@ class FicheMetierTypeControllerFactory {
         $missionsPrincipalesForm = $manager->getServiceLocator()->get('FormElementManager')->get(MissionsPrincipalesForm::class);
 
 
-        /** @var FicheMetierTypeController $controller */
-        $controller = new FicheMetierTypeController();
+        /** @var FicheMetierController $controller */
+        $controller = new FicheMetierController();
 
         $controller->setActiviteService($activiteService);
         $controller->setFicheMetierService($ficheMetierService);

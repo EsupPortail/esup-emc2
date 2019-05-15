@@ -245,7 +245,7 @@ class StructureService
         $options[null] = "Sélectionner une structure ...";
         /** @var Structure $item */
         foreach ($result as $item) {
-            $options[$item->getId()] = $item->getLibelleLong();
+            if ($item->getIdSource() !== null) $options[$item->getIdSource()] = $item->getLibelleLong();
         }
 
         return $options;
