@@ -11,7 +11,7 @@
         <field name="lien"              type="string" length="256"      column="lien"                     nullable="true"/>
 
         <many-to-one target-entity="Application\Entity\Db\Agent" field="rattachementHierarchique">
-            <join-column name="rattachement_hierarchique" referenced-column-name="id" />
+            <join-column name="rattachement_hierarchique" referenced-column-name="c_individu" />
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Correspondance" field="correspondance">
             <join-column name="correspondance" referenced-column-name="id" />

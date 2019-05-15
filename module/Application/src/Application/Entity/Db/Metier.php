@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Metier {
 
     /** @var integer */
@@ -12,6 +14,16 @@ class Metier {
     private $famille;
     /** @var Domaine */
     private $domaine;
+
+    /** @var ArrayCollection (FicheMetierType) */
+    private $fichesMetiers;
+    /** @var ArrayCollection (FichePoste) */
+    private $fichesPostes;
+
+    public function __construct()
+    {
+        $this->fichesMetiers = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -78,5 +90,20 @@ class Metier {
         return $this->getLibelle();
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getFichesMetiers()
+    {
+        return $this->fichesMetiers;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFichesPostes()
+    {
+        return $this->fichesPostes;
+    }
 
 }
