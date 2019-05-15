@@ -2,6 +2,7 @@
 
 namespace Fichier;
 
+use Zend\Http\Request as HttpRequest;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ArrayUtils;
@@ -19,7 +20,7 @@ class Module
         $eventManager->getSharedManager()->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch',
             function (MvcEvent $e) {
                 $request = $e->getRequest();
-                if ($request->isXmlHttpRequest()) {
+                if ($request instanceof HttpRequest && $request->isXmlHttpRequest()) {
                     $e->getTarget()->layout('layout/ajax.phtml');
                 }
             }
