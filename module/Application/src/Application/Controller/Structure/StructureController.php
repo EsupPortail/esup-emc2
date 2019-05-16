@@ -2,8 +2,6 @@
 
 namespace Application\Controller\Structure;
 
-use Application\Entity\Db\Structure;
-use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Utilisateur\Entity\Db\Role;
@@ -17,115 +15,17 @@ use Zend\View\Model\ViewModel;
 class StructureController extends AbstractActionController {
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use StructureFormAwareTrait;
     use UserServiceAwareTrait;
 
     public function indexAction()
     {
-        $structures = $this->getStructureService()->getStructuresOuvertes();
+        $structures = $this->getStructureService()->getStructures();
 
         return new ViewModel([
             'structures' => $structures,
         ]);
     }
 
-    public function creerAction()
-    {
-        $structure = new Structure();
-        $form = $this->getStructureForm();
-        $form->setAttribute('action', $this->url()->fromRoute('structure/creer',[],[],true));
-        $form->bind($structure);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $structure->setSource("PrEECoG");
-                $this->getStructureService()->create($structure);
-                return $this->redirect()->toRoute('structure', [], [], true);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajouter une structure",
-            'form' => $form,
-            ]);
-        return $vm;
-    }
-
-    public function modifierAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $form = $this->getStructureForm();
-        $form->setAttribute('action', $this->url()->fromRoute('structure/modifier',['structure' => $structure->getId()],[],true));
-        $form->bind($structure);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getStructureService()->update($structure);
-                return $this->redirect()->toRoute('structure', [], [], true);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modifier une structure",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function descriptionAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-
-        return new ViewModel([
-            'title' => "Description de la structure <strong>". $structure->getLibelleCourt()."</strong>",
-            'description' => $structure->getDescription(),
-        ]);
-    }
-
-    public function historiserAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $this->getStructureService()->historise($structure);
-        return $this->redirect()->toRoute('structure',[], [], true);
-    }
-
-    public function restaurerAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $this->getStructureService()->restore($structure);
-        return $this->redirect()->toRoute('structure',[], [], true);
-    }
-
-    public function detruireAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $this->getStructureService()->delete($structure);
-        return $this->redirect()->toRoute('structure',[], [], true);
-    }
-
-    public function synchroniserAction()
-    {
-        $result = $this->getStructureService()->synchroniseFromOctopus();
-        return $this->redirect()->toRoute('structure',[], [], true);
-    }
-
-    public function synchroniserCronAction()
-    {
-        //TODO !!!
-        $result = $this->getStructureService()->synchroniseFromOctopus();
-    }
 
     public function ajouterGestionnaireAction()
     {
@@ -138,8 +38,7 @@ class StructureController extends AbstractActionController {
                 $data = $request->getPost();
                 $gestionnaire = $this->getUserService()->getUtilisateur($data['gestionnaire']);
                 if ($gestionnaire) {
-                    $structure->addGestionnaire($gestionnaire);
-                    $this->getStructureService()->update($structure);
+                    $this->getStructureService()->addGestionnaire($structure, $gestionnaire);
                 }
             } else {
                 /** @var User[] $gestionnaires */
@@ -170,8 +69,7 @@ class StructureController extends AbstractActionController {
                 $data = $request->getPost();
                 $gestionnaire = $this->getUserService()->getUtilisateur($data['gestionnaire']);
                 if ($gestionnaire) {
-                    $structure->removeGestionnaire($gestionnaire);
-                    $this->getStructureService()->update($structure);
+                    $this->getStructureService()->removeGestionnaire($structure, $gestionnaire);
                 }
             } else {
                 /** @var User[] $gestionnaires */
