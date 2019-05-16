@@ -25,20 +25,6 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 
 <div class="main">
 
-    <?php if($canAjouter) : ?>
-        <a
-                class="btn btn-primary action ajax-modal"
-                href="<?php echo $this->url('agent/importer', [], [], true); ?>"
-                data-event="modification"
-        >
-            <span class="icon synchoniser"></span>
-            Synchroniser les agents
-        </a>
-        <br/> <br/>
-    <?php endif; ?>
-
-
-
     <?php if (count($agents) > 0) : ?>
         <table class="table table-condensed">
             <thead>

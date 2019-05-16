@@ -7,12 +7,6 @@ use Application\Controller\Agent\AgentControllerFactory;
 use Application\Controller\AgentFichier\AgentFichierController;
 use Application\Controller\AgentFichier\AgentFichierControllerFactory;
 use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
-use Application\Form\Agent\AgentForm;
-use Application\Form\Agent\AgentFormFactory;
-use Application\Form\Agent\AgentHydrator;
-use Application\Form\Agent\AgentHydratorFactory;
-use Application\Form\Agent\AgentImportForm;
-use Application\Form\Agent\AgentImportFormFactory;
 use Application\Form\Agent\AssocierMissionSpecifiqueFactoryForm;
 use Application\Form\Agent\AssocierMissionSpecifiqueForm;
 use Application\Form\Agent\AssocierMissionSpecifiqueHydrator;
@@ -43,30 +37,10 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'ajouter',
-                        'importer',
                         'rechercher-individu',
                     ],
                     'privileges' => [
                         AgentPrivileges::AJOUTER,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'supprimer',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::EFFACER,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'modifier',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::EDITER,
                     ],
                 ],
                 [
@@ -174,46 +148,6 @@ return [
                             ],
                         ],
                     ],
-                    'modifier' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier/:id',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier',
-                            ],
-                        ],
-                    ],
-                    'supprimer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer/:id',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'supprimer',
-                            ],
-                        ],
-                    ],
-                    'ajouter' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/ajouter',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'ajouter',
-                            ],
-                        ],
-                    ],
-                    'importer' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/importer',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'importer',
-                            ],
-                        ],
-                    ],
                     'rechercher-individu' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -244,17 +178,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentForm::class => AgentFormFactory::class,
-            AgentImportForm::class => AgentImportFormFactory::class,
             AssocierMissionSpecifiqueForm::class => AssocierMissionSpecifiqueFactoryForm::class,
         ],
     ],
     'hydrators' => [
         'invokables' => [
             AssocierMissionSpecifiqueHydrator::class => AssocierMissionSpecifiqueHydrator::class,
-        ],
-        'factories' => [
-            AgentHydrator::class => AgentHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

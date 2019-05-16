@@ -2,10 +2,6 @@
 
 namespace Application\Controller\Agent;
 
-use Application\Entity\Db\Agent;
-use Application\Form\Agent\AgentForm;
-use Application\Form\Agent\AgentFormAwareTrait;
-use Application\Form\Agent\AgentImportFormAwareTrait;
 use Application\Form\Agent\AssocierMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
@@ -23,8 +19,6 @@ class AgentController extends AbstractActionController
     use IndividuServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     /** Trait utilisés pour les formulaires */
-    use AgentFormAwareTrait;
-    use AgentImportFormAwareTrait;
     use AssocierMissionSpecifiqueFormAwareTrait;
 
     public function indexAction() {
@@ -41,17 +35,6 @@ class AgentController extends AbstractActionController
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
-        ]);
-    }
-
-    public function afficherStatutsAction()
-    {
-        $agent   = $this->getAgentService()->getRequestedAgent($this, 'agent');
-        $statuts = $agent->getStatus();
-
-        return new ViewModel([
-            'title' => 'Statuts de l\'agent '.$agent->getDenomination(),
-            'status' => $statuts,
         ]);
     }
 
@@ -82,39 +65,6 @@ class AgentController extends AbstractActionController
             'form' => $form,
         ]);
         return $vm;
-    }
-
-    public function desassocierMissionsSpecifiqueAction()
-    {
-
-    }
-
-    public function importerAction()
-    {
-        $form = $this->getAgentImportForm();
-        $form->setAttribute('method','post');
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            var_dump($data);
-            $individu = $this->getIndividuService()->getIndividu($data['agent']['id']);
-
-            var_dump($individu->getNomUsage());
-            var_dump($individu->getPrenom());
-            foreach ($individu->getAffectations() as $affectation) {
-                if ($affectation->getType()->getId() < 5) {
-                    var_dump($affectation->getStructure()->getLibelleLong());
-                    var_dump($affectation->getDateDebut()->format('d/m/Y'));
-                    if ($affectation->getDateFin()) var_dump($affectation->getDateFin()->format('d/m/Y'));
-                }
-            }
-        }
-
-        return new ViewModel([
-            'form' => $form,
-        ]);
     }
 
     /**

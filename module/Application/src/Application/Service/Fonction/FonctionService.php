@@ -3,285 +3,60 @@
 namespace Application\Service\Fonction;
 
 use Application\Entity\Db\Fonction;
-use Application\Entity\Db\FonctionLibelle;
-use Application\Entity\Db\Source;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Exception;
-use Octopus\Entity\Db\FonctionType;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FonctionService {
     use EntityManagerAwareTrait;
-    use \Octopus\Service\Fonction\FonctionServiceAwareTrait;
-    use UserServiceAwareTrait;
 
-    /** @var \Octopus\Service\Fonction\FonctionService */
-    public $octopusFonctionService;
+    /** Site **********************************************************************************************************/
 
-    /**
-     * @var Fonction $fonction
-     * @return Fonction
-     */
-    public function create($fonction)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $fonction->setHistoCreation($date);
-        $fonction->setHistoCreateur($user);
-        $fonction->setHistoModification($date);
-        $fonction->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($fonction);
-            $this->getEntityManager()->flush($fonction);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une Fonction", $e);
-        }
-        return $fonction;
-    }
-
-    /**
-     * @var Fonction $fonction
-     * @return Fonction
-     */
-    public function update($fonction)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $fonction->setHistoModification($date);
-        $fonction->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($fonction);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une Fonction", $e);
-        }
-        return $fonction;
-    }
-
-    /**
-     * @var Fonction $fonction
-     * @return Fonction
-     */
-    public function historise($fonction)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $fonction->setHistoDestruction($date);
-        $fonction->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($fonction);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une Fonction", $e);
-        }
-        return $fonction;
-    }
-
-    /**
-     * @var Fonction $fonction
-     * @return Fonction
-     */
-    public function restore($fonction)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $fonction->setHistoModification($date);
-        $fonction->setHistoModificateur($user);
-        $fonction->setHistoDestruction(null);
-        $fonction->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($fonction);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une Fonction", $e);
-        }
-        return $fonction;
-    }
-
-    /**
-     * @var Fonction $fonction
-     * @return Fonction
-     */
-    public function delete($fonction)
-    {
-        try {
-            $this->getEntityManager()->remove($fonction);
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'effacement d'une Fonction", $e);
-        }
-        return $fonction;
-    }
-
-    /**  ********************/
-
-    /**
-     * @var FonctionLibelle $libelle
-     * @return FonctionLibelle
-     */
-    public function createLibelle($libelle)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $libelle->setHistoCreation($date);
-        $libelle->setHistoCreateur($user);
-        $libelle->setHistoModification($date);
-        $libelle->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($libelle);
-            $this->getEntityManager()->flush($libelle);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une FonctionLibelle", $e);
-        }
-        return $libelle;
-    }
-
-    /**
-     * @var FonctionLibelle $libelle
-     * @return FonctionLibelle
-     */
-    public function updateLibelle($libelle)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $libelle->setHistoModification($date);
-        $libelle->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($libelle);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une FonctionLibelle", $e);
-        }
-        return $libelle;
-    }
-
-    /**
-     * @var FonctionLibelle $libelle
-     * @return FonctionLibelle
-     */
-    public function historiseLibelle($libelle)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $libelle->setHistoDestruction($date);
-        $libelle->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($libelle);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une FonctionLibelle", $e);
-        }
-        return $libelle;
-    }
-
-    /**
-     * @var FonctionLibelle $libelle
-     * @return FonctionLibelle
-     */
-    public function restoreLibelle($libelle)
-    {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
-        $libelle->setHistoModification($date);
-        $libelle->setHistoModificateur($user);
-        $libelle->setHistoDestruction(null);
-        $libelle->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($libelle);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une FonctionLibelle", $e);
-        }
-        return $libelle;
-    }
-
-    /**
-     * @var FonctionLibelle $libelle
-     * @return FonctionLibelle
-     */
-    public function deleteLibelle($libelle)
-    {
-        try {
-            $this->getEntityManager()->remove($libelle);
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'effacement d'une FonctionLibelle", $e);
-        }
-        return $libelle;
-    }
-
-    /**  ********************/
     /**
      * @return Fonction[]
      */
     public function getFonctions()
     {
         $qb = $this->getEntityManager()->getRepository(Fonction::class)->createQueryBuilder('fonction')
-            ->orderBy('fonction.id');
+            ->addSelect('libelle')->leftJoin('fonction.libelles','libelle')
+        ;
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     /**
-     * @param integer $id
+     * @return array
+     */
+    public function getFonctionsAsOptions()
+    {
+        $fonctions = $this->getFonctions();
+        $options = [];
+        foreach ($fonctions as $fonction) {
+            $array = [];
+            foreach ($fonction->getLibelles() as $libelle) $array[] = $libelle->getLibelle();
+            $options[$fonction->getId()] = implode("/", $array);
+        }
+        return $options;
+    }
+
+    /**
+     * @param string $id
      * @return Fonction
      */
     public function getFonction($id)
     {
         $qb = $this->getEntityManager()->getRepository(Fonction::class)->createQueryBuilder('fonction')
+            ->addSelect('libelle')->leftJoin('fonction.libelles','libelle')
             ->andWhere('fonction.id = :id')
-            ->setParameter('id', $id);
+            ->setParameter('id', $id)
+        ;
+
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Fonction partagent le même identifiant [".$id."]", $e);
+            throw new RuntimeException('Plusieurs Fonction partagent le même id ['.$id.']', $e);
         }
         return $result;
     }
@@ -291,124 +66,10 @@ class FonctionService {
      * @param string $paramName
      * @return Fonction
      */
-    public function getRequestedFontion($controller, $paramName)
+    public function getRequestedSite($controller, $paramName)
     {
         $id = $controller->params()->fromRoute($paramName);
-        $fonction = $this->getFonction($id);
-        return $fonction;
+        $site = $this->getFonction($id);
+        return $site;
     }
-
-
-    public function synchroniseFromOctopus()
-    {
-        $fonctionType = $this->getFonctionService()->getFonctionTypeByNom(FonctionType::FONCTION_STRUCTURELLE);
-        $fonctions_OCTOPUS = $this->getFonctionService()->getFonctionsByType($fonctionType);
-        $fonctions_PREECOG = $this->getFonctions();
-
-
-        $nouvelles = [];
-        $modifiees = [];
-        $supprimees = [];
-        foreach ($fonctions_OCTOPUS as $fonction) {
-            $res = array_filter($fonctions_PREECOG,
-                function(Fonction $s) use ($fonction) { return ($s->getSource() === 'OCTOPUS' && $s->getIdSource() == $fonction->getId()); });
-            if (! empty($res)) {
-                $modification = $this->updateFromOctopus(current($res), $fonction);
-                if ($modification) $modifiees[] = current($res);
-            } else {
-                //nouvelle structure
-                $nouvelle = $this->createFromOctopus($fonction);
-                $nouvelles[] = $nouvelle;
-            }
-        }
-        foreach ($fonctions_PREECOG as $fonction) {
-            if ($fonction->getSource() === Source::Octopus) {
-                $res = array_filter($fonctions_OCTOPUS,
-                    function (\Octopus\Entity\Db\Fonction $s) use ($fonction) {
-                        return ($fonction->getSource() === 'OCTOPUS' && $s->getId() == $fonction->getIdSource());
-                    });
-                if (empty($res)) {
-                    $this->delete($fonction);
-                    $supprimees[] = $fonction;
-                }
-            }
-        }
-        return [
-            'nouvelles' => $nouvelles,
-            'modifiees' => $modifiees,
-            'supprimees' => $supprimees,
-        ];
-    }
-
-    /**
-     * @var \Octopus\Entity\Db\Fonction $fonction_OCTOPUS
-     * @return Fonction
-     */
-    private function createFromOctopus($fonction_OCTOPUS)
-    {
-        $fonction = new Fonction();
-        $fonction->setSource('OCTOPUS');
-        $fonction->setIdSource($fonction_OCTOPUS->getId());
-        $fonction = $this->create($fonction);
-
-        /**  recopie des libelles */
-        foreach ($fonction_OCTOPUS->getLibelles() as $libelle_OCTOPUS) {
-            $libelle = new FonctionLibelle();
-            $libelle->setFonction($fonction);
-            $libelle->setLibelle($libelle_OCTOPUS->getLibelle());
-            $libelle->setGenre($libelle_OCTOPUS->getGenre());
-            $libelle->setDefault(($libelle_OCTOPUS->getDefault())?'O':'N');
-            $libelle->setSource('OCTOPUS');
-            $libelle->setIdSource($libelle_OCTOPUS->getId());
-            $this->createLibelle($libelle);
-
-            $fonction->addLibelle($libelle);
-            $this->update($fonction);
-        }
-
-        return $fonction;
-    }
-
-    /**
-     * @var Fonction $current
-     * @var \Octopus\Entity\Db\Fonction $fonction
-     * @return Fonction
-     */
-    private function updateFromOctopus($current, \Octopus\Entity\Db\Fonction $fonction)
-    {
-        $libelles = $current->getLibelles();
-        foreach ($libelles as $libelle) {
-            $current->removeLibelle($libelle);
-            $this->deleteLibelle($libelle);
-        }
-
-        foreach ($fonction->getLibelles() as $libelle_OCTOPUS) {
-            $libelle = new FonctionLibelle();
-            $libelle->setFonction($current);
-            $libelle->setLibelle($libelle_OCTOPUS->getLibelle());
-            $libelle->setGenre($libelle_OCTOPUS->getGenre());
-            $libelle->setDefault(($libelle_OCTOPUS->getDefault()) ? 'O' : 'N');
-            $libelle->setSource('OCTOPUS');
-            $libelle->setIdSource($libelle_OCTOPUS->getId());
-            $this->createLibelle($libelle);
-            $current->addLibelle($libelle);
-        }
-
-        $this->update($current);
-        return $current;
-    }
-
-    public function getFonctionsAsOption()
-    {
-        $options = [];
-        $options[null] = "Selectionner une fonction ...";
-
-        foreach ($this->getFonctions() as $fonction) {
-            $options[$fonction->getId()] = $fonction->__toString();
-        }
-
-        return $options;
-    }
-
-
 }

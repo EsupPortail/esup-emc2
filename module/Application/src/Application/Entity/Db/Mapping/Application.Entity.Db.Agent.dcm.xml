@@ -2,21 +2,20 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\Agent" table="agent">
 
-        <id name="id" type="integer" column="c_individu">
+        <id    name="id"                        column="c_individu"         type="string" length="40" >
         </id>
 
-        <field name="sourceName"        type="string" length="10"       column="c_source"                 nullable="false"/>
-        <field name="sourceId"          type="integer"                  column="c_src_individu"           nullable="false"/>
+        <field name="sourceName"                column="c_source"           type="string" length="40" />
+        <field name="sourceId"                  column="c_src_individu"     type="string" length="40" />
 
-        <field name="prenom"            type="string" length="64"       column="prenom"                   nullable="true"/>
-        <field name="nomUsuel"          type="string" length="64"       column="nom_usage"                nullable="true"/>
+        <field name="prenom"                   column="prenom"              type="string" length="64" />
+        <field name="nomUsuel"                 column="nom_usage"           type="string" length="64" />
 
         <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
 
-        <!-- TODO devrait être un one-to-one ? -->
-        <many-to-one target-entity="Utilisateur\Entity\Db\User" field="utilisateur">
+        <one-to-one target-entity="Utilisateur\Entity\Db\User" field="utilisateur">
             <join-column name="utilisateur_id" referenced-column-name="id" />
-        </many-to-one>
+        </one-to-one>
 
         <many-to-many field="missions" target-entity="Application\Entity\Db\MissionSpecifique" inversed-by="mission" fetch="LAZY">
             <join-table name="agent_mission">

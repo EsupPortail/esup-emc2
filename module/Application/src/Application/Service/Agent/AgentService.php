@@ -5,7 +5,6 @@ namespace Application\Service\Agent;
 use Application\Entity\Db\Agent;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
-use UnicaenApp\Entity\Ldap\People;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Utilisateur\Entity\Db\User;
@@ -24,6 +23,8 @@ class AgentService {
 
         if ($order !== null) {
             $qb = $qb->orderBy('agent.' . $order);
+        } else {
+            $qb = $qb->orderBy('agent.nomUsuel, agent.prenom');
         }
 
         $result =  $qb->getQuery()->getResult();
@@ -80,37 +81,6 @@ class AgentService {
     }
 
     /**
-     * @param People $people
-     * @param User user
-     * @return Agent
-     */
-    public function createFromLDAP($people, $user)
-    {
-        $agent = new Agent();
-        $agent->setUtilisateur($user);
-        $agent->setNomUsuel($people->getNomUsuel());
-        $agent->setPrenom($people->getGivenName());
-
-        $this->create($agent);
-        return $agent;
-    }
-
-    /**
-     * @param Agent $agent
-     * @return Agent
-     */
-    public function create($agent)
-    {
-        $this->getEntityManager()->persist($agent);
-        try {
-            $this->getEntityManager()->flush($agent);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème a été recontré lors de la création de l'agent", $e);
-        }
-        return $agent;
-    }
-
-    /**
      * @param Agent $agent
      * @return Agent
      */
@@ -122,19 +92,6 @@ class AgentService {
             throw new RuntimeException("Un problème a été recontré lors de la mise à jour de l'agent", $e);
         }
         return $agent;
-    }
-
-    /**
-     * @param Agent $agent
-     */
-    public function delete($agent)
-    {
-        $this->getEntityManager()->remove($agent);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème a été recontré lors de la suppression de l'agent", $e);
-        }
     }
 
     /**
