@@ -42,13 +42,13 @@ class AgentViewHelper extends AbstractHelper
         $texte .= '<dt> Nom </dt>';
         $texte .= '<dd> '. $agent->getNomUsuel() .'</dd>';
         $texte .= '<dt> Quotité travaillée </dt>';
-        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
+        $texte .= '<dd>'. (($agent->getQuotite() === null)?"Non renseignée":$agent->getQuotite() . " %").'</dd>';
         $texte .= '<dt> Correspondance </dt>';
-        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
+        $texte .= '<dd> <span class="TODO"> Disponible dans la prochaine version d\'OCTOPUS </span> </dd>';
         $texte .= '<dt> Corps </dt>';
-        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
+        $texte .= '<dd> <span class="TODO"> Disponible dans la prochaine version d\'OCTOPUS </span> </dd>';
         $texte .= '<dt> Grade </dt>';
-        $texte .= '<dd> <span class="TODO"> Information manquante </span> </dd>';
+        $texte .= '<dd> <span class="TODO"> Disponible dans la prochaine version d\'OCTOPUS </span> </dd>';
         $texte .= '</dl>';
 
         $texte .= '<h3>Statuts</h3>';

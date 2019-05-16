@@ -2,7 +2,7 @@
 
 namespace Application\Controller\Agent;
 
-use Application\Form\Agent\AssocierMissionSpecifiqueFormAwareTrait;
+use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Octopus\Entity\Db\Individu;
@@ -18,8 +18,8 @@ class AgentController extends AbstractActionController
     use AgentServiceAwareTrait;
     use IndividuServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
-    /** Trait utilisés pour les formulaires */
-    use AssocierMissionSpecifiqueFormAwareTrait;
+    /** Trait de formulaire */
+    use AgentFormAwareTrait;
 
     public function indexAction() {
         $agents = $this->getAgentService()->getAgents();
@@ -38,30 +38,27 @@ class AgentController extends AbstractActionController
         ]);
     }
 
-    public function associerMissionSpecifiqueAction()
+    public function modifierAction()
     {
         $agent   = $this->getAgentService()->getRequestedAgent($this, 'agent');
-        $form = $this->getAssocierMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/associer-mission-specifique', ['agent' => $agent->getId()], [], true));
+        $form = $this->getAgentForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier', ['agent' => $agent->getId()], [], true));
         $form->bind($agent);
 
         /** @var  Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data['mission'] !== "") {
-                $mission = $this->getRessourceRhService()->getMissionSpecifique($data['mission']);
-                if ($mission) {
-                    $agent->addMission($mission);
+            $form->setData($data);
+            if ($form->isValid()) {
                     $this->getAgentService()->update($agent);
-                }
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Associer une mission spécifique',
+            'title' => 'Éditer l\'agent',
             'form' => $form,
         ]);
         return $vm;

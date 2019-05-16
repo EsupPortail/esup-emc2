@@ -43,6 +43,18 @@ class RessourceRhService {
         return $result;
     }
 
+    public function getCorrespondancesAsOptions()
+    {
+        $correspondances = $this->getCorrespondances();
+
+        $array = [];
+        foreach ($correspondances as $correspondance) {
+            $array[$correspondance->getId()] = $correspondance->getLibelle();
+        }
+
+        return $array;
+    }
+
     /**
      * @param integer $id
      * @return Correspondance
@@ -122,6 +134,20 @@ class RessourceRhService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCorpsAsOptions()
+    {
+        $corps = $this->getCorpsListe();
+
+        $array = [];
+        foreach ($corps as $item) {
+            $array[$item->getId()] = $item->getLibelle();
+        }
+        return $array;
     }
 
     /**
@@ -465,6 +491,21 @@ class RessourceRhService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGradesAsOptions()
+    {
+        $grades = $this->getGrades();
+
+        $array = [];
+        foreach ($grades as $grade) {
+            $array[$grade->getId()] = $grade->getLibelle();
+        }
+
+        return $array;
     }
 
     /**

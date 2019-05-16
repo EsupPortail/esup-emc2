@@ -5,18 +5,18 @@ namespace Application\Form\Agent;
 use Application\Service\RessourceRh\RessourceRhService;
 use Zend\Form\FormElementManager;
 
-class AssocierMissionSpecifiqueFactoryForm {
+class AgentFormFactory {
 
     public function __invoke(FormElementManager $manager)
     {
-        /** @var AssocierMissionSpecifiqueHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AssocierMissionSpecifiqueHydrator::class);
+        /** @var AgentHydrator $hydrator */
+        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AgentHydrator::class);
 
         /** @var RessourceRhService $ressourceService */
         $ressourceService = $manager->getServiceLocator()->get(RessourceRhService::class);
 
-        /** @var AssocierMissionSpecifiqueForm $form */
-        $form = new AssocierMissionSpecifiqueForm();
+        /** @var AgentForm $form */
+        $form = new AgentForm();
         $form->setRessourceRhService($ressourceService);
         $form->setHydrator($hydrator);
         $form->init();

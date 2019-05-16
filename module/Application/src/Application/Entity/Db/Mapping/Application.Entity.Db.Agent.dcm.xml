@@ -11,6 +11,8 @@
         <field name="prenom"                   column="prenom"              type="string" length="64" />
         <field name="nomUsuel"                 column="nom_usage"           type="string" length="64" />
 
+        <field name="quotite"                  column="quotite"             type="integer" />
+
         <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
 
         <one-to-one target-entity="Utilisateur\Entity\Db\User" field="utilisateur">
