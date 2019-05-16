@@ -130,6 +130,14 @@ return [
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
+                            [
+                                'order' => 7,
+                                'label' => 'Bâtiments et sites',
+                                'route' => 'immobilier',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
 
 
                         ],

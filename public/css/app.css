@@ -198,6 +198,10 @@ span.icon.minus:before {
     content: "\f068";
 }
 
+span.icon.batiment:before {
+    content: "\f1ad";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
