@@ -51,7 +51,7 @@ class SpecificitePosteViewHelper extends AbstractHelper
             $texte .= $specificite->getRelationsExternes();
         }
         if ($specificite->getContraintes()) {
-            $texte .= '<h3> Contraintes particulières d\'exercice </h3>';
+            $texte .= '<h3>  Sujétions ou conditions particulières </h3>';
             $texte .= $specificite->getContraintes();
         }
         if ($specificite->getMoyens()) {

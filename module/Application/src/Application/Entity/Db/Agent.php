@@ -2,11 +2,15 @@
 
 namespace Application\Entity\Db;
 
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Fichier\Entity\Db\Fichier;
+use Fichier\Entity\Db\Nature;
 use Utilisateur\Entity\Db\User;
 
 class Agent {
     use ImportableAwareTrait;
+    use AgentServiceAwareTrait;
 
     /** @var string */
     private $id;
@@ -27,11 +31,14 @@ class Agent {
     private $statuts;
     /** @var ArrayCollection (MissionSpecifique) */
     private $missions;
+    /** @var ArrayCollection (Fichier) */
+    private $fichiers;
 
     public function __construct()
     {
         $this->statuts = new ArrayCollection();
         $this->missions = new ArrayCollection();
+        $this->fichiers = new ArrayCollection();
     }
 
     /**
@@ -210,5 +217,45 @@ class Agent {
     {
         $this->missions->removeElement($mission);
         return $this;
+    }
+
+    /**
+     * @return Fichier[]
+     */
+    public function getFichiers()
+    {
+        return $this->fichiers->toArray();
+    }
+
+    /**
+     * @param Fichier $fichier
+     * @return Agent
+     */
+    public function addFichier($fichier)
+    {
+        $this->fichiers->add($fichier);
+        return $this;
+    }
+
+    /**
+     * @param Fichier $fichier
+     * @return Agent
+     */
+    public function removeFichier($fichier)
+    {
+        $this->fichiers->removeElement($fichier);
+        return $this;
+    }
+
+    /**
+     * @param string $nature
+     * @return Fichier[]
+     */
+    public function fetchFiles($nature)
+    {
+        $fichiers = $this->getFichiers();
+        $fichiers = array_filter($fichiers, function (Fichier $f) use ($nature) { return ($f->getHistoDestruction() === null && $f->getNature()->getCode() === $nature);});
+
+        return $fichiers;
     }
 }
