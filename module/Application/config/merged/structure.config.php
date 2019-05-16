@@ -43,16 +43,6 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'creer' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/creer',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'creer',
-                            ],
-                        ],
-                    ],
                     'ajouter-gestionnaire' => [
                         'type'  => Segment::class,
                         'options' => [
