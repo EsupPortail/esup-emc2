@@ -76,6 +76,14 @@ return [
                         'pages' => [
                             [
                                 'order' => 1,
+                                'label' => 'Les agents',
+                                'route' => 'agent',
+                                'privileges' => FicheMetierPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 2,
                                 'label' => 'Les corps et grades',
                                 'route' => 'ressource-rh/index-corps-grade',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
@@ -83,7 +91,7 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'order' => 2,
+                                'order' => 3,
                                 'label' => 'Les correspondances',
                                 'route' => 'ressource-rh/index-correspondance',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
@@ -92,23 +100,7 @@ return [
                             ],
                             [
                                 'order' => 4,
-                                'label' => 'Les fonctions',
-                                'route' => 'fonction',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 4,
-                                'label' => 'Les missions spécifiques',
-                                'route' => 'ressource-rh/index-mission-specifique',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 5,
-                                'label' => 'Métiers, familles et domaines',
+                                'label' => 'Familles, domaines et métiers',
                                 'route' => 'ressource-rh/index-metier-famille-domaine',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
@@ -116,14 +108,30 @@ return [
                             ],
                             [
                                 'order' => 5,
-                                'label' => 'Cartographie',
-                                'route' => 'ressource-rh/cartographie',
+                                'label' => 'Les fonctions',
+                                'route' => 'fonction',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
                                 'order' => 6,
+                                'label' => 'Les missions spécifiques',
+                                'route' => 'ressource-rh/index-mission-specifique',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 7,
+                                'label' => 'Sites et bâtiments',
+                                'route' => 'immobilier',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 8,
                                 'label' => 'Les structures',
                                 'route' => 'structure',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
@@ -131,14 +139,13 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'order' => 7,
-                                'label' => 'Bâtiments et sites',
-                                'route' => 'immobilier',
+                                'order' => 100,
+                                'label' => 'Cartographie',
+                                'route' => 'ressource-rh/cartographie',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
-
 
                         ],
                     ],
@@ -214,13 +221,6 @@ return [
                                 'privileges' => ActivitePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right',
-                            ],
-                            [
-                                'label' => 'Les agents',
-                                'route' => 'agent',
-                                'privileges' => FicheMetierPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
                             ],
                             [
                                 'label' => 'Les applications',

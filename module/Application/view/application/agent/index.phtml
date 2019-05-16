@@ -49,11 +49,11 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                                 <span class="icon voir"  title="Afficher l'agent"></span></a>
                         <?php endif; ?>
                         <?php if ($canModifier) : ?>
-                            <a href="<?php echo $this->url('agent/associer-mission-specifique', ['agent' => $agent->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('agent/modifier', ['agent' => $agent->getId()], [], true); ?>"
                                class="ajax-modal"
                                data-event="modification-noreload"
                             >
-                                <span class="icon plus"  title="Associer mission spécifique "></span></a>
+                                <span class="icon editer"  title="Éditer la fiche d'un agent "></span></a>
                         <?php endif; ?>
                     </td>
                 </tr>

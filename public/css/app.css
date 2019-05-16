@@ -73,7 +73,8 @@ div#navbar.production {
 }
 
 span.TODO {
-    background-color: deeppink;
+    background-color: #fff77e;
+    font-weight: bold;
     /*animation: blinker 2s linear infinite;*/
 }
 

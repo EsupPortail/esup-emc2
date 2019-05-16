@@ -2,7 +2,7 @@
 
 namespace Application\Controller\Agent;
 
-use Application\Form\Agent\AssocierMissionSpecifiqueForm;
+use Application\Form\Agent\AgentForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Octopus\Service\Individu\IndividuService;
@@ -22,9 +22,9 @@ class AgentControllerFactory {
         $ressourceService = $manager->getServiceLocator()->get(RessourceRhService::class);
 
         /**
-         * @var AssocierMissionSpecifiqueForm $associerForm
+         * @var AgentForm $agentForm
          */
-        $associerForm = $manager->getServiceLocator()->get('FormElementManager')->get(AssocierMissionSpecifiqueForm::class);
+        $agentForm = $manager->getServiceLocator()->get('FormElementManager')->get(AgentForm::class);
 
         /** @var AgentController $controller */
         $controller = new AgentController();
@@ -33,7 +33,7 @@ class AgentControllerFactory {
         $controller->setIndividuService($individuService);
         $controller->setRessourceRhService($ressourceService);
 
-        $controller->setAssocierMissionSpecifiqueForm($associerForm);
+        $controller->setAgentForm($agentForm);
 
         return $controller;
     }

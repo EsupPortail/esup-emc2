@@ -20,6 +20,8 @@ class Agent {
     private $nomUsuel;
     /** @var User */
     private $utilisateur;
+    /** @var int */
+    private $quotite;
 
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
@@ -135,6 +137,24 @@ class Agent {
     public function setUtilisateur($utilisateur)
     {
         $this->utilisateur = $utilisateur;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuotite()
+    {
+        return $this->quotite;
+    }
+
+    /**
+     * @param int $quotite
+     * @return Agent
+     */
+    public function setQuotite($quotite)
+    {
+        $this->quotite = $quotite;
         return $this;
     }
 

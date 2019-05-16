@@ -20,6 +20,7 @@ class FonctionService {
     {
         $qb = $this->getEntityManager()->getRepository(Fonction::class)->createQueryBuilder('fonction')
             ->addSelect('libelle')->leftJoin('fonction.libelles','libelle')
+            ->orderBy('fonction.parent, fonction.id')
         ;
 
         $result = $qb->getQuery()->getResult();
