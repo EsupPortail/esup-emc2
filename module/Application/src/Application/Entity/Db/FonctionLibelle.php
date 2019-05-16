@@ -2,12 +2,10 @@
 
 namespace Application\Entity\Db;
 
-use UnicaenApp\Entity\HistoriqueAwareTrait;
-
 class FonctionLibelle {
-    use HistoriqueAwareTrait;
+    use ImportableAwareTrait;
 
-    /** @var integer */
+    /** @var string */
     private $id;
     /** @var Fonction */
     private $fonction;
@@ -16,29 +14,14 @@ class FonctionLibelle {
     /** @var string */
     private $genre;
     /** @var string */
-    private $default;
-
-    /** @var string */
-    private $source;
-    /** @var string */
-    private $idSource;
+    private $defaut;
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return FonctionLibelle
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
     }
 
     /**
@@ -96,59 +79,22 @@ class FonctionLibelle {
     }
 
     /**
-     * @return boolean
-     */
-    public function getDefault()
-    {
-        return ($this->default === 'O');
-    }
-
-    /**
-     * @param string $default
-     * @return FonctionLibelle
-     */
-    public function setDefault($default)
-    {
-        $this->default = $default;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getSource()
+    public function getDefaut()
     {
-        return $this->source;
+        return $this->defaut;
     }
 
     /**
-     * @param string $source
+     * @param string $defaut
      * @return FonctionLibelle
      */
-    public function setSource($source)
+    public function setDefaut($defaut)
     {
-        $this->source = $source;
+        $this->defaut = $defaut;
         return $this;
     }
-
-    /**
-     * @return string
-     */
-    public function getIdSource()
-    {
-        return $this->idSource;
-    }
-
-    /**
-     * @param string $idSource
-     * @return FonctionLibelle
-     */
-    public function setIdSource($idSource)
-    {
-        $this->idSource = $idSource;
-        return $this;
-    }
-
 
 
 }

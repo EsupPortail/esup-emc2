@@ -6,7 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Utilisateur\Entity\Db\User;
 
 class Agent {
-    /** @var integer */
+    use ImportableAwareTrait;
+
+    /** @var string */
     private $id;
     /** @var string */
     private $sourceName;

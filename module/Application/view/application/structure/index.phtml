@@ -8,10 +8,6 @@ $this->headTitle("Index des structures");
  * @var Application\Entity\Db\Structure[] $structures
  */
 
-$canDescription     = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER));
-$canEditer          = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER));
-$canHistoriser      = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::HISTORISER));
-$canDetruire        = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EFFACER));
 $canGestionnaire    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::GESTIONNAIRE));
 ?>
 
