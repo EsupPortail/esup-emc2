@@ -10,6 +10,7 @@
         <field name="libelleCourt"              column="libelle_court"      type="string" length="128"/>
         <field name="libelleLong"               column="libelle_long"       type="string" length="1024"/>
         <field name="type"                      column="type"               type="string" length="128"/>
+        <field name="description"               column="description"        type="string" length="10240"/>
 
         <field name="importationCreation"       column="created_on"         type="datetime"  />
         <field name="importationModification"   column="updated_on"         type="datetime"  />

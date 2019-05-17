@@ -2,6 +2,7 @@
 
 namespace Application\Controller\Structure;
 
+use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Utilisateur\Entity\Db\Role;
@@ -16,6 +17,8 @@ class StructureController extends AbstractActionController {
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
+
+    use StructureFormAwareTrait;
 
     public function indexAction()
     {
@@ -86,6 +89,33 @@ class StructureController extends AbstractActionController {
         }
 
         exit;
+    }
+
+    public function editerDescriptionAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+
+        $form = $this->getStructureForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/editer-description', ['structure' => $structure->getId()], [] , true));
+        $form->bind($structure);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getStructureService()->update($structure);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Édition de la description de la structure',
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
 }

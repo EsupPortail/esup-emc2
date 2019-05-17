@@ -8,8 +8,6 @@ use Zend\View\Helper\AbstractHelper;
 
 class PosteViewHelper extends AbstractHelper
 {
-    use ImmobilierServiceAwareTrait;
-
     /** @var Poste */
     protected $poste;
 
@@ -42,8 +40,7 @@ class PosteViewHelper extends AbstractHelper
         $texte .= '<dt> Affectation du poste </dt>';
         $texte .= '<dd class="siham">'.$poste->getStructure().'</dd>';
         $texte .= '<dt> Localisation du poste </dt>';
-//        $texte .= '<dd class="siham">'.$poste->getLocalisation().'</dd>';
-        $texte .= '<dd class="siham">'.$this->getImmobiliserService()->getImmobilierBatiment($poste->getLocalisation()).'</dd>';
+        $texte .= '<dd class="siham">'.$poste->getLocalisation().'</dd>';
         $texte .= '<dt> Rattachement hiérarchique </dt>';
         $texte .= '<dd class="siham">'.(($poste->getRattachementHierarchique())?$poste->getRattachementHierarchique()->getDenomination():"---").'</dd>';
         $texte .= '<dt> Catégorie </dt>';
