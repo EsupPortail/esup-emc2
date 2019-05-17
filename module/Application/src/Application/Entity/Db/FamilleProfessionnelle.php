@@ -4,23 +4,22 @@ namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Metier {
+class FamilleProfessionnelle {
 
     /** @var integer */
     private $id;
     /** @var string */
     private $libelle;
 
-    /** @var Fonction */
-    private $fonction;
+    /** @var ArrayCollection */
+    private $domaines;
 
-
-    /** @var ArrayCollection (FicheMetierType) */
-    private $fichesMetiers;
-
+    /**
+     * MetierFamille constructor.
+     */
     public function __construct()
     {
-        $this->fichesMetiers = new ArrayCollection();
+        $this->domaines = new ArrayCollection();
     }
 
     /**
@@ -41,43 +40,36 @@ class Metier {
 
     /**
      * @param string $libelle
+     * @return FamilleProfessionnelle
      */
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
-    }
-
-    /**
-     * @return Fonction
-     */
-    public function getFonction()
-    {
-        return $this->fonction;
-    }
-
-    /**
-     * @param Fonction $fonction
-     * @return Metier
-     */
-    public function setFonction($fonction)
-    {
-        $this->fonction = $fonction;
         return $this;
     }
 
-
-
-    public function __toString()
+    public function getDomaines()
     {
-        return $this->getLibelle();
+        return $this->domaines->toArray();
     }
 
     /**
-     * @return ArrayCollection
+     * @param Domaine $domaine
+     * @return FamilleProfessionnelle
      */
-    public function getFichesMetiers()
+    public function addDomaine($domaine)
     {
-        return $this->fichesMetiers;
+        $this->domaines->add($domaine);
+        return $this;
     }
 
+    /**
+     * @param Domaine $domaine
+     * @return FamilleProfessionnelle
+     */
+    public function removeDomaine($domaine)
+    {
+        $this->domaines->removeElement($domaine);
+        return $this;
+    }
 }

@@ -11,15 +11,14 @@ class Domaine {
     /** @var string */
     private $libelle;
 
+    /** @var FamilleProfessionnelle */
+    private $famille;
     /** @var ArrayCollection */
-    private $metiers;
-//    /** @var ArrayCollection (MetierFamille) */
-//    private $familles;
+    private $fonctions;
 
     public function __construct()
     {
-        $this->metiers = new ArrayCollection();
-//        $this->familles = new ArrayCollection();
+        $this->fonctions = new ArrayCollection();
     }
 
     /**
@@ -49,59 +48,48 @@ class Domaine {
     }
 
     /**
-     * @return Metier[]
+     * @return FamilleProfessionnelle
      */
-    public function getMetiers()
+    public function getFamille()
     {
-        return $this->metiers->toArray();
+        return $this->famille;
     }
 
     /**
-     * @param Metier $metier
+     * @param FamilleProfessionnelle $famille
      * @return Domaine
      */
-    public function addMetier($metier)
+    public function setFamille($famille)
     {
-        $this->metiers->add($metier);
+        $this->famille = $famille;
         return $this;
     }
 
     /**
-     * @param Metier $metier
+     * @return Fonction[]
+     */
+    public function getFonctions()
+    {
+        return $this->fonctions->toArray();
+    }
+
+    /**
+     * @param Fonction $fonction
      * @return Domaine
      */
-    public function removeMetier($metier)
+    public function addFonction($fonction)
     {
-        $this->metiers->removeElement($metier);
+        $this->fonctions->add($fonction);
         return $this;
     }
 
-
-//    /**
-//     * @return MetierFamille[]
-//     */
-//    public function getFamilles()
-//    {
-//        return $this->familles->toArray();
-//    }
-//
-//    /**
-//     * @param MetierFamille $famille
-//     * @return Domaine
-//     */
-//    public function addFamille($famille)
-//    {
-//        $this->familles->add($famille);
-//        return $this;
-//    }
-//
-//    /**
-//     * @param MetierFamille $famille
-//     * @return Domaine
-//     */
-//    public function removeFamille($famille)
-//    {
-//        $this->familles->removeElement($famille);
-//        return $this;
-//    }
+    /**
+     * @param Fonction $fonction
+     * @return Domaine
+     */
+    public function removeFonction($fonction)
+    {
+        $this->fonctions->removeElement($fonction);
+        return $this;
+    }
 }
