@@ -100,16 +100,8 @@ return [
                             ],
                             [
                                 'order' => 4,
-                                'label' => 'Familles, domaines et métiers',
+                                'label' => 'Familles, domaines, fonctions et métiers',
                                 'route' => 'ressource-rh/index-metier-famille-domaine',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 5,
-                                'label' => 'Les fonctions',
-                                'route' => 'fonction',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'

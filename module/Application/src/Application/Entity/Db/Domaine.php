@@ -92,4 +92,12 @@ class Domaine {
         $this->fonctions->removeElement($fonction);
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
 }

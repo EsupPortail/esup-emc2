@@ -2,43 +2,33 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Service\Fonction\FonctionServiceAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
-class MetierForm extends Form {
-    use FonctionServiceAwareTrait;
+class FonctionForm extends Form {
+    use DomaineServiceAwareTrait;
 
     public function init()
     {
-        //fonction
+        // Domaine
         $this->add([
             'type' => Select::class,
-            'name' => 'fonction',
+            'name' => 'domaine',
             'options' => [
-                'label' => "Fonction* :",
-                'empty_option' => "Sélectionner une fonction ...",
-                'value_options' => $this->getFonctionService()->getFonctionsAsOptions(),
+                'label' => "Domaine* :",
+                'empty_option' => "Sélectionner un domaine ...",
+                'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'fonction',
+                'id' => 'domaine',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ],
         ]);
-        // libelle
-        $this->add([
-            'type' => Text::class,
-            'name' => 'libelle',
-            'options' => [
-                'label' => "Libelle :",
-            ],
-            'attributes' => [
-                'id' => 'libelle',
-            ],
-        ]);
+
         // button
         $this->add([
             'type' => Button::class,

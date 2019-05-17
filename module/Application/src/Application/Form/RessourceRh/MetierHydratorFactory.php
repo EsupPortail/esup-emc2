@@ -2,7 +2,7 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Service\RessourceRh\RessourceRhService;
+use Application\Service\Fonction\FonctionService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MetierHydratorFactory {
@@ -11,11 +11,11 @@ class MetierHydratorFactory {
     {
         /** @var ServiceLocatorInterface $parentLocator */
         $parentLocator = $serviceLocator->getServiceLocator();
-        /** @var RessourceRhService $ressourceService */
-        $ressourceService = $parentLocator->get(RessourceRhService::class);
+        /** @var FonctionService $fonctionService */
+        $fonctionService = $parentLocator->get(FonctionService::class);
 
         $hydrator = new MetierHydrator();
-        $hydrator->setRessourceRhService($ressourceService);
+        $hydrator->setFonctionService($fonctionService);
 
         return $hydrator;
     }
