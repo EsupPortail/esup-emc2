@@ -16,12 +16,13 @@ use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormAwareTrait;
 use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\GradeFormAwareTrait;
-use Application\Form\RessourceRh\MetierFamilleForm;
-use Application\Form\RessourceRh\MetierFamilleFormAwareTrait;
+use Application\Form\RessourceRh\FamilleProfessionnelleForm;
+use Application\Form\RessourceRh\FamilleProfessionnelleFormAwareTrait;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormAwareTrait;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -31,12 +32,14 @@ use Zend\View\Model\ViewModel;
 class RessourceRhController extends AbstractActionController {
     /** Trait utilisés pour les services */
     use RessourceRhServiceAwareTrait;
+    use FamilleProfessionnelleServiceAwareTrait;
+
     /** Trait utilisés pour les formulaires */
     use CorpsFormAwareTrait;
     use CorrespondanceFormAwareTrait;
     use DomaineFormAwareTrait;
     use GradeFormAwareTrait;
-    use MetierFamilleFormAwareTrait;
+    use FamilleProfessionnelleFormAwareTrait;
     use MetierFormAwareTrait;
     use MissionSpecifiqueFormAwareTrait;
 
@@ -67,7 +70,7 @@ class RessourceRhController extends AbstractActionController {
     public function indexMetierFamilleDomaineAction()
     {
         $metiers = $this->getRessourceRhService()->getMetiers('libelle');
-        $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
         $domaines = $this->getRessourceRhService()->getDomaines('libelle');
 
         return new ViewModel([
@@ -296,8 +299,8 @@ class RessourceRhController extends AbstractActionController {
     {
         $famille = new FamilleProfessionnelle();
 
-        /** @var MetierFamilleForm $form */
-        $form = $this->getMetierFamilleForm();
+        /** @var FamilleProfessionnelleForm $form */
+        $form = $this->getFamilleProfessionnelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/famille/creer', [], [], true));
         $form->bind($famille);
 
@@ -307,7 +310,7 @@ class RessourceRhController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getRessourceRhService()->createMetierFamille($famille);
+                $this->getFamilleProfessionnelleService()->create($famille);
             }
         }
 
@@ -322,11 +325,10 @@ class RessourceRhController extends AbstractActionController {
 
     public function modifierFamilleAction()
     {
-        $familleId = $this->params()->fromRoute('id');
-        $famille = $this->getRessourceRhService()->getMetierFamille($familleId);
+        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this, 'id');
 
-        /** @var MetierFamilleForm $form */
-        $form = $this->getMetierFamilleForm();
+        /** @var FamilleProfessionnelleForm $form */
+        $form = $this->getFamilleProfessionnelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/famille/modifier', [], [], true));
         $form->bind($famille);
 
@@ -336,7 +338,7 @@ class RessourceRhController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getRessourceRhService()->updateMetierFamille($famille);
+                $this->getFamilleProfessionnelleService()->update($famille);
             }
         }
 
@@ -351,14 +353,13 @@ class RessourceRhController extends AbstractActionController {
 
     public function effacerFamilleAction()
     {
-        $familleId = $this->params()->fromRoute('id');
-        $famille = $this->getRessourceRhService()->getMetierFamille($familleId);
+        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this, 'id');
 
         if ($famille !== null) {
-            $this->getRessourceRhService()->deleteMetierFamille($famille);
+            $this->getFamilleProfessionnelleService()->delete($famille);
         }
 
-        return $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh/index-metier-famille-domaine', [], [], true);
     }
 
     /** DOMAINE *******************************************************************************************************/
@@ -432,7 +433,7 @@ class RessourceRhController extends AbstractActionController {
             $this->getRessourceRhService()->deleteDomaine($domaine);
         }
 
-        return $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh/index-metier-fmaille-domaine', [], [], true);
     }
 
     /** Grade ******************************************************************************************************/

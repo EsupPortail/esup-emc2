@@ -18,18 +18,20 @@ use Application\Form\RessourceRh\CorrespondanceHydrator;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
+use Application\Form\RessourceRh\FamilleProfessionnelleHydrator;
 use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\GradeFormFactory;
 use Application\Form\RessourceRh\GradeHydrator;
 use Application\Form\RessourceRh\GradeHydratorFactory;
-use Application\Form\RessourceRh\MetierFamilleForm;
-use Application\Form\RessourceRh\MetierFamilleFormFactory;
-use Application\Form\RessourceRh\MetierFamilleHydrator;
+use Application\Form\RessourceRh\FamilleProfessionnelleForm;
+use Application\Form\RessourceRh\FamilleProfessionnelleFormFactory;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
 use Application\Form\RessourceRh\MetierHydratorFactory;
 use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\RessourceRh\RessourceRhServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -527,10 +529,9 @@ return [
     ],
 
     'service_manager' => [
-        'invokables' => [
-        ],
         'factories' => [
             RessourceRhService::class => RessourceRhServiceFactory::class,
+            FamilleProfessionnelleService::class => FamilleProfessionnelleServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -543,7 +544,7 @@ return [
             CorpsForm::class => CorpsFormFactory::class,
             CorrespondanceForm::class => CorrespondanceFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
-            MetierFamilleForm::class => MetierFamilleFormFactory::class,
+            FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
             GradeForm::class => GradeFormFactory::class,
             MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
@@ -553,7 +554,7 @@ return [
         'invokables' => [
             CorpsHydrator::class => CorpsHydrator::class,
             CorrespondanceHydrator::class => CorrespondanceHydrator::class,
-            MetierFamilleHydrator::class => MetierFamilleHydrator::class,
+            FamilleProfessionnelleHydrator::class => FamilleProfessionnelleHydrator::class,
             DomaineHydrator::class => DomaineHydrator::class,
 //            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydrator::class,
         ],

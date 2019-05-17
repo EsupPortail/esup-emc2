@@ -7,7 +7,6 @@
         </id>
 
         <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
-        <field name="couleur"           type="string"   length="64"       column="couleur"                nullable="true"  />
 
         <one-to-many target-entity="Application\Entity\Db\Domaine" field="domaines" mapped-by="famille"/>
 

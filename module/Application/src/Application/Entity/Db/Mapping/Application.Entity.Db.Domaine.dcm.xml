@@ -9,7 +9,7 @@
         <field name="libelle"           type="string" length="256"      column="libelle"                nullable="false"/>
 
         <many-to-one target-entity="Application\Entity\Db\FamilleProfessionnelle"  field="famille">
-            <join-column name="fmaille_id" referenced-column-name="id"/>
+            <join-column name="famille_id" referenced-column-name="id"/>
         </many-to-one>
 
         <one-to-many target-entity="Application\Entity\Db\Fonction" field="fonctions" mapped-by="domaine"/>

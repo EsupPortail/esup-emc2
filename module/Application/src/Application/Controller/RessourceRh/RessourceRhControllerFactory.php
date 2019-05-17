@@ -7,8 +7,9 @@ use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\GradeForm;
-use Application\Form\RessourceRh\MetierFamilleForm;
+use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\MetierForm;
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Zend\Mvc\Controller\ControllerManager;
 
@@ -18,38 +19,46 @@ class RessourceRhControllerFactory {
     {
         /**
          * @var RessourceRhService $ressourceService
+         *
+         * @var FamilleProfessionnelleService $familleService
          */
         $ressourceService    = $manager->getServiceLocator()->get(RessourceRhService::class);
+        $familleService      = $manager->getServiceLocator()->get(FamilleProfessionnelleService::class);
 
         /**
          * @var CorpsForm $corpsForm
          * @var CorrespondanceForm $correspondanceForm
          * @var DomaineForm $domaineForm
          * @var GradeForm $gradeForm
-         * @var MetierFamilleForm $metierFamilleForm
+         * @var FamilleProfessionnelleForm $familleForm
          * @var MetierForm $metierForm
          * @var MissionSpecifiqueForm $missionSpecifiqueForm
          */
         $corpsForm                  = $manager->getServiceLocator()->get('FormElementManager')->get(CorpsForm::class);
         $correspondanceForm         = $manager->getServiceLocator()->get('FormElementManager')->get(CorrespondanceForm::class);
-        $domaineForm                = $manager->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
         $gradeForm                  = $manager->getServiceLocator()->get('FormElementManager')->get(GradeForm::class);
-        $metierFamilleForm          = $manager->getServiceLocator()->get('FormElementManager')->get(MetierFamilleForm::class);
-        $metierForm                 = $manager->getServiceLocator()->get('FormElementManager')->get(MetierForm::class);
         $missionSpecifiqueForm      = $manager->getServiceLocator()->get('FormElementManager')->get(MissionSpecifiqueForm::class);
+
+        $familleForm                = $manager->getServiceLocator()->get('FormElementManager')->get(FamilleProfessionnelleForm::class);
+//        $domaineForm                = $manager->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
+//        $metierForm                 = $manager->getServiceLocator()->get('FormElementManager')->get(MetierForm::class);
+
 
         /** @var RessourceRhController $controller */
         $controller = new RessourceRhController();
 
         $controller->setRessourceRhService($ressourceService);
+        $controller->setFamilleProfessionnelleService($familleService);
 
         $controller->setCorpsForm($corpsForm);
         $controller->setCorrespondanceForm($correspondanceForm);
-        $controller->setDomaineForm($domaineForm);
         $controller->setGradeForm($gradeForm);
-        $controller->setMetierFamilleForm($metierFamilleForm);
-        $controller->setMetierForm($metierForm);
         $controller->setMissionSpecifiqueForm($missionSpecifiqueForm);
+        $controller->setFamilleProfessionnelleForm($familleForm);
+
+//        $controller->setDomaineForm($domaineForm);
+//        $controller->setMetierForm($metierForm);
+
         return $controller;
     }
 
