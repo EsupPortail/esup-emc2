@@ -5,9 +5,9 @@ namespace Application\Form\Poste;
 use Application\Entity\Db\Poste;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
+use Application\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Octopus\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {
@@ -23,11 +23,10 @@ class PosteHydrator implements HydratorInterface {
      */
     public function extract($object)
     {
-        $batiment = $this->getImmobiliserService()->getImmobilierBatiment($object->getLocalisation());
 
         $data = [
             'numero_poste'      => $object->getNumeroPoste(),
-            'localisation'      => $batiment,
+            'localisation'      => ($object->getLocalisation())?$object->getLocalisation()->getId():null,
             'structure'         => ($object->getStructure())?$object->getStructure()->getId():null,
             'correspondance'    => ($object->getCorrespondance())?$object->getCorrespondance()->getId():null,
             'rattachement'      => ($object->getRattachementHierarchique())?$object->getRattachementHierarchique()->getId():null,
@@ -50,9 +49,10 @@ class PosteHydrator implements HydratorInterface {
         $rattachement = $this->getAgentService()->getAgent($data['rattachement']);
         $domaine = $this->getRessourceRhService()->getDomaine($data['domaine']);
         $fonction = $this->getFonctionService()->getFonction($data['fonction']);
+        $batiment = $this->getImmobilierService()->getBatiment($data['localisation']);
 
         $object->setNumeroPoste($data['numero_poste']);
-        $object->setLocalisation($data['localisation']['id']);
+        $object->setLocalisation($batiment);
         $object->setStructure($structure);
         $object->setCorrespondance($correspondance);
         $object->setRattachementHierarchique($rattachement);

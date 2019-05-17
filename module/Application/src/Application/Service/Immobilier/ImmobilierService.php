@@ -97,7 +97,7 @@ class ImmobilierService {
         $batiments = $this->getBatiments();
         $options = [];
         foreach ($batiments as $batiment) {
-            $options[$batiment->getId()] = $batiment->getLibelle();
+            $options[$batiment->getId()] = $batiment->getLibelle() . /*'<span class="badge">'*/ ' - '.$batiment->getSite()->getLibelle()/*.'</span>'*/;
         }
         return $options;
     }

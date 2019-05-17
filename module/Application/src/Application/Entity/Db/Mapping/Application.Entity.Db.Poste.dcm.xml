@@ -7,9 +7,11 @@
         </id>
 
         <field name="numeroPoste"       type="string" length="128"      column="numero_poste"             nullable="true"/>
-        <field name="localisation"      type="string" length="128"      column="localisation"             nullable="true"/>
         <field name="lien"              type="string" length="256"      column="lien"                     nullable="true"/>
 
+        <many-to-one target-entity="Application\Entity\Db\Batiment" field="localisation">
+            <join-column name="localisation" referenced-column-name="id" />
+        </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Agent" field="rattachementHierarchique">
             <join-column name="rattachement_hierarchique" referenced-column-name="c_individu" />
         </many-to-one>

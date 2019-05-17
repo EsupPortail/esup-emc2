@@ -22,6 +22,8 @@ class AssocierAgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'agent',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 

@@ -34,7 +34,7 @@ class EntretienProfessionnelForm extends Form {
         $personnelsOpt = [];
         $personnelsOpt[ null ] = 'Sélectionnaire un personnel ... ';
         foreach ($agents as $agent) {
-            $personnelsOpt[$agent->getId()] = $agent->getPrenom(). " ".$agent->getNom();
+            $personnelsOpt[$agent->getId()] = $agent->getDenomination();
         }
 
         /** Année Scolaire **/

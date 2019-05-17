@@ -76,4 +76,11 @@ class Batiment {
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->libelle . '<span class="badge">'.$this->getSite()->getNom().'</span>';
+    }
 }

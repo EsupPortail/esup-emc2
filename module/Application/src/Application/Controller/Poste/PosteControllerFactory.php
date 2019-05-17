@@ -4,7 +4,6 @@ namespace Application\Controller\Poste;
 
 use Application\Form\Poste\PosteForm;
 use Application\Service\Poste\PosteService;
-use Octopus\Service\Immobilier\ImmobilierService;
 use Zend\Mvc\Controller\ControllerManager;
 
 class PosteControllerFactory {
@@ -13,10 +12,8 @@ class PosteControllerFactory {
     {
         /**
          * @var PosteService $posteService
-         * @var ImmobilierService $immobilierService
          */
         $posteService    = $manager->getServiceLocator()->get(PosteService::class);
-        $immobilierService    = $manager->getServiceLocator()->get(ImmobilierService::class);
 
         /**
          * @var PosteForm $posteForm
@@ -26,7 +23,6 @@ class PosteControllerFactory {
         /** @var PosteController $controller */
         $controller = new PosteController();
         $controller->setPosteService($posteService);
-        $controller->setImmobiliserService($immobilierService);
         $controller->setPosteForm($posteForm);
         return $controller;
     }
