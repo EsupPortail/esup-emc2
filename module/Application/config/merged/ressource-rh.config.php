@@ -63,6 +63,7 @@ return [
                         'index-mission-specifique',
                         'get-grades-json',
                         'cartographie',
+                        'export-cartographie',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AFFICHER,
@@ -473,7 +474,19 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes' => [],
+                        'child_routes' => [
+                            'export' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route'    => '/export',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'export-cartographie',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ],
                     ],
                     'mission-specifique' => [
                         'type' => Literal::class,

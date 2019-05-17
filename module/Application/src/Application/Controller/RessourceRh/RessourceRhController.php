@@ -28,6 +28,8 @@ use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwar
 use Application\Service\Fonction\FonctionServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use DateTime;
+use UnicaenApp\View\Model\CsvModel;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -676,6 +678,45 @@ class RessourceRhController extends AbstractActionController {
         return new ViewModel([
             'results' => $results,
         ]);
+    }
+
+    public function exportCartographieAction() {
+        $metiers = $this->getMetierService()->getMetiers();
+
+        $results = [];
+        foreach($metiers as $metier) {
+            $fonction = $metier->getFonction();
+            $domaine = ($fonction)?$fonction->getDomaine():null;
+            $famille = ($domaine)?$domaine->getFamille():null;
+            $entry = [
+                'famille'  => ($famille)?$famille->__toString():"---",
+                'domaine'  => ($domaine)?$domaine->__toString():"---",
+                'fonction' => ($fonction)?$fonction->__toString():"---",
+                'metier'   => ($metier)?$metier->__toString():"---",
+                'nbFiche'   => count($metier->getFichesMetiers()),
+            ];
+            $results[] = $entry;
+        }
+
+        usort($results, function($a, $b) {
+            if ($a['famille'] !== $b['famille'])     return $a['famille'] < $b['famille'];
+            if ($a['domaine'] !== $b['domaine'])     return $a['domaine'] < $b['domaine'];
+            if ($a['fonction'] !== $b['fonction'])   return $a['fonction'] < $b['fonction'];
+            return $a['metier'] < $b['metier'];
+        });
+
+        $headers = ['Famille', 'Domaine', 'Fonction', 'Metier', '#Fiche'];
+
+        $today = new DateTime();
+
+        $result = new CsvModel();
+        $result->setDelimiter(';');
+        $result->setEnclosure('"');
+        $result->setHeader($headers);
+        $result->setData($results);
+        $result->setFilename('cartographie_metier_'.$today->format('Ymd-His').'.csv');
+
+        return $result;
     }
 
 
