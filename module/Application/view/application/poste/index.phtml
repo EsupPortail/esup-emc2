@@ -2,7 +2,6 @@
 
 /**
  * @var Poste[] $postes
- * @var \Octopus\Service\Immobilier\ImmobilierService $immobilierService
  */
 
 use Application\Entity\Db\Poste;
@@ -53,7 +52,7 @@ $this->headTitle("Index des postes")
                 <td>
                     <?php echo $poste->getStructure(); ?>
                 </td>
-                <td> <?php echo $immobilierService->getImmobilierBatiment($poste->getLocalisation()); ?> </td>
+                <td> <?php echo $poste->getLocalisation(); ?> </td>
                 <td>
                     <?php if($canAfficherPoste) : ?>
                         <a href="<?php echo $this->url('poste/afficher', ['poste' => $poste->getId()], [], true); ?>"

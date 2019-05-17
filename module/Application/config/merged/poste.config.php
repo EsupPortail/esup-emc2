@@ -86,16 +86,6 @@ return [
                             ],
                         ],
                     ],
-                    'rechercher-batiment' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/rechercher-batiment',
-                            'defaults' => [
-                                'controller' => PosteController::class,
-                                'action'     => 'rechercher-batiment',
-                            ],
-                        ],
-                    ],
                     'supprimer' => [
                         'type'  => Segment::class,
                         'options' => [

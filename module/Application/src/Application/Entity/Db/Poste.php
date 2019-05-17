@@ -10,7 +10,7 @@ class Poste {
     private $numeroPoste;
     /** @var Structure */
     private $structure;
-    /** @var string */
+    /** @var Batiment */
     private $localisation;
     /** @var Correspondance */
     private $correspondance;
@@ -68,7 +68,7 @@ class Poste {
     }
 
     /**
-     * @return string
+     * @return Batiment
      */
     public function getLocalisation()
     {
@@ -76,7 +76,7 @@ class Poste {
     }
 
     /**
-     * @param string $localisation
+     * @param Batiment $localisation
      * @return Poste
      */
     public function setLocalisation($localisation)

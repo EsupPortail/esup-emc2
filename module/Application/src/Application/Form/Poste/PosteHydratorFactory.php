@@ -3,10 +3,10 @@
 namespace Application\Form\Poste;
 
 use Application\Service\Fonction\FonctionService;
+use Application\Service\Immobilier\ImmobilierService;
 use Application\Service\Structure\StructureService;
 use Application\Service\Agent\AgentService;
 use Application\Service\RessourceRh\RessourceRhService;
-use Octopus\Service\Immobilier\ImmobilierService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class PosteHydratorFactory {
@@ -34,7 +34,7 @@ class PosteHydratorFactory {
         $hydrator->setAgentService($agentService);
         $hydrator->setFonctionService($fonctionService);
         $hydrator->setRessourceRhService($ressourceService);
-        $hydrator->setImmobiliserService($immobilierService);
+        $hydrator->setImmobilierService($immobilierService);
 
         return $hydrator;
     }

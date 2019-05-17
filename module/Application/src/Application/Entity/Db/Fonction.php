@@ -126,4 +126,16 @@ class Fonction {
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $array = [];
+        foreach ($this->getLibelles() as $libelle) {
+            $array[] = $libelle->getLibelle();
+        }
+
+        return implode("/", $array);
+    }
 }
