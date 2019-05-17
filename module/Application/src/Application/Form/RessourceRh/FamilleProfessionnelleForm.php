@@ -6,7 +6,7 @@ use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
-class MetierFamilleForm extends Form {
+class FamilleProfessionnelleForm extends Form {
 
     public function init()
     {
@@ -26,7 +26,7 @@ class MetierFamilleForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer le métier',
+                'label' => '<i class="fas fa-save"></i> Enregistrer',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
