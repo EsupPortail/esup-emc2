@@ -72,4 +72,12 @@ class FamilleProfessionnelle {
         $this->domaines->removeElement($domaine);
         return $this;
     }
+
+    /**
+     * @return
+     */
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
 }

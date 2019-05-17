@@ -22,7 +22,10 @@ use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormAwareTrait;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Application\Service\Fonction\FonctionServiceAwareTrait;
+use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -32,7 +35,11 @@ use Zend\View\Model\ViewModel;
 class RessourceRhController extends AbstractActionController {
     /** Trait utilisés pour les services */
     use RessourceRhServiceAwareTrait;
+
+    use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
+    use FonctionServiceAwareTrait;
+    use MetierServiceAwareTrait;
 
     /** Trait utilisés pour les formulaires */
     use CorpsFormAwareTrait;
@@ -69,13 +76,15 @@ class RessourceRhController extends AbstractActionController {
 
     public function indexMetierFamilleDomaineAction()
     {
-        $metiers = $this->getRessourceRhService()->getMetiers('libelle');
         $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
-        $domaines = $this->getRessourceRhService()->getDomaines('libelle');
+        $domaines = $this->getDomaineService()->getDomaines();
+        $fonctions = $this->getFonctionService()->getFonctions();
+        $metiers = $this->getMetierService()->getMetiers();
 
         return new ViewModel([
             'metiers' => $metiers,
             'familles' => $familles,
+            'fonctions' => $fonctions,
             'domaines' => $domaines,
         ]);
     }
@@ -239,7 +248,7 @@ class RessourceRhController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getRessourceRhService()->createMetier($metier);
+                $this->getMetierService()->create($metier);
             }
         }
 
@@ -254,8 +263,7 @@ class RessourceRhController extends AbstractActionController {
 
     public function modifierMetierAction()
     {
-        $metierId = $this->params()->fromRoute('id');
-        $metier = $this->getRessourceRhService()->getMetier($metierId);
+        $metier = $this->getMetierService()->getRequestedMetier($this, 'id');
 
         /** @var MetierForm $form */
         $form = $this->getMetierForm();
@@ -268,7 +276,7 @@ class RessourceRhController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getRessourceRhService()->updateMetier($metier);
+                $this->getMetierService()->update($metier);
             }
         }
 
@@ -283,17 +291,16 @@ class RessourceRhController extends AbstractActionController {
 
     public function effacerMetierAction()
     {
-        $metierId = $this->params()->fromRoute('id');
-        $metier = $this->getRessourceRhService()->getMetier($metierId);
+        $metier = $this->getMetierService()->getRequestedMetier($this, 'id');
 
         if ($metier !== null) {
-            $this->getRessourceRhService()->deleteMetier($metier);
+            $this->getMetierService()->delete($metier);
         }
 
-        return $this->redirect()->toRoute('ressource-rh', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh/index-metier-famille-domaine', [], [], true);
     }
 
-    /** FAMILLE METIER ************************************************************************************************/
+    /** FAMILLE PROFESSIONNELLE ***************************************************************************************/
 
     public function creerFamilleAction()
     {
@@ -380,7 +387,7 @@ class RessourceRhController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getRessourceRhService()->createDomaine($domaine);
+                $this->getDomaineService()->create($domaine);
             }
         }
 
@@ -395,9 +402,7 @@ class RessourceRhController extends AbstractActionController {
 
     public function modifierDomaineAction()
     {
-        /** @var Domaine $domaine */
-        $domaineId = $this->params()->fromRoute('domaine');
-        $domaine = $this->getRessourceRhService()->getDomaine($domaineId);
+        $domaine = $this->getDomaineService()->getRequestedDomaine($this, 'domaine');
 
         /** @var DomaineForm $form */
         $form = $this->getDomaineForm();
@@ -410,7 +415,7 @@ class RessourceRhController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getRessourceRhService()->updateDomaine($domaine);
+                $this->getDomaineService()->update($domaine);
             }
         }
 
@@ -425,15 +430,13 @@ class RessourceRhController extends AbstractActionController {
 
     public function supprimerDomaineAction()
     {
-        /** @var Domaine $domaine */
-        $domaineId = $this->params()->fromRoute('domaine');
-        $domaine = $this->getRessourceRhService()->getDomaine($domaineId);
+        $domaine = $this->getDomaineService()->getRequestedDomaine($this, 'domaine');
 
         if ($domaine !== null) {
-            $this->getRessourceRhService()->deleteDomaine($domaine);
+            $this->getDomaineService()->delete($domaine);
         }
 
-        return $this->redirect()->toRoute('ressource-rh/index-metier-fmaille-domaine', [], [], true);
+        return $this->redirect()->toRoute('ressource-rh/index-metier-famille-domaine', [], [], true);
     }
 
     /** Grade ******************************************************************************************************/
@@ -614,9 +617,9 @@ class RessourceRhController extends AbstractActionController {
 
 
     public function cartographieAction() {
-        $metiers = $this->getRessourceRhService()->getCartographie();
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
         return new ViewModel([
-            'metiers' => $metiers,
+            'familles' => $familles,
         ]);
     }
 

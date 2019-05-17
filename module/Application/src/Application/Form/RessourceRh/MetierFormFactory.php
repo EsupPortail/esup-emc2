@@ -2,7 +2,7 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Service\RessourceRh\RessourceRhService;
+use Application\Service\Fonction\FonctionService;
 use Zend\Form\FormElementManager;
 
 class MetierFormFactory {
@@ -12,11 +12,11 @@ class MetierFormFactory {
         /** @var MetierHydrator $hydrator */
         $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(MetierHydrator::class);
 
-        /** @var RessourceRhService $ressourceService */
-        $ressourceService = $manager->getServiceLocator()->get(RessourceRhService::class);
+        /** @var FonctionService $fonctionService */
+        $fonctionService = $manager->getServiceLocator()->get(FonctionService::class);
 
         $form = new MetierForm();
-        $form->setRessourceRhService($ressourceService);
+        $form->setFonctionService($fonctionService);
         $form->init();
         $form->setHydrator($hydrator);
 
