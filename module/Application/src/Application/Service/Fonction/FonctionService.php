@@ -4,6 +4,7 @@ namespace Application\Service\Fonction;
 
 use Application\Entity\Db\Fonction;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -67,10 +68,25 @@ class FonctionService {
      * @param string $paramName
      * @return Fonction
      */
-    public function getRequestedSite($controller, $paramName)
+    public function getRequestedFonction($controller, $paramName)
     {
         $id = $controller->params()->fromRoute($paramName);
         $site = $this->getFonction($id);
         return $site;
+    }
+
+    /**
+     * @param Fonction $fonction
+     * @return $fonction
+     */
+    public function update($fonction)
+    {
+        try {
+            $this->getEntityManager()->flush($fonction);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException('Un problème est surevenue lors de l\'enregistrement en base.', $e);
+        }
+        return $fonction;
+
     }
 }

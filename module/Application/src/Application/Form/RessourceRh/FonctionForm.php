@@ -3,7 +3,6 @@
 namespace Application\Form\RessourceRh;
 
 use Application\Service\Domaine\DomaineServiceAwareTrait;
-use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
