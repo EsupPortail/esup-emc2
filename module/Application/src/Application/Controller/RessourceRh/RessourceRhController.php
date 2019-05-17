@@ -7,7 +7,7 @@ use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
-use Application\Entity\Db\MetierFamille;
+use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Form\MissionSpecifique\MissionSpecifiqueFormAwareTrait;
 use Application\Form\RessourceRh\CorpsFormAwareTrait;
@@ -294,7 +294,7 @@ class RessourceRhController extends AbstractActionController {
 
     public function creerFamilleAction()
     {
-        $famille = new MetierFamille();
+        $famille = new FamilleProfessionnelle();
 
         /** @var MetierFamilleForm $form */
         $form = $this->getMetierFamilleForm();

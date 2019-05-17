@@ -7,7 +7,7 @@ use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
-use Application\Entity\Db\MetierFamille;
+use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\MissionSpecifique;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -295,11 +295,11 @@ class RessourceRhService {
 
     /**
      * @param string $order
-     * @return MetierFamille[]
+     * @return FamilleProfessionnelle[]
      */
     public function getMetiersFamilles($order = null)
     {
-        $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
+        $qb = $this->getEntityManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
             ->addSelect('metier')->leftJoin('famille.metiers', 'metier')
         ;
 
@@ -323,11 +323,11 @@ class RessourceRhService {
 
     /**
      * @param integer $id
-     * @return MetierFamille
+     * @return FamilleProfessionnelle
      */
     public function getMetierFamille($id)
     {
-        $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
+        $qb = $this->getEntityManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
             ->andWhere('famille.id = :id')
             ->setParameter('id', $id)
         ;
@@ -341,8 +341,8 @@ class RessourceRhService {
     }
 
     /**
-     * @param MetierFamille $famille
-     * @return MetierFamille
+     * @param FamilleProfessionnelle $famille
+     * @return FamilleProfessionnelle
      */
     public function createMetierFamille($famille)
     {
@@ -356,8 +356,8 @@ class RessourceRhService {
     }
 
     /**
-     * @param MetierFamille $famille
-     * @return MetierFamille
+     * @param FamilleProfessionnelle $famille
+     * @return FamilleProfessionnelle
      */
     public function updateMetierFamille($famille)
     {
@@ -370,7 +370,7 @@ class RessourceRhService {
     }
 
     /**
-     * @param MetierFamille $famille
+     * @param FamilleProfessionnelle $famille
      */
     public function deleteMetierFamille($famille)
     {

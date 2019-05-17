@@ -15,13 +15,18 @@ class Fonction {
    private $code;
     /** @var string */
    private $niveau;
-
    /** @var ArrayCollection */
    private $libelles;
+
+   /** @var Domaine */
+   private $domaine;
+   /** @var ArrayCollection (Metier) */
+   private $metiers;
 
    public function __construct()
    {
        $this->libelles = new ArrayCollection();
+       $this->metiers = new ArrayCollection();
    }
 
     /**
@@ -123,6 +128,52 @@ class Fonction {
     public function removeLibelle($libelle)
     {
         $this->libelles->removeElement($libelle);
+        return $this;
+    }
+
+    /**
+     * @return Domaine
+     */
+    public function getDomaine()
+    {
+        return $this->domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Fonction
+     */
+    public function setDomaine($domaine)
+    {
+        $this->domaine = $domaine;
+        return $this;
+    }
+
+    /**
+     * @return Metier[]
+     */
+    public function getMetiers()
+    {
+        return $this->metiers->toArray();
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Fonction
+     */
+    public function addMetier($metier)
+    {
+        $this->metiers->add($metier);
+        return $this;
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Fonction
+     */
+    public function removeMetier($metier)
+    {
+        $this->metiers->removeElement($metier);
         return $this;
     }
 

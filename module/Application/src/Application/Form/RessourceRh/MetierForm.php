@@ -2,7 +2,7 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Entity\Db\MetierFamille;
+use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;

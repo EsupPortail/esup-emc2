@@ -2,13 +2,13 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Entity\Db\MetierFamille;
+use Application\Entity\Db\FamilleProfessionnelle;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class MetierFamilleHydrator implements HydratorInterface {
 
     /**
-     * @param MetierFamille $object
+     * @param FamilleProfessionnelle $object
      * @return array
      */
     public function extract($object)
@@ -21,8 +21,8 @@ class MetierFamilleHydrator implements HydratorInterface {
 
     /**
      * @param array $data
-     * @param MetierFamille $object
-     * @return MetierFamille
+     * @param FamilleProfessionnelle $object
+     * @return FamilleProfessionnelle
      */
     public function hydrate(array $data, $object)
     {
