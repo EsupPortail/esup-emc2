@@ -1,9 +1,10 @@
 <?php
 
 /**
- * @var Application\Entity\Db\Metier[] $metiers
+ * @var array $results
  */
 
+$this->headTitle('Cartographie des métiers');
 ?>
 
 <h1 class="page-header"> Cartographie des métiers </h1>
@@ -12,23 +13,31 @@
 
     EXPORT CSV!!!
 
+    <div class="alert alert-info">
+        <strong>Attention :</strong> La cartogrpahie se base sur les métiers. Par conséquent, une fonction  (resp. un domaine ou une famille) vide ne sera pas cartographié.
+    </div>
+
     <table class="table table-condensed">
         <thead>
             <tr>
                 <th> Famille professionnelle </th>
                 <th> Domaine </th>
+                <th> Fonction </th>
                 <th> Métier </th>
                 <th> #Fiche métier</th>
 <!--                <th> #Fiche poste </th>-->
             </tr>
         </thead>
         <tbody>
-            <?php foreach($metiers as $metier) : ?>
+            <?php foreach($results as $result) : ?>
+
+
             <tr>
-                <td> <?php echo $metier->getFamille()->getLibelle(); ?></td>
-                <td> <?php echo $metier->getDomaine()->getLibelle(); ?></td>
-                <td> <?php echo $metier->getLibelle(); ?></td>
-                <td> <?php echo count($metier->getFichesMetiers()); ?> </td>
+                <td> <?php echo $result['famille']; ?> </td>
+                <td> <?php echo $result['domaine']; ?> </td>
+                <td> <?php echo $result['fonction']; ?> </td>
+                <td> <?php echo $result['metier']; ?> </td>
+                <td> <?php echo $result['nbFiche']; ?> </td>
             </tr>
             <?php endforeach; ?>
         </tbody>

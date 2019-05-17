@@ -14,6 +14,7 @@ use Application\Form\RessourceRh\CorpsFormAwareTrait;
 use Application\Form\RessourceRh\CorrespondanceFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormAwareTrait;
+use Application\Form\RessourceRh\FonctionFormAwareTrait;
 use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\GradeFormAwareTrait;
 use Application\Form\RessourceRh\FamilleProfessionnelleForm;
@@ -47,8 +48,10 @@ class RessourceRhController extends AbstractActionController {
     use DomaineFormAwareTrait;
     use GradeFormAwareTrait;
     use FamilleProfessionnelleFormAwareTrait;
+    use FonctionFormAwareTrait;
     use MetierFormAwareTrait;
     use MissionSpecifiqueFormAwareTrait;
+
 
     public function indexAction()
     {
@@ -439,6 +442,35 @@ class RessourceRhController extends AbstractActionController {
         return $this->redirect()->toRoute('ressource-rh/index-metier-famille-domaine', [], [], true);
     }
 
+    /** Fonction ***************************************************************************************************/
+
+    public function modifierFonctionAction()
+    {
+        $fonction = $this->getFonctionService()->getRequestedFonction($this, 'fonction');
+
+        /** @var DomaineForm $form */
+        $form = $this->getFonctionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/fonction/modifier', ['fonction' => $fonction->getId()], [], true));
+        $form->bind($fonction);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFonctionService()->update($fonction);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modifier un domaine',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
     /** Grade ******************************************************************************************************/
 
     public function ajouterGradeAction()
@@ -617,10 +649,35 @@ class RessourceRhController extends AbstractActionController {
 
 
     public function cartographieAction() {
-        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
+        $metiers = $this->getMetierService()->getMetiers();
+
+        $results = [];
+        foreach($metiers as $metier) {
+            $fonction = $metier->getFonction();
+            $domaine = ($fonction)?$fonction->getDomaine():null;
+            $famille = ($domaine)?$domaine->getFamille():null;
+            $entry = [
+                'famille'  => ($famille)?$famille->__toString():"---",
+                'domaine'  => ($domaine)?$domaine->__toString():"---",
+                'fonction' => ($fonction)?$fonction->__toString():"---",
+                'metier'   => ($metier)?$metier->__toString():"---",
+                'nbFiche'   => count($metier->getFichesMetiers()),
+            ];
+            $results[] = $entry;
+        }
+
+        usort($results, function($a, $b) {
+            if ($a['famille'] !== $b['famille'])     return $a['famille'] < $b['famille'];
+            if ($a['domaine'] !== $b['domaine'])     return $a['domaine'] < $b['domaine'];
+            if ($a['fonction'] !== $b['fonction'])   return $a['fonction'] < $b['fonction'];
+            return $a['metier'] < $b['metier'];
+        });
+
         return new ViewModel([
-            'familles' => $familles,
+            'results' => $results,
         ]);
     }
+
+
 
 }

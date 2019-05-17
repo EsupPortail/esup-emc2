@@ -6,6 +6,7 @@ use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Form\RessourceRh\DomaineForm;
+use Application\Form\RessourceRh\FonctionForm;
 use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\MetierForm;
@@ -40,6 +41,7 @@ class RessourceRhControllerFactory {
          * @var DomaineForm $domaineForm
          * @var GradeForm $gradeForm
          * @var FamilleProfessionnelleForm $familleForm
+         * @var FonctionForm $fonctionForm
          * @var MetierForm $metierForm
          * @var MissionSpecifiqueForm $missionSpecifiqueForm
          */
@@ -49,6 +51,7 @@ class RessourceRhControllerFactory {
         $missionSpecifiqueForm      = $manager->getServiceLocator()->get('FormElementManager')->get(MissionSpecifiqueForm::class);
 
         $familleForm                = $manager->getServiceLocator()->get('FormElementManager')->get(FamilleProfessionnelleForm::class);
+        $fonctionForm               = $manager->getServiceLocator()->get('FormElementManager')->get(FonctionForm::class);
         $domaineForm                = $manager->getServiceLocator()->get('FormElementManager')->get(DomaineForm::class);
         $metierForm                 = $manager->getServiceLocator()->get('FormElementManager')->get(MetierForm::class);
 
@@ -67,6 +70,7 @@ class RessourceRhControllerFactory {
         $controller->setGradeForm($gradeForm);
         $controller->setMissionSpecifiqueForm($missionSpecifiqueForm);
         $controller->setFamilleProfessionnelleForm($familleForm);
+        $controller->setFonctionForm($fonctionForm);
         $controller->setDomaineForm($domaineForm);
         $controller->setMetierForm($metierForm);
 

@@ -20,6 +20,10 @@ use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
 use Application\Form\RessourceRh\DomaineHydratorFactory;
 use Application\Form\RessourceRh\FamilleProfessionnelleHydrator;
+use Application\Form\RessourceRh\FonctionForm;
+use Application\Form\RessourceRh\FonctionFormFactory;
+use Application\Form\RessourceRh\FonctionHydrator;
+use Application\Form\RessourceRh\FonctionHydratorFactory;
 use Application\Form\RessourceRh\GradeForm;
 use Application\Form\RessourceRh\GradeFormFactory;
 use Application\Form\RessourceRh\GradeHydrator;
@@ -555,6 +559,7 @@ return [
             CorrespondanceForm::class => CorrespondanceFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
             FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
+            FonctionForm::class => FonctionFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
             GradeForm::class => GradeFormFactory::class,
             MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
@@ -572,6 +577,7 @@ return [
             GradeHydrator::class => GradeHydratorFactory::class,
             MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
             DomaineHydrator::class => DomaineHydratorFactory::class,
+            FonctionHydrator::class => FonctionHydratorFactory::class,
         ],
     ]
 

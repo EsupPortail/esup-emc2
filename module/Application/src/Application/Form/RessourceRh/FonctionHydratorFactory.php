@@ -2,7 +2,7 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Application\Service\Domaine\DomaineService;
 use Zend\Stdlib\Hydrator\HydratorPluginManager;
 
 class FonctionHydratorFactory {
@@ -10,13 +10,13 @@ class FonctionHydratorFactory {
     public function __invoke(HydratorPluginManager $manager)
     {
         /**
-         * @var FamilleProfessionnelleService $familleService
+         * @var DomaineService $domaineService
          */
-        $familleService = $manager->getServiceLocator()->get(FamilleProfessionnelleService::class);
+        $domaineService = $manager->getServiceLocator()->get(DomaineService::class);
 
-        /** @var DomaineHydrator $hydrator */
-        $hydrator = new DomaineHydrator();
-        $hydrator->setFamilleProfessionnelleService($familleService);
+        /** @var FonctionHydrator $hydrator */
+        $hydrator = new FonctionHydrator();
+        $hydrator->setDomaineService($domaineService);
         return $hydrator;
     }
 }
