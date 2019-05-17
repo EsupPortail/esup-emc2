@@ -21,6 +21,8 @@ class Structure {
     private $type;
 
 
+    /** @var string */
+    private $description;
     /** @var ArrayCollection */
     private $gestionnaires;
 
@@ -106,6 +108,24 @@ class Structure {
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return Structure
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
         return $this;
     }
 

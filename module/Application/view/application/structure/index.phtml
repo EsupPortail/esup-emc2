@@ -9,6 +9,7 @@ $this->headTitle("Index des structures");
  */
 
 $canGestionnaire    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::GESTIONNAIRE));
+$canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER));
 ?>
 
 <h1 class="page-header">
@@ -60,6 +61,14 @@ $canGestionnaire    = $this->isAllowed(StructurePrivileges::getResourceId(Struct
                         <?php endif; ?>
                     </td>
                     <td>
+                        <?php if ($canEditer) : ?>
+                            <a
+                                    href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon editer"   title="Editer la description"></span></a>
+                        <?php endif; ?>
                         <?php if ($canGestionnaire) : ?>
                             <a
                                     href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"

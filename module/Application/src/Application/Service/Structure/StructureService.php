@@ -106,4 +106,18 @@ class StructureService
         }
         return $structure;
     }
+
+    /**
+     * @param Structure
+     * @return Structure
+     */
+    public function update($structure)
+    {
+        try {
+            $this->getEntityManager()->flush($structure);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
+        }
+        return $structure;
+    }
 }
