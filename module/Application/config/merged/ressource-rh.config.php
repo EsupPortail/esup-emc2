@@ -12,9 +12,6 @@ use Application\Form\MissionSpecifique\MissionSpecifiqueHydratorFactory;
 use Application\Form\RessourceRh\CorpsForm;
 use Application\Form\RessourceRh\CorpsFormFactory;
 use Application\Form\RessourceRh\CorpsHydrator;
-use Application\Form\RessourceRh\CorrespondanceForm;
-use Application\Form\RessourceRh\CorrespondanceFormFactory;
-use Application\Form\RessourceRh\CorrespondanceHydrator;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
@@ -72,7 +69,6 @@ return [
                 [
                     'controller' => RessourceRhController::class,
                     'action' => [
-                        'creer-correspondance',
                         'creer-corps',
                         'creer-metier',
                         'creer-famille',
@@ -88,7 +84,6 @@ return [
                 [
                     'controller' => RessourceRhController::class,
                     'action' => [
-                        'modifier-correspondance',
                         'modifier-corps',
                         'modifier-metier',
                         'modifier-famille',
@@ -108,7 +103,6 @@ return [
                     'controller' => RessourceRhController::class,
                     'action' => [
                         'effacer-corps',
-                        'effacer-correspondance',
                         'effacer-metier',
                         'effacer-famille',
                         'supprimer-domaine',
@@ -178,45 +172,6 @@ return [
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
                                 'action'     => 'index-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'correspondance' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route'    => '/correspondance',
-                        ],
-                        'may_terminate' => false,
-                        'child_routes' => [
-                            'creer' => [
-                                'type'  => Literal::class,
-                                'options' => [
-                                    'route'    => '/creer',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'creer-correspondance',
-                                    ],
-                                ],
-                            ],
-                            'modifier' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/modifier/:id',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'modifier-correspondance',
-                                    ],
-                                ],
-                            ],
-                            'effacer' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/effacer/:id',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'effacer-correspondance',
-                                    ],
-                                ],
                             ],
                         ],
                     ],
@@ -569,7 +524,6 @@ return [
     'form_elements' => [
         'factories' => [
             CorpsForm::class => CorpsFormFactory::class,
-            CorrespondanceForm::class => CorrespondanceFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
             FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
             FonctionForm::class => FonctionFormFactory::class,
@@ -581,7 +535,6 @@ return [
     'hydrators' => [
         'invokables' => [
             CorpsHydrator::class => CorpsHydrator::class,
-            CorrespondanceHydrator::class => CorrespondanceHydrator::class,
             FamilleProfessionnelleHydrator::class => FamilleProfessionnelleHydrator::class,
 //            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydrator::class,
         ],
