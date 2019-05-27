@@ -5,7 +5,6 @@ namespace Application\Entity\Db;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
-use Fichier\Entity\Db\Nature;
 use Utilisateur\Entity\Db\User;
 
 class Agent {
@@ -26,6 +25,9 @@ class Agent {
     private $utilisateur;
     /** @var int */
     private $quotite;
+
+    /** @var Correspondance */
+    private $correspondance;
 
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
@@ -162,6 +164,24 @@ class Agent {
     public function setQuotite($quotite)
     {
         $this->quotite = $quotite;
+        return $this;
+    }
+
+    /**
+     * @return Correspondance
+     */
+    public function getCorrespondance()
+    {
+        return $this->correspondance;
+    }
+
+    /**
+     * @param Correspondance $correspondance
+     * @return Agent
+     */
+    public function setCorrespondance($correspondance)
+    {
+        $this->correspondance = $correspondance;
         return $this;
     }
 

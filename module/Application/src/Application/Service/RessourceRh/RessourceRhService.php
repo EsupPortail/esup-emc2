@@ -26,14 +26,19 @@ class RessourceRhService {
     /** CORRESPONDANCE ************************************************************************************************/
 
     /**
+     * @param bool $active
      * @param string $order
      * @return Correspondance[]
      */
-    public function getCorrespondances($order = null)
+    public function getCorrespondances($active = null, $order = null)
     {
         $qb = $this->getEntityManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance')
-            ->orderBy('correspondance.reference', 'ASC')
+            ->orderBy('correspondance.libelleCourt', 'ASC')
         ;
+        if ($active !== null) {
+            if ($active)    $qb = $qb ->andWhere("correspondance.histo = 'O'");
+            else            $qb = $qb ->andWhere("correspondance.histo <> 'O'");
+        }
 
         if ($order !== null) {
             $qb = $qb->addOrderBy('correspondance.'.$order, 'ASC');
@@ -49,7 +54,7 @@ class RessourceRhService {
 
         $array = [];
         foreach ($correspondances as $correspondance) {
-            $array[$correspondance->getId()] = $correspondance->getLibelle();
+            $array[$correspondance->getId()] = $correspondance->getLibelleLong() . " - " . $correspondance->getLibelleLong();
         }
 
         return $array;

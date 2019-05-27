@@ -62,10 +62,12 @@ class RessourceRhController extends AbstractActionController {
 
     public function indexCorrespondanceAction()
     {
-        $correspondances = $this->getRessourceRhService()->getCorrespondances('libelle');
+        $correspondances_on  = $this->getRessourceRhService()->getCorrespondances(true);
+        $correspondances_off = $this->getRessourceRhService()->getCorrespondances(false);
 
         return new ViewModel([
-            'correspondances' => $correspondances,
+            'correspondances_actives'       => $correspondances_on,
+            'correspondances_historisees'   => $correspondances_off,
         ]);
     }
 
