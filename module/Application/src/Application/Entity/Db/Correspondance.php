@@ -7,11 +7,13 @@ class Correspondance {
     /** @var integer */
     private $id;
     /** @var string */
-    private $reference;
+    private $categorie;
     /** @var string */
-    private $libelle;
+    private $libelleCourt;
     /** @var string */
-    private $description;
+    private $libelleLong;
+    /** @var string */
+    private $histo;
 
     /**
      * @return int
@@ -24,60 +26,81 @@ class Correspondance {
     /**
      * @return string
      */
-    public function getReference()
+    public function getCategorie()
     {
-        return $this->reference;
+        return $this->categorie;
     }
 
     /**
-     * @param string $reference
+     * @param string $categorie
      * @return Correspondance
      */
-    public function setReference($reference)
+    public function setCategorie($categorie)
     {
-        $this->reference = $reference;
+        $this->categorie = $categorie;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getLibelleCourt()
     {
-        return $this->libelle;
+        return $this->libelleCourt;
     }
 
     /**
-     * @param string $libelle
+     * @param string $libelleCourt
      * @return Correspondance
      */
-    public function setLibelle($libelle)
+    public function setLibelleCourt($libelleCourt)
     {
-        $this->libelle = $libelle;
+        $this->libelleCourt = $libelleCourt;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getDescription()
+    public function getLibelleLong()
     {
-        return $this->description;
+        return $this->libelleLong;
     }
 
     /**
-     * @param string $description
+     * @param string $libelleLong
      * @return Correspondance
      */
-    public function setDescription($description)
+    public function setLibelleLong($libelleLong)
     {
-        $this->description = $description;
+        $this->libelleLong = $libelleLong;
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getHisto()
+    {
+        return $this->histo;
+    }
+
+    /**
+     * @param string $histo
+     * @return Correspondance
+     */
+    public function setHisto($histo)
+    {
+        $this->histo = $histo;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        return $this->reference . ' '. $this->getLibelle() . ' '.'"'. $this->getDescription().'"';
+        return $this->getLibelleCourt();
     }
 
 

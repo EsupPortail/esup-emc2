@@ -68,7 +68,7 @@ return [
                     'select'             => 'SELECT * FROM V_PREECOG_AGENT',
                     'connection'         => 'doctrine.connection.orm_octopus',
                     'source_code_column' => 'C_INDIVIDU',
-                    'columns'            => ['C_SRC_INDIVIDU', 'C_SOURCE', 'PRENOM', 'NOM_USAGE'],
+                    'columns'            => ['C_SRC_INDIVIDU', 'C_SOURCE', 'PRENOM', 'NOM_USAGE', 'BAP_ID', 'CORPS_ID', 'GRADE_ID'],
                 ],
                 'intermediate_table' => 'src_agent',
                 'destination' => [
@@ -76,7 +76,7 @@ return [
                     'table'              => 'agent',
                     'connection'         => 'doctrine.connection.orm_default',
                     'source_code_column' => 'c_individu',
-                    'columns'            => ['c_src_individu', 'c_source', 'prenom', 'nom_usage'],
+                    'columns'            => ['c_src_individu', 'c_source', 'prenom', 'nom_usage', 'bap_id', 'corps_id', 'grade_id'],
                 ],
             ],
             [
@@ -189,6 +189,24 @@ return [
                     'connection'         => 'doctrine.connection.orm_default',
                     'source_code_column' => 'id',
                     'columns'            => ['fonction_id', 'libelle', 'genre', 'defaut'],
+                ],
+            ],
+            [
+                'name' => 'Import_BAP',
+                'source' => [
+                    'name'               => 'BAP des agents remonté depuis OCTOPUS',
+                    'select'             => 'SELECT * FROM V_PREECOG_BAP',
+                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'source_code_column' => 'ID',
+                    'columns'            => ['C_BAP', 'LIB_COURT', 'LIB_LONG', 'HISTO'],
+                ],
+                'intermediate_table' => 'src_correspondance',
+                'destination' => [
+                    'name'               => 'BAP des agents remonté depuis OCTOPUS',
+                    'table'              => 'correspondance',
+                    'connection'         => 'doctrine.connection.orm_default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['c_bap', 'lib_court', 'lib_long', 'histo'],
                 ],
             ],
         ],

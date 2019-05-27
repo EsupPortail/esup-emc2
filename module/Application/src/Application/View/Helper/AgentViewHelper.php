@@ -44,7 +44,7 @@ class AgentViewHelper extends AbstractHelper
         $texte .= '<dt> Quotité travaillée </dt>';
         $texte .= '<dd>'. (($agent->getQuotite() === null)?"Non renseignée":$agent->getQuotite() . " %").'</dd>';
         $texte .= '<dt> Correspondance </dt>';
-        $texte .= '<dd> <span class="TODO"> Disponible dans la prochaine version d\'OCTOPUS </span> </dd>';
+        $texte .= '<dd>' . ($agent->getCorrespondance()) ? ($agent->getCorrespondance()->getLibelleCourt()) . " - " . $agent->getCorrespondance()->getLibelleLong() : "---" .'</dd>';
         $texte .= '<dt> Corps </dt>';
         $texte .= '<dd> <span class="TODO"> Disponible dans la prochaine version d\'OCTOPUS </span> </dd>';
         $texte .= '<dt> Grade </dt>';
