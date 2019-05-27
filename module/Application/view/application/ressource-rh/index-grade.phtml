@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @var Grade[] $grades_actifs
+ * @var Grade[] $grades_historises
+ */
+
+use Application\Entity\Db\Grade;
+
+$this->headTitle('Index des grades');
+
+?>
+
+<h1 class="page-header">
+    Index des grades
+</h1>
+
+<div class="main">
+    <h2>
+        Liste des grades actifs
+        <span class="badge">
+        <?php echo count($grades_actifs); ?>
+    </span>
+    </h2>
+
+    <?php if (count($grades_actifs) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Code </th>
+                <th> Libellé court </th>
+                <th> Libellé long </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($grades_actifs as $grade) : ?>
+                <tr>
+                    <td> <?php echo $grade->getCode(); ?> </td>
+                    <td> <?php echo $grade->getLibelleCourt(); ?> </td>
+                    <td> <?php echo $grade->getLibelleLong(); ?> </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<div class="main">
+    <h2>
+        Liste des corps historisés
+        <span class="badge">
+        <?php echo count($grades_historises); ?>
+    </span>
+    </h2>
+
+    <?php if (count($grades_historises) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Code </th>
+                <th> Libellé court </th>
+                <th> Libellé long </th>
+                <th> Historisation </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($grades_historises as $grade) : ?>
+                <tr>
+                    <td> <?php echo $grade->getCode(); ?> </td>
+                    <td> <?php echo $grade->getLibelleCourt(); ?> </td>
+                    <td> <?php echo $grade->getLibelleLong(); ?> </td>
+                    <td> <?php echo $grade->getHisto(); ?> </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>

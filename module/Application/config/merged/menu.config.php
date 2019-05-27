@@ -84,8 +84,16 @@ return [
                             ],
                             [
                                 'order' => 2,
-                                'label' => 'Les corps et grades',
-                                'route' => 'ressource-rh/index-corps-grade',
+                                'label' => 'Les corps',
+                                'route' => 'ressource-rh/index-corps',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 2,
+                                'label' => 'Les grades',
+                                'route' => 'ressource-rh/index-grade',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'

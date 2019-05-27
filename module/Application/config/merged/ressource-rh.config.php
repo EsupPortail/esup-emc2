@@ -9,9 +9,6 @@ use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
 use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
 use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
 use Application\Form\MissionSpecifique\MissionSpecifiqueHydratorFactory;
-use Application\Form\RessourceRh\CorpsForm;
-use Application\Form\RessourceRh\CorpsFormFactory;
-use Application\Form\RessourceRh\CorpsHydrator;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
@@ -21,10 +18,6 @@ use Application\Form\RessourceRh\FonctionForm;
 use Application\Form\RessourceRh\FonctionFormFactory;
 use Application\Form\RessourceRh\FonctionHydrator;
 use Application\Form\RessourceRh\FonctionHydratorFactory;
-use Application\Form\RessourceRh\GradeForm;
-use Application\Form\RessourceRh\GradeFormFactory;
-use Application\Form\RessourceRh\GradeHydrator;
-use Application\Form\RessourceRh\GradeHydratorFactory;
 use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\FamilleProfessionnelleFormFactory;
 use Application\Form\RessourceRh\MetierForm;
@@ -54,7 +47,8 @@ return [
                     'controller' => RessourceRhController::class,
                     'action' => [
                         'index',
-                        'index-corps-grade',
+                        'index-grade',
+                        'index-corps',
                         'index-metier-famille-domaine',
                         'index-correspondance',
                         'index-mission-specifique',
@@ -69,12 +63,10 @@ return [
                 [
                     'controller' => RessourceRhController::class,
                     'action' => [
-                        'creer-corps',
                         'creer-metier',
                         'creer-famille',
                         'ajouter-domaine',
                         'ajouter-fonction',
-                        'ajouter-grade',
                         'ajouter-mission-specifique',
                     ],
                     'privileges' => [
@@ -84,12 +76,10 @@ return [
                 [
                     'controller' => RessourceRhController::class,
                     'action' => [
-                        'modifier-corps',
                         'modifier-metier',
                         'modifier-famille',
                         'modifier-domaine',
                         'modifier-fonction',
-                        'modifier-grade',
 
                         'modifier-mission-specifique',
                         'historiser-mission-specifique',
@@ -102,12 +92,10 @@ return [
                 [
                     'controller' => RessourceRhController::class,
                     'action' => [
-                        'effacer-corps',
                         'effacer-metier',
                         'effacer-famille',
                         'supprimer-domaine',
                         'supprimer-fonction',
-                        'supprimer-grade',
                         'supprimer-mission-specifique',
                     ],
                     'privileges' => [
@@ -131,14 +119,36 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'index-corps-grade' => [
+                    'index-correspondance' => [
                         'type' => Literal::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/index-corps-grade',
+                            'route'    => '/index-correspondance',
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
-                                'action'     => 'index-corps-grade',
+                                'action'     => 'index-correspondance',
+                            ],
+                        ],
+                    ],
+                    'index-corps' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-corps',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'index-corps',
+                            ],
+                        ],
+                    ],
+                    'index-grade' => [
+                        'type' => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-grade',
+                            'defaults' => [
+                                'controller' => RessourceRhController::class,
+                                'action'     => 'index-grade',
                             ],
                         ],
                     ],
@@ -153,17 +163,7 @@ return [
                             ],
                         ],
                     ],
-                    'index-correspondance' => [
-                        'type' => Literal::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/index-correspondance',
-                            'defaults' => [
-                                'controller' => RessourceRhController::class,
-                                'action'     => 'index-correspondance',
-                            ],
-                        ],
-                    ],
+
                     'index-mission-specifique' => [
                         'type' => Literal::class,
                         'may_terminate' => true,
@@ -172,45 +172,6 @@ return [
                             'defaults' => [
                                 'controller' => RessourceRhController::class,
                                 'action'     => 'index-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'corps' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route'    => '/corps',
-                        ],
-                        'may_terminate' => false,
-                        'child_routes' => [
-                            'creer' => [
-                                'type'  => Literal::class,
-                                'options' => [
-                                    'route'    => '/creer',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'creer-corps',
-                                    ],
-                                ],
-                            ],
-                            'modifier' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/modifier/:id',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'modifier-corps',
-                                    ],
-                                ],
-                            ],
-                            'effacer' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/effacer/:id',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'effacer-corps',
-                                    ],
-                                ],
                             ],
                         ],
                     ],
@@ -370,55 +331,6 @@ return [
                             ],
                         ],
                     ],
-                    'grade' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route'    => '/grade',
-                        ],
-                        'may_terminate' => false,
-                        'child_routes' => [
-                            'get-grades' => [
-                                'type'  => Literal::class,
-                                'options' => [
-                                    'route'    => '/get-grades',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'get-grades-json',
-                                    ],
-                                ],
-                            ],
-                            'ajouter' => [
-                                'type'  => Literal::class,
-                                'options' => [
-                                    'route'    => '/ajouter',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'ajouter-grade',
-                                    ],
-                                ],
-                            ],
-                            'modifier' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/modifier/:grade',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'modifier-grade',
-                                    ],
-                                ],
-                            ],
-                            'supprimer' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/supprimer/:grade',
-                                    'defaults' => [
-                                        'controller' => RessourceRhController::class,
-                                        'action'     => 'supprimer-grade',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
                     'cartographie' => [
                         'type' => Literal::class,
                         'options' => [
@@ -523,24 +435,20 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            CorpsForm::class => CorpsFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
             FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
             FonctionForm::class => FonctionFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
-            GradeForm::class => GradeFormFactory::class,
             MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokables' => [
-            CorpsHydrator::class => CorpsHydrator::class,
             FamilleProfessionnelleHydrator::class => FamilleProfessionnelleHydrator::class,
 //            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydrator::class,
         ],
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,
-            GradeHydrator::class => GradeHydratorFactory::class,
             MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
             DomaineHydrator::class => DomaineHydratorFactory::class,
             FonctionHydrator::class => FonctionHydratorFactory::class,

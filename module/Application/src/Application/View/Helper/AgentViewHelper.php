@@ -33,6 +33,11 @@ class AgentViewHelper extends AbstractHelper
      */
     public function render($agent)
     {
+
+        $correspondance = ($agent->getCorrespondance()) ? ($agent->getCorrespondance()->getLibelleCourt())  . " - "     . $agent->getCorrespondance()->getLibelleLong()     : "---";
+        $corps          = ($agent->getCorps())          ? ($agent->getCorps()->getLibelleCourt())           . " - "     . $agent->getCorps()->getLibelleLong()              : "---";
+        $grade          = ($agent->getGrade())          ? ($agent->getGrade()->getLibelleCourt())           . " - "     . $agent->getGrade()->getLibelleLong()              : "---";
+
         $texte  = '';
         $texte .= '<h3>Présentation de l\'agent </h3>';
 
@@ -44,11 +49,11 @@ class AgentViewHelper extends AbstractHelper
         $texte .= '<dt> Quotité travaillée </dt>';
         $texte .= '<dd>'. (($agent->getQuotite() === null)?"Non renseignée":$agent->getQuotite() . " %").'</dd>';
         $texte .= '<dt> Correspondance </dt>';
-        $texte .= '<dd>' . ($agent->getCorrespondance()) ? ($agent->getCorrespondance()->getLibelleCourt()) . " - " . $agent->getCorrespondance()->getLibelleLong() : "---" .'</dd>';
+        $texte .= '<dd>' . $correspondance.'</dd>';
         $texte .= '<dt> Corps </dt>';
-        $texte .= '<dd> <span class="TODO"> Disponible dans la prochaine version d\'OCTOPUS </span> </dd>';
+        $texte .= '<dd>' . $corps . '</dd>';
         $texte .= '<dt> Grade </dt>';
-        $texte .= '<dd> <span class="TODO"> Disponible dans la prochaine version d\'OCTOPUS </span> </dd>';
+        $texte .= '<dd>' . $grade . '</dd>';
         $texte .= '</dl>';
 
         $texte .= '<h3>Statuts</h3>';

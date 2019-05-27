@@ -2,27 +2,18 @@
 
 namespace Application\Controller\RessourceRh;
 
-use Application\Entity\Db\Corps;
-use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Domaine;
-use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Form\MissionSpecifique\MissionSpecifiqueFormAwareTrait;
-use Application\Form\RessourceRh\CorpsFormAwareTrait;
-use Application\Form\RessourceRh\CorrespondanceFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormAwareTrait;
 use Application\Form\RessourceRh\FonctionFormAwareTrait;
-use Application\Form\RessourceRh\GradeForm;
-use Application\Form\RessourceRh\GradeFormAwareTrait;
 use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\FamilleProfessionnelleFormAwareTrait;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormAwareTrait;
-use Application\Form\RessourceRh\CorpsForm;
-use Application\Form\RessourceRh\CorrespondanceForm;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
@@ -32,7 +23,6 @@ use DateTime;
 use UnicaenApp\View\Model\CsvModel;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class RessourceRhController extends AbstractActionController {
@@ -45,10 +35,7 @@ class RessourceRhController extends AbstractActionController {
     use MetierServiceAwareTrait;
 
     /** Trait utilisés pour les formulaires */
-    use CorpsFormAwareTrait;
-    use CorrespondanceFormAwareTrait;
     use DomaineFormAwareTrait;
-    use GradeFormAwareTrait;
     use FamilleProfessionnelleFormAwareTrait;
     use FonctionFormAwareTrait;
     use MetierFormAwareTrait;
@@ -71,13 +58,25 @@ class RessourceRhController extends AbstractActionController {
         ]);
     }
 
-    /** Sub part */
-    public function indexCorpsGradeAction()
+    public function indexGradeAction()
     {
-        $corps = $this->getRessourceRhService()->getCorpsListe('libelle');
+        $grades_on  = $this->getRessourceRhService()->getGrades(true);
+        $grades_off = $this->getRessourceRhService()->getGrades(false);
 
         return new ViewModel([
-            'corps'  => $corps,
+            'grades_actifs'       => $grades_on,
+            'grades_historises'   => $grades_off,
+        ]);
+    }
+
+    public function indexCorpsAction()
+    {
+        $corps_on  = $this->getRessourceRhService()->getCorps(true);
+        $corps_off = $this->getRessourceRhService()->getCorps(false);
+
+        return new ViewModel([
+            'corps_actifs'       => $corps_on,
+            'corps_historises'   => $corps_off,
         ]);
     }
 
@@ -94,77 +93,6 @@ class RessourceRhController extends AbstractActionController {
             'fonctions' => $fonctions,
             'domaines' => $domaines,
         ]);
-    }
-
-    /** CORPS *********************************************************************************************************/
-
-    public function creerCorpsAction()
-    {
-        $corps = new Corps();
-
-        /** @var CorpsForm $form */
-        $form = $this->getCorpsForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/corps/creer', [], [], true));
-        $form->bind($corps);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->createCorps($corps);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter un nouveau corps',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierCorpsAction()
-    {
-        $corpsId = $this->params()->fromRoute('id');
-        $corps = $this->getRessourceRhService()->getCorps($corpsId);
-
-        /** @var CorpsForm $form */
-        $form = $this->getCorpsForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/corps/modifier', [], [], true));
-        $form->bind($corps);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->updateCorps($corps);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Éditer un corps',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function effacerCorpsAction()
-    {
-        $corpsId = $this->params()->fromRoute('id');
-        $corps = $this->getRessourceRhService()->getCorps($corpsId);
-
-        if ($corps !== null) {
-            $this->getRessourceRhService()->deleteCorps($corps);
-        }
-
-        return $this->redirect()->toRoute('ressource-rh/index-corps-grade', [], [], true);
     }
 
     /** METIER ********************************************************************************************************/
@@ -403,97 +331,6 @@ class RessourceRhController extends AbstractActionController {
             'form' => $form,
         ]);
         return $vm;
-    }
-    /** Grade ******************************************************************************************************/
-
-    public function ajouterGradeAction()
-    {
-        /** @var Grade $grade */
-        $grade = new Grade();
-
-        /** @var GradeForm $form */
-        $form = $this->getGradeForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/grade/ajouter', [], [], true));
-        $form->bind($grade);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->createGrade($grade);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter un grade',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierGradeAction()
-    {
-        /** @var Grade $grade */
-        $gradeId = $this->params()->fromRoute('grade');
-        $grade = $this->getRessourceRhService()->getGrade($gradeId);
-
-        /** @var GradeForm $form */
-        $form = $this->getGradeForm();
-        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/grade/modifier', ['grade' => $grade->getId()], [], true));
-        $form->bind($grade);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getRessourceRhService()->updateGrade($grade);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier un grade',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function supprimerGradeAction()
-    {
-        /** @var Grade $grade */
-        $gradeId = $this->params()->fromRoute('grade');
-        $grade = $this->getRessourceRhService()->getGrade($gradeId);
-
-        if ($grade !== null) {
-            $this->getRessourceRhService()->deleteGrade($grade);
-        }
-
-        return $this->redirect()->toRoute('ressource-rh/index-corps-grade', [], [], true);
-    }
-
-    public function getGradesJsonAction()
-    {
-        $grades = $this->getRessourceRhService()->getGrades();
-
-        $result = [];
-        foreach ($grades as $grade) {
-            $result[$grade->getId()] = [
-                'id' => $grade->getId(),
-                'corps' => $grade->getCorps()->getId(),
-                'libelle' => $grade->getLibelle(),
-            ];
-        }
-        $jm = new JsonModel(
-            $result
-        );
-        return $jm;
     }
 
     /** MISSION SPECIFIQUE ********************************************************************************************/
