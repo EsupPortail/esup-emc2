@@ -48,6 +48,9 @@ class RessourceRhService {
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function getCorrespondancesAsOptions()
     {
         $correspondances = $this->getCorrespondances();
@@ -61,7 +64,7 @@ class RessourceRhService {
     }
 
     /**
-     * @param integer $id
+     * @param string $id
      * @return Correspondance
      */
     public function getCorrespondance($id)
@@ -79,47 +82,6 @@ class RessourceRhService {
         return $result;
     }
 
-    /**
-     * @param Correspondance $correspondance
-     * @return Correspondance
-     */
-    public function createCorrespondance($correspondance)
-    {
-        $this->getEntityManager()->persist($correspondance);
-        try {
-            $this->getEntityManager()->flush($correspondance);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'une correspondance", $e);
-        }
-        return $correspondance;
-    }
-
-    /**
-     * @param Correspondance $correspondance
-     * @return Correspondance
-     */
-    public function updateCorrespondance($correspondance)
-    {
-        try {
-            $this->getEntityManager()->flush($correspondance);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'une correspondance", $e);
-        }
-        return $correspondance;
-    }
-
-    /**
-     * @param Correspondance $correspondance
-     */
-    public function deleteCorrespondance($correspondance)
-    {
-        $this->getEntityManager()->remove($correspondance);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une correspondance", $e);
-        }
-    }
 
     /** CORPS *********************************************************************************************************/
 
