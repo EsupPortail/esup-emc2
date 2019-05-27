@@ -36,18 +36,12 @@ class RessourceRhControllerFactory {
         $metierService       = $manager->getServiceLocator()->get(MetierService::class);
 
         /**
-         * @var CorpsForm $corpsForm
-         * @var CorrespondanceForm $correspondanceForm
          * @var DomaineForm $domaineForm
-         * @var GradeForm $gradeForm
          * @var FamilleProfessionnelleForm $familleForm
          * @var FonctionForm $fonctionForm
          * @var MetierForm $metierForm
          * @var MissionSpecifiqueForm $missionSpecifiqueForm
          */
-        $corpsForm                  = $manager->getServiceLocator()->get('FormElementManager')->get(CorpsForm::class);
-        $correspondanceForm         = $manager->getServiceLocator()->get('FormElementManager')->get(CorrespondanceForm::class);
-        $gradeForm                  = $manager->getServiceLocator()->get('FormElementManager')->get(GradeForm::class);
         $missionSpecifiqueForm      = $manager->getServiceLocator()->get('FormElementManager')->get(MissionSpecifiqueForm::class);
 
         $familleForm                = $manager->getServiceLocator()->get('FormElementManager')->get(FamilleProfessionnelleForm::class);
@@ -65,9 +59,6 @@ class RessourceRhControllerFactory {
         $controller->setFonctionService($fonctionService);
         $controller->setMetierService($metierService);
 
-        $controller->setCorpsForm($corpsForm);
-        $controller->setCorrespondanceForm($correspondanceForm);
-        $controller->setGradeForm($gradeForm);
         $controller->setMissionSpecifiqueForm($missionSpecifiqueForm);
         $controller->setFamilleProfessionnelleForm($familleForm);
         $controller->setFonctionForm($fonctionForm);

@@ -53,7 +53,7 @@ class RessourceRhService {
      */
     public function getCorrespondancesAsOptions()
     {
-        $correspondances = $this->getCorrespondances();
+        $correspondances = $this->getCorrespondances(true);
 
         $array = [];
         foreach ($correspondances as $correspondance) {
@@ -82,119 +82,25 @@ class RessourceRhService {
         return $result;
     }
 
-
-    /** CORPS *********************************************************************************************************/
-
-    /**
-     * @param string $order
-     * @return Corps[]
-     */
-    public function getCorpsListe($order = null)
-    {
-        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
-            ->addSelect('grade')->leftJoin('corps.grades', 'grade')
-        ;
-
-        if ($order !== null) {
-            $qb = $qb->addOrderBy('corps.'.$order, 'ASC');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCorpsAsOptions()
-    {
-        $corps = $this->getCorpsListe();
-
-        $array = [];
-        foreach ($corps as $item) {
-            $array[$item->getId()] = $item->getLibelle();
-        }
-        return $array;
-    }
-
-    /**
-     * @param integer $id
-     * @return Corps
-     */
-    public function getCorps($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
-            ->andWhere('corps.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs corps partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param Corps $corps
-     * @return Corps
-     */
-    public function createCorps($corps)
-    {
-        $this->getEntityManager()->persist($corps);
-        try {
-            $this->getEntityManager()->flush($corps);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un corps", $e);
-        }
-        return $corps;
-    }
-
-    /**
-     * @param Corps $corps
-     * @return Corps
-     */
-    public function updateCorps($corps)
-    {
-        try {
-            $this->getEntityManager()->flush($corps);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un corps", $e);
-        }
-        return $corps;
-    }
-
-    /**
-     * @param Corps $corps
-     */
-    public function deleteCorps($corps)
-    {
-        $this->getEntityManager()->remove($corps);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un corps", $e);
-        }
-    }
-
-
-
     /** Grade *******************************************************************************************************/
 
     /**
+     * @param bool $active
      * @param string $order
-     * @return Grade[]
+     * @return Correspondance[]
      */
-    public function getGrades($order = null)
+    public function getGrades($active = null, $order = null)
     {
         $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
+            ->orderBy('grade.libelleCourt', 'ASC')
         ;
+        if ($active !== null) {
+            if ($active)    $qb = $qb ->andWhere("grade.histo = 'O'");
+            else            $qb = $qb ->andWhere("grade.histo <> 'O'");
+        }
 
         if ($order !== null) {
             $qb = $qb->addOrderBy('grade.'.$order, 'ASC');
-        } else {
-            $qb = $qb->addOrderBy('grade.corps, grade.rang', 'ASC');
         }
 
         $result = $qb->getQuery()->getResult();
@@ -206,11 +112,11 @@ class RessourceRhService {
      */
     public function getGradesAsOptions()
     {
-        $grades = $this->getGrades();
+        $grades = $this->getGrades(true);
 
         $array = [];
         foreach ($grades as $grade) {
-            $array[$grade->getId()] = $grade->getLibelle();
+            $array[$grade->getId()] = $grade->getLibelleCourt() . " - ". $grade->getLibelleLong();
         }
 
         return $array;
@@ -235,47 +141,65 @@ class RessourceRhService {
         return $result;
     }
 
+    /** Corps *********************************************************************************************************/
+
     /**
-     * @param Grade $grade
-     * @return Grade
+     * @param bool $active
+     * @param string $order
+     * @return Correspondance[]
      */
-    public function createGrade($grade)
+    public function getCorps($active = null, $order = null)
     {
-        $this->getEntityManager()->persist($grade);
-        try {
-            $this->getEntityManager()->flush($grade);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un Grade", $e);
+        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+            ->orderBy('corps.libelleCourt', 'ASC')
+        ;
+        if ($active !== null) {
+            if ($active)    $qb = $qb ->andWhere("corps.histo = 'O'");
+            else            $qb = $qb ->andWhere("corps.histo <> 'O'");
         }
-        return $grade;
+
+        if ($order !== null) {
+            $qb = $qb->addOrderBy('corps.'.$order, 'ASC');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /**
-     * @param Grade $grade
-     * @return Grade
+     * @return array
      */
-    public function updateGrade($grade)
+    public function getCorpsAsOptions()
     {
-        try {
-            $this->getEntityManager()->flush($grade);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Grade.", $e);
+        $corps = $this->getCorps(true);
+
+        $array = [];
+        foreach ($corps as $item) {
+            $array[$item->getId()] = $item->getLibelleCourt() . " - " . $item->getLibelleLong() ;
         }
-        return $grade;
+        return $array;
     }
 
     /**
-     * @param Grade $grade
+     * @param integer $id
+     * @return Corps
      */
-    public function deleteGrade($grade)
+    public function getCorp($id)
     {
-        $this->getEntityManager()->remove($grade);
+        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+            ->andWhere('corps.id = :id')
+            ->setParameter('id', $id)
+        ;
+
         try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Grade", $e);
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs corps partagent le même identifiant [".$id."]");
         }
+        return $result;
     }
+
+    /** ***********************************************/
 
     public function getMetiersTypesAsOptions()
     {

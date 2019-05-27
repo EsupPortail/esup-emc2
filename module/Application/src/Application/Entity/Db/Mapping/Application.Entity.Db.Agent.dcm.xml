@@ -44,5 +44,13 @@
         <many-to-one target-entity="Application\Entity\Db\Correspondance"  field="correspondance">
             <join-column name="bap_id" referenced-column-name="id"/>
         </many-to-one>
+
+        <many-to-one target-entity="Application\Entity\Db\Grade"  field="grade">
+            <join-column name="grade_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <many-to-one target-entity="Application\Entity\Db\Corps"  field="corps">
+            <join-column name="corps_id" referenced-column-name="id"/>
+        </many-to-one>
     </entity>
 </doctrine-mapping>

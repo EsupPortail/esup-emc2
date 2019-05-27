@@ -209,6 +209,42 @@ return [
                     'columns'            => ['c_bap', 'lib_court', 'lib_long', 'histo'],
                 ],
             ],
+            [
+                'name' => 'Import_GRADE',
+                'source' => [
+                    'name'               => 'Grades des agents remonté depuis OCTOPUS',
+                    'select'             => 'SELECT * FROM V_PREECOG_GRADE',
+                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'source_code_column' => 'ID',
+                    'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'HISTO'],
+                ],
+                'intermediate_table' => 'src_grade',
+                'destination' => [
+                    'name'               => 'Grades des agents remonté depuis OCTOPUS',
+                    'table'              => 'grade',
+                    'connection'         => 'doctrine.connection.orm_default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['lib_court', 'lib_long', 'code', 'histo'],
+                ],
+            ],
+            [
+                'name' => 'Import_CORPS',
+                'source' => [
+                    'name'               => 'Corps des agents remonté depuis OCTOPUS',
+                    'select'             => 'SELECT * FROM V_PREECOG_CORPS',
+                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'source_code_column' => 'ID',
+                    'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'CATEGORIE', 'HISTO'],
+                ],
+                'intermediate_table' => 'src_corps',
+                'destination' => [
+                    'name'               => 'Corps des agents remonté depuis OCTOPUS',
+                    'table'              => 'corps',
+                    'connection'         => 'doctrine.connection.orm_default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['lib_court', 'lib_long', 'code', 'categorie', 'histo'],
+                ],
+            ],
         ],
 
     ],

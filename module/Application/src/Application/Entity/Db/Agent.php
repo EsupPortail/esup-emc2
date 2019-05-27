@@ -28,6 +28,10 @@ class Agent {
 
     /** @var Correspondance */
     private $correspondance;
+    /** @var Grade */
+    private $grade;
+    /** @var Corps */
+    private $corps;
 
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
@@ -182,6 +186,42 @@ class Agent {
     public function setCorrespondance($correspondance)
     {
         $this->correspondance = $correspondance;
+        return $this;
+    }
+
+    /**
+     * @return Grade
+     */
+    public function getGrade()
+    {
+        return $this->grade;
+    }
+
+    /**
+     * @param Grade $grade
+     * @return Agent
+     */
+    public function setGrade($grade)
+    {
+        $this->grade = $grade;
+        return $this;
+    }
+
+    /**
+     * @return Corps
+     */
+    public function getCorps()
+    {
+        return $this->corps;
+    }
+
+    /**
+     * @param Corps $corps
+     * @return Agent
+     */
+    public function setCorps($corps)
+    {
+        $this->corps = $corps;
         return $this;
     }
 

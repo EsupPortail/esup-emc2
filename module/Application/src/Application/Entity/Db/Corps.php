@@ -2,8 +2,6 @@
 
 namespace Application\Entity\Db;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 class Corps {
 
     /** @var integer */
@@ -11,14 +9,13 @@ class Corps {
     /** @var string */
     private $code;
     /** @var string */
-    private $libelle;
-    /** @var ArrayCollection (Grade) */
-    private $grades;
-
-    public function __construct()
-    {
-        $this->grades = new ArrayCollection();
-    }
+    private $libelleCourt;
+    /** @var string */
+    private $libelleLong;
+    /** @var string */
+    private $categorie;
+    /** @var string */
+    private $histo;
 
     /**
      * @return int
@@ -59,56 +56,78 @@ class Corps {
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getLibelleCourt()
     {
-        return $this->libelle;
+        return $this->libelleCourt;
     }
 
     /**
-     * @param string $libelle
+     * @param string $libelleCourt
      * @return Corps
      */
-    public function setLibelle($libelle)
+    public function setLibelleCourt($libelleCourt)
     {
-        $this->libelle = $libelle;
-        return $this;
-    }
-
-    /**
-     * @return Grade[]
-     */
-    public function getGrades()
-    {
-        return $this->grades->toArray();
-    }
-
-    /**
-     * @param Grade $grade
-     * @return Corps
-     */
-    public function addGrade($grade)
-    {
-        $this->grades->add($grade);
-        return $this;
-    }
-
-    /**
-     * @param Grade $grade
-     * @return Corps
-     */
-    public function removeGrade($grade)
-    {
-        $this->grades->removeElement($grade);
+        $this->libelleCourt = $libelleCourt;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function getLibelleLong()
     {
-        return "(".$this->getCode().") ".$this->getLibelle();
+        return $this->libelleLong;
     }
 
+    /**
+     * @param string $libelleLong
+     * @return Corps
+     */
+    public function setLibelleLong($libelleLong)
+    {
+        $this->libelleLong = $libelleLong;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategorie()
+    {
+        return $this->categorie;
+    }
+
+    /**
+     * @param string $categorie
+     * @return Corps
+     */
+    public function setCategorie($categorie)
+    {
+        $this->categorie = $categorie;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHisto()
+    {
+        return $this->histo;
+    }
+
+    /**
+     * @param string $histo
+     * @return Corps
+     */
+    public function setHisto($histo)
+    {
+        $this->histo = $histo;
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getLibelleCourt();
+    }
 
 }

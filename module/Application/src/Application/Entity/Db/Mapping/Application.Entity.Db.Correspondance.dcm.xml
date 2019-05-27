@@ -8,7 +8,7 @@
         <field name="categorie"     column="c_bap"          type="string"       length="10"   />
         <field name="libelleCourt"  column="lib_court"      type="string"       length="20"   />
         <field name="libelleLong"   column="lib_long"       type="string"       length="200"  />
-        <field name="histo"         column="histo"          type="string"       length="1"  />
+        <field name="histo"         column="histo"          type="string"       length="10"  />
 
     </entity>
 </doctrine-mapping>
