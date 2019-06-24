@@ -18,4 +18,16 @@ use Application\Entity\Db\Activite;
     <?php echo $activite->getDescription(); ?>
 </div>
 
+<h3>
+    Applications associées
+    <span class="badge">
+        <?php echo count($activite->getApplications()); ?>
+    </span>
+</h3>
+
+    <ul>
+        <?php foreach ($activite->getApplications() as $application) : ?>
+            <li><?php echo $application->getLibelle(); ?></li>
+        <?php endforeach; ?>
+    </ul>
 </div>

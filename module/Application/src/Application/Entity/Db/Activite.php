@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Activite
@@ -14,6 +15,8 @@ class Activite
     private $libelle;
     /** @var string */
     private $description;
+    /** @var ArrayCollection */
+    private $applications;
 
     /**
      * @return int
@@ -59,5 +62,41 @@ class Activite
         return $this;
     }
 
+    /**
+     * @return Application[]
+     */
+    public function getApplications()
+    {
+        return $this->applications->toArray();
+    }
+
+    /**
+     * @param Application $application
+     * @return Activite
+     */
+    public function addApplication($application)
+    {
+        $this->applications->add($application);
+        return $this;
+    }
+
+    /**
+     * @param Application $application
+     * @return Activite
+     */
+    public function removeApplication($application)
+    {
+        $this->applications->removeElement($application);
+        return $this;
+    }
+
+    /**
+     * @param Application $application
+     * @return boolean
+     */
+    public function hasApplication($application)
+    {
+        return $this->applications->contains($application);
+    }
 
 }

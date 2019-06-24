@@ -37,8 +37,8 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
     <table class="table table-condensed">
         <thead>
             <th> Activité </th>
+            <th> Application </th>
             <th> Modification </th>
-            <th> Modificateur </th>
             <th> Action </th>
         </thead>
         <tbody>
@@ -48,10 +48,17 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                         <?php echo $activite->getLibelle(); ?> <br/>
                     </td>
                     <td>
-                        <?php echo $activite->getHistoModification()->format('d/m/Y'); ?>
+                        <ul>
+                        <?php foreach ($activite->getApplications() as $application) : ?>
+                            <li> <?php echo $application->getLibelle(); ?></li>
+                        <?php endforeach; ?>
+                        </ul>
                     </td>
                     <td>
-                        <?php echo $activite->getHistoModificateur()->getDisplayName(); ?>
+                        <small>
+                            <?php echo $activite->getHistoModification()->format('d/m/Y'); ?> <br/>
+                            <?php echo $activite->getHistoModificateur()->getDisplayName(); ?>
+                        </small>
                     </td>
                     <td>
                         <?php if ($canVisualiser) : ?>
