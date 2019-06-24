@@ -4,10 +4,11 @@ namespace Application\Form\Activite;
 
 use Application\Service\Application\ApplicationService;
 use Zend\Form\FormElementManager;
+use Zend\Stdlib\Hydrator\HydratorPluginManager;
 
 class ActiviteHydratorFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(HydratorPluginManager $manager)
     {
         /**
          * @var ApplicationService $applicationService
