@@ -97,7 +97,7 @@ class FicheTypeViewHelper extends AbstractHelper
             $applications[] = $application->getLibelle();
         }
         sort($applications);
-//        $applications = array_unique($applications);
+        $applications = array_unique($applications);
 
         $texte .= '         <div class="row">';
         $texte .= '             <div class="col-md-6">';
