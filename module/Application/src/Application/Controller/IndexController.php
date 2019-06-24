@@ -26,6 +26,9 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
+        $identity = null;
+        $agent = null;
+
         /** @var Role $connectedRole */
         $connectedRole = $this->getUserService()->getConnectedRole();
 
@@ -41,7 +44,6 @@ class IndexController extends AbstractActionController
         }
 
         if ($this->getUserService()->getServiceUserContext()->getLdapUser()) {
-
             $supannId = ((int)$this->getUserService()->getServiceUserContext()->getLdapUser()->getSupannEmpId());
             $identity = $this->getUserService()->getConnectedUser();
 
