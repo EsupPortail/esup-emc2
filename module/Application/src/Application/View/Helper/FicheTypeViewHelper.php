@@ -87,13 +87,25 @@ class FicheTypeViewHelper extends AbstractHelper
         $texte .= '             </div>';
         $texte .= '         </div>';
 
+        $applications = [];
+        foreach ($ficheMetier->getActivites() as $activite) {
+            foreach ($activite->getActivite()->getApplications() as $application) {
+                $applications[] = $application->getLibelle();
+            }
+        }
+        foreach ($ficheMetier->getApplications() as $application) {
+            $applications[] = $application->getLibelle();
+        }
+        sort($applications);
+//        $applications = array_unique($applications);
+
         $texte .= '         <div class="row">';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Applications </h4>';
         $texte .= '                  <ul>';
 
-                                    foreach ($ficheMetier->getApplications() as $application) {
-                                        $texte .= '<li>'.$application->getLibelle().'</li>';
+                                    foreach ($applications as $application) {
+                                        $texte .= '<li>'.$application.'</li>';
                                     }
 
         $texte .= '                  </ul>';
