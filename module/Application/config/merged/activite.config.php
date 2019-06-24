@@ -7,6 +7,7 @@ use Application\Controller\Activite\ActiviteControllerFactory;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormFactory;
 use Application\Form\Activite\ActiviteHydrator;
+use Application\Form\Activite\ActiviteHydratorFactory;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Activite\ActiviteServiceFactory;
@@ -141,8 +142,8 @@ return [
         ],
     ],
     'hydrators' => [
-        'invokable' => [
-            ActiviteHydrator::class => ActiviteHydrator::class,
+        'factories' => [
+            ActiviteHydrator::class => ActiviteHydratorFactory::class,
         ]
     ]
 
