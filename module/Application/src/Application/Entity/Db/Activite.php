@@ -18,6 +18,10 @@ class Activite
     /** @var ArrayCollection */
     private $applications;
 
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
     /**
      * @return int
      */

@@ -11,5 +11,16 @@
         <field name="url"               type="string"   length="128"      column="url"                    nullable="false"  />
         <field name="actif"             type="boolean"                    column="actif"                  nullable="false"  />
 
+        <many-to-many field="activites" target-entity="Application\Entity\Db\Activite" inversed-by="activite" fetch="LAZY">
+            <join-table name="activite_application">
+                <join-columns>
+                    <join-column name="application" referenced-column-name="application_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="activite" referenced-column-name="activite_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
     </entity>
 </doctrine-mapping>
