@@ -155,5 +155,15 @@ class FichePoste
         return null;
     }
 
+    public function getQuotiteTravaillee()
+    {
+        $somme = 0;
+        /** @var FicheTypeExterne $ficheMetier */
+        foreach ($this->fichesMetiers as $ficheMetier) {
+            $somme += $ficheMetier->getQuotite();
+        }
+        return $somme;
+    }
+
 
 }
