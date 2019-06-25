@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
  * @var FichePoste[] $fiches
@@ -8,11 +9,11 @@ use Application\Entity\Db\FichePoste;
 
 $this->headTitle('Index des fiches de postes');
 
-$canAjouter = true;
-$canVoir = true;
-$canHistoriser = true;
-$canEditer = true;
-$canDetruire = true;
+$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
+$canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
+$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 ?>
 
 <h1 class="page-header">

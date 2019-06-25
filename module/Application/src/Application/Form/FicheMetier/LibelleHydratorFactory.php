@@ -2,7 +2,7 @@
 
 namespace Application\Form\FicheMetier;
 
-use Application\Service\RessourceRh\RessourceRhService;
+use Application\Service\Metier\MetierService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class LibelleHydratorFactory {
@@ -11,11 +11,11 @@ class LibelleHydratorFactory {
     {
         /** @var ServiceLocatorInterface $parentLocator */
         $parentLocator = $serviceLocator->getServiceLocator();
-        /** @var RessourceRhService $ressourceService */
-        $ressourceService = $parentLocator->get(RessourceRhService::class);
+        /** @var MetierService $metierService */
+        $metierService = $parentLocator->get(MetierService::class);
 
         $hydrator = new LibelleHydrator();
-        $hydrator->setRessourceRhService($ressourceService);
+        $hydrator->setMetierService($metierService);
 
         return $hydrator;
     }

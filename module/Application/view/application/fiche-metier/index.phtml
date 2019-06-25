@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\FicheMetierType;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 
 /**
  * @var FicheMetierType[] $fiches
@@ -8,11 +9,11 @@ use Application\Entity\Db\FicheMetierType;
 
 $this->headTitle('Index des fiches métiers');
 
-$canAjouter = true;
-$canEditer = true;
-$canVoir = true;
-$canHistoriser = true;
-$canDetruire = true;
+$canAjouter     = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AJOUTER));
+$canVoir        = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
+$canHistoriser  = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::HISTORISER));
+$canEditer      = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
+$canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
 ?>
 
 <h1 class="page-header">
