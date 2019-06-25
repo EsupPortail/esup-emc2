@@ -7,6 +7,7 @@ use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
 class AjouterFicheMetierForm extends Form {
     use FicheMetierServiceAwareTrait;
@@ -19,6 +20,7 @@ class AjouterFicheMetierForm extends Form {
             'name' => 'fiche_type',
             'options' => [
                 'label' => "Fiche type :",
+                'empty_option' => 'Sélectionner une fiche type ...',
                 'value_options' => $this->generateFicheTypeOptions(),
             ],
             'attributes' => [
@@ -33,6 +35,7 @@ class AjouterFicheMetierForm extends Form {
             'name' => 'quotite',
             'options' => [
                 'label' => "Quotité* :",
+                'empty_option' => 'Préciser la quotité associée ...',
                 'value_options' => $this->generateQuotiteOptions(),
             ],
             'attributes' => [
@@ -67,13 +70,17 @@ class AjouterFicheMetierForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'fiche_type'        => [ 'required' => true,  ],
+            'quotite'           => [ 'required' => true,  ],
+        ]));
     }
 
     private function generateFicheTypeOptions()
     {
         $fiches = $this->getFicheMetierService()->getFichesMetiers();
         $options = [];
-        $options[0] = "Sélectionner une fiche type ... ";
         foreach ($fiches as $fiche) {
             $options[$fiche->getId()] = $fiche->getMetier()->getLibelle();
         }

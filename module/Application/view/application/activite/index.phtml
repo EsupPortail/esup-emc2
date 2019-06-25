@@ -16,7 +16,7 @@ $canHistoriser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
 $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::EFFACER));
 ?>
 
-<h1>
+<h1 class="page-header">
     Activité
     <span class="badge"> <?php echo count($activites); ?> </span>
 </h1>
@@ -26,8 +26,7 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
     <?php if ($canAjouter) : ?>
         <a href="<?php echo $this->url('activite/creer', [], [], true); ?>"
            class="btn btn-primary action ajax-modal"
-           data-event="modification"
-           >
+           data-event="modification">
             <span class="icon ajouter"></span>
             Ajouter une activité
         </a>
@@ -37,9 +36,9 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
     <table class="table table-condensed">
         <thead>
             <th> Activité </th>
-            <th> Application </th>
+            <th> Applications </th>
             <th> Modification </th>
-            <th> Action </th>
+            <th style="width:10rem;"> Action </th>
         </thead>
         <tbody>
             <?php foreach($activites as $activite) : ?>
@@ -48,11 +47,13 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                         <?php echo $activite->getLibelle(); ?> <br/>
                     </td>
                     <td>
-                        <ul>
-                        <?php foreach ($activite->getApplications() as $application) : ?>
-                            <li> <?php echo $application->getLibelle(); ?></li>
-                        <?php endforeach; ?>
-                        </ul>
+                        <small>
+                            <ul>
+                            <?php foreach ($activite->getApplications() as $application) : ?>
+                                <li> <?php echo $application->getLibelle(); ?></li>
+                            <?php endforeach; ?>
+                            </ul>
+                        </small>
                     </td>
                     <td>
                         <small>
@@ -66,6 +67,8 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                                class="ajax-modal"
                             >
                                 <span class="icon voir" title="Voir l'activité"></span></a>
+                        <?php else : ?>
+                                <span class="icon voir" style="color:lightgrey;"></span>
                         <?php endif; ?>
                         <?php if ($canEditer) : ?>
                             <a href="<?php echo $this->url('activite/editer', ['activite' => $activite->getId()], [], true); ?>"
@@ -73,6 +76,8 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                                data-event="modification"
                             >
                                 <span class="icon editer" title="Éditer l'activité"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgrey;"></span>
                         <?php endif; ?>
                         <?php if($canHistoriser) :?>
                             <?php if($activite->estNonHistorise()): ?>
@@ -84,10 +89,18 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                                 >
                                     <span class="icon restaurer" title="Restaurer l'activité"></span></a>
                             <?php endif; ?>
+                        <?php else : ?>
+                            <?php if($activite->estNonHistorise()): ?>
+                                    <span class="icon historiser" style="color:lightgrey;"></span>
+                            <?php else : ?>
+                                    <span class="icon restaurer" style="color:lightgrey;"></span>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <?php if ($canEffacer) : ?>
                             <a href="<?php echo $this->url('activite/detruire', ['activite' => $activite->getId()], [], true); ?>">
                                 <span class="icon detruire"  title="Supprimer l'activité"></span></a>
+                        <?php else : ?>
+                            <span class="icon detruire" style="color:lightgrey;"></span>
                         <?php endif; ?>
                     </td>
                 </tr>

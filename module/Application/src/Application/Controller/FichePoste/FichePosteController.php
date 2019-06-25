@@ -182,6 +182,10 @@ class FichePosteController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
+
+            $res = $this->checkValidite($fiche, $data);
+            if ($res) return $res;
+
             if ($form->isValid()) {
                 $ficheTypeExterne->setFichePoste($fiche);
                 $this->getFichePosteService()->createFicheTypeExterne($ficheTypeExterne);
@@ -205,7 +209,6 @@ class FichePosteController extends AbstractActionController {
                 $text = implode(";",$tab);
                 $ficheTypeExterne->setActivites($text);
                 $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
-
             }
         }
 
@@ -216,17 +219,6 @@ class FichePosteController extends AbstractActionController {
             'form'  => $form,
         ]);
         return $vm;
-    }
-
-    public function retirerFicheMetierAction()
-    {
-        $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
-        $ficheTypeExterne = $this->getFichePosteService()->getFicheTypeExterne($ficheTypeExterneId);
-
-        if ($ficheTypeExterne && $fichePoste) $this->getFichePosteService()->deleteFicheTypeExterne($ficheTypeExterne);
-
-        return $this->redirect()->toRoute('fiche-poste/editer',['fiche-poste' => $fichePoste->getId()], [], true);
     }
 
     public function modifierFicheMetierAction()
@@ -243,7 +235,12 @@ class FichePosteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
+
             $form->setData($data);
+
+            $res = $this->checkValidite($fichePoste, $data);
+            if ($res) return $res;
+
             if ($form->isValid()) {
                 $ficheTypeExterne->setFichePoste($fichePoste);
                 $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
@@ -268,6 +265,16 @@ class FichePosteController extends AbstractActionController {
         return $vm;
     }
 
+    public function retirerFicheMetierAction()
+    {
+        $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
+        $ficheTypeExterne = $this->getFichePosteService()->getFicheTypeExterne($ficheTypeExterneId);
+
+        if ($ficheTypeExterne && $fichePoste) $this->getFichePosteService()->deleteFicheTypeExterne($ficheTypeExterne);
+
+        return $this->redirect()->toRoute('fiche-poste/editer',['fiche-poste' => $fichePoste->getId()], [], true);
+    }
 
     public function selectionnerActiviteAction()
     {
@@ -331,5 +338,30 @@ class FichePosteController extends AbstractActionController {
             'form' => $form,
         ]);
 
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @param array $data
+     * @return ViewModel
+     */
+    private function checkValidite($fiche, $data)
+    {
+        $cut = false;
+        if ($data['est_principale'] === "1"  && $data['quotite'] < 50) {
+            $cut = true;
+            $this->flashMessenger()->addErrorMessage("La fichie métier principale doit avoir une quotité d'au moins 50%.");
+        }
+        if ($data['est_principale'] === "0" && $data['quotite'] >= 50) {
+            $cut = true;
+            $this->flashMessenger()->addErrorMessage("La fichie métier non principale doit avoir une quotité infiérieure à 50%.");
+        }
+        if ($fiche->getQuotiteTravaillee() + $data['quotite'] > 100) {
+            $cut = true;
+            $this->flashMessenger()->addErrorMessage("La somme des quotités travaillées ne peut dépasser 100%.");
+        }
+        if ($cut) {
+            return (new ViewModel(['title' => 'Informations saisies incorrectes']))->setTemplate('layout/flashMessage');
+        }
     }
 }

@@ -33,13 +33,29 @@ return [
                     'controller' => ActiviteController::class,
                     'action' => [
                         'creer',
+                    ],
+                    'privileges' => [
+                        ActivitePrivileges::AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ActiviteController::class,
+                    'action' => [
                         'editer',
                         'historiser',
                         'restaurer',
-                        'detruire',
                     ],
                     'privileges' => [
                         ActivitePrivileges::EDITER,
+                    ],
+                ],
+                [
+                    'controller' => ActiviteController::class,
+                    'action' => [
+                        'detruire',
+                    ],
+                    'privileges' => [
+                        ActivitePrivileges::EFFACER,
                     ],
                 ],
             ],
