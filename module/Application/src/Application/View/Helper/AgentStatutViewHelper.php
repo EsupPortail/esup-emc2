@@ -23,7 +23,7 @@ class AgentStatutViewHelper extends AbstractHelper
         if (!isset($args['show_structure']) || $args['show_structure'] == true) $texte .= '<span class="badge">'. $statut->getStructure()->getLibelleLong(). '</span> ';
         $texte .= ($statut->getDebut())?$statut->getDebut()->format('d/m/Y'):'---';
         $texte .= '&rarr;';
-        $texte .= ($statut->getFin() && $statut->getFin()->format('Y') !== '9999')?$statut->getFin()->format('d/m/Y'):'---';
+        $texte .= ($statut->getFin() && $statut->getFin()->format('d/m/Y') !== '31/12/1999')?$statut->getFin()->format('d/m/Y'):'---';
 
         $texte .= '<ul>';
         if ($statut->isTitulaire())         $texte .='<li>Titulaire</li>';
