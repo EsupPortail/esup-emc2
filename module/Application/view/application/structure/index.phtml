@@ -28,7 +28,7 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
 </div>
 <div class="main">
 
-    <table class="table table-condensed">
+    <table id="structures" class="table table-condensed">
         <thead>
             <tr>
                 <th> Code </th>
@@ -95,6 +95,14 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
 
 
 <script>
+    $(document).ready(function() {
+        $('#structures').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
