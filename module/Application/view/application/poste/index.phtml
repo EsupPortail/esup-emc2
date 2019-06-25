@@ -5,11 +5,12 @@
  */
 
 use Application\Entity\Db\Poste;
+use Application\Provider\Privilege\PostePrivileges;
 
-$canAjouterPoste    = true;
-$canAfficherPoste   = true;
-$canModifierPoste   = true;
-$canSupprimerPoste  = true;
+$canAjouterPoste    = $this->isAllowed(PostePrivileges::getResourceId(PostePrivileges::AJOUTER));
+$canAfficherPoste   = $this->isAllowed(PostePrivileges::getResourceId(PostePrivileges::AFFICHER));
+$canModifierPoste   = $this->isAllowed(PostePrivileges::getResourceId(PostePrivileges::EDITER));
+$canSupprimerPoste  = $this->isAllowed(PostePrivileges::getResourceId(PostePrivileges::EDITER));
 
 $this->headTitle("Index des postes")
 ?>

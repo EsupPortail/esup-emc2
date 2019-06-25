@@ -53,39 +53,15 @@ class FicheTypeViewHelper extends AbstractHelper
         $texte .= '         <div class="panel-heading">';
         $texte .= '              <h2>Parcours de formation de base pour la prise de poste</h2>';
         $texte .= '         </div>';
+
         $texte .= '         <div class="panel-body">';
-        $texte .= '         <div class="row">';
-        $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Connaissances </h4>';
         $texte .= '                  ' . $ficheMetier->getConnaissances();
-        $texte .= '             </div>';
-        $texte .= '             <div class="col-md-6">';
-        $texte .= '                  <h4> Plan de formation </h4>';
-        $texte .= '                  ' . $ficheMetier->getConnaissancesFormation();
-        $texte .= '             </div>';
-        $texte .= '         </div>';
-
-        $texte .= '         <div class="row">';
-        $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Compétences opérationnelles </h4>';
         $texte .= '                  ' . $ficheMetier->getCompetencesOperationnelles();
-        $texte .= '             </div>';
-        $texte .= '             <div class="col-md-6">';
-        $texte .= '                  <h4> Plan de formation </h4>';
-        $texte .= '                  ' . $ficheMetier->getCompetencesOperationnellesFormation();
-        $texte .= '             </div>';
-        $texte .= '         </div>';
-
-        $texte .= '         <div class="row">';
-        $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Compétences comportementales </h4>';
         $texte .= '                  ' . $ficheMetier->getCompetencesComportementales();
-        $texte .= '             </div>';
-        $texte .= '             <div class="col-md-6">';
-        $texte .= '                  <h4> Plan de formation </h4>';
-        $texte .= '                  ' . $ficheMetier->getCompetencesComportementalesFormation();
-        $texte .= '             </div>';
-        $texte .= '         </div>';
+        $texte .= '        </div>';
 
         $applications = [];
         foreach ($ficheMetier->getActivites() as $activite) {
@@ -112,6 +88,9 @@ class FicheTypeViewHelper extends AbstractHelper
         $texte .= '             </div>';
         $texte .= '             <div class="col-md-6">';
         $texte .= '                  <h4> Plan de formation </h4>';
+        $texte .= '                  ' . $ficheMetier->getConnaissancesFormation();
+        $texte .= '                  ' . $ficheMetier->getCompetencesOperationnellesFormation();
+        $texte .= '                  ' . $ficheMetier->getCompetencesComportementalesFormation();
         $texte .= '                  ' . $ficheMetier->getApplicationsFormation();
         $texte .= '             </div>';
         $texte .= '         </div>';
