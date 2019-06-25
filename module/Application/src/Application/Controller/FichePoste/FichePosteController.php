@@ -191,10 +191,11 @@ class FichePosteController extends AbstractActionController {
                 $this->getFichePosteService()->createFicheTypeExterne($ficheTypeExterne);
 
                 if ($ficheTypeExterne->getPrincipale()) {
+                    var_dump('principale is 1');
                     foreach ($fiche->getFichesMetiers() as $ficheMetier) {
                         if ($ficheMetier !== $ficheTypeExterne && $ficheMetier->getPrincipale()) {
                             $ficheMetier->setPrincipale(false);
-                            //$this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
+                            $this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
                         }
                     }
                 }
