@@ -77,7 +77,8 @@ class FichePosteController extends AbstractActionController {
 
     public function editerAction()
     {
-        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
+        $fiche = $this->getFichePosteService()->getLastFichePoste();
         return new ViewModel([
             'fiche' => $fiche,
         ]);

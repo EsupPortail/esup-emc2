@@ -115,7 +115,7 @@ return [
                     'editer' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/editer/:id',
+                            'route'    => '/editer[/:id]',
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'editer',

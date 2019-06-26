@@ -172,4 +172,13 @@ class FicheMetierService {
         return $ficheMetier;
     }
 
+    /**
+     * @return FicheMetier
+     */
+    public function getLastFicheMetier()
+    {
+        $fiches = $this->getFichesMetiers('id');
+        return end($fiches);
+    }
+
 }
