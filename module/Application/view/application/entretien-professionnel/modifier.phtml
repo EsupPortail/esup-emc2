@@ -12,7 +12,7 @@ $this->headTitle('Édition de l\'entretien professionnel');
 <h1 class="page-header">
     Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
     <?php echo $entretien->getAgent()->getPrenom(); ?>
-    <?php echo $entretien->getAgent()->getNom(); ?>
+    <?php echo $entretien->getAgent()->getNomUsuel(); ?>
 </h1>
 
 <div class="main">
@@ -30,7 +30,7 @@ $this->headTitle('Édition de l\'entretien professionnel');
                         <dt> Agent</dt>
                         <dd>
                             <?php echo $entretien->getAgent()->getPrenom(); ?>
-                            <?php echo $entretien->getAgent()->getNom(); ?>
+                            <?php echo $entretien->getAgent()->getNomUsuel(); ?>
                         </dd>
                         <dt> Responsable</dt>
                         <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>

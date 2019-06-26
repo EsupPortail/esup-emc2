@@ -73,7 +73,7 @@ $canAssocierMetierType = true;
 
     $fichesMetiers = $fiche->getFichesMetiers();
     $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
-    usort($fiche->getFichesMetiers(), function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
+    usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
 ?>
 
 

@@ -20,7 +20,9 @@ class AgentStatutViewHelper extends AbstractHelper
 
         if (!isset($args['show_id']) || $args['show_id'] !== false) $texte .= '<span class="badge">'. $statut->getIdOrigine(). '</span> ';
         if (!isset($args['show_agent']) || $args['show_agent'] !== false) $texte .= '<span class="badge">'. $statut->getAgent()->getDenomination(). '</span> ';
-        if (!isset($args['show_structure']) || $args['show_structure'] == true) $texte .= '<span class="badge">'. $statut->getStructure()->getLibelleLong(). '</span> ';
+        if (!isset($args['show_structure']) || $args['show_structure'] == true) {
+            $texte .= '<span class="badge structure '.str_replace("-","",str_replace(" ","",$statut->getStructure()->getType())).'" title="'.$statut->getStructure()->getLibelleLong().'">'. $statut->getStructure()->getLibelleCourt(). '</span> ';
+        }
         $texte .= ($statut->getDebut())?$statut->getDebut()->format('d/m/Y'):'---';
         $texte .= '&rarr;';
         $texte .= ($statut->getFin() && $statut->getFin()->format('d/m/Y') !== '31/12/1999')?$statut->getFin()->format('d/m/Y'):'---';
@@ -47,6 +49,5 @@ class AgentStatutViewHelper extends AbstractHelper
         $texte .= '</div>';
 
         return $texte;
-
     }
 }

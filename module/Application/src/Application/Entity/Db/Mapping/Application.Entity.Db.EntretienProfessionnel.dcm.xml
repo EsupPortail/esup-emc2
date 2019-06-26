@@ -11,7 +11,7 @@
         </many-to-one>
 
         <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="responsable">
-            <join-column name="responsable" referenced-column-name="c_individu"/>
+            <join-column name="responsable" referenced-column-name="id"/>
         </many-to-one>
 
         <field name="annee"             type="string" length="16"       column="annee"              nullable="false"/>
