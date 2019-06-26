@@ -88,8 +88,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            window.location.reload();
+            window.location.href = 'fiche-metier-type/editer';
         });
     });
-
 </script>

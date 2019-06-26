@@ -25,7 +25,6 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
 
 <div class="main">
 
-    <span class="TODO">REDIRIGER APRES CREATION VERS LA PAGE D EDITION ...</span><br/>
     <?php if ($canAjouter) : ?>
         <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
             <span class="icon ajouter"></span>
@@ -92,7 +91,7 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            window.location.reload();
+            window.location.href = 'fiche-poste/editer';
         });
     });
 </script>

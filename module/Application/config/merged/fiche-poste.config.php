@@ -97,7 +97,7 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/editer/:fiche-poste',
+                            'route'    => '/editer[/:fiche-poste]',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'editer',
