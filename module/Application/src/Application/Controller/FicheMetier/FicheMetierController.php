@@ -106,7 +106,6 @@ class FicheMetierController extends  AbstractActionController{
         $form = $this->getLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [] , true));
         $form->bind($fiche);
-//        $familles = $this->getRessourceRhService()->getMetiersFamilles('libelle');
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -122,8 +121,6 @@ class FicheMetierController extends  AbstractActionController{
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Ajout d\'une fiche metier',
-//            'familles' => $familles,
-//            'metier' => $this->getRessourceRhService()->getMetier(11),
             'form' => $form,
         ]);
         return $vm;
