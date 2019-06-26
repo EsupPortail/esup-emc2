@@ -34,7 +34,7 @@ $canAfficherEntretien = true;
                 <td> <?php echo $entretien->getAnnee(); ?> </td>
                 <td>
                     <?php echo $entretien->getAgent()->getPrenom(); ?>
-                    <?php echo $entretien->getAgent()->getNom(); ?>
+                    <?php echo $entretien->getAgent()->getNomUsuel(); ?>
                 </td>
                 <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
                 <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
