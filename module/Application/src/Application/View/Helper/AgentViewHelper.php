@@ -3,6 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentStatut;
 use Zend\View\Helper\AbstractHelper;
 
 class AgentViewHelper extends AbstractHelper
@@ -57,7 +58,9 @@ class AgentViewHelper extends AbstractHelper
         $texte .= '</dl>';
 
         $texte .= '<h3>Statuts</h3>';
-        foreach ($agent->getStatuts() as $statut) {
+        $statuts = $agent->getStatuts();
+        usort($statuts, function (AgentStatut $a, AgentStatut $b) { return $a->getDebut() < $b->getDebut();});
+        foreach ($statuts as $statut) {
             $texte .= $this->getView()->agentStatut()->render($statut, ['show_agent' => false]);
         }
 

@@ -38,7 +38,7 @@ class FicheTypeExterneViewHelper extends AbstractHelper
         $texte .= '<div class="panel panel-info">';
         $texte .= '    <div class="panel-heading">';
         $texte .= '         <div class="row">';
-        $texte .= '              <div class="col-md-6">';
+        $texte .= '              <div class="col-md-8">';
         $texte .= '                   <h2>'.$ficheTypeExterne->getFicheType()->getMetier()->getLibelle().'</h2>';
         $texte .= '              </div>';
         $texte .= '              <div class="col-md-1 pull-right">';
@@ -51,70 +51,19 @@ class FicheTypeExterneViewHelper extends AbstractHelper
             $texte .= '                   <span class="icon detruire" title="Retirer la fiche type externe"></span></a>';
         }
         $texte .= '              </div>';
-        $texte .= '              <div class="col-md-3 pull-right">';
+        $texte .= '              <div class="col-md-2 pull-right">';
         if ($ficheTypeExterne->getPrincipale()) {
             $texte .='Principale';
-        } else {
-            $texte .=$ficheTypeExterne->getQuotite().'%';
+            $texte .='<br/>';
         }
+        $texte .=$ficheTypeExterne->getQuotite().'%';
+
         $texte .= '              </div>';
         $texte .= '         </div>';
         $texte .= '    </div>';
         $texte .= '    <div class="panel-body">';
-        if ($ficheTypeExterne->getPrincipale()) {
-            $texte .= '         <h3>Missions principales</h3>';
-            $texte .= '         ' . $ficheTypeExterne->getFicheType()->getMissionsPrincipales();
-
-            $texte .= '         <h3>Parcours de formation de base pour la prise de poste </h3>';
-
-            $texte .= '         <div class="row">';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Connaissances </h4>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getConnaissances();
-            $texte .= '             </div>';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Plan de formation </h4>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getConnaissancesFormation();
-            $texte .= '             </div>';
-            $texte .= '         </div>';
-
-            $texte .= '         <div class="row">';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Compétences opérationnelles </h4>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getCompetencesOperationnelles();
-            $texte .= '             </div>';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Plan de formation </h4>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getCompetencesOperationnellesFormation();
-            $texte .= '             </div>';
-            $texte .= '         </div>';
-
-            $texte .= '         <div class="row">';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Compétences comportementales </h4>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getCompetencesComportementales();
-            $texte .= '             </div>';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Plan de formation </h4>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getCompetencesComportementalesFormation();
-            $texte .= '             </div>';
-            $texte .= '         </div>';
-
-            $texte .= '         <div class="row">';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Applications </h4>';
-            $texte .= '                  <ul>';
-            foreach ($ficheTypeExterne->getFicheType()->getApplications() as $application) {
-                $texte .= '<li>'.$application->getLibelle().'</li>';
-            }
-            $texte .= '                  </ul>';
-            $texte .= '             </div>';
-            $texte .= '             <div class="col-md-6">';
-            $texte .= '                  <h4> Plan de formation </h4>';
-            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getApplicationsFormation();
-            $texte .= '             </div>';
-            $texte .= '         </div>';
-        }
+        $texte .= '         <h3>Missions principales</h3>';
+        $texte .= '         ' . $ficheTypeExterne->getFicheType()->getMissionsPrincipales();
 
         $texte .= '         <h3> Activités </h3>';
         $activites = explode(";", $ficheTypeExterne->getActivites());
@@ -125,6 +74,47 @@ class FicheTypeExterneViewHelper extends AbstractHelper
                 $texte .= $activite->getActivite()->getDescription();
             }
         }
+
+//        if ($ficheTypeExterne->getPrincipale()) {
+            $texte .= '         <h3>Parcours de formation de base pour la prise de poste </h3>';
+
+            $texte .= '          <h4> Connaissances </h4>';
+            $texte .= '          ' . $ficheTypeExterne->getFicheType()->getConnaissances();
+            $texte .= '          <h4> Compétences opérationnelles </h4>';
+            $texte .= '          ' . $ficheTypeExterne->getFicheType()->getCompetencesOperationnelles();
+            $texte .= '          <h4> Compétences comportementales </h4>';
+            $texte .= '          ' . $ficheTypeExterne->getFicheType()->getCompetencesComportementales();
+
+            $texte .= '         <div class="row">';
+            $texte .= '             <div class="col-md-6">';
+            $texte .= '                  <h4> Applications </h4>';
+
+
+        $applications = [];
+        foreach ($ficheTypeExterne->getFicheType()->getActivites() as $activite) {
+            $idActivite = $activite->getActivite()->getId();
+            if (array_search($idActivite, $activites) !== false) {
+                foreach ($activite->getActivite()->getApplications() as $application) {
+                    $applications[] = $application->getLibelle();
+                }
+            }
+        }
+        $texte .= '                  <ul>';
+        foreach ($applications as $application) {
+            $texte .= '<li>'.$application.'</li>';
+        }
+        $texte .= '                  </ul>';
+
+            $texte .= '             </div>';
+            $texte .= '             <div class="col-md-6">';
+            $texte .= '                  <h4> Plan de formation </h4>';
+            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getConnaissancesFormation();
+            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getCompetencesOperationnellesFormation();
+            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getCompetencesComportementalesFormation();
+            $texte .= '                  ' . $ficheTypeExterne->getFicheType()->getApplicationsFormation();
+            $texte .= '             </div>';
+            $texte .= '             </div>';
+//        }
 
         $texte .= '    </div>';
         $texte .= '</div>';
