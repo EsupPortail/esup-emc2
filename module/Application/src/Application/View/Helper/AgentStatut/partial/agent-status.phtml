@@ -1,0 +1,71 @@
+<?php
+
+
+/**
+ * @var AgentStatut $statut
+ * @var array $options
+ */
+
+use Application\Entity\Db\AgentStatut;
+
+?>
+
+<div class="agent-status">
+    <?php if (!isset($options['id']) && $options['id'] !== true) : ?>
+        <span class="badge">
+            <?php echo $statut->getIdOrigine(); ?>
+        </span>
+    <?php endif; ?>
+
+    <?php if (!isset($options['denomination']) && $options['denomination'] !== true) : ?>
+        <span class="badge">
+            <?php echo $statut->getAgent()->getDenomination(); ?>
+        </span>
+    <?php endif; ?>
+
+    <?php if (!isset($options['structure']) && $options['structure'] !== true) : ?>
+        <span class="badge" title="<?php echo $statut->getStructure()->getLibelleLong(); ?>">
+            <?php echo $statut->getStructure()->getLibelleCourt(); ?>
+        </span>
+    <?php endif; ?>
+
+    <?php if (!isset($options['periode']) && $options['periode'] !== true) : ?>
+        <?php
+            $debut  = ($statut->getDebut())?$statut->getDebut()->format('d/m/Y'):'---';
+            $fin    = ($statut->getFin() && $statut->getFin()->format('d/m/Y') !== '31/12/1999')?$statut->getFin()->format('d/m/Y'):'---';
+        ?>
+        <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
+    <?php endif; ?>
+
+    <?php if (!isset($options['statut']) && $options['statut'] !== true) : ?>
+        <ul>
+        <?php
+            if ($statut->isTitulaire())         echo '<li>Titulaire</li>';
+            if ($statut->isCdi())               echo '<li>C.D.I.</li>';
+            if ($statut->isCdd())               echo '<li>C.D.D.</li>';
+            if ($statut->isVacataire())         echo '<li>Vacataire</li>';
+            if ($statut->isEnseignant())        echo '<li>Enseignant</li>';
+            if ($statut->isAdministratif())     echo '<li>Administratif</li>';
+            if ($statut->isChercheur())         echo '<li>Chercheur</li>';
+            if ($statut->isEtudiant())          echo '<li>Etudiant</li>';
+            if ($statut->isAuditeurLibre())     echo '<li>Auditeur libre</li>';
+            if ($statut->isDoctorant())         echo '<li>Doctorant</li>';
+            if ($statut->isDetacheIn())         echo '<li>Détaché (in)</li>';
+            if ($statut->isDetacheOut())        echo '<li>Détaché (out)</li>';
+            if ($statut->isDispo())             echo '<li>Disponibilité</li>';
+            if ($statut->isHeberge())           echo '<li>Hébergé</li>';
+            if ($statut->isEmerite())           echo '<li>Émerite</li>';
+            if ($statut->isRetraite())          echo '<li>Retraité</li>';
+        ?>
+        </ul>
+    <?php endif; ?>
+</div>
+
+<style>
+    div.agent-status {
+        border: solid grey 1px;
+        margin: 2px;
+        padding: 2px;
+        border-radius: 5px;
+    }
+</style>

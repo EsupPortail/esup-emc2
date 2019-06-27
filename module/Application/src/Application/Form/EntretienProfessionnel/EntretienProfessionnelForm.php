@@ -56,6 +56,8 @@ class EntretienProfessionnelForm extends Form {
             ],
             'attributes' => [
                 'id' => 'responsable',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         //Agent       (selection parmi liste des agents [du service])
@@ -68,6 +70,8 @@ class EntretienProfessionnelForm extends Form {
             ],
             'attributes' => [
                 'id' => 'agent',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         //Annee       (initialisée à l'annee scolaire en cours)

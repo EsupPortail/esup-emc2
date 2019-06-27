@@ -14,7 +14,7 @@ use Application\Form\Agent\AgentHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
-use Application\View\Helper\AgentStatutViewHelper;
+use Application\View\Helper\AgentStatut\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
