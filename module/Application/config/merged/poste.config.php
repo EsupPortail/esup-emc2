@@ -144,8 +144,8 @@ return [
         ]
     ],
     'view_helpers' => [
-        'factories' => [
-            'poste' => PosteViewHelperFactory::class,
+        'invokables' => [
+            'poste' => PosteViewHelper::class,
         ],
     ],
 

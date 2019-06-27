@@ -28,8 +28,8 @@ use Application\Form\FicheMetier\MissionsPrincipalesFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\View\Helper\FicheMetierViewHelper;
 use Application\View\Helper\FicheTypeExterneViewHelper;
-use Application\View\Helper\FicheTypeViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
@@ -316,7 +316,7 @@ return [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
             'ficheTypeExterne' => FicheTypeExterneViewHelper::class,
-            'ficheMetierType'  => FicheTypeViewHelper::class,
+            'ficheMetier'  => FicheMetierViewHelper::class,
         ],
     ],
 
