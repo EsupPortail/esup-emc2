@@ -150,9 +150,9 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
     </div>
 </div>
 
-<?php if ($principal) echo $this->ficheTypeExterne()->render($principal);  ?>
+<?php if ($principal) echo $this->ficheMetierExterne($principal, true);  ?>
 <?php foreach ($fichesMetiers as $ficheType) : ?>
-    <?php echo $this->ficheTypeExterne()->render($ficheType);  ?>
+    <?php echo $this->ficheMetierExterne($ficheType, true);  ?>
 <?php endforeach; ?>
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
@@ -182,7 +182,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
                 Aucune spécificité attachée à ce poste.
             </div>
         <?php else: ?>
-            <?php echo $this->specificitePoste()->render($fiche->getSpecificite()); ?>
+            <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
         <?php endif; ?>
     </div>
 </div>
