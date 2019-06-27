@@ -106,7 +106,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     Aucun poste n'est attaché à ce poste
                 </div>
             <?php else: ?>
-                <?php echo $this->poste()->render($fiche->getPoste()); ?>
+                <?php echo $this->poste($fiche->getPoste()); ?>
             <?php endif; ?>
     </div>
 </div>

@@ -6,6 +6,7 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\PersoPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 
@@ -21,9 +22,7 @@ return [
 //                        'visible' => false,
                         'label' => 'Accueil',
                         'route' => 'index-personnel',
-                        'roles' => [
-                            'Personnel'
-                        ],
+                        'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::MENU),
                         'pages' => [
                             'index-personnel' => [
                                 'visible' => true,
@@ -31,9 +30,7 @@ return [
                                 'label' => 'Mon accueil',
                                 'icon' => 'fas fa-angle-right',
                                 'route' => 'index-personnel',
-                                'roles' => [
-                                    'Personnel',
-                                ],
+                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::MENU),
                             ],
                             'entretien' => [
                                 'visible' => true,
@@ -41,9 +38,7 @@ return [
                                 'label' => 'Mes entretiens Pro.',
                                 'icon' => 'fas fa-angle-right',
                                 'route' => 'agent/entretien-professionnel',
-                                'roles' => [
-                                    'Personnel',
-                                ],
+                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::ENTRETIEN),
                             ],
                             'fichier' => [
                                 'visible' => true,
@@ -51,9 +46,7 @@ return [
                                 'label' => 'Mes fichiers',
                                 'icon' => 'fas fa-angle-right',
                                 'route' => 'agent/fichiers',
-                                'roles' => [
-                                    'Personnel',
-                                ],
+                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::FICHIER),
                             ],
 //                            'rgpd' => [
 //                                'visible' => true,

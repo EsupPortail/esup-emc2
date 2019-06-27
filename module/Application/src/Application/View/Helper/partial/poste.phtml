@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @var Poste $poste
+ */
+
+use Application\Entity\Db\Poste;
+
+?>
+
+<?php
+    $rattachement = (($poste->getRattachementHierarchique())?$poste->getRattachementHierarchique()->getDenomination():"---");
+    $domaine = (($poste->getDomaine())?$poste->getDomaine()->getLibelle():"---");
+    $fonction = ($poste->getFonction())?:"---";
+?>
+
+<dl class="dl-horizontal">
+    <dt> Numéro poste national </dt>
+    <dd class="siham"> <?php echo $poste->getNumeroPoste(); ?> </dd>
+    <dt> Affectation du poste </dt>
+    <dd class="siham"> <?php echo $poste->getStructure(); ?> </dd>
+    <dt> Localisation du poste </dt>
+    <dd class="siham"> <?php echo $poste->getLocalisation(); ?> </dd>
+    <dt> Rattachement hiérarchique </dt>
+    <dd class="siham"> <?php echo $rattachement; ?> </dd>
+    <dt> Catégorie </dt>
+    <dd class="siham"> <?php echo $poste->getCorrespondance(); ?> </dd>
+    <dt> Domaine UNICAEN </dt>
+    <dd class="gpeec"> <?php echo $domaine; ?></dd>
+    <dt> Fonction </dt>
+    <dd class="gpeec"> <?php echo $fonction; ?></dd>
+
+    <?php if ($poste->getLien()) : ?>
+        <dt> Lien externe </dt>
+        <dd class="gpeec">
+            <a href="<?php echo $poste->getLien(); ?>">
+                <?php echo $poste->getLien(); ?>
+            </a>
+        </dd>
+    <?php endif; ?>
+</dl>

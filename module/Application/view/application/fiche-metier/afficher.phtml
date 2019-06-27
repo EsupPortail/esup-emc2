@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @var \Application\Entity\Db\FicheMetier $fiche
+ * @var FicheMetier $fiche
  */
+
+use Application\Entity\Db\FicheMetier;
 
 ?>
 
 
 <?php
-    echo $this->ficheMetierType()->render($fiche);
+    echo $this->ficheMetier($fiche);
 ?>
 
