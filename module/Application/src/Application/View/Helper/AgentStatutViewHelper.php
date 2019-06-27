@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\View\Helper\AgentStatut;
+namespace Application\View\Helper;
 
 use Application\Entity\Db\AgentStatut;
 use Application\View\Renderer\PhpRenderer;
@@ -30,7 +30,7 @@ class AgentStatutViewHelper extends AbstractHelper
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
-        $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__."/partial"]]));
+        $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
         return $view->partial('agent-status', ['statut' => $statut, 'options' => $options]);
     }

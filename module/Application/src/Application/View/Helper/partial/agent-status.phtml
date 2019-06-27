@@ -24,7 +24,7 @@ use Application\Entity\Db\AgentStatut;
     <?php endif; ?>
 
     <?php if (!isset($options['structure']) && $options['structure'] !== true) : ?>
-        <span class="badge" title="<?php echo $statut->getStructure()->getLibelleLong(); ?>">
+        <span class="badge structure" title="<?php echo $statut->getStructure()->getLibelleLong(); ?>">
             <?php echo $statut->getStructure()->getLibelleCourt(); ?>
         </span>
     <?php endif; ?>

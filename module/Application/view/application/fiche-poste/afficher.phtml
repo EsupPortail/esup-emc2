@@ -27,7 +27,7 @@ $canAssocierMetierType = true;
                 Aucun agent d'associé à ce poste
             </div>
         <?php else : ?>
-            <?php echo $this->agent()->render($agent); ?>
+            <?php echo $this->agent($agent); ?>
         <?php endif; ?>
     </div>
 </div>
