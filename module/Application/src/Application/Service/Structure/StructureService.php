@@ -19,11 +19,13 @@ class StructureService
     /**
      * @return Structure[]
      */
-    public function getStructures()
+    public function getStructures($ouverte = true)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->orderBy('structure.id');
+            ->orderBy('structure.code');
+        if ($ouverte) $qb = $qb->andWhere("structure.histo = 'O'");
         $result = $qb->getQuery()->getResult();
+
         return $result;
     }
 
@@ -59,11 +61,12 @@ class StructureService
     /**
      * @return array
      */
-    public function getStructuresAsOptions()
+    public function getStructuresAsOptions($ouverte = true)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->orderBy('structure.libelleLong')
         ;
+        if ($ouverte) $qb = $qb->andWhere("structure.histo = 'O'");
 
         $result = $qb->getQuery()->getResult();
 

@@ -180,11 +180,10 @@ class PosteForm extends Form  {
 
     private function generateCorrespondanceSelectOptions()
     {
-        $correspondances = $this->getRessourceRhService()->getCorrespondances();
+        $correspondances = $this->getRessourceRhService()->getCorrespondances(true);
         $options = [];
-        $options[0] = "Sélectionner une correspondance ...";
         foreach($correspondances as $correspondance) {
-            $options[$correspondance->getId()] = $correspondance->__toString();
+            $options[$correspondance->getId()] = $correspondance->getLibelleCourt() . " - " . $correspondance->getLibelleLong();
         }
         return $options;
     }
