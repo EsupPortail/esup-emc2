@@ -19,6 +19,8 @@ class Structure {
     private $libelleLong;
     /** @var string */
     private $type;
+    /** @var string */
+    private $histo;
 
 
     /** @var string */
@@ -154,6 +156,24 @@ class Structure {
     public function removeGestionnaire($user)
     {
         $this->gestionnaires->removeElement($user);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHisto()
+    {
+        return $this->histo;
+    }
+
+    /**
+     * @param string $histo
+     * @return Structure
+     */
+    public function setHisto($histo)
+    {
+        $this->histo = $histo;
         return $this;
     }
 

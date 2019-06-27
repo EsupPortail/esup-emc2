@@ -108,7 +108,7 @@ return [
                     'select'             => 'SELECT * FROM V_PREECOG_STRUCTURE',
                     'connection'         => 'doctrine.connection.orm_octopus',
                     'source_code_column' => 'ID',
-                    'columns'            => ['CODE', 'LIBELLE_COURT', 'LIBELLE_LONG', 'TYPE'],
+                    'columns'            => ['CODE', 'LIBELLE_COURT', 'LIBELLE_LONG', 'TYPE', 'HISTO'],
                 ],
                 'intermediate_table' => 'src_structure',
                 'destination' => [
@@ -116,7 +116,7 @@ return [
                     'table'              => 'structure',
                     'connection'         => 'doctrine.connection.orm_default',
                     'source_code_column' => 'id',
-                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type'],
+                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type', 'histo'],
                 ],
             ],
             [

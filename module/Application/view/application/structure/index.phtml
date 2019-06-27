@@ -31,9 +31,9 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
     <table id="structures" class="table table-condensed">
         <thead>
             <tr>
-                <th> Code </th>
                 <th> Libellé court </th>
                 <th> Type </th>
+                <th> Code </th>
                 <th> Gestionnaire </th>
                 <th> Action </th>
             </tr>
@@ -41,7 +41,6 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
         <tbody>
             <?php foreach ($structures as $structure) : ?>
                 <tr>
-                    <td> <?php echo $structure->getCode(); ?> </td>
                     <td>
                         <?php echo $structure->getLibelleCourt(); ?>
                         <?php if ($structure->getLibelleLong()): ?>
@@ -49,6 +48,7 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
                         <?php endif; ?>
                     </td>
                     <td> <?php echo $structure->getType(); ?> </td>
+                    <td> <?php echo $structure->getCode(); ?> </td>
                     <td>
                         <?php if (count($structure->getGestionnaires())) : ?>
                             <?php
