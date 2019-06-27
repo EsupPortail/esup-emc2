@@ -95,9 +95,9 @@ $canAssocierMetierType = true;
     </div>
 </div>
 
-<?php if ($principal) echo $this->ficheTypeExterne()->render($principal, false);  ?>
+<?php if ($principal) echo $this->ficheMetierExterne($principal, false);  ?>
 <?php foreach ($fichesMetiers as $ficheType) : ?>
-    <?php echo $this->ficheTypeExterne()->render($ficheType, false);  ?>
+    <?php echo $this->ficheMetierExterne($ficheType, false);  ?>
 <?php endforeach; ?>
 
 
@@ -113,7 +113,7 @@ $canAssocierMetierType = true;
                 Aucune spécificité attachée à ce poste.
             </div>
         <?php else: ?>
-            <?php echo $this->specificitePoste()->render($fiche->getSpecificite()); ?>
+            <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
         <?php endif; ?>
     </div>
 </div>

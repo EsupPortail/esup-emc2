@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * @var FicheTypeExterne $fiche
+ * @var boolean $actionnable
+ */
+
+use Application\Entity\Db\FicheTypeExterne;
+
+?>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-8">
+                <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelle(); ?> </h2>
+            </div>
+            <div class="col-md-1 pull-right">
+                <?php if ($actionnable === true) : ?>
+                    <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                       <span class="icon editer" title="Éditer la fiche type externe"></span></a>
+                    <a href="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                       <span class="icon listing" title="Sélectionner les activités associées"></span></a>
+                    <a href="<?php $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>">
+                        <span class="icon detruire" title="Retirer la fiche type externe"></span></a>
+                <?php endif; ?>
+            </div>
+            <div class="col-md-2 pull-right">
+                <?php if ($fiche->getPrincipale()) : ?>
+                    Principale <br/>
+                <?php endif ;?>
+                <?php echo $fiche->getQuotite(); ?> %
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <h3>Missions principales</h3>
+        <?php echo $fiche->getFicheType()->getMissionsPrincipales(); ?>
+
+        <h3> Activités </h3>
+        <?php
+            $activites = explode(";", $fiche->getActivites());
+        ?>
+
+        <?php foreach($fiche->getFicheType()->getActivites() as $activite)  : ?>
+            <?php $idActivite = $activite->getActivite()->getId(); ?>
+            <?php if (array_search($idActivite, $activites) !== false)  : ?>
+                <h4> <?php echo $activite->getActivite()->getLibelle(); ?> </h4>
+                <?php echo $activite->getActivite()->getDescription(); ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <?php if ($fiche->getPrincipale()) : ?>
+            <h3>Parcours de formation de base pour la prise de poste </h3>
+
+            <h4> Connaissances </h4>
+            <?php echo  $fiche->getFicheType()->getConnaissances(); ?>
+            <h4> Compétences opérationnelles </h4>
+            <?php echo  $fiche->getFicheType()->getCompetencesOperationnelles(); ?>
+            <h4> Compétences comportementales </h4>
+            <?php $fiche->getFicheType()->getCompetencesComportementales(); ?>
+
+             <div class="row">
+                 <div class="col-md-6">
+                     <h4> Applications </h4>
+
+                    <?php
+                        $applications = [];
+                        foreach ($fiche->getFicheType()->getActivites() as $activite) {
+                            $idActivite = $activite->getActivite()->getId();
+                            if (array_search($idActivite, $activites) !== false) {
+                                foreach ($activite->getActivite()->getApplications() as $application) {
+                                    $applications[] = $application->getLibelle();
+                                }
+                            }
+                        }
+                    ?>
+
+                     <ul>
+                    <?php foreach ($applications as $application) : ?>
+                        <li> <?php echo $application; ?> </li>
+                    <?php endforeach; ?>
+                    </ul>
+
+                 </div>
+                 <div class="col-md-6">
+                      <h4> Plan de formation </h4>
+                            <?php
+                                echo $fiche->getFicheType()->getConnaissancesFormation();
+                                echo $fiche->getFicheType()->getCompetencesOperationnellesFormation();
+                                echo $fiche->getFicheType()->getCompetencesComportementalesFormation();
+                                echo $fiche->getFicheType()->getApplicationsFormation();
+                            ?>
+                 </div>
+             </div>
+    <?php endif; ?>
+    </div>
+</div>
