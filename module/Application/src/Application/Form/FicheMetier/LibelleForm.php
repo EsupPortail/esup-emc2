@@ -19,7 +19,9 @@ class LibelleForm extends Form {
             'options' => [
                 'label' => "Libellé du métier :",
                 'empty_option' => "Sélectionner un metier ...",
-                'value_options' => $this->getRessourceRhService()->getMetiersTypesAsOptions(),
+                'value_options' =>
+                    //$this->getOptions(),
+                    $this->getRessourceRhService()->getMetiersTypesAsMultiOptions(),
             ],
             'attributes' => [
                 'id' => 'metier',

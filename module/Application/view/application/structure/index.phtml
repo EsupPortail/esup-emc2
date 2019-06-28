@@ -1,11 +1,14 @@
 <?php
 
 use Application\Provider\Privilege\StructurePrivileges;
+use Utilisateur\Entity\Db\Role;
 
 $this->headTitle("Index des structures");
 
 /**
  * @var Application\Entity\Db\Structure[] $structures
+ * @var \Utilisateur\Entity\Db\User $user
+ * @var \Utilisateur\Entity\Db\Role $role
  */
 
 $canGestionnaire    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::GESTIONNAIRE));
