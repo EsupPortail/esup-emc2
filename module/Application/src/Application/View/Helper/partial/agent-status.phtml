@@ -11,25 +11,25 @@ use Application\Entity\Db\AgentStatut;
 ?>
 
 <div class="agent-status">
-    <?php if (!isset($options['id']) && $options['id'] !== true) : ?>
+    <?php if (!isset($options['id']) || $options['id'] !== false) : ?>
         <span class="badge">
             <?php echo $statut->getIdOrigine(); ?>
         </span>
     <?php endif; ?>
 
-    <?php if (!isset($options['denomination']) && $options['denomination'] !== true) : ?>
+    <?php if (!isset($options['denomination']) || $options['denomination'] !== false) : ?>
         <span class="badge">
             <?php echo $statut->getAgent()->getDenomination(); ?>
         </span>
     <?php endif; ?>
 
-    <?php if (!isset($options['structure']) && $options['structure'] !== true) : ?>
+    <?php if (!isset($options['structure']) || $options['structure'] !== false) : ?>
         <span class="badge structure" title="<?php echo $statut->getStructure()->getLibelleLong(); ?>">
             <?php echo $statut->getStructure()->getLibelleCourt(); ?>
         </span>
     <?php endif; ?>
 
-    <?php if (!isset($options['periode']) && $options['periode'] !== true) : ?>
+    <?php if (!isset($options['periode']) || $options['periode'] !== false) : ?>
         <?php
             $debut  = ($statut->getDebut())?$statut->getDebut()->format('d/m/Y'):'---';
             $fin    = ($statut->getFin() && $statut->getFin()->format('d/m/Y') !== '31/12/1999')?$statut->getFin()->format('d/m/Y'):'---';
@@ -37,7 +37,7 @@ use Application\Entity\Db\AgentStatut;
         <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
     <?php endif; ?>
 
-    <?php if (!isset($options['statut']) && $options['statut'] !== true) : ?>
+    <?php if (!isset($options['statut']) || $options['statut'] !== false) : ?>
         <ul>
         <?php
             if ($statut->isTitulaire())         echo '<li>Titulaire</li>';
