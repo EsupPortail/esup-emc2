@@ -4,10 +4,8 @@ namespace Application\Service\RessourceRh;
 
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
-use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
-use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\MissionSpecifique;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -217,6 +215,43 @@ class RessourceRhService {
         return $options;
     }
 
+
+    public function getMetiersTypesAsMultiOptions()
+    {
+        /** @var Metier[] $metiers */
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+        ->orderBy('metier.libelle', 'ASC');
+        $metiers = $qb->getQuery()->getResult();
+
+        $vide = [];
+        $result = [];
+        foreach ($metiers as $metier) {
+            if ($metier->getFonction()) {
+                $libelle = [];
+                foreach ($metier->getFonction()->getLibelles() as $fonctionLibelle) $libelle[] = $fonctionLibelle->getLibelle();
+                $result[implode("/", $libelle)][] = $metier;
+            } else {
+                $vide[] = $metier;
+            }
+        }
+        ksort($result);
+        $multi = [];
+        foreach ($result as $key => $metiers) {
+            //['label'=>'A', 'options' => ["A" => "A", "a"=> "a"]],
+            $options = [];
+            foreach ($metiers as $metier) {
+                $options[$metier->getId()] = $metier->getLibelle();
+            }
+            $multi[] = ['label' => $key, 'options' => $options];
+        }
+        $options = [];
+        foreach ($vide as $metier) {
+            $options[$metier->getId()] = $metier->getLibelle();
+        }
+        $multi[] = ['label' => 'Sans fonction rattachée', 'options' => $options];
+        return $multi;
+
+    }
     /** MISSION SPECIFIQUE ********************************************************************************************/
 
     /**

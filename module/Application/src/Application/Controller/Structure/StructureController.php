@@ -23,9 +23,13 @@ class StructureController extends AbstractActionController {
     public function indexAction()
     {
         $structures = $this->getStructureService()->getStructures();
+        $user = $this->getUserService()->getConnectedUser();
+        $role = $this->getUserService()->getConnectedRole();
 
         return new ViewModel([
             'structures' => $structures,
+            'user' => $user,
+            'role' => $role,
         ]);
     }
 
