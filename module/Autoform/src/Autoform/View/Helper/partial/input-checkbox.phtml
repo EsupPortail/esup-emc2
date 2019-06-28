@@ -1,0 +1,24 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $reponse
+ */
+
+use Autoform\Entity\Db\Champ;
+
+$options = explode(';', $champ->getOptions());
+?>
+<div class="row">
+    <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-11">
+            <label>
+                <input type="checkbox" name="<?php echo $champ->getId()?>"
+                    <?php if ($reponse && $reponse === 'on') :?>
+                        checked
+                   <?php endif; ?>
+                   /> <?php echo $champ->getLibelle(); ?>
+            </label>
+        </div>
+    </div>
+</div>
+
