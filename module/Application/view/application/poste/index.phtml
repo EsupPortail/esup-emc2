@@ -54,7 +54,7 @@ $this->headTitle("Index des postes")
                 <td> <?php echo $poste->getNumeroPoste(); ?> </td>
                 <td> <?php echo $poste->getFonction(); ?> </td>
                 <td>
-                    <?php echo $poste->getStructure(); ?>
+                    <?php echo $poste->getStructure()->getLibelleCourt(); ?>
                 </td>
                 <td> <?php echo $poste->getLocalisation(); ?> </td>
                 <td>

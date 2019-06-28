@@ -20,12 +20,14 @@ use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Form\FicheMetier\MissionsPrincipalesForm;
 use Application\Form\FicheMetier\MissionsPrincipalesFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
 
 class FicheMetierController extends  AbstractActionController{
     /** Traits associé aux services */
@@ -378,5 +380,21 @@ class FicheMetierController extends  AbstractActionController{
             'title' => 'Modification des compétences comportementales',
             'form' => $form,
         ]);
+    }
+
+    /** Document pour la signature en présidence */
+    public function exportAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
+
+        /* @var PhpRenderer $renderer  */
+        $renderer = $this->getServiceLocator()->get('view_renderer');
+
+        $exporter = new FicheMetierPdfExporter($renderer, 'A4');
+        $exporter->setVars([
+            'fiche' => $fiche,
+        ]);
+        $exporter->export('export.pdf');
+        exit;
     }
 }
