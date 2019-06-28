@@ -55,6 +55,7 @@ return [
                         'detruire',
                         'historiser',
                         'restaurer',
+                        'export',
 
                         'editer-libelle',
                         'editer-missions-principales',
@@ -108,6 +109,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'export' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/export/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'export',
                             ],
                         ],
                         'may_terminate' => true,

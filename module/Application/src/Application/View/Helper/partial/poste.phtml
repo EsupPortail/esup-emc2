@@ -18,13 +18,19 @@ use Application\Entity\Db\Poste;
     <dt> Numéro poste national </dt>
     <dd class="siham"> <?php echo $poste->getNumeroPoste(); ?> </dd>
     <dt> Affectation du poste </dt>
-    <dd class="siham"> <?php echo $poste->getStructure(); ?> </dd>
+    <dd class="siham">
+        <span class="badge"><?php echo $poste->getStructure()->getType(); ?></span>
+        <?php echo $poste->getStructure()->getLibelleLong(); ?>
+    </dd>
     <dt> Localisation du poste </dt>
     <dd class="siham"> <?php echo $poste->getLocalisation(); ?> </dd>
     <dt> Rattachement hiérarchique </dt>
     <dd class="siham"> <?php echo $rattachement; ?> </dd>
     <dt> Catégorie </dt>
-    <dd class="siham"> <?php echo $poste->getCorrespondance(); ?> </dd>
+    <dd class="siham">
+        BAP <?php echo $poste->getCorrespondance()->getCategorie(); ?> -
+        <?php echo $poste->getCorrespondance()->getLibelleLong(); ?>
+    </dd>
     <dt> Domaine UNICAEN </dt>
     <dd class="gpeec"> <?php echo $domaine; ?></dd>
     <dt> Fonction </dt>

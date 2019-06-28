@@ -14,10 +14,12 @@ use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
 
 class FichePosteController extends AbstractActionController {
     /** Service **/
@@ -78,7 +80,7 @@ class FichePosteController extends AbstractActionController {
     public function editerAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
-        $fiche = $this->getFichePosteService()->getLastFichePoste();
+        if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
         return new ViewModel([
             'fiche' => $fiche,
         ]);
@@ -365,5 +367,21 @@ class FichePosteController extends AbstractActionController {
         if ($cut) {
             return (new ViewModel(['title' => 'Informations saisies incorrectes']))->setTemplate('layout/flashMessage');
         }
+    }
+
+    /** Document pour la signature en présidence */
+    public function exportAction()
+    {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
+        /* @var PhpRenderer $renderer  */
+        $renderer = $this->getServiceLocator()->get('view_renderer');
+
+        $exporter = new FichePostePdfExporter($renderer, 'A4');
+        $exporter->setVars([
+            'fiche' => $fiche,
+        ]);
+        $exporter->export('export.pdf');
+        exit;
     }
 }
