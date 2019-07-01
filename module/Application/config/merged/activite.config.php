@@ -67,7 +67,7 @@ return [
             'activite' => [
                 'type'  => Literal::class,
                 'options' => [
-                    'route'    => '/activite',
+                    'route'    => '/mission-principale',
                     'defaults' => [
                         'controller' => ActiviteController::class,
                         'action'     => 'index',

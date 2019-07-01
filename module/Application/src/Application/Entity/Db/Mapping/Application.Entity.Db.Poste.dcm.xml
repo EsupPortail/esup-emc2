@@ -7,6 +7,7 @@
         </id>
 
         <field name="numeroPoste"       type="string" length="128"      column="numero_poste"             nullable="true"/>
+        <field name="fonction"          type="string" length="128"      column="fonction"                 nullable="true"/>
         <field name="lien"              type="string" length="256"      column="lien"                     nullable="true"/>
 
         <many-to-one target-entity="Application\Entity\Db\Batiment" field="localisation">
@@ -24,9 +25,5 @@
         <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
             <join-column name="domaine" referenced-column-name="id" />
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\Fonction" field="fonction">
-            <join-column name="fonction" referenced-column-name="id" />
-        </many-to-one>
-
     </entity>
 </doctrine-mapping>

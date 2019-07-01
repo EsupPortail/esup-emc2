@@ -437,7 +437,7 @@ return [
         'factories' => [
             MetierForm::class => MetierFormFactory::class,
             FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
-            FonctionForm::class => FonctionFormFactory::class,
+//            FonctionForm::class => FonctionFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
             MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
         ],
@@ -445,7 +445,6 @@ return [
     'hydrators' => [
         'invokables' => [
             FamilleProfessionnelleHydrator::class => FamilleProfessionnelleHydrator::class,
-//            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydrator::class,
         ],
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,

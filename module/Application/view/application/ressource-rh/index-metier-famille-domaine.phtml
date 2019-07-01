@@ -27,7 +27,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'famille']); ?>" class="btn btn-primary action">Famille professionnelle</a>
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'domaine']); ?>" class="btn btn-primary action">Domaine</a>
-<a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'fonction']); ?>" class="btn btn-primary action">Fonction</a>
+<!--<a href="--><?php //echo $this->url('ressource-rh', [], ['fragment' => 'fonction']); ?><!--" class="btn btn-primary action">Fonction</a>-->
 <a href="<?php echo $this->url('ressource-rh', [], ['fragment' => 'metier']); ?>" class="btn btn-primary action">Métier</a>
 
 <div class="main">
@@ -116,7 +116,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         <tr>
             <th> Libelle </th>
             <th> Famille professionnelle </th>
-            <th> #fonction </th>
+            <th> #metier </th>
             <th class="action"> Action </th>
         </tr>
         </thead>
@@ -126,7 +126,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                 <td> <?php echo $domaine->getLibelle(); ?> </td>
                 <td> <?php echo $domaine->getFamille(); ?> </td>
                 <td>
-                    <?php echo count($domaine->getFonctions()); ?>
+                    <?php echo count($domaine->getMetiers()); ?>
                 </td>
                 <td>
                     <?php if ($canEditerRessource) : ?>
@@ -150,69 +150,67 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 
 <br/>
 
-<div class="main">
-    <a name="fonction"></a>
-    <div class="col-md-8">
-        <h2>
-            Liste des fonctions
-            <span class="badge">
-            <?php echo count($fonctions); ?>
-        </span>
-        </h2>
-    </div>
-    <div class="pull-right">
-        <div class="alert alert-info"><em> Importer depuis Octopus</em></div>
-    </div>
-    <br/>
-    <table class="table table-condensed">
-        <thead>
-        <tr>
-            <th> Id </th>
-            <th> Parent </th>
-            <th> Code </th>
-<!--            <th> Niveau </th>-->
-            <th> Libellés </th>
-            <th> Domaine </th>
-            <th> #métier </th>
-            <th> Action </th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach($fonctions as $fonction) : ?>
-            <tr>
-                <td> <?php echo $fonction->getId(); ?> </td>
-                <td> <?php echo ($fonction !== $fonction->getParent())?$fonction->getParent()->getId():""; ?> </td>
-                <td> <?php echo $fonction->getCode(); ?> </td>
-<!--                <td> --><?php //echo $fonction->getNiveau(); ?><!-- </td>-->
-                <td>
-                    <ul>
-                        <?php foreach($fonction->getLibelles() as $libelle) : ?>
-                            <li>
-                                <span class="badge" <?php if ($libelle->getDefaut() === 'O') echo 'style="background-color:green;"'; ?> >
-                                    <?php echo $libelle->getGenre(); ?>
-                                </span>
-                                <?php echo $libelle->getLibelle(); ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </td>
-                <td> <?php echo $fonction->getDomaine(); ?> </td>
-                <td> <?php echo count($fonction->getMetiers()); ?> </td>
-                <td>
-                    <?php if ($canEditerRessource) : ?>
-                        <a href="<?php echo $this->url('ressource-rh/fonction/modifier', ['fonction' => $fonction->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
-                            <span class="icon editer" title="Éditer l'application"></span></a>
-                    <?php else : ?>
-                        <span class="icon editer" style="color: lightgrey;"></span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<br/>
+<!--<div class="main">-->
+<!--    <a name="fonction"></a>-->
+<!--    <div class="col-md-8">-->
+<!--        <h2>-->
+<!--            Liste des fonctions-->
+<!--            <span class="badge">-->
+<!--            --><?php //echo count($fonctions); ?>
+<!--        </span>-->
+<!--        </h2>-->
+<!--    </div>-->
+<!--    <div class="pull-right">-->
+<!--        <div class="alert alert-info"><em> Importer depuis Octopus</em></div>-->
+<!--    </div>-->
+<!--    <br/>-->
+<!--    <table class="table table-condensed">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th> Id </th>-->
+<!--            <th> Parent </th>-->
+<!--            <th> Code </th>-->
+<!--            <th> Libellés </th>-->
+<!--            <th> Domaine </th>-->
+<!--            <th> #métier </th>-->
+<!--            <th> Action </th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        --><?php //foreach($fonctions as $fonction) : ?>
+<!--            <tr>-->
+<!--                <td> --><?php //echo $fonction->getId(); ?><!-- </td>-->
+<!--                <td> --><?php //echo ($fonction !== $fonction->getParent())?$fonction->getParent()->getId():""; ?><!-- </td>-->
+<!--                <td> --><?php //echo $fonction->getCode(); ?><!-- </td>-->
+<!--                <td>-->
+<!--                    <ul>-->
+<!--                        --><?php //foreach($fonction->getLibelles() as $libelle) : ?>
+<!--                            <li>-->
+<!--                                <span class="badge" --><?php //if ($libelle->getDefaut() === 'O') echo 'style="background-color:green;"'; ?><!-- >-->
+<!--                                    --><?php //echo $libelle->getGenre(); ?>
+<!--                                </span>-->
+<!--                                --><?php //echo $libelle->getLibelle(); ?>
+<!--                            </li>-->
+<!--                        --><?php //endforeach; ?>
+<!--                    </ul>-->
+<!--                </td>-->
+<!--                <td> --><?php //echo $fonction->getDomaine(); ?><!-- </td>-->
+<!--                <td> --><?php //echo count($fonction->getMetiers()); ?><!-- </td>-->
+<!--                <td>-->
+<!--                    --><?php //if ($canEditerRessource) : ?>
+<!--                        <a href="--><?php //echo $this->url('ressource-rh/fonction/modifier', ['fonction' => $fonction->getId()], [], true); ?><!--"  class="ajax-modal" data-event="modification">-->
+<!--                            <span class="icon editer" title="Éditer l'application"></span></a>-->
+<!--                    --><?php //else : ?>
+<!--                        <span class="icon editer" style="color: lightgrey;"></span>-->
+<!--                    --><?php //endif; ?>
+<!--                </td>-->
+<!--            </tr>-->
+<!--        --><?php //endforeach; ?>
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+<!---->
+<!--<br/>-->
 
 <div class="main">
     <a name="metier"></a>
@@ -240,6 +238,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         <thead>
         <tr>
             <th> Libelle </th>
+            <th> Domaine </th>
             <th> Fonction </th>
             <th class="action"> Action </th>
         </tr>
@@ -248,6 +247,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
         <?php foreach($metiers as $metier): ?>
             <tr>
                 <td> <?php echo $metier->getLibelle(); ?> </td>
+                <td> <?php echo $metier->getDomaine(); ?> </td>
                 <td> <?php echo $metier->getFonction(); ?> </td>
                 <td>
                     <?php if ($canEditerRessource) : ?>

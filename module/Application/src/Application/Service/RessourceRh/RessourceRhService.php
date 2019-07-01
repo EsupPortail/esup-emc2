@@ -226,10 +226,8 @@ class RessourceRhService {
         $vide = [];
         $result = [];
         foreach ($metiers as $metier) {
-            if ($metier->getFonction()) {
-                $libelle = [];
-                foreach ($metier->getFonction()->getLibelles() as $fonctionLibelle) $libelle[] = $fonctionLibelle->getLibelle();
-                $result[implode("/", $libelle)][] = $metier;
+            if ($metier->getDomaine()) {
+                $result[$metier->getDomaine()->getLibelle()][] = $metier;
             } else {
                 $vide[] = $metier;
             }
@@ -248,7 +246,7 @@ class RessourceRhService {
         foreach ($vide as $metier) {
             $options[$metier->getId()] = $metier->getLibelle();
         }
-        $multi[] = ['label' => 'Sans fonction rattachée', 'options' => $options];
+        $multi[] = ['label' => 'Sans domaine rattaché', 'options' => $options];
         return $multi;
 
     }

@@ -34,7 +34,7 @@ $this->headTitle("Index des applications");
         <br/><br/>
     <?php endif; ?>
 
-    <table class="table table-condensed">
+    <table id="datatable" class="table table-condensed">
         <thead>
             <tr>
                 <th> Libelle</th>
@@ -83,6 +83,14 @@ $this->headTitle("Index des applications");
 </div>
 
 <script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    });
+
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');

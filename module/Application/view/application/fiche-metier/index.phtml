@@ -35,10 +35,12 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         <br/> <br/>
     <?php endif; ?>
 
-    <table class="table table-condensed">
+    <table id="datatable" class="table table-condensed">
     <thead>
     <tr>
         <th> Libellé </th>
+        <th> Fonction </th>
+        <th> Domaine </th>
         <th> Action </th>
     </tr>
     </thead>
@@ -46,6 +48,8 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         <?php foreach($fiches as $fiche): ?>
             <tr>
                 <td> <?php echo $fiche->getMetier()->getLibelle(); ?> </td>
+                <td> <?php echo $fiche->getMetier()->getFonction(); ?> </td>
+                <td> <?php echo $fiche->getMetier()->getDomaine(); ?> </td>
                 <td>
                     <?php if ($canVoir) : ?>
                         <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
@@ -91,6 +95,14 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
 
 
 <script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');

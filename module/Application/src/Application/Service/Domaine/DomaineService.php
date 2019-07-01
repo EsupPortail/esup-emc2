@@ -19,8 +19,7 @@ class DomaineService {
     {
         $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
             ->addSelect('famille')->leftJoin('domaine.famille', 'famille')
-            ->addSelect('fonction')->leftJoin('domaine.fonctions', 'fonction')
-            ->addSelect('metier')->leftJoin('fonction.metiers', 'metier')
+            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
         ;
         $qb = $qb->addOrderBy('domaine.libelle', 'ASC');
 
@@ -51,8 +50,7 @@ class DomaineService {
     {
         $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
             ->addSelect('famille')->leftJoin('domaine.famille', 'famille')
-            ->addSelect('fonction')->leftJoin('domaine.fonctions', 'fonction')
-            ->addSelect('metier')->leftJoin('fonction.metiers', 'metier')
+            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
             ->andWhere('domaine.id = :id')
             ->setParameter('id', $id)
         ;

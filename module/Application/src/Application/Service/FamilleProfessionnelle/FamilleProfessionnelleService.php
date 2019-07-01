@@ -20,8 +20,7 @@ class FamilleProfessionnelleService {
     {
         $qb = $this->getEntityManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
             ->addSelect('domaine')->leftJoin('famille.domaines', 'domaine')
-            ->addSelect('fonction')->leftJoin('domaine.fonctions', 'fonction')
-            ->addSelect('metier')->leftJoin('fonction.metiers', 'metier')
+            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
         ;
         $qb = $qb->addOrderBy('famille.libelle');
 
@@ -47,8 +46,7 @@ class FamilleProfessionnelleService {
     {
         $qb = $this->getEntityManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
             ->addSelect('domaine')->leftJoin('famille.domaines', 'domaine')
-            ->addSelect('fonction')->leftJoin('domaine.fonctions', 'fonction')
-            ->addSelect('metier')->leftJoin('fonction.metiers', 'metier')
+            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
             ->andWhere('famille.id = :id')
             ->setParameter('id', $id)
         ;

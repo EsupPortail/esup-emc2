@@ -20,7 +20,7 @@ class Poste {
     private $domaine;
     /** @var string */
     private $lien;
-    /** @var Fonction */
+    /** @var string */
     private $fonction;
 
     /**
@@ -158,7 +158,7 @@ class Poste {
     }
 
     /**
-     * @return Fonction
+     * @return string
      */
     public function getFonction()
     {
@@ -166,7 +166,7 @@ class Poste {
     }
 
     /**
-     * @param Fonction $fonction
+     * @param string $fonction
      * @return Poste
      */
     public function setFonction($fonction)

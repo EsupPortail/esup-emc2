@@ -19,7 +19,7 @@ class FonctionForm extends Form {
             'options' => [
                 'label' => "Domaine* :",
                 'empty_option' => "Sélectionner un domaine ...",
-                'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
+                'value_options' => [],//$this->getDomaineService()->getDomainesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'domaine',
