@@ -7,7 +7,7 @@
 use Application\Entity\Db\Activite;
 use Application\Provider\Privilege\ActivitePrivileges;
 
-$this->headTitle('Index des activités');
+$this->headTitle('Missions principales');
 
 $canVisualiser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::AFFICHER));
 $canAjouter     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::AJOUTER));
@@ -17,7 +17,7 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
 ?>
 
 <h1 class="page-header">
-    Activité
+    Missions principales
     <span class="badge"> <?php echo count($activites); ?> </span>
 </h1>
 
@@ -28,17 +28,19 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
            class="btn btn-primary action ajax-modal"
            data-event="modification">
             <span class="icon ajouter"></span>
-            Ajouter une activité
+            Ajouter une mission principale
         </a>
         <br/><br/>
     <?php endif; ?>
 
-    <table class="table table-condensed">
+    <table id="datatable" class="table table-condensed">
         <thead>
-            <th> Activité </th>
-            <th> Applications </th>
-            <th> Modification </th>
-            <th style="width:10rem;"> Action </th>
+            <tr>
+                <th> Mission </th>
+                <th> Applications </th>
+                <th> Modification </th>
+                <th style="width:10rem;"> Action </th>
+            </tr>
         </thead>
         <tbody>
             <?php foreach($activites as $activite) : ?>
@@ -110,6 +112,14 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
 </div>
 
 <script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    } );
+
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');

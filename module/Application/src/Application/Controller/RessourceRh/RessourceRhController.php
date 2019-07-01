@@ -424,12 +424,12 @@ class RessourceRhController extends AbstractActionController {
         $results = [];
         foreach($metiers as $metier) {
             $fonction = $metier->getFonction();
-            $domaine = ($fonction)?$fonction->getDomaine():null;
+            $domaine =  $metier->getDomaine();
             $famille = ($domaine)?$domaine->getFamille():null;
             $entry = [
                 'famille'  => ($famille)?$famille->__toString():"---",
+                'fonction' => ($fonction)?$fonction:"---",
                 'domaine'  => ($domaine)?$domaine->__toString():"---",
-                'fonction' => ($fonction)?$fonction->__toString():"---",
                 'metier'   => ($metier)?$metier->__toString():"---",
                 'nbFiche'   => count($metier->getFichesMetiers()),
             ];
@@ -438,8 +438,8 @@ class RessourceRhController extends AbstractActionController {
 
         usort($results, function($a, $b) {
             if ($a['famille'] !== $b['famille'])     return $a['famille'] < $b['famille'];
-            if ($a['domaine'] !== $b['domaine'])     return $a['domaine'] < $b['domaine'];
             if ($a['fonction'] !== $b['fonction'])   return $a['fonction'] < $b['fonction'];
+            if ($a['domaine'] !== $b['domaine'])     return $a['domaine'] < $b['domaine'];
             return $a['metier'] < $b['metier'];
         });
 

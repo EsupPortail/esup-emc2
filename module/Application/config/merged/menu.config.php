@@ -101,7 +101,7 @@ return [
                             ],
                             [
                                 'order' => 4,
-                                'label' => 'Familles, domaines, fonctions et métiers',
+                                'label' => 'Familles, domaines et métiers',
                                 'route' => 'ressource-rh/index-metier-famille-domaine',
                                 'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                                 'dropdown-header' => true,
@@ -224,14 +224,14 @@ return [
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
-                            [
-                                'order' => 4,
-                                'label' => 'Les formations',
-                                'route' => 'application',
-                                'privileges' => ApplicationPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
+//                            [
+//                                'order' => 4,
+//                                'label' => 'Les formations',
+//                                'route' => 'application',
+//                                'privileges' => ApplicationPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
                             [
                                 'order' => 7,
                                 'label' => 'Les fiches de poste',

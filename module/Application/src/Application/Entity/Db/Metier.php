@@ -11,7 +11,9 @@ class Metier {
     /** @var string */
     private $libelle;
 
-    /** @var Fonction */
+    /** @var Domaine */
+    private $domaine;
+    /** @var string */
     private $fonction;
 
 
@@ -48,7 +50,7 @@ class Metier {
     }
 
     /**
-     * @return Fonction
+     * @return string
      */
     public function getFonction()
     {
@@ -56,7 +58,7 @@ class Metier {
     }
 
     /**
-     * @param Fonction $fonction
+     * @param string $fonction
      * @return Metier
      */
     public function setFonction($fonction)
@@ -65,7 +67,23 @@ class Metier {
         return $this;
     }
 
+    /**
+     * @return Domaine
+     */
+    public function getDomaine()
+    {
+        return $this->domaine;
+    }
 
+    /**
+     * @param Domaine $domaine
+     * @return Metier
+     */
+    public function setDomaine($domaine)
+    {
+        $this->domaine = $domaine;
+        return $this;
+    }
 
     public function __toString()
     {

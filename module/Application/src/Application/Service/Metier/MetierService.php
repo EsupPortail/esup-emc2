@@ -18,8 +18,7 @@ class MetierService {
     public function getMetiers()
     {
         $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->addSelect('fonction')->leftJoin('metier.fonction','fonction')
-            ->addSelect('domaine')->leftJoin('fonction.domaine','domaine')
+            ->addSelect('domaine')->leftJoin('metier.domaine','domaine')
             ->addSelect('famille')->leftJoin('domaine.famille','famille')
         ;
         $qb = $qb->addOrderBy('metier.libelle');
@@ -49,8 +48,7 @@ class MetierService {
     public function getMetier($id)
     {
         $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->addSelect('fonction')->leftJoin('metier.fonction','fonction')
-            ->addSelect('domaine')->leftJoin('fonction.domaine','domaine')
+            ->addSelect('domaine')->leftJoin('metier.domaine','domaine')
             ->addSelect('famille')->leftJoin('domaine.famille','famille')
             ->andWhere('metier.id = :id')
             ->setParameter('id', $id)

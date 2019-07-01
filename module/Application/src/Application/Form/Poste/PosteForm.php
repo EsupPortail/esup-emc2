@@ -5,7 +5,6 @@ namespace Application\Form\Poste;
 use Application\Entity\Db\Domaine;
 use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Fonction\FonctionServiceAwareTrait;
 use Application\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -21,7 +20,6 @@ class PosteForm extends Form  {
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     use EntityManagerAwareTrait;
-    use FonctionServiceAwareTrait;
     use ServiceLocatorAwareTrait;
     use StructureServiceAwareTrait;
     use ImmobilierServiceAwareTrait;
@@ -138,7 +136,10 @@ class PosteForm extends Form  {
             'options' => [
                 'label' => "Fonction :",
                 'empty_option'  => "Sélectionner une fonction ...",
-                'value_options' => $this->getFonctionService()->getFonctionsAsOptions(),
+                'value_options' => [
+                    'Soutien' => 'Soutien',
+                    'Support' => 'Support',
+                ],
             ],
             'attributes' => [
                 'id' => 'fonction',

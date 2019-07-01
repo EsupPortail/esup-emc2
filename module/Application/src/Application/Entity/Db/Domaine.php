@@ -14,11 +14,11 @@ class Domaine {
     /** @var FamilleProfessionnelle */
     private $famille;
     /** @var ArrayCollection */
-    private $fonctions;
+    private $metiers;
 
     public function __construct()
     {
-        $this->fonctions = new ArrayCollection();
+        $this->metiers = new ArrayCollection();
     }
 
     /**
@@ -66,30 +66,30 @@ class Domaine {
     }
 
     /**
-     * @return Fonction[]
+     * @return Metier[]
      */
-    public function getFonctions()
+    public function getMetiers()
     {
-        return $this->fonctions->toArray();
+        return $this->metiers->toArray();
     }
 
     /**
-     * @param Fonction $fonction
+     * @param Metier $metier
      * @return Domaine
      */
-    public function addFonction($fonction)
+    public function addMetier($metier)
     {
-        $this->fonctions->add($fonction);
+        $this->metiers->add($metier);
         return $this;
     }
 
     /**
-     * @param Fonction $fonction
+     * @param Metier $metier
      * @return Domaine
      */
-    public function removeFonction($fonction)
+    public function removeMetier($metier)
     {
-        $this->fonctions->removeElement($fonction);
+        $this->metiers->removeElement($metier);
         return $this;
     }
 
