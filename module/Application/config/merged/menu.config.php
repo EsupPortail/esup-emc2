@@ -108,14 +108,6 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'order' => 6,
-                                'label' => 'Les missions spécifiques',
-                                'route' => 'ressource-rh/index-mission-specifique',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
                                 'order' => 7,
                                 'label' => 'Sites et bâtiments',
                                 'route' => 'immobilier',
@@ -209,13 +201,23 @@ return [
                         'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER),
                         'pages' => [
                             [
-                                'label' => 'Les activités',
+                                'order' => 1,
+                                'label' => 'Les missions principales',
                                 'route' => 'activite',
                                 'privileges' => ActivitePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right',
                             ],
                             [
+                                'order' => 2,
+                                'label' => 'Les missions spécifiques',
+                                'route' => 'ressource-rh/index-mission-specifique',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 3,
                                 'label' => 'Les applications',
                                 'route' => 'application',
                                 'privileges' => ApplicationPrivileges::AFFICHER,
@@ -223,6 +225,15 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
+                                'order' => 4,
+                                'label' => 'Les formations',
+                                'route' => 'application',
+                                'privileges' => ApplicationPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 7,
                                 'label' => 'Les fiches de poste',
                                 'route' => 'fiche-poste',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
@@ -230,6 +241,7 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
+                                'order' => 6,
                                 'label' => 'Les fiches métiers',
                                 'route' => 'fiche-metier-type',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
@@ -237,6 +249,7 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
+                                'order' => 5,
                                 'label' => 'Les postes',
                                 'route' => 'poste',
                                 'privileges' => PostePrivileges::AFFICHER,

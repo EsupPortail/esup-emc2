@@ -26,7 +26,7 @@ use Application\Entity\Db\Poste;
     <dd class="siham"> <?php echo $poste->getLocalisation(); ?> </dd>
     <dt> Rattachement hiérarchique </dt>
     <dd class="siham"> <?php echo $rattachement; ?> </dd>
-    <dt> Catégorie </dt>
+    <dt> Correspondance </dt>
     <dd class="siham">
         BAP <?php echo $poste->getCorrespondance()->getCategorie(); ?> -
         <?php echo $poste->getCorrespondance()->getLibelleLong(); ?>
