@@ -16,18 +16,13 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
 ?>
 
 <h1 class="page-header">
-    Index des missions spécifiques
+    Missions spécifiques
+    <span class="badge">
+        <?php echo count($missions); ?>
+    </span>
 </h1>
 
 <div class="main">
-    <div class="col-md-8">
-        <h2>
-            Liste des missions spécifiques
-            <span class="badge">
-            <?php echo count($missions); ?>
-        </span>
-        </h2>
-    </div>
     <div class="pull-right">
         <?php if ($canAjouterRessource) : ?>
             <a href="<?php echo $this->url('ressource-rh/mission-specifique/ajouter', [], [], true);?>"

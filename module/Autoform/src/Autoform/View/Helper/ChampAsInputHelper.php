@@ -38,7 +38,6 @@ class ChampAsInputHelper extends AbstractHelper
 
             case Champ::TYPE_CHECKBOX :
                 $texte .= $view->partial('input-checkbox', ['champ' => $champ, 'reponse' => $reponse]);
-
                 break;
 
             case Champ::TYPE_TEXT :
