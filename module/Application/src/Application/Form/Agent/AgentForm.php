@@ -17,6 +17,7 @@ class AgentForm extends Form {
             'type' => Select::class,
             'name' => 'quotite',
             'options' => [
+                'label' => 'Quotité travaillée* :',
                 'empty_option' => "Sélectionner une quotité ...",
                 'value_options' => [
                     20 => ' 20 %',
@@ -42,6 +43,7 @@ class AgentForm extends Form {
             'type' => Select::class,
             'name' => 'missions',
             'options' => [
+                'label' => 'Missions spécifiques :',
                 'value_options' => $this->getRessourceRhService()->getMisssionsSpecifiquesAsOption(),
             ],
             'attributes' => [
