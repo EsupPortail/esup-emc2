@@ -454,12 +454,12 @@ class RessourceRhController extends AbstractActionController {
         $results = [];
         foreach($metiers as $metier) {
             $fonction = $metier->getFonction();
-            $domaine = ($fonction)?$fonction->getDomaine():null;
+            $domaine = ($metier)?$metier->getDomaine():null;
             $famille = ($domaine)?$domaine->getFamille():null;
             $entry = [
                 'famille'  => ($famille)?$famille->__toString():"---",
                 'domaine'  => ($domaine)?$domaine->__toString():"---",
-                'fonction' => ($fonction)?$fonction->__toString():"---",
+                'fonction' => ($fonction)?:"---",
                 'metier'   => ($metier)?$metier->__toString():"---",
                 'nbFiche'   => count($metier->getFichesMetiers()),
             ];
