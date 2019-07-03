@@ -6,7 +6,7 @@ class FicheMetierTypeActivite {
 
     /** @var int */
     private $id;
-    /** @var FicheMetierType */
+    /** @var FicheMetier */
     private $fiche;
     /** @var Activite */
     private $activite;
@@ -23,7 +23,7 @@ class FicheMetierTypeActivite {
     }
 
     /**
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function getFiche()
     {
@@ -31,7 +31,7 @@ class FicheMetierTypeActivite {
     }
 
     /**
-     * @param FicheMetierType $fiche
+     * @param FicheMetier $fiche
      * @return FicheMetierTypeActivite
      */
     public function setFiche($fiche)

@@ -2,50 +2,34 @@
 
 namespace Application;
 
-use Application\Controller\FicheMetier\FicheMetierTypeController;
-use Application\Controller\FicheMetier\FicheMetierTypeControllerFactory;
-use Application\Form\FicheMetier\AjouterFicheTypeForm;
-use Application\Form\FicheMetier\AjouterFicheTypeFormFactory;
-use Application\Form\FicheMetier\AjouterFicheTypeHydrator;
-use Application\Form\FicheMetier\AjouterFicheTypeHydratorFactory;
-use Application\Form\FicheMetier\AssocierMetierTypeForm;
-use Application\Form\FicheMetier\AssocierMetierTypeFormFactory;
-use Application\Form\FicheMetier\AssocierMetierTypeHydrator;
-use Application\Form\FicheMetier\AssocierMetierTypeHydratorFactory;
-use Application\Form\FicheMetier\AssocierPosteForm;
-use Application\Form\FicheMetier\AssocierPosteFormFactory;
-use Application\Form\FicheMetier\AssocierPosteHydrator;
-use Application\Form\FicheMetier\AssocierPosteHydratorFactory;
-use Application\Form\FicheMetier\FicheMetierCreationForm;
-use Application\Form\FicheMetier\FicheMetierCreationFormFactory;
-use Application\Form\FicheMetier\FicheMetierCreationHydrator;
-use Application\Form\FicheMetier\FicheMetierCreationHydratorFactory;
-use Application\Form\FicheMetierType\ActiviteExistanteForm;
-use Application\Form\FicheMetierType\ActiviteExistanteFormFactory;
-use Application\Form\FicheMetierType\ApplicationsForm;
-use Application\Form\FicheMetierType\ApplicationsFormFactory;
-use Application\Form\FicheMetierType\ApplicationsHydrator;
-use Application\Form\FicheMetierType\ApplicationsHydratorFactory;
-use Application\Form\FicheMetierType\FormationBaseForm;
-use Application\Form\FicheMetierType\FormationBaseFormFactory;
-use Application\Form\FicheMetierType\FormationBaseHydrator;
-use Application\Form\FicheMetierType\FormationComportementaleForm;
-use Application\Form\FicheMetierType\FormationComportementaleFormFactory;
-use Application\Form\FicheMetierType\FormationComportementaleHydrator;
-use Application\Form\FicheMetierType\FormationOperationnelleForm;
-use Application\Form\FicheMetierType\FormationOperationnelleFormFactory;
-use Application\Form\FicheMetierType\FormationOperationnelleHydrator;
-use Application\Form\FicheMetierType\LibelleForm;
-use Application\Form\FicheMetierType\LibelleFormFactory;
-use Application\Form\FicheMetierType\LibelleHydrator;
-use Application\Form\FicheMetierType\LibelleHydratorFactory;
-use Application\Form\FicheMetierType\MissionsPrincipalesForm;
-use Application\Form\FicheMetierType\MissionsPrincipalesFormFactory;
+use Application\Controller\FicheMetier\FicheMetierController;
+use Application\Controller\FicheMetier\FicheMetierControllerFactory;
+use Application\Form\FicheMetier\ActiviteExistanteForm;
+use Application\Form\FicheMetier\ActiviteExistanteFormFactory;
+use Application\Form\FicheMetier\ApplicationsForm;
+use Application\Form\FicheMetier\ApplicationsFormFactory;
+use Application\Form\FicheMetier\ApplicationsHydrator;
+use Application\Form\FicheMetier\ApplicationsHydratorFactory;
+use Application\Form\FicheMetier\FormationBaseForm;
+use Application\Form\FicheMetier\FormationBaseFormFactory;
+use Application\Form\FicheMetier\FormationBaseHydrator;
+use Application\Form\FicheMetier\FormationComportementaleForm;
+use Application\Form\FicheMetier\FormationComportementaleFormFactory;
+use Application\Form\FicheMetier\FormationComportementaleHydrator;
+use Application\Form\FicheMetier\FormationOperationnelleForm;
+use Application\Form\FicheMetier\FormationOperationnelleFormFactory;
+use Application\Form\FicheMetier\FormationOperationnelleHydrator;
+use Application\Form\FicheMetier\LibelleForm;
+use Application\Form\FicheMetier\LibelleFormFactory;
+use Application\Form\FicheMetier\LibelleHydrator;
+use Application\Form\FicheMetier\LibelleHydratorFactory;
+use Application\Form\FicheMetier\MissionsPrincipalesForm;
+use Application\Form\FicheMetier\MissionsPrincipalesFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
-use Application\View\Helper\FicheTypeExterneViewHelper;
-use Application\View\Helper\FicheTypeViewHelper;
+use Application\View\Helper\FicheMetierExterneViewHelper;
+use Application\View\Helper\FicheMetierViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
@@ -56,7 +40,7 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => FicheMetierTypeController::class,
+                    'controller' => FicheMetierController::class,
                     'action' => [
                         'index',
                     ],
@@ -64,13 +48,14 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FicheMetierTypeController::class,
+                    'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
                         'editer',
                         'detruire',
                         'historiser',
                         'restaurer',
+                        'export',
 
                         'editer-libelle',
                         'editer-missions-principales',
@@ -100,7 +85,7 @@ return [
                 'options' => [
                     'route'    => '/fiche-metier-type',
                     'defaults' => [
-                        'controller' => FicheMetierTypeController::class,
+                        'controller' => FicheMetierController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -111,7 +96,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -122,8 +107,19 @@ return [
                         'options' => [
                             'route'    => '/afficher/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'export' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/export/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'export',
                             ],
                         ],
                         'may_terminate' => true,
@@ -131,9 +127,9 @@ return [
                     'editer' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/editer/:id',
+                            'route'    => '/editer[/:id]',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'editer',
                             ],
                         ],
@@ -144,7 +140,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -155,7 +151,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -166,7 +162,7 @@ return [
                         'options' => [
                             'route'    => '/detruire/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'detruire',
                             ],
                         ],
@@ -177,7 +173,7 @@ return [
                         'options' => [
                             'route'    => '/editer-libelle/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'editer-libelle',
                             ],
                         ],
@@ -188,7 +184,7 @@ return [
                         'options' => [
                             'route'    => '/editer-missions-principales/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'editer-missions-principales',
                             ],
                         ],
@@ -199,7 +195,7 @@ return [
                         'options' => [
                             'route'    => '/retirer-activite/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'retirer-activite',
                             ],
                         ],
@@ -210,7 +206,7 @@ return [
                         'options' => [
                             'route'    => '/deplacer-activite/:id/:direction',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'deplacer-activite',
                             ],
                         ],
@@ -221,7 +217,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter-nouvelle-activite/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter-nouvelle-activite',
                             ],
                         ],
@@ -232,7 +228,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter-activite-existante/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter-activite-existante',
                             ],
                         ],
@@ -243,7 +239,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-connaissances/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-connaissances',
                             ],
                         ],
@@ -254,7 +250,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-operationnelle/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-operationnelle',
                             ],
                         ],
@@ -265,7 +261,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-comportementale/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-comportementale',
                             ],
                         ],
@@ -276,7 +272,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-application/:id',
                             'defaults' => [
-                                'controller' => FicheMetierTypeController::class,
+                                'controller' => FicheMetierController::class,
                                 'action'     => 'modifier-application',
                             ],
                         ],
@@ -296,7 +292,7 @@ return [
     ],
     'controllers'     => [
         'factories' => [
-            FicheMetierTypeController::class => FicheMetierTypeControllerFactory::class,
+            FicheMetierController::class => FicheMetierControllerFactory::class,
         ],
     ],
     'form_elements' => [
@@ -331,8 +327,8 @@ return [
     'view_helpers' => [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
-            'ficheTypeExterne' => FicheTypeExterneViewHelper::class,
-            'ficheMetierType'  => FicheTypeViewHelper::class,
+            'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
+            'ficheMetier'  => FicheMetierViewHelper::class,
         ],
     ],
 

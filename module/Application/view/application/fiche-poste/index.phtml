@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
  * @var FichePoste[] $fiches
@@ -8,15 +9,15 @@ use Application\Entity\Db\FichePoste;
 
 $this->headTitle('Index des fiches de postes');
 
-$canAjouter = true;
-$canVoir = true;
-$canHistoriser = true;
-$canEditer = true;
-$canDetruire = true;
+$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
+$canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
+$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 ?>
 
 <h1 class="page-header">
-    Index des fiches de poste
+    Fiches de poste
     <span class="badge">
         <?php echo count($fiches); ?>
     </span>
@@ -24,7 +25,6 @@ $canDetruire = true;
 
 <div class="main">
 
-    <span class="TODO">REDIRIGER APRES CREATION VERS LA PAGE D EDITION ...</span><br/>
     <?php if ($canAjouter) : ?>
         <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
             <span class="icon ajouter"></span>
@@ -62,6 +62,12 @@ $canDetruire = true;
                               class="ajax-modal">
                                 <span class="icon voir" title="Visualiser la fiche de poste"></span></a>
                         <?php endif; ?>
+                        <?php if ($canVoir) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               title="Exporter en PDF la fiche de poste"
+                            >
+                                <span class="icon pdf"></span></a>
+                        <?php endif; ?>
                         <?php if ($canEditer) : ?>
                             <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>">
                                 <span class="icon editer" title="Éditer la fiche de poste"></span></a>
@@ -91,7 +97,7 @@ $canDetruire = true;
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            window.location.reload();
+            window.location.href = 'fiche-poste/editer';
         });
     });
 </script>

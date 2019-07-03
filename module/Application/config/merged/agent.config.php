@@ -7,18 +7,15 @@ use Application\Controller\Agent\AgentControllerFactory;
 use Application\Controller\AgentFichier\AgentFichierController;
 use Application\Controller\AgentFichier\AgentFichierControllerFactory;
 use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
-use Application\Entity\Db\AgentStatut;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
 use Application\Form\Agent\AgentHydratorFactory;
-use Application\Form\Agent\AgentImportForm;
-use Application\Form\Agent\AgentImportFormFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
-use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
+use Application\View\Helper\AgentStatutViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -32,6 +29,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+
                     ],
                     'privileges' => [
                         AgentPrivileges::AFFICHER,
@@ -40,21 +38,10 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'ajouter',
-                        'importer',
                         'rechercher-individu',
                     ],
                     'privileges' => [
                         AgentPrivileges::AJOUTER,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'supprimer',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::EFFACER,
                     ],
                 ],
                 [
@@ -102,6 +89,16 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                    ],
                     'fichiers' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -142,46 +139,6 @@ return [
                             ],
                         ],
                     ],
-                    'modifier' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier/:id',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier',
-                            ],
-                        ],
-                    ],
-                    'supprimer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer/:id',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'supprimer',
-                            ],
-                        ],
-                    ],
-                    'ajouter' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/ajouter',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'ajouter',
-                            ],
-                        ],
-                    ],
-                    'importer' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/importer',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'importer',
-                            ],
-                        ],
-                    ],
                     'rechercher-individu' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -213,13 +170,12 @@ return [
     'form_elements' => [
         'factories' => [
             AgentForm::class => AgentFormFactory::class,
-            AgentImportForm::class => AgentImportFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             AgentHydrator::class => AgentHydratorFactory::class,
-        ]
+        ],
     ],
     'view_helpers' => [
         'invokables' => [

@@ -12,7 +12,7 @@ $this->headTitle('Édition de l\'entretien professionnel');
 <h1 class="page-header">
     Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
     <?php echo $entretien->getAgent()->getPrenom(); ?>
-    <?php echo $entretien->getAgent()->getNom(); ?>
+    <?php echo $entretien->getAgent()->getNomUsuel(); ?>
 </h1>
 
 <div class="main">
@@ -30,7 +30,7 @@ $this->headTitle('Édition de l\'entretien professionnel');
                         <dt> Agent</dt>
                         <dd>
                             <?php echo $entretien->getAgent()->getPrenom(); ?>
-                            <?php echo $entretien->getAgent()->getNom(); ?>
+                            <?php echo $entretien->getAgent()->getNomUsuel(); ?>
                         </dd>
                         <dt> Responsable</dt>
                         <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>
@@ -63,8 +63,8 @@ $this->headTitle('Édition de l\'entretien professionnel');
          * @var string $retour
          */
         $formulaire = $entretien->getFormulaireInstance()->getFormulaire();
-        $retour = $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], ['force_canonical' => true], true);
-        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $entretien->getFormulaireInstance()->getId()], ['query' => ['retour' => $retour], 'force_canonical' => true], true);
+        $retour = $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $entretien->getFormulaireInstance()->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
         echo "'".$url."'";
         ?>;
     console.log(url);

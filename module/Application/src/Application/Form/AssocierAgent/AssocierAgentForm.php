@@ -22,6 +22,8 @@ class AssocierAgentForm extends Form {
             ],
             'attributes' => [
                 'id' => 'agent',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 
@@ -48,7 +50,7 @@ class AssocierAgentForm extends Form {
         $options = [];
         $options[0] = "Sélectionner un agent ... ";
         foreach ($agents as $agent) {
-            $options[$agent->getId()] = $agent->getDenomination() . ' ('.$agent->getNumeroPoste().')';
+            $options[$agent->getId()] = $agent->getDenomination(); /* . ' ('.$agent->getNumeroPoste().')';*/
         }
         return $options;
 

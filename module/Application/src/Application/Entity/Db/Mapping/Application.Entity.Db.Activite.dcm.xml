@@ -9,6 +9,17 @@
         <field name="libelle"           type="string" length="255"      column="libelle"                nullable="false"/>
         <field name="description"       type="string" length="2047"     column="description"            nullable="false"/>
 
+        <many-to-many field="applications" target-entity="Application\Entity\Db\Application" inversed-by="application" fetch="LAZY">
+            <join-table name="activite_application">
+                <join-columns>
+                    <join-column name="activite_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="application_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>

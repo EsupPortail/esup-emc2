@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @var FicheMetier $fiche
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierTypeActivite;
+
+?>
+
+<?php
+    $activites = $fiche->getActivites();
+    usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() < $b->getPosition();});
+?>
+
+<h1>
+    <?php echo $fiche->getMetier()->getLibelle(); ?>
+</h1>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>Missions principales</h2>
+    </div>
+    <div class="panel-body">
+        <?php echo $fiche->getMissionsPrincipales(); ?>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>Activités</h2>
+    </div>
+    <div class="panel-body">
+
+    <?php foreach($activites as $activite) : ?>
+        <?php if ($activite->getActivite()->estNonHistorise()) : ?>
+            <div class="activite">
+                <h3> <?php echo $activite->getActivite()->getLibelle(); ?> </h3>
+                <?php echo $activite->getActivite()->getDescription(); ?>
+            </div>
+        <?php endif ;?>
+    <?php endforeach; ?>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>Parcours de formation de base pour la prise de poste</h2>
+    </div>
+    <div class="panel-body">
+        <h3> Connaissances </h3>
+        <?php echo $fiche->getConnaissances(); ?>
+        <h3>Compétences opérationnelles </h3>
+        <?php echo $fiche->getCompetencesOperationnelles(); ?>
+        <h3> Compétences comportementales </h3>
+        <?php echo $fiche->getCompetencesComportementales(); ?>
+    </div>
+
+<?php
+    $applications = [];
+    foreach ($fiche->getActivites() as $activite) {
+        foreach ($activite->getActivite()->getApplications() as $application) {
+            $applications[] = $application->getLibelle();
+        }
+    }
+    foreach ($fiche->getApplications() as $application) {
+        $applications[] = $application->getLibelle();
+    }
+    sort($applications);
+    $applications = array_unique($applications);
+?>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3> Applications </h3>
+                <ul>
+                    <?php foreach ($applications as $application) : ?>
+                        <li> <?php echo $application; ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+        </div>
+        <div class="col-md-6">
+            <h3> Plan de formation </h3>
+                <?php
+                    echo $fiche->getConnaissancesFormation();
+                    echo $fiche->getCompetencesOperationnellesFormation();
+                    echo $fiche->getCompetencesComportementalesFormation();
+                    echo $fiche->getApplicationsFormation();
+                ?>
+        </div>
+    </div>
+</div>

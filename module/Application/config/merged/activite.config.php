@@ -7,6 +7,7 @@ use Application\Controller\Activite\ActiviteControllerFactory;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormFactory;
 use Application\Form\Activite\ActiviteHydrator;
+use Application\Form\Activite\ActiviteHydratorFactory;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Activite\ActiviteServiceFactory;
@@ -32,13 +33,29 @@ return [
                     'controller' => ActiviteController::class,
                     'action' => [
                         'creer',
+                    ],
+                    'privileges' => [
+                        ActivitePrivileges::AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ActiviteController::class,
+                    'action' => [
                         'editer',
                         'historiser',
                         'restaurer',
-                        'detruire',
                     ],
                     'privileges' => [
                         ActivitePrivileges::EDITER,
+                    ],
+                ],
+                [
+                    'controller' => ActiviteController::class,
+                    'action' => [
+                        'detruire',
+                    ],
+                    'privileges' => [
+                        ActivitePrivileges::EFFACER,
                     ],
                 ],
             ],
@@ -50,7 +67,7 @@ return [
             'activite' => [
                 'type'  => Literal::class,
                 'options' => [
-                    'route'    => '/activite',
+                    'route'    => '/mission-principale',
                     'defaults' => [
                         'controller' => ActiviteController::class,
                         'action'     => 'index',
@@ -141,8 +158,8 @@ return [
         ],
     ],
     'hydrators' => [
-        'invokable' => [
-            ActiviteHydrator::class => ActiviteHydrator::class,
+        'factories' => [
+            ActiviteHydrator::class => ActiviteHydratorFactory::class,
         ]
     ]
 

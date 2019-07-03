@@ -3,20 +3,22 @@
 namespace Application\Form\Agent;
 
 use Application\Service\RessourceRh\RessourceRhService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\Hydrator\HydratorPluginManager;
 
-class AgentHydratorFactory {
+class AgentHydratorFactory  {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
-    {
-        /** @var ServiceLocatorInterface $parentLocator */
-        $parentLocator = $serviceLocator->getServiceLocator();
-        /** @var RessourceRhService $ressourceService */
-        $ressourceService = $parentLocator->get(RessourceRhService::class);
+    public function __invoke(HydratorPluginManager $manager) {
 
-        $hydrator = new AgentHydrator();
+        /**
+         * @var RessourceRhService $ressourceService
+         */
+        $ressourceService = $manager->getServiceLocator()->get(RessourceRhService::class);
+
+        /** @var AgentHydrator $hydrator */
+        $hydrator = new AgentHydrator;
         $hydrator->setRessourceRhService($ressourceService);
-
         return $hydrator;
     }
+
+
 }

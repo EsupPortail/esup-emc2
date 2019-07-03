@@ -4,16 +4,19 @@ namespace Application\Entity\Db;
 
 class Grade {
 
-    /** @var integer */
-    private $id;
-    /** @var Corps */
-    private $corps;
     /** @var string */
-    private $libelle;
-    /** @var integer */
-    private $rang;
+    private $id;
+    /** @var string */
+    private $libelleCourt;
+    /** @var string */
+    private $libelleLong;
+    /** @var string */
+    private $code;
+    /** @var string */
+    private $histo;
+
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
@@ -21,64 +24,79 @@ class Grade {
     }
 
     /**
-     * @return Corps
+     * @return string
      */
-    public function getCorps()
+    public function getLibelleCourt()
     {
-        return $this->corps;
+        return $this->libelleCourt;
     }
 
     /**
-     * @param Corps $corps
+     * @param string $libelleCourt
      * @return Grade
      */
-    public function setCorps($corps)
+    public function setLibelleCourt($libelleCourt)
     {
-        $this->corps = $corps;
+        $this->libelleCourt = $libelleCourt;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getLibelleLong()
     {
-        return $this->libelle;
+        return $this->libelleLong;
     }
 
     /**
-     * @param string $libelle
+     * @param string $libelleLong
      * @return Grade
      */
-    public function setLibelle($libelle)
+    public function setLibelleLong($libelleLong)
     {
-        $this->libelle = $libelle;
+        $this->libelleLong = $libelleLong;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     * @return Grade
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHisto()
+    {
+        return $this->histo;
+    }
+
+    /**
+     * @param string $histo
+     * @return Grade
+     */
+    public function setHisto($histo)
+    {
+        $this->histo = $histo;
         return $this;
     }
 
     public function __toString()
     {
-        $texte = $this->getCorps()->getLibelle() . " ". $this->getLibelle();
-        return $texte;
+        return $this->getLibelleCourt();
     }
-
-    /**
-     * @return int
-     */
-    public function getRang()
-    {
-        return $this->rang;
-    }
-
-    /**
-     * @param int $rang
-     * @return Grade
-     */
-    public function setRang($rang)
-    {
-        $this->rang = $rang;
-        return $this;
-    }
-
-
 }

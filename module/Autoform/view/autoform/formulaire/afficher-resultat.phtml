@@ -24,7 +24,7 @@
 
                 $results = [];
                 foreach ($champs as $champ) {
-                    if ($reponses[$champ->getId()]) $results[] = $reponses[$champ->getId()];
+                    if ($champ->getId() && isset($reponses[$champ->getId()])) $results[] = $reponses[$champ->getId()];
                 }
             ?>
 

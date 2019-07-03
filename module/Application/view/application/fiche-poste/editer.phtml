@@ -34,7 +34,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </div>
             <div class="col-md-6">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche' => $fiche->getId()], [], true); ?>"
+                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >
@@ -57,7 +57,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                 Aucun agent d'associé à ce poste
             </div>
         <?php else : ?>
-            <?php echo $this->agent()->render($agent); ?>
+            <?php echo $this->agent($agent); ?>
         <?php endif; ?>
     </div>
 </div>
@@ -106,7 +106,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
                     Aucun poste n'est attaché à ce poste
                 </div>
             <?php else: ?>
-                <?php echo $this->poste()->render($fiche->getPoste()); ?>
+                <?php echo $this->poste($fiche->getPoste()); ?>
             <?php endif; ?>
     </div>
 </div>
@@ -127,7 +127,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-8">
-            <h2>Fiche composée de <?php echo count($fichesMetiers); ?> fiche(s) type(s).</h2>
+            <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
             <ul>
                 <?php if ($principal) : ?>
                     <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
@@ -150,9 +150,9 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
     </div>
 </div>
 
-<?php if ($principal) echo $this->ficheTypeExterne()->render($principal);  ?>
+<?php if ($principal) echo $this->ficheMetierExterne($principal, true);  ?>
 <?php foreach ($fichesMetiers as $ficheType) : ?>
-    <?php echo $this->ficheTypeExterne()->render($ficheType);  ?>
+    <?php echo $this->ficheMetierExterne($ficheType, true);  ?>
 <?php endforeach; ?>
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
@@ -182,7 +182,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
                 Aucune spécificité attachée à ce poste.
             </div>
         <?php else: ?>
-            <?php echo $this->specificitePoste()->render($fiche->getSpecificite()); ?>
+            <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
         <?php endif; ?>
     </div>
 </div>

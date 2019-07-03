@@ -10,7 +10,7 @@ class Poste {
     private $numeroPoste;
     /** @var Structure */
     private $structure;
-    /** @var string */
+    /** @var Batiment */
     private $localisation;
     /** @var Correspondance */
     private $correspondance;
@@ -20,7 +20,7 @@ class Poste {
     private $domaine;
     /** @var string */
     private $lien;
-    /** @var Fonction */
+    /** @var string */
     private $fonction;
 
     /**
@@ -68,7 +68,7 @@ class Poste {
     }
 
     /**
-     * @return string
+     * @return Batiment
      */
     public function getLocalisation()
     {
@@ -76,7 +76,7 @@ class Poste {
     }
 
     /**
-     * @param string $localisation
+     * @param Batiment $localisation
      * @return Poste
      */
     public function setLocalisation($localisation)
@@ -158,7 +158,7 @@ class Poste {
     }
 
     /**
-     * @return Fonction
+     * @return string
      */
     public function getFonction()
     {
@@ -166,7 +166,7 @@ class Poste {
     }
 
     /**
-     * @param Fonction $fonction
+     * @param string $fonction
      * @return Poste
      */
     public function setFonction($fonction)

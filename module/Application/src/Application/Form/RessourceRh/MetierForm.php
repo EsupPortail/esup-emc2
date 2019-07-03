@@ -2,39 +2,49 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Entity\Db\MetierFamille;
-use DoctrineModule\Form\Element\ObjectSelect;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
+use Application\Service\Fonction\FonctionServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
 class MetierForm extends Form {
-    use EntityManagerAwareTrait;
+    use DomaineServiceAwareTrait;
 
     public function init()
     {
-        // Status
+        //domaine
         $this->add([
-            'type' => ObjectSelect::class,
-            'name' => 'famille',
+            'type' => Select::class,
+            'name' => 'fonction',
             'options' => [
-                'label' => "Famille de métier* :",
-                'empty_option' => "Sélectionner une famille de métier ...",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => MetierFamille::class,
-                'property' => 'libelle',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['libelle' => 'ASC'],
-                    ],
+                'label' => "Fonction :",
+                'empty_option' => "Sélectionner une fonction ...",
+                'value_options' => [
+                    'Soutien' => 'Soutien',
+                    'Support' => 'Support',
                 ],
-                'disable_inarray_validator' => true,
             ],
             'attributes' => [
-                'id' => 'famille',
+                'id' => 'fonction',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
+        //fonction
+        $this->add([
+            'type' => Select::class,
+            'name' => 'domaine',
+            'options' => [
+                'label' => "Domaine UniCaen* :",
+                'empty_option' => "Sélectionner un domaine ...",
+                'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'fonction',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         // libelle
@@ -53,7 +63,7 @@ class MetierForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer le métier',
+                'label' => '<i class="fas fa-save"></i> Enregistrer',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

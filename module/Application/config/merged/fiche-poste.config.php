@@ -50,6 +50,7 @@ return [
                         'retirer-fiche-metier',
                         'modifier-fiche-metier',
                         'selectionner-activite',
+                        'export',
                     ],
                     'roles' => [
                     ],
@@ -93,11 +94,22 @@ return [
                             ],
                         ],
                     ],
+                    'export' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/export/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'export',
+                            ],
+                        ],
+                    ],
                     'editer' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/editer/:fiche-poste',
+                            'route'    => '/editer[/:fiche-poste]',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'editer',

@@ -4,8 +4,8 @@ namespace Application\Form\Agent;
 
 trait AgentFormAwareTrait {
 
-    /** @var AgentForm $agentForm */
-    private $agentForm;
+    /** @var AgentForm */
+    private  $agentForm;
 
     /**
      * @return AgentForm
@@ -24,4 +24,6 @@ trait AgentFormAwareTrait {
         $this->agentForm = $agentForm;
         return $this->agentForm;
     }
+
+
 }

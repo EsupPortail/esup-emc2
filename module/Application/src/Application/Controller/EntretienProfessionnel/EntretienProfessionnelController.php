@@ -81,7 +81,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        //$vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Création d\'un nouvel entretien professionnel',
             'form'  => $form,
@@ -128,6 +128,4 @@ class EntretienProfessionnelController extends AbstractActionController {
         $this->getEntretienProfessionnelService()->delete($entretien);
         return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
     }
-
-
 }

@@ -26,6 +26,9 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
+        $identity = null;
+        $agent = null;
+
         /** @var Role $connectedRole */
         $connectedRole = $this->getUserService()->getConnectedRole();
 
@@ -40,17 +43,16 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $identity = $this->getUserService()->getConnectedUser();
-        if ($identity) {
-        }
+        if ($this->getUserService()->getServiceUserContext()->getLdapUser()) {
+            $supannId = ((int)$this->getUserService()->getServiceUserContext()->getLdapUser()->getSupannEmpId());
+            $identity = $this->getUserService()->getConnectedUser();
 
-        // !TODO bouger cela pour faire plus propre ...
-        $agent = $this->getAgentService()->getAgentByUser($identity);
-        if ($identity !== null && $agent === null) {
-            $people = $this->getServiceUserContext()->getLdapUser();
-            if ($people->getSupannEmpId() !== null) {
+            // !TODO bouger cela pour faire plus propre ...
+            $agent = $this->getAgentService()->getAgentBySupannId($supannId);
+            if ($identity !== null && $agent !== null && $agent->getUtilisateur() === null) {
+                $agent->setUtilisateur($identity);
+                $this->getAgentService()->update($agent);
                 $personnel = $this->getRoleService()->getRoleByCode(Role::PERSONNEL);
-                $this->getAgentService()->createFromLDAP($people, $identity);
                 $this->getUserService()->addRole($identity, $personnel);
                 return $this->redirect()->toRoute('home', [], [], true);
             }

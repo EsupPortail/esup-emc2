@@ -2,111 +2,41 @@
 
 namespace Application\Service\RessourceRh;
 
-use Application\Entity\Db\AgentStatus;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
-use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
-use Application\Entity\Db\MetierFamille;
+use Application\Entity\Db\MissionSpecifique;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenAuth\Entity\Db\User;
+use Utilisateur\Service\User\UserServiceAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class RessourceRhService {
     use EntityManagerAwareTrait;
-
-    /** AGENT STATUS **************************************************************************************************/
-
-    /**
-     * @param string $order
-     * @return AgentStatus[]
-     */
-    public function getAgentStatusListe($order = null)
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentStatus::class)->createQueryBuilder('status');
-
-        if ($order !== null) {
-            $qb = $qb->orderBy('status.' . $order);
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return AgentStatus
-     */
-    public function getAgentStatus($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentStatus::class)->createQueryBuilder('status')
-            ->andWhere('status.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs status partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param AgentStatus $status
-     * @return AgentStatus
-     */
-    public function createAgentStatus($status)
-    {
-        $this->getEntityManager()->persist($status);
-        try {
-            $this->getEntityManager()->flush($status);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un status", $e);
-        }
-        return $status;
-    }
-
-    /**
-     * @param AgentStatus $status
-     * @return AgentStatus
-     */
-    public function updateAgentStatus($status)
-    {
-        try {
-            $this->getEntityManager()->flush($status);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un status", $e);
-        }
-        return $status;
-    }
-
-    /**
-     * @param AgentStatus $status
-     */
-    public function deleteAgentStatus($status)
-    {
-        $this->getEntityManager()->remove($status);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un status", $e);
-        }
-    }
+    use UserServiceAwareTrait;
 
     /** CORRESPONDANCE ************************************************************************************************/
 
     /**
+     * @param bool $active
      * @param string $order
      * @return Correspondance[]
      */
-    public function getCorrespondances($order = null)
+    public function getCorrespondances($active = null, $order = null)
     {
         $qb = $this->getEntityManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance')
-            ->orderBy('correspondance.reference', 'ASC')
+            ->orderBy('correspondance.libelleCourt', 'ASC')
         ;
+        if ($active !== null) {
+            if ($active)    $qb = $qb ->andWhere("correspondance.histo = 'O'");
+            else            $qb = $qb ->andWhere("correspondance.histo <> 'O'");
+        }
 
         if ($order !== null) {
             $qb = $qb->addOrderBy('correspondance.'.$order, 'ASC');
@@ -117,7 +47,22 @@ class RessourceRhService {
     }
 
     /**
-     * @param integer $id
+     * @return array
+     */
+    public function getCorrespondancesAsOptions()
+    {
+        $correspondances = $this->getCorrespondances(true);
+
+        $array = [];
+        foreach ($correspondances as $correspondance) {
+            $array[$correspondance->getId()] = $correspondance->getLibelleLong() . " - " . $correspondance->getLibelleLong();
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param string $id
      * @return Correspondance
      */
     public function getCorrespondance($id)
@@ -135,388 +80,44 @@ class RessourceRhService {
         return $result;
     }
 
-    /**
-     * @param Correspondance $correspondance
-     * @return Correspondance
-     */
-    public function createCorrespondance($correspondance)
-    {
-        $this->getEntityManager()->persist($correspondance);
-        try {
-            $this->getEntityManager()->flush($correspondance);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'une correspondance", $e);
-        }
-        return $correspondance;
-    }
-
-    /**
-     * @param Correspondance $correspondance
-     * @return Correspondance
-     */
-    public function updateCorrespondance($correspondance)
-    {
-        try {
-            $this->getEntityManager()->flush($correspondance);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'une correspondance", $e);
-        }
-        return $correspondance;
-    }
-
-    /**
-     * @param Correspondance $correspondance
-     */
-    public function deleteCorrespondance($correspondance)
-    {
-        $this->getEntityManager()->remove($correspondance);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une correspondance", $e);
-        }
-    }
-
-    /** CORPS *********************************************************************************************************/
-
-    /**
-     * @param string $order
-     * @return Corps[]
-     */
-    public function getCorpsListe($order = null)
-    {
-        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
-        ;
-
-        if ($order !== null) {
-            $qb = $qb->addOrderBy('corps.'.$order, 'ASC');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return Corps
-     */
-    public function getCorps($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
-            ->andWhere('corps.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs corps partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param Corps $corps
-     * @return Corps
-     */
-    public function createCorps($corps)
-    {
-        $this->getEntityManager()->persist($corps);
-        try {
-            $this->getEntityManager()->flush($corps);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un corps", $e);
-        }
-        return $corps;
-    }
-
-    /**
-     * @param Corps $corps
-     * @return Corps
-     */
-    public function updateCorps($corps)
-    {
-        try {
-            $this->getEntityManager()->flush($corps);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un corps", $e);
-        }
-        return $corps;
-    }
-
-    /**
-     * @param Corps $corps
-     */
-    public function deleteCorps($corps)
-    {
-        $this->getEntityManager()->remove($corps);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un corps", $e);
-        }
-    }
-
-    /** CORPS *********************************************************************************************************/
-
-    /**
-     * @param string $order
-     * @return Metier[]
-     */
-    public function getMetiers($order = null)
-    {
-        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-        ;
-
-        if ($order !== null) {
-            $qb = $qb->addOrderBy('metier.'.$order, 'ASC');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return Metier
-     */
-    public function getMetier($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->andWhere('metier.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs métiers partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param Metier $metier
-     * @return Metier
-     */
-    public function createMetier($metier)
-    {
-        $this->getEntityManager()->persist($metier);
-        try {
-            $this->getEntityManager()->flush($metier);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un métier", $e);
-        }
-        return $metier;
-    }
-
-    /**
-     * @param Metier $metier
-     * @return Metier
-     */
-    public function updateMetier($metier)
-    {
-        try {
-            $this->getEntityManager()->flush($metier);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un metier.", $e);
-        }
-        return $metier;
-    }
-
-    /**
-     * @param Metier $metier
-     */
-    public function deleteMetier($metier)
-    {
-        $this->getEntityManager()->remove($metier);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un metier", $e);
-        }
-    }
-
-    /** Famille Metier ************************************************************************************************/
-
-    /**
-     * @param string $order
-     * @return MetierFamille[]
-     */
-    public function getMetiersFamilles($order = null)
-    {
-        $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
-            ->addSelect('metier')->leftJoin('famille.metiers', 'metier')
-        ;
-
-        if ($order !== null) {
-            $qb = $qb->addOrderBy('famille.'.$order, 'ASC');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return MetierFamille
-     */
-    public function getMetierFamille($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(MetierFamille::class)->createQueryBuilder('famille')
-            ->andWhere('famille.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs familles de métier partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param MetierFamille $famille
-     * @return MetierFamille
-     */
-    public function createMetierFamille($famille)
-    {
-        $this->getEntityManager()->persist($famille);
-        try {
-            $this->getEntityManager()->flush($famille);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'une famille de métier", $e);
-        }
-        return $famille;
-    }
-
-    /**
-     * @param MetierFamille $famille
-     * @return MetierFamille
-     */
-    public function updateMetierFamille($famille)
-    {
-        try {
-            $this->getEntityManager()->flush($famille);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'une famille de metier.", $e);
-        }
-        return $famille;
-    }
-
-    /**
-     * @param MetierFamille $famille
-     */
-    public function deleteMetierFamille($famille)
-    {
-        $this->getEntityManager()->remove($famille);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une famille de metier", $e);
-        }
-    }
-
-    /** Domaine *******************************************************************************************************/
-
-    /**
-     * @param string $order
-     * @return Domaine[]
-     */
-    public function getDomaines($order = null)
-    {
-        $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
-        ;
-
-        if ($order !== null) {
-            $qb = $qb->addOrderBy('domaine.'.$order, 'ASC');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return Domaine
-     */
-    public function getDomaine($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
-            ->andWhere('domaine.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs domaines partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
-    public function createDomaine($domaine)
-    {
-        $this->getEntityManager()->persist($domaine);
-        try {
-            $this->getEntityManager()->flush($domaine);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un Domaine", $e);
-        }
-        return $domaine;
-    }
-
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
-    public function updateDomaine($domaine)
-    {
-        try {
-            $this->getEntityManager()->flush($domaine);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Domaine.", $e);
-        }
-        return $domaine;
-    }
-
-    /**
-     * @param Domaine $domaine
-     */
-    public function deleteDomaine($domaine)
-    {
-        $this->getEntityManager()->remove($domaine);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Domaine", $e);
-        }
-    }
-
     /** Grade *******************************************************************************************************/
 
     /**
+     * @param bool $active
      * @param string $order
-     * @return Grade[]
+     * @return Correspondance[]
      */
-    public function getGrades($order = null)
+    public function getGrades($active = null, $order = null)
     {
         $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
+            ->orderBy('grade.libelleCourt', 'ASC')
         ;
+        if ($active !== null) {
+            if ($active)    $qb = $qb ->andWhere("grade.histo = 'O'");
+            else            $qb = $qb ->andWhere("grade.histo <> 'O'");
+        }
 
         if ($order !== null) {
             $qb = $qb->addOrderBy('grade.'.$order, 'ASC');
-        } else {
-            $qb = $qb->addOrderBy('grade.corps, grade.rang', 'ASC');
         }
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGradesAsOptions()
+    {
+        $grades = $this->getGrades(true);
+
+        $array = [];
+        foreach ($grades as $grade) {
+            $array[$grade->getId()] = $grade->getLibelleCourt() . " - ". $grade->getLibelleLong();
+        }
+
+        return $array;
     }
 
     /**
@@ -538,47 +139,65 @@ class RessourceRhService {
         return $result;
     }
 
+    /** Corps *********************************************************************************************************/
+
     /**
-     * @param Grade $grade
-     * @return Grade
+     * @param bool $active
+     * @param string $order
+     * @return Correspondance[]
      */
-    public function createGrade($grade)
+    public function getCorps($active = null, $order = null)
     {
-        $this->getEntityManager()->persist($grade);
-        try {
-            $this->getEntityManager()->flush($grade);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un Grade", $e);
+        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+            ->orderBy('corps.libelleCourt', 'ASC')
+        ;
+        if ($active !== null) {
+            if ($active)    $qb = $qb ->andWhere("corps.histo = 'O'");
+            else            $qb = $qb ->andWhere("corps.histo <> 'O'");
         }
-        return $grade;
+
+        if ($order !== null) {
+            $qb = $qb->addOrderBy('corps.'.$order, 'ASC');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /**
-     * @param Grade $grade
-     * @return Grade
+     * @return array
      */
-    public function updateGrade($grade)
+    public function getCorpsAsOptions()
     {
-        try {
-            $this->getEntityManager()->flush($grade);
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Grade.", $e);
+        $corps = $this->getCorps(true);
+
+        $array = [];
+        foreach ($corps as $item) {
+            $array[$item->getId()] = $item->getLibelleCourt() . " - " . $item->getLibelleLong() ;
         }
-        return $grade;
+        return $array;
     }
 
     /**
-     * @param Grade $grade
+     * @param integer $id
+     * @return Corps
      */
-    public function deleteGrade($grade)
+    public function getCorp($id)
     {
-        $this->getEntityManager()->remove($grade);
+        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+            ->andWhere('corps.id = :id')
+            ->setParameter('id', $id)
+        ;
+
         try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Grade", $e);
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs corps partagent le même identifiant [".$id."]");
         }
+        return $result;
     }
+
+    /** ***********************************************/
 
     public function getMetiersTypesAsOptions()
     {
@@ -594,5 +213,228 @@ class RessourceRhService {
             $options[$metier->getId()] = $metier->getLibelle();
         }
         return $options;
+    }
+
+
+    public function getMetiersTypesAsMultiOptions()
+    {
+        /** @var Metier[] $metiers */
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+        ->orderBy('metier.libelle', 'ASC');
+        $metiers = $qb->getQuery()->getResult();
+
+        $vide = [];
+        $result = [];
+        foreach ($metiers as $metier) {
+            if ($metier->getDomaine()) {
+                $result[$metier->getDomaine()->getLibelle()][] = $metier;
+            } else {
+                $vide[] = $metier;
+            }
+        }
+        ksort($result);
+        $multi = [];
+        foreach ($result as $key => $metiers) {
+            //['label'=>'A', 'options' => ["A" => "A", "a"=> "a"]],
+            $options = [];
+            foreach ($metiers as $metier) {
+                $options[$metier->getId()] = $metier->getLibelle();
+            }
+            $multi[] = ['label' => $key, 'options' => $options];
+        }
+        $options = [];
+        foreach ($vide as $metier) {
+            $options[$metier->getId()] = $metier->getLibelle();
+        }
+        $multi[] = ['label' => 'Sans domaine rattaché', 'options' => $options];
+        return $multi;
+
+    }
+    /** MISSION SPECIFIQUE ********************************************************************************************/
+
+    /**
+     * @return MissionSpecifique[]
+     */
+    public function getMissionsSpecifiques() {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
+            ->orderBy('mission.libelle', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @return MissionSpecifique[]
+     */
+    public function getMisssionsSpecifiquesAsOption()
+    {
+        $missions = $this->getMissionsSpecifiques();
+        $options = [];
+        foreach ($missions as $mission) {
+            $options[$mission->getId()] = $mission->getLibelle();
+        }
+        return $options;
+    }
+
+    /**
+     * @param integer $id
+     * @return MissionSpecifique
+     */
+    public function getMissionSpecifique($id) {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
+            ->andWhere('mission.id = :id')
+            ->setParameter('id', $id);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs MissionSpecifique partagent le même id [".$id."]", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return MissionSpecifique
+     */
+    public function getRequestedMissionSpecifique($controller, $paramName)
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $mission = $this->getMissionSpecifique($id);
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function createMissionSpecifique($mission)
+    {
+        /** @var User $user */
+        $user = $this->getUserService()->getConnectedUser();
+        /** @var DateTime $date */
+        try {
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+        }
+
+        $mission->setHistoCreation($date);
+        $mission->setHistoCreateur($user);
+        $mission->setHistoModification($date);
+        $mission->setHistoModificateur($user);
+
+        $this->getEntityManager()->persist($mission);
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function updateMissionSpecifique($mission)
+    {
+        /** @var User $user */
+        $user = $this->getUserService()->getConnectedUser();
+        /** @var DateTime $date */
+        try {
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+        }
+
+        $mission->setHistoModification($date);
+        $mission->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function historiseMissionSpecifique($mission)
+    {
+        /** @var User $user */
+        $user = $this->getUserService()->getConnectedUser();
+        /** @var DateTime $date */
+        try {
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la récupération de la date", $e);
+        }
+
+        $mission->setHistoDestruction($date);
+        $mission->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function restoreMissionSpecifique($mission)
+    {
+        $mission->setHistoDestruction(null);
+        $mission->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @param MissionSpecifique $mission
+     * @return MissionSpecifique
+     */
+    public function deleteMissionSpecifique($mission)
+    {
+
+        $this->getEntityManager()->remove($mission);
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
+        }
+
+        return $mission;
+    }
+
+    /**
+     * @return Metier[]
+     */
+    public function getCartographie()
+    {
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+            ->addSelect('famille')->join('metier.famille', 'famille')
+            ->addSelect('domaine')->join('metier.domaine', 'domaine')
+            ->orderBy('famille.libelle, domaine.libelle, metier.libelle');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

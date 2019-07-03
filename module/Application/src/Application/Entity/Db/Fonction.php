@@ -3,27 +3,34 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Fonction {
-    use HistoriqueAwareTrait;
+   use ImportableAwareTrait;
 
-    /** @var integer */
-    private $id;
+   /** @var string */
+   private $id;
+   /** @var Fonction */
+   private $parent;
     /** @var string */
-    private $source;
+   private $code;
     /** @var string */
-    private $idSource;
-    /** @var ArrayCollection */
-    private $libelles;
+   private $niveau;
+   /** @var ArrayCollection */
+   private $libelles;
 
-    public function __construct()
-    {
-        $this->libelles = new ArrayCollection();
-    }
+   /** @var Domaine */
+   private $domaine;
+   /** @var ArrayCollection (Metier) */
+   private $metiers;
+
+   public function __construct()
+   {
+       $this->libelles = new ArrayCollection();
+       $this->metiers = new ArrayCollection();
+   }
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
@@ -31,38 +38,66 @@ class Fonction {
     }
 
     /**
-     * @return string
+     * @param string $id
+     * @return Fonction
      */
-    public function getSource()
+    public function setId($id)
     {
-        return $this->source;
+        $this->id = $id;
+        return $this;
     }
 
     /**
-     * @param string $source
      * @return Fonction
      */
-    public function setSource($source)
+    public function getParent()
     {
-        $this->source = $source;
+        return $this->parent;
+    }
+
+    /**
+     * @param Fonction $parent
+     * @return Fonction
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getIdSource()
+    public function getCode()
     {
-        return $this->idSource;
+        return $this->code;
     }
 
     /**
-     * @param string $idSource
+     * @param string $code
      * @return Fonction
      */
-    public function setIdSource($idSource)
+    public function setCode($code)
     {
-        $this->idSource = $idSource;
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNiveau()
+    {
+        return $this->niveau;
+    }
+
+    /**
+     * @param string $niveau
+     * @return Fonction
+     */
+    public function setNiveau($niveau)
+    {
+        $this->niveau = $niveau;
         return $this;
     }
 
@@ -78,6 +113,7 @@ class Fonction {
      * @param FonctionLibelle $libelle
      * @return Fonction
      */
+
     public function addLibelle($libelle)
     {
         $this->libelles->add($libelle);
@@ -88,35 +124,69 @@ class Fonction {
      * @param FonctionLibelle $libelle
      * @return Fonction
      */
+
     public function removeLibelle($libelle)
     {
         $this->libelles->removeElement($libelle);
         return $this;
     }
 
-    public function __toString()
+    /**
+     * @return Domaine
+     */
+    public function getDomaine()
     {
-        $tab = [];
-        foreach ($this->getLibelles() as $libelle) $tab[] = $libelle->getLibelle();
-        return implode("/", $tab);
+        return $this->domaine;
     }
 
     /**
-     * @param string $genre
-     * @return FonctionLibelle
+     * @param Domaine $domaine
+     * @return Fonction
      */
-    public function getDefault($genre)
+    public function setDomaine($domaine)
     {
-        /** @var FonctionLibelle $libelle */
-        foreach ($this->libelles as $libelle) {
-            if ($libelle->getDefault() && $libelle->getGenre() === $genre) return $libelle;
+        $this->domaine = $domaine;
+        return $this;
+    }
+
+    /**
+     * @return Metier[]
+     */
+    public function getMetiers()
+    {
+        return $this->metiers->toArray();
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Fonction
+     */
+    public function addMetier($metier)
+    {
+        $this->metiers->add($metier);
+        return $this;
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Fonction
+     */
+    public function removeMetier($metier)
+    {
+        $this->metiers->removeElement($metier);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $array = [];
+        foreach ($this->getLibelles() as $libelle) {
+            $array[] = $libelle->getLibelle();
         }
-        return null;
-    }
 
-    public function setId($id)
-    {
-        $this->id = $id;
+        return implode("/", $array);
     }
-
 }

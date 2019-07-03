@@ -1,3 +1,5 @@
 vendor/
+data/
+upload/
 .idea
 config/autoload/*local*

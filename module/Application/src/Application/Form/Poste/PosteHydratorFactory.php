@@ -2,11 +2,11 @@
 
 namespace Application\Form\Poste;
 
-use Application\Service\Fonction\FonctionService;
-use Application\Service\Structure\StructureService;
 use Application\Service\Agent\AgentService;
+use Application\Service\Domaine\DomaineService;
+use Application\Service\Immobilier\ImmobilierService;
 use Application\Service\RessourceRh\RessourceRhService;
-use Octopus\Service\Immobilier\ImmobilierService;
+use Application\Service\Structure\StructureService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class PosteHydratorFactory {
@@ -17,24 +17,24 @@ class PosteHydratorFactory {
         $parentLocator = $serviceLocator->getServiceLocator();
         /**
          * @var AgentService $agentService
-         * @var FonctionService $fonctionService
+         * @var DomaineService $domaineService
          * @var StructureService $structureService
          * @var RessourceRhService $ressourceService
          * @var ImmobilierService $immobilierService
          */
         $agentService = $parentLocator->get(AgentService::class);
-        $fonctionService = $parentLocator->get(FonctionService::class);
+        $domaineService = $parentLocator->get(DomaineService::class);
         $structureService = $parentLocator->get(StructureService::class);
         $ressourceService = $parentLocator->get(RessourceRhService::class);
         $immobilierService = $parentLocator->get(ImmobilierService::class);
 
 
         $hydrator = new PosteHydrator();
-        $hydrator->setStructureService($structureService);
         $hydrator->setAgentService($agentService);
-        $hydrator->setFonctionService($fonctionService);
+        $hydrator->setDomaineService($domaineService);
+        $hydrator->setStructureService($structureService);
         $hydrator->setRessourceRhService($ressourceService);
-        $hydrator->setImmobiliserService($immobilierService);
+        $hydrator->setImmobilierService($immobilierService);
 
         return $hydrator;
     }

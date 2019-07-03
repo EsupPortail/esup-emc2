@@ -2,42 +2,20 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\Structure" table="structure">
 
-        <id name="id" type="integer" column="id">
-            <generator strategy="IDENTITY"/>
+        <id    name="id"                        column="id"                 type="string" length="40" >
         </id>
 
-        <field name="libelleCourt"      type="string" length="128"      column="libelle_court"                nullable="false"/>
-        <field name="libelleLong"       type="string" length="2048"     column="libelle_long"                 nullable="true"/>
-        <field name="sigle"             type="string" length="32"       column="sigle"                        nullable="true"/>
+        <field name="code"                      column="code"               type="string" length="40" />
 
-        <many-to-one target-entity="Application\Entity\Db\StructureType"  field="type">
-            <join-column name="structure_type" referenced-column-name="id"/>
-        </many-to-one>
+        <field name="libelleCourt"              column="libelle_court"      type="string" length="128"/>
+        <field name="libelleLong"               column="libelle_long"       type="string" length="1024"/>
+        <field name="type"                      column="type"               type="string" length="128"/>
+        <field name="description"               column="description"        type="string" length="10240"/>
+        <field name="histo"                     column="histo"              type="string" length="10"  />
 
-        <field name="dateOuverture"     type="datetime"                 column="date_ouverture"     nullable="false"/>
-        <field name="dateFermeture"     type="datetime"                 column="date_fermeture"     nullable="false"/>
-
-<!--        <many-to-one target-entity="Application\Entity\Db\Source"  field="source">-->
-<!--            <join-column name="source" referenced-column-name="id"/>-->
-<!--        </many-to-one>-->
-        <field name="source"            type="string" length="32"       column="source"                        nullable="true"/>
-        <field name="idSource"          type="string" length="128"               column="source_id"     nullable="false"/>
-
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
-        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
-
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoCreateur">
-            <join-column name="histo_createur_id" referenced-column-name="id"/>
-        </many-to-one>
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoModificateur">
-            <join-column name="histo_modificateur_id" referenced-column-name="id"/>
-        </many-to-one>
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
-            <join-column name="histo_destructeur_id" referenced-column-name="id"/>
-        </many-to-one>
-
-        <field name="description"             type="string" length="4096"       column="description"                        nullable="true"/>
+        <field name="importationCreation"       column="created_on"         type="datetime"  />
+        <field name="importationModification"   column="updated_on"         type="datetime"  />
+        <field name="importationHistorisation"  column="deleted_on"         type="datetime"  />
 
         <many-to-many field="gestionnaires" target-entity="Utilisateur\Entity\Db\User" inversed-by="gestionnaire" fetch="LAZY">
             <join-table name="structure_gestionnaire">

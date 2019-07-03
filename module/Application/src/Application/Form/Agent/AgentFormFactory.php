@@ -2,25 +2,24 @@
 
 namespace Application\Form\Agent;
 
-use Doctrine\ORM\EntityManager;
+use Application\Service\RessourceRh\RessourceRhService;
 use Zend\Form\FormElementManager;
 
 class AgentFormFactory {
 
     public function __invoke(FormElementManager $manager)
     {
-        /**
-         * @var EntityManager $entityManager
-         * @var AgentHydrator $hydrator
-         */
+        /** @var AgentHydrator $hydrator */
         $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AgentHydrator::class);
-        $entityManager =  $manager->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 
+        /** @var RessourceRhService $ressourceService */
+        $ressourceService = $manager->getServiceLocator()->get(RessourceRhService::class);
+
+        /** @var AgentForm $form */
         $form = new AgentForm();
-        $form->setEntityManager($entityManager);
+        $form->setRessourceRhService($ressourceService);
         $form->setHydrator($hydrator);
         $form->init();
-
         return $form;
     }
 }
