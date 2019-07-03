@@ -2,56 +2,51 @@
 
 namespace Application\Entity\Db;
 
-use DateTime;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
-use UnicaenApp\Exception\RuntimeException;
 use Utilisateur\Entity\Db\User;
 
 class Agent {
+    use ImportableAwareTrait;
+    use AgentServiceAwareTrait;
 
-    /** @var integer */
+    /** @var string */
     private $id;
     /** @var string */
-    private $nom;
+    private $sourceName;
+    /** @var integer */
+    private $sourceId;
     /** @var string */
     private $prenom;
     /** @var string */
-    private $numeroPoste;
-
-    // categorie, corps, et grade (devrait correspondre à des infos en bases pour une meilleures structuration ...
-
-    /** @var DateTime */
-    private $dateDebut;
-    /** @var DateTime */
-    private $dateFin;
-    /** @var integer */
-    private $quotite;
-    /** @var AgentStatus */
-    private $status;
-    /** @var ArrayCollection (AgentStatut)*/
-    private $statuts;
-    /** @var Correspondance */
-    private $correspondance;
-    /** @var Corps */
-    private $corps;
-    /** @var Grade */
-    private $grade;
+    private $nomUsuel;
     /** @var User */
     private $utilisateur;
+    /** @var int */
+    private $quotite;
 
+    /** @var Correspondance */
+    private $correspondance;
+    /** @var Grade */
+    private $grade;
+    /** @var Corps */
+    private $corps;
 
-    /** @var string */
-    private $missionsComplementaires;
-
-    /** @var ArrayCollection */
+    /** @var ArrayCollection (AgentStatut)*/
+    private $statuts;
+    /** @var ArrayCollection (MissionSpecifique) */
+    private $missions;
+    /** @var ArrayCollection (Fichier) */
     private $fichiers;
 
     public function __construct()
     {
-        $this->statuts  = new ArrayCollection();
+        $this->statuts = new ArrayCollection();
+        $this->missions = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
     }
+
     /**
      * @return int
      */
@@ -63,18 +58,36 @@ class Agent {
     /**
      * @return string
      */
-    public function getNom()
+    public function getSourceName()
     {
-        return $this->nom;
+        return $this->sourceName;
     }
 
     /**
-     * @param string $nom
+     * @param string $sourceName
      * @return Agent
      */
-    public function setNom($nom)
+    public function setSourceName($sourceName)
     {
-        $this->nom = $nom;
+        $this->sourceName = $sourceName;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSourceId()
+    {
+        return $this->sourceId;
+    }
+
+    /**
+     * @param int $sourceId
+     * @return Agent
+     */
+    public function setSourceId($sourceId)
+    {
+        $this->sourceId = $sourceId;
         return $this;
     }
 
@@ -96,44 +109,47 @@ class Agent {
         return $this;
     }
 
-    public function getDenomination()
-    {
-        return $this->getPrenom().' '.$this->getNom();
-
-    }
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getDateDebut()
+    public function getNomUsuel()
     {
-        return $this->dateDebut;
+        return $this->nomUsuel;
     }
 
     /**
-     * @param DateTime $dateDebut
+     * @param string $nomUsuel
      * @return Agent
      */
-    public function setDateDebut($dateDebut)
+    public function setNomUsuel($nomUsuel)
     {
-        $this->dateDebut = $dateDebut;
+        $this->nomUsuel = $nomUsuel;
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getDateFin()
+    public function getDenomination()
     {
-        return $this->dateFin;
+        return $this->getPrenom().' '.$this->getNomUsuel();
+
+    }
+    /**
+     * @return User
+     */
+    public function getUtilisateur()
+    {
+        return $this->utilisateur;
     }
 
     /**
-     * @param DateTime $dateFin
+     * @param User $utilisateur
      * @return Agent
      */
-    public function setDateFin($dateFin)
+    public function setUtilisateur($utilisateur)
     {
-        $this->dateFin = $dateFin;
+        $this->utilisateur = $utilisateur;
         return $this;
     }
 
@@ -156,52 +172,6 @@ class Agent {
     }
 
     /**
-     * @return AgentStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param AgentStatus $status
-     * @return Agent
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-        return $this;
-    }
-
-    /**
-     * @return AgentStatut[]
-     */
-    public function getStatuts()
-    {
-        return $this->statuts->toArray();
-    }
-
-    /**
-     * @param AgentStatut $statut
-     * @return Agent
-     */
-    public function addStatut($statut)
-    {
-        $this->statuts->add($statut);
-        return $this;
-    }
-
-    /**
-     * @param AgentStatut $statut
-     * @return Agent
-     */
-    public function removeStatut($statut)
-    {
-        $this->statuts->removeElement($statut);
-        return $this;
-    }
-
-    /**
      * @return Correspondance
      */
     public function getCorrespondance()
@@ -220,20 +190,20 @@ class Agent {
     }
 
     /**
-     * @return string
+     * @return Grade
      */
-    public function getNumeroPoste()
+    public function getGrade()
     {
-        return $this->numeroPoste;
+        return $this->grade;
     }
 
     /**
-     * @param string $numeroPoste
+     * @param Grade $grade
      * @return Agent
      */
-    public function setNumeroPoste($numeroPoste)
+    public function setGrade($grade)
     {
-        $this->numeroPoste = $numeroPoste;
+        $this->grade = $grade;
         return $this;
     }
 
@@ -256,38 +226,56 @@ class Agent {
     }
 
     /**
-     * @return string
+     * @return AgentStatut[]
      */
-    public function getMissionsComplementaires()
-    {
-        return $this->missionsComplementaires;
+    public function getStatuts() {
+        return $this->statuts->toArray();
     }
 
     /**
-     * @param string $missionsComplementaires
+     * @param AgentStatut
      * @return Agent
      */
-    public function setMissionsComplementaires($missionsComplementaires)
+    public function addStatut($statut)
     {
-        $this->missionsComplementaires = $missionsComplementaires;
+        $this->statuts->add($statut);
         return $this;
     }
 
     /**
-     * @return Grade
+     * @param AgentStatut
+     * @return Agent
      */
-    public function getGrade()
+    public function removeStatut($statut)
     {
-        return $this->grade;
+        $this->statuts->removeElement($statut);
+        return $this;
     }
 
     /**
-     * @param Grade $grade
+     * @return MissionSpecifique[]
+     */
+    public function getMissions() {
+        return $this->missions->toArray();
+    }
+
+    /**
+     * @param MissionSpecifique
      * @return Agent
      */
-    public function setGrade($grade)
+    public function addMission($mission)
     {
-        $this->grade = $grade;
+        $this->missions->add($mission);
+        return $this;
+    }
+
+    /**
+     * @param MissionSpecifique
+     * @return Agent
+     */
+    public function removeMission($mission)
+    {
+        $this->missions->removeElement($mission);
         return $this;
     }
 
@@ -320,66 +308,14 @@ class Agent {
     }
 
     /**
-     * @return User
-     */
-    public function getUtilisateur()
-    {
-        return $this->utilisateur;
-    }
-
-    /**
-     * @param User $utilisateur
-     * @return Agent
-     */
-    public function setUtilisateur($utilisateur)
-    {
-        $this->utilisateur = $utilisateur;
-        return $this;
-    }
-
-
-
-    /**
-     * @param string $natureCode
-     * @return Fichier
-     */
-    public function fetchFile($natureCode)
-    {
-        $result = $this->fetchFiles($natureCode);
-        $nb = count($result);
-
-        if ($nb === 0) return null;
-        if ($nb > 1) throw new RuntimeException("Plusieurs fichiers de nature [] trouvés.");
-
-        return current($result);
-    }
-
-    /**
-     * @param string $natureCode
+     * @param string $nature
      * @return Fichier[]
      */
-    public function fetchFiles($natureCode)
+    public function fetchFiles($nature)
     {
-        $result = [];
-        /** @var Fichier $fichier */
-        foreach ($this->fichiers as $fichier) {
-            if ($fichier->getNature()->getCode() === $natureCode) $result[] = $fichier;
-        }
-        return $result;
-    }
+        $fichiers = $this->getFichiers();
+        $fichiers = array_filter($fichiers, function (Fichier $f) use ($nature) { return ($f->getHistoDestruction() === null && $f->getNature()->getCode() === $nature);});
 
-    /**
-     * @return AgentStatut[]
-     */
-    public function getStatutsActifs()
-    {
-        $statutsActifs = [];
-        foreach ($this->statuts as $statut) {
-            if ($statut->isActif()) {
-                $statutsActifs[] = $statut;
-            }
-        }
-
-        return $statutsActifs;
+        return $fichiers;
     }
 }

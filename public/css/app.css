@@ -73,7 +73,8 @@ div#navbar.production {
 }
 
 span.TODO {
-    background-color: deeppink;
+    background-color: #fff77e;
+    font-weight: bold;
     /*animation: blinker 2s linear infinite;*/
 }
 
@@ -86,6 +87,11 @@ span.TODO {
 div.modal div.modal-header {
     background-color: #337ab7;
     color: white;
+}
+button.close {
+    color: white;
+    opacity: 1;
+    font-size: xx-large;
 }
 
 div.modal div.modal-footer {
@@ -188,6 +194,18 @@ span.icon.donnees:before {
 
 span.icon.power:before {
     content: "\f011";
+}
+
+span.icon.plus:before {
+    content: "\f067";
+}
+
+span.icon.minus:before {
+    content: "\f068";
+}
+
+span.icon.batiment:before {
+    content: "\f1ad";
 }
 
 div.survol:hover {
@@ -341,4 +359,37 @@ div.activite h3 {
 .modal-dialog {
     width: 1000px;
     margin: 30px auto;
+}
+
+/** BADGE STRUCTURE ********************************************************************/
+
+span.badge.structure {
+    border-radius: 0.5em;
+}
+
+span.badge.structure.Servicecentral {
+    background-color: indianred;
+}
+span.badge.structure.Sousstructureadministrative {
+    background-color: indianred;
+}
+span.badge.structure.Servicecommun {
+    background-color: indianred;
+}
+
+span.badge.structure.Composante {
+    background-color: #2B6FB6;
+}
+span.badge.structure.Département {
+    background-color: #2B6FB6;
+}
+span.badge.structure.Antenne {
+    background-color: #2B6FB6;
+}
+span.badge.structure.Établissement {
+    background-color: #2B6FB6;
+}
+
+span.badge.structure.Structurederecherche {
+    background-color: #3c763d;
 }

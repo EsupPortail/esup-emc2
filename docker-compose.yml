@@ -7,11 +7,10 @@ services:
       args:
         PHP_VERSION: 7.0
       context: .
-      dockerfile: Dockerfile
     ports:
-     - "8112:80"
-     - "8111:443"
+      - "8000:80"
+      - "443:443"
     volumes:
-     - .:/app
-     - /tmp:/tmp
+      - .:/app
+      - /tmp:/tmp
     working_dir: /app

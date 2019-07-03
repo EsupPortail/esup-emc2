@@ -9,7 +9,13 @@ class Corps {
     /** @var string */
     private $code;
     /** @var string */
-    private $libelle;
+    private $libelleCourt;
+    /** @var string */
+    private $libelleLong;
+    /** @var string */
+    private $categorie;
+    /** @var string */
+    private $histo;
 
     /**
      * @return int
@@ -50,25 +56,78 @@ class Corps {
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getLibelleCourt()
     {
-        return $this->libelle;
+        return $this->libelleCourt;
     }
 
     /**
-     * @param string $libelle
+     * @param string $libelleCourt
      * @return Corps
      */
-    public function setLibelle($libelle)
+    public function setLibelleCourt($libelleCourt)
     {
-        $this->libelle = $libelle;
+        $this->libelleCourt = $libelleCourt;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLibelleLong()
+    {
+        return $this->libelleLong;
+    }
+
+    /**
+     * @param string $libelleLong
+     * @return Corps
+     */
+    public function setLibelleLong($libelleLong)
+    {
+        $this->libelleLong = $libelleLong;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategorie()
+    {
+        return $this->categorie;
+    }
+
+    /**
+     * @param string $categorie
+     * @return Corps
+     */
+    public function setCategorie($categorie)
+    {
+        $this->categorie = $categorie;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHisto()
+    {
+        return $this->histo;
+    }
+
+    /**
+     * @param string $histo
+     * @return Corps
+     */
+    public function setHisto($histo)
+    {
+        $this->histo = $histo;
         return $this;
     }
 
     public function __toString()
     {
-        return "(".$this->getCode().") ".$this->getLibelle();
+        return $this->getLibelleCourt();
     }
-
 
 }

@@ -30,7 +30,7 @@ class AjouterFicheMetierHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $ficheType = $this->getFicheMetierService()->getFicheMetierType($data['fiche_type']);
+        $ficheType = $this->getFicheMetierService()->getFicheMetier($data['fiche_type']);
         $object->setFicheType($ficheType);
         $object->setQuotite($data['quotite']);
         $object->setPrincipale($data['est_principale']);

@@ -239,6 +239,4 @@ class FichierService {
         }
         $this->delete($fichier);
     }
-
-
 }

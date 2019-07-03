@@ -37,19 +37,19 @@ class AgentFichierController extends AbstractActionController {
             }
         }
 
-        /** @var Fichier $cv */
-        $cv = $agent->fetchFile(Nature::CV);
+        /** @var Fichier[] $cv */
+        $cvs = $agent->fetchFiles(Nature::CV);
 
-        /** @var Fichier $motiv */
-        $motiv = $agent->fetchFile(Nature::MOTIV);
+        /** @var Fichier[] $motiv */
+        $motivs = $agent->fetchFiles(Nature::MOTIV);
 
         /** @var Fichier[] $formations */
         $formations = $agent->fetchFiles(Nature::FORMATION);
 
         return new ViewModel([
             'agent' => $agent,
-            'cv' => $cv,
-            'motiv' => $motiv,
+            'cvs' => $cvs,
+            'motivs' => $motivs,
             'formations' => $formations,
         ]);
     }

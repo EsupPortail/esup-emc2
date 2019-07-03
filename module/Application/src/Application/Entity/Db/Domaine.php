@@ -2,12 +2,24 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Domaine {
 
     /** @var integer */
     private $id;
     /** @var string */
     private $libelle;
+
+    /** @var FamilleProfessionnelle */
+    private $famille;
+    /** @var ArrayCollection */
+    private $metiers;
+
+    public function __construct()
+    {
+        $this->metiers = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -35,5 +47,57 @@ class Domaine {
         return $this;
     }
 
+    /**
+     * @return FamilleProfessionnelle
+     */
+    public function getFamille()
+    {
+        return $this->famille;
+    }
 
+    /**
+     * @param FamilleProfessionnelle $famille
+     * @return Domaine
+     */
+    public function setFamille($famille)
+    {
+        $this->famille = $famille;
+        return $this;
+    }
+
+    /**
+     * @return Metier[]
+     */
+    public function getMetiers()
+    {
+        return $this->metiers->toArray();
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Domaine
+     */
+    public function addMetier($metier)
+    {
+        $this->metiers->add($metier);
+        return $this;
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Domaine
+     */
+    public function removeMetier($metier)
+    {
+        $this->metiers->removeElement($metier);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
 }

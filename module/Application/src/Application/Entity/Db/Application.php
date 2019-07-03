@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Application {
 
     /** @var integer */
@@ -14,6 +16,14 @@ class Application {
     private $url;
     /** @var boolean */
     private $actif;
+
+    /** @var ArrayCollection */
+    private  $activites;
+
+    public function __construct()
+    {
+        $this->activites = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -93,5 +103,42 @@ class Application {
     {
         $this->actif = $actif;
         return $this;
+    }
+
+    /**
+     * @return Activite[]
+     */
+    public function getActivites()
+    {
+        return $this->activites->toArray();
+    }
+
+    /**
+     * @param Activite $activite
+     * @return Application
+     */
+    public function addApplication($activite)
+    {
+        $this->activites->add($activite);
+        return $this;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return Application
+     */
+    public function removeApplication($activite)
+    {
+        $this->activites->removeElement($activite);
+        return $this;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return boolean
+     */
+    public function hasApplication($activite)
+    {
+        return $this->activites->contains($activite);
     }
 }

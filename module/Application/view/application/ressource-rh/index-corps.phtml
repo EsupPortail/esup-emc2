@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @var Corps[] $corps_actifs
+ * @var Corps[] $corps_historises
+ */
+
+use Application\Entity\Db\Corps;
+
+$this->headTitle('Index des corps');
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="page-header">
+            Corps
+            <span class="badge">
+                <?php echo count($corps_actifs) + count($corps_historises); ?>
+            </span>
+        </h1>
+    </div>
+    <div class="pull-right col-md-5 alert alert-info">
+        <span class="icon synchoniser"></span>
+        Les corps sont synchronisés depuis Octopus.
+    </div>
+</div>
+
+<div class="main">
+    <h2>
+        Liste des corps actifs
+        <span class="badge">
+        <?php echo count($corps_actifs); ?>
+    </span>
+    </h2>
+
+    <?php if (count($corps_actifs) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Code </th>
+                <th> Catégorie </th>
+                <th> Libellé court </th>
+                <th> Libellé long </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($corps_actifs as $grade) : ?>
+                <tr>
+                    <td> <?php echo $grade->getCode(); ?> </td>
+                    <td> <?php echo $grade->getCategorie(); ?> </td>
+                    <td> <?php echo $grade->getLibelleCourt(); ?> </td>
+                    <td> <?php echo $grade->getLibelleLong(); ?> </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<div class="main">
+    <h2>
+        Liste des corps historisés
+        <span class="badge">
+        <?php echo count($corps_historises); ?>
+    </span>
+    </h2>
+
+    <?php if (count($corps_historises) > 0) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Code </th>
+                <th> Catégorie </th>
+                <th> Libellé court </th>
+                <th> Libellé long </th>
+                <th> Historisation </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($corps_historises as $grade) : ?>
+                <tr>
+                    <td> <?php echo $grade->getCode(); ?> </td>
+                    <td> <?php echo $grade->getCategorie(); ?> </td>
+                    <td> <?php echo $grade->getLibelleCourt(); ?> </td>
+                    <td> <?php echo $grade->getLibelleLong(); ?> </td>
+                    <td> <?php echo $grade->getHisto(); ?> </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>

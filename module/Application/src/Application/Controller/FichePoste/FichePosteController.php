@@ -2,7 +2,7 @@
 
 namespace Application\Controller\FichePoste;
 
-use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
@@ -14,10 +14,12 @@ use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
 
 class FichePosteController extends AbstractActionController {
     /** Service **/
@@ -52,7 +54,7 @@ class FichePosteController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $fiche = $this->getFichePosteService()->create($fiche);
+                $this->getFichePosteService()->create($fiche);
             }
         }
 
@@ -77,7 +79,8 @@ class FichePosteController extends AbstractActionController {
 
     public function editerAction()
     {
-        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
+        if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
         return new ViewModel([
             'fiche' => $fiche,
         ]);
@@ -182,21 +185,26 @@ class FichePosteController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
+
+            $res = $this->checkValidite($fiche, $data);
+            if ($res) return $res;
+
             if ($form->isValid()) {
                 $ficheTypeExterne->setFichePoste($fiche);
                 $this->getFichePosteService()->createFicheTypeExterne($ficheTypeExterne);
 
                 if ($ficheTypeExterne->getPrincipale()) {
+                    var_dump('principale is 1');
                     foreach ($fiche->getFichesMetiers() as $ficheMetier) {
                         if ($ficheMetier !== $ficheTypeExterne && $ficheMetier->getPrincipale()) {
                             $ficheMetier->setPrincipale(false);
-                            //$this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
+                            $this->getFichePosteService()->updateFicheTypeExterne($ficheMetier);
                         }
                     }
                 }
 
                 //comportement par defaut (ajout de toutes les activités)
-                /** @var FicheMetierType */
+                /** @var FicheMetier */
                 $activites = $ficheTypeExterne->getFicheType()->getActivites();
                 $tab = [];
                 foreach ($activites as $activite) {
@@ -205,7 +213,6 @@ class FichePosteController extends AbstractActionController {
                 $text = implode(";",$tab);
                 $ficheTypeExterne->setActivites($text);
                 $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
-
             }
         }
 
@@ -216,17 +223,6 @@ class FichePosteController extends AbstractActionController {
             'form'  => $form,
         ]);
         return $vm;
-    }
-
-    public function retirerFicheMetierAction()
-    {
-        $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
-        $ficheTypeExterne = $this->getFichePosteService()->getFicheTypeExterne($ficheTypeExterneId);
-
-        if ($ficheTypeExterne && $fichePoste) $this->getFichePosteService()->deleteFicheTypeExterne($ficheTypeExterne);
-
-        return $this->redirect()->toRoute('fiche-poste/editer',['fiche-poste' => $fichePoste->getId()], [], true);
     }
 
     public function modifierFicheMetierAction()
@@ -243,7 +239,12 @@ class FichePosteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
+
             $form->setData($data);
+
+            $res = $this->checkValidite($fichePoste, $data);
+            if ($res) return $res;
+
             if ($form->isValid()) {
                 $ficheTypeExterne->setFichePoste($fichePoste);
                 $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
@@ -268,6 +269,16 @@ class FichePosteController extends AbstractActionController {
         return $vm;
     }
 
+    public function retirerFicheMetierAction()
+    {
+        $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
+        $ficheTypeExterne = $this->getFichePosteService()->getFicheTypeExterne($ficheTypeExterneId);
+
+        if ($ficheTypeExterne && $fichePoste) $this->getFichePosteService()->deleteFicheTypeExterne($ficheTypeExterne);
+
+        return $this->redirect()->toRoute('fiche-poste/editer',['fiche-poste' => $fichePoste->getId()], [], true);
+    }
 
     public function selectionnerActiviteAction()
     {
@@ -331,5 +342,46 @@ class FichePosteController extends AbstractActionController {
             'form' => $form,
         ]);
 
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @param array $data
+     * @return ViewModel
+     */
+    private function checkValidite($fiche, $data)
+    {
+        $cut = false;
+        if ($data['est_principale'] === "1"  && $data['quotite'] < 50) {
+            $cut = true;
+            $this->flashMessenger()->addErrorMessage("La fichie métier principale doit avoir une quotité d'au moins 50%.");
+        }
+        if ($data['est_principale'] === "0" && $data['quotite'] >= 50) {
+            $cut = true;
+            $this->flashMessenger()->addErrorMessage("La fichie métier non principale doit avoir une quotité infiérieure à 50%.");
+        }
+        if ($fiche->getQuotiteTravaillee() + $data['quotite'] > 100) {
+            $cut = true;
+            $this->flashMessenger()->addErrorMessage("La somme des quotités travaillées ne peut dépasser 100%.");
+        }
+        if ($cut) {
+            return (new ViewModel(['title' => 'Informations saisies incorrectes']))->setTemplate('layout/flashMessage');
+        }
+    }
+
+    /** Document pour la signature en présidence */
+    public function exportAction()
+    {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
+        /* @var PhpRenderer $renderer  */
+        $renderer = $this->getServiceLocator()->get('view_renderer');
+
+        $exporter = new FichePostePdfExporter($renderer, 'A4');
+        $exporter->setVars([
+            'fiche' => $fiche,
+        ]);
+        $exporter->export('export.pdf');
+        exit;
     }
 }

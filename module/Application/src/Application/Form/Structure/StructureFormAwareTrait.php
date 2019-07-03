@@ -24,6 +24,4 @@ trait StructureFormAwareTrait {
         $this->structureForm = $structureForm;
         return $this->structureForm;
     }
-
-
 }

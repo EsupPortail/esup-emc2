@@ -2,12 +2,13 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\Corps" table="corps">
 
-        <id name="id" type="integer" column="id">
-            <generator strategy="IDENTITY"/>
+        <id name="id"               column="id"             type="string"       length="40">
         </id>
 
-        <field name="code"              type="string"   length="64"       column="code"                   nullable="false"  />
-        <field name="libelle"           type="string"   length="256"      column="libelle"                nullable="false"  />
-
+        <field name="libelleCourt"  column="lib_court"      type="string"       length="20"   />
+        <field name="libelleLong"   column="lib_long"       type="string"       length="200"  />
+        <field name="code"          column="code"           type="string"       length="10"  />
+        <field name="categorie"     column="categorie"      type="string"       length="10"  />
+        <field name="histo"         column="histo"          type="string"       length="10"  />
     </entity>
 </doctrine-mapping>

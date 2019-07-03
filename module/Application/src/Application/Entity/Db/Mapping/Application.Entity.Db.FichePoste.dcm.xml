@@ -22,7 +22,7 @@
         </many-to-one>
 
         <many-to-one field="agent" target-entity="Application\Entity\Db\Agent">
-            <join-column name="agent" referenced-column-name="id" />
+            <join-column name="agent" referenced-column-name="c_individu" />
         </many-to-one>
 
         <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste">

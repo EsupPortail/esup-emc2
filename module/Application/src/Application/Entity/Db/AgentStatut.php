@@ -7,7 +7,7 @@ use Exception;
 use UnicaenApp\Exception\RuntimeException;
 
 class AgentStatut {
-    /** @var integer */
+    /** @var string */
     private $id;
     /** @var string */
     private $sourceName;
@@ -58,21 +58,11 @@ class AgentStatut {
     private $retraite;
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return AgentStatut
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
     }
 
     /**
@@ -206,7 +196,7 @@ class AgentStatut {
      */
     public function isTitulaire()
     {
-        return $this->titulaire;
+        return $this->titulaire === 'O';
     }
 
     /**
@@ -224,7 +214,7 @@ class AgentStatut {
      */
     public function isCdi()
     {
-        return $this->cdi;
+        return $this->cdi === 'O';
     }
 
     /**
@@ -242,7 +232,7 @@ class AgentStatut {
      */
     public function isCdd()
     {
-        return $this->cdd;
+        return $this->cdd === 'O';
     }
 
     /**
@@ -260,7 +250,7 @@ class AgentStatut {
      */
     public function isVacataire()
     {
-        return $this->vacataire;
+        return $this->vacataire === 'O';
     }
 
     /**
@@ -278,7 +268,7 @@ class AgentStatut {
      */
     public function isEnseignant()
     {
-        return $this->enseignant;
+        return $this->enseignant === 'O';
     }
 
     /**
@@ -296,7 +286,7 @@ class AgentStatut {
      */
     public function isAdministratif()
     {
-        return $this->administratif;
+        return $this->administratif === 'O';
     }
 
     /**
@@ -314,7 +304,7 @@ class AgentStatut {
      */
     public function isChercheur()
     {
-        return $this->chercheur;
+        return $this->chercheur === 'O';
     }
 
     /**
@@ -332,7 +322,7 @@ class AgentStatut {
      */
     public function isEtudiant()
     {
-        return $this->etudiant;
+        return $this->etudiant === 'O';
     }
 
     /**
@@ -350,7 +340,7 @@ class AgentStatut {
      */
     public function isAuditeurLibre()
     {
-        return $this->auditeurLibre;
+        return $this->auditeurLibre === 'O';
     }
 
     /**
@@ -368,7 +358,7 @@ class AgentStatut {
      */
     public function isDoctorant()
     {
-        return $this->doctorant;
+        return $this->doctorant === 'O';
     }
 
     /**
@@ -386,7 +376,7 @@ class AgentStatut {
      */
     public function isDetacheIn()
     {
-        return $this->detacheIn;
+        return $this->detacheIn === 'O';
     }
 
     /**
@@ -404,7 +394,7 @@ class AgentStatut {
      */
     public function isDetacheOut()
     {
-        return $this->detacheOut;
+        return $this->detacheOut === 'O';
     }
 
     /**
@@ -422,7 +412,7 @@ class AgentStatut {
      */
     public function isDispo()
     {
-        return $this->dispo;
+        return $this->dispo === 'O';
     }
 
     /**
@@ -440,7 +430,7 @@ class AgentStatut {
      */
     public function isHeberge()
     {
-        return $this->heberge;
+        return $this->heberge === 'O';
     }
 
     /**
@@ -458,7 +448,7 @@ class AgentStatut {
      */
     public function isEmerite()
     {
-        return $this->emerite;
+        return $this->emerite === 'O';
     }
 
     /**
@@ -476,7 +466,7 @@ class AgentStatut {
      */
     public function isRetraite()
     {
-        return $this->retraite;
+        return $this->retraite === 'O';
     }
 
     /**

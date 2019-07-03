@@ -7,8 +7,12 @@
         </id>
 
         <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
-        <many-to-one target-entity="Application\Entity\Db\MetierFamille" field="famille">
-            <join-column name="famille" referenced-column-name="id" />
+        <field name="fonction"          type="string"   length="128"      column="fonction"                nullable="false"  />
+
+        <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
+            <join-column name="domaine_id" referenced-column-name="id" />
         </many-to-one>
+
+        <one-to-many target-entity="Application\Entity\Db\FicheMetier" mapped-by="metier" field="fichesMetiers"/>
     </entity>
 </doctrine-mapping>

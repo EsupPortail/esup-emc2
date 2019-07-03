@@ -3,62 +3,24 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\Poste;
-use Octopus\Service\Immobilier\ImmobilierServiceAwareTrait;
+use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\Partial;
+use Zend\View\Resolver\TemplatePathStack;
 
 class PosteViewHelper extends AbstractHelper
 {
-    use ImmobilierServiceAwareTrait;
-
-    /** @var Poste */
-    protected $poste;
-
     /**
      * @param Poste $poste
-     * @return $this
+     * @param array $options
+     * @return string|Partial
      */
-    public function __invoke($poste = null)
+    public function __invoke($poste, $options = [])
     {
-        $this->poste = $poste;
-        return $this;
-    }
+        /** @var PhpRenderer $view */
+        $view = $this->getView();
+        $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-    public function __call($name, $arguments)
-    {
-        $attr = call_user_func_array([$this->poste, $name], $arguments);
-        return $this;
-    }
-
-    /**
-     * @param  Poste $poste
-     * @return string
-     */
-    public function render($poste)
-    {
-        $texte = '';
-        $texte .= '<dl class="dl-horizontal">';
-        $texte .= '<dt> Numéro poste national </dt>';
-        $texte .= '<dd class="siham">'.$poste->getNumeroPoste().'</dd>';
-        $texte .= '<dt> Affectation du poste </dt>';
-        $texte .= '<dd class="siham">'.$poste->getStructure().'</dd>';
-        $texte .= '<dt> Localisation du poste </dt>';
-//        $texte .= '<dd class="siham">'.$poste->getLocalisation().'</dd>';
-        $texte .= '<dd class="siham">'.$this->getImmobiliserService()->getImmobilierBatiment($poste->getLocalisation()).'</dd>';
-        $texte .= '<dt> Rattachement hiérarchique </dt>';
-        $texte .= '<dd class="siham">'.(($poste->getRattachementHierarchique())?$poste->getRattachementHierarchique()->getDenomination():"---").'</dd>';
-        $texte .= '<dt> Catégorie </dt>';
-        $texte .= '<dd class="siham">'.$poste->getCorrespondance().'</dd>';
-        $texte .= '<dt> Domaine UNICAEN </dt>';
-        $texte .= '<dd class="gpeec">'.(($poste->getDomaine())?$poste->getDomaine()->getLibelle():"---").'</dd>';
-        $texte .= '<dt> Fonction </dt>';
-
-        $texte .= '<dd class="gpeec">'.($poste->getFonction())?:"---".'</dd>';
-        if ($poste->getLien()) {
-            $texte .= '<dt> Lien externe </dt>';
-            $texte .= '<dd class="gpeec"><a href="'.$poste->getLien().'">'.$poste->getLien().'</a></dd>';
-        }
-        $texte .= '</dl>';
-
-        return $texte;
+        return $view->partial('poste', ['poste' => $poste, 'options' => $options]);
     }
 }

@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * @var Application\Entity\Db\MissionSpecifique[] $missions
+ */
+
+use Application\Provider\Privilege\RessourceRhPrivileges;
+
+$this->headTitle('Index des domaines');
+
+$canAjouterRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AJOUTER));
+$canEditerRessource     = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::MODIFIER));
+$canHistoriserRessource = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::MODIFIER));
+$canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::EFFACER));
+
+?>
+
+<h1 class="page-header">
+    Missions spécifiques
+    <span class="badge">
+        <?php echo count($missions); ?>
+    </span>
+</h1>
+
+<div class="main">
+    <div class="pull-right">
+        <?php if ($canAjouterRessource) : ?>
+            <a href="<?php echo $this->url('ressource-rh/mission-specifique/ajouter', [], [], true);?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une mission
+            </a>
+        <?php endif;?>
+    </div>
+    <?php if (count($missions) > 0) : ?>
+        <table id="datatable" class="table table-condensed">
+            <thead>
+            <tr>
+<!--                <th> Id </th>-->
+                <th> Libelle </th>
+                <th> #Agent </th>
+                <th> Modificateur </th>
+                <th class="action"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($missions as $mission) : ?>
+                <tr>
+                    <td> <?php echo $mission->getLibelle(); ?> </td>
+                    <td> <?php echo count($mission->getAgents()); ?> </td>
+                    <td> <small>
+                            <?php echo $mission->getHistoModificateur()->getDisplayName(); ?> <br/>
+                            <?php echo $mission->getHistoModification()->format('d/m/Y à H:i'); ?>
+                        </small>
+                    </td>
+                    <td>
+                        <?php if ($canEditerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/mission-specifique/modifier', ['mission' => $mission->getId()], [], true); ?>"
+                               data-event="modification"
+                               class="ajax-modal"
+                            >
+                                <span class="icon editer" title="Éditer le domaine"></span></a>
+                        <?php else : ?>
+                                <span class="icon editer" style="color: lightgrey;"></span>
+                        <?php endif; ?>
+                        <?php if ($canHistoriserRessource) : ?>
+                            <?php if ($mission->getHistoDestruction() === null) : ?>
+                                <a href="<?php echo $this->url('ressource-rh/mission-specifique/historiser', ['mission' => $mission->getId()], [], true); ?>">
+                                    <span class="icon historiser" title="Historiser le domaine"></span></a>
+                            <?php else : ?>
+                                <a href="<?php echo $this->url('ressource-rh/mission-specifique/restaurer', ['mission' => $mission->getId()], [], true); ?>">
+                                    <span class="icon restaurer" title="Restaurer le domaine"></span></a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if ($mission->getHistoDestruction() === null) : ?>
+                                <span class="icon historiser" style="color: lightgrey;"></span>
+                            <?php else : ?>
+                                <span class="icon restaurer" style="color: lightgrey;"></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canEffacerRessource) : ?>
+                            <a href="<?php echo $this->url('ressource-rh/mission-specifique/supprimer', ['mission' => $mission->getId()], [], true); ?>" >
+                                <span class="icon detruire" title="Effacer le domaine"></span></a>
+                            <?php else : ?>
+                                <span class="icon detruire" style="color: lightgrey;"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    });
+
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

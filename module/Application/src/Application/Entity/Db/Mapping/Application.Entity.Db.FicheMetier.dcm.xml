@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\FicheMetier" table="fiche_metier">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <!--<one-to-many field="metier" target-entity="Application\Entity\Db\Metier" mapped-by="id" />-->
+        <many-to-one target-entity="Application\Entity\Db\Metier" field="metier">
+            <join-column name="metier" referenced-column-name="id" />
+        </many-to-one>
+        <field name="missionsPrincipales"   type="string" length="4096"     column="missions_principales"               nullable="false"/>
+
+        <field name="connaissances"             type="string" length="1024"     column="connaissances"                         nullable="true"/>
+        <field name="connaissancesFormation"    type="string" length="1024"     column="connaissances_formation"               nullable="true"/>
+
+        <field name="competencesOperationnelles"             type="string" length="1024"     column="competences_operationnelles"                         nullable="true"/>
+        <field name="competencesOperationnellesFormation"    type="string" length="1024"     column="competences_operationnelles_formation"               nullable="true"/>
+
+        <field name="competencesComportementales"             type="string" length="1024"     column="competences_comportementales"                         nullable="true"/>
+        <field name="competencesComportementalesFormation"    type="string" length="1024"     column="competences_comportementales_formation"               nullable="true"/>
+
+        <field name="applicationsFormation"                   type="string" length="1024"     column="applications_formation"               nullable="true"/>
+
+        <many-to-many field="applications" target-entity="Application\Entity\Db\Application">
+            <join-table name="fiche_metier_type_application">
+                <join-columns>
+                    <join-column name="fiche" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="application" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <one-to-many target-entity="Application\Entity\Db\FicheMetierTypeActivite" mapped-by="fiche" field="activites"/>
+
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="id"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

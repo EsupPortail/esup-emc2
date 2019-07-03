@@ -34,8 +34,8 @@ $this->headTitle('Édition de l\'entretien professionnel');
          * @var string $retour
          */
         $formulaire = $entretien->getFormulaireInstance()->getFormulaire();
-        $retour = $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], ['force_canonical' => true], true);
-        $url = $this->url('autoform/formulaire/afficher-resultat', ['formulaire' => $formulaire->getId(), 'instance' => $entretien->getFormulaireInstance()->getId()], ['query' => ['retour' => $retour], 'force_canonical' => true], true);
+        $retour = $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+        $url = $this->url('autoform/formulaire/afficher-resultat', ['formulaire' => $formulaire->getId(), 'instance' => $entretien->getFormulaireInstance()->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
         echo "'".$url."'";
         ?>;
     console.log(url);

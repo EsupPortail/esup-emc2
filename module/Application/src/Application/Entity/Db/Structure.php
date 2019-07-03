@@ -4,33 +4,27 @@ namespace Application\Entity\Db;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
 use Utilisateur\Entity\Db\User;
 
 class Structure {
-    use HistoriqueAwareTrait;
+    use ImportableAwareTrait;
 
-    /** @var integer */
+    /** @var string */
     private $id;
+    /** @var string */
+    private $code;
     /** @var string */
     private $libelleCourt;
     /** @var string */
     private $libelleLong;
     /** @var string */
-    private $sigle;
-    /** @var StructureType */
     private $type;
-    /** @var DateTime */
-    private $dateOuverture;
-    /** @var DateTime */
-    private $dateFermeture;
     /** @var string */
-    private $source;
-    /** @var string */
-    private $idSource;
+    private $histo;
+
+
     /** @var string */
     private $description;
-
     /** @var ArrayCollection */
     private $gestionnaires;
 
@@ -40,14 +34,32 @@ class Structure {
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
         return $this->id;
     }
 
-     /**
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     * @return Structure
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getLibelleCourt()
@@ -86,108 +98,18 @@ class Structure {
     /**
      * @return string
      */
-    public function getSigle()
-    {
-        return $this->sigle;
-    }
-
-    /**
-     * @param string $sigle
-     * @return Structure
-     */
-    public function setSigle($sigle)
-    {
-        $this->sigle = $sigle;
-        return $this;
-    }
-
-    /**
-     * @return StructureType
-     */
     public function getType()
     {
         return $this->type;
     }
 
     /**
-     * @param StructureType $type
+     * @param string $type
      * @return Structure
      */
     public function setType($type)
     {
         $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDateOuverture()
-    {
-        return $this->dateOuverture;
-    }
-
-    /**
-     * @param DateTime $dateOuverture
-     * @return Structure
-     */
-    public function setDateOuverture($dateOuverture)
-    {
-        $this->dateOuverture = $dateOuverture;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDateFermeture()
-    {
-        return $this->dateFermeture;
-    }
-
-    /**
-     * @param DateTime $dateFermeture
-     * @return Structure
-     */
-    public function setDateFermeture($dateFermeture)
-    {
-        $this->dateFermeture = $dateFermeture;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * @param string $source
-     * @return Structure
-     */
-    public function setSource($source)
-    {
-        $this->source = $source;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdSource()
-    {
-        return $this->idSource;
-    }
-
-    /**
-     * @param string $idSource
-     * @return Structure
-     */
-    public function setIdSource($idSource)
-    {
-        $this->idSource = $idSource;
         return $this;
     }
 
@@ -212,36 +134,56 @@ class Structure {
     /**
      * @return User[]
      */
-    public function getGestionnaires() {
+    public function getGestionnaires()
+    {
         return $this->gestionnaires->toArray();
     }
 
     /**
-     * @param User $gestionnaire
+     * @param User $user
+     * @return Structure
      */
-    public function addGestionnaire($gestionnaire) {
-        $this->gestionnaires->add($gestionnaire);
+    public function addGestionnaire($user)
+    {
+        $this->gestionnaires->add($user);
+        return $this;
     }
 
     /**
-     * @param User $gestionnaire
+     * @param User $user
+     * @return Structure
      */
-    public function removeGestionnaire($gestionnaire) {
-        $this->gestionnaires->removeElement($gestionnaire);
+    public function removeGestionnaire($user)
+    {
+        $this->gestionnaires->removeElement($user);
+        return $this;
     }
 
     /**
-     * @param User $gestionnaire
-     * @return boolean
+     * @return string
      */
-    public function hasGestionnaire($gestionnaire) {
-        return $this->gestionnaires->contains($gestionnaire);
+    public function getHisto()
+    {
+        return $this->histo;
     }
 
+    /**
+     * @param string $histo
+     * @return Structure
+     */
+    public function setHisto($histo)
+    {
+        $this->histo = $histo;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $text =  "";
-        $text .= "[".$this->getType()->getCode()."] ";
+        $text .= "[".$this->getType()."] ";
         $text .= $this->getLibelleCourt();
         return $text;
     }

@@ -21,16 +21,17 @@ class StructureControllerFactory {
         $structureService = $manager->getServiceLocator()->get(StructureService::class);
         $userService = $manager->getServiceLocator()->get(UserService::class);
 
-
-        /** @var StructureForm $structureForm */
+        /**
+         * @var StructureForm $structureForm
+         */
         $structureForm = $manager->getServiceLocator()->get('FormElementManager')->get(StructureForm::class);
 
         /** @var StructureController $controller */
         $controller = new StructureController();
         $controller->setRoleService($roleService);
         $controller->setStructureService($structureService);
-        $controller->setStructureForm($structureForm);
         $controller->setUserService($userService);
+        $controller->setStructureForm($structureForm);
         return $controller;
     }
 }

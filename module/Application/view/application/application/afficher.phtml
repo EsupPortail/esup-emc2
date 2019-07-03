@@ -22,7 +22,7 @@ use Application\Entity\Db\Application;
     </dd>
     <dt> Actif</dt>
     <dd>
-        <?if ($application->isActif()) : ?>
+        <?php if ($application->isActif()) : ?>
             <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
         <?php else: ?>
             <span class="badge" style="background-color: darkred;">&nbsp;</span>

@@ -157,12 +157,14 @@ class FichePosteService {
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
+     * @param bool $notNull
      * @return FichePoste
      */
-    public function getRequestedFichePoste($controller, $paramName)
+    public function getRequestedFichePoste($controller, $paramName, $notNull = false)
     {
         $id = $controller->params()->fromRoute($paramName);
         $fiche = $this->getFichePoste($id);
+        if($notNull && !$fiche) throw new RuntimeException("Aucune fiche de trouvée avec l'identifiant [".$id."]");
         return $fiche;
 
     }
@@ -304,5 +306,14 @@ class FichePosteService {
             throw new RuntimeException("Plusieus FicheTypeExterne partagent le même identifiant [".$id."]",$e);
         }
         return $result;
+    }
+
+    /**
+     * @return FichePoste
+     */
+    public function getLastFichePoste()
+    {
+        $fiches = $this->getFichesPostes();
+        return end($fiches);
     }
 }

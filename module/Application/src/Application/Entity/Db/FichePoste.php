@@ -155,5 +155,63 @@ class FichePoste
         return null;
     }
 
+    public function getQuotiteTravaillee()
+    {
+        $somme = 0;
+        /** @var FicheTypeExterne $ficheMetier */
+        foreach ($this->fichesMetiers as $ficheMetier) {
+            $somme += $ficheMetier->getQuotite();
+        }
+        return $somme;
+    }
+
+
+    /**
+     * //TODO finir cela
+     * [
+     *      [
+     *          'famille' => 'Informatique,
+     *          [
+     *              'id' => 123,
+     *              'metier' => 'Ingenieur en logiciel',
+     *              'quotite' => '50',
+     *              'principal' => true,
+     *          ],
+     *          [
+     *              'id' => 43,
+     *              'metier' => 'Gestionnaire de base de données',
+     *              'quotite' => '20',
+     *          ],
+     *      ],
+     *      [
+     *          'famille' => 'Assistance technique et administration de la recherche ,
+     *          [
+     *              'id' => 665,
+     *              'metier' => 'Responsable assistance support',
+     *              'quotite' => '20',
+     *          ],
+     *      ],
+     * ]
+     *
+     * @return array
+     */
+    public function getFamillesAsJson() {
+        $result = [];
+        foreach ($this->getFichesMetiers() as $fiche) {
+            $metier  = $fiche->getFicheType()->getMetier()->getLibelle();
+            $famille = $fiche->getFicheType()->getMetier()->getFonction()->getDomaine()->getFamille()->getLibelle();
+            $quotite = $fiche->getQuotite();
+
+            if (!isset($result[$famille])) {
+                $result[$famille] = [];
+            }
+            $result[$famille][] = [
+                'id' => $fiche->getId(),
+                'metier' => $metier,
+                'quotite' => $quotite
+            ];
+        }
+        return $result;
+    }
 
 }

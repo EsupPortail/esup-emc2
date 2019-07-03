@@ -5,11 +5,10 @@ namespace Application\Form\Poste;
 use Application\Entity\Db\Domaine;
 use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Fonction\FonctionServiceAwareTrait;
+use Application\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
-use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -21,9 +20,9 @@ class PosteForm extends Form  {
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     use EntityManagerAwareTrait;
-    use FonctionServiceAwareTrait;
     use ServiceLocatorAwareTrait;
     use StructureServiceAwareTrait;
+    use ImmobilierServiceAwareTrait;
 
     use AutocompleteAwareTrait;
 
@@ -46,6 +45,7 @@ class PosteForm extends Form  {
             'name' => 'structure',
             'options' => [
                 'label' => "Service/composante/direction d'affectation :",
+                'empty_option'  => "Sélectionner une service ...",
                 'value_options' => $this->getStructureService()->getStructuresAsOptions(),
             ],
             'attributes' => [
@@ -56,14 +56,20 @@ class PosteForm extends Form  {
         ]);
 
         // localisation
-        $sas = new SearchAndSelect('localisation');
-        $sas->setLabel('Localisation du poste');
-        $sas->setAttribute('placeholder','Recherchez un batiment');
-        $sas->setAttribute('class', 'individu-finder');
-        $sas->setLabelOption('disable_html_escape', false);
-
-        $sas->setAutocompleteSource($this->getAutocomplete());
-        $this->add($sas);
+        $this->add([
+            'type' => Select::class,
+            'name' => 'localisation',
+            'options' => [
+                'label' => "Localisation du poste :",
+                'empty_option'  => "Sélectionner un bâtiment ...",
+                'value_options' => $this->getImmobilierService()->getBatimentsAsOptions(),
+            ],
+            'attributes' => [
+                'id'                => 'localisation',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
 
         // correspondance
         $this->add([
@@ -71,6 +77,7 @@ class PosteForm extends Form  {
             'name' => 'correspondance',
             'options' => [
                 'label' => "Catégorie :",
+                'empty_option'  => "Sélectionner une correspondance ...",
                 'value_options' => $this->generateCorrespondanceSelectOptions(),
             ],
             'attributes' => [
@@ -86,6 +93,7 @@ class PosteForm extends Form  {
             'name' => 'rattachement',
             'options' => [
                 'label' => "Rattachement hierarchique :",
+                'empty_option'  => "Sélectionner un rattachement ...",
                 'value_options' => $this->generateRattachementSelectOptions(),
             ],
             'attributes' => [
@@ -101,7 +109,7 @@ class PosteForm extends Form  {
             'name' => 'domaine',
             'options' => [
                 'label' => "Domaine UNICAEN :",
-                'empty_option' => "Sélectionner un domaine",
+                'empty_option' => "Sélectionner un domaine ...",
                 'object_manager' => $this->getEntityManager(),
                 'target_class' => Domaine::class,
                 'property' => 'libelle',
@@ -127,7 +135,11 @@ class PosteForm extends Form  {
             'name' => 'fonction',
             'options' => [
                 'label' => "Fonction :",
-                'value_options' => $this->getFonctionService()->getFonctionsAsOption(),
+                'empty_option'  => "Sélectionner une fonction ...",
+                'value_options' => [
+                    'Soutien' => 'Soutien',
+                    'Support' => 'Support',
+                ],
             ],
             'attributes' => [
                 'id' => 'fonction',
@@ -169,11 +181,10 @@ class PosteForm extends Form  {
 
     private function generateCorrespondanceSelectOptions()
     {
-        $correspondances = $this->getRessourceRhService()->getCorrespondances();
+        $correspondances = $this->getRessourceRhService()->getCorrespondances(true);
         $options = [];
-        $options[0] = "Sélectionner une correspondance ...";
         foreach($correspondances as $correspondance) {
-            $options[$correspondance->getId()] = $correspondance->__toString();
+            $options[$correspondance->getId()] = $correspondance->getLibelleCourt() . " - " . $correspondance->getLibelleLong();
         }
         return $options;
     }

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentStatut;
+
+?>
+
+<h3> Présentation de l'agent </h3>
+
+<?php
+    $correspondance = ($agent->getCorrespondance()) ? ($agent->getCorrespondance()->getLibelleCourt())  . " - "     . $agent->getCorrespondance()->getLibelleLong()     : "---";
+    $corps          = ($agent->getCorps())          ? ($agent->getCorps()->getLibelleCourt())           . " - "     . $agent->getCorps()->getLibelleLong()              : "---";
+    $grade          = ($agent->getGrade())          ? ($agent->getGrade()->getLibelleCourt())           . " - "     . $agent->getGrade()->getLibelleLong()              : "---";
+?>
+
+<dl class="dl-horizontal">
+    <dt> Prénom </dt>
+    <dd> <?php echo $agent->getPrenom(); ?> </dd>
+    <dt> Nom </dt>
+    <dd> <?php echo $agent->getNomUsuel(); ?> </dd>
+    <dt> Quotité travaillée </dt>
+    <dd> <?php echo $agent->getQuotite(); ?> </dd>
+    <dt> Correspondance </dt>
+    <dd> <?php echo $correspondance; ?> </dd>
+    <dt> Corps </dt>
+    <dd> <?php echo $corps; ?></dd>
+    <dt> Grade </dt>
+    <dd> <?php echo $grade; ?></dd>
+</dl>
+
+<h3>Statuts</h3>
+
+<?php
+    $statuts = $agent->getStatuts();
+    usort($statuts, function (AgentStatut $a, AgentStatut $b) { return $a->getDebut() < $b->getDebut();});
+?>
+
+<?php foreach ($statuts as $statut) : ?>
+    <?php echo $this->agentStatut($statut, ['denomination' => false]); ?>
+<?php endforeach; ?>
+
+<h3> Missions spécifiques </h3>
+
+<ul>
+    <?php foreach ($agent->getMissions() as $mission) : ?>
+        <li> <?php echo $mission->getLibelle(); ?> </li>
+    <?php endforeach; ?>
+</ul>

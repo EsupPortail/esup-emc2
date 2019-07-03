@@ -70,7 +70,7 @@ class SpecificitePosteForm extends Form {
             'name' => 'contraintes',
             'type' => 'textarea',
             'options' => [
-                'label' => 'Contraintes particulières d\'exercice : ',
+                'label' => 'Sujétions ou conditions particulières : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],

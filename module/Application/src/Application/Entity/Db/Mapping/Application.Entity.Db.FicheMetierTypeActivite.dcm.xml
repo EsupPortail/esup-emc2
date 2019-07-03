@@ -8,7 +8,7 @@
 
         <field name="position" column="position" type="integer" nullable="false" />
 
-        <many-to-one target-entity="Application\Entity\Db\FicheMetierType" field="fiche">
+        <many-to-one target-entity="Application\Entity\Db\FicheMetier" field="fiche">
             <join-column name="fiche" referenced-column-name="id" />
         </many-to-one>
 

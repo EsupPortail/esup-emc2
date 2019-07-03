@@ -15,23 +15,5 @@ return [
         'cache_dir'                => 'data/config/',
         'check_dependencies'       => ($env !== 'production'),
     ],
-    'doctrine' => [
-        'configuration' => [
-            'orm_default' => [
-                'metadata_cache'   => ($env === 'production' ? 'memcached' : 'array'),
-                'query_cache'      => ($env === 'production' ? 'memcached' : 'array'),
-                'result_cache'     => ($env === 'production' ? 'memcached' : 'array'),
-                'hydration_cache'  => ($env === 'production' ? 'memcached' : 'array'),
-                'generate_proxies' => ($env !== 'production'),
-            ],
-            'orm_octopus' => [
-                'metadata_cache'   => ($env === 'production' ? 'memcached' : 'array'),
-                'query_cache'      => ($env === 'production' ? 'memcached' : 'array'),
-                'result_cache'     => ($env === 'production' ? 'memcached' : 'array'),
-                'hydration_cache'  => ($env === 'production' ? 'memcached' : 'array'),
-                'generate_proxies' => ($env !== 'production'),
-                'driver'           => 'orm_octopus',
-            ],
-        ],
-    ],
+
 ];

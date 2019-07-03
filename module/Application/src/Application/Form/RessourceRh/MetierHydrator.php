@@ -3,11 +3,11 @@
 namespace Application\Form\RessourceRh;
 
 use Application\Entity\Db\Metier;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class MetierHydrator implements HydratorInterface {
-    use RessourceRhServiceAwareTrait;
+    use DomaineServiceAwareTrait;
 
     /**
      * @param Metier $object
@@ -16,7 +16,8 @@ class MetierHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'famille' => $object->getFamille(),
+            'domaine' => ($object->getDomaine())?$object->getDomaine()->getId():null,
+            'fonction' => $object->getFonction(),
             'libelle' => $object->getLibelle(),
         ];
         return $data;
@@ -29,10 +30,11 @@ class MetierHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $famille = $this->getRessourceRhService()->getMetierFamille($data['famille']);
+        $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
 
         $object->setLibelle($data['libelle']);
-        $object->setFamille($famille);
+        $object->setFonction($data['fonction']);
+        $object->setDomaine($domaine);
         return $object;
     }
 

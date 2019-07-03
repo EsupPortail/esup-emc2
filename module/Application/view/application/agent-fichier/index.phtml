@@ -2,9 +2,9 @@
 
 /**
  * @var \Application\Entity\Db\Agent $agent
- * @var \Fichier\Entity\Db\Fichier $cv
- * @var \Fichier\Entity\Db\Fichier $motiv
- * @var \Fichier\Entity\Db\Fichier $formations
+ * @var \Fichier\Entity\Db\Fichier[] $cvs
+ * @var \Fichier\Entity\Db\Fichier[] $motivs
+ * @var \Fichier\Entity\Db\Fichier[] $formations
  */
 
 use Fichier\Entity\Db\Nature;
@@ -20,24 +20,40 @@ $this->headTitle('Mes fichiers : '.$agent->getDenomination());
 <div class="main">
     <h2> Curriculum Vitae </h2>
 
-    <?php if ($cv !== null) : ?>
-        <?php echo $this->fichier()->render($cv, $this->url('agent/fichiers', ['agent' => $agent->getId()], ['force_canonical' => true], true)); ?>
+    <a href='<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId(), 'nature' => Nature::CV], [], true); ?>' class="btn btn-primary zajax-modal" data-event="modification">
+        <span class="icon televerser"></span>
+        Téléverser un fichier
+    </a>
+
+    <?php if (!empty($cvs)) : ?>
+        <?php foreach($cvs as $cv) : ?>
+            <?php echo $this->fichier()->render($cv, $this->url('agent/fichiers', ['agent' => $agent->getId()], ['force_canonical' => true], true)); ?>
+        <?php endforeach; ?>
     <?php else : ?>
-        <a href='<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId(), 'nature' => Nature::CV], [], true); ?>' class="btn btn-primary zajax-modal" data-event="modification">
-            <span class="icon televerser"></span>
-            Téléverser un fichier
-        </a>
+
+        <br/><br/>
+
+        Aucun CV.
+
     <?php endif; ?>
 
     <h2> Lettre de motivation </h2>
 
-    <?php if ($motiv !== null) : ?>
-        <?php echo $this->fichier()->render($motiv, $this->url('agent/fichiers', ['agent' => $agent->getId()], ['force_canonical' => true], true)); ?>
+    <a href='<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId(), 'nature' => Nature::MOTIV], [], true); ?>' class="btn btn-primary zajax-modal" data-event="modification">
+        <span class="icon televerser"></span>
+        Téléverser un fichier
+    </a>
+
+    <?php if (!empty($motivs)) : ?>
+        <?php foreach($motivs as $motiv) : ?>
+            <?php echo $this->fichier()->render($motiv, $this->url('agent/fichiers', ['agent' => $agent->getId()], ['force_canonical' => true], true)); ?>
+        <?php endforeach; ?>
     <?php else : ?>
-        <a href='<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId(), 'nature' => Nature::MOTIV], [], true); ?>' class="btn btn-primary zajax-modal" data-event="modification">
-            <span class="icon televerser"></span>
-            Téléverser un fichier
-        </a>
+
+        <br/><br/>
+
+        Aucune lettre.
+
     <?php endif; ?>
 
     <h2> Justificatif de formation </h2>
@@ -46,9 +62,6 @@ $this->headTitle('Mes fichiers : '.$agent->getDenomination());
         <span class="icon televerser"></span>
         Téléverser un fichier
     </a>
-
-
-
 
     <?php if (!empty($formations)) : ?>
         <?php foreach($formations as $formation) : ?>
