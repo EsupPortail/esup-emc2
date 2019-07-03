@@ -10,6 +10,7 @@ $modules = [
     'Octopus',
     'Utilisateur',
     'Application',
+    //'ZendDeveloperTools',
 ];
 
 if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {
