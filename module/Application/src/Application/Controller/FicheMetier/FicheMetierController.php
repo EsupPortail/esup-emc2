@@ -4,6 +4,7 @@ namespace Application\Controller\FicheMetier;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
+use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
@@ -17,8 +18,6 @@ use Application\Form\FicheMetier\FormationOperationnelleForm;
 use Application\Form\FicheMetier\FormationOperationnelleFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
-use Application\Form\FicheMetier\MissionsPrincipalesForm;
-use Application\Form\FicheMetier\MissionsPrincipalesFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -42,7 +41,6 @@ class FicheMetierController extends  AbstractActionController{
     use FormationComportementaleFormAwareTrait;
     use FormationOperationnelleFormAwareTrait;
     use LibelleFormAwareTrait;
-    use MissionsPrincipalesFormAwareTrait;
 
     public function indexAction()
     {
@@ -133,7 +131,7 @@ class FicheMetierController extends  AbstractActionController{
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
-        /** @var MissionsPrincipalesForm $form */
+        /** @var LibelleForm $form */
         $form = $this->getLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-libelle',['id' => $fiche->getId()],[], true));
         $form->bind($fiche);
@@ -157,40 +155,12 @@ class FicheMetierController extends  AbstractActionController{
         return $vm;
     }
 
-    public function editerMissionsPrincipalesAction()
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-
-        /** @var MissionsPrincipalesForm $form */
-        $form = $this->getMissionsPrincipalesForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-missions-principales',['id' => $fiche->getId()],[], true));
-        $form->bind($fiche);
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Éditer missions principales',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
     public function ajouterNouvelleActiviteAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
         $activite = new Activite();
-        /** @var MissionsPrincipalesForm $form */
+        /** @var ActiviteForm $form */
         $form = $this->getActiviteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-nouvelle-activite',['id' => $fiche->getId()],[], true));
         $form->bind($activite);

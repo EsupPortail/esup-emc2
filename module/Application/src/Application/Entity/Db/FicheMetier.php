@@ -12,8 +12,6 @@ class FicheMetier {
     private $id;
     /** @var Metier */
     private $metier;
-    /** @var string */
-    private $missionsPrincipales;
 
     /** @var string */
     private $connaissances;
@@ -62,7 +60,7 @@ class FicheMetier {
 
     /**
      * @param Metier $metier
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setMetier($metier)
     {
@@ -75,12 +73,20 @@ class FicheMetier {
      */
     public function getMissionsPrincipales()
     {
-        return $this->missionsPrincipales;
+        $texte = '<ul>';
+        //return $this->missionsPrincipales;
+        $activites = $this->getActivites();
+        usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) {return $a->getPosition() > $b->getPosition();});
+        foreach ($activites as $activite) {
+            $texte .= '<li>'.$activite->getActivite()->getLibelle().'</li>';
+        }
+        $texte .= '</ul>';
+        return $texte;
     }
 
     /**
      * @param string $missionsPrincipales
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setMissionsPrincipales($missionsPrincipales)
     {
@@ -98,7 +104,7 @@ class FicheMetier {
 
     /**
      * @param string $connaissances
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setConnaissances($connaissances)
     {
@@ -116,7 +122,7 @@ class FicheMetier {
 
     /**
      * @param string $connaissancesFormation
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setConnaissancesFormation($connaissancesFormation)
     {
@@ -134,7 +140,7 @@ class FicheMetier {
 
     /**
      * @param string $competencesOperationnelles
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setCompetencesOperationnelles($competencesOperationnelles)
     {
@@ -152,7 +158,7 @@ class FicheMetier {
 
     /**
      * @param string $competencesOperationnellesFormation
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setCompetencesOperationnellesFormation($competencesOperationnellesFormation)
     {
@@ -170,7 +176,7 @@ class FicheMetier {
 
     /**
      * @param string $competencesComportementales
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setCompetencesComportementales($competencesComportementales)
     {
@@ -188,7 +194,7 @@ class FicheMetier {
 
     /**
      * @param string $competencesComportementalesFormation
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setCompetencesComportementalesFormation($competencesComportementalesFormation)
     {
@@ -206,7 +212,7 @@ class FicheMetier {
 
     /**
      * @param Application $application
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function addApplication($application)
     {
@@ -216,7 +222,7 @@ class FicheMetier {
 
     /**
      * @param Application $application
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function removeApplication($application)
     {
@@ -234,7 +240,7 @@ class FicheMetier {
 
     /**
      * @param string $formation
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function setApplicationsFormation($formation)
     {
@@ -252,7 +258,7 @@ class FicheMetier {
 
     /**
      * @param FicheMetierTypeActivite $activite
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function addActivite($activite)
     {
@@ -262,7 +268,7 @@ class FicheMetier {
 
     /**
      * @param FicheMetierTypeActivite $activite
-     * @return FicheMetierType
+     * @return FicheMetier
      */
     public function removeActivite($activite)
     {

@@ -45,17 +45,6 @@ $canEditer = true;
             <div class="col-md-6">
                 <h2> Missions principales </h2>
             </div>
-            <div class="col-md-6">
-                <?php if ($canEditer) : ?>
-                    <a  class="btn btn-primary action ajax-modal pull-right"
-                        href="<?php echo $this->url('fiche-metier-type/editer-missions-principales', ['id' => $fiche->getId()], [] , true); ?>"
-                        data-event="modification"
-                    >
-                        <span class="icon editer"></span>
-                        Éditer missions principales
-                    </a>
-                <?php endif; ?>
-            </div>
         </div>
     </div>
     <div class="panel-body">
