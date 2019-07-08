@@ -30,7 +30,7 @@ class ActiviteHydrator implements HydratorInterface {
         $data = [
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
-            'applications' => $formationIds,
+            'applications' => $applicationIds,
             'formations' => $formationIds,
         ];
         return $data;
