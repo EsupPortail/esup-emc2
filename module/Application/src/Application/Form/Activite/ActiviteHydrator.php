@@ -4,10 +4,12 @@ namespace Application\Form\Activite;
 
 use Application\Entity\Db\Activite;
 use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class ActiviteHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
+    use FormationServiceAwareTrait;
 
     /**
      * @param Activite $object
@@ -15,15 +17,21 @@ class ActiviteHydrator implements HydratorInterface {
      */
     public function extract($object)
     {
-        $formationIds = [];
+        $applicationIds = [];
         foreach ($object->getApplications() as $application) {
-            $formationIds[] = $application->getId();
+            $applicationIds[] = $application->getId();
+        }
+
+        $formationIds = [];
+        foreach ($object->getFormations() as $formation) {
+            $formationIds[] = $formation->getId();
         }
 
         $data = [
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
             'applications' => $formationIds,
+            'formations' => $formationIds,
         ];
         return $data;
     }
@@ -44,6 +52,14 @@ class ActiviteHydrator implements HydratorInterface {
         foreach ($data['applications'] as $id) {
             $application = $this->getApplicationService()->getApplication($id);
             if ($application) $object->addApplication($application);
+        }
+
+        foreach ($object->getFormations() as $formation) {
+            $object->removeFormation($formation);
+        }
+        foreach ($data['formations'] as $id) {
+            $formation = $this->getFormationService()->getFormation($id);
+            if ($formation) $object->addFormation($formation);
         }
         return $object;
     }

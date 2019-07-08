@@ -20,7 +20,6 @@ class ApplicationsHydrator implements HydratorInterface {
         }
 
         $data = [
-            'formation' => $object->getApplicationsFormation(),
             'applications' => $applicationsId,
         ];
         return $data;
@@ -33,10 +32,7 @@ class ApplicationsHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-
         foreach ($object->getApplications() as $application) $object->removeApplication($application);
-
-        $object->setApplicationsFormation($data['formation']);
 
         foreach ($data['applications'] as $applicationId) {
             $application = $this->getApplicationService()->getApplication($applicationId);
