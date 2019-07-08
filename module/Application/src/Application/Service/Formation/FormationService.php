@@ -24,6 +24,7 @@ class FormationService {
     public function getFormations($ordre = null)
     {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+            ->andWhere('formation.histoDestruction IS NULL')
         ;
         if ($ordre) $qb = $qb->orderBy('formation.' . $ordre);
 
@@ -162,5 +163,18 @@ class FormationService {
         } catch (OptimisticLockException $e) {
             throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormationsAsOptions() {
+        $formations = $this->getFormations('libelle');
+
+        $result = [];
+        foreach ($formations as $formation) {
+            $result[$formation->getId()] = $formation->getLibelle();
+        }
+        return $result;
     }
 }

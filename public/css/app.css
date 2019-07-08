@@ -208,6 +208,10 @@ span.icon.batiment:before {
     content: "\f1ad";
 }
 
+span.icon.formation:before {
+    content: "\f51b";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }

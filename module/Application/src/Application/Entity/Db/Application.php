@@ -19,10 +19,13 @@ class Application {
 
     /** @var ArrayCollection */
     private  $activites;
+    /** @var ArrayCollection */
+    private  $formations;
 
     public function __construct()
     {
         $this->activites = new ArrayCollection();
+        $this->formations = new ArrayCollection();
     }
 
     /**
@@ -140,5 +143,33 @@ class Application {
     public function hasApplication($activite)
     {
         return $this->activites->contains($activite);
+    }
+
+    /**
+     * @return Formation[]
+     */
+    public function getFormations()
+    {
+        return $this->formations->toArray();
+    }
+
+    /**
+     * @param Formation $formation
+     * @return Application
+     */
+    public function addFormation($formation)
+    {
+        $this->formations->add($formation);
+        return $this;
+    }
+
+    /**
+     * @param Formation $formation
+     * @return Application
+     */
+    public function removeFormation($formation)
+    {
+        $this->formations->removeElement($formation);
+        return $this;
     }
 }
