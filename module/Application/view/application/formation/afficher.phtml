@@ -1,0 +1,35 @@
+<?php
+
+use Application\Entity\Db\Formation;
+
+/**
+ * @var Formation $formation
+ */
+
+?>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2><?php echo $formation->getLibelle() ?></h2>
+    </div>
+    <div class="panel-body">
+        <h3> Description </h3>
+        <?php if ($formation->getDescription() !== null) : ?>
+            <?php echo $formation->getDescription(); ?>
+        <?php else : ?>
+            Aucune description.
+        <?php endif; ?>
+        <h3> Lien </h3>
+        <?php if ($formation->getLien() !== null) : ?>
+            <a href="<?php echo $formation->getLien(); ?>">
+                <?php echo $formation->getLien(); ?>
+            </a>
+        <?php else : ?>
+            Aucun lien.
+        <?php endif; ?>
+        <h3> Connaissances/Compétences liées </h3>
+        TODO
+        <h3> Applications liées </h3>
+        TODO
+    </div>
+</div>
