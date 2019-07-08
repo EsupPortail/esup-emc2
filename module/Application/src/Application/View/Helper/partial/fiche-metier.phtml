@@ -65,6 +65,9 @@ use Application\Entity\Db\FicheMetierTypeActivite;
             $applications[] = $application->getLibelle();
             foreach ($application->getFormations() as $formation) $formations[] = $formation->getLibelle();
         }
+        foreach ($activite->getActivite()->getFormations() as $formation) {
+            $formations[] = $formation->getLibelle();
+        }
     }
     foreach ($fiche->getApplications() as $application) {
         $applications[] = $application->getLibelle();
@@ -72,6 +75,7 @@ use Application\Entity\Db\FicheMetierTypeActivite;
     }
     sort($applications);
     $applications = array_unique($applications);
+
     sort( $formations);
     $formations = array_unique($formations);
 ?>
@@ -88,15 +92,9 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 
         <div class="col-md-6">
             <h3> Plan de formation </h3>
-                <?php
-                    echo $fiche->getConnaissancesFormation();
-                    echo $fiche->getCompetencesOperationnellesFormation();
-                    echo $fiche->getCompetencesComportementalesFormation();
-                    echo $fiche->getApplicationsFormation();
-                ?>
             <ul>
                 <?php foreach($formations as $formation) : ?>
-                <li> <?php echo $formation; ?> </li>
+                    <li> <?php echo $formation; ?> </li>
                 <?php endforeach; ?>
             </ul>
         </div>

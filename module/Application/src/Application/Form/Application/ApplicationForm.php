@@ -50,7 +50,7 @@ class ApplicationForm extends Form {
                 'id' => 'url',
             ],
         ]);
-        // url
+        // formation
         $this->add([
             'type' => Select::class,
             'name' => 'formations',

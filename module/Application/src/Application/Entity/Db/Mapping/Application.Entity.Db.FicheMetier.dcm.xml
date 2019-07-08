@@ -12,15 +12,8 @@
         </many-to-one>
 
         <field name="connaissances"             type="string" length="1024"     column="connaissances"                         nullable="true"/>
-        <field name="connaissancesFormation"    type="string" length="1024"     column="connaissances_formation"               nullable="true"/>
-
         <field name="competencesOperationnelles"             type="string" length="1024"     column="competences_operationnelles"                         nullable="true"/>
-        <field name="competencesOperationnellesFormation"    type="string" length="1024"     column="competences_operationnelles_formation"               nullable="true"/>
-
         <field name="competencesComportementales"             type="string" length="1024"     column="competences_comportementales"                         nullable="true"/>
-        <field name="competencesComportementalesFormation"    type="string" length="1024"     column="competences_comportementales_formation"               nullable="true"/>
-
-        <field name="applicationsFormation"                   type="string" length="1024"     column="applications_formation"               nullable="true"/>
 
         <many-to-many field="applications" target-entity="Application\Entity\Db\Application">
             <join-table name="fiche_metier_type_application">
