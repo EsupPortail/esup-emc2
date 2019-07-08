@@ -7,6 +7,7 @@ use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
 class ActiviteForm extends Form {
     use ApplicationServiceAwareTrait;
@@ -69,6 +70,12 @@ class ActiviteForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'libelle'               => [ 'required' => true,  ],
+            'description'           => [ 'required' => true,  ],
+            'applications'           => [ 'required' => false,  ],
+        ]));
     }
 
     private function getApplicationOptions()
