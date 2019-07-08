@@ -56,23 +56,23 @@ $this->headTitle("Index des applications");
                     <td>
                         <?php if ($canAfficher) : ?>
                             <a href="<?php echo $this->url('application/afficher', ['id' => $application->getId()], [], true); ?>" class="ajax-modal">
-                                <span class="icon voir"        title="Voir l'application"></span>
-                            </a>
+                                <span class="icon voir"        title="Voir l'application"></span></a>
                         <?php endif; ?>
                         <?php if ($canEditer) : ?>
                             <a href="<?php echo $this->url('application/editer', ['id' => $application->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
-                                <span class="icon editer" title="Éditer l'application"></span>
-                            </a>
+                                <span class="icon editer" title="Éditer l'application"></span></a>
                         <?php endif; ?>
+<!--                        --><?php //if ($canEditer) : ?>
+<!--                            <a href="--><?php ////echo $this->url('application/formation', ['id' => $application->getId()], [], true); ?><!--"  class="ajax-modal" data-event="modification">-->
+<!--                                <span class="icon formation" title="Modifier liste des formations"></span></a>-->
+<!--                        --><?php //endif; ?>
                         <?php if ($canEditer) : ?>
                             <a href="<?php echo $this->url('application/changer-status', ['id' => $application->getId()], [], true); ?>">
-                                <span class="icon power"  title="Activer/Desactiver l'application"></span>
-                            </a>
+                                <span class="icon power"  title="Activer/Desactiver l'application"></span></a>
                         <?php endif; ?>
                         <?php if ($canEffacer) : ?>
                             <a href="<?php echo $this->url('application/effacer', ['id' => $application->getId()], [], true); ?>">
-                                <span class="icon detruire"  title="Supprimer l'application"></span>
-                            </a>
+                                <span class="icon detruire"  title="Supprimer l'application"></span></a>
                         <?php endif; ?>
                     </td>
                 </tr>

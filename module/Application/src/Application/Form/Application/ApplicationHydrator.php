@@ -3,9 +3,11 @@
 namespace Application\Form\Application;
 
 use Application\Entity\Db\Application;
+use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class ApplicationHydrator implements HydratorInterface {
+    use FormationServiceAwareTrait;
 
     /**
      * @param Application $object
@@ -13,10 +15,14 @@ class ApplicationHydrator implements HydratorInterface {
      */
     public function extract($object)
     {
+        $formationIds = [];
+        foreach ($object->getFormations() as $formation) $formationIds[] = $formation->getId();
+
         $data = [
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
             'url' => $object->getUrl(),
+            'formations' => $formationIds,
         ];
         return $data;
     }
@@ -28,6 +34,11 @@ class ApplicationHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
+        $formations = [];
+        foreach($data['formations'] as $id) {
+            $formations[] = $this->getFormationService()->getFormation($id);
+        }
+
         $object->setLibelle($data['libelle']);
         if ($data['description'] === null || $data['description'] === '') {
             $object->setDescription(null);
@@ -39,6 +50,10 @@ class ApplicationHydrator implements HydratorInterface {
         } else {
             $object->setUrl($data['url']);
         }
+
+        foreach ($object->getFormations() as $formation) $object->removeFormation($formation);
+        foreach ($formations as $formation) $object->addFormation($formation);
+
         return $object;
     }
 

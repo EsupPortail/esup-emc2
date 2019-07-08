@@ -31,3 +31,19 @@ use Application\Entity\Db\Application;
     <dt> Description</dt>
     <dd> <?php echo $application->getDescription(); ?> </dd>
 </dl>
+
+<h3>
+    Formations
+    <span class="badge">
+        <?php echo count($application->getFormations()); ?>
+    </span>
+</h3>
+
+    <ul>
+        <?php foreach ($application->getFormations() as $formation) : ?>
+            <li>
+                <?php echo $formation->getLibelle(); ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
