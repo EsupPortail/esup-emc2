@@ -6,6 +6,7 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\FormationPrivileges;
 use Application\Provider\Privilege\PersoPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
@@ -221,6 +222,14 @@ return [
                                 'label' => 'Les applications',
                                 'route' => 'application',
                                 'privileges' => ApplicationPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 4,
+                                'label' => 'Les formations',
+                                'route' => 'formation',
+                                'privileges' => FormationPrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
