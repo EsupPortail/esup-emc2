@@ -19,17 +19,44 @@ use Application\Entity\Db\Formation;
         <?php else : ?>
             Aucune description.
         <?php endif; ?>
+
         <h3> Lien </h3>
-        <?php if ($formation->getLien() !== null) : ?>
+        <?php if ($formation->getLien() !== null && $formation->getLien() !== "") : ?>
             <a href="<?php echo $formation->getLien(); ?>">
                 <?php echo $formation->getLien(); ?>
             </a>
         <?php else : ?>
             Aucun lien.
         <?php endif; ?>
-        <h3> Connaissances/Compétences liées </h3>
-        TODO
-        <h3> Applications liées </h3>
-        TODO
+
+        <h3> Connaissances/Compétences liées
+            <span class="badge">
+                <?php echo count($formation->getMissions()); ?>
+            </span>
+        </h3>
+        <?php if (!empty($formation->getMissions())): ?>
+            <ul>
+                <?php foreach ($formation->getMissions() as $mission) : ?>
+                    <li> <?php echo $mission->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else : ?>
+            Aucune connaissance ou compétence liée à cette formation
+        <?php endif; ?>
+
+        <h3> Applications liées
+            <span class="badge">
+                <?php echo count($formation->getApplications()); ?>
+            </span>
+        </h3>
+        <?php if (!empty($formation->getApplications())): ?>
+            <ul>
+                <?php foreach ($formation->getApplications() as $application) : ?>
+                    <li> <?php echo $application->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else : ?>
+            Aucune application liée à cette formation
+        <?php endif; ?>
     </div>
 </div>

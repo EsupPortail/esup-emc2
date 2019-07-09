@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Formation {
@@ -15,6 +16,18 @@ class Formation {
     private $description;
     /** @var string */
     private $lien;
+
+    /** @var ArrayCollection */
+    private $applications;
+    /** @var ArrayCollection */
+    private $missions;
+
+
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+        $this->missions = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -78,4 +91,59 @@ class Formation {
         return $this;
     }
 
+    /**
+     * @return Application[]
+     */
+    public function getApplications()
+    {
+        return $this->applications->toArray();
+    }
+
+    /**
+     * @param Application $application
+     * @return Formation
+     */
+    public function addApplication($application)
+    {
+        $this->applications->add($application);
+        return $this;
+    }
+
+    /**
+     * @param Application $application
+     * @return Formation
+     */
+    public function removeApplication($application)
+    {
+        $this->applications->removeElement($application);
+        return $this;
+    }
+
+    /**
+     * @return Activite[]
+     */
+    public function getMissions()
+    {
+        return $this->missions->toArray();
+    }
+
+    /**
+     * @param Activite $mission
+     * @return Formation
+     */
+    public function addMission($mission)
+    {
+        $this->missions->add($mission);
+        return $this;
+    }
+
+    /**
+     * @param Activite $mission
+     * @return Formation
+     */
+    public function removeMission($mission)
+    {
+        $this->missions->removeElement($mission);
+        return $this;
+    }
 }
