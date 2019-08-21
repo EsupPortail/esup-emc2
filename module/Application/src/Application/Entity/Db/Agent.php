@@ -37,6 +37,8 @@ class Agent {
     private $statuts;
     /** @var ArrayCollection (MissionSpecifique) */
     private $missions;
+    /** @var ArrayCollection (AgentMissionSpecifique) */
+    private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
 
@@ -44,6 +46,7 @@ class Agent {
     {
         $this->statuts = new ArrayCollection();
         $this->missions = new ArrayCollection();
+        $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
     }
 
@@ -317,5 +320,9 @@ class Agent {
         $fichiers = array_filter($fichiers, function (Fichier $f) use ($nature) { return ($f->getHistoDestruction() === null && $f->getNature()->getCode() === $nature);});
 
         return $fichiers;
+    }
+
+    public function getMissionsSpecifiques() {
+        return $this->missionsSpecifiques->toArray();
     }
 }

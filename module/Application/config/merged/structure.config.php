@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\EditionStructureAssertion;
+use Application\Assertion\EditionStructureAssertionFactory;
 use Application\Controller\Structure\StructureController;
 use Application\Controller\Structure\StructureControllerFactory;
 use Application\Form\Structure\StructureForm;
@@ -11,6 +13,7 @@ use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\Structure\StructureService;
 use Application\Service\Structure\StructureServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenAuth\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
 
@@ -42,8 +45,23 @@ return [
                     'action' => [
                         'editer-description'
                     ],
-                    'privileges' => [
-                        StructurePrivileges::EDITER,
+                    'assertion'  => EditionStructureAssertion::class,
+                    'privileges' => StructurePrivileges::EDITER,
+                ],
+            ],
+        ],
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'structure' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => StructurePrivileges::EDITER,
+                        //'resources' => ['structure'],
+                        'assertion' => EditionStructureAssertion::class,
                     ],
                 ],
             ],
@@ -106,6 +124,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            EditionStructureAssertion::class => EditionStructureAssertionFactory::class,
             StructureService::class => StructureServiceFactory::class,
         ],
     ],

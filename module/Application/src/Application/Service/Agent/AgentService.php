@@ -114,4 +114,27 @@ class AgentService {
         return $result;
 
     }
+
+    /**
+     * @param bool $active
+     * @return array
+     */
+    public function getAgentsAsOption($active = true)
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->orderBy('agent.nomUsuel, agent.prenom');
+
+        if ($active === true) {
+            //TODO
+        }
+
+        /** @var Agent[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $agents = [];
+        foreach ($result as $item) {
+            $agents[$item->getId()] = $item->getDenomination();
+        }
+        return $agents;
+    }
 }
