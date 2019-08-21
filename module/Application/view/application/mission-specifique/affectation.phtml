@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @see MissionSpecifiqueController::affectationAction
+ *
+ * @var Agent $agent
+ * @var MissionSpecifique $mission
+ * @var Structure $structure
+ * @var AgentMissionSpecifique[] $affectations
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\MissionSpecifique;
+use Application\Entity\Db\Structure;
+use Application\Provider\Privilege\AgentPrivileges;
+
+$this->headTitle("Affectations de missions spécifiques");
+
+$canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AJOUTER));
+$canEditer      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::EDITER));
+$canhistoriser  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::EDITER));
+$canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::EFFACER));
+
+?>
+
+<h1 class="page-header">
+    Affections de missions spécifiques
+</h1>
+
+<div class="main">
+
+    <div class="row">
+        <?php if ($canAjouter) : ?>
+            <?php /** @see MissionSpecifiqueController::ajouterAction */ ?>
+            <a href="<?php echo $this->url('agent-mission-specifique/ajouter', [], [], true); ?>"
+                class="btn btn-primary ajax-modal action"
+                data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter une affectation
+            </a>
+        <?php endif; ?>
+    </div>
+
+    <?php if ($affectations === null OR empty($affectations)) : ?>
+        Aucune affectations de trouvés.
+    <?php else : ?>
+        <table id="datatable" class="table table-condensed">
+            <thead>
+                <tr>
+                    <th> Structure </th>
+                    <th> Agent </th>
+                    <th> Mission</th>
+                    <th> Début </th>
+                    <th> Fin </th>
+                    <th> Action </th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($affectations as $affectation) : ?>
+                <tr>
+                    <td> <?php echo $affectation->getStructure()->getLibelleCourt(); ?> </td>
+                    <td> <?php echo $affectation->getAgent()->getDenomination(); ?> </td>
+                    <td> <?php echo ($affectation->getMission()?$affectation->getMission()->getLibelle():"---"); ?> </td>
+                    <td> <?php echo $affectation->getDateDebut()->format('d/m/Y'); ?> </td>
+                    <td> <?php echo ($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"--"); ?> </td>
+                    <td>
+                        <?php if ($canEditer) : ?>
+                            <?php /** @see MissionSpecifiqueController::editerAction() */ ?>
+                            <a href="<?php echo $this->url('agent-mission-specifique/editer', ['affectation' => $affectation->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier une affectation"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgray;"></span>
+                        <?php endif; ?>
+
+                        <?php if ($affectation->estNonHistorise()) : ?>
+                            <?php if ($canhistoriser) : ?>
+                                <?php /** @see MissionSpecifiqueController::historiserAction() */ ?>
+                                <a href="<?php echo $this->url('agent-mission-specifique/historiser', ['affectation' => $affectation->getId()], [], true); ?>">
+                                    <span class="icon historiser" title="Historiser une affectation"></span></a>
+                                <?php else : ?>
+                                <span class="icon historiser" style="color:lightgray;"></span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if ($canhistoriser) : ?>
+                                <?php /** @see MissionSpecifiqueController::restaurerAction() */ ?>
+                                <a href="<?php echo $this->url('agent-mission-specifique/restaurer', ['affectation' => $affectation->getId()], [], true); ?>">
+                                    <span class="icon restaurer" title="Restaurer une affectation"></span></a>
+                            <?php else : ?>
+                                <span class="icon restaurer" style="color:lightgray;"></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php if ($canDetruire) : ?>
+                            <?php /** @see MissionSpecifiqueController::detruireAction() */ ?>
+                            <a href="<?php echo $this->url('agent-mission-specifique/detruire', ['affectation' => $affectation->getId()], [], true); ?>">
+                                <span class="icon detruire" title="Détruire une affectation"></span></a>
+                        <?php else : ?>
+                            <span class="icon detruire" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

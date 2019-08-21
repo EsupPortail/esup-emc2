@@ -2,12 +2,17 @@
 
 namespace Application\Entity\Db;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Utilisateur\Entity\Db\User;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Structure {
+class Structure implements ResourceInterface{
     use ImportableAwareTrait;
+
+    public function getResourceId()
+    {
+        return 'structure';
+    }
 
     /** @var string */
     private $id;

@@ -30,6 +30,8 @@
             </join-table>
         </many-to-many>
 
+        <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="agent_id" field="missionsSpecifiques"/>
+
         <many-to-many field="fichiers" target-entity="Fichier\Entity\Db\Fichier" inversed-by="fichier" fetch="LAZY">
             <join-table name="agent_fichier">
                 <join-columns>
