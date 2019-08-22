@@ -3,6 +3,10 @@
 /**
  * @see MissionSpecifiqueController::affectationAction
  *
+ * @var array $structures
+ * @var array $missions
+ * @var array $agents
+ *
  * @var Agent $agent
  * @var MissionSpecifique $mission
  * @var Structure $structure
@@ -27,6 +31,39 @@ $canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivilege
 <h1 class="page-header">
     Affections de missions spécifiques
 </h1>
+
+<div class="filter">
+    <form method="get" action="<?php echo $this->url(); ?>">
+        Structure :
+        <select name="structure" class="selectpicker" data-live-search="true">
+            <option value="0"> Toutes les structures </option>
+            <?php foreach($structures as $clef => $label) : ?>
+                <option value="<?php echo $clef; ?>"
+                    <?php if ($structure && $structure->getId() == $clef) echo " selected" ?>
+                > <?php echo $label; ?> </option>
+            <?php endforeach; ?>
+        </select>
+        Agent :
+        <select name="agent" class="selectpicker show-tick" data-live-search="true">
+            <option value="0"> Tous les agents </option>
+            <?php foreach($agents as $clef => $label) : ?>
+                <option value="<?php echo $clef; ?>"
+                    <?php if ($agent && $agent->getId() == $clef) echo " selected" ?>
+                > <?php echo $label; ?> </option>
+            <?php endforeach; ?>
+        </select>
+        Mission :
+        <select name="mission" class="selectpicker" data-live-search="true">
+            <option value="0"> Toutes les missions </option>
+            <?php foreach($missions as $clef => $label) : ?>
+                <option value="<?php echo $clef; ?>"
+                    <?php if ($mission && $mission->getId() == $clef) echo " selected" ?>
+                > <?php echo $label; ?> </option>
+            <?php endforeach; ?>
+        </select>
+        <input class="btn btn-primary action" type="submit" value="Filter les affectations"/>
+    </form>
+</div>
 
 <div class="main">
 
@@ -109,6 +146,9 @@ $canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivilege
 </div>
 
 <script>
+
+    $('select').selectpicker();
+
     $(document).ready(function() {
         $('#datatable').DataTable( {
             language: {

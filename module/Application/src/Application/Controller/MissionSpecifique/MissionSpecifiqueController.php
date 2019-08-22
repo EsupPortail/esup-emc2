@@ -32,11 +32,19 @@ class MissionSpecifiqueController extends AbstractActionController
 
         $affectations = $this->getMissionSpecifiqueService()->getAffectations($agent, $mission, $structure);
 
+        $structures  = $this->getStructureService()->getStructuresAsOptions();
+        $agents      = $this->getAgentService()->getAgentsAsOption();
+        $missions    = $this->getRessourceRhService()->getMisssionsSpecifiquesAsOption();
+
         return new ViewModel([
             'agent' => $agent,
             'structure' => $structure,
             'mission' => $mission,
             'affectations' => $affectations,
+
+            'structures' => $structures,
+            'missions' => $missions,
+            'agents' => $agents,
         ]);
     }
 
