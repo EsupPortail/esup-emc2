@@ -9,6 +9,7 @@ $modules = [
     'Mailing',
     'Octopus',
     'Utilisateur',
+    'Indicateur',
     'Application',
     //'ZendDeveloperTools',
 ];

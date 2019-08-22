@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @var Indicateur $indicateur
+ * @var array $data
+ */
+
+use Indicateur\Entity\Db\Indicateur;
+
+?>
+
+<h1 class="page-header">
+    Indicateur <br/>
+    <?php echo $indicateur->getTitre(); ?>
+</h1>
+
+<div class="main">
+
+    <div class="row">
+        <a href="<?php echo $this->url('indicateur/rafraichir', ['indicateur' => $indicateur->getId()], [], true); ?>"
+           class="btn btn-primary action"
+        >
+            <span class="icon synchoniser"></span>
+            Rafraichir l'indicateur
+        </a>
+
+        <small>dernier rafraichissement le <?php echo ($indicateur->getDernierRafraichissement()?$indicateur->getDernierRafraichissement()->format('d/m/Y à H:i:s'):"---"); ?></small>
+    </div>
+
+
+    <?php echo $this->indicateurStructure()->render($indicateur, $data); ?>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    } );
+</script>

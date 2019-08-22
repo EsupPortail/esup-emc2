@@ -35,8 +35,6 @@ class Agent {
 
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
-    /** @var ArrayCollection (MissionSpecifique) */
-    private $missions;
     /** @var ArrayCollection (AgentMissionSpecifique) */
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
@@ -45,7 +43,6 @@ class Agent {
     public function __construct()
     {
         $this->statuts = new ArrayCollection();
-        $this->missions = new ArrayCollection();
         $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
     }
@@ -256,33 +253,6 @@ class Agent {
     }
 
     /**
-     * @return MissionSpecifique[]
-     */
-    public function getMissions() {
-        return $this->missions->toArray();
-    }
-
-    /**
-     * @param MissionSpecifique
-     * @return Agent
-     */
-    public function addMission($mission)
-    {
-        $this->missions->add($mission);
-        return $this;
-    }
-
-    /**
-     * @param MissionSpecifique
-     * @return Agent
-     */
-    public function removeMission($mission)
-    {
-        $this->missions->removeElement($mission);
-        return $this;
-    }
-
-    /**
      * @return Fichier[]
      */
     public function getFichiers()
@@ -322,6 +292,7 @@ class Agent {
         return $fichiers;
     }
 
+    /** @return AgentMissionSpecifique[] */
     public function getMissionsSpecifiques() {
         return $this->missionsSpecifiques->toArray();
     }
