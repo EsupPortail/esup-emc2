@@ -1,0 +1,75 @@
+<?php
+/**
+ * @var array $structures
+ * @var array $agents
+ * @var array $missions
+ *
+ * @var Structure $structure
+ * @var Agent $agent
+ * @var MissionSpecifique $mission
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\MissionSpecifique;
+use Application\Entity\Db\Structure;
+
+?>
+
+<form method="get" action="<?php echo $this->url(); ?>">
+    <label for="structure">Structure :</label>
+    <select id="structure" name="structure" class="selectpicker show-tick" data-live-search="true">
+        <option value="0"> Toutes les structures </option>
+        <?php foreach($structures as $clef => $label) : ?>
+            <option value="<?php echo $clef; ?>"
+                <?php if ($structure && $structure->getId() == $clef) echo " selected" ?>
+            > <?php echo $label; ?> </option>
+        <?php endforeach; ?>
+    </select>
+
+    <label for="structure">Agent :</label>
+    <select id="agent" name="agent" class="selectpicker show-tick" data-live-search="true">
+        <option value="0"> Tous les agents </option>
+        <?php foreach($agents as $clef => $label) : ?>
+            <option value="<?php echo $clef; ?>"
+                <?php if ($agent && $agent->getId() == $clef) echo " selected" ?>
+            > <?php echo $label; ?> </option>
+        <?php endforeach; ?>
+    </select>
+
+    <label for="mission">Mission :</label>
+    <select id="mission" name="mission" class="selectpicker show-tick" data-live-search="true">
+        <option value="0"> Toutes les missions </option>
+        <?php foreach($missions as $clef => $label) : ?>
+            <option value="<?php echo $clef; ?>"
+                <?php if ($mission && $mission->getId() == $clef) echo " selected" ?>
+            > <?php echo $label; ?> </option>
+        <?php endforeach; ?>
+    </select>
+    <button class="btn btn-primary" id="clear">
+        <span class="icon effacer"></span>
+    </button>
+
+    <input class="btn btn-primary action pull-right" type="submit" value="Filter les affectations"/>
+</form>
+
+
+<style>
+    div.filter {
+        background-color: white;
+        padding: 0.5rem;
+        margin: 0.5rem;
+        border-radius: 5px;
+    }
+
+    div.filter label {
+        margin-left: 1em;
+    }
+</style>
+
+<script>
+    $('button#clear').click(function() {
+        $('select#structure option:selected').removeAttr('selected');
+        $('select#agent option:selected').removeAttr('selected');
+        $('select#mission option:selected').removeAttr('selected');
+    });
+</script>
