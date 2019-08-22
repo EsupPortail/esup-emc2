@@ -13,11 +13,11 @@ class MissionSpecifique {
     /** @var string */
     private $libelle;
     /** @var ArrayCollection */
-    private $agents;
+    private $affectations;
 
     public function __construct()
     {
-        $this->agents = new ArrayCollection();
+        $this->affectations = new ArrayCollection();
     }
 
     /**
@@ -57,30 +57,11 @@ class MissionSpecifique {
     }
 
     /**
-     * @return Agent[]
+     * @return AgentMissionSpecifique[]
      */
-    public function getAgents()
+    public function getAffectations()
     {
-        return $this->agents->toArray();
+        return $this->affectations->toArray();
     }
 
-    /**
-     * @param Agent $agent
-     * @return MissionSpecifique
-     */
-    public function addAgent($agent)
-    {
-        $this->agents->add($agent);
-        return $this;
-    }
-
-    /**
-     * @param Agent $agent
-     * @return MissionSpecifique
-     */
-    public function removeAgent($agent)
-    {
-        $this->agents->removeElement($agent);
-        return $this;
-    }
 }

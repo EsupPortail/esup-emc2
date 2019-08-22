@@ -45,13 +45,17 @@ use Application\Entity\Db\Structure;
             > <?php echo $label; ?> </option>
         <?php endforeach; ?>
     </select>
+
     <button class="btn btn-primary" id="clear">
         <span class="icon effacer"></span>
     </button>
 
-    <input class="btn btn-primary action pull-right" type="submit" value="Filter les affectations"/>
+
+    <input class="btn btn-primary action pull-right" style="margin:0.5em;" type="submit" value="Filter les affectations"/>
 </form>
 
+<br/>
+<br/>
 
 <style>
     div.filter {
@@ -62,7 +66,7 @@ use Application\Entity\Db\Structure;
     }
 
     div.filter label {
-        margin-left: 1em;
+        margin-left: .25em;
     }
 </style>
 

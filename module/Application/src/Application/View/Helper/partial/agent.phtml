@@ -5,6 +5,7 @@
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentStatut;
 
 ?>
@@ -46,7 +47,15 @@ use Application\Entity\Db\AgentStatut;
 <h3> Missions spécifiques </h3>
 
 <ul>
-    <?php foreach ($agent->getMissions() as $mission) : ?>
-        <li> <?php echo $mission->getLibelle(); ?> </li>
+    <?php /** @var AgentMissionSpecifique $mission */ ?>
+    <?php foreach ($agent->getMissionsSpecifiques() as $mission) : ?>
+        <li>
+            <?php echo $mission->getMission()->getLibelle(); ?>
+            <?php if ($mission->getStructure()) echo  " pour ".$mission->getStructure()->getLibelleCourt(); ?>
+             du
+            <?php echo ($mission->getDateDebut()?$mission->getDateDebut()->format('d/m/Y'):"---"); ?>
+            au
+            <?php echo ($mission->getDateFin()?$mission->getDateFin()->format('d/m/Y'):"---"); ?>
+        </li>
     <?php endforeach; ?>
 </ul>

@@ -8,16 +8,7 @@
 
         <field name="libelle"           type="string" length="256"      column="libelle"                  nullable="false"/>
 
-        <many-to-many field="agents" target-entity="Application\Entity\Db\Agent" inversed-by="agent" fetch="LAZY">
-            <join-table name="agent_mission">
-                <join-columns>
-                    <join-column name="mission_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="agent_id" referenced-column-name="c_individu"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
+        <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="mission" field="affectations"/>
 
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

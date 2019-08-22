@@ -49,7 +49,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             <?php foreach ($missions as $mission) : ?>
                 <tr>
                     <td> <?php echo $mission->getLibelle(); ?> </td>
-                    <td> <?php echo count($mission->getAgents()); ?> </td>
+                    <td> <?php echo count($mission->getAffectations()); ?> </td>
                     <td> <small>
                             <?php echo $mission->getHistoModificateur()->getDisplayName(); ?> <br/>
                             <?php echo $mission->getHistoModification()->format('d/m/Y à H:i'); ?>
