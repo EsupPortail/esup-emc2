@@ -2,6 +2,7 @@
 
 namespace Indicateur\Controller\Abonnement;
 
+use DateInterval;
 use DateTime;
 use Indicateur\Entity\Db\Abonnement;
 use Indicateur\Service\Abonnement\AbonnementService;
@@ -39,10 +40,13 @@ class AbonnementController extends AbstractActionController {
         return $this->redirect()->toRoute('indicateurs', [], [], true);
     }
 
-    public function desabonnementAction()
+    public function resilierAction()
     {
-        $abonnement = $this->getAbonnementService()->getRequestedAbonnement($this);
-        $this->getAbonnementService()->delete($abonnement);
+        $indicateur = $this->getIndicateurService()->getRequestedIndicateur($this);
+        $user = $this->getUserService()->getConnectedUser();
+
+        $abonnements = $this->getAbonnementService()->getAbonnementsByUserAndIndicateur($user, $indicateur);
+        foreach ($abonnements as $abonnement) $this->getAbonnementService()->delete($abonnement);
 
         return $this->redirect()->toRoute('indicateurs', [], [], true);
     }
@@ -53,7 +57,7 @@ class AbonnementController extends AbstractActionController {
         $now = new DateTime();
         $listing = [];
         foreach ($abonnements as $abonnement) {
-            if ($now - $abonnement->getFrequence() > $abonnement->getDernierEnvoi()) {
+            if (date_diff($now, $abonnement->getDernierEnvoi()) > DateInterval::createFromDateString($abonnement->getFrequence())) {
                 $listing[$abonnement->getIndicateur()->getId()][] = $abonnement;
             }
         }
@@ -78,8 +82,11 @@ class AbonnementController extends AbstractActionController {
 
             foreach ($list as $abonnement) {
                 $this->getAbonnementService()->notify($abonnement, $titre, $texte, $now);
+                $abonnement->setDernierEnvoi($now);
+                $this->getAbonnementService()->update($abonnement);
             }
         }
-        exit();
+
+        return $this->redirect()->toRoute('indicateurs', [], [], true);
     }
 }
