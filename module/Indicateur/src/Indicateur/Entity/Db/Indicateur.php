@@ -6,7 +6,7 @@ use DateTime;
 
 class Indicateur {
 
-    public $ENTITY_STRUCTURE='Structure';
+    const ENTITY_STRUCTURE='Structure';
 
     /** @var integer */
     private $id;
