@@ -193,6 +193,15 @@ return [
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
+                            'indicateurs' => [
+                                'label'      => "Indicateurs",
+                                'title'      => "Module Indicateur",
+                                'route'      => 'indicateurs',
+                                'roles'      => [],
+    //                                'withtarget' => true,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
                         ],
                     ],
                     'fiche-metier' => [
