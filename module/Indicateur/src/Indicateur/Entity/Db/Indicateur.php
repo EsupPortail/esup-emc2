@@ -3,6 +3,7 @@
 namespace Indicateur\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Indicateur {
 
@@ -22,6 +23,14 @@ class Indicateur {
     private $viewId;
     /** @var string */
     private $entity;
+
+    /** @var ArrayCollection (Abonnement) */
+    private $abonnements;
+
+    public function __construct()
+    {
+        $this->abonnements = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -139,6 +148,41 @@ class Indicateur {
         return $this;
     }
 
+    /**
+     * @return Abonnement[]
+     */
+    public function getAbonnements()
+    {
+        return $this->abonnements->toArray();
+    }
 
+    /**
+     * @param Abonnement $abonnement
+     * @return Indicateur
+     */
+    public function addAbonnement($abonnement)
+    {
+        $this->abonnements->add($abonnement);
+        return $this;
+    }
 
+    /**
+     * @param Abonnement $abonnement
+     * @return Indicateur
+     */
+    public function removeAbonnement($abonnement)
+    {
+        $this->abonnements->removeElement($abonnement);
+        return $this;
+    }
+
+    /**
+     * @param Abonnement $abonnement
+     * @return Indicateur
+     */
+    public function hasAbonnement($abonnement)
+    {
+        $this->abonnements->contains($abonnement);
+        return $this;
+    }
 }

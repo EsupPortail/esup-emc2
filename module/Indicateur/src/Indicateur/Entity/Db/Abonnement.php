@@ -16,7 +16,7 @@ class Abonnement {
     /** @var string */
     private $frequence;
     /** @var DateTime */
-    private $denierEnvoi;
+    private $dernierEnvoi;
 
     /**
      * @return int
@@ -83,18 +83,18 @@ class Abonnement {
     /**
      * @return DateTime
      */
-    public function getDenierEnvoi()
+    public function getDernierEnvoi()
     {
-        return $this->denierEnvoi;
+        return $this->dernierEnvoi;
     }
 
     /**
      * @param DateTime $denierEnvoi
      * @return Abonnement
      */
-    public function setDenierEnvoi($denierEnvoi)
+    public function setDernierEnvoi($denierEnvoi)
     {
-        $this->denierEnvoi = $denierEnvoi;
+        $this->dernierEnvoi = $denierEnvoi;
         return $this;
     }
 

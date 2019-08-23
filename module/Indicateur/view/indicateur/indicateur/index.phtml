@@ -2,8 +2,10 @@
 
 /**
  * @var Indicateur[] $indicateurs
+ * @var Abonnement[] $abonnements
  */
 
+use Indicateur\Entity\Db\Abonnement;
 use Indicateur\Entity\Db\Indicateur;
 use Indicateur\Provider\Privilege\IndicateurPrivileges;
 
@@ -20,15 +22,21 @@ $canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPr
 
     <div class="row">
         <?php if ($canEditer) :?>
-
             <?php /** @see IndicateurController::creerAction() */?>
-        <a href="<?php echo $this->url("indicateur/creer", [], [], true); ?>"
-           class="btn btn-primary ajax-modal action" data-event="modification"
-        >
-            <span class="icon ajouter"></span>
-            Créer un nouvel indicateur
-        </a>
+            <a href="<?php echo $this->url("indicateur/creer", [], [], true); ?>"
+               class="btn btn-primary ajax-modal action" data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Créer un nouvel indicateur
+            </a>
 
+            <?php /** @see AbonnementController::notifierAction() */?>
+            <a href="<?php echo $this->url("abonnement/notifier", [], [], true); ?>"
+               class="btn btn-primary action"
+            >
+                <span class="icon ok"></span>
+                Notifier
+            </a>
         <?php endif; ?>
     </div>
 
@@ -48,7 +56,14 @@ $canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPr
                     <td> <?php echo $indicateur->getTitre(); ?> </td>
                     <td> <?php echo $indicateur->getDescription(); ?> </td>
                     <td> <?php echo $indicateur->getEntity(); ?> </td>
-                    <td> <?php echo "TODO"; ?> </td>
+                    <td>
+                        <?php echo count($indicateur->getAbonnements()); ?>
+                        <?php if ($abonnements[$indicateur->getId()]) : ?>
+                            <span class="icon ok" style="color:darkgreen;" title="Vous êtes abonné&middot;e à cet indicateur"></span>
+                        <?php else : ?>
+                            <span class="icon ko" style="color:darkred;" title="Vous n'êtes pas abonné&middot;e à cet indicateur"></span>
+                        <?php endif;?>
+                    </td>
                     <td>
                         <?php if ($canVoir): ?>
                             <?php /** @see IndicateurController::afficherAction() */?>

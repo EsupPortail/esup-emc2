@@ -12,5 +12,7 @@
         <field name="dernierRafraichissement"      type="datetime"      column="dernier_rafraichissement" nullable="true"/>
         <field name="viewId"            type="string" length="255"      column="view_id"                nullable="true"/>
         <field name="entity"            type="string" length="255"      column="entity"                nullable="true"/>
+
+        <one-to-many target-entity="Indicateur\Entity\Db\Abonnement" field="abonnements" mapped-by="indicateur" />
     </entity>
 </doctrine-mapping>
