@@ -56,7 +56,7 @@ return [
                     'resilier' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/resilier/:abonnement',
+                            'route'    => '/resilier/:indicateur',
                             'defaults' => [
                                 'controller' => AbonnementController::class,
                                 'action' => 'resilier'

@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Indicateur\Entity\Db\Abonnement;
+use Indicateur\Entity\Db\Indicateur;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -130,5 +131,23 @@ class AbonnementService {
         $mail = $abonnement->getUser()->getEmail();
         $this->getMailingService()->sendMail($mail, $titre, $texte);
         $abonnement->setDernierEnvoi($date);
+    }
+
+    /**
+     * @param User $user
+     * @param Indicateur $indicateur
+     * @return Abonnement[]
+     */
+    public function getAbonnementsByUserAndIndicateur($user, $indicateur)
+    {
+        $qb = $this->getEntityManager()->getRepository(Abonnement::class)->createQueryBuilder('abonnement')
+            ->andWhere('abonnement.user = :user')
+            ->andWhere('abonnement.indicateur = :indicateur')
+            ->setParameter('user', $user)
+            ->setParameter('indicateur', $indicateur)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

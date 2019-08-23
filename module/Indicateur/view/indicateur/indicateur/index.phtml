@@ -59,9 +59,15 @@ $canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPr
                     <td>
                         <?php echo count($indicateur->getAbonnements()); ?>
                         <?php if ($abonnements[$indicateur->getId()]) : ?>
-                            <span class="icon ok" style="color:darkgreen;" title="Vous êtes abonné&middot;e à cet indicateur"></span>
+                            <?php /** @see AbonnementController::resilierAction() */?>
+                            <a href="<?php echo $this->url("abonnement/resilier", ['indicateur' => $indicateur->getId()], [], true); ?>">
+                                <span class="icon ok" style="color:darkgreen;" title="Vous êtes abonné&middot;e à cet indicateur"></span>
+                            </a>
                         <?php else : ?>
-                            <span class="icon ko" style="color:darkred;" title="Vous n'êtes pas abonné&middot;e à cet indicateur"></span>
+                            <?php /** @see AbonnementController::souscrireAction() */?>
+                            <a href="<?php echo $this->url("abonnement/souscrire", ['indicateur' => $indicateur->getId()], [], true); ?>">
+                                <span class="icon ko" style="color:darkred;" title="Vous n'êtes pas abonné&middot;e à cet indicateur"></span>
+                            </a>
                         <?php endif;?>
                     </td>
                     <td>
