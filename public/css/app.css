@@ -216,6 +216,10 @@ span.icon.effacer:before {
     content: "\f12d";
 }
 
+span.icon.exporter:before {
+    content: "\f6dd ";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }

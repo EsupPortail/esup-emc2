@@ -5,7 +5,11 @@
  */
 
 use Indicateur\Entity\Db\Indicateur;
+use Indicateur\Provider\Privilege\IndicateurPrivileges;
 
+$canVoir    = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER));
+$canEditer  = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPrivileges::EDITER));
+$canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPrivileges::DETRUIRE));
 ?>
 
 <h1 class="page-header">
@@ -14,13 +18,29 @@ use Indicateur\Entity\Db\Indicateur;
 
 <div class="main">
 
+    <div class="row">
+        <?php if ($canEditer) :?>
+
+            <?php /** @see IndicateurController::creerAction() */?>
+        <a href="<?php echo $this->url("indicateur/creer", [], [], true); ?>"
+           class="btn btn-primary ajax-modal action" data-event="modification"
+        >
+            <span class="icon ajouter"></span>
+            Créer un nouvel indicateur
+        </a>
+
+        <?php endif; ?>
+    </div>
+
     <table id="datatable" class="table table-condensed">
         <thead>
-            <th> Titre </th>
-            <th> Description </th>
-            <th> Entity </th>
-            <th> #Abonnement </th>
-            <th> Action </th>
+            <tr>
+                <th> Titre </th>
+                <th> Description </th>
+                <th> Entity </th>
+                <th> #Abonnement </th>
+                <th> Action </th>
+            </tr>
         </thead>
         <tbody>
             <?php foreach ($indicateurs as $indicateur) : ?>
@@ -29,10 +49,46 @@ use Indicateur\Entity\Db\Indicateur;
                     <td> <?php echo $indicateur->getDescription(); ?> </td>
                     <td> <?php echo $indicateur->getEntity(); ?> </td>
                     <td> <?php echo "TODO"; ?> </td>
-                    <td> <?php echo "TODO"; ?> </td>
+                    <td>
+                        <?php if ($canVoir): ?>
+                            <?php /** @see IndicateurController::afficherAction() */?>
+                            <a href="<?php echo $this->url("indicateur/afficher", ['indicateur' => $indicateur->getId()], [], true); ?>">
+                                <span class="icon voir" title="Visualiser l'indicateur"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgray"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canEditer): ?>
+                            <?php /** @see IndicateurController::modifierAction() */?>
+                            <a href="<?php echo $this->url("indicateur/modifier", ['indicateur' => $indicateur->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification">
+                                <span class="icon editer" title="Modifier l'indicateur"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgray"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canDetruire): ?>
+                            <?php /** @see IndicateurController::detruireAction() */?>
+                            <a href="<?php echo $this->url("indicateur/detruire", ['indicateur' => $indicateur->getId()], [], true); ?>">
+                                <span class="icon detruire" title="Détruire l'indicateur"></span></a>
+                        <?php else : ?>
+                            <span class="icon detruire" style="color:lightgray"></span>
+                        <?php endif; ?>
+
+
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 
 </div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
