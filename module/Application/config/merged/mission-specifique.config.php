@@ -23,6 +23,7 @@ return [
                     'controller' => MissionSpecifiqueController::class,
                     'action' => [
                         'affectation',
+                        'afficher',
                     ],
                     'privileges' => [
                         AgentPrivileges::AFFICHER,
@@ -65,6 +66,17 @@ return [
                             'defaults' => [
                                 'controller' => MissionSpecifiqueController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:affectation',
+                            'defaults' => [
+                                'controller' => MissionSpecifiqueController::class,
+                                'action'     => 'afficher',
                             ],
                         ],
                         'may_terminate' => true,

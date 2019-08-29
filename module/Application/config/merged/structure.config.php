@@ -25,6 +25,7 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'index',
+                        'afficher',
                     ],
                     'privileges' => [
                         StructurePrivileges::AFFICHER,
@@ -81,6 +82,18 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
                     'ajouter-gestionnaire' => [
                         'type'  => Segment::class,
                         'options' => [

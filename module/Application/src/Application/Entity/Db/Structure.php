@@ -32,10 +32,15 @@ class Structure implements ResourceInterface{
     private $description;
     /** @var ArrayCollection */
     private $gestionnaires;
+    /** @var ArrayCollection (Poste) */
+    private $postes;
+    /** @var ArrayCollection (AgentMissionSpecifique) */
+    private $missions;
 
     public function __construct()
     {
         $this->gestionnaires = new ArrayCollection();
+        $this->postes = new ArrayCollection();
     }
 
     /**
@@ -162,6 +167,79 @@ class Structure implements ResourceInterface{
     {
         $this->gestionnaires->removeElement($user);
         return $this;
+    }
+
+    /**
+     * @return Poste[]
+     */
+    public function getPostes()
+    {
+        return $this->postes->toArray();
+    }
+
+    /**
+     * @param Poste $poste
+     * @return Structure
+     */
+    public function addPoste($poste)
+    {
+        $this->postes->add($poste);
+        return $this;
+    }
+
+    /**
+     * @param Poste $poste
+     * @return Structure
+     */
+    public function removePoste($poste)
+    {
+        $this->postes->removeElement($poste);
+        return $this;
+    }
+
+    /**
+     * @param Poste $poste
+     * @return boolean
+     */
+    public function hasPoste($poste)
+    {
+        return $this->postes->contains($poste);
+    }
+    /**
+     * @return AgentMissionSpecifique[]
+     */
+    public function getMissions()
+    {
+        return $this->missions->toArray();
+    }
+
+    /**
+     * @param AgentMissionSpecifique $mission
+     * @return Structure
+     */
+    public function addMission($mission)
+    {
+        $this->missions->add($mission);
+        return $this;
+    }
+
+    /**
+     * @param AgentMissionSpecifique $mission
+     * @return Structure
+     */
+    public function removeMission($mission)
+    {
+        $this->postes->removeElement($mission);
+        return $this;
+    }
+
+    /**
+     * @param AgentMissionSpecifique $mission
+     * @return boolean
+     */
+    public function hasMission($mission)
+    {
+        return $this->missions->contains($mission);
     }
 
     /**

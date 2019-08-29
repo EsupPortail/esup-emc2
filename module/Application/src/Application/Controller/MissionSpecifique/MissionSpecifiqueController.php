@@ -74,6 +74,17 @@ class MissionSpecifiqueController extends AbstractActionController
         return $vm;
     }
 
+    public function afficherAction() {
+        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+
+        $vm = new ViewModel();
+        $vm->setVariables([
+            'title' => 'Affichage de l\'affection',
+            'affectation' => $affectation,
+        ]);
+        return $vm;
+    }
+
     public function editerAction() {
         $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
         $form = $this->getAgentMissionSpecifiqueForm();
