@@ -11,6 +11,7 @@ $this->headTitle("Index des structures");
  * @var \Utilisateur\Entity\Db\Role $role
  */
 
+$canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER));
 $canGestionnaire    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::GESTIONNAIRE));
 $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER));
 ?>
@@ -67,6 +68,12 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
                         <?php endif; ?>
                     </td>
                     <td>
+                        <?php if ($canAfficher) : ?>
+                            <a
+                                    href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getId()], [], true); ?>"
+                            >
+                                <span class="icon voir"   title="Afficher la structure"></span></a>
+                        <?php endif; ?>
                         <?php if ($canEditer) : ?>
                             <a
                                     href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"

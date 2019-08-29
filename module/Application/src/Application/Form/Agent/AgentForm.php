@@ -8,7 +8,6 @@ use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
 class AgentForm extends Form {
-    use RessourceRhServiceAwareTrait;
 
     public function init()
     {
@@ -35,21 +34,6 @@ class AgentForm extends Form {
                 'id'                => 'quotite',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
-            ],
-        ]);
-
-        //MissionSpecifique
-        $this->add([
-            'type' => Select::class,
-            'name' => 'missions',
-            'options' => [
-                'label' => 'Missions spécifiques :',
-                'value_options' => $this->getRessourceRhService()->getMisssionsSpecifiquesAsOption(),
-            ],
-            'attributes' => [
-                'id'                => 'missions',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'multiple'          => 'multiple',
             ],
         ]);
 

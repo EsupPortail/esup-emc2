@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @see StructureController::afficherAction()
+ * @var Structure $structure
+ */
+
+use Application\Controller\FichePoste\FichePosteController;
+use Application\Controller\MissionSpecifique\MissionSpecifiqueController;
+use Application\Entity\Db\Structure;
+
+$this->headTitle("Affichage de la structure : " . $structure->getLibelleLong());
+
+$canAfficheFichePoste = true;
+$canAfficheAffectation = true;
+?>
+
+<h1 class="page-header">
+    Affichage de la structure <br/>
+    <strong> <?php echo $structure->getLibelleLong(); ?> </strong>
+</h1>
+
+<div class="main">
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2>
+                Description
+            </h2>
+            <?php echo $structure->getDescription(); ?>
+        </div>
+        <div class="col-md-4">
+            <h2>
+                Gestionnaire
+                <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
+            </h2>
+            <ul>
+                <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
+                    <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+    <h2>
+        Postes
+        <span class="badge"><?php echo count($structure->getPostes()); ?></span>
+    </h2>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Agent </th>
+            <th> Poste </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($structure->getPostes() as $poste): ?>
+            <tr>
+                <td> <?php echo $poste->getFichePoste()->getAgent()->getDenomination(); ?> </td>
+                <td> <?php echo $poste->getFichePoste()->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canAfficheFichePoste) : ?>
+                    <a <?php /** @see FichePosteController::afficherAction() */ ?>
+                        href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $poste->getFichePoste()->getId()], [], true); ?>"
+                        class="ajax-modal"
+                    >
+                        <span class="icon voir" title="Voir la fiche de poste"></span>
+                    </a>
+                    <?php else : ?>
+                        <span class="icon voir" style="color:lightgray;"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h2>
+        Missions spécifiques
+        <span class="badge"><?php echo count($structure->getMissions()); ?></span>
+    </h2>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Agent </th>
+            <th> Mission </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($structure->getMissions() as $mission): ?>
+            <tr>
+                <td> <?php echo $mission->getAgent()->getDenomination(); ?> </td>
+                <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canAfficheAffectation) : ?>
+                        <a <?php /** @see MissionSpecifiqueController::afficherAction() */ ?>
+                            href="<?php echo $this->url('agent-mission-specifique/afficher', ['affectation' => $mission->getId()], [], true); ?>"
+                            class="ajax-modal"
+                        >
+                            <span class="icon voir" title="Voir l'affectation"></span>
+                        </a>
+                    <?php else : ?>
+                        <span class="icon voir" style="color:lightgray;"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+

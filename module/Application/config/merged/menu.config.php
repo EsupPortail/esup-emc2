@@ -4,8 +4,10 @@ namespace Application;
 
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AdministrationPrivileges;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\FormationPrivileges;
 use Application\Provider\Privilege\PersoPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
@@ -191,6 +193,15 @@ return [
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
+                            'indicateurs' => [
+                                'label'      => "Indicateurs",
+                                'title'      => "Module Indicateur",
+                                'route'      => 'indicateurs',
+                                'roles'      => [],
+    //                                'withtarget' => true,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
                         ],
                     ],
                     'fiche-metier' => [
@@ -218,9 +229,25 @@ return [
                             ],
                             [
                                 'order' => 3,
+                                'label' => 'Affectations de missions',
+                                'route' => 'agent-mission-specifique',
+                                'resource' =>  AgentPrivileges::getResourceId(AgentPrivileges::AFFICHER) ,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 4,
                                 'label' => 'Les applications',
                                 'route' => 'application',
                                 'privileges' => ApplicationPrivileges::AFFICHER,
+                                'dropdown-header' => true,
+                                'icon' => 'fas fa-angle-right'
+                            ],
+                            [
+                                'order' => 5,
+                                'label' => 'Les formations',
+                                'route' => 'formation',
+                                'privileges' => FormationPrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],
@@ -233,7 +260,7 @@ return [
 //                                'icon' => 'fas fa-angle-right'
 //                            ],
                             [
-                                'order' => 7,
+                                'order' => 8,
                                 'label' => 'Les fiches de poste',
                                 'route' => 'fiche-poste',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
@@ -241,7 +268,7 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'order' => 6,
+                                'order' => 7,
                                 'label' => 'Les fiches métiers',
                                 'route' => 'fiche-metier-type',
                                 'privileges' => FicheMetierPrivileges::AFFICHER,
@@ -249,7 +276,7 @@ return [
                                 'icon' => 'fas fa-angle-right'
                             ],
                             [
-                                'order' => 5,
+                                'order' => 6,
                                 'label' => 'Les postes',
                                 'route' => 'poste',
                                 'privileges' => PostePrivileges::AFFICHER,

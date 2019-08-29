@@ -16,7 +16,6 @@ class FormationBaseHydrator implements HydratorInterface {
     {
         $data = [
             'description' => $object->getConnaissances(),
-            'formation' => $object->getConnaissancesFormation(),
         ];
         return $data;
     }
@@ -29,8 +28,6 @@ class FormationBaseHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $object->setConnaissances($data['description']);
-        $object->setConnaissancesFormation($data['formation']);
-
         return $object;
     }
 

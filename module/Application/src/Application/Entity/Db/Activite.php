@@ -17,10 +17,13 @@ class Activite
     private $description;
     /** @var ArrayCollection */
     private $applications;
+    /** @var ArrayCollection */
+    private $formations;
 
     public function __construct()
     {
         $this->applications = new ArrayCollection();
+        $this->formations = new ArrayCollection();
     }
     /**
      * @return int
@@ -103,4 +106,31 @@ class Activite
         return $this->applications->contains($application);
     }
 
+    /**
+     * @return Formation[]
+     */
+    public function getFormations()
+    {
+        return $this->formations->toArray();
+    }
+
+    /**
+     * @param Formation $formation
+     * @return Activite
+     */
+    public function addFormation($formation)
+    {
+        $this->formations->add($formation);
+        return $this;
+    }
+
+    /**
+     * @param Formation $formation
+     * @return Activite
+     */
+    public function removeFormation($formation)
+    {
+        $this->formations->removeElement($formation);
+        return $this;
+    }
 }

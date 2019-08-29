@@ -16,7 +16,6 @@ class FormationComportementaleHydrator implements HydratorInterface {
     {
         $data = [
             'description' => $object->getCompetencesComportementales(),
-            'formation' => $object->getCompetencesComportementalesFormation(),
         ];
         return $data;
     }
@@ -29,7 +28,6 @@ class FormationComportementaleHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $object->setCompetencesComportementales($data['description']);
-        $object->setCompetencesComportementalesFormation($data['formation']);
 
         return $object;
     }

@@ -7,6 +7,7 @@ use Application\Controller\Application\ApplicationControllerFactory;
 use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormFactory;
 use Application\Form\Application\ApplicationHydrator;
+use Application\Form\Application\ApplicationHydratorFactory;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
@@ -146,8 +147,8 @@ return [
         ],
     ],
     'hydrators' => [
-        'invokable' => [
-            ApplicationHydrator::class => ApplicationHydrator::class,
+        'factories' => [
+            ApplicationHydrator::class => ApplicationHydratorFactory::class,
         ]
     ]
 

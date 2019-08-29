@@ -24,20 +24,6 @@ class FormationComportementaleForm extends Form {
                 'class' => 'description form-control',
             ]
         ]);
-        // formation
-        $this->add([
-            'name' => 'formation',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Formation : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'formation form-control',
-            ]
-        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -56,9 +42,6 @@ class FormationComportementaleForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'description' => [
-                'required' => false,
-            ],
-            'formation' => [
                 'required' => false,
             ],
         ]));
