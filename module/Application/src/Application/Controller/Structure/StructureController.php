@@ -33,6 +33,14 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
+    public function afficherAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+
+        return new ViewModel([
+            'structure' => $structure,
+        ]);
+    }
 
     public function ajouterGestionnaireAction()
     {

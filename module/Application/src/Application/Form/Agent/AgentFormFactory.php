@@ -12,12 +12,8 @@ class AgentFormFactory {
         /** @var AgentHydrator $hydrator */
         $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AgentHydrator::class);
 
-        /** @var RessourceRhService $ressourceService */
-        $ressourceService = $manager->getServiceLocator()->get(RessourceRhService::class);
-
         /** @var AgentForm $form */
         $form = new AgentForm();
-        $form->setRessourceRhService($ressourceService);
         $form->setHydrator($hydrator);
         $form->init();
         return $form;

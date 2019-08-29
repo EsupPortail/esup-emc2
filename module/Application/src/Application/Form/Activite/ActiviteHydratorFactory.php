@@ -3,7 +3,7 @@
 namespace Application\Form\Activite;
 
 use Application\Service\Application\ApplicationService;
-use Zend\Form\FormElementManager;
+use Application\Service\Formation\FormationService;
 use Zend\Stdlib\Hydrator\HydratorPluginManager;
 
 class ActiviteHydratorFactory {
@@ -12,11 +12,14 @@ class ActiviteHydratorFactory {
     {
         /**
          * @var ApplicationService $applicationService
+         * @var FormationService $formationService
          */
         $applicationService = $manager->getServiceLocator()->get(ApplicationService::class);
+        $formationService = $manager->getServiceLocator()->get(FormationService::class);
 
         $hydrator = new ActiviteHydrator();
         $hydrator->setApplicationService($applicationService);
+        $hydrator->setFormationService($formationService);
 
         return $hydrator;
     }

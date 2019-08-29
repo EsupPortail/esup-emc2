@@ -16,7 +16,6 @@ class FormationOperationnelleHydrator implements HydratorInterface {
     {
         $data = [
             'description' => $object->getCompetencesOperationnelles(),
-            'formation' => $object->getCompetencesOperationnellesFormation(),
         ];
         return $data;
     }
@@ -29,8 +28,6 @@ class FormationOperationnelleHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $object->setCompetencesOperationnelles($data['description']);
-        $object->setCompetencesOperationnellesFormation($data['formation']);
-
         return $object;
     }
 

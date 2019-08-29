@@ -45,17 +45,6 @@ $canEditer = true;
             <div class="col-md-6">
                 <h2> Missions principales </h2>
             </div>
-            <div class="col-md-6">
-                <?php if ($canEditer) : ?>
-                    <a  class="btn btn-primary action ajax-modal pull-right"
-                        href="<?php echo $this->url('fiche-metier-type/editer-missions-principales', ['id' => $fiche->getId()], [] , true); ?>"
-                        data-event="modification"
-                    >
-                        <span class="icon editer"></span>
-                        Éditer missions principales
-                    </a>
-                <?php endif; ?>
-            </div>
         </div>
     </div>
     <div class="panel-body">
@@ -141,13 +130,9 @@ $canEditer = true;
                     <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-11">
                 <h3> Connaissances </h3>
                 <?php echo $fiche->getConnaissances(); ?>
-            </div>
-            <div class="col-md-5">
-                <h3> Plan de formation </h3>
-                <?php echo $fiche->getConnaissancesFormation(); ?>
             </div>
         </div>
         <div class="row">
@@ -159,13 +144,9 @@ $canEditer = true;
                     <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-11">
                 <h3> Compétences opérationnelles </h3>
                 <?php echo $fiche->getCompetencesOperationnelles(); ?>
-            </div>
-            <div class="col-md-5">
-                <h3> Plan de formation </h3>
-                <?php echo $fiche->getCompetencesOperationnellesFormation(); ?>
             </div>
         </div>
         <div class="row">
@@ -177,13 +158,9 @@ $canEditer = true;
                     <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-11">
                 <h3> Compétences comportementales </h3>
                 <?php echo $fiche->getCompetencesComportementales(); ?>
-            </div>
-            <div class="col-md-5">
-                <h3> Plan de formation </h3>
-                <?php echo $fiche->getCompetencesComportementalesFormation(); ?>
             </div>
         </div>
         <div class="row">
@@ -195,7 +172,7 @@ $canEditer = true;
                     <span class="icon editer"></span>
                 </a>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-11">
                 <h3> Applications métiers</h3>
                     <ul>
                         <?php /** @var Application $application */ ?>
@@ -203,10 +180,6 @@ $canEditer = true;
                             <li> <?php echo $application->getLibelle(); ?> </li>
                         <?php endforeach; ?>
                     </ul>
-            </div>
-            <div class="col-md-5">
-                <h3> Plan de formation </h3>
-                <?php echo $fiche->getApplicationsFormation(); ?>
             </div>
         </div>
     </div>

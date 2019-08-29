@@ -108,7 +108,7 @@ class MailingService {
     public function sendMail($to, $subject, $texte, $attachement_path = null) {
 
         $message = (new Message())->setEncoding('UTF-8');
-        $message->setFrom('ne_pas_repondre@unicaen.fr', "PrEECoG");
+        $message->setFrom('ne-pas-repondre@unicaen.fr', "PrEECoG");
         if (!is_array($to)) $to = [ $to ];
         if ($this->doNotSend) {
             $message->addTo($this->redirectTo);

@@ -23,8 +23,6 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
 use Application\Form\FicheMetier\LibelleHydratorFactory;
-use Application\Form\FicheMetier\MissionsPrincipalesForm;
-use Application\Form\FicheMetier\MissionsPrincipalesFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
@@ -58,7 +56,6 @@ return [
                         'export',
 
                         'editer-libelle',
-                        'editer-missions-principales',
                         'retirer-activite',
                         'deplacer-activite',
                         'ajouter-nouvelle-activite',
@@ -179,17 +176,6 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'editer-missions-principales' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/editer-missions-principales/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer-missions-principales',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'retirer-activite' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -301,8 +287,6 @@ return [
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
-            MissionsPrincipalesForm::class => MissionsPrincipalesFormFactory::class,
-
 
             FormationBaseForm::class => FormationBaseFormFactory::class,
             FormationOperationnelleForm::class => FormationOperationnelleFormFactory::class,

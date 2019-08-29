@@ -55,5 +55,4 @@ return [
     'hydrators' => [
         'factories' => [],
     ]
-
 ];

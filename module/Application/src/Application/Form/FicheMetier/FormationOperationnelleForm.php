@@ -24,20 +24,6 @@ class FormationOperationnelleForm extends Form {
                 'class' => 'description form-control',
             ]
         ]);
-        // formation
-        $this->add([
-            'name' => 'formation',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Formation : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'formation form-control',
-            ]
-        ]);
         // button
         $this->add([
             'type' => Button::class,

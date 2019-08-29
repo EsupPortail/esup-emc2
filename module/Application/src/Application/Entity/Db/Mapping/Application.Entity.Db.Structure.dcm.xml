@@ -28,5 +28,8 @@
             </join-table>
         </many-to-many>
 
+        <one-to-many target-entity="Application\Entity\Db\Poste" mapped-by="structure" field="postes"/>
+        <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="structure" field="missions"/>
+
     </entity>
 </doctrine-mapping>

@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @var Indicateur $indicateur
+ * @var array $header
+ * @var array $data
+ *
+ * @see IndicateurController::afficherAction()
+ */
+
+use Indicateur\Entity\Db\Indicateur;
+
+?>
+
+<h1 class="page-header">
+    Indicateur <br/>
+    <?php echo $indicateur->getTitre(); ?>
+</h1>
+
+<div class="main">
+
+    <div class="row">
+        <?php /** @see IndicateurController::exportAction() */ ?>
+        <a href="<?php echo $this->url('indicateur/exporter', ['indicateur' => $indicateur->getId()], [], true); ?>"
+           class="btn btn-primary action"
+        >
+            <span class="icon exporter"></span>
+            Exporter l'indicateur
+        </a>
+
+        <?php /** @see IndicateurController::rafraichirAction() */?>
+        <a href="<?php echo $this->url('indicateur/rafraichir', ['indicateur' => $indicateur->getId()], [], true); ?>"
+           class="btn btn-primary action"
+        >
+            <span class="icon synchoniser"></span>
+            Rafraichir l'indicateur
+        </a>
+
+        <small>dernier rafraichissement le <?php echo ($indicateur->getDernierRafraichissement()?$indicateur->getDernierRafraichissement()->format('d/m/Y à H:i:s'):"---"); ?></small>
+    </div>
+
+    <br/>
+
+    <div class="alert alert-info">
+        <?php echo $indicateur->getDescription(); ?>
+    </div>
+
+    <table id="datatable" class="table table-extra-condensed">
+        <thead>
+        <tr>
+            <?php foreach ($header as $item) : ?>
+                <th> <?php echo $item; ?> </th>
+            <?php endforeach; ?>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($data as $item) : ?>
+                <tr>
+                    <?php foreach ($item as $value) : ?>
+                        <td><?php echo $value; ?></td>
+                    <?php endforeach; ?>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    } );
+</script>
