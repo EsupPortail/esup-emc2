@@ -29,9 +29,9 @@
             <join-column name="specificite" referenced-column-name="id" />
         </one-to-one>
 
-        <many-to-one field="poste" target-entity="Application\Entity\Db\Poste">
+        <one-to-one field="poste" target-entity="Application\Entity\Db\Poste" >
             <join-column name="poste" referenced-column-name="id" />
-        </many-to-one>
+        </one-to-one>
 
         <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="fichePoste" field="fichesMetiers"/>
 

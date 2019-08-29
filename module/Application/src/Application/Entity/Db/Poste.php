@@ -23,6 +23,9 @@ class Poste {
     /** @var string */
     private $fonction;
 
+    /** @var FichePoste */
+    private $fichePoste;
+
     /**
      * @return int
      */
@@ -174,4 +177,24 @@ class Poste {
         $this->fonction = $fonction;
         return $this;
     }
+
+    /**
+     * @return FichePoste
+     */
+    public function getFichePoste()
+    {
+        return $this->fichePoste;
+    }
+
+    /**
+     * @param FichePoste $fichePoste
+     * @return Poste
+     */
+    public function setFichePoste($fichePoste)
+    {
+        $this->fichePoste = $fichePoste;
+        return $this;
+    }
+
+
 }

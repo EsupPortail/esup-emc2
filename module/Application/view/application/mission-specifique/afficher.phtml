@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @see MissionSpecifiqueController::afficherAction()
+ * @var AgentMissionSpecifique $affectation
+ */
+
+use Application\Controller\MissionSpecifique\MissionSpecifiqueController;
+use Application\Entity\Db\AgentMissionSpecifique;
+
+?>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2> Affection </h2>
+    </div>
+    <div class="panel-body">
+        <dl>
+            <dt> Agent </dt>
+            <dd> <?php echo $affectation->getAgent()->getDenomination(); ?> </dd>
+
+            <dt> Mission </dt>
+            <dd> <?php echo $affectation->getMission()->getLibelle(); ?> </dd>
+
+            <dt> Structure </dt>
+            <dd> <?php echo $affectation->getStructure()->getLibelleLong(); ?> </dd>
+
+            <dt> Période </dt>
+            <dd>
+                Du
+                <?php echo ($affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):"---"); ?>
+                au
+                <?php echo ($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"---"); ?>
+            </dd>
+        </dl>
+    </div>
+</div>
