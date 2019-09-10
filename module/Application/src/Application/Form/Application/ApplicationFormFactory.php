@@ -3,17 +3,18 @@
 namespace Application\Form\Application;
 
 use Application\Service\Formation\FormationService;
+use Interop\Container\ContainerInterface;
 use Zend\Form\FormElementManager;
 
 class ApplicationFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var FormationService $formationService */
-        $formationService = $manager->getServiceLocator()->get(FormationService::class);
+        $formationService = $container->get(FormationService::class);
 
         /** @var ApplicationHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(ApplicationHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(ApplicationHydrator::class);
 
         $form = new ApplicationForm();
         $form->setFormationService($formationService);

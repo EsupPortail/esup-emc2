@@ -3,16 +3,16 @@
 namespace Application\Form\RessourceRh;
 
 use Application\Service\Domaine\DomaineService;
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class FonctionHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $manager)
     {
         /**
          * @var DomaineService $domaineService
          */
-        $domaineService = $manager->getServiceLocator()->get(DomaineService::class);
+        $domaineService = $manager->get(DomaineService::class);
 
         /** @var FonctionHydrator $hydrator */
         $hydrator = new FonctionHydrator();

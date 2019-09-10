@@ -6,7 +6,7 @@ use Application\Entity\Db\EntretienProfessionnel;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class EntretienProfessionnelHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;

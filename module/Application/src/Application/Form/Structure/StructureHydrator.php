@@ -3,7 +3,7 @@
 namespace Application\Form\Structure;
 
 use Application\Entity\Db\Structure;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class StructureHydrator implements HydratorInterface {
 

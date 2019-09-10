@@ -2,6 +2,7 @@
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Indicateur\Provider\Privilege\IndicateurPrivileges;
 use UnicaenAuth\Guard\PrivilegeController;
 
 return array(
@@ -29,6 +30,25 @@ return array(
         'cache' => [
             'apc' => [
                 'namespace' => 'PREECOG__' . __NAMESPACE__,
+            ],
+        ],
+    ],
+
+    '\Zend\Navigation\Navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'indicateurs' => [
+                                'label'    => 'Indicateur',
+                                'route'    => 'indicateurs',
+                                'resource' => IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER),
+                                'order'    => 1000,
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

@@ -4,7 +4,7 @@ namespace Application\Form\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class FormationComportementaleHydrator implements HydratorInterface {
     use RessourceRhServiceAwareTrait;

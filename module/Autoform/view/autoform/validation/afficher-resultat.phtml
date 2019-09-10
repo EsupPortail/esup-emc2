@@ -1,59 +1,71 @@
 <?php
 
+// NB : sera ouvert en modal ne pas s'embêter avec les titres et le reste
+
 /**
- * @var Autoform\Entity\Db\Formulaire $formulaire
- * @var Autoform\Entity\Db\Validation $validation
- * @var Autoform\Entity\Db\FormulaireReponse[] $fReponses
- * @var Autoform\Entity\Db\ValidationReponse[] $vReponses
+ * @var Formulaire $formulaire
+ * @var Validation $validation
+ * @var FormulaireReponse[] $fReponses
+ * @var ValidationReponse[] $vReponses
  */
 
-$this->headTitle($formulaire->getLibelle() ." : ". $formulaire->getId())
+use Autoform\Entity\Db\Categorie;
+use Autoform\Entity\Db\Champ;
+use Autoform\Entity\Db\Formulaire;
+use Autoform\Entity\Db\FormulaireReponse;
+use Autoform\Entity\Db\Validation;
+use Autoform\Entity\Db\ValidationReponse;
 
 ?>
 
+<?php
+    /** @var Categorie[] $categories */
+    $categories = $formulaire->getCategories();
+    $categories = array_filter($categories, function (Categorie $categorie) { return $categorie->estNonHistorise();});
+    usort($categories, function (Categorie $a, Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+?>
 
-<!--<h1 class="page-header">-->
-<!--    --><?php //echo $formulaire->getLibelle(); ?><!-- <br/>-->
-<!--    --><?php //echo $demande->getEtudiant(); ?>
-<!--</h1>-->
-<!---->
-<div class="">
+<div class="main">
+<?php if ($validation->getTypeValidation() === 'listing') : ?>
+    <?php foreach ($categories as $categorie) : ?>
 
         <?php
-            /** @var Autoform\Entity\Db\Categorie[] $categories */
-            $categories = $formulaire->getCategories();
-            $categories = array_filter($categories, function (Autoform\Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
-            usort($categories, function (Autoform\Entity\Db\Categorie $a, Autoform\Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+            /** @var Champ[] $champs */
+            $champs = $categorie->getChamps();
+            $champs = array_filter($champs, function (Champ $champ) { return $champ->estNonHistorise();});
+            usort($champs, function (Champ $a, Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+
+            $results = [];
+            foreach ($champs as $champ) {
+                $fReponse = isset($fReponses[$champ->getId()])?$fReponses[$champ->getId()]->getReponse():null;
+                $vReponse = isset($vReponses[$champ->getId()])?$vReponses[$champ->getId()]->getValue():null;
+                if ($fReponse && $vReponse) $results[$champ->getId()] = $fReponses[$champ->getId()];
+            }
         ?>
 
-        <?php foreach ($categories as $categorie) : ?>
+        <?php if (!empty($champs) && !empty($results)) : ?>
 
-            <?php
-                /** @var Autoform\Entity\Db\Champ[] $champs */
-                $champs = $categorie->getChamps();
-                $champs = array_filter($champs, function (Autoform\Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
-                usort($champs, function (Autoform\Entity\Db\Champ $a, Autoform\Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+            <h3> <?php echo $categorie->getLibelle(); ?> </h3>
 
-                $results = [];
-                foreach ($champs as $champ) {
-                    $fReponse = isset($fReponses[$champ->getId()])?$fReponses[$champ->getId()]->getReponse():null;
-                    $vReponse = isset($vReponses[$champ->getId()])?$vReponses[$champ->getId()]->getValue():null;
-                    if ($fReponse && $vReponse) $results[$champ->getId()] = $fReponses[$champ->getId()];
-                }
-            ?>
-
-            <?php if (!empty($champs) && !empty($results)) : ?>
-
-                <h2> <?php echo $categorie->getLibelle(); ?> </h2>
-
-                <?php foreach ($champs as $champ) : ?>
-                    <?php if (isset($results[$champ->getId()])) : ?>
-                        <?php
-                            echo $this->champAsResult()->render($champ, $fReponses[$champ->getId()]->getReponse());
-                        ?>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        <?php endforeach; ?>
-
+            <?php foreach ($champs as $champ) : ?>
+                <?php if (isset($results[$champ->getId()])) : ?>
+                    <?php
+                        switch($champ->getElement()) {
+                            case Champ::TYPE_MULTIPLE :
+                                echo $this->champAsResult()->render($champ, $vReponses[$champ->getId()]->getValue());
+                                break;
+                            default :
+                                echo $this->champAsResult()->render($champ, $fReponses[$champ->getId()]->getReponse());
+                                break;
+                        }
+                    ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php else : ?>
+    <?php
+        echo $this->instanceAsDiv()->render($validation->getReference());
+    ?>
+<?php endif; ?>
 </div>

@@ -4,8 +4,8 @@ use Utilisateur\Controller\PrivilegeController;
 use Utilisateur\Controller\PrivilegeControllerFactory;
 use Utilisateur\Service\Privilege\PrivilegeService;
 use Utilisateur\Service\Privilege\PrivilegeServiceFactory;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
 
@@ -68,22 +68,22 @@ return [
         ],
     ],
 
-//    'navigation' => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'privilege' => [
-//                                'label' => 'Privilège',
-//                                'route' => 'privilege',
-//                                'resource' => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
-//                                'order'    => 10,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    '\Zend\Navigation\Navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'privilege' => [
+                                'label' => 'Privilège',
+                                'route' => 'privilege',
+                                'resource' => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
+                                'order'    => 2010,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];

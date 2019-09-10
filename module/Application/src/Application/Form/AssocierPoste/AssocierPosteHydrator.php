@@ -4,7 +4,7 @@ namespace Application\Form\AssocierPoste;
 
 use Application\Entity\Db\FichePoste;
 use Application\Service\Poste\PosteServiceAwareTrait;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 ;
 

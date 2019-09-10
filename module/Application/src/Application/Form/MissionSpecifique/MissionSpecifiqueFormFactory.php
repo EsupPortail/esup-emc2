@@ -2,16 +2,17 @@
 
 namespace Application\Form\MissionSpecifique;
 
+use Interop\Container\ContainerInterface;
 use Zend\Form\FormElementManager;
 
 class MissionSpecifiqueFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var MissionSpecifiqueHydrator $hydrator
          */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(MissionSpecifiqueHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(MissionSpecifiqueHydrator::class);
 
         /**
          * @var MissionSpecifiqueForm $form

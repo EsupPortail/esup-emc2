@@ -3,8 +3,7 @@
 namespace Application\Form\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class AgentHydrator implements HydratorInterface {
 
@@ -28,12 +27,6 @@ class AgentHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $object->setQuotite($data['quotite']);
-
-
-        foreach ($data['missions'] as $missionId) {
-            $mission = $this->getRessourceRhService()->getMissionSpecifique($missionId);
-        }
-
         return $object;
     }
 

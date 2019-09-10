@@ -3,17 +3,17 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Service\Activite\ActiviteService;
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class ActiviteExistanteFormFactory{
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var ActiviteExistanteHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(ActiviteExistanteHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(ActiviteExistanteHydrator::class);
 
         /** @var ActiviteService $activiteService */
-        $activiteService = $manager->getServiceLocator()->get(ActiviteService::class);
+        $activiteService = $container->get(ActiviteService::class);
 
         $form = new ActiviteExistanteForm();
         $form->setActiviteService($activiteService);

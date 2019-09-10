@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\Application\ApplicationController;
-use Application\Controller\Application\ApplicationControllerFactory;
+use Application\Controller\ApplicationController;
+use Application\Controller\ApplicationControllerFactory;
 use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormFactory;
 use Application\Form\Application\ApplicationHydrator;
@@ -12,8 +12,8 @@ use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

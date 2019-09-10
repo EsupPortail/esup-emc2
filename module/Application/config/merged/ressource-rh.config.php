@@ -2,9 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\RessourceRh\RessourceRhController;
-use Application\Controller\RessourceRh\RessourceRhControllerFactory;
-
+use Application\Controller\RessourceRhController;
+use Application\Controller\RessourceRhControllerFactory;
 use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
 use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
 use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
@@ -13,13 +12,11 @@ use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
 use Application\Form\RessourceRh\DomaineHydratorFactory;
-use Application\Form\RessourceRh\FamilleProfessionnelleHydrator;
-use Application\Form\RessourceRh\FonctionForm;
-use Application\Form\RessourceRh\FonctionFormFactory;
-use Application\Form\RessourceRh\FonctionHydrator;
-use Application\Form\RessourceRh\FonctionHydratorFactory;
 use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\FamilleProfessionnelleFormFactory;
+use Application\Form\RessourceRh\FamilleProfessionnelleHydrator;
+use Application\Form\RessourceRh\FonctionHydrator;
+use Application\Form\RessourceRh\FonctionHydratorFactory;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
@@ -36,8 +33,8 @@ use Application\Service\Metier\MetierServiceFactory;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\RessourceRh\RessourceRhServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

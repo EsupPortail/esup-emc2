@@ -2,17 +2,17 @@
 
 namespace Application\Service\Activite;
 
-use Utilisateur\Service\User\UserService;
 use Doctrine\ORM\EntityManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Utilisateur\Service\User\UserService;
 
 class ActiviteServiceFactory {
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $serviceLocator
      * @return ActiviteService
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator) {
+    public function __invoke(ContainerInterface $serviceLocator) {
         /**
          * @var EntityManager $entityManager
          * @var UserService $userService

@@ -2,14 +2,14 @@
 
 namespace Autoform\Form\Champ;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class ChampFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var ChampHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(ChampHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(ChampHydrator::class);
 
         /** @var  ChampForm $form */
         $form = new ChampForm();

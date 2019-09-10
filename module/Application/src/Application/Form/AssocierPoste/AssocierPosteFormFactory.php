@@ -3,17 +3,17 @@
 namespace Application\Form\AssocierPoste;
 
 use Doctrine\ORM\EntityManager;
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class AssocierPosteFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var AssocierPosteHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AssocierPosteHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(AssocierPosteHydrator::class);
 
         /** @var EntityManager $entityManager **/
-        $entityManager = $manager->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         /** @var AssocierPosteForm $form */
         $form = new AssocierPosteForm();

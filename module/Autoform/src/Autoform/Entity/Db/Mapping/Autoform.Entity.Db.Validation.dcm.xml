@@ -7,9 +7,14 @@
         </id>
 
         <field name="type"              column="type"               type="string"    length="64"    nullable="false" />
-
         <many-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="instance">
             <join-column name="instance" referenced-column-name="id"/>
+        </many-to-one>
+        <one-to-many target-entity="Autoform\Entity\Db\ValidationReponse"   mapped-by="validation" field="reponses"/>
+
+        <field name="typeValidation"    column="type_validation"    type="string"    length="64"    nullable="false" />
+        <many-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="reference">
+            <join-column name="reference" referenced-column-name="id"/>
         </many-to-one>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

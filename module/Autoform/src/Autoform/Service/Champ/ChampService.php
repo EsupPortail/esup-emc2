@@ -2,16 +2,15 @@
 
 namespace Autoform\Service\Champ;
 
-use Utilisateur\Service\User\UserServiceAwareTrait;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenAuth\Entity\Db\User;
+use Utilisateur\Entity\Db\User;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ChampService {
@@ -89,7 +88,7 @@ class ChampService {
         /** @var DateTime $date */
         try {
             $date = new DateTime();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème lors de la récupération de la date", $e);
         }
         $champ->setHistoCreateur($user);
@@ -117,7 +116,7 @@ class ChampService {
         /** @var DateTime $date */
         try {
             $date = new DateTime();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème lors de la récupération de la date", $e);
         }
         $champ->setHistoModificateur($user);
@@ -142,7 +141,7 @@ class ChampService {
         /** @var DateTime $date */
         try {
             $date = new DateTime();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème lors de la récupération de la date", $e);
         }
         $champ->setHistoDestructeur($user);
@@ -254,6 +253,18 @@ class ChampService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+
+    public function getAllInstance($entity)
+    {
+        $instances = $this->getEntityManager()->getRepository($entity)->findAll();
+        usort($instances, function($a, $b) {return $a->getLibelle() > $b->getLibelle();});
+        $array = [];
+        foreach ($instances as $instance) {
+            $array[$instance->getId()] = $instance->getLibelle();
+        }
+        return $array;
     }
 
 

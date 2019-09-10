@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\Formation\FormationController;
-use Application\Controller\Formation\FormationControllerFactory;
+use Application\Controller\FormationController;
+use Application\Controller\FormationControllerFactory;
 use Application\Form\Formation\FormationForm;
 use Application\Form\Formation\FormationFormFactory;
 use Application\Form\Formation\FormationHydrator;
@@ -12,8 +12,8 @@ use Application\Provider\Privilege\FormationPrivileges;
 use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

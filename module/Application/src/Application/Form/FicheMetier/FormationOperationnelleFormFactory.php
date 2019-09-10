@@ -2,14 +2,14 @@
 
 namespace Application\Form\FicheMetier;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class FormationOperationnelleFormFactory{
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var FormationOperationnelleHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(FormationOperationnelleHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(FormationOperationnelleHydrator::class);
 
         $form = new FormationOperationnelleForm();
         $form->init();
