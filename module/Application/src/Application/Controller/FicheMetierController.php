@@ -358,7 +358,7 @@ class FicheMetierController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
 
         /* @var PhpRenderer $renderer  */
-        $renderer = $this->getServiceLocator()->get('view_renderer');
+        $renderer = $this->getServiceLocator()->get('ViewRenderer');
 
         $exporter = new FicheMetierPdfExporter($renderer, 'A4');
         $exporter->setVars([

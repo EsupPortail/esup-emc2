@@ -1,12 +1,13 @@
 <?php
 
-namespace Fichier\Controller\Index;
+namespace Fichier\Controller;
 
+use Interop\Container\ContainerInterface;
 use Zend\Mvc\Controller\ControllerManager;
 
 class IndexControllerFactory {
 
-    public function __invoke(ControllerManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var IndexController $controller */
         $controller = new IndexController();

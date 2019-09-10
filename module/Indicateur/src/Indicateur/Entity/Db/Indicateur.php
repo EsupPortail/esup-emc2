@@ -7,7 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Indicateur {
 
-    const ENTITY_STRUCTURE='Structure';
+    const ENTITY_COMPOSANTE='Composante';
+    const ENTITY_ETUDIANT='Etudiant';
 
     /** @var integer */
     private $id;

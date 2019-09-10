@@ -2,15 +2,17 @@
 
 namespace Autoform\Service\Validation;
 
-use Utilisateur\Entity\Db\User;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\Validation;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Utilisateur\Entity\Db\User;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ValidationService {
@@ -77,10 +79,12 @@ class ValidationService {
         $validation->setHistoModificateur($user);
         $validation->setHistoModification($date);
 
-        $this->getEntityManager()->persist($validation);
         try {
+            $this->getEntityManager()->persist($validation);
             $this->getEntityManager()->flush($validation);
         } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la création d'un Validation.", $e);
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la création d'un Validation.", $e);
         }
         return $validation;
@@ -107,6 +111,8 @@ class ValidationService {
             $this->getEntityManager()->flush($validation);
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Validation.", $e);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Validation.", $e);
         }
         return $validation;
     }
@@ -132,6 +138,8 @@ class ValidationService {
             $this->getEntityManager()->flush($validation);
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Validation.", $e);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Validation.", $e);
         }
         return $validation;
     }
@@ -149,6 +157,8 @@ class ValidationService {
             $this->getEntityManager()->flush($validation);
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Validation.", $e);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Validation.", $e);
         }
         return $validation;
     }
@@ -159,12 +169,39 @@ class ValidationService {
      */
     public function delete($validation)
     {
-        $this->getEntityManager()->remove($validation);
+
         try {
             $this->getEntityManager()->flush();
+            $this->getEntityManager()->remove($validation);
         } catch (OptimisticLockException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Validation.", $e);
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Validation.", $e);
         }
         return $validation;
     }
+
+    /**
+     * @param string $type
+     * @param FormulaireInstance $instance
+     * @return Validation
+     */
+    public function getValidationByTypeAndInstance($type, $instance)
+    {
+        $qb = $this->getEntityManager()->getRepository(Validation::class)->createQueryBuilder('validation')
+            ->andWhere('validation.instance = :instance')
+            ->andWhere('validation.type = :type')
+            ->andWhere('validation.histoDestruction IS NULL')
+            ->setParameter('instance', $instance)
+            ->setParameter('type', $type)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs validations partagent la même instance et le même type [".$type."/".$instance->getId()."].", 0, $e);
+        }
+        return $result;
+    }
+
 }

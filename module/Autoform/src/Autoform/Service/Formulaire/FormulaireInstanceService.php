@@ -2,20 +2,20 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Utilisateur\Service\User\UserServiceAwareTrait;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Entity\Db\FormulaireInstance;
-use DateTime;
+use Autoform\Entity\Db\FormulaireReponse;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireInstanceService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+    use FormulaireReponseServiceAwareTrait;
 
     /**
      * @param AbstractActionController $controller
@@ -70,6 +70,7 @@ class FormulaireInstanceService {
         ;
 
         try {
+            $sql = $qb->getQuery();
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs FormulaireInstance partagent le même identifiant [".$id."]", $e);
@@ -84,8 +85,8 @@ class FormulaireInstanceService {
     public function create($instance)
     {
         try {
-            $date = new DateTime();
-        } catch (Exception $e) {
+            $date = new \DateTime();
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème de récupération de la date", $e);
         }
         $user = $this->getUserService()->getConnectedUser();
@@ -112,8 +113,8 @@ class FormulaireInstanceService {
     public function update($instance)
     {
         try {
-            $date = new DateTime();
-        } catch (Exception $e) {
+            $date = new \DateTime();
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème de récupération de la date", $e);
         }
         $user = $this->getUserService()->getConnectedUser();
@@ -137,8 +138,8 @@ class FormulaireInstanceService {
     public function historise($instance)
     {
         try {
-            $date = new DateTime();
-        } catch (Exception $e) {
+            $date = new \DateTime();
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème de récupération de la date", $e);
         }
         $user = $this->getUserService()->getConnectedUser();
@@ -188,6 +189,23 @@ class FormulaireInstanceService {
         }
 
         return $instance;
+    }
+
+    /**
+     * @param FormulaireInstance $reference
+     * @param FormulaireInstance $instance
+     */
+    public function duplicate($reference, $instance)
+    {
+        foreach ($reference->getReponses() as $reponse) {
+            $newReponse = new FormulaireReponse();
+            $newReponse->setFormulaireInstance($instance);
+            $newReponse->setChamp($reponse->getChamp());
+            $newReponse->setReponse($reponse->getReponse());
+            $this->getFormulaireReponseService()->create($newReponse);
+            $instance->addReponse($reponse);
+        }
+        $this->update($instance);
     }
 
 

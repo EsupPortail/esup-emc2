@@ -9,7 +9,6 @@
 
 namespace Autoform;
 
-use Zend\Http\Request as HttpRequest;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ArrayUtils;

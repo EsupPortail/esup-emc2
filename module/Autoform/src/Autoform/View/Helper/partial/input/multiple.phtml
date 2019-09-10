@@ -1,0 +1,33 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $reponse
+ */
+
+use Autoform\Entity\Db\Champ;
+
+$options = explode(';', $champ->getOptions());
+$splits = explode(';', $reponse);
+
+/** NB: penser à retirer les espaces lors de la création de l'identifiant car cela pose soucis */
+?>
+
+<div class="form-group row col-md-12">
+        <label for="textarea_<?php echo $champ->getId()?>" class="control-label">
+            <strong><?php echo $champ->getLibelle()?>&nbsp;:</strong>
+        </label>
+    <div class="col-md-offset-2 col-md-10">
+    <?php foreach ($options as $option) : ?>
+        <?php
+            $option_str = $option;
+            $option_id  = str_replace(" ","_",$option);
+        ?>
+        <input type="checkbox" name="<?php echo $champ->getId()?>_<?php echo $option_id; ?>"
+        <?php if ($reponse && (array_search('on_'.$option_id, $splits) !== false)) : ?>
+               checked
+       <?php endif; ?>
+        />&nbsp;<?php echo $option_str; ?>
+        <br/>
+    <?php endforeach; ?>
+    </div>
+</div>

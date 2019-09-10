@@ -2,11 +2,11 @@
 
 namespace Indicateur\Form\Indicateur;
 
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class IndicateurHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var IndicateurHydrator $hydrator */
         $hydrator = new IndicateurHydrator();

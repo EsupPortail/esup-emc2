@@ -2,12 +2,11 @@
 
 namespace Application;
 
-use Fichier\Controller\Index\IndexController;
-use Fichier\Controller\Index\IndexControllerFactory;
+use Fichier\Controller\IndexController;
+use Fichier\Controller\IndexControllerFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Utilisateur\Entity\Db\Role;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

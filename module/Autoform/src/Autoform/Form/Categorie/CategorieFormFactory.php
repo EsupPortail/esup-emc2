@@ -2,14 +2,14 @@
 
 namespace Autoform\Form\Categorie;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class CategorieFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var CategorieHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(CategorieHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(CategorieHydrator::class);
 
         /** @var  CategorieForm $form */
         $form = new CategorieForm();

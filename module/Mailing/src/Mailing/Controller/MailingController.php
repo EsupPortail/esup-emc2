@@ -1,6 +1,6 @@
 <?php
 
-namespace Mailing\Controller\Mailing;
+namespace Mailing\Controller;
 
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use Mailing\Model\Db\Mail;

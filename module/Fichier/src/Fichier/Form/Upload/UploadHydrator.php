@@ -2,7 +2,7 @@
 
 namespace Fichier\Form\Upload;
 
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class UploadHydrator implements HydratorInterface {
 

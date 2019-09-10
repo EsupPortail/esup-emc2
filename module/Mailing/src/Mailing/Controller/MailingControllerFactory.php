@@ -1,21 +1,21 @@
 <?php
 
-namespace Mailing\Controller\Mailing;
+namespace Mailing\Controller;
 
-use Utilisateur\Service\User\UserService;
+use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
-use Zend\Mvc\Controller\ControllerManager;
+use Utilisateur\Service\User\UserService;
 
 class MailingControllerFactory {
 
-    public function __invoke(ControllerManager $controllerManager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var MailingService $mailingService
          * @var UserService $userService
          */
-        $mailingService = $controllerManager->getServiceLocator()->get(MailingService::class);
-        $userService = $controllerManager->getServiceLocator()->get(UserService::class);
+        $mailingService = $container->get(MailingService::class);
+        $userService = $container->get(UserService::class);
 
         /** @var  MailingController $controller */
         $controller = new MailingController();

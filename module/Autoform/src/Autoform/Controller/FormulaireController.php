@@ -13,8 +13,8 @@ use Autoform\Form\Formulaire\FormulaireFormAwareTrait;
 use Autoform\Service\Categorie\CategorieServiceAwareTrait;
 use Autoform\Service\Champ\ChampServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireReponseServiceAwareTrait;
+use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -326,7 +326,6 @@ class FormulaireController extends AbstractActionController {
 
     /**
      * si dans les paramètres passés en query on a retour alors la redirection "finale" doit être vers cette adresse
-     * @return ViewModel
      */
     public function afficherFormulaireAction() {
         $formulaire = $this->getFormulaireService()->getRequestedFormulaire($this, 'formulaire');
@@ -349,7 +348,6 @@ class FormulaireController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-
             $this->getFormulaireReponseService()->updateFormulaireReponse($formulaire, $instance, $data);
             if ($retour) {
                 return $this->redirect()->toUrl($retour);

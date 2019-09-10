@@ -1,0 +1,32 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $reponse
+ * @var array $options (ID => STRING)
+ */
+
+use Autoform\Entity\Db\Champ;
+
+?>
+<div class="row">
+<div class="form-group" style="display: block;">
+    <label for="textarea_<?php echo $champ->getId()?>" class="col-sm-2 control-label">
+        <?php echo $champ->getLibelle(); ?>&nbsp;:
+    </label>
+    <div class="col-sm-10">
+    <select class="selectpicker form-control" name="<?php echo $champ->getId(); ?>"  data-live-search="true">
+        <option value="null"></option>
+        <?php foreach ($options as $id => $option) : ?>
+            <option value="<?php echo $id; ?>"
+                    <?php if ($reponse == $id) : ?>
+                     selected
+                    <?php endif; ?>
+            >
+                <?php echo $option; ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    </div>
+</div>
+</div>
+

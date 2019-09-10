@@ -1,39 +1,47 @@
 <?php
 
-namespace Autoform;
-
 /**
- * @var Entity\Db\Formulaire $formulaire
- * @var Entity\Db\int[] $reponses
+ * @var \Autoform\Entity\Db\Formulaire $formulaire
+ * @var \Application\Entity\Db\Demande $demande
+ * @var \Autoform\Entity\Db\int[] $reponses
  * @var string $url
  */
 
 ?>
 
-    <form method="post" action="<?php echo $url; ?>" >
+
+    <form class="autoform" method="post" action="<?php echo $url; ?>" >
+
+        <span id="hide" class="btn btn-info"> Cacher les catégories </span>
+        <span id="show" class="btn btn-info">Afficher les catégories </span>
+        <input type="submit" value="Valider le formulaire" class="btn btn-primary"/>
+
+        <br/>
+        <br/>
+
         <?php
-            /** @var Entity\Db\Categorie[] $categories */
+            /** @var \Autoform\Entity\Db\Categorie[] $categories */
             $categories = $formulaire->getCategories();
-            $categories = array_filter($categories, function (Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
-            usort($categories, function (Entity\Db\Categorie $a, Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+            $categories = array_filter($categories, function (\Autoform\Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
+            usort($categories, function (\Autoform\Entity\Db\Categorie $a, \Autoform\Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
         ?>
 
         <?php foreach ($categories as $categorie) : ?>
 
             <?php
-                /** @var Entity\Db\Champ[] $champs */
+                /** @var \Autoform\Entity\Db\Champ[] $champs */
                 $champs = $categorie->getChamps();
-                $champs = array_filter($champs, function (Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
-                usort($champs, function (Entity\Db\Champ $a, Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+                $champs = array_filter($champs, function (\Autoform\Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
+                usort($champs, function (\Autoform\Entity\Db\Champ $a, \Autoform\Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
             ?>
 
             <?php if (!empty($champs)) : ?>
 
                 <div class="panel panel-info">
-                    <div class="panel-heading">
+                    <div class="panel-heading title-reductible">
                         <h2> <?php echo $categorie->getLibelle(); ?> </h2>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body body-reductible">
                         <?php foreach ($champs as $champ) : ?>
                             <div> <?php echo $this->champAsInput()->render($champ, $reponses); ?> </div>
                         <?php endforeach; ?>
@@ -46,3 +54,42 @@ namespace Autoform;
         <input type="submit" value="Valider le formulaire" class="btn btn-primary"/>
     </form>
 
+<script>
+    $('div.body-reductible').each(function() { $(this).hide()});
+
+    $('div.title-reductible').click(function() {
+        $(this).siblings().each(function() { $(this).toggle(); });
+    });
+
+    $('span#hide').click(function() {
+        $('div.body-reductible').each(function() { $(this).hide()});
+    });
+
+    $('span#show').click(function() {
+        $('div.body-reductible').each(function() { $(this).show()});
+    });
+
+    $("select.periode").change(function() {
+        checkPeriode($(this));
+    });
+
+    $("select.periode").each(function() {
+        checkPeriode($(this));
+    });
+
+    function checkPeriode(element) {
+        let name = element.attr('name');
+        let splits = name.split("_");
+        let id = splits[1];
+        let value = $("select[name="+name+"] option:selected").val();
+
+        if (value === "Balisée") {
+            $("span#datation_" + id).show();
+        } else {
+            $("span#datation_" + id).hide();
+        }
+    }
+
+    $('.selectpicker').selectpicker();
+
+</script>

@@ -3,7 +3,7 @@
 namespace Autoform\Form\Champ;
 
 use Autoform\Entity\Db\Champ;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class ChampHydrator implements HydratorInterface {
 

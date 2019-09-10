@@ -2,18 +2,19 @@
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-use Mailing\Controller\Mailing\MailingController;
-use Mailing\Controller\Mailing\MailingControllerFactory;
+use Mailing\Controller\MailingController;
+use Mailing\Controller\MailingControllerFactory;
 use Mailing\Provider\Privilege\MailingPrivileges;
 use Mailing\Service\Mailing\MailingService;
 use Mailing\Service\Mailing\MailingServiceFactory;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
+use UnicaenAuth\Guard\PrivilegeController;
 
 return array(
     'bjyauthorize'    => [
         'guards' => [
-            \UnicaenAuth\Guard\PrivilegeController::class => [
+            PrivilegeController::class => [
                 [
                     'controller' => MailingController::class,
                     'action'     => [
@@ -170,14 +171,10 @@ return array(
     ],
 
     'form_elements' => [
-        'factories' => [
-//            IndicateurForm::class => IndicateurFormFactory::class,
-        ],
+        'factories' => [],
     ],
     'hydrators' => [
-        'invokables' => [
-//            IndicateurHydrator::class => IndicateurHydrator::class,
-        ],
+        'invokables' => [],
     ],
     'service_manager' => [
         'factories' => [
@@ -191,9 +188,7 @@ return array(
         ],
     ],
     'view_helpers' => [
-        'invokables' => [
-//            'completIndicateurThese'    => CompletIndicateurTheseHelper::class,
-        ],
+        'invokables' => [],
     ],
     'view_manager' => [
         'template_path_stack' => [

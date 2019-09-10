@@ -10,8 +10,8 @@ use Utilisateur\Service\Role\RoleServiceFactory;
 use Utilisateur\Service\User\UserService;
 use Utilisateur\Service\User\UserServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 
 return [
@@ -61,24 +61,24 @@ return [
         ],
     ],
 
-//    'navigation' => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'utilisateur' => [
-//                                'label' => 'Utilisateur',
-//                                'route' => 'utilisateur-preecog',
-//                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::AFFICHER),
-//                                'order'    => 10,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    '\Zend\Navigation\Navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'utilisateur' => [
+                                'label' => 'Utilisateur',
+                                'route' => 'utilisateur-preecog',
+                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::AFFICHER),
+                                'order'    => 2000,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

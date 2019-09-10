@@ -222,6 +222,11 @@ class UserService
         return $result;
     }
 
+    public function getServiceUserContext()
+    {
+        return $this->serviceUserContext;
+    }
+
 
 }
 

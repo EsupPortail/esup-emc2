@@ -1,24 +1,24 @@
 <?php
 
-namespace Indicateur\Controller\Abonnement;
+namespace Indicateur\Controller;
 
 use Indicateur\Service\Abonnement\AbonnementService;
 use Indicateur\Service\Indicateur\IndicateurService;
+use Interop\Container\ContainerInterface;
 use Utilisateur\Service\User\UserService;
-use Zend\Mvc\Controller\ControllerManager;
 
 class AbonnementControllerFactory {
 
-    public function __invoke(ControllerManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var AbonnementService $abonnementService
          * @var IndicateurService $indicateurService
          * @var UserService $userService
          */
-        $abonnementService = $manager->getServiceLocator()->get(AbonnementService::class);
-        $indicateurService = $manager->getServiceLocator()->get(IndicateurService::class);
-        $userService = $manager->getServiceLocator()->get(UserService::class);
+        $abonnementService = $container->get(AbonnementService::class);
+        $indicateurService = $container->get(IndicateurService::class);
+        $userService = $container->get(UserService::class);
 
         /** @var AbonnementController $controller */
         $controller = new AbonnementController();
