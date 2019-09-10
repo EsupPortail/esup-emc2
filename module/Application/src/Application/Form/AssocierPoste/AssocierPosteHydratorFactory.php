@@ -3,16 +3,14 @@
 namespace Application\Form\AssocierPoste;
 
 use Application\Service\Poste\PosteService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class AssocierPosteHydratorFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        /** @var ServiceLocatorInterface $parentLocator */
-        $parentLocator = $serviceLocator->getServiceLocator();
         /** @var PosteService $posteService */
-        $posteService = $parentLocator->get(PosteService::class);
+        $posteService = $container->get(PosteService::class);
 
         $hydrator = new AssocierPosteHydrator();
         $hydrator->setPosteService($posteService);

@@ -14,13 +14,11 @@ use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 class PosteForm extends Form  {
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     use EntityManagerAwareTrait;
-    use ServiceLocatorAwareTrait;
     use StructureServiceAwareTrait;
     use ImmobilierServiceAwareTrait;
 

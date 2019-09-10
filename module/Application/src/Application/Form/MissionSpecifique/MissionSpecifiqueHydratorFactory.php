@@ -2,11 +2,11 @@
 
 namespace Application\Form\MissionSpecifique;
 
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class MissionSpecifiqueHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var MissionSpecifiqueHydrator $hydrator */
         $hydrator = new MissionSpecifiqueHydrator();

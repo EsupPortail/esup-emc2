@@ -2,11 +2,11 @@
 
 namespace Application\Form\Formation;
 
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class FormationHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var FormationHydrator $hydrator */
         $hydrator = new FormationHydrator();

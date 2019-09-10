@@ -2,15 +2,15 @@
 
 namespace Application\Form\Agent;
 
-use Application\Service\RessourceRh\RessourceRhService;
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
+
 
 class AgentFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var AgentHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AgentHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(AgentHydrator::class);
 
         /** @var AgentForm $form */
         $form = new AgentForm();

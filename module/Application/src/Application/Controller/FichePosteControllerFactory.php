@@ -1,0 +1,51 @@
+<?php
+
+namespace Application\Controller;
+
+use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
+use Application\Form\AssocierAgent\AssocierAgentForm;
+use Application\Form\AssocierPoste\AssocierPosteForm;
+use Application\Form\FichePosteCreation\FichePosteCreationForm;
+use Application\Form\SpecificitePoste\SpecificitePosteForm;
+use Application\Service\Agent\AgentService;
+use Application\Service\FichePoste\FichePosteService;
+use Interop\Container\ContainerInterface;
+
+class FichePosteControllerFactory {
+
+    public function __invoke(ContainerInterface $container)
+    {
+        /**
+         * @var AgentService $agentService
+         * @var FichePosteService $fichePosteService
+         */
+        $agentService = $container->get(AgentService::class);
+        $fichePosteService = $container->get(FichePosteService::class);
+
+        /**
+         * @var AjouterFicheMetierForm $ajouterFicheMetierForm
+         * @var AssocierAgentForm $associerAgentForm
+         * @var AssocierPosteForm $associerPosteForm
+         * @var FichePosteCreationForm $fichePosteCreation
+         * @var SpecificitePosteForm $specificiftePosteForm
+         */
+        $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
+        $associerAgentForm = $container->get('FormElementManager')->get(AssocierAgentForm::class);
+        $associerPosteForm = $container->get('FormElementManager')->get(AssocierPosteForm::class);
+        $fichePosteCreation = $container->get('FormElementManager')->get(FichePosteCreationForm::class);
+        $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
+
+        /** @var FichePosteController $controller */
+        $controller = new FichePosteController();
+
+        $controller->setAgentService($agentService);
+        $controller->setFichePosteService($fichePosteService);
+
+        $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
+        $controller->setAssocierAgentForm($associerAgentForm);
+        $controller->setAssocierPosteForm($associerPosteForm);
+        $controller->setFichePosteCreationForm($fichePosteCreation);
+        $controller->setSpecificitePosteForm($specificiftePosteForm);
+        return $controller;
+    }
+}

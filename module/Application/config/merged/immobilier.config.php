@@ -2,19 +2,13 @@
 
 namespace Application;
 
-use Application\Controller\Immobilier\ImmobilierController;
-use Application\Controller\Immobilier\ImmobilierControllerFactory;
-use Application\Controller\Structure\StructureController;
-use Application\Controller\Structure\StructureControllerFactory;
+use Application\Controller\ImmobilierController;
+use Application\Controller\ImmobilierControllerFactory;
 use Application\Provider\Privilege\RessourceRhPrivileges;
-use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\Immobilier\ImmobilierService;
 use Application\Service\Immobilier\ImmobilierServiceFactory;
-use Application\Service\Structure\StructureService;
-use Application\Service\Structure\StructureServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
 
 return [
     'bjyauthorize' => [

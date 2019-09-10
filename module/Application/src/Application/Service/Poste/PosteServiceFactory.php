@@ -3,20 +3,20 @@
 namespace Application\Service\Poste;
 
 use Doctrine\ORM\EntityManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class PosteServiceFactory {
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @return PosteService
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
          */
-        $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         /** @var PosteService $service */
         $service = new PosteService();

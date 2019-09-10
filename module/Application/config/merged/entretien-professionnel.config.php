@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
-use Application\Controller\EntretienProfessionnel\EntretienProfessionnelControllerFactory;
+use Application\Controller\EntretienProfessionnelController;
+use Application\Controller\EntretienProfessionnelControllerFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydrator;
@@ -12,8 +12,8 @@ use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

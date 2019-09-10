@@ -3,7 +3,7 @@
 namespace Application\Form\MissionSpecifique;
 
 use Application\Entity\Db\MissionSpecifique;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class MissionSpecifiqueHydrator implements HydratorInterface {
 

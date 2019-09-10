@@ -4,7 +4,7 @@ namespace Application\Form\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
 use Application\Service\Application\ApplicationServiceAwareTrait;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class ApplicationsHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
