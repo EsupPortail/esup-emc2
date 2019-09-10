@@ -2,16 +2,16 @@
 
 namespace Application\Form\Formation;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class FormationFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var FormationHydrator $hydrator
          */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(FormationHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(FormationHydrator::class);
 
         /** @var FormationForm $form */
         $form = new FormationForm();

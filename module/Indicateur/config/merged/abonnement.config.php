@@ -2,14 +2,15 @@
 
 namespace Application;
 
-use Indicateur\Controller\Abonnement\AbonnementController;
-use Indicateur\Controller\Abonnement\AbonnementControllerFactory;
+use Indicateur\Controller\AbonnementController;
+use Indicateur\Controller\AbonnementControllerFactory;
 use Indicateur\Provider\Privilege\AbonnementPrivileges;
 use Indicateur\Service\Abonnement\AbonnementService;
 use Indicateur\Service\Abonnement\AbonnementServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Mvc\Console\Router\Simple;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -25,6 +26,13 @@ return [
                     'privileges' => [
                         AbonnementPrivileges::EDITER,
                     ],
+                ],
+                [
+                    'controller' => AbonnementController::class,
+                    'action' => [
+                        'notifier-console'
+                    ],
+                    'roles' => [],
                 ],
             ],
         ],
@@ -80,6 +88,22 @@ return [
         ],
     ],
 
+    'console' => [
+        'router' => [
+            'routes' => [
+                'indicateur-notifier' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'indicateur-notifier',
+                        'defaults' => [
+                            'controller' => AbonnementController::class,
+                            'action' => 'notifier-console'
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     'service_manager' => [
         'factories' => [
             AbonnementService::class => AbonnementServiceFactory::class,

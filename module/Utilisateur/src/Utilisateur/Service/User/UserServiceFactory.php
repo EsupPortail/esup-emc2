@@ -3,23 +3,23 @@
 namespace Utilisateur\Service\User;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use UnicaenAuth\Service\UserContext;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class UserServiceFactory {
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @return UserService
      */
-    public function __invoke(ServiceLocatorInterface $serviceLocator) {
+    public function __invoke(ContainerInterface $container) {
 
         /**
          * @var EntityManager $entityManager
          * @var UserContext $userContext
          */
-        $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        $userContext = $serviceLocator->get('UnicaenAuth\Service\UserContext');
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $userContext = $container->get(UserContext::class);
 
         /** @var UserService $service */
         $service = new UserService();

@@ -2,10 +2,10 @@
 
 namespace Application;
 
-use Application\Controller\Agent\AgentController;
-use Application\Controller\Agent\AgentControllerFactory;
-use Application\Controller\AgentFichier\AgentFichierController;
-use Application\Controller\AgentFichier\AgentFichierControllerFactory;
+use Application\Controller\AgentController;
+use Application\Controller\AgentControllerFactory;
+use Application\Controller\AgentFichierController;
+use Application\Controller\AgentFichierControllerFactory;
 use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
@@ -17,8 +17,8 @@ use Application\Service\Agent\AgentServiceFactory;
 use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

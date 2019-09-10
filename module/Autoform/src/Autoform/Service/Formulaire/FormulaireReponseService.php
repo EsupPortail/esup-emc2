@@ -2,22 +2,25 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Utilisateur\Service\User\UserServiceAwareTrait;
-use Autoform\Entity\Db\FormulaireInstance;
+use Application\Entity\Db\Demande;
 use Autoform\Entity\Db\Champ;
 use Autoform\Entity\Db\Formulaire;
+use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
+use Autoform\Service\Champ\ChampServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
+use UnicaenApp\Entity\UserInterface;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenAuth\Entity\Db\User;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireReponseService {
     use EntityManagerAwareTrait;
+    use ChampServiceAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -44,6 +47,31 @@ class FormulaireReponseService {
     }
 
     /**
+     * @param Formulaire $formulaire
+     * @param Demande $demande
+     * @return FormulaireReponse[]
+     */
+    public function getFormulaireResponsesByFormulaireAndDemande($formulaire, $demande)
+    {
+        $qb = $this->getEntityManager()->getRepository(FormulaireReponse::class)->createQueryBuilder('reponse')
+            ->addSelect('champ')->join('reponse.champ', 'champ')
+            ->addSelect('categorie')->join('champ.categorie', 'categorie')
+            ->andWhere('categorie.formulaire = :formulaire')
+            ->setParameter('formulaire', $formulaire)
+            ->andWhere('reponse.demande = :demande')
+            ->setParameter('demande', $demande)
+        ;
+
+        /** @var FormulaireReponse[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $reponses = [];
+        foreach ($result as $item) {
+            $reponses[$item->getChamp()->getId()] = $item;
+        }
+        return $reponses;
+    }
+    /**
      * @param integer $id
      * @return FormulaireReponse
      */
@@ -68,7 +96,7 @@ class FormulaireReponseService {
      */
     public function create($reponse)
     {
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = $this->getUserService()->getConnectedUser();
         /** @var DateTime $date */
         try {
@@ -81,10 +109,10 @@ class FormulaireReponseService {
         $reponse->setHistoModificateur($user);
         $reponse->setHistoModification($date);
 
-        $this->getEntityManager()->persist($reponse);
         try {
+            $this->getEntityManager()->persist($reponse);
             $this->getEntityManager()->flush($reponse);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la création d'un Reponse.", $e);
         }
         return $reponse;
@@ -96,7 +124,7 @@ class FormulaireReponseService {
      */
     public function update($reponse)
     {
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = $this->getUserService()->getConnectedUser();
         /** @var DateTime $date */
         try {
@@ -109,7 +137,7 @@ class FormulaireReponseService {
 
         try {
             $this->getEntityManager()->flush($reponse);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Reponse.", $e);
         }
         return $reponse;
@@ -121,7 +149,7 @@ class FormulaireReponseService {
      */
     public function historise($reponse)
     {
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = $this->getUserService()->getConnectedUser();
         /** @var DateTime $date */
         try {
@@ -134,7 +162,7 @@ class FormulaireReponseService {
 
         try {
             $this->getEntityManager()->flush($reponse);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Reponse.", $e);
         }
         return $reponse;
@@ -151,7 +179,7 @@ class FormulaireReponseService {
 
         try {
             $this->getEntityManager()->flush($reponse);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Reponse.", $e);
         }
         return $reponse;
@@ -163,10 +191,10 @@ class FormulaireReponseService {
      */
     public function delete($reponse)
     {
-        $this->getEntityManager()->remove($reponse);
         try {
+            $this->getEntityManager()->remove($reponse);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Reponse.", $e);
         }
         return $reponse;
@@ -193,9 +221,13 @@ class FormulaireReponseService {
         /** @var FormulaireReponse[] $reponses */
         $reponses = $this->getFormulaireResponsesByFormulaireInstance($instance);
 
+        $ids = [];
+        foreach ($champs as $champ) {
+            $ids[] = $champ->getId();
+        }
         foreach($champs as $champ) {
             $value = $this->getValueFomData($champ, $data);
-            if ($value !== null) {
+            if ($value !== null && $value !== "") {
                 $found = null;
                 foreach($reponses as $reponse) {
                     if ($reponse->getChamp()->getId() === $champ->getId()) {
@@ -204,18 +236,23 @@ class FormulaireReponseService {
                     }
                 }
                 if ($found !== null) {
+                    // Le champ existe et a une réponse :: mise à jour
+                    // TODO :: historise duplique avec la nouvelle valeur
                     $reponse = $found;
                     $reponse->setReponse($value);
-                    $this->update($reponse); //cas C
+                    $this->update($reponse);
                 } else {
+                    // Le champ n'existe pas et un réponse doit être sauvegardé :: creation
                     $reponse = new FormulaireReponse();
                     $reponse->setFormulaireInstance($instance);
                     $reponse->setChamp($champ);
                     $reponse->setReponse($value);
-                    $this->create($reponse); // cas B
+                    $this->create($reponse);
                 }
             } else {
                 foreach($reponses as $reponse) {
+                    // Le champ existe mais n'a plus de réponse :: destruction
+                    // TODO :: devrait être historisée
                     if ($reponse->getChamp()->getId() === $champ->getId()) {
                         $this->delete($reponse); //cas A
                         break;
@@ -265,10 +302,33 @@ class FormulaireReponseService {
                 } else return null;
                 break;
             case Champ::TYPE_SELECT :
+            case Champ::TYPE_ENTITY :
+            case Champ::TYPE_ANNEE :
                 if (isset($data[$champ->getId()])) {
                     $value = $data[$champ->getId()];
                     return ($value !== 'null')?$value:null;
                 } else return null;
+                break;
+            case Champ::TYPE_ENTITY_MULTI:
+                $instances = $this->getChampService()->getAllInstance($champ->getOptions());
+                $values = [];
+                foreach($instances as $id => $instance) {
+                    if (isset($data[$champ->getId()."_".$id])) {
+                        $values[] = $id;
+                    }
+                }
+                return implode(";", $values);
+                break;
+            case Champ::TYPE_MULTIPLE :
+                $options = explode(";", $champ->getOptions());
+                $values = [];
+                foreach($options as $option) {
+                    $option = str_replace(" ","_", $option);
+                    if (isset($data[$champ->getId()."_".$option])) {
+                        $values[] = "on_".$option;
+                    }
+                }
+                return implode(";", $values);
                 break;
             case Champ::TYPE_PERIODE :
                 $select = $data['select_'.$champ->getId()];

@@ -57,6 +57,7 @@ class IndicateurForm extends Form {
                 'label' => "Entity associé* :",
                 'empty_option' => "Sélectionner une entité ...",
                 'value_options' => [
+                   Indicateur::ENTITY_AGENT       => 'Agent',
                    Indicateur::ENTITY_STRUCTURE   => 'Structure',
                 ]
             ],

@@ -4,18 +4,18 @@ namespace Autoform\Service\Validation;
 
 use Autoform\Service\Formulaire\FormulaireReponseService;
 use Doctrine\ORM\EntityManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class ValidationReponseServiceFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
          * @var FormulaireReponseService $formulaireReponseService
          */
-        $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        $formulaireReponseService   = $serviceLocator->get(FormulaireReponseService::class);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $formulaireReponseService   = $container->get(FormulaireReponseService::class);
 
         /** @var ValidationReponseService $service */
         $service = new ValidationReponseService();

@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\Poste\PosteController;
-use Application\Controller\Poste\PosteControllerFactory;
+use Application\Controller\PosteController;
+use Application\Controller\PosteControllerFactory;
 use Application\Form\Poste\PosteForm;
 use Application\Form\Poste\PosteFormFactory;
 use Application\Form\Poste\PosteHydrator;
@@ -13,8 +13,8 @@ use Application\Service\Poste\PosteService;
 use Application\Service\Poste\PosteServiceFactory;
 use Application\View\Helper\PosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

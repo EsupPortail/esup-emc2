@@ -5,7 +5,19 @@
  * Copiez ce fichier dans le répertoire "config/autoload" de l'application,
  * enlevez l'extension ".dist" et adaptez son contenu à vos besoins.
  */
+
+use Zend\Session\Storage\SessionArrayStorage;
+
 return [
+    'session_config' => [
+        'cookie_lifetime' => 60*60*8,
+        'gc_maxlifetime'     => 60*60*24*30,
+    ],
+
+    'session_storage' => [
+        'type' => SessionArrayStorage::class
+    ],
+
     'unicaen-app' => [
 
         /**
@@ -20,6 +32,8 @@ return [
             'mentionsLegales'        => "http://www.unicaen.fr/acces-direct/mentions-legales/",
             'informatiqueEtLibertes' => "http://www.unicaen.fr/acces-direct/informatique-et-libertes/",
         ],
+
+
 
         /**
          * Période d'exécution de la requête de rafraîchissement de la session utilisateur, en millisecondes.

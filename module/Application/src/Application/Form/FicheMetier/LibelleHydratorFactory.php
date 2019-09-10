@@ -3,16 +3,14 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Service\Metier\MetierService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class LibelleHydratorFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        /** @var ServiceLocatorInterface $parentLocator */
-        $parentLocator = $serviceLocator->getServiceLocator();
         /** @var MetierService $metierService */
-        $metierService = $parentLocator->get(MetierService::class);
+        $metierService = $container->get(MetierService::class);
 
         $hydrator = new LibelleHydrator();
         $hydrator->setMetierService($metierService);

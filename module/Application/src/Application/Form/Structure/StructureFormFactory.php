@@ -2,14 +2,14 @@
 
 namespace Application\Form\Structure;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class StructureFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var StructureHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(StructureHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(StructureHydrator::class);
 
         /** @var StructureForm $form */
         $form = new StructureForm();

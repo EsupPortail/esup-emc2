@@ -5,12 +5,12 @@ namespace Application\Form\AgentMissionSpecifique;
 use Application\Service\Agent\AgentService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\Structure\StructureService;
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class AgentMissionSpecifiqueHydratorFactory
 {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
 
         /**
@@ -18,9 +18,9 @@ class AgentMissionSpecifiqueHydratorFactory
          * @var RessourceRhService $ressourceService
          * @var StructureService $structureService
          */
-        $agentService     = $manager->getServiceLocator()->get(AgentService::class);
-        $ressourceService = $manager->getServiceLocator()->get(RessourceRhService::class);
-        $structureService = $manager->getServiceLocator()->get(StructureService::class);
+        $agentService     = $container->get(AgentService::class);
+        $ressourceService = $container->get(RessourceRhService::class);
+        $structureService = $container->get(StructureService::class);
 
         /** @var AgentMissionSpecifiqueHydrator $hydrator */
         $hydrator = new AgentMissionSpecifiqueHydrator();

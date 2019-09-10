@@ -4,7 +4,7 @@ namespace Application\Form\RessourceRh;
 
 use Application\Entity\Db\Metier;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class MetierHydrator implements HydratorInterface {
     use DomaineServiceAwareTrait;

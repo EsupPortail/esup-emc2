@@ -2,7 +2,8 @@
 
 namespace Autoform\Entity\Db;
 
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Utilisateur\Entity\HistoriqueAwareTrait;
 
 class Validation {
     use HistoriqueAwareTrait;
@@ -17,6 +18,21 @@ class Validation {
     private $type;
     /** @var FormulaireInstance */
     private $instance;
+
+    /** @var string */
+    private $typeValidation;
+    /** @var FormulaireInstance */
+    private $reference;
+
+
+    /** @var ArrayCollection */
+    private $reponses;
+
+
+    public function __construct()
+    {
+        $this->reponses = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -62,6 +78,75 @@ class Validation {
         return $this;
     }
 
+    /**
+     * @return ValidationReponse[]
+     */
+    public function getReponses() {
+        return $this->reponses->toArray();
+    }
 
+    /**
+     * @param ValidationReponse $reponse
+     * @return Validation
+     */
+    public function addReponse($reponse)
+    {
+        $this->reponses->add($reponse);
+        return $this;
+    }
+
+    /**
+     * @return FormulaireInstance
+     */
+    public function getInstance()
+    {
+        return $this->instance;
+    }
+
+    /**
+     * @param FormulaireInstance $instance
+     * @return Validation
+     */
+    public function setInstance($instance)
+    {
+        $this->instance = $instance;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeValidation()
+    {
+        return $this->typeValidation;
+    }
+
+    /**
+     * @param string $typeValidation
+     * @return Validation
+     */
+    public function setTypeValidation($typeValidation)
+    {
+        $this->typeValidation = $typeValidation;
+        return $this;
+    }
+
+    /**
+     * @return FormulaireInstance
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param FormulaireInstance $reference
+     * @return Validation
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
+        return $this;
+    }
 
 }

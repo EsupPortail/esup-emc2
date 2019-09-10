@@ -3,7 +3,7 @@
 namespace Autoform\Form\Formulaire;
 
 use Autoform\Entity\Db\Formulaire;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class FormulaireHydrator implements HydratorInterface {
 

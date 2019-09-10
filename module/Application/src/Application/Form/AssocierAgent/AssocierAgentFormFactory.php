@@ -3,17 +3,18 @@
 namespace Application\Form\AssocierAgent;
 
 use Application\Service\Agent\AgentService;
+use Interop\Container\ContainerInterface;
 use Zend\Form\FormElementManager;
 
 class AssocierAgentFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
 
         /** @var AgentService $agentService */
-        $agentService = $manager->getServiceLocator()->get(AgentService::class);
+        $agentService = $container->get(AgentService::class);
         /** @var AssocierAgentHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AssocierAgentHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(AssocierAgentHydrator::class);
 
         /** @var AssocierAgentForm $form */
         $form = new AssocierAgentForm();

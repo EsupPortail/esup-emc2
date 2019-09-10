@@ -8,7 +8,7 @@ use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;

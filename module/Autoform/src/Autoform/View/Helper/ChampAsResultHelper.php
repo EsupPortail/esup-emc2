@@ -3,10 +3,15 @@
 namespace Autoform\View\Helper;
 
 use Autoform\Entity\Db\Champ;
+use Autoform\Service\Champ\ChampServiceAwareTrait;
 use Zend\Form\View\Helper\AbstractHelper;
+use Zend\View\Renderer\PhpRenderer;
+use Zend\View\Resolver\TemplatePathStack;
 
 class ChampAsResultHelper extends AbstractHelper
 {
+    use ChampServiceAwareTrait;
+
     /**
      * @param Champ $champ
      * @param array $data
@@ -15,6 +20,9 @@ class ChampAsResultHelper extends AbstractHelper
     public function render($champ, $data = null) {
         $texte = "";
 
+        /** @var PhpRenderer $view */
+        $view = $this->getView();
+        $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
         switch($champ->getElement()) {
             case Champ::TYPE_LABEL : return "";
@@ -22,31 +30,45 @@ class ChampAsResultHelper extends AbstractHelper
             case Champ::TYPE_SPACER : return "";
                 break;
             case Champ::TYPE_CHECKBOX :
-                if ($data === null OR $data === 'on') $texte .= ($champ->getTexte())?:$champ->getLibelle();
+                $texte .= $view->partial('result/checkbox', ['champ' => $champ, 'data' => $data]);
                 break;
             case Champ::TYPE_TEXT :
-                $texte .= $champ->getLibelle(). ' : ';
-                if ($data !== '') {
-                    $texte .= $data;
-                }
+                $texte .= $view->partial('result/text', ['champ' => $champ, 'data' => $data]);
                 break;
             case Champ::TYPE_TEXTAREA :
-                $texte .= $champ->getLibelle(). ' : ';
-                if ($data !== '') {
-                    $texte .= $data;
-                }
+                $texte .= $view->partial('result/textarea', ['champ' => $champ, 'data' => $data]);
                 break;
             case Champ::TYPE_SELECT :
-                $texte .= $champ->getLibelle(). ' : ';
-                if ($data !== 'null') {
-                    $texte .= $data;
-                }
+                $texte .= $view->partial('result/select', ['champ' => $champ, 'data' => $data]);
+                break;
+            case Champ::TYPE_ANNEE :
+                $texte .= $view->partial('result/annee', ['champ' => $champ, 'data' => $data]);
                 break;
             case Champ::TYPE_PERIODE :
-                $texte .= $champ->getLibelle(). ' : ';
-                if ($data !== 'null') {
-                    $texte .= $data;
+                $texte .= $view->partial('result/periode', ['champ' => $champ, 'data' => $data]);
+                break;
+            case Champ::TYPE_MULTIPLE :
+                $texte .= $view->partial('result/multiple', ['champ' => $champ, 'data' => $data]);
+                break;
+            case Champ::TYPE_ENTITY :
+                $options = $this->getChampService()->getAllInstance($champ->getOptions());
+                $reponse = "NOT FOUND !!!";
+                foreach ($options as $id => $option) {
+                    if ($id == $data) {
+                        $reponse = $option;
+                        break;
+                    }
                 }
+                $texte .= $view->partial('result/entity', ['champ' => $champ, 'data' => $reponse]);
+                break;
+            case Champ::TYPE_ENTITY_MULTI :
+                $options = $this->getChampService()->getAllInstance($champ->getOptions());
+                $ids = explode(";", (string) $data);
+                $reponse = [];
+                foreach ($ids as $id) {
+                    $reponse[] = $options[$id];
+                }
+                $texte .= $view->partial('result/entity-multiple', ['champ' => $champ, 'data' => $reponse]);
                 break;
             default :
                 $texte .= 'Type ['. $champ->getElement() .'] inconnu !';
@@ -56,7 +78,7 @@ class ChampAsResultHelper extends AbstractHelper
         if (! $champ->estNonHistorise()) {
             $texte = "<span class='result-historiser'>".$texte."</span>";
         }
-        $texte = "<li>".$texte."</li>";
+        if ($texte != "") $texte = "<li>".$texte."</li>";
 
 
         return $texte;

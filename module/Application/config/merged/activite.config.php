@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\Activite\ActiviteController;
-use Application\Controller\Activite\ActiviteControllerFactory;
+use Application\Controller\ActiviteController;
+use Application\Controller\ActiviteControllerFactory;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormFactory;
 use Application\Form\Activite\ActiviteHydrator;
@@ -12,8 +12,8 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Activite\ActiviteServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

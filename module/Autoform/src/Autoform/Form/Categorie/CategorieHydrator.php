@@ -3,8 +3,7 @@
 namespace Autoform\Form\Categorie;
 
 use Autoform\Entity\Db\Categorie;
-use Zend\Stdlib\Hydrator\HydratorInterface;
-
+use Zend\Hydrator\HydratorInterface;
 
 class CategorieHydrator implements HydratorInterface {
 

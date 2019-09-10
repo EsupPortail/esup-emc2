@@ -3,19 +3,19 @@
 namespace Application\Form\EntretienProfessionnel;
 
 use Application\Service\Agent\AgentService;
+use Interop\Container\ContainerInterface;
 use Utilisateur\Service\User\UserService;
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
 
 class EntretienProfessionnelHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $manager)
     {
         /**
          * @var AgentService $agentService
          * @var UserService $userService
          */
-        $agentService = $manager->getServiceLocator()->get(AgentService::class);
-        $userService = $manager->getServiceLocator()->get(UserService::class);
+        $agentService = $manager->get(AgentService::class);
+        $userService = $manager->get(UserService::class);
 
         /**
          * @var EntretienProfessionnelHydrator $hydrator

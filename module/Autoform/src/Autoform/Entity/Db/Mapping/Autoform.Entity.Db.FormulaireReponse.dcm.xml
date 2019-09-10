@@ -29,7 +29,5 @@
         <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="id"/>
         </many-to-one>
-
-
     </entity>
 </doctrine-mapping>

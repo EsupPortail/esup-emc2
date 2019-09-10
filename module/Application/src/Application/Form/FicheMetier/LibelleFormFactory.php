@@ -3,17 +3,17 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Service\RessourceRh\RessourceRhService;
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class LibelleFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var LibelleHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(LibelleHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(LibelleHydrator::class);
 
         /** @var RessourceRhService $ressourceRhService */
-        $ressourceRhService = $manager->getServiceLocator()->get(RessourceRhService::class);
+        $ressourceRhService = $container->get(RessourceRhService::class);
 
         $form = new LibelleForm();
         $form->setRessourceRhService($ressourceRhService);

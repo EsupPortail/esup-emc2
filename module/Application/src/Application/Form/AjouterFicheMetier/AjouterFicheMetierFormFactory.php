@@ -3,17 +3,17 @@
 namespace Application\Form\AjouterFicheMetier;
 
 use Application\Service\FicheMetier\FicheMetierService;
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class AjouterFicheMetierFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var AjouterFicheMetierHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(AjouterFicheMetierHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(AjouterFicheMetierHydrator::class);
 
         /** @var FicheMetierService $ficheMetierService */
-        $ficheMetierService = $manager->getServiceLocator()->get(FicheMetierService::class);
+        $ficheMetierService = $container->get(FicheMetierService::class);
 
         /** @var AjouterFicheMetierForm $form */
         $form = new AjouterFicheMetierForm();
