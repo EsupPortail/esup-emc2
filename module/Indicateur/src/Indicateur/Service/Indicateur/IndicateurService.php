@@ -185,21 +185,21 @@ class IndicateurService {
         $rawdata = $this->fetch($indicateur);
         $rubriques = [];
 
-        if ($indicateur->getEntity() === Indicateur::ENTITY_COMPOSANTE) {
+        if ($indicateur->getEntity() === Indicateur::ENTITY_STRUCTURE) {
             $rubriques = [
-            'ID'                    => 'id',
-            'Libelle'               => 'libelle',
-            'Type'                  => 'type',
             'Code'                  => 'code',
+            'Libelle'               => 'libelle_court',
+            'Libelle long'          => 'libelle_long',
+            'Type'                  => 'type',
+
             ];
         }
-        if ($indicateur->getEntity() === Indicateur::ENTITY_ETUDIANT) {
+        if ($indicateur->getEntity() === Indicateur::ENTITY_AGENT) {
             $rubriques = [
-                'ID'                    => 'id',
+                'ID'                    => 'c_src_individu',
+                'SOURCE'                => 'c_source',
                 'Prenom'                => 'prenom',
-                'Nom'                   => 'nom',
-                'Numero étudiant'       => 'numero_etudiant',
-                'Identifiant ministériel' => 'identifiant_ministeriel',
+                'Nom'                   => 'nom_usage',
             ];
         }
 
