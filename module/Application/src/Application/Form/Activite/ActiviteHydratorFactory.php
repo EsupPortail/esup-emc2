@@ -4,18 +4,18 @@ namespace Application\Form\Activite;
 
 use Application\Service\Application\ApplicationService;
 use Application\Service\Formation\FormationService;
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class ActiviteHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var ApplicationService $applicationService
          * @var FormationService $formationService
          */
-        $applicationService = $manager->getServiceLocator()->get(ApplicationService::class);
-        $formationService = $manager->getServiceLocator()->get(FormationService::class);
+        $applicationService = $container->get(ApplicationService::class);
+        $formationService = $container->get(FormationService::class);
 
         $hydrator = new ActiviteHydrator();
         $hydrator->setApplicationService($applicationService);

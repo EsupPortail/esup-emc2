@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\FicheMetier\FicheMetierController;
-use Application\Controller\FicheMetier\FicheMetierControllerFactory;
+use Application\Controller\FicheMetierController;
+use Application\Controller\FicheMetierControllerFactory;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormFactory;
 use Application\Form\FicheMetier\ApplicationsForm;
@@ -30,8 +30,8 @@ use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FicheMetierViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

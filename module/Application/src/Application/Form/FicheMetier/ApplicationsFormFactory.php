@@ -3,17 +3,17 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Service\Application\ApplicationService;
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class ApplicationsFormFactory{
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var ApplicationService $applicationService*/
-        $applicationService = $manager->getServiceLocator()->get(ApplicationService::class);
+        $applicationService = $container->get(ApplicationService::class);
 
         /** @var ApplicationsHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(ApplicationsHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(ApplicationsHydrator::class);
 
         $form = new ApplicationsForm();
         $form->setApplicationService($applicationService);

@@ -3,7 +3,7 @@
 namespace Application\Form\RessourceRh;
 
 use Application\Entity\Db\FamilleProfessionnelle;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class FamilleProfessionnelleHydrator implements HydratorInterface {
 

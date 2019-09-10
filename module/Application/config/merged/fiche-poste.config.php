@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\FichePoste\FichePosteController;
-use Application\Controller\FichePoste\FichePosteControllerFactory;
+use Application\Controller\FichePosteController;
+use Application\Controller\FichePosteControllerFactory;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormFactory;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydrator;
@@ -26,8 +26,8 @@ use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

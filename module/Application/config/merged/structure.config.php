@@ -4,8 +4,8 @@ namespace Application;
 
 use Application\Assertion\EditionStructureAssertion;
 use Application\Assertion\EditionStructureAssertionFactory;
-use Application\Controller\Structure\StructureController;
-use Application\Controller\Structure\StructureControllerFactory;
+use Application\Controller\StructureController;
+use Application\Controller\StructureControllerFactory;
 use Application\Form\Structure\StructureForm;
 use Application\Form\Structure\StructureFormFactory;
 use Application\Form\Structure\StructureHydrator;
@@ -14,8 +14,8 @@ use Application\Service\Structure\StructureService;
 use Application\Service\Structure\StructureServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
 use UnicaenAuth\Provider\Rule\PrivilegeRuleProvider;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

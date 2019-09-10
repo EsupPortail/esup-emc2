@@ -3,7 +3,7 @@
 namespace Application\Form\FichePosteCreation;
 
 use Application\Entity\Db\FichePoste;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class FichePosteCreationHydrator implements HydratorInterface {
 

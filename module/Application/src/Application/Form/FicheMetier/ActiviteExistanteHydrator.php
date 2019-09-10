@@ -3,7 +3,7 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class ActiviteExistanteHydrator implements HydratorInterface {
 

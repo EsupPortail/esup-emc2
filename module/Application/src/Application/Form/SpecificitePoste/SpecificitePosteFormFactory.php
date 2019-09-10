@@ -2,14 +2,14 @@
 
 namespace Application\Form\SpecificitePoste;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class SpecificitePosteFormFactory{
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var SpecificitePosteHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(SpecificitePosteHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(SpecificitePosteHydrator::class);
 
         /** @var SpecificitePosteForm $form */
         $form = new SpecificitePosteForm();

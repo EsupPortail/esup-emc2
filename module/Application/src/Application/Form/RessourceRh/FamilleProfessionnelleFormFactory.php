@@ -2,14 +2,14 @@
 
 namespace Application\Form\RessourceRh;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class FamilleProfessionnelleFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var FamilleProfessionnelleHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(FamilleProfessionnelleHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(FamilleProfessionnelleHydrator::class);
 
         $form = new FamilleProfessionnelleForm();
         $form->init();

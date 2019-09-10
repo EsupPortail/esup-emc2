@@ -1,8 +1,28 @@
 <?php
 
 $modules = [
-    'ZfcBase', 'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'ZfcUserDoctrineORM',
-    'BjyAuthorize', 'AssetManager',
+    'Zend\Cache',
+    'Zend\Filter',
+    'Zend\Form',
+    'Zend\Hydrator',
+    'Zend\I18n',
+    'Zend\InputFilter',
+    'Zend\Log',
+    'Zend\Mail',
+    'Zend\Mvc\Console',
+    'Zend\Mvc\I18n',
+    'Zend\Mvc\Plugin\FilePrg',
+    'Zend\Mvc\Plugin\FlashMessenger',
+    'Zend\Mvc\Plugin\Identity',
+    'Zend\Mvc\Plugin\Prg',
+    'Zend\Navigation',
+    'Zend\Paginator',
+    'Zend\Router',
+    'Zend\Session',
+    'Zend\Validator',
+
+    'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'BjyAuthorize' => 'BjyAuthorize',
+    'UnicaenApp',
     'UnicaenApp', 'UnicaenAuth', 'UnicaenLdap', 'UnicaenDbImport',
     'Autoform',
     'Fichier',
@@ -12,6 +32,7 @@ $modules = [
     'Indicateur',
     'Application',
     //'ZendDeveloperTools',
+
 ];
 
 if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {
