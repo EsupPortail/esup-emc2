@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\MissionSpecifique\MissionSpecifiqueController;
-use Application\Controller\MissionSpecifique\MissionSpecifiqueControllerFactory;
+use Application\Controller\MissionSpecifiqueController;
+use Application\Controller\MissionSpecifiqueControllerFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydrator;
@@ -12,8 +12,8 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

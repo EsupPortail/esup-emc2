@@ -3,16 +3,14 @@
 namespace Application\Form\AssocierAgent;
 
 use Application\Service\Agent\AgentService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class AssocierAgentHydratorFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        /** @var ServiceLocatorInterface $parentLocator */
-        $parentLocator = $serviceLocator->getServiceLocator();
         /** @var AgentService $agentService */
-        $agentService = $parentLocator->get(AgentService::class);
+        $agentService = $container->get(AgentService::class);
 
         $hydrator = new AssocierAgentHydrator();
         $hydrator->setAgentService($agentService);

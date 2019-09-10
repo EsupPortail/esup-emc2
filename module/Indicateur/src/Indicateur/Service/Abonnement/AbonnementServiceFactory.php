@@ -3,19 +3,19 @@
 namespace Indicateur\Service\Abonnement;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class AbonnementServiceFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
          * @var MailingService $mailingService
          */
-        $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        $mailingService = $serviceLocator->get(MailingService::class);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $mailingService = $container->get(MailingService::class);
 
         /** @var AbonnementService $service */
         $service = new AbonnementService();

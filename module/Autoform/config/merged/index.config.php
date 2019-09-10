@@ -6,7 +6,7 @@ use Autoform\Controller\IndexController;
 use Autoform\Controller\IndexControllerFactory;
 use Autoform\Provider\Privilege\IndexPrivileges;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
+use Zend\Router\Http\Literal;
 
 return [
     'bjyauthorize' => [
@@ -55,4 +55,5 @@ return [
     'hydrators' => [
         'factories' => [],
     ]
+
 ];

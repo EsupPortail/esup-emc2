@@ -3,17 +3,17 @@
 namespace Application\Form\RessourceRh;
 
 use Application\Service\Domaine\DomaineService;
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class MetierFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var MetierHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(MetierHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(MetierHydrator::class);
 
         /** @var DomaineService $domaineService */
-        $domaineService = $manager->getServiceLocator()->get(DomaineService::class);
+        $domaineService = $container->get(DomaineService::class);
 
         $form = new MetierForm();
         $form->setDomaineService($domaineService);

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @var Autoform\Entity\Db\Formulaire $formulaire
+ * @var \Autoform\Entity\Db\Formulaire $formulaire
  *
- * @see Autoform\Controller\FormulaireController::modifierAction()
+ * @see \Autoform\Controller\Formulaire\FormulaireController::modifierAction()
  */
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
@@ -131,7 +131,9 @@ $canDetruireChamp           = $this->isAllowed(ChampPrivileges::getResourceId(Ch
                 <?php foreach($champs as $champ) : ?>
                     <div class="row survol">
                         <div class="col-md-10">
-                            <?php echo $this->champAsInput()->render($champ); ?>
+                            <?php
+                            echo $this->champAsInput()->render($champ);
+                            ?>
                         </div>
                         <div class="col-md-2">
                             <?php if ($canModifierChamp) : ?>
@@ -185,26 +187,26 @@ $canDetruireChamp           = $this->isAllowed(ChampPrivileges::getResourceId(Ch
         </div>
     <?php endforeach; ?>
 
-    <h2> Vue de l'affichage </h2>
-
-    <?php foreach($categories as $categorie) : ?>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <?php echo $categorie->getLibelle(); ?>
-            </div>
-            <div class="panel-body">
-                <?php
-                    $champs = $categorie->getChamps();
-                    usort($champs, function (Champ $a, Champ $b) { return ($a->getOrdre() - $b->getOrdre());});
-                ?>
-                <ul>
-                <?php foreach($champs as $champ) : ?>
-                    <?php echo $this->champAsResult()->render($champ); ?>
-                <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
-    <?php endforeach; ?>
+<!--    <h2> Vue de l'affichage </h2>-->
+<!---->
+<!--    --><?php //foreach($categories as $categorie) : ?>
+<!--        <div class="panel panel-info">-->
+<!--            <div class="panel-heading">-->
+<!--                --><?php //echo $categorie->getLibelle(); ?>
+<!--            </div>-->
+<!--            <div class="panel-body">-->
+<!--                --><?php
+//                    $champs = $categorie->getChamps();
+//                    usort($champs, function (Champ $a, Champ $b) { return ($a->getOrdre() - $b->getOrdre());});
+//                ?>
+<!--                <ul>-->
+<!--                --><?php //foreach($champs as $champ) : ?>
+<!--                    --><?php //echo $this->champAsResult()->render($champ); ?>
+<!--                --><?php //endforeach; ?>
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    --><?php //endforeach; ?>
 
 
 

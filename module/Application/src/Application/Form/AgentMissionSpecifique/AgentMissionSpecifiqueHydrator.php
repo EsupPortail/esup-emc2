@@ -7,7 +7,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class AgentMissionSpecifiqueHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;

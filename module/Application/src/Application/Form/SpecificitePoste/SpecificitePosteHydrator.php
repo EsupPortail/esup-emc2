@@ -5,7 +5,7 @@ namespace Application\Form\SpecificitePoste;
 
 
 use Application\Entity\Db\SpecificitePoste;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class SpecificitePosteHydrator implements HydratorInterface {
 

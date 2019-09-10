@@ -11,7 +11,7 @@ use Application\Provider\Privilege\FormationPrivileges;
 use Application\Provider\Privilege\PersoPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
-
+use UnicaenAuth\Guard\PrivilegeController;
 return [
     'navigation' => [
         'default' => [
@@ -144,7 +144,7 @@ return [
                         'pages' => [
                         ],
                     ],
-                    'administration-preecog' => [
+                    'administration' => [
                         'order' => 1000,
                         'label' => 'Administration',
                         'title' => "Administration",
@@ -170,7 +170,7 @@ return [
                                 'label'      => "Privilèges",
                                 'title'      => "Gestion des privilèges",
                                 'route'      => 'privilege',
-                                'resource'   => \UnicaenAuth\Guard\PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
+                                'resource'   => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
                                 'withtarget' => true,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
@@ -198,7 +198,6 @@ return [
                                 'title'      => "Module Indicateur",
                                 'route'      => 'indicateurs',
                                 'roles'      => [],
-    //                                'withtarget' => true,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
                             ],

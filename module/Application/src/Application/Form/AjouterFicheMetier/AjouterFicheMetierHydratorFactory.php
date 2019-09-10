@@ -3,16 +3,16 @@
 namespace Application\Form\AjouterFicheMetier;
 
 use Application\Service\FicheMetier\FicheMetierService;
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class AjouterFicheMetierHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var FicheMetierService $ficheMetierService
          */
-        $ficheMetierService = $manager->getServiceLocator()->get(FicheMetierService::class);
+        $ficheMetierService = $container->get(FicheMetierService::class);
 
         /** @var AjouterFicheMetierHydrator $hydrator */
         $hydrator = new AjouterFicheMetierHydrator();

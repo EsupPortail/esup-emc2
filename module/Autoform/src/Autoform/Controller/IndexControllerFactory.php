@@ -2,11 +2,11 @@
 
 namespace Autoform\Controller;
 
-use Zend\Mvc\Controller\ControllerManager;
+use Interop\Container\ContainerInterface;
 
 class IndexControllerFactory {
 
-    public function __invoke(ControllerManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var IndexController $controller*/
         $controller = new IndexController();

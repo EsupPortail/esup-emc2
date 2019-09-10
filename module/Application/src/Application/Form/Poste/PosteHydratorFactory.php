@@ -7,14 +7,12 @@ use Application\Service\Domaine\DomaineService;
 use Application\Service\Immobilier\ImmobilierService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\Structure\StructureService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class PosteHydratorFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        /** @var ServiceLocatorInterface $parentLocator */
-        $parentLocator = $serviceLocator->getServiceLocator();
         /**
          * @var AgentService $agentService
          * @var DomaineService $domaineService
@@ -22,11 +20,11 @@ class PosteHydratorFactory {
          * @var RessourceRhService $ressourceService
          * @var ImmobilierService $immobilierService
          */
-        $agentService = $parentLocator->get(AgentService::class);
-        $domaineService = $parentLocator->get(DomaineService::class);
-        $structureService = $parentLocator->get(StructureService::class);
-        $ressourceService = $parentLocator->get(RessourceRhService::class);
-        $immobilierService = $parentLocator->get(ImmobilierService::class);
+        $agentService = $container->get(AgentService::class);
+        $domaineService = $container->get(DomaineService::class);
+        $structureService = $container->get(StructureService::class);
+        $ressourceService = $container->get(RessourceRhService::class);
+        $immobilierService = $container->get(ImmobilierService::class);
 
 
         $hydrator = new PosteHydrator();

@@ -4,7 +4,7 @@ namespace Application\Form\AssocierAgent;
 
 use Application\Entity\Db\FichePoste;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class AssocierAgentHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;

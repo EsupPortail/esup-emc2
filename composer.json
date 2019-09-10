@@ -1,6 +1,6 @@
 {
     "name": "unicaen/skeleton-application",
-    "description": "Squelette d'application Unicaen (ZF2)",
+    "description": "PrEECoG :  outils pour la GPEEC",
     "repositories": [
         {
             "type": "composer",
@@ -8,11 +8,12 @@
         }
     ],
     "require": {
-        "unicaen/app":                  "^1.2",
-        "unicaen/auth":                 "^1.2",
-        "unicaen/ldap":                 "^2.2",
-        "unicaen/octopus":              "^0.6.0",
-        "unicaen/db-import": "^1.1"
+        "unicaen/app":           "dev-zf-3.x",
+        "unicaen/auth":          "dev-zf-3.x",
+        "unicaen/bjy-authorize": "dev-zf-3.x",
+        "unicaen/ldap":          "dev-zf-3.x",
+        "unicaen/octopus":       "dev-zf-3.x",
+        "unicaen/db-import":     "dev-zf-3.x"
     },
     "require-dev": {
         "unicaen/code":                         "^1.0",

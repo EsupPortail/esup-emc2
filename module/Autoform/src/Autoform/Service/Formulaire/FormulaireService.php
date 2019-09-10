@@ -2,16 +2,15 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Utilisateur\Service\User\UserServiceAwareTrait;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Service\Categorie\CategorieServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenAuth\Entity\Db\User;
+use Utilisateur\Entity\Db\User;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireService {
@@ -48,6 +47,8 @@ class FormulaireService {
     public function getFormulaire($id)
     {
         $qb = $this->getEntityManager()->getRepository(Formulaire::class)->createQueryBuilder('formulaire')
+            ->addSelect('categorie')->leftJoin('formulaire.categories', 'categorie')
+            ->addSelect('champ')->leftJoin('categorie.champs', 'champ')
             ->andWhere('formulaire.id = :id')
             ->setParameter('id', $id)
             ;
@@ -71,7 +72,7 @@ class FormulaireService {
         /** @var DateTime $date */
         try {
             $date = new DateTime();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème lors de la récupération de la date", $e);
         }
         $formulaire->setHistoCreateur($user);
@@ -99,7 +100,7 @@ class FormulaireService {
         /** @var DateTime $date */
         try {
             $date = new DateTime();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème lors de la récupération de la date", $e);
         }
         $formulaire->setHistoModificateur($user);
@@ -124,7 +125,7 @@ class FormulaireService {
         /** @var DateTime $date */
         try {
             $date = new DateTime();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException("Problème lors de la récupération de la date", $e);
         }
         $formulaire->setHistoDestructeur($user);

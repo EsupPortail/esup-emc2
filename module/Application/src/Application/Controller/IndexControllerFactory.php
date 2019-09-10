@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Service\Agent\AgentService;
+use Interop\Container\ContainerInterface;
 use UnicaenAuth\Service\UserContext;
 use Utilisateur\Service\Role\RoleService;
 use Utilisateur\Service\User\UserService;
@@ -10,7 +11,7 @@ use Zend\Mvc\Controller\ControllerManager;
 
 class IndexControllerFactory {
 
-    public function __invoke(ControllerManager $controllerManager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var AgentService $agentService
@@ -18,10 +19,10 @@ class IndexControllerFactory {
          * @var UserService $userService
          * @var UserContext $userContext
          */
-        $agentService = $controllerManager->getServiceLocator()->get(AgentService::class);
-        $roleService = $controllerManager->getServiceLocator()->get(RoleService::class);
-        $userService = $controllerManager->getServiceLocator()->get(UserService::class);
-        $userContext = $controllerManager->getServiceLocator()->get('UnicaenAuth\Service\UserContext');
+        $agentService = $container->get(AgentService::class);
+        $roleService = $container->get(RoleService::class);
+        $userService = $container->get(UserService::class);
+        $userContext = $container->get(UserContext::class);
 
         /** @var IndexController $controller */
         $controller = new IndexController();

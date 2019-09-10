@@ -3,7 +3,7 @@
 namespace Application\Form\Formation;
 
 use Application\Entity\Db\Formation;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\HydratorInterface;
 
 class FormationHydrator implements HydratorInterface {
 

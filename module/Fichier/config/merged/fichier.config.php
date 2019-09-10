@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Fichier\Controller\Fichier\FichierController;
-use Fichier\Controller\Fichier\FichierControllerFactory;
+use Fichier\Controller\FichierController;
+use Fichier\Controller\FichierControllerFactory;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Form\Upload\UploadFormFactory;
 use Fichier\Form\Upload\UploadHydrator;
@@ -13,8 +13,8 @@ use Fichier\Service\Nature\NatureService;
 use Fichier\Service\Nature\NatureServiceFactory;
 use Fichier\View\Helper\FichierViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

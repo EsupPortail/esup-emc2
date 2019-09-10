@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var Autoform\Entity\Db\Validation[] $validations
+ * @var \Autoform\Entity\Db\Validation[] $validations
  */
 
 use Autoform\Provider\Privilege\ValidationPrivileges;
@@ -35,9 +35,6 @@ $this->headTitle('Index des validations');
     <table class="table table-condensed">
         <thead>
             <tr>
-<!--                <th> Année </th>-->
-<!--                <th> Étudiant </th>-->
-<!--                <th> Composante </th>-->
                 <th> Type </th>
                 <th> Date </th>
                 <th> Action </th>
@@ -46,39 +43,36 @@ $this->headTitle('Index des validations');
         <tbody>
             <?php foreach ($validations as $validation) : ?>
                 <tr>
-<!--                    <td> --><?php //echo $validation->getDemande()->getAnnee(); ?><!-- </td>-->
-<!--                    <td> --><?php //echo $validation->getDemande()->getEtudiant(); ?><!-- </td>-->
-<!--                    <td> --><?php //echo ($validation->getDemande()->getComposante())?$validation->getDemande()->getComposante()->getLibelle():"---"; ?><!-- </td>-->
                     <td> <?php echo $validation->getType(); ?> </td>
                     <td> <?php echo $validation->getHistoModification()->format('d/m/Y à H:i'); ?> </td>
                     <td>
                         <?php if ($canVoirValidation) : ?>
-<!--                            <a href="--><?php //echo $this->url('autoform/validation/afficher-resultat', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?><!--">-->
-<!--                                <span class="icon voir" title="Examiner la validation"></span></a>-->
-<!--                        --><?php //else : ?>
-<!--                            <span class="icon voir" style="color:lightgray;"></span>-->
-<!--                        --><?php //endif; ?>
-<!---->
-<!--                        --><?php //if ($canEditerValidation) : ?>
-<!--                        <a href="--><?php //echo $this->url('autoform/validation/afficher-validation', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?><!--">-->
-<!--                            <span class="icon editer" title="Éditer la validation"></span></a>-->
-<!--                        --><?php //else : ?>
-<!--                            <span class="icon editer" style="color:lightgray;"></span>-->
-<!--                        --><?php //endif; ?>
-<!---->
-<!--                        --><?php //if ($canVoirValidation) : ?>
-<!--                            <a href="--><?php //echo $this->url('autoform/validation/export-pdf', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()], [], true); ?><!--">-->
-<!--                                <span class="icon pdf" title="Version PDF"></span></a>-->
-<!--                        --><?php //endif; ?>
-<!---->
-<!--                        --><?php //if ($canHistoriserValidation) : ?>
-<!--                            --><?php //if ($validation->estNonHistorise()) : ?>
-<!--                            <a href="--><?php //echo $this->url('autoform/validation/historiser', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?><!--">-->
-<!--                                <span class="icon historiser" title="Historiser la validation"></span></a>-->
-<!--                            --><?php //else : ?>
-<!--                                <a href="--><?php //echo $this->url('autoform/validation/restaurer', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?><!--">-->
-<!--                                    <span class="icon restaurer" title="restaurer la validation"></span></a>-->
-<!--                            --><?php //endif; ?>
+                            <a href="<?php echo $this->url('autoform/validation/afficher-resultat', ['validation' => $validation->getId()],[], true); ?>">
+                                <span class="icon voir" title="Examiner la validation"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgray;"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canEditerValidation) : ?>
+                        <a href="<?php //echo $this->url('autoform/validation/afficher-validation', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?>">
+                            <span class="icon editer" title="Éditer la validation"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgray;"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canVoirValidation) : ?>
+                            <a href="<?php ///echo $this->url('autoform/validation/export-pdf', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()], [], true); ?>">
+                                <span class="icon pdf" title="Version PDF"></span></a>
+                        <?php endif; ?>
+
+                        <?php if ($canHistoriserValidation) : ?>
+                            <?php if ($validation->estNonHistorise()) : ?>
+                            <a href="<?php //echo $this->url('autoform/validation/historiser', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?>">
+                                <span class="icon historiser" title="Historiser la validation"></span></a>
+                            <?php else : ?>
+                                <a href="<?php //echo $this->url('autoform/validation/restaurer', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?>">
+                                    <span class="icon restaurer" title="restaurer la validation"></span></a>
+                            <?php endif; ?>
                         <?php else : ?>
                             <?php if ($validation->estNonHistorise()) : ?>
                                 <span class="icon historiser" style="color:lightgray;"></span>
@@ -88,8 +82,8 @@ $this->headTitle('Index des validations');
                         <?php endif; ?>
 
                         <?php if ($canDetruireValidation) : ?>
-<!--                            <a href="--><?php //echo $this->url('autoform/validation/detruire', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?><!--">-->
-<!--                                <span class="icon detruire" title="Détruire la validation"></span></a>-->
+                            <a href="<?php //echo $this->url('autoform/validation/detruire', ['demande' => $validation->getDemande()->getId(), 'validation' => $validation->getId()],[], true); ?>">
+                                <span class="icon detruire" title="Détruire la validation"></span></a>
                         <?php else : ?>
                             <span class="icon detruire" style="color:lightgray;"></span>
                         <?php endif; ?>
