@@ -1,6 +1,6 @@
 <?php
 
-namespace Indicateur\Controller\Indicateur;
+namespace Indicateur\Controller;
 
 use DateTime;
 use Indicateur\Entity\Db\Indicateur;
@@ -143,5 +143,12 @@ class IndicateurController extends AbstractActionController {
             $this->getIndicateurService()->refresh($indicateur);
         }
         exit();
+    }
+
+    public function rafraichirConsoleAction() {
+        $indicateurs = $this->getIndicateurService()->getIndicateurs();
+        foreach ($indicateurs as $indicateur) {
+            $this->getIndicateurService()->refresh($indicateur);
+        }
     }
 }

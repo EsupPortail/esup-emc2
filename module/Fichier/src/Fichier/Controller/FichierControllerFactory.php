@@ -1,6 +1,6 @@
 <?php
 
-namespace Fichier\Controller\Fichier;
+namespace Fichier\Controller;
 
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;

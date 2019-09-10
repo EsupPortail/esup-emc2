@@ -2,14 +2,14 @@
 
 namespace Autoform\Form\Formulaire;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class FormulaireFormFactory {
 
-    public function __invoke(FormElementManager $container)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var FormulaireHydrator $hydrator */
-        $hydrator = $container->getServiceLocator()->get('HydratorManager')->get(FormulaireHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(FormulaireHydrator::class);
 
         /** @var  FormulaireForm $form */
         $form = new FormulaireForm();

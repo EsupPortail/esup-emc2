@@ -2,11 +2,11 @@
 
 namespace Autoform\Form\Formulaire;
 
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class FormulaireHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var FormulaireHydrator $hydrator */
         $hydrator = new FormulaireHydrator();

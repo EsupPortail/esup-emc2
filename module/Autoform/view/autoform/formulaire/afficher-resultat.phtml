@@ -1,30 +1,31 @@
 <?php
 
 /**
- * @var Autoform\Entity\Db\Formulaire $formulaire
- * @var Autoform\Entity\Db\FormulaireReponse[] $reponses
+ * @var \Autoform\Entity\Db\Formulaire $formulaire
+ * @var \Application\Entity\Db\Demande $demande
+ * @var \Autoform\Entity\Db\FormulaireReponse[] $reponses
  */
 
 ?>
 
         <?php
-            /** @var Autoform\Entity\Db\Categorie[] $categories */
+            /** @var \Autoform\Entity\Db\Categorie[] $categories */
             $categories = $formulaire->getCategories();
-            $categories = array_filter($categories, function (Autoform\Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
-            usort($categories, function (Autoform\Entity\Db\Categorie $a, Autoform\Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+            $categories = array_filter($categories, function (\Autoform\Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
+            usort($categories, function (\Autoform\Entity\Db\Categorie $a, \Autoform\Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
         ?>
 
         <?php foreach ($categories as $categorie) : ?>
 
             <?php
-                /** @var Autoform\Entity\Db\Champ[] $champs */
+                /** @var \Autoform\Entity\Db\Champ[] $champs */
                 $champs = $categorie->getChamps();
-                $champs = array_filter($champs, function (Autoform\Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
-                usort($champs, function (Autoform\Entity\Db\Champ $a, Autoform\Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+                $champs = array_filter($champs, function (\Autoform\Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
+                usort($champs, function (\Autoform\Entity\Db\Champ $a, \Autoform\Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
 
                 $results = [];
                 foreach ($champs as $champ) {
-                    if ($champ->getId() && isset($reponses[$champ->getId()])) $results[] = $reponses[$champ->getId()];
+                    if ($reponses[$champ->getId()]) $results[] = $reponses[$champ->getId()];
                 }
             ?>
 

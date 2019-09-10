@@ -375,7 +375,7 @@ class FichePosteController extends AbstractActionController {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
         /* @var PhpRenderer $renderer  */
-        $renderer = $this->getServiceLocator()->get('view_renderer');
+        $renderer = $this->getServiceLocator()->get('ViewRenderer');
 
         $exporter = new FichePostePdfExporter($renderer, 'A4');
         $exporter->setVars([

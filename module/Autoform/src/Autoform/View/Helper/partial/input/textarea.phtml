@@ -15,7 +15,7 @@ $options = explode(';', $champ->getOptions());
         <?php echo $champ->getLibelle(); ?>&nbsp;:
     </label>
     <div class="col-sm-10">
-        <textarea class="form-control" id="textarea_<?php echo $champ->getId(); ?>" name="<?php echo $champ->getId(); ?>" >
+        <textarea class="form-control autoform-textarea" id="textarea_<?php echo $champ->getId(); ?>" name="<?php echo $champ->getId(); ?>" >
                 <?php if (trim($reponse) !== ''): ?>
                     <?php echo $reponse; ?>
                 <?php endif; ?>
@@ -29,3 +29,7 @@ $options = explode(';', $champ->getOptions());
         margin-bottom : 10px;
     }
 </style>
+
+<script>
+
+</script>

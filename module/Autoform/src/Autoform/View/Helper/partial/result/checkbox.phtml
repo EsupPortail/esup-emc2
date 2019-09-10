@@ -1,0 +1,17 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $data
+ */
+
+use Autoform\Entity\Db\Champ;
+
+?>
+
+<?php if ($data === "on") : ?>
+    <?php if ($champ->getTexte()) : ?>
+        <?php echo $champ->getTexte(); ?>
+    <?php else : ?>
+        <?php echo $champ->getLibelle(); ?>
+    <?php endif; ?>
+<?php endif; ?>

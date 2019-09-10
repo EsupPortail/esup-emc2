@@ -2,7 +2,7 @@
 
 namespace Autoform\Entity\Db;
 
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use Utilisateur\Entity\HistoriqueAwareTrait;
 
 class Champ {
     use HistoriqueAwareTrait;
@@ -13,7 +13,11 @@ class Champ {
     const TYPE_TEXTAREA     = "Textarea";
     const TYPE_CHECKBOX     = "Checkbox";
     const TYPE_SELECT       = "Select";
-    const TYPE_PERIODE        = "Periode";
+    const TYPE_PERIODE      = "Periode";
+    const TYPE_ANNEE        = "Annee";
+    const TYPE_MULTIPLE     = "Multiple";
+    const TYPE_ENTITY       = "Entity";
+    const TYPE_ENTITY_MULTI = "Entity Multiple";
 
 
     /** @var integer */

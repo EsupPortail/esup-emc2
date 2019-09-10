@@ -3,19 +3,20 @@
 namespace Fichier\Form\Upload;
 
 use Fichier\Service\Nature\NatureService;
+use Interop\Container\ContainerInterface;
 use Zend\Form\FormElementManager;
 
 class UploadFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var UploadHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(UploadHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(UploadHydrator::class);
 
         /**
          * @var NatureService $natureService
          */
-        $natureService = $manager->getServiceLocator()->get(NatureService::class);
+        $natureService = $container->get(NatureService::class);
 
         /** @var UploadForm $form */
         $form = new UploadForm();

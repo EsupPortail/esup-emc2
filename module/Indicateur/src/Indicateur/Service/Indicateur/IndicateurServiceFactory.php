@@ -3,16 +3,16 @@
 namespace Indicateur\Service\Indicateur;
 
 use Doctrine\ORM\EntityManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class IndicateurServiceFactory {
 
-    public function __invoke(ServiceLocatorInterface $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
          */
-        $entityManager = $manager->get('doctrine.entitymanager.orm_default');
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         /** @var IndicateurService $service */
         $service = new IndicateurService();

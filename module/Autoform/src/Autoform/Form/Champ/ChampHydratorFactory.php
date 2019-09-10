@@ -2,11 +2,11 @@
 
 namespace Autoform\Form\Champ;
 
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class ChampHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var ChampHydrator $hydrator */
         $hydrator = new ChampHydrator();

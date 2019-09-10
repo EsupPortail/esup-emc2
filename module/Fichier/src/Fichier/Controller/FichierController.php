@@ -1,6 +1,6 @@
 <?php
 
-namespace Fichier\Controller\Fichier;
+namespace Fichier\Controller;
 
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
