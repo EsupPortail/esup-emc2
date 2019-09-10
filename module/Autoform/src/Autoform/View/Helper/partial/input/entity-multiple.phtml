@@ -1,0 +1,27 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $reponse
+ * @var array $options (ID => STRING)
+ */
+
+use Autoform\Entity\Db\Champ;
+
+$splits = explode(";", $reponse);
+?>
+
+<div class="form-group row col-md-12">
+    <label for="textarea_<?php echo $champ->getId()?>" class="control-label">
+        <strong><?php echo $champ->getLibelle()?>&nbsp;:</strong>
+    </label>
+    <div class="col-md-offset-2 col-md-10">
+        <?php foreach ($options as $id => $option) : ?>
+            <input type="checkbox" name="<?php echo $champ->getId()?>_<?php echo $id; ?>"
+                <?php if ($reponse && (array_search($id, $splits) !== false)) : ?>
+                    checked
+                <?php endif; ?>
+            />&nbsp;<?php echo $option; ?>
+            <br/>
+        <?php endforeach; ?>
+    </div>
+</div>

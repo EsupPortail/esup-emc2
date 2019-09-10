@@ -187,13 +187,19 @@ class IndicateurService {
 
         if ($indicateur->getEntity() === Indicateur::ENTITY_STRUCTURE) {
             $rubriques = [
-//            'id'                    => 'id',
-//            'Code'                  => 'sigle',
-                'Libelle court'         => 'libelle_court',
-                'Libelle long'          => 'libelle_long',
-                'Type'                  => 'type',
-                //'Description'           => 'description',
-                //'Historisé'             => 'histo',
+            'Code'                  => 'code',
+            'Libelle'               => 'libelle_court',
+            'Libelle long'          => 'libelle_long',
+            'Type'                  => 'type',
+
+            ];
+        }
+        if ($indicateur->getEntity() === Indicateur::ENTITY_AGENT) {
+            $rubriques = [
+                'ID'                    => 'c_src_individu',
+                'SOURCE'                => 'c_source',
+                'Prenom'                => 'prenom',
+                'Nom'                   => 'nom_usage',
             ];
         }
 

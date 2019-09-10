@@ -4,16 +4,14 @@ namespace Application\Form\FicheMetier;
 
 
 use Application\Service\Application\ApplicationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class ApplicationsHydratorFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
-        /** @var ServiceLocatorInterface $parentLocator */
-        $parentLocator = $serviceLocator->getServiceLocator();
         /** @var ApplicationService $applicationService */
-        $applicationService = $parentLocator->get(ApplicationService::class);
+        $applicationService = $container->get(ApplicationService::class);
 
         $hydrator = new ApplicationsHydrator();
         $hydrator->setApplicationService($applicationService);

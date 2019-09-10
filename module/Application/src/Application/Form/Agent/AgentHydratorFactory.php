@@ -2,12 +2,11 @@
 
 namespace Application\Form\Agent;
 
-use Application\Service\RessourceRh\RessourceRhService;
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class AgentHydratorFactory  {
 
-    public function __invoke(HydratorPluginManager $manager) {
+    public function __invoke(ContainerInterface $container) {
 
         /** @var AgentHydrator $hydrator */
         $hydrator = new AgentHydrator;

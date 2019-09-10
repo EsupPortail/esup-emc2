@@ -2,14 +2,14 @@
 
 namespace Application\Form\FichePosteCreation;
 
-use Zend\Form\FormElementManager;
+use Interop\Container\ContainerInterface;
 
 class FichePosteCreationFormFactory {
 
-    public function __invoke(FormElementManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var FichePosteCreationHydrator $hydrator */
-        $hydrator = $manager->getServiceLocator()->get('HydratorManager')->get(FichePosteCreationHydrator::class);
+        $hydrator = $container->get('HydratorManager')->get(FichePosteCreationHydrator::class);
 
         /** @var FichePosteCreationForm $form */
         $form = new FichePosteCreationForm();

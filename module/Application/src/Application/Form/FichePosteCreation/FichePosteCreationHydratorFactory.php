@@ -2,11 +2,11 @@
 
 namespace Application\Form\FichePosteCreation;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class FichePosteCreationHydratorFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
         $hydrator = new FichePosteCreationHydrator();
 

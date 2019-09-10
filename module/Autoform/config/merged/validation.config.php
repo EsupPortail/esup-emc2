@@ -2,7 +2,7 @@
 
 namespace Autoform;
 
-use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\AdministrationPrivileges;
 use Autoform\Controller\ValidationController;
 use Autoform\Controller\ValidationControllerFactory;
 use Autoform\Provider\Privilege\FormulairePrivileges;
@@ -11,8 +11,8 @@ use Autoform\Service\Validation\ValidationReponseServiceFactory;
 use Autoform\Service\Validation\ValidationService;
 use Autoform\Service\Validation\ValidationServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -38,24 +38,24 @@ return [
         ],
     ],
 
-//    'navigation'      => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
 //                    'gestion' => [
 //                        'pages' => [
 //                            'validation' => [
 //                                'label'    => 'Validation',
 //                                'route'    => 'autoform/validations',
-//                                'resource' => [],
+//                                'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::ADMINISTRATION_VOIR),
 //                                'order'    => 3,
 //                            ],
 //                        ],
 //                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [
@@ -76,7 +76,7 @@ return [
                         'type' => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/creer-validation/:demande/:type',
+                            'route'    => '/creer-validation/:instance/:type',
                             'defaults' => [
                                 'controller' => ValidationController::class,
                                 'action'     => 'creer',
@@ -87,14 +87,14 @@ return [
                         'type' => Segment::class,
                         'may_terminate' => false,
                         'options' => [
-                            'route'    => '/validation/:validation',
+                            'route'    => '/validation',
                         ],
                         'child_routes' => [
                             'afficher-validation' => [
                                 'type' => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/afficher-validation/:demande',
+                                    'route'    => '/afficher-validation/:instance/:type',
                                     'defaults' => [
                                         'controller' => ValidationController::class,
                                         'action'     => 'afficher-validation',
@@ -105,7 +105,7 @@ return [
                                 'type' => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/afficher-resultat/:demande',
+                                    'route'    => '/afficher-resultat/:validation',
                                     'defaults' => [
                                         'controller' => ValidationController::class,
                                         'action'     => 'afficher-resultat',
@@ -116,7 +116,7 @@ return [
                                 'type' => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/export-pdf/:demande',
+                                    'route'    => '/export-pdf/:validation',
                                     'defaults' => [
                                         'controller' => ValidationController::class,
                                         'action'     => 'export-pdf',
@@ -127,7 +127,7 @@ return [
                                 'type' => Literal::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/historiser',
+                                    'route'    => '/historiser/:validation',
                                     'defaults' => [
                                         'controller' => ValidationController::class,
                                         'action'     => 'historiser',
@@ -138,7 +138,7 @@ return [
                                 'type' => Literal::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/restaurer',
+                                    'route'    => '/restaurer:validation',
                                     'defaults' => [
                                         'controller' => ValidationController::class,
                                         'action'     => 'restaurer',
@@ -149,7 +149,7 @@ return [
                                 'type' => Literal::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/detruire',
+                                    'route'    => '/detruire:validation',
                                     'defaults' => [
                                         'controller' => ValidationController::class,
                                         'action'     => 'detruire',

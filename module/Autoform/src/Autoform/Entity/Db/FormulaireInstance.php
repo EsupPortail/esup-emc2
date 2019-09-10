@@ -3,7 +3,7 @@
 namespace Autoform\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use Utilisateur\Entity\HistoriqueAwareTrait;
 
 class FormulaireInstance {
     use HistoriqueAwareTrait;
@@ -95,6 +95,18 @@ class FormulaireInstance {
     public function getValidations()
     {
         return $this->validations->toArray();
+    }
+
+    /**
+     * @param string $type
+     * @return Validation
+     */
+    public function getValidationByType($type)
+    {
+        foreach($this->validations as $validation) {
+            if ($validation->getHistoDestruction() === null && $validation->getType() === $type) return $validation;
+        }
+        return null;
     }
 
     /**

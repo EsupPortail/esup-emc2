@@ -2,11 +2,11 @@
 
 namespace Autoform\Form\Categorie;
 
-use Zend\Stdlib\Hydrator\HydratorPluginManager;
+use Interop\Container\ContainerInterface;
 
 class CategorieHydratorFactory {
 
-    public function __invoke(HydratorPluginManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /** @var CategorieHydrator $hydrator */
         $hydrator = new CategorieHydrator();

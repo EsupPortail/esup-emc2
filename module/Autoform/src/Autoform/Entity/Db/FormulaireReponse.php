@@ -2,7 +2,7 @@
 
 namespace Autoform\Entity\Db;
 
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use Utilisateur\Entity\HistoriqueAwareTrait;
 
 class FormulaireReponse {
     use HistoriqueAwareTrait;

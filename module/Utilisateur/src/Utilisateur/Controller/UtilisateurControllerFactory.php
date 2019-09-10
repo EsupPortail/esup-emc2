@@ -3,15 +3,15 @@
 namespace Utilisateur\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
 use UnicaenLdap\Service\People;
 use Utilisateur\Service\Role\RoleService;
 use Utilisateur\Service\User\UserService;
-use Zend\Mvc\Controller\ControllerManager;
 
 class UtilisateurControllerFactory {
 
-    public function __invoke(ControllerManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var RoleService $roleService
@@ -20,10 +20,10 @@ class UtilisateurControllerFactory {
          * @var MailingService $mailService
          * @var EntityManager $entityManager
          */
-        $roleService = $manager->getServiceLocator()->get(RoleService::class);
-        $ldapService = $manager->getServiceLocator()->get('LdapServicePeople');
-        $userService = $manager->getServiceLocator()->get(UserService::class);
-        $mailService = $manager->getServiceLocator()->get(MailingService::class);
+        $roleService = $container->get(RoleService::class);
+        $ldapService = $container->get('LdapServicePeople');
+        $userService = $container->get(UserService::class);
+        $mailService = $container->get(MailingService::class);
 
         /** @var UtilisateurController $controller */
         $controller = new UtilisateurController();

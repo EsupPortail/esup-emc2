@@ -3,9 +3,9 @@
 namespace Autoform\Controller;
 
 use Autoform\Entity\Db\Validation;
+use Autoform\Service\Exporter\Validation\ValidationExporter;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireReponseServiceAwareTrait;
-use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Autoform\Service\Validation\ValidationReponseServiceAwareTrait;
 use Autoform\Service\Validation\ValidationServiceAwareTrait;
 use Zend\Http\Request;
@@ -13,11 +13,12 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ValidationController extends AbstractActionController {
-    use FormulaireServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use FormulaireReponseServiceAwareTrait;
     use ValidationServiceAwareTrait;
     use ValidationReponseServiceAwareTrait;
+
+    public $renderer;
 
     public function indexAction()
     {
@@ -33,73 +34,88 @@ class ValidationController extends AbstractActionController {
         $instance = $this->getFormulaireInstanceService()->getRequestedFormulaireInstance($this, 'instance');
         $type = $this->params()->fromRoute('type');
 
-        $validation = new Validation();
-        $validation->setFormulaireInstance($instance);
-        $validation->setType($type);
+        $validation = $this->getValidationService()->getValidationByTypeAndInstance($type, $instance);
+        if ($validation === null) {
+            $validation = new Validation();
+            $validation->setFormulaireInstance($instance);
+            $validation->setType($type);
+            $this->getValidationService()->create($validation);
+        }
 
-        $this->getValidationService()->create($validation);
-        return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
+        return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId()], [], true);
     }
 
     public function afficherValidationAction()
     {
-        //todo inserer cela dans la table validation ?
-        $__FORMULAIRE_ID__ = 1; // ENTRETIEN PRO
-
+        $type     = $this->params()->fromRoute('type');
         $instance = $this->getFormulaireInstanceService()->getRequestedFormulaireInstance($this, 'instance');
-        $formulaire = $this->getFormulaireService()->getFormulaire($__FORMULAIRE_ID__);
-        $validation = $this->getValidationService()->getRequestedValidation($this, 'validation');
-        $fReponses = $this->getFormulaireReponseService()->getFormulaireResponsesByFormulaireInstance($instance);
-        $vReponses = $this->getValidationReponseService()->getValidationResponsesByValidation($validation);
+        $retour = $this->params()->fromQuery('retour');
 
+        $validation = $this->getValidationService()->getValidationByTypeAndInstance($type, $instance);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-
-            $this->getValidationReponseService()->updateValidationReponse($instance, $validation, $data);
-            return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
+            $this->getValidationReponseService()->updateValidationReponse($validation,$data);
+            $this->getValidationService()->update($validation);
+            if ($retour) {
+                return $this->redirect()->toUrl($retour);
+            } else {
+                return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['instance' => $instance->getId(), 'type' => $type], [], true);
+            }
         }
 
+        $formulaire = $instance->getFormulaire();
+        $freponses = $this->getFormulaireReponseService()->getFormulaireResponsesByFormulaireInstance($instance);
+        $vreponses = ($validation)?$this->getValidationReponseService()->getValidationResponsesByValidation($validation):[];
+        $url = '';
+
         return new ViewModel([
-            'instance'      => $instance,
             'formulaire'    => $formulaire,
-            'validation'    => $validation,
-            'fReponses'     => $fReponses,
-            'vReponses'     => $vReponses,
+            'instance'      => $instance,
+            'fReponses'      => $freponses,
+            'vReponses'      => $vreponses,
+            'url'           => $url,
         ]);
     }
 
     public function afficherResultatAction()
     {
-        //todo inserer cela dans la table validation ?
-        $__FORMULAIRE_ID__ = 1;
-
-        $instance = $this->getFormulaireInstanceService()->getRequestedFormulaireInstance($this, 'instance');
-        $formulaire = $this->getFormulaireService()->getFormulaire($__FORMULAIRE_ID__);
         $validation = $this->getValidationService()->getRequestedValidation($this, 'validation');
+        $instance = $validation->getFormulaireInstance();
+        $formulaire = $instance->getFormulaire();
+
         $fReponses = $this->getFormulaireReponseService()->getFormulaireResponsesByFormulaireInstance($instance);
         $vReponses = $this->getValidationReponseService()->getValidationResponsesByValidation($validation);
 
 
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-
-            $this->getValidationReponseService()->updateValidationReponse($instance, $validation, $data);
-            return $this->redirect()->toRoute('autoform/validation/afficher-validation', ['validation' => $validation->getId(), 'instance' => $instance->getId()], [], true);
-        }
-
         return new ViewModel([
-            'title' => 'Validation <strong>'.$validation->getType().'</strong> de la demande de ',
-            '$instance' => $instance,
+            'title' => 'Validation',
             'formulaire' => $formulaire,
             'validation' => $validation,
             'fReponses' => $fReponses,
             'vReponses' => $vReponses,
         ]);
+    }
+
+    public function exportPdfAction()
+    {
+        $validation = $this->getValidationService()->getRequestedValidation($this, 'validation');
+        $instance = $validation->getFormulaireInstance();
+        $formulaire = $instance->getFormulaire();
+
+        $fReponses = $this->getFormulaireReponseService()->getFormulaireResponsesByFormulaireInstance($instance);
+        $vReponses = $this->getValidationReponseService()->getValidationResponsesByValidation($validation);
+
+        $exporter = new ValidationExporter($this->renderer, 'A4');
+        $exporter->setVars([
+            'formulaire' => $formulaire,
+            'fReponses' => $fReponses,
+            'vReponses' => $vReponses,
+        ]);
+        $exporter->export('export.pdf');
+        exit;
     }
 
     public function historiserAction()

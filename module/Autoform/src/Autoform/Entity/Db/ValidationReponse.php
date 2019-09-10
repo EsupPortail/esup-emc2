@@ -10,7 +10,7 @@ class ValidationReponse {
     private $validation;
     /** @var FormulaireReponse */
     private $formulaireReponse;
-    /** @var boolean */
+    /** @var string */
     private $value;
 
     /**
@@ -58,7 +58,7 @@ class ValidationReponse {
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getValue()
     {
@@ -66,7 +66,7 @@ class ValidationReponse {
     }
 
     /**
-     * @param bool $value
+     * @param string $value
      * @return ValidationReponse
      */
     public function setValue($value)

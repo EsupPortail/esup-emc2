@@ -24,9 +24,14 @@ class ChampForm extends Form {
                     Champ::TYPE_TEXTAREA    => "Texte libre long ",
                     Champ::TYPE_CHECKBOX    => "Boîte à cocher",
                     Champ::TYPE_SELECT      => "Choix simple parmi selection",
+                    Champ::TYPE_MULTIPLE    => "Choix multiple parmi selection",
                     Champ::TYPE_PERIODE     => "Période",
+                    Champ::TYPE_ANNEE       => "Année Scolaire",
+                    Champ::TYPE_ENTITY      => "Choix parmi instance d'une entité",
+                    Champ::TYPE_ENTITY_MULTI => "Choix multiples parmi instance d'une entité",
                     Champ::TYPE_LABEL       => "Texte non éditable",
                     Champ::TYPE_SPACER      => "Espace de séparation",
+
                 ],
             ],
             'attributes' => [

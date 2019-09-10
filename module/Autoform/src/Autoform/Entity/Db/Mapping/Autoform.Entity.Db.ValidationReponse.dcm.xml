@@ -14,7 +14,7 @@
             <join-column name="reponse" referenced-column-name="id"/>
         </many-to-one>
 
-        <field name="value"              column="value"               type="boolean"    nullable="false" />
+        <field name="value"              column="value"               type="string" length="256"   nullable="false" />
 
 
     </entity>

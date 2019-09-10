@@ -22,8 +22,8 @@ use Autoform\Service\Formulaire\FormulaireReponseServiceFactory;
 use Autoform\Service\Formulaire\FormulaireService;
 use Autoform\Service\Formulaire\FormulaireServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

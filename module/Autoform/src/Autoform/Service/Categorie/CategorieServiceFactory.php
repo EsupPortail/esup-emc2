@@ -2,23 +2,23 @@
 
 namespace Autoform\Service\Categorie;
 
-use Utilisateur\Service\User\UserService;
 use Autoform\Service\Champ\ChampService;
 use Doctrine\ORM\EntityManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Utilisateur\Service\User\UserService;
 
 class CategorieServiceFactory {
 
-    public function __invoke(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
          * @var ChampService $champService
          * @var UserService $userService
          */
-        $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        $champService = $serviceLocator->get(ChampService::class);
-        $userService = $serviceLocator->get(UserService::class);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $champService = $container->get(ChampService::class);
+        $userService = $container->get(UserService::class);
 
         /** @var CategorieService $service */
         $service = new CategorieService();

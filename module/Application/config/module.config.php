@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use UnicaenAuth\Guard\PrivilegeController;
 use Utilisateur\Service\Role\RoleService;
 use Utilisateur\Service\Role\RoleServiceFactory;
-use Zend\Mvc\Router\Http\Literal;
+use Zend\Router\Http\Literal;
 
 return [
     'bjyauthorize' => [

@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Indicateur\Controller\Indicateur\IndicateurController;
-use Indicateur\Controller\Indicateur\IndicateurControllerFactory;
+use Indicateur\Controller\IndicateurController;
+use Indicateur\Controller\IndicateurControllerFactory;
 use Indicateur\Form\Indicateur\IndicateurForm;
 use Indicateur\Form\Indicateur\IndicateurFormFactory;
 use Indicateur\Form\Indicateur\IndicateurHydrator;
@@ -12,8 +12,9 @@ use Indicateur\Provider\Privilege\IndicateurPrivileges;
 use Indicateur\Service\Indicateur\IndicateurService;
 use Indicateur\Service\Indicateur\IndicateurServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Mvc\Router\Http\Literal;
-use Zend\Mvc\Router\Http\Segment;
+use Zend\Mvc\Console\Router\Simple;
+use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -34,7 +35,15 @@ return [
                         IndicateurPrivileges::AFFICHER,
                     ],
                 ],
+                [
+                    'controller' => IndicateurController::class,
+                    'action' => [
+                        'rafraichir-console',
+                    ],
+                    'roles' => [],
+                ],
             ],
+
         ],
     ],
 
@@ -124,7 +133,24 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                ]
+                ],
+            ],
+        ],
+    ],
+
+    'console' => [
+        'router' => [
+            'routes' => [
+                'indicateur-refresh' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'indicateur-refresh',
+                        'defaults' => [
+                            'controller' => IndicateurController::class,
+                            'action' => 'rafraichir-console'
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -148,10 +174,6 @@ return [
         'factories' => [
             IndicateurHydrator::class => IndicateurHydratorFactory::class,
         ],
-    ],
-    'view_helpers' => [
-        'invokables' => [
-        ]
     ]
 
 ];
