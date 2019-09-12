@@ -1,5 +1,6 @@
 <?php
 
+use Application\Controller\FichePosteController;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
 
@@ -26,6 +27,7 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
 <div class="main">
 
     <?php if ($canAjouter) : ?>
+        <?php /** @see FichePosteController::ajouterAction() */ ?>
         <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
             <span class="icon ajouter"></span>
             Ajouter une fiche de poste
