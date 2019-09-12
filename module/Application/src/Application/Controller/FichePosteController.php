@@ -41,6 +41,7 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
+
     public function ajouterAction()
     {
         $fiche = new FichePoste();
