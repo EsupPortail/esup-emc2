@@ -5,6 +5,7 @@ namespace Application\Service\FichePoste;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
+use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
@@ -315,5 +316,23 @@ class FichePosteService {
     {
         $fiches = $this->getFichesPostes();
         return end($fiches);
+    }
+
+    /**
+     * @param Structure $structure
+     * @return FichePoste[]
+     */
+    public function getFichesPostesByStructure($structure)
+    {
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->addSelect('poste')->join('fiche.poste', 'poste')
+            ->addSelect('agent')->join('fiche.agent', 'agent')
+            ->andWhere('poste.structure = :structure')
+            ->setParameter('structure', $structure)
+            ->orderBy('agent.nomUsuel, agent.prenom');
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

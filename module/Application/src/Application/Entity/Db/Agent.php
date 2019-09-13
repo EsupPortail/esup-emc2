@@ -32,6 +32,8 @@ class Agent {
     private $grade;
     /** @var Corps */
     private $corps;
+    /** @var FichePoste */
+    private $fiche;
 
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
@@ -222,6 +224,24 @@ class Agent {
     public function setCorps($corps)
     {
         $this->corps = $corps;
+        return $this;
+    }
+
+    /**
+     * @return FichePoste
+     */
+    public function getFiche()
+    {
+        return $this->fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return Agent
+     */
+    public function setFiche($fiche)
+    {
+        $this->fiche = $fiche;
         return $this;
     }
 

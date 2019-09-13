@@ -46,8 +46,8 @@ return [
                     'action' => [
                         'editer-description'
                     ],
-                    'assertion'  => EditionStructureAssertion::class,
-                    'privileges' => StructurePrivileges::EDITER,
+                    //'assertion'  => EditionStructureAssertion::class,
+                    'privileges' => StructurePrivileges::EDITER_DESCRIPTION,
                 ],
             ],
         ],

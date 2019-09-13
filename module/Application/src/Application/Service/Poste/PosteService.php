@@ -3,6 +3,7 @@
 namespace Application\Service\Poste;
 
 use Application\Entity\Db\Poste;
+use Application\Entity\Db\Structure;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
@@ -82,6 +83,24 @@ class PosteService {
         } catch (OptimisticLockException $e) {
             throw new RuntimeException("Problème lors de la suppression en base du Poste.",$e);
         }
+    }
+
+    /**
+     * @param Structure $structure
+     * @return  Poste[]
+     */
+    public function getPostesByStructure($structure = null)
+    {
+        $qb = $this->getEntityManager()->getRepository(Poste::class)->createQueryBuilder('poste')
+            ->orderBy('poste.numeroPoste');
+
+        if ($structure !== null) {
+            $qb = $qb->andWhere('poste.structure = :structure')
+                ->setParameter('structure', $structure);
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }

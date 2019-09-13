@@ -51,7 +51,7 @@ class StructureService
      * @param string $paramName
      * @return Structure
      */
-    public function getRequestedStructure($controller, $paramName)
+    public function getRequestedStructure($controller, $paramName = 'structure')
     {
         $id = $controller->params()->fromRoute($paramName);
         $structure = $this->getStructure($id);
@@ -122,5 +122,22 @@ class StructureService
             throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
         }
         return $structure;
+    }
+
+    /**
+     * @param User $user
+     * @return Structure[]
+     */
+    public function getStructuresByGestionnaire($user)
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
+            ->andWhere('gestionnaire.id = :userId')
+            ->setParameter('userId', $user->getId())
+            ->orderBy('structure.libelleCourt')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

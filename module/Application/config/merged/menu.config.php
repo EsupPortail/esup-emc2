@@ -8,9 +8,11 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FormationPrivileges;
+use Application\Provider\Privilege\MesStructuresPrivileges;
 use Application\Provider\Privilege\PersoPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\StructurePrivileges;
 use UnicaenAuth\Guard\PrivilegeController;
 return [
     'navigation' => [
@@ -141,6 +143,14 @@ return [
                         'label' => 'Entretiens',
                         'route' => 'entretien-professionnel',
                         'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER),
+                        'pages' => [
+                        ],
+                    ],
+                    'mes-strustures' => [
+                        'order' => 100,
+                        'label' => 'Ma structure',
+                        'route' => 'mes-structures',
+                        'resource' => MesStructuresPrivileges::getResourceId(MesStructuresPrivileges::GESTION),
                         'pages' => [
                         ],
                     ],

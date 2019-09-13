@@ -1,0 +1,299 @@
+<?php
+
+/**
+ * @var User $user
+ * @var Structure[] $structures
+ * @var Structure $structure
+ * @var Agent[] $agentsSansFiche
+ * @var AgentMissionSpecifique[] $missionsSpecifiques
+ * @var FichePoste[] $fichesPostes
+ */
+
+use Application\Controller\StructureController;
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Structure;
+use Application\Provider\Privilege\FichePostePrivileges;
+use Application\Provider\Privilege\StructurePrivileges;
+use Utilisateur\Entity\Db\User;
+
+if ($structure !== null) {
+    $this->headTitle('Ma structure  : '.$structure->getLibelleCourt());
+} else {
+$this->headTitle('Ma structure');
+}
+
+/** PRIVILEGE */
+$canEditerDescription               = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER_DESCRIPTION));
+$canVoirFichePoste                  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canEditerFichePoste                = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canDetruireFichePoste              = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::DETRUIRE));
+//TODO creer les privileges
+$canEditerMissionSpecifique         = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::DETRUIRE));
+
+
+?>
+
+<?php /** TITRE *******************************************************************************************************/ ?>
+<h1 class="page-header">
+    Ma structure <br>
+    <?php if ($structure !== null) : ?>
+        <strong> <?php echo $structure->getLibelleCourt(); ?> </strong>
+    <?php else : ?>
+        <i> Aucune </i>
+    <?php endif; ?>
+</h1>
+
+<div class="main">
+
+    <?php /** OUTIL DE SELECTION DE STRUCTURE *************************************************************************/ ?>
+    <?php if (count($structures) > 1) : ?>
+    <form>
+        <label for="structure">
+            Sélectionner une structure :
+        </label>
+        <select id="structure">
+            <?php foreach ($structures as $structureOption) : ?>
+                <option> <?php echo $structureOption->getId(); ?> <?php echo $structureOption->getLibelleCourt(); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </form>
+    <?php endif; ?>
+
+    <?php if ($structure === null) : ?>
+        Aucune structure de remontée.
+    <?php else : ?>
+
+    <div class="row">
+
+        <?php /** DESCRIPTION *****************************************************************************************/ ?>
+        <div class="col-md-8" >
+            <div class="row" >
+
+                <div class="col-md-6">
+                    <h2>Description</h2>
+                </div>
+                <div class="pull-right">
+                    <br/>
+
+                    <?php if ($canEditerDescription) :?>
+                        <?php /** @see StructureController::editerDescriptionAction() */ ?>
+                        <a href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
+                           class="btn btn-primary ajax-modal action"
+                           data-event="modification"
+                        >
+                            <span class="icon editer"></span>
+                            Modifier la description
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php if ($structure->getDescription() !== null) : ?>
+                <?php echo $structure->getDescription(); ?>
+            <?php else : ?>
+                <div class="alert alert-warning">
+                    <span class="icon attention"></span>
+                    Aucune description pour la structure <strong><?php echo $structure->getLibelleCourt(); ?></strong>.
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php /** GESTIONNAIRES ***************************************************************************************/ ?>
+        <div class="col-md-4" >
+            <h2>
+                Gestionnaires
+                <span class="icon attention" style='color: darkred;' title="Tous les gestionnaires ne remontent pas ...">
+            </h2>
+
+            <ul>
+                <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
+                    <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+
+    <?php /** FICHES DE POSTE *****************************************************************************************/ ?>
+    <div >
+
+    <div class="row" >
+        <div class="col-md-6" >
+        <h2>
+            Fiche de postes
+            <span class="icon attention" style='color: darkred;' title="Ajouter une confirmation avant destruction de la fiche.">
+            <span class="badge"> <?php echo count($fichesPostes); ?> </span>
+        </h2>
+        </div>
+        <div class="pull-right" >
+            <br/>
+            <a href=""
+               class="btn btn-primary action"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une fiche de poste
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th class="agent-cell"> Agent </th>
+                <th class="libelle-cell"> Poste </th>
+                <th> Intitulé </th>
+                <th class="action-cell"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($fichesPostes as $fiche): ?>
+                <tr>
+                    <td> <?php echo $fiche->getAgent()->getDenomination(); ?> </td>
+                    <td> <?php echo $fiche->getPoste()->getNumeroPoste(); ?> </td>
+                    <td> <?php echo $fiche->getLibelle(); ?> </td>
+                    <td class="action-cell">
+                        <?php if ($canVoirFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               class="ajax-modal">
+                            <span class="icon voir" title="Voir la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                        <?php if ($canEditerFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               class="">
+                                <span class="icon editer" title="Éditer la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                        <?php if ($canDetruireFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               class="">
+                                <span class="icon detruire" title="Effacer définitivement la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon detruire" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+
+    </table>
+    </div>
+
+    <?php /** MISSIONS SPECIFIQUE *************************************************************************************/ ?>
+    <div>
+        <div class="row" >
+            <div class="col-md-6" >
+                <h2>
+                    Missions spécifiques
+                    <span class="icon question" style="color:darkgreen;" title="Le listing des agents ne comprend que les missions spécifiques en cours, toutefois il est possible de lister toutes les missions enregistrées.">
+                    <span class="icon attention" style='color: darkred;' title="Revoir les privilèges associés. <br> Ajouter une confirmation avant destruction de l'affectation.">
+                    <span class="badge"> <?php echo count($missionsSpecifiques); ?> </span>
+                </h2>
+            </div>
+            <div class="pull-right" >
+                <br/>
+                <a href="<?php echo $this->url('agent-mission-specifique/ajouter', [], ["query" => ["structure"=>$structure->getId()]], true); ?>"
+                   class="btn btn-primary action ajax-modal"
+                   data-event="modification"
+                >
+                    <span class="icon ajouter"></span>
+                    Ajouter une mission
+                </a>
+            </div>
+        </div>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th class="agent-cell"> Agent </th>
+            <th class="libelle-cell"> Missions </th>
+            <th> Période</th>
+            <th class="action-cell"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($missionsSpecifiques as $missionSpecifique) : ?>
+            <tr>
+                <td> <?php echo $missionSpecifique->getAgent()->getDenomination(); ?> </td>
+                <td> <?php echo $missionSpecifique->getMission()->getLibelle(); ?> </td>
+                <td>
+                    <?php
+                        $debut = ($missionSpecifique->getDateDebut())?$missionSpecifique->getDateDebut()->format('d/m/Y'):'---';
+                        $fin   = ($missionSpecifique->getDateFin())?$missionSpecifique->getDateFin()->format('d/m/Y'):'---';
+                    ?>
+                    <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
+                </td>
+                <td class="action-cell">
+                    <?php if ($canEditerMissionSpecifique) : ?>
+                        <a href="<?php echo $this->url('agent-mission-specifique/editer', ['affectation' => $missionSpecifique->getId()], ["query" => ["structure"=>$structure->getId()]], true); ?>"
+                           class="ajax-modal"
+                           data-event="modification"
+                        >
+                            <span class="icon editer" title="Éditer l'affectation"></span></a>
+                    <?php else : ?>
+                        <span class="icon editer" style="color:lightgray;"></span>
+                    <?php endif; ?>
+                    <?php if ($canDetruireMissionSpecifique) : ?>
+                        <a href="<?php echo $this->url('agent-mission-specifique/detruire', ['affectation' => $missionSpecifique->getId()], ["query" => ["structure"=>$structure->getId()]], true); ?>"
+                           class="">
+                            <span class="icon detruire" title="Effacer définitivement l'affectation"></span></a>
+                    <?php else : ?>
+                        <span class="icon detruire" style="color:lightgray;"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    </div>
+
+    <h2>
+        Agents non liés à une fiche de poste
+        <span class="icon question" style="color:darkgreen;" title=" Le listing des agents ne comprend que les agents marqués comme administratif. \n Que faire pour les enseignants, doctorants et autres vacataires ?">
+        <span class="badge"> <?php echo count($agentsSansFiche); ?> </span>
+    </h2>
+
+    <ul>
+    <?php foreach ($agentsSansFiche as $agent)  :?>
+        <li>
+            <?php echo $agent->getDenomination() ; ?>
+<!--            --><?php //echo $this->agent($agent); ?>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+</div>
+
+
+<style>
+    th.agent-cell {
+      width:25rem;
+    }
+    th.libelle-cell {
+        width:25rem;
+    }
+    th.action-cell {
+        width:10rem;
+    }
+    td.action-cell {
+        text-align: right;
+    }
+
+    h2 {
+        color: #3c6c8b;
+        text-decoration: none;
+    }
+
+</style>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
