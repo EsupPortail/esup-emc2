@@ -31,7 +31,7 @@ $modules = [
     'Utilisateur',
     'Indicateur',
     'Application',
-    //'ZendDeveloperTools',
+    'ZendDeveloperTools',
 
 ];
 

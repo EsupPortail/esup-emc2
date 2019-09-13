@@ -2,6 +2,7 @@
 
 namespace Application\Form\AgentMissionSpecifique;
 
+use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -114,5 +115,30 @@ class AgentMissionSpecifiqueForm extends Form {
             'debut'             => [ 'required' => true,  ],
             'fin'               => [ 'required' => false, ],
         ]));
+    }
+
+    /**
+     * @param Structure $structure
+     * @return  AgentMissionSpecifiqueForm
+     */
+    public function reinitWithStructure($structure)
+    {
+        //agent
+        $agents = $this->getAgentService()->getAgentsByStructure($structure);
+        $agentOptions = [];
+        foreach ($agents as $agent) {
+            $agentOptions[$agent->getId()] = $agent->getDenomination();
+        }
+        /** @var Select $this->get('agent') */
+        $this->get('agent')->setValueOptions($agentOptions);
+
+        //structure
+        $structureOptions = [];
+        $structureOptions[$structure->getId()] = $structure->getLibelleCourt();
+        $this->get('structure')->setValueOptions($structureOptions);
+        $this->get('structure')->setEmptyOption(null);
+
+
+        return $this;
     }
 }

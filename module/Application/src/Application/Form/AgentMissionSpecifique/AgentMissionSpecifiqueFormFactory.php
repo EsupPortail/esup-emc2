@@ -30,7 +30,7 @@ class AgentMissionSpecifiqueFormFactory {
         $form->setAgentService($agentService);
         $form->setRessourceRhService($ressourceService);
         $form->setStructureService($structureService);
-        $form->init();
+        //$form->init();
         return $form;
     }
 }

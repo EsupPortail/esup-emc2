@@ -228,6 +228,14 @@ span.icon.ko:before {
     content: "\f00d ";
 }
 
+span.icon.attention:before {
+    content: "\f071 ";
+}
+
+span.icon.question:before {
+    content: "\f059 ";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
@@ -258,7 +266,7 @@ div.main {
 }
 
 div.main h2 {
-    text-decoration: underline;
+    /**text-decoration: underline;**/
 }
 div.jumbotron#preecog {
     background-color: white;
@@ -330,8 +338,8 @@ dl.dl-horizontal dt:after {
 
 a.action {
     width: 20em;
-    margin:1px;
     text-indent: 0em;
+    margin: 5px;
 }
 
 th.action {

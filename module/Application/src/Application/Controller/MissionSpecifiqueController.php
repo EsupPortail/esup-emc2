@@ -50,9 +50,17 @@ class MissionSpecifiqueController extends AbstractActionController
 
     public function ajouterAction() {
 
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $affectation = new AgentMissionSpecifique();
         $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], [], true));
+        if ($structure === null) {
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], [], true));
+        } else {
+            $form = $form->reinitWithStructure($structure);
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
+        }
         $form->bind($affectation);
 
         /** @var Request $request */
@@ -68,7 +76,7 @@ class MissionSpecifiqueController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Affection d\'une nouvelle mission spécifique à un agent',
+            'title' => 'Affectation d\'une nouvelle mission spécifique à un agent',
             'form' => $form,
         ]);
         return $vm;
@@ -86,9 +94,18 @@ class MissionSpecifiqueController extends AbstractActionController
     }
 
     public function editerAction() {
+
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
         $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], [], true));
+        if ($structure === null) {
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], [], true));
+        } else {
+            $form = $form->reinitWithStructure($structure);
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], ["query" =>["structure" => $structure->getId()]], true));
+        }
         $form->bind($affectation);
 
         /** @var Request $request */
@@ -123,8 +140,16 @@ class MissionSpecifiqueController extends AbstractActionController
     }
 
     public function detruireAction() {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
         $this->getMissionSpecifiqueService()->delete($affectation);
-        return $this->redirect()->toRoute('agent-mission-specifique', [], [], true);
+
+        if ($structure === null) {
+            return $this->redirect()->toRoute('agent-mission-specifique', [], [], true);
+        } else {
+            return $this->redirect()->toRoute('mes-structures', ['structure' => $structure->getId()], [], true);
+        }
     }
 }
