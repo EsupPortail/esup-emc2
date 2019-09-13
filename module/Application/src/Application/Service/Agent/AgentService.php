@@ -164,7 +164,6 @@ class AgentService {
             ->setParameter('today', $today)
             ->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
-
         ;
 
         if ($structure !== null) {

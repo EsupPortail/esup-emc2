@@ -155,21 +155,21 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
                     <td> <?php echo $fiche->getLibelle(); ?> </td>
                     <td class="action-cell">
                         <?php if ($canVoirFichePoste) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
                                class="ajax-modal">
                             <span class="icon voir" title="Voir la fiche"></span></a>
                         <?php else : ?>
                             <span class="icon voir" style="color:lightgray;"></span>
                         <?php endif; ?>
                         <?php if ($canEditerFichePoste) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
                                class="">
                                 <span class="icon editer" title="Éditer la fiche"></span></a>
                         <?php else : ?>
                             <span class="icon editer" style="color:lightgray;"></span>
                         <?php endif; ?>
                         <?php if ($canDetruireFichePoste) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
                                class="">
                                 <span class="icon detruire" title="Effacer définitivement la fiche"></span></a>
                         <?php else : ?>
@@ -189,7 +189,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
             <div class="col-md-6" >
                 <h2>
                     Missions spécifiques
-                    <span class="icon question" style="color:darkgreen;" title="Le listing des agents ne comprend que les missions spécifiques en cours, toutefois il est possible de lister toutes les missions enregistrées.">
+<!--                    <span class="icon question" style="color:darkgreen;" title="Le listing des agents ne comprend que les missions spécifiques en cours, toutefois il est possible de lister toutes les missions enregistrées.">-->
                     <span class="icon attention" style='color: darkred;' title="Revoir les privilèges associés. <br> Ajouter une confirmation avant destruction de l'affectation.">
                     <span class="badge"> <?php echo count($missionsSpecifiques); ?> </span>
                 </h2>
@@ -252,7 +252,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
 
     <h2>
         Agents non liés à une fiche de poste
-        <span class="icon question" style="color:darkgreen;" title=" Le listing des agents ne comprend que les agents marqués comme administratif. \n Que faire pour les enseignants, doctorants et autres vacataires ?">
+<!--        <span class="icon question" style="color:darkgreen;" title=" Le listing des agents ne comprend que les agents marqués comme administratif. \n Que faire pour les enseignants, doctorants et autres vacataires ?">-->
         <span class="badge"> <?php echo count($agentsSansFiche); ?> </span>
     </h2>
 

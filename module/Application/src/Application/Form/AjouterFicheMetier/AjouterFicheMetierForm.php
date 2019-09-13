@@ -6,6 +6,7 @@ use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwar
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
+use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -13,6 +14,26 @@ use Zend\InputFilter\Factory;
 class AjouterFicheMetierForm extends Form {
     use FicheMetierServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
+
+    private $previous;
+
+    /**
+     * @return mixed
+     */
+    public function getPrevious()
+    {
+        return $this->previous;
+    }
+
+    /**
+     * @param mixed $previous
+     * @return AjouterFicheMetierForm
+     */
+    public function setPrevious($previous)
+    {
+        $this->previous = $previous;
+        return $this;
+    }
 
     public function init()
     {
@@ -27,6 +48,14 @@ class AjouterFicheMetierForm extends Form {
             ],
             'attributes' => [
                 'id' => 'fiche_type',
+            ],
+        ]);
+
+        $this->add([
+            'type' => Hidden::class,
+            'name' => 'old',
+            'attributes' => [
+                'value' => $this->previous,
             ],
         ]);
 
@@ -76,6 +105,7 @@ class AjouterFicheMetierForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'fiche_type'        => [ 'required' => true,  ],
             'quotite'           => [ 'required' => true,  ],
+            'old'               => [ 'required' => false,  ],
         ]));
     }
 
