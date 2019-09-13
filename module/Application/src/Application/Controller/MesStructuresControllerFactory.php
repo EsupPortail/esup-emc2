@@ -25,6 +25,7 @@ class MesStructuresControllerFactory {
         $agentService = $container->get(AgentService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $missionService = $container->get(MissionSpecifiqueService::class);
+        $posteService = $container->get(PosteService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 

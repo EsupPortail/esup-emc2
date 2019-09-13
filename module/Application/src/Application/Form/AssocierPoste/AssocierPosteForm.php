@@ -3,37 +3,34 @@
 namespace Application\Form\AssocierPoste;
 
 use Application\Entity\Db\Poste;
+use Application\Entity\Db\Structure;
+use Application\Form\AssocierAgent\AssocierAgentForm;
+use Application\Service\Poste\PosteServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
 class AssocierPosteForm extends Form {
     use EntityManagerAwareTrait;
+    use PosteServiceAwareTrait;
 
     public function init()
     {
         //Selection obligatoire AFFECTATION
         $this->add([
-            'type' => ObjectSelect::class,
+            'type' => Select::class,
             'name' => 'poste',
             'options' => [
                 'label' => "Poste :",
-                'empty_option' => "Sélectionner un poste",
-                'object_manager' => $this->getEntityManager(),
-                'target_class' => Poste::class,
-                'property' => 'numeroPoste',
-                'find_method' => [
-                    'name' => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy' => ['numeroPoste' => 'ASC'],
-                    ],
-                ],
-                'disable_inarray_validator' => true,
+                'empty_option' => "Sélectionner un poste ...",
+                'value_options' => $this->generateSelectOptions(),
             ],
             'attributes' => [
                 'id' => 'poste',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 
@@ -52,5 +49,33 @@ class AssocierPosteForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+    }
+
+    private function generateSelectOptions()
+    {
+        $postes = $this->getPosteService()->getPostes();
+        $options = [];
+        foreach ($postes as $poste) {
+            $options[$poste->getId()] = $poste->getNumeroPoste();
+        }
+        return $options;
+    }
+
+    /**
+     * @param Structure $structure
+     * @return AssocierPosteForm
+     */
+    public function reinitWithStructure($structure)
+    {
+        //agent
+        $postes = $this->getPosteService()->getPostesByStructure($structure);
+        $posteOptions = [];
+        foreach ($postes as $poste) {
+            $posteOptions[$poste->getId()] = $poste->getNumeroPoste();
+        }
+        /** @var Select $this->get('agent') */
+        $this->get('poste')->setValueOptions($posteOptions);
+
+        return $this;
     }
 }

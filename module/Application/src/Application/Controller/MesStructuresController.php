@@ -40,6 +40,7 @@ class MesStructuresController extends AbstractActionController {
         $missionsSpecifiques = null;
         $fichesPostes = null;
         if ($structure != null) {
+            //TODO sans fiche de poste
             $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructure($structure);
             $agentsSansFiche = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure);
             $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructure($structure);
@@ -65,12 +66,9 @@ class MesStructuresController extends AbstractActionController {
             throw new RuntimeException("L'ajout de fiche ne peut être fait d'avec une structure donnée !");
         }
 
-        $agentsSansFiche = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure);
-        $postes = $this->getPosteService()->getPostesByStructure($structure);
-        return new ViewModel([
-            'structure' => $structure,
-            'agentsSansFiche' => $agentsSansFiche,
-            'postes' => $postes,
-        ]);
+        $fiche = new FichePoste();
+        $fiche->setLibelle("Fiche de poste sans titre");
+        $this->getFichePosteService()->create($fiche);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
     }
 }

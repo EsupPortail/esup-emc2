@@ -42,7 +42,7 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'mes-structures' => [
+                    'ajouter-fiche-poste' => [
                         'type'  => Segment::class,
                         'options' => [
                             'route'    => '/ajouter-fiche-poste',

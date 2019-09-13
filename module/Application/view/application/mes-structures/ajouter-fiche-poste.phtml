@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @see MesStructuresController::ajouterFichePosteAction()
+ *
+ * @var Structure $structure
+ * @var FichePoste $fiche
+ * @var Agent[] $agents
+ * @var Poste[] $postes
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Poste;
+use Application\Entity\Db\Structure;
+
+?>
+
+<h1 class="page-header">
+    Édition d'une fiche de poste <br/>
+    <?php if ($structure !== null) : ?>
+        <strong> <?php echo $structure->getLibelleCourt(); ?></strong>
+    <?php else: ?>
+        <strong style="color:darkred">Aucune Structure </strong>
+    <?php endif; ?>
+</h1>
+
+<div class="main">
+    <h2>
+
+    </h2>
+</div>
+
+<style>
+    h2 {
+        color: #3c6c8b;
+        text-decoration: none;
+    }
+</style>
