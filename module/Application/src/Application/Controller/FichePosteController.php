@@ -110,8 +110,13 @@ class FichePosteController extends AbstractActionController {
 
     public function detruireAction()
     {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $this->getFichePosteService()->delete($fiche);
+
+        if ($structure !== null) return $this->redirect()->toRoute('mes-structures', ['structure' => $structure->getId()], [], true);
         return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
@@ -215,7 +220,7 @@ class FichePosteController extends AbstractActionController {
                 $this->getFichePosteService()->createFicheTypeExterne($ficheTypeExterne);
 
                 if ($ficheTypeExterne->getPrincipale()) {
-                    var_dump('principale is 1');
+//                    var_dump('principale is 1');
                     foreach ($fiche->getFichesMetiers() as $ficheMetier) {
                         if ($ficheMetier !== $ficheTypeExterne && $ficheMetier->getPrincipale()) {
                             $ficheMetier->setPrincipale(false);
@@ -251,6 +256,7 @@ class FichePosteController extends AbstractActionController {
         $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
         $ficheTypeExterne = $this->getFichePosteService()->getFicheTypeExterne($ficheTypeExterneId);
+        $previous = $ficheTypeExterne->getQuotite();
 
         $form = $this->getAjouterFicheTypeForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true));
@@ -260,9 +266,8 @@ class FichePosteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-
             $form->setData($data);
-
+            $data["old"] = $previous;
             $res = $this->checkValidite($fichePoste, $data);
             if ($res) return $res;
 
@@ -373,15 +378,15 @@ class FichePosteController extends AbstractActionController {
     private function checkValidite($fiche, $data)
     {
         $cut = false;
-        if ($data['est_principale'] === "1"  && $data['quotite'] < 50) {
+        if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La fichie métier principale doit avoir une quotité d'au moins 50%.");
         }
-        if ($data['est_principale'] === "0" && $data['quotite'] >= 50) {
+        if ($data['est_principale'] === "0" && ((int) $data['quotite']) >= 50) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La fichie métier non principale doit avoir une quotité infiérieure à 50%.");
         }
-        if ($fiche->getQuotiteTravaillee() + $data['quotite'] > 100) {
+        if ($fiche->getQuotiteTravaillee() + ((int) $data['quotite']) - ((int) $data['old']) > 100) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La somme des quotités travaillées ne peut dépasser 100%.");
         }
