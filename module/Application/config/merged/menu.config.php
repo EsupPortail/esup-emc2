@@ -217,7 +217,7 @@ return [
 //                        'order' => -10,
                         'label' => 'Fiches',
 //                        'title' => "Fiche métier",
-                        'route' => 'activite',
+                        'route' => 'fiche-poste',
                         'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER),
                         'pages' => [
                             [

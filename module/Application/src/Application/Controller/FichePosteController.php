@@ -9,6 +9,7 @@ use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
+use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
 use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
@@ -16,6 +17,7 @@ use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -25,6 +27,7 @@ class FichePosteController extends AbstractActionController {
     /** Service **/
     use AgentServiceAwareTrait;
     use FichePosteServiceAwareTrait;
+    use StructureServiceAwareTrait;
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
     use AssocierAgentFormAwareTrait;
@@ -80,10 +83,14 @@ class FichePosteController extends AbstractActionController {
 
     public function editerAction()
     {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
         return new ViewModel([
             'fiche' => $fiche,
+            'structure' => $structure,
         ]);
     }
 
@@ -112,11 +119,18 @@ class FichePosteController extends AbstractActionController {
 
     public function associerAgentAction()
     {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
         /** @var AssocierAgentForm $form */
         $form = $this->getAssocierAgentForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-agent', ['fiche-poste' => $fiche->getId()], [], true));
+
+        if ($structure !== null) {
+            $form = $form->reinitWithStructure($structure);
+        }
         $form->bind($fiche);
 
         /**@var Request $request */
@@ -143,11 +157,17 @@ class FichePosteController extends AbstractActionController {
 
     public function associerPosteAction()
     {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
-        /** @var AssocierAgentForm $form */
+        /** @var AssocierPosteForm $form */
         $form = $this->getAssocierPosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-poste', ['fiche-poste' => $fiche->getId()], [], true));
+
+        if ($structure !== null) {
+            $form = $form->reinitWithStructure($structure);
+        }
         $form->bind($fiche);
 
         /**@var Request $request */

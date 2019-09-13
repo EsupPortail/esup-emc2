@@ -129,7 +129,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         </div>
         <div class="pull-right" >
             <br/>
-            <a href=""
+            <a href="<?php echo $this->url('mes-structures/ajouter-fiche-poste', ['structure' => $structure->getId()], [], true); ?>"
                class="btn btn-primary action"
             >
                 <span class="icon ajouter"></span>
