@@ -36,6 +36,7 @@ class StructureService
     public function getStructure($id)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->andWhere('structure.id = :id')
             ->setParameter('id', $id);
         try {

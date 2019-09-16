@@ -106,6 +106,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
             <h2>
                 Gestionnaires
                 <span class="icon attention" style='color: darkred;' title="Tous les gestionnaires ne remontent pas ...">
+                <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
             </h2>
 
             <ul>
