@@ -157,10 +157,10 @@ class AgentService {
         /** !!TODO!! faire le lien entre agent et fiche de poste */
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
-//            ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
+            ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
             ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
             ->andWhere('statut.administratif = :true')
-//            ->andWhere('fiche.id IS NULL')
+            ->andWhere('fiche.id IS NULL')
             ->setParameter('today', $today)
             ->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
