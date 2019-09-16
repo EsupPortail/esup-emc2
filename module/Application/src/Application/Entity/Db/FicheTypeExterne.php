@@ -122,4 +122,17 @@ class FicheTypeExterne {
         return $this;
     }
 
+    /**
+     * @return FicheTypeExterne
+     */
+    public function clone_it()
+    {
+        $result = new FicheTypeExterne();
+        $result->setFicheType($this->getFicheType());
+        $result->setQuotite($this->getQuotite());
+        $result->setPrincipale($this->getPrincipale());
+        $result->setActivites($this->getActivites());
+        return $result;
+    }
+
 }

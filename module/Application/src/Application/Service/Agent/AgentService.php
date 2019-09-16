@@ -58,7 +58,7 @@ class AgentService {
      * @param string $paramName
      * @return Agent
      */
-    public function getRequestedAgent($controller, $paramName)
+    public function getRequestedAgent($controller, $paramName = 'agent')
     {
         $id = $controller->params()->fromRoute($paramName);
         $agent = $this->getAgent($id);
@@ -164,11 +164,12 @@ class AgentService {
             ->setParameter('today', $today)
             ->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
+            ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
         if ($structure !== null) {
             $qb = $qb->andWhere('statut.structure = :structure')
-                ->setParameter('structure', $structure);
+                     ->setParameter('structure', $structure);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -190,7 +191,6 @@ class AgentService {
             throw new RuntimeException("Problème lors de la création des dates");
         }
 
-        /** !!TODO!! faire le lien entre agent et fiche de poste */
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')

@@ -48,7 +48,7 @@ class AssocierAgentForm extends Form {
 
     private function generateSelectOptions()
     {
-        $agents = $this->getAgentService()->getAgents();
+        $agents = $this->getAgentService()->getAgentsSansFichePosteByStructure();
         $options = [];
         foreach ($agents as $agent) {
             $options[$agent->getId()] = $agent->getDenomination(); /* . ' ('.$agent->getNumeroPoste().')';*/
@@ -64,7 +64,7 @@ class AssocierAgentForm extends Form {
     public function reinitWithStructure($structure)
     {
         //agent
-        $agents = $this->getAgentService()->getAgentsByStructure($structure);
+        $agents = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure);
         $agentOptions = [];
         foreach ($agents as $agent) {
             $agentOptions[$agent->getId()] = $agent->getDenomination();

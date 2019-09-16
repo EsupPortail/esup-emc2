@@ -324,12 +324,24 @@ class FichePosteService {
      */
     public function getFichesPostesByStructure($structure)
     {
+        try {
+            $today = new DateTime();
+            $noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la création des dates");
+        }
+
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            ->addSelect('poste')->join('fiche.poste', 'poste')
             ->addSelect('agent')->join('fiche.agent', 'agent')
-            ->andWhere('poste.structure = :structure')
+            ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->andWhere('statut.structure = :structure')
+            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.administratif = :true')
             ->setParameter('structure', $structure)
-            ->orderBy('agent.nomUsuel, agent.prenom');
+            ->setParameter('today', $today)
+            ->setParameter('noEnd', $noEnd)
+            ->setParameter('true', 'O')
+            ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
         $result = $qb->getQuery()->getResult();

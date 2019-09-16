@@ -2,13 +2,10 @@
 
 namespace Application;
 
-use Application\Controller\ImmobilierController;
 use Application\Controller\MesStructuresController;
 use Application\Controller\MesStructuresControllerFactory;
 use Application\Provider\Privilege\MesStructuresPrivileges;
-use Application\Provider\Privilege\RessourceRhPrivileges;
 use UnicaenAuth\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [
@@ -20,6 +17,7 @@ return [
                     'action' => [
                         'index',
                         'ajouter-fiche-poste',
+                        'dupliquer-fiche-poste',
                     ],
                     'privileges' => [
                         MesStructuresPrivileges::GESTION,
@@ -45,10 +43,22 @@ return [
                     'ajouter-fiche-poste' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-fiche-poste',
+                            'route'    => '/ajouter-fiche-poste[/:agent]',
                             'defaults' => [
                                 'controller' => MesStructuresController::class,
                                 'action'     => 'ajouter-fiche-poste',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => []
+                    ],
+                    'dupliquer-fiche-poste' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/dupliquer-fiche-poste/:agent',
+                            'defaults' => [
+                                'controller' => MesStructuresController::class,
+                                'action'     => 'dupliquer-fiche-poste',
                             ],
                         ],
                         'may_terminate' => true,

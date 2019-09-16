@@ -11,6 +11,7 @@ use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
 use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
+use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
@@ -31,8 +32,9 @@ class FichePosteController extends AbstractActionController {
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
     use AssocierAgentFormAwareTrait;
-    use FichePosteCreationFormAwareTrait;
     use AssocierPosteFormAwareTrait;
+    use AssocierTitreFormAwareTrait;
+    use FichePosteCreationFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
 
     public function indexAction()
@@ -75,8 +77,20 @@ class FichePosteController extends AbstractActionController {
     public function afficherAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $titre = 'Fiche de poste <br/>';
+        $titre .= '<strong>';
+        if ($fiche->getFicheTypeExternePrincipale()) {
+            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+        } else {
+            $titre .= "<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale";
+        }
+        if($fiche->getLibelle() !== null) {
+            $titre .= "(" .$fiche->getLibelle(). ")";
+        }
+        $titre .= '</strong>';
+
         return new ViewModel([
-            'title' => 'Fiche de poste <br/> <em>'.$fiche->getLibelle().'</em>',
+            'title' => $titre,
            'fiche' => $fiche,
         ]);
     }
@@ -110,14 +124,61 @@ class FichePosteController extends AbstractActionController {
 
     public function detruireAction()
     {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
+        $params = [];
+        if ($structure !== null) $params["structure"] = $structure->getId();
 
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFichePosteService()->delete($fiche);
+            //TODO c'est vraiment crade ...
+            return $this->redirect()->toRoute('home');
+        }
+
+        $vm = new ViewModel();
+        if ($fiche !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la fiche de poste  de " . $fiche->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-poste/detruire', ["affectation" => $fiche->getId()], ["query" => $params], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** TITRE *********************************************************************************************************/
+
+    public function associerTitreAction()
+    {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $this->getFichePosteService()->delete($fiche);
 
-        if ($structure !== null) return $this->redirect()->toRoute('mes-structures', ['structure' => $structure->getId()], [], true);
-        return $this->redirect()->toRoute('fiche-poste', [], [], true);
+        /** @var AssocierAgentForm $form */
+        $form = $this->getAssocierTitreForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /**@var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFichePosteService()->update($fiche);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Associer un titre',
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
     /** AGENT *********************************************************************************************************/

@@ -2,11 +2,8 @@
 
 namespace Application\Form\AssocierPoste;
 
-use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
-use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Service\Poste\PosteServiceAwareTrait;
-use DoctrineModule\Form\Element\ObjectSelect;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;

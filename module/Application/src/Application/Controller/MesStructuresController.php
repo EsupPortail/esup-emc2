@@ -11,6 +11,7 @@ use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Utilisateur\Service\User\UserServiceAwareTrait;
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -68,13 +69,59 @@ class MesStructuresController extends AbstractActionController {
     public function ajouterFichePosteAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
         if ($structure === null) {
             throw new RuntimeException("L'ajout de fiche ne peut être fait d'avec une structure donnée !");
         }
 
         $fiche = new FichePoste();
-        $fiche->setLibelle("Fiche de poste sans titre");
+        if ($agent !== null) {
+            $fiche->setAgent($agent);
+        }
         $this->getFichePosteService()->create($fiche);
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+    }
+
+    public function dupliquerFichePosteAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $fiches = $this->getFichePosteService()->getFichesPostesByStructure($structure);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $ficheId = $data['fiche'];
+            $fiche = $this->getFichePosteService()->getFichePoste($ficheId);
+
+            $nouvelleFiche = new FichePoste();
+            $nouvelleFiche->setLibelle($fiche->getLibelle());
+            $nouvelleFiche->setAgent($agent);
+
+            //dupliquer specificite
+            $specifite = $fiche->getSpecificite()->clone_it();
+            $this->getFichePosteService()->createSpecificitePoste($specifite);
+            $nouvelleFiche->setSpecificite($specifite);
+
+            $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
+
+            //dupliquer fiche metier externe
+            foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {
+                $nouvelleFicheMetier = $ficheMetierExterne->clone_it();
+                $nouvelleFicheMetier->setFichePoste($nouvelleFiche);
+                $nouvelleFicheMetier = $this->getFichePosteService()->createFicheTypeExterne($nouvelleFicheMetier);
+            }
+
+            /**  Commenter pour eviter perte de temps et clignotement de la modal */
+            // return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+        }
+
+        return new ViewModel([
+           'title' => "Duplication d'une fiche de poste pour ".$agent->getDenomination()."",
+           'structure' => $structure,
+           'agent' => $agent,
+           'fiches' => $fiches,
+        ]);
     }
 }

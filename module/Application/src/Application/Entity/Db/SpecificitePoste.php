@@ -156,5 +156,18 @@ class SpecificitePoste {
         return $this;
     }
 
+    /** @return SpecificitePoste */
+    public function clone_it()
+    {
+        $result = new SpecificitePoste();
+        $result->setSpecificite($this->getSpecificite());
+        $result->setEncadrement($this->getEncadrement());
+        $result->setRelationsInternes($this->getRelationsInternes());
+        $result->setRelationsExternes($this->getRelationsExternes());
+        $result->setContraintes($this->getContraintes());
+        $result->setMoyens($this->getMoyens());
+        return $result;
+    }
+
 
 }
