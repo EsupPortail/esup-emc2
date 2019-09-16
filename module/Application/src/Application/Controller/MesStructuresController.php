@@ -31,6 +31,12 @@ class MesStructuresController extends AbstractActionController {
 
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
+        if ($structure !== null && $structure->getId() === '417') {
+            $aya = $this->getUserService()->getUtilisateurByUsername('corbela');
+            $dupontc = $this->getUserService()->getUtilisateurByUsername('dupontc01');
+            $structure->addGestionnaire($aya);
+            $structure->addGestionnaire($dupontc);
+        }
         if ($structure === null && count($structures) === 1) {
             return $this->redirect()->toRoute('mes-structures', ['structure' => $structures[0]->getId()], [], true);
         }
