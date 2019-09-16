@@ -25,7 +25,12 @@ $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePriv
     <div class="col-md-8">
         <h1 class="page-header">
             Fiche métier <br/>
-            <strong> <?php echo $fiche->getLibelle(); ?> </strong>
+            <strong>
+                <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
+                <?php if($fiche->getLibelle() !== null) : ?>
+                    (<?php echo $fiche->getLibelle(); ?>)
+                <?php endif; ?>
+            </strong>
         </h1>
     </div>
     <div class="pull-right">
@@ -33,8 +38,8 @@ $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePriv
         <br/>
         <br/>
         <br/>
-        <a href=""
-           class="btn btn-primary action"
+        <a href="<?php echo $this->url('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+           class="btn btn-primary action ajax-modal"
            data-event="modification"
         >
             <span class="icon editer"></span>

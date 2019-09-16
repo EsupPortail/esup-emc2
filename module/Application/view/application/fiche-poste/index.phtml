@@ -84,7 +84,9 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if ($canDetruire) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
                                 <span class="icon detruire" title="Détruire la fiche de poste"></span></a>
                         <?php endif; ?>
                     </td>
@@ -98,6 +100,13 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
 <script>
     $(function() {
         $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+    $(function() {
+        $("body").on("edition", function (event) {
             event.div.modal('hide');
             window.location.href = 'fiche-poste/editer';
         });

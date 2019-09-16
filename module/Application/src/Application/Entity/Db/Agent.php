@@ -134,7 +134,7 @@ class Agent {
      */
     public function getDenomination()
     {
-        return $this->getPrenom().' '.$this->getNomUsuel();
+        return ucwords(strtolower($this->getPrenom()), "-").' '.$this->getNomUsuel();
 
     }
     /**

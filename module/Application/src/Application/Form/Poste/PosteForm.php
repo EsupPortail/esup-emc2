@@ -14,6 +14,7 @@ use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
 class PosteForm extends Form  {
     use AgentServiceAwareTrait;
@@ -175,6 +176,18 @@ class PosteForm extends Form  {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        //inputFIlter
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'numero_poste'      => [ 'required' => true,  ],
+            'structure'         => [ 'required' => true,  ],
+            'localisation'      => [ 'required' => false, ],
+            'correspondance'    => [ 'required' => true,  ],
+            'rattachement'      => [ 'required' => true,  ],
+            'domaine'           => [ 'required' => true,  ],
+            'fonction'          => [ 'required' => true,  ],
+            'lien'              => [ 'required' => false, ],
+        ]));
     }
 
     private function generateCorrespondanceSelectOptions()

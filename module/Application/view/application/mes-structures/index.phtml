@@ -9,6 +9,7 @@
  * @var FichePoste[] $fichesPostes
  */
 
+use Application\Controller\MesStructuresController;
 use Application\Controller\StructureController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
@@ -124,7 +125,6 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         <div class="col-md-6" >
         <h2>
             Fiche de postes
-            <span class="icon attention" style='color: darkred;' title="Ajouter une confirmation avant destruction de la fiche.">
             <span class="badge"> <?php echo count($fichesPostes); ?> </span>
         </h2>
         </div>
@@ -151,9 +151,14 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         <tbody>
             <?php foreach ($fichesPostes as $fiche): ?>
                 <tr>
-                    <td> <?php echo $fiche->getAgent()->getDenomination(); ?> </td>
-                    <td> <?php echo $fiche->getPoste()->getNumeroPoste(); ?> </td>
-                    <td> <?php echo $fiche->getLibelle(); ?> </td>
+                    <td> <?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"<span class='icon attention' style='color:darkred;'></span> Aucun agent"; ?> </td>
+                    <td> <?php echo ($fiche->getPoste())?$fiche->getPoste()->getNumeroPoste():"<span class='icon attention' style='color:darkred;'></span> Aucun poste"; ?> </td>
+                    <td>
+                        <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
+                        <?php if($fiche->getLibelle() !== null) : ?>
+                            (<?php echo $fiche->getLibelle(); ?>)
+                        <?php endif; ?>
+                    </td>
                     <td class="action-cell">
                         <?php if ($canVoirFichePoste) : ?>
                             <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
@@ -171,7 +176,8 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
                         <?php endif; ?>
                         <?php if ($canDetruireFichePoste) : ?>
                             <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
-                               class="">
+                               class="ajax-modal"
+                               data-event="modification">
                                 <span class="icon detruire" title="Effacer définitivement la fiche"></span></a>
                         <?php else : ?>
                             <span class="icon detruire" style="color:lightgray;"></span>
@@ -190,8 +196,6 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
             <div class="col-md-6" >
                 <h2>
                     Missions spécifiques
-<!--                    <span class="icon question" style="color:darkgreen;" title="Le listing des agents ne comprend que les missions spécifiques en cours, toutefois il est possible de lister toutes les missions enregistrées.">-->
-                    <span class="icon attention" style='color: darkred;' title="Revoir les privilèges associés. <br> Ajouter une confirmation avant destruction de l'affectation.">
                     <span class="badge"> <?php echo count($missionsSpecifiques); ?> </span>
                 </h2>
             </div>
@@ -239,7 +243,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
                     <?php endif; ?>
                     <?php if ($canDetruireMissionSpecifique) : ?>
                         <a href="<?php echo $this->url('agent-mission-specifique/detruire', ['affectation' => $missionSpecifique->getId()], ["query" => ["structure"=>$structure->getId()]], true); ?>"
-                           class="">
+                           class="ajax-modal" data-event="modification">
                             <span class="icon detruire" title="Effacer définitivement l'affectation"></span></a>
                     <?php else : ?>
                         <span class="icon detruire" style="color:lightgray;"></span>
@@ -253,17 +257,47 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
 
     <h2>
         Agents non liés à une fiche de poste
-<!--        <span class="icon question" style="color:darkgreen;" title=" Le listing des agents ne comprend que les agents marqués comme administratif. \n Que faire pour les enseignants, doctorants et autres vacataires ?">-->
         <span class="badge"> <?php echo count($agentsSansFiche); ?> </span>
     </h2>
 
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th class="agent-cell"> Agent </th>
+                <th></th>
+                <th class="action-cell"> Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($agentsSansFiche as $agent)  :?>
+                <tr>
+                    <td> <?php echo $agent->getDenomination() ; ?> </td>
+                    <td></td>
+                    <td class="action-cell">
+                        <?php if ($canEditerFichePoste) : ?>
+                            <?php /** @see MesStructuresController::ajouterFichePosteAction() */ ?>
+                            <a href="<?php echo $this->url('mes-structures/ajouter-fiche-poste', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>">
+                                <span class="icon ajouter"      title="Ajouter une fiche de poste"></span></a>
+                        <?php else : ?>
+                            <span class="icon ajouter"      style="color:lightgray"></span>
+                        <?php endif; ?>
+                        <?php if ($canEditerFichePoste AND !empty($fichesPostes)) : ?>
+                            <?php /** @see MesStructuresController::dupliquerFichePosteAction() */ ?>
+                            <a href="<?php echo $this->url('mes-structures/dupliquer-fiche-poste', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="duplication"
+                            >
+                                <span class="icon cloner"       title="Cloner une fiche pour cet&middot;te agent"></span>
+                        <?php else : ?>
+                            <span class="icon cloner"       style="color:lightgray"></span>
+                        <?php endif; ?>
+                    </td>
+
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
     <ul>
-    <?php foreach ($agentsSansFiche as $agent)  :?>
-        <li>
-            <?php echo $agent->getDenomination() ; ?>
-<!--            --><?php //echo $this->agent($agent); ?>
-        </li>
-    <?php endforeach; ?>
+
     </ul>
     <?php endif; ?>
 </div>
@@ -295,6 +329,13 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+    });
+
+    $(function() {
+        $("body").on("duplication", function (event) {
+            event.div.modal('hide');
+            window.location.href = '../fiche-poste/editer?structure=' + <?php echo $structure->getId(); ?>
         });
     });
 </script>

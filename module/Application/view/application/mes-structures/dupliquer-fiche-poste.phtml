@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @var FichePoste[] $fiches
+ * @var Structure $structure
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Structure;
+
+?>
+
+<form
+    method="post"
+    action="<?php echo $this->url('mes-structures/dupliquer-fiche-poste', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
+>
+    <select id="fiche" name="fiche">
+        <?php foreach ($fiches as $fiche) : ?>
+            <option value="<?php echo $fiche->getId(); ?>"> <?php echo $fiche->getLibelle(); ?> - <?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?> </option>
+        <?php endforeach; ?>
+    </select>
+    <input type="submit" value="Utiliser cette fiche de poste">
+</form>

@@ -16,6 +16,10 @@ use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormFactory;
 use Application\Form\AssocierPoste\AssocierPosteHydrator;
 use Application\Form\AssocierPoste\AssocierPosteHydratorFactory;
+use Application\Form\AssocierTitre\AssocierTitreForm;
+use Application\Form\AssocierTitre\AssocierTitreFormFactory;
+use Application\Form\AssocierTitre\AssocierTitreHydrator;
+use Application\Form\AssocierTitre\AssocierTitreHydratorFactory;
 use Application\Form\FichePosteCreation\FichePosteCreationForm;
 use Application\Form\FichePosteCreation\FichePosteCreationFormFactory;
 use Application\Form\FichePosteCreation\FichePosteCreationHydrator;
@@ -45,6 +49,7 @@ return [
                         'detruire',
                         'associer-agent',
                         'associer-poste',
+                        'associer-titre',
                         'editer-specificite',
                         'ajouter-fiche-metier',
                         'retirer-fiche-metier',
@@ -159,7 +164,6 @@ return [
                                 'action'     => 'associer-agent',
                             ],
                         ],
-
                     ],
                     'associer-poste' => [
                         'type' => Segment::class,
@@ -171,7 +175,17 @@ return [
                                 'action'     => 'associer-poste',
                             ],
                         ],
-
+                    ],
+                    'associer-titre' => [
+                        'type' => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/associer-titre/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'associer-titre',
+                            ],
+                        ],
                     ],
                     'ajouter-fiche-metier' => [
                         'type'  => Segment::class,
@@ -248,6 +262,7 @@ return [
             AjouterFicheMetierForm::class => AjouterFicheMetierFormFactory::class,
             AssocierAgentForm::class => AssocierAgentFormFactory::class,
             AssocierPosteForm::class => AssocierPosteFormFactory::class,
+            AssocierTitreForm::class => AssocierTitreFormFactory::class,
             FichePosteCreationForm::class => FichePosteCreationFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
         ],
@@ -260,6 +275,7 @@ return [
             AjouterFicheMetierHydrator::class => AjouterFicheMetierHydratorFactory::class,
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
+            AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
             FichePosteCreationHydrator::class => FichePosteCreationHydratorFactory::class,
         ],
     ]

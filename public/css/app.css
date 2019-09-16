@@ -88,6 +88,10 @@ div.modal div.modal-header {
     background-color: #337ab7;
     color: white;
 }
+
+div.modal h2.modal-title{
+    color: white;
+}
 button.close {
     color: white;
     opacity: 1;
@@ -236,6 +240,10 @@ span.icon.question:before {
     content: "\f059 ";
 }
 
+span.icon.cloner:before {
+    content: "\f24d ";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
@@ -261,7 +269,7 @@ h1 {
 div.main {
     background-color: white;
     border-radius: 5px;
-    padding: 10px;
+    padding: 15px;
     margin: 5px;
 }
 
@@ -337,6 +345,11 @@ dl.dl-horizontal dt:after {
 }
 
 a.action {
+    width: 20em;
+    text-indent: 0em;
+    margin: 5px;
+}
+input.action {
     width: 20em;
     text-indent: 0em;
     margin: 5px;

@@ -139,17 +139,32 @@ class MissionSpecifiqueController extends AbstractActionController
         return $this->redirect()->toRoute('agent-mission-specifique', [], [], true);
     }
 
-    public function detruireAction() {
+    public function detruireAction()
+    {
+        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
+        $params = [];
+        if ($structure !== null) $params["structure"] = $structure->getId();
 
-        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
-        $this->getMissionSpecifiqueService()->delete($affectation);
-
-        if ($structure === null) {
-            return $this->redirect()->toRoute('agent-mission-specifique', [], [], true);
-        } else {
-            return $this->redirect()->toRoute('mes-structures', ['structure' => $structure->getId()], [], true);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueService()->delete($affectation);
+            //TODO c'est vraiment crade ...
+            return $this->redirect()->toRoute('home');
         }
+
+        $vm = new ViewModel();
+        if ($affectation != null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'affectation de " . $affectation->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent-mission-specifique/detruire', ["affectation" => $affectation->getId()], ["query" => $params], true),
+            ]);
+        }
+        return $vm;
     }
 }
