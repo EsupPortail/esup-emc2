@@ -80,6 +80,7 @@ class StructureService
     }
 
     /**
+     * @param bool $ouverte
      * @return array
      */
     public function getStructuresAsGroupOptions($ouverte = true)
@@ -87,13 +88,21 @@ class StructureService
         $structures = $this->getStructures($ouverte);
 
         $dictionnary = [];
-
-        $result = $qb->getQuery()->getResult();
+        foreach ($structures as $structure) {
+            $dictionnary[$structure->getType()][] = $structure;
+        }
 
         $options = [];
-        /** @var Structure $item */
-        foreach ($result as $item) {
-            if ($item->getId() !== null) $options[$item->getId()] = $item->getLibelleLong();
+        foreach ($dictionnary as $type => $structuresStored) {
+            $optionsoptions = [];
+            foreach ($structuresStored as $structure) {
+                $optionsoptions[$structure->getId()] = $structure->getLibelleCourt();
+            }
+            $array = [
+                'label' => $type,
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
         }
         return $options;
     }
