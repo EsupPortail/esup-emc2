@@ -31,19 +31,19 @@ class ApplicationsForm extends Form {
             ]
         ]);
         // formation
-        $this->add([
-            'name' => 'formation',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Formation : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'formation form-control',
-            ]
-        ]);
+//        $this->add([
+//            'name' => 'formation',
+//            'type' => 'textarea',
+//            'options' => [
+//                'label' => 'Formation : ',
+//                'label_attributes' => [
+//                    'class' => 'control-label',
+//                ],
+//            ],
+//            'attributes' => [
+//                'class' => 'formation form-control',
+//            ]
+//        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -61,12 +61,12 @@ class ApplicationsForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'description' => [
+            'applications' => [
                 'required' => false,
             ],
-            'formation' => [
-                'required' => false,
-            ],
+//            'formation' => [
+//                'required' => false,
+//            ],
         ]));
     }
 

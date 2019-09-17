@@ -8,6 +8,7 @@ use Application\Form\FicheMetier\ApplicationsForm;
 use Application\Form\FicheMetier\FormationBaseForm;
 use Application\Form\FicheMetier\FormationComportementaleForm;
 use Application\Form\FicheMetier\FormationOperationnelleForm;
+use Application\Form\FicheMetier\FormationsForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\FicheMetier\FicheMetierService;
@@ -28,21 +29,26 @@ class FicheMetierControllerFactory {
         $ressourceRhService = $container->get(RessourceRhService::class);
 
         /**
+         * @var LibelleForm $libelleForm
          * @var ActiviteForm $activiteForm
          * @var ActiviteExistanteForm $activiteExistanteForm
          * @var ApplicationsForm $applicationsForm
+         * @var FormationsForm $formationsForm
+         *
          * @var FormationBaseForm $formationBaseForm
          * @var FormationComportementaleForm $formationComportementalForm
          * @var FormationOperationnelleForm $formationOperationnelleForm
-         * @var LibelleForm $libelleForm
          */
+        $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
         $activiteExistanteForm = $container->get('FormElementManager')->get(ActiviteExistanteForm::class);
         $applicationsForm = $container->get('FormElementManager')->get(ApplicationsForm::class);
+        $formationsForm = $container->get('FormElementManager')->get(FormationsForm::class);
+
         $formationBaseForm = $container->get('FormElementManager')->get(FormationBaseForm::class);
         $formationComportementalForm = $container->get('FormElementManager')->get(FormationComportementaleForm::class);
         $formationOperationnelleForm = $container->get('FormElementManager')->get(FormationOperationnelleForm::class);
-        $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
+
 
 
         /** @var FicheMetierController $controller */
@@ -52,13 +58,16 @@ class FicheMetierControllerFactory {
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setRessourceRhService($ressourceRhService);
 
+        $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);
         $controller->setActiviteExistanteForm($activiteExistanteForm);
         $controller->setApplicationsForm($applicationsForm);
+        $controller->setFormationsForm($formationsForm);
+
         $controller->setFormationBaseForm($formationBaseForm);
         $controller->setFormationComportementaleForm($formationComportementalForm);
         $controller->setFormationOperationnelleForm($formationOperationnelleForm);
-        $controller->setLibelleForm($libelleForm);
+
 
 
         return $controller;

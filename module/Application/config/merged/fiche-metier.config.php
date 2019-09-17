@@ -19,6 +19,10 @@ use Application\Form\FicheMetier\FormationComportementaleHydrator;
 use Application\Form\FicheMetier\FormationOperationnelleForm;
 use Application\Form\FicheMetier\FormationOperationnelleFormFactory;
 use Application\Form\FicheMetier\FormationOperationnelleHydrator;
+use Application\Form\FicheMetier\FormationsForm;
+use Application\Form\FicheMetier\FormationsFormFactory;
+use Application\Form\FicheMetier\FormationsHydrator;
+use Application\Form\FicheMetier\FormationsHydratorFactory;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
@@ -65,6 +69,7 @@ return [
                         'modifier-operationnelle',
                         'modifier-comportementale',
                         'modifier-application',
+                        'modifier-formation',
                         'ajouter',
                     ],
                     'privileges' => [
@@ -264,6 +269,17 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'modifier-formation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-formation/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'modifier-formation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                 ],
             ],
         ],
@@ -287,11 +303,11 @@ return [
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
-
             FormationBaseForm::class => FormationBaseFormFactory::class,
             FormationOperationnelleForm::class => FormationOperationnelleFormFactory::class,
             FormationComportementaleForm::class => FormationComportementaleFormFactory::class,
             ApplicationsForm::class => ApplicationsFormFactory::class,
+            FormationsForm::class => FormationsFormFactory::class,
 
 
         ],
@@ -301,11 +317,11 @@ return [
             FormationBaseHydrator::class => FormationBaseHydrator::class,
             FormationOperationnelleHydrator::class => FormationOperationnelleHydrator::class,
             FormationComportementaleHydrator::class => FormationComportementaleHydrator::class,
-
         ],
         'factories' => [
             LibelleHydrator::class => LibelleHydratorFactory::class,
             ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
+            FormationsHydrator::class => FormationsHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
