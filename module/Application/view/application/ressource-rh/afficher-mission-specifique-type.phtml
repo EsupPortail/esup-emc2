@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @see RessourceRhController::afficherTypeAction()
+ *
+ * @var string $title
+ * @var MissionSpecifiqueType $type
+ */
+
+use Application\Controller\RessourceRhController;
+use Application\Entity\Db\MissionSpecifiqueType;
+
+?>
+
+<dl>
+    <dt> Libellé </dt>
+    <dd> <?php echo $type->getLibelle(); ?> </dd>
+    <dt> Dernière modification </dt>
+    <dd>
+        <?php echo $type->getHistoModificateur()->getDisplayName(); ?>
+        <br/>
+        <?php echo $type->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+    </dd>
+    <dt>
+        Liste des missions
+        <span class="badge"> <?php echo count($type->getMissions()); ?></span>
+    </dt>
+    <dd>
+        <ul>
+            <?php foreach($type->getMissions() as $mission) : ?>
+                <li> <?php echo $mission->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
+</dl>
+

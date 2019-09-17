@@ -7,9 +7,12 @@ use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MissionSpecifique;
+use Application\Entity\Db\MissionSpecifiqueTheme;
+use Application\Entity\Db\MissionSpecifiqueType;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -311,10 +314,8 @@ class RessourceRhService {
      */
     public function createMissionSpecifique($mission)
     {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
         try {
+            $user = $this->getUserService()->getConnectedUser();
             $date = new DateTime();
         } catch (Exception $e) {
             throw new RuntimeException("Problème lors de la récupération de la date", $e);
@@ -341,9 +342,7 @@ class RessourceRhService {
      */
     public function updateMissionSpecifique($mission)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
         try {
             $date = new DateTime();
         } catch (Exception $e) {
@@ -368,9 +367,7 @@ class RessourceRhService {
      */
     public function historiseMissionSpecifique($mission)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
         try {
             $date = new DateTime();
         } catch (Exception $e) {
@@ -423,6 +420,354 @@ class RessourceRhService {
 
         return $mission;
     }
+
+    /** MISSION SPECIFIQUE TYPE ***************************************************************************************/
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $ordre
+     * @return MissionSpecifiqueType[]
+     */
+    public function getMissionsSpecifiquesTypes($historiser= false, $champ = 'libelle', $ordre ='ASC')
+    {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueType::class)->createQueryBuilder('type')
+            ->orderBy('type.' . $champ, $ordre)
+        ;
+
+        if ($historiser === false) {
+            $qb = $qb->andWhere('type.histoDestruction IS NULL');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $ordre
+     * @return array
+     */
+    public function getMissionsSpecifiquesTypesAsOptions($historiser= false, $champ = 'libelle', $ordre ='ASC')
+    {
+        $types = $this->getMissionsSpecifiquesTypes($historiser, $champ, $ordre);
+        $array = [];
+        foreach ($types as $type) {
+            $array[$type->getId()] = $type->getLibelle();
+        }
+        return $array;
+    }
+
+    /**
+     * @param integer $id
+     * @return MissionSpecifiqueType
+     */
+    public function getMissionSpecifiqueType($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueType::class)->createQueryBuilder('type')
+            ->andWhere('type.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (ORMException $e) {
+            throw new RuntimeException('Plusieurs MissionSpecifiqueType partagent le même id ['.$id.'].', $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return MissionSpecifiqueType
+     */
+    public function getRequestedMissionSpecifiqueType($controller, $paramName = 'mission-specifique-type')
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $result = $this->getMissionSpecifiqueType($id);
+        return $result;
+    }
+
+    /**
+     * @param MissionSpecifiqueType $type
+     * @return MissionSpecifiqueType
+     */
+    public function createMissionSpecifiqueType($type)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch(Exception $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de la récupération des données d'historisation", $e);
+        }
+        $type->setHistoCreateur($user);
+        $type->setHistoCreation($date);
+        $type->setHistoModificateur($user);
+        $type->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->persist($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueType $type
+     * @return MissionSpecifiqueType
+     */
+    public function updateMissionSpecifiqueType($type)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch(Exception $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de la récupération des données d'historisation", $e);
+        }
+        $type->setHistoModificateur($user);
+        $type->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueType $type
+     * @return MissionSpecifiqueType
+     */
+    public function historizeMissionSpecifiqueType($type)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch(Exception $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de la récupération des données d'historisation", $e);
+        }
+        $type->setHistoDestructeur($user);
+        $type->setHistoDestruction($date);
+
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueType $type
+     * @return MissionSpecifiqueType
+     */
+    public function restoreMissionSpecifiqueType($type)
+    {
+        $type->setHistoDestructeur(null);
+        $type->setHistoDestruction(null);
+
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueType $type
+     * @return MissionSpecifiqueType
+     */
+    public function deleteMissionSpecifiqueType($type)
+    {
+        try {
+            $this->getEntityManager()->remove($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /** MISSION SPECIFIQUE THEME **************************************************************************************/
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $ordre
+     * @return MissionSpecifiqueTheme[]
+     */
+    public function getMissionsSpecifiquesThemes($historiser= false, $champ = 'libelle', $ordre ='ASC')
+    {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('type')
+            ->orderBy('type.' . $champ, $ordre)
+        ;
+
+        if ($historiser === false) {
+            $qb = $qb->andWhere('type.histoDestruction IS NULL');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $ordre
+     * @return array
+     */
+    public function getMissionsSpecifiquesThemesAsOptions($historiser= false, $champ = 'libelle', $ordre ='ASC')
+    {
+        $types = $this->getMissionsSpecifiquesThemes($historiser, $champ, $ordre);
+        $array = [];
+        foreach ($types as $type) {
+            $array[$type->getId()] = $type->getLibelle();
+        }
+        return $array;
+    }
+
+    /**
+     * @param integer $id
+     * @return MissionSpecifiqueTheme
+     */
+    public function getMissionSpecifiqueTheme($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('type')
+            ->andWhere('type.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (ORMException $e) {
+            throw new RuntimeException('Plusieurs MissionSpecifiqueTheme partagent le même id ['.$id.'].', $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return MissionSpecifiqueTheme
+     */
+    public function getRequestedMissionSpecifiqueTheme($controller, $paramName = 'mission-specifique-theme')
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $result = $this->getMissionSpecifiqueTheme($id);
+        return $result;
+    }
+
+    /**
+     * @param MissionSpecifiqueTheme $type
+     * @return MissionSpecifiqueTheme
+     */
+    public function createMissionSpecifiqueTheme($type)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch(Exception $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de la récupération des données d'historisation", $e);
+        }
+        $type->setHistoCreateur($user);
+        $type->setHistoCreation($date);
+        $type->setHistoModificateur($user);
+        $type->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->persist($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueTheme $type
+     * @return MissionSpecifiqueTheme
+     */
+    public function updateMissionSpecifiqueTheme($type)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch(Exception $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de la récupération des données d'historisation", $e);
+        }
+        $type->setHistoModificateur($user);
+        $type->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueTheme $type
+     * @return MissionSpecifiqueTheme
+     */
+    public function historizeMissionSpecifiqueTheme($type)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch(Exception $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de la récupération des données d'historisation", $e);
+        }
+        $type->setHistoDestructeur($user);
+        $type->setHistoDestruction($date);
+
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueTheme $type
+     * @return MissionSpecifiqueTheme
+     */
+    public function restoreMissionSpecifiqueTheme($type)
+    {
+        $type->setHistoDestructeur(null);
+        $type->setHistoDestruction(null);
+
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /**
+     * @param MissionSpecifiqueTheme $type
+     * @return MissionSpecifiqueTheme
+     */
+    public function deleteMissionSpecifiqueTheme($type)
+    {
+        try {
+            $this->getEntityManager()->remove($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
+        }
+        return $type;
+    }
+
+    /** CARTOGRAPHIE **************************************************************************************************/
 
     /**
      * @return Metier[]
