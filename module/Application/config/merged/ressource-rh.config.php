@@ -4,10 +4,10 @@ namespace Application;
 
 use Application\Controller\RessourceRhController;
 use Application\Controller\RessourceRhControllerFactory;
-use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
-use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
-use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
-use Application\Form\MissionSpecifique\MissionSpecifiqueHydratorFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueForm;
+use Application\Form\RessourceRh\MissionSpecifiqueFormFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueHydrator;
+use Application\Form\RessourceRh\MissionSpecifiqueHydratorFactory;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
@@ -61,6 +61,7 @@ return [
                         'cartographie',
                         'export-cartographie',
 
+                        'afficher-mission-specifique',
                         'afficher-mission-specifique-type',
                         'afficher-mission-specifique-theme',
                     ],
@@ -388,6 +389,16 @@ return [
                                     'defaults' => [
                                         'controller' => RessourceRhController::class,
                                         'action'     => 'ajouter-mission-specifique',
+                                    ],
+                                ],
+                            ],
+                            'afficher' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher/:mission',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'afficher-mission-specifique',
                                     ],
                                 ],
                             ],

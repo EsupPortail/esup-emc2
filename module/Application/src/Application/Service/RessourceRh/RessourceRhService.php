@@ -280,6 +280,45 @@ class RessourceRhService {
     }
 
     /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $ordre
+     * @return MissionSpecifique[]
+     */
+    public function getMisssionsSpecifiquesAsGroupOptions($historiser = false, $champ = 'libelle', $ordre = 'ASC')
+    {
+        $themes = $this->getMissionsSpecifiquesThemes($historiser, $champ, $ordre);
+        $sanstheme = $this->getMissionsSpecifiquesSansTheme();
+        $options = [];
+
+        foreach ($themes as $theme) {
+            $optionsoptions = [];
+            foreach ($theme->getMissions() as $mission) {
+                $optionsoptions[$mission->getId()] = $mission->getLibelle();
+            }
+            $array = [
+                'label' => $theme->getLibelle(),
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        if (!empty($sanstheme)) {
+            $optionsoptions = [];
+            foreach ($sanstheme as $mission) {
+                $optionsoptions[$mission->getId()] = $mission->getLibelle();
+            }
+            $array = [
+                'label' => "Sans thème",
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        return $options;
+    }
+
+    /**
      * @param integer $id
      * @return MissionSpecifique
      */
@@ -301,11 +340,25 @@ class RessourceRhService {
      * @param string $paramName
      * @return MissionSpecifique
      */
-    public function getRequestedMissionSpecifique($controller, $paramName)
+    public function getRequestedMissionSpecifique($controller, $paramName = 'mission')
     {
         $id = $controller->params()->fromRoute($paramName);
         $mission = $this->getMissionSpecifique($id);
         return $mission;
+    }
+
+    /**
+     * @return MissionSpecifique[]
+     */
+    private function getMissionsSpecifiquesSansTheme()
+    {
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
+            ->orderBy('mission.libelle', 'ASC')
+            ->andWhere('mission.theme IS NULL')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /**
@@ -782,4 +835,6 @@ class RessourceRhService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+
 }

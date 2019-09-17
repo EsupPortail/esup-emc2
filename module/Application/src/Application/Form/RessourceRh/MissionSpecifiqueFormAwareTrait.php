@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\MissionSpecifique;
+namespace Application\Form\RessourceRh;
 
 trait MissionSpecifiqueFormAwareTrait {
 
