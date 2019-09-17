@@ -1,25 +1,25 @@
-<?php 
+<?php
 
-namespace Application\Form\AssocierTitre;
+namespace Application\Form\FormationTheme;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class AssocierTitreForm extends Form {
+class FormationThemeForm extends Form {
 
-    public function init()
-    {
-        // libelle
+    public function init() {
+
+        //libelle
         $this->add([
             'type' => Text::class,
-            'name' => 'titre',
+            'name' => 'libelle',
             'options' => [
-                'label' => "Complément de titre :",
+                'label' => "Libelle :",
             ],
             'attributes' => [
-                'id' => 'titre',
+                'id' => 'libelle',
             ],
         ]);
         // button
@@ -38,10 +38,9 @@ class AssocierTitreForm extends Form {
             ],
         ]);
 
+        //Contraintes
         $this->setInputFilter((new Factory())->createInputFilter([
-            'titre' => [
-                'required' => false,
-            ],
+            'libelle' => [ 'required' => true, ],
         ]));
     }
 }

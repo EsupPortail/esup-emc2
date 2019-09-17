@@ -8,6 +8,10 @@ use Application\Form\Formation\FormationForm;
 use Application\Form\Formation\FormationFormFactory;
 use Application\Form\Formation\FormationHydrator;
 use Application\Form\Formation\FormationHydratorFactory;
+use Application\Form\FormationTheme\FormationThemeForm;
+use Application\Form\FormationTheme\FormationThemeFormFactory;
+use Application\Form\FormationTheme\FormationThemeHydrator;
+use Application\Form\FormationTheme\FormationThemeHydratorFactory;
 use Application\Provider\Privilege\FormationPrivileges;
 use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
@@ -24,6 +28,8 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+
+                        'afficher-theme',
                     ],
                     'privileges' => [
                         FormationPrivileges::AFFICHER,
@@ -36,6 +42,11 @@ return [
                         'editer',
                         'historiser',
                         'restaurer',
+
+                        'ajouter-theme',
+                        'editer-theme',
+                        'historiser-theme',
+                        'restaurer-theme',
                     ],
                     'privileges' => [
                         FormationPrivileges::EDITER,
@@ -45,6 +56,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'detruire',
+                        'detruire-theme',
                     ],
                     'privileges' => [
                         FormationPrivileges::DETRUIRE,
@@ -56,6 +68,78 @@ return [
 
     'router'          => [
         'routes' => [
+            'formation-theme' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/formation-theme',
+                    'defaults' => [
+                        'controller' => FormationController::class,
+                    ],
+                ],
+                'may_terminate' => false,
+                'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:formation-theme',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'afficher-theme',
+                            ],
+                        ],
+                    ],
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'ajouter-theme',
+                            ],
+                        ],
+                    ],
+                    'editer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/editer/:formation-theme',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'editer-theme',
+                            ],
+                        ],
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:formation-theme',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'historiser-theme',
+                            ],
+                        ],
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:formation-theme',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'restaurer-theme',
+                            ],
+                        ],
+                    ],
+                    'detruire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire/:formation-theme',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'detruire-theme',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             'formation' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -145,11 +229,13 @@ return [
     'form_elements' => [
         'factories' => [
             FormationForm::class => FormationFormFactory::class,
+            FormationThemeForm::class => FormationThemeFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             FormationHydrator::class => FormationHydratorFactory::class,
+            FormationThemeHydrator::class => FormationThemeHydratorFactory::class,
         ],
     ]
 
