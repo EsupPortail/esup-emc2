@@ -113,12 +113,10 @@ return [
 
     'public_files' => [
         'inline_scripts' => [
-            '100_' => 'js/jquery.ui.datepicker-fr.js',
-//            '111_' => 'https://gest.unicaen.fr/public/bootstrap-confirmation-2.4.0/bootstrap-confirmation.min.js',
+//            '100_' => 'js/jquery.ui.datepicker-fr.js',
             '111_' => 'vendor/DataTables-1.10.18/datatables.min.js',
             '112_' => 'vendor/font-awesome-5.0.9/fontawesome-all.min.js',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/js/bootstrap-select.min.js',
-            '124_' => 'vendor/vakata-jstree-3.3.4/dist/jstree.min.js',
             '150_' => 'js/tinymce/js/tinymce/tinymce.js',
             '151_' => 'js/form_fiche.js',
         ],
@@ -127,7 +125,6 @@ return [
 //            '111_' => 'https://gest.unicaen.fr/public/open-sans-gh-pages/open-sans.css',
             '111_' => 'vendor/DataTables-1.10.18/datatables.min.css',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
-            '121_' => 'vendor/vakata-jstree-3.3.4/dist/themes/proton/style.min.css',
         ],
         'images' => [
             '100_' => 'img/PrEECoG.svg',
