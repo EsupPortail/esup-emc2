@@ -58,7 +58,7 @@ class AgentMissionSpecifiqueForm extends Form {
             'options' => [
                 'label' => "Structure :",
                 'empty_option' => 'Sélectionner la structure à affecter ...',
-                'value_options' => $this->getStructureService()->getStructuresAsOptions(),
+                'value_options' => $this->getStructureService()->getStructuresAsGroupOptions(),
             ],
             'attributes' => [
                 'id' => 'structure',
