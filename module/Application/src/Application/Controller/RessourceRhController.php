@@ -3,21 +3,21 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Domaine;
-use Application\Entity\Db\Metier;
 use Application\Entity\Db\FamilleProfessionnelle;
+use Application\Entity\Db\Metier;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\MissionSpecifiqueTheme;
 use Application\Entity\Db\MissionSpecifiqueType;
-use Application\Form\RessourceRh\MissionSpecifiqueThemeFormAwareTrait;
-use Application\Form\RessourceRh\MissionSpecifiqueTypeFormAwareTrait;
-use Application\Form\MissionSpecifique\MissionSpecifiqueFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormAwareTrait;
-use Application\Form\RessourceRh\FonctionFormAwareTrait;
 use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\FamilleProfessionnelleFormAwareTrait;
+use Application\Form\RessourceRh\FonctionFormAwareTrait;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormAwareTrait;
+use Application\Form\RessourceRh\MissionSpecifiqueFormAwareTrait;
+use Application\Form\RessourceRh\MissionSpecifiqueThemeFormAwareTrait;
+use Application\Form\RessourceRh\MissionSpecifiqueTypeFormAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
@@ -351,6 +351,15 @@ class RessourceRhController extends AbstractActionController {
             'missions' => $missions,
             'types' => $types,
             'themes' => $themes,
+        ]);
+    }
+
+    public function afficherMissionSpecifiqueAction() {
+        $mission = $this->getRessourceRhService()->getRequestedMissionSpecifique($this);
+
+        return new ViewModel([
+            'title' => "Affichage d'une mission spécifique",
+            'mission' => $mission,
         ]);
     }
 

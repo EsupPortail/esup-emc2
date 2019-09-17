@@ -80,6 +80,25 @@ class StructureService
     }
 
     /**
+     * @return array
+     */
+    public function getStructuresAsGroupOptions($ouverte = true)
+    {
+        $structures = $this->getStructures($ouverte);
+
+        $dictionnary = [];
+
+        $result = $qb->getQuery()->getResult();
+
+        $options = [];
+        /** @var Structure $item */
+        foreach ($result as $item) {
+            if ($item->getId() !== null) $options[$item->getId()] = $item->getLibelleLong();
+        }
+        return $options;
+    }
+
+    /**
      * @param Structure $structure
      * @param User $gestionnaire
      * @return Structure

@@ -247,6 +247,8 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             <tr>
 <!--                <th> Id </th>-->
                 <th> Libelle </th>
+                <th> Type </th>
+                <th> Thème </th>
                 <th> #Agent </th>
                 <th> Modificateur </th>
                 <th class="action"> Action </th>
@@ -256,6 +258,8 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
             <?php foreach ($missions as $mission) : ?>
                 <tr>
                     <td> <?php echo $mission->getLibelle(); ?> </td>
+                    <td> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"Aucun"; ?> </td>
+                    <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"Aucun"; ?> </td>
                     <td> <?php echo count($mission->getAffectations()); ?> </td>
                     <td> <small>
                             <?php echo $mission->getHistoModificateur()->getDisplayName(); ?> <br/>
@@ -263,6 +267,15 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                         </small>
                     </td>
                     <td>
+                        <?php if ($canVoirRessource) : ?>
+                            <?php /** @see RessourceRhController::afficherMissionSpecifiqueAction() */ ?>
+                            <a href="<?php echo $this->url('ressource-rh/mission-specifique/afficher', ['mission' => $mission->getId()], [], true); ?>"
+                               class="ajax-modal"
+                            >
+                                <span class="icon voir" title="Afficher la mission"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgray"></span>
+                        <?php endif; ?>
                         <?php if ($canEditerRessource) : ?>
                             <a href="<?php echo $this->url('ressource-rh/mission-specifique/modifier', ['mission' => $mission->getId()], [], true); ?>"
                                data-event="modification"

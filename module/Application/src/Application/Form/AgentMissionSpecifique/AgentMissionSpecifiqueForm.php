@@ -42,7 +42,7 @@ class AgentMissionSpecifiqueForm extends Form {
             'options' => [
                 'label' => "Mission* :",
                 'empty_option' => 'Sélectionner la mission à affecter ...',
-                'value_options' => $this->getRessourceRhService()->getMisssionsSpecifiquesAsOption(),
+                'value_options' => $this->getRessourceRhService()->getMisssionsSpecifiquesAsGroupOptions(),
             ],
             'attributes' => [
                 'id' => 'mission',
