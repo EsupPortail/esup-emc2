@@ -35,6 +35,20 @@ class FormationService {
     }
 
     /**
+     * @param string $champ
+     * @param string $order
+     * @return Formation[]
+     */
+    private function getFormationsSansThemes($champ = 'libelle', $order = 'ASC')
+    {
+        $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+            ->andWhere('formation.theme IS NULL')
+            ->andWhere('formation.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+    /**
      * @param int $id
      * @return Formation
      */
@@ -216,6 +230,45 @@ class FormationService {
             $array[$theme->getId()] = $theme->getLibelle();
         }
         return $array;
+    }
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $order
+     * @return array
+     */
+    public function getFormationsThemesAsGroupOptions($historiser = false, $champ = 'libelle', $order = 'ASC')
+    {
+        $themes = $this->getFormationsThemes();
+        $sanstheme = $this->getFormationsSansThemes();
+        $options = [];
+
+        foreach ($themes as $theme) {
+            $optionsoptions = [];
+            foreach ($theme->getFormations() as $formation) {
+                $optionsoptions[$formation->getId()] = $formation->getLibelle();
+            }
+            $array = [
+                'label' => $theme->getLibelle(),
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        if (!empty($sanstheme)) {
+            $optionsoptions = [];
+            foreach ($sanstheme as $formation) {
+                $optionsoptions[$formation->getId()] = $formation->getLibelle();
+            }
+            $array = [
+                'label' => "Sans thème",
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        return $options;
     }
 
     /**

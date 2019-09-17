@@ -69,6 +69,10 @@ use Application\Entity\Db\FicheTypeExterne;
 
                     <?php
                         $applications = [];
+                        foreach ($fiche->getFicheType()->getApplications() as $application) {
+                            $applications[] = $application->getLibelle();
+                        }
+
                         foreach ($fiche->getFicheType()->getActivites() as $activite) {
                             $idActivite = $activite->getActivite()->getId();
                             if (array_search($idActivite, $activites) !== false) {
@@ -91,6 +95,10 @@ use Application\Entity\Db\FicheTypeExterne;
 
                      <?php
                         $formations = [];
+                        //formations de base
+                        foreach ($fiche->getFicheType()->getFormations() as $formation) {
+                            $formations[] = $formation->getLibelle();
+                        }
 
                         //formations liees aux missions actives
                         foreach($fiche->getFicheType()->getActivites() as $activite) {
