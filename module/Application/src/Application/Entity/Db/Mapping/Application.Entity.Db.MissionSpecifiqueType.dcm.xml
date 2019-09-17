@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\MissionSpecifique" table="mission_specifique">
+    <entity name="Application\Entity\Db\MissionSpecifiqueType" table="mission_specifique_type">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
@@ -8,14 +8,7 @@
 
         <field name="libelle"           type="string" length="256"      column="libelle"                  nullable="false"/>
 
-        <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="mission" field="affectations"/>
-
-        <many-to-one target-entity="Application\Entity\Db\MissionSpecifiqueTheme"  field="theme">
-            <join-column name="theme_id" referenced-column-name="id"/>
-        </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\MissionSpecifiqueType"  field="type">
-            <join-column name="type_id" referenced-column-name="id"/>
-        </many-to-one>
+        <one-to-many target-entity="Application\Entity\Db\MissionSpecifique" mapped-by="type" field="missions"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
@@ -29,7 +22,6 @@
         <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="id"/>
         </many-to-one>
-
 
     </entity>
 </doctrine-mapping>

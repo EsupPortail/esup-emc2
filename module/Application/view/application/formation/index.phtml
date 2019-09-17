@@ -1,11 +1,14 @@
 <?php
 
 /**
+ * @see RessourceRhController::indexMissionSpecifiqueAction()
+ *
  * @var Formation[] $formations
  * @var FormationTheme[] $themes
  */
 
 use Application\Controller\FormationController;
+use Application\Controller\RessourceRhController;
 use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationTheme;
 use Application\Provider\Privilege\FormationPrivileges;
@@ -16,13 +19,11 @@ $canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivil
 $canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::EDITER));
 $canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::DETRUIRE));
 
+$this->headTitle("Index des formations");
 ?>
 
 <h1 class="page-header">
-    Formations
-    <span class="badge">
-        <?php echo count($formations); ?>
-    </span>
+    Index des formations
 </h1>
 
 <div class="main">
