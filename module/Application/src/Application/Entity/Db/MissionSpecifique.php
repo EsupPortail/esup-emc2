@@ -12,6 +12,10 @@ class MissionSpecifique {
     private $id;
     /** @var string */
     private $libelle;
+    /** @var MissionSpecifiqueTheme */
+    private $theme;
+    /** @var MissionSpecifiqueType */
+    private $type;
     /** @var ArrayCollection */
     private $affectations;
 
@@ -53,6 +57,42 @@ class MissionSpecifique {
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+        return $this;
+    }
+
+    /**
+     * @return MissionSpecifiqueTheme
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param MissionSpecifiqueTheme $theme
+     * @return MissionSpecifique
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+        return $this;
+    }
+
+    /**
+     * @return MissionSpecifiqueType
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param MissionSpecifiqueType $type
+     * @return MissionSpecifique
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
         return $this;
     }
 

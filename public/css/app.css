@@ -88,6 +88,10 @@ div.modal div.modal-header {
     background-color: #337ab7;
     color: white;
 }
+
+div.modal h2.modal-title{
+    color: white;
+}
 button.close {
     color: white;
     opacity: 1;
@@ -228,6 +232,18 @@ span.icon.ko:before {
     content: "\f00d ";
 }
 
+span.icon.attention:before {
+    content: "\f071 ";
+}
+
+span.icon.question:before {
+    content: "\f059 ";
+}
+
+span.icon.cloner:before {
+    content: "\f24d ";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
@@ -253,12 +269,12 @@ h1 {
 div.main {
     background-color: white;
     border-radius: 5px;
-    padding: 10px;
+    padding: 15px;
     margin: 5px;
 }
 
 div.main h2 {
-    text-decoration: underline;
+    /**text-decoration: underline;**/
 }
 div.jumbotron#preecog {
     background-color: white;
@@ -330,8 +346,13 @@ dl.dl-horizontal dt:after {
 
 a.action {
     width: 20em;
-    margin:1px;
     text-indent: 0em;
+    margin: 5px;
+}
+input.action {
+    width: 20em;
+    text-indent: 0em;
+    margin: 5px;
 }
 
 th.action {

@@ -36,6 +36,7 @@ class StructureService
     public function getStructure($id)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->andWhere('structure.id = :id')
             ->setParameter('id', $id);
         try {
@@ -51,7 +52,7 @@ class StructureService
      * @param string $paramName
      * @return Structure
      */
-    public function getRequestedStructure($controller, $paramName)
+    public function getRequestedStructure($controller, $paramName = 'structure')
     {
         $id = $controller->params()->fromRoute($paramName);
         $structure = $this->getStructure($id);
@@ -74,6 +75,34 @@ class StructureService
         /** @var Structure $item */
         foreach ($result as $item) {
             if ($item->getId() !== null) $options[$item->getId()] = $item->getLibelleLong();
+        }
+        return $options;
+    }
+
+    /**
+     * @param bool $ouverte
+     * @return array
+     */
+    public function getStructuresAsGroupOptions($ouverte = true)
+    {
+        $structures = $this->getStructures($ouverte);
+
+        $dictionnary = [];
+        foreach ($structures as $structure) {
+            $dictionnary[$structure->getType()][] = $structure;
+        }
+
+        $options = [];
+        foreach ($dictionnary as $type => $structuresStored) {
+            $optionsoptions = [];
+            foreach ($structuresStored as $structure) {
+                $optionsoptions[$structure->getId()] = $structure->getLibelleCourt();
+            }
+            $array = [
+                'label' => $type,
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
         }
         return $options;
     }
@@ -122,5 +151,23 @@ class StructureService
             throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
         }
         return $structure;
+    }
+
+    /**
+     * @param User $user
+     * @return Structure[]
+     */
+    public function getStructuresByGestionnaire($user)
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.gestionnaires', 'gestionnaireSelection')
+            ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
+            ->andWhere('gestionnaireSelection.id = :userId')
+            ->setParameter('userId', $user->getId())
+            ->orderBy('structure.libelleCourt')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
@@ -165,6 +166,7 @@ $canEditer = true;
         </div>
         <div class="row">
             <div class="col-md-1">
+                <?php /** @see FicheMetierController::modifierApplicationAction() **/ ?>
                 <a class="btn btn-default mini ajax-modal"
                    data-event="modification"
                    href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true); ?>"
@@ -180,6 +182,26 @@ $canEditer = true;
                             <li> <?php echo $application->getLibelle(); ?> </li>
                         <?php endforeach; ?>
                     </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <?php /** @see FicheMetierController::modifierFormationAction() **/ ?>
+                <a class="btn btn-default mini ajax-modal"
+                   data-event="modification"
+                   href="<?php echo $this->url('fiche-metier-type/modifier-formation', ['id' => $fiche->getId()], [], true); ?>"
+                >
+                    <span class="icon editer"></span>
+                </a>
+            </div>
+            <div class="col-md-11">
+                <h3> Formations</h3>
+                <ul>
+                    <?php /** @var Application $application */ ?>
+                    <?php foreach($fiche->getFormations() as $formation) : ?>
+                        <li> <?php echo $formation->getLibelle(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         </div>
     </div>

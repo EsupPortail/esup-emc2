@@ -3,17 +3,21 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Domaine;
-use Application\Entity\Db\Metier;
 use Application\Entity\Db\FamilleProfessionnelle;
+use Application\Entity\Db\Metier;
 use Application\Entity\Db\MissionSpecifique;
-use Application\Form\MissionSpecifique\MissionSpecifiqueFormAwareTrait;
+use Application\Entity\Db\MissionSpecifiqueTheme;
+use Application\Entity\Db\MissionSpecifiqueType;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormAwareTrait;
-use Application\Form\RessourceRh\FonctionFormAwareTrait;
 use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\FamilleProfessionnelleFormAwareTrait;
+use Application\Form\RessourceRh\FonctionFormAwareTrait;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormAwareTrait;
+use Application\Form\RessourceRh\MissionSpecifiqueFormAwareTrait;
+use Application\Form\RessourceRh\MissionSpecifiqueThemeFormAwareTrait;
+use Application\Form\RessourceRh\MissionSpecifiqueTypeFormAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
@@ -40,6 +44,8 @@ class RessourceRhController extends AbstractActionController {
     use FonctionFormAwareTrait;
     use MetierFormAwareTrait;
     use MissionSpecifiqueFormAwareTrait;
+    use MissionSpecifiqueTypeFormAwareTrait;
+    use MissionSpecifiqueThemeFormAwareTrait;
 
 
     public function indexAction()
@@ -338,9 +344,22 @@ class RessourceRhController extends AbstractActionController {
     public function indexMissionSpecifiqueAction()
     {
         $missions = $this->getRessourceRhService()->getMissionsSpecifiques();
+        $types = $this->getRessourceRhService()->getMissionsSpecifiquesTypes(true);
+        $themes = $this->getRessourceRhService()->getMissionsSpecifiquesThemes(true);
 
         return new ViewModel([
             'missions' => $missions,
+            'types' => $types,
+            'themes' => $themes,
+        ]);
+    }
+
+    public function afficherMissionSpecifiqueAction() {
+        $mission = $this->getRessourceRhService()->getRequestedMissionSpecifique($this);
+
+        return new ViewModel([
+            'title' => "Affichage d'une mission spécifique",
+            'mission' => $mission,
         ]);
     }
 
@@ -417,6 +436,179 @@ class RessourceRhController extends AbstractActionController {
         return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
     }
 
+    /** MISSION SPECIFIQUE TYPE ***************************************************************************************/
+
+    public function ajouterMissionSpecifiqueTypeAction()
+    {
+        $type = new MissionSpecifiqueType();
+        $form = $this->getMissionSpecifiqueTypeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/mission-specifique-type/ajouter', [], [], true));
+        $form->bind($type);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createMissionSpecifiqueType($type);
+                //return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'un nouveau type de mission",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function afficherMissionSpecifiqueTypeAction() {
+        $type = $this->getRessourceRhService()->getRequestedMissionSpecifiqueType($this);
+
+        return new ViewModel([
+            'title' => "Affichage d'un type de missions spécifiques",
+            'type' => $type,
+        ]);
+    }
+
+    public function modifierMissionSpecifiqueTypeAction()
+    {
+        $type = $this->getRessourceRhService()->getRequestedMissionSpecifiqueType($this);
+        $form = $this->getMissionSpecifiqueTypeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/mission-specifique-type/modifier', ['mission-specifique-type' => $type->getId()], [], true));
+        $form->bind($type);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateMissionSpecifiqueType($type);
+                //return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier un type de mission",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserMissionSpecifiqueTypeAction()
+    {
+        $type = $this->getRessourceRhService()->getRequestedMissionSpecifiqueType($this);
+        $this->getRessourceRhService()->historizeMissionSpecifiqueType($type);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    public function restaurerMissionSpecifiqueTypeAction()
+    {
+        $type = $this->getRessourceRhService()->getRequestedMissionSpecifiqueType($this);
+        $this->getRessourceRhService()->restoreMissionSpecifiqueType($type);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    public function detruireMissionSpecifiqueTypeAction()
+    {
+        $type = $this->getRessourceRhService()->getRequestedMissionSpecifiqueType($this);
+        $this->getRessourceRhService()->deleteMissionSpecifiqueType($type);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    /** MISSION SPECIFIQUE THEME **************************************************************************************/
+
+    public function ajouterMissionSpecifiqueThemeAction()
+    {
+        $theme = new MissionSpecifiqueTheme();
+        $form = $this->getMissionSpecifiqueThemeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/mission-specifique-theme/ajouter', [], [], true));
+        $form->bind($theme);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->createMissionSpecifiqueTheme($theme);
+                //return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'un nouveau thème de mission",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function afficherMissionSpecifiqueThemeAction() {
+        $theme = $this->getRessourceRhService()->getRequestedMissionSpecifiqueTheme($this);
+
+        return new ViewModel([
+            'title' => "Affichage d'un thème de missions spécifiques",
+            'theme' => $theme,
+        ]);
+    }
+
+    public function modifierMissionSpecifiqueThemeAction()
+    {
+        $theme = $this->getRessourceRhService()->getRequestedMissionSpecifiqueTheme($this);
+        $form = $this->getMissionSpecifiqueThemeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('ressource-rh/mission-specifique-theme/modifier', ['mission-specifique-theme' => $theme->getId()], [], true));
+        $form->bind($theme);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getRessourceRhService()->updateMissionSpecifiqueTheme($theme);
+                //return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier un thème de mission",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserMissionSpecifiqueThemeAction()
+    {
+        $theme = $this->getRessourceRhService()->getRequestedMissionSpecifiqueTheme($this);
+        $this->getRessourceRhService()->historizeMissionSpecifiqueTheme($theme);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    public function restaurerMissionSpecifiqueThemeAction()
+    {
+        $theme = $this->getRessourceRhService()->getRequestedMissionSpecifiqueTheme($this);
+        $this->getRessourceRhService()->restoreMissionSpecifiqueTheme($theme);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    public function detruireMissionSpecifiqueThemeAction()
+    {
+        $theme = $this->getRessourceRhService()->getRequestedMissionSpecifiqueTheme($this);
+        $this->getRessourceRhService()->deleteMissionSpecifiqueTheme($theme);
+        return $this->redirect()->toRoute('ressource-rh/index-mission-specifique', [], [], true);
+    }
+
+    /** CARTOGRAPHIE ***************************************************************************************************/
 
     public function cartographieAction() {
         $metiers = $this->getMetierService()->getMetiers();

@@ -49,17 +49,22 @@ class ActiviteHydrator implements HydratorInterface {
         foreach ($object->getApplications() as $application) {
             $object->removeApplication($application);
         }
-        foreach ($data['applications'] as $id) {
-            $application = $this->getApplicationService()->getApplication($id);
-            if ($application) $object->addApplication($application);
+        if (isset($data['applications'])) {
+            foreach ($data['applications'] as $id) {
+                $application = $this->getApplicationService()->getApplication($id);
+                if ($application) $object->addApplication($application);
+            }
         }
 
         foreach ($object->getFormations() as $formation) {
             $object->removeFormation($formation);
         }
-        foreach ($data['formations'] as $id) {
-            $formation = $this->getFormationService()->getFormation($id);
-            if ($formation) $object->addFormation($formation);
+
+        if (isset($data['formations'])) {
+            foreach ($data['formations'] as $id) {
+                $formation = $this->getFormationService()->getFormation($id);
+                if ($formation) $object->addFormation($formation);
+            }
         }
         return $object;
     }

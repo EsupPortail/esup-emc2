@@ -2,6 +2,7 @@
 
 namespace Application\Form\AjouterFicheMetier;
 
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
 
@@ -12,11 +13,16 @@ class AjouterFicheMetierFormFactory {
         /** @var AjouterFicheMetierHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(AjouterFicheMetierHydrator::class);
 
-        /** @var FicheMetierService $ficheMetierService */
+        /**
+         * @var FamilleProfessionnelleService $familleService
+         * @var FicheMetierService $ficheMetierService
+         */
+        $familleService = $container->get(FamilleProfessionnelleService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
 
         /** @var AjouterFicheMetierForm $form */
         $form = new AjouterFicheMetierForm();
+        $form->setFamilleProfessionnelleService($familleService);
         $form->setFicheMetierService($ficheMetierService);
         $form->setHydrator($hydrator);
         return $form;

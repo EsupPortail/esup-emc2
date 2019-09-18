@@ -29,7 +29,7 @@ $canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivilege
 ?>
 
 <h1 class="page-header">
-    Affections de missions spécifiques
+    Affectations de missions spécifiques
 </h1>
 
 <div class="filter">
@@ -103,7 +103,9 @@ $canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivilege
 
                         <?php if ($canDetruire) : ?>
                             <?php /** @see MissionSpecifiqueController::detruireAction() */ ?>
-                            <a href="<?php echo $this->url('agent-mission-specifique/detruire', ['affectation' => $affectation->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('agent-mission-specifique/detruire', ['affectation' => $affectation->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
                                 <span class="icon detruire" title="Détruire une affectation"></span></a>
                         <?php else : ?>
                             <span class="icon detruire" style="color:lightgray;"></span>
@@ -117,21 +119,13 @@ $canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivilege
 </div>
 
 <script>
-
-    $('select').selectpicker();
-
-    $(document).ready(function() {
-        $('#datatable').DataTable( {
-            language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
-    } );
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
     });
+
+    $('select').selectpicker();
 </script>
 

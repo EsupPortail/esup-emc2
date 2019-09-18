@@ -16,6 +16,8 @@ use Application\Form\FicheMetier\FormationComportementaleForm;
 use Application\Form\FicheMetier\FormationComportementaleFormAwareTrait;
 use Application\Form\FicheMetier\FormationOperationnelleForm;
 use Application\Form\FicheMetier\FormationOperationnelleFormAwareTrait;
+use Application\Form\FicheMetier\FormationsForm;
+use Application\Form\FicheMetier\FormationsFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -37,10 +39,13 @@ class FicheMetierController extends  AbstractActionController{
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;
     use ApplicationsFormAwareTrait;
+    use FormationsFormAwareTrait;
+    use LibelleFormAwareTrait;
+
     use FormationBaseFormAwareTrait;
     use FormationComportementaleFormAwareTrait;
     use FormationOperationnelleFormAwareTrait;
-    use LibelleFormAwareTrait;
+
 
     public function indexAction()
     {
@@ -345,11 +350,41 @@ class FicheMetierController extends  AbstractActionController{
             }
         }
 
-        return new ViewModel([
-            'type' => 'comportementale',
-            'title' => 'Modification des compétences comportementales',
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modification des applications',
             'form' => $form,
         ]);
+        return $vm;
+    }
+
+    public function modifierFormationAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
+
+        /** @var FormationsForm $form */
+        $form = $this->getFormationsForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-formation', ['id' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fiche);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modification des formations',
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
     /** Document pour la signature en présidence */

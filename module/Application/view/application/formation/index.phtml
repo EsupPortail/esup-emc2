@@ -1,10 +1,16 @@
 <?php
 
 /**
+ * @see RessourceRhController::indexMissionSpecifiqueAction()
+ *
  * @var Formation[] $formations
+ * @var FormationTheme[] $themes
  */
 
+use Application\Controller\FormationController;
+use Application\Controller\RessourceRhController;
 use Application\Entity\Db\Formation;
+use Application\Entity\Db\FormationTheme;
 use Application\Provider\Privilege\FormationPrivileges;
 
 $canAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::AFFICHER));
@@ -13,32 +19,144 @@ $canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivil
 $canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::EDITER));
 $canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::DETRUIRE));
 
+$this->headTitle("Index des formations");
 ?>
 
 <h1 class="page-header">
-    Formations
-    <span class="badge">
-        <?php echo count($formations); ?>
-    </span>
+    Index des formations
 </h1>
 
 <div class="main">
-    <?php if ($canAjouter) : ?>
-        <a href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
-           class="btn btn-primary action ajax-modal"
-           data-event="modification">
-            <span class="icon ajouter"></span>
-            Ajouter une formation
-        </a>
+    <div class="row">
+        <div class="col-md-8">
+            <h2>
+                Thèmes des formations
+                <span class="badge">
+                    <?php echo count($themes); ?>
+                </span>
+            </h2>
+        </div>
+        <div class="col-md-4">
+            <?php if ($canAjouter) : ?>
+                <br/>
+                <a href="<?php echo $this->url('formation-theme/ajouter', [], [], true); ?>"
+                   class="btn btn-primary action ajax-modal"
+                   data-event="modification">
+                    <span class="icon ajouter"></span>
+                    Ajouter un thème
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
 
-        <br/>
-        <br/>
-    <?php endif; ?>
+    <table id="datatable"  class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Libellé </th>
+                <th> #Formation </th>
+                <th> Modification </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($themes as $theme) : ?>
+                <tr>
+                    <td> <?php echo $theme->getLibelle(); ?> </td>
+                    <td> <?php echo count($theme->getFormations()); ?> </td>
+                    <td>
+                        <small>
+                            <?php echo $theme->getHistoModification()->format('d/m/Y à H:i'); ?>
+                            <br/>
+                            <?php echo $theme->getHistoModificateur()->getDisplayName(); ?>
+                        </small>
+                    </td>
+                    <td>
+                        <?php if ($canAfficher) : ?>
+                            <?php /** @see FormationController::afficherThemeAction() */ ?>
+                            <a href="<?php  echo $this->url('formation-theme/afficher', ['formation-theme' => $theme->getId()], [], true); ?>"
+                               class="ajax-modal">
+                                <span class="icon voir" title="Afficher le thème"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+                        <?php if ($canEditer) : ?>
+                            <?php /** @see FormationController::editerThemeAction() */ ?>
+                            <a href="<?php  echo $this->url('formation-theme/editer', ['formation-theme' => $theme->getId()], [], true); ?>"
+                               class="ajax-modal"
+                               data-event="modification"
+                            >
+                                <span class="icon editer" title="Éditer le thème"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+                        <?php if ($canHistoriser) : ?>
+                            <?php if ($theme->estNonHistorise()) : ?>
+                                <?php /** @see FormationController::historiserThemeAction() */ ?>
+                                <a href="<?php  echo $this->url('formation-theme/historiser', ['formation-theme' => $theme->getId()], [], true); ?>"
+                                >
+                                    <span class="icon historiser" title="Historiser le thème"></span></a>
+                            <?php else : ?>
+                                <?php /** @see FormationController::restaurerThemeAction() */ ?>
+                                <a href="<?php  echo $this->url('formation-theme/restaurer', ['formation-theme' => $theme->getId()], [], true); ?>"
+                                >
+                                    <span class="icon restaurer" title="Restaurer le thème"></span></a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if ($theme->estNonHistorise()) : ?>
+                                <span class="icon historiser" style="color:lightgrey;"></span>
+                            <?php else : ?>
+                                <span class="icon restaurer" style="color:lightgrey;"></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canDetruire) : ?>
+                            <?php /** @see FormationController::detruireThemeAction() */ ?>
+                            <a href="<?php echo $this->url('formation-theme/detruire', ['formation-theme' => $theme->getId()], [], true); ?>"
+                            >
+                                <span class="icon detruire" title="Afficher le thème"></span></a>
+                        <?php else : ?>
+                            <span class="icon detruire" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<div class="main">
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2>
+                Formations
+                <span class="badge">
+                    <?php echo count($formations); ?>
+                </span>
+            </h2>
+        </div>
+        <div class="col-md-4">
+            <?php if ($canAjouter) : ?>
+                <br/>
+
+                <div class="row">
+                    <?php /** @see FormationController::ajouterThemeAction() */ ?>
+                    <a href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification">
+                        <span class="icon ajouter"></span>
+                        Ajouter une formation
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
 
     <table id="datatable" class="table table-condensed">
         <thead>
             <tr>
                 <th> Libellé </th>
+                <th> Thème </th>
                 <th> Lien </th>
                 <th> Modification </th>
                 <th> Action </th>
@@ -48,6 +166,7 @@ $canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPriv
             <?php foreach ($formations as $formation) : ?>
                 <tr>
                     <td> <?php echo $formation->getLibelle(); ?> </td>
+                    <td> <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():""; ?> </td>
                     <td>
                         <?php if ($formation->getLien() !== null) : ?>
                             <a href="<?php echo $formation->getLien(); ?>">
