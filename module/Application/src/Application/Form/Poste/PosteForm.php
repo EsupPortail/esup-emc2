@@ -45,7 +45,7 @@ class PosteForm extends Form  {
             'options' => [
                 'label' => "Service/composante/direction d'affectation :",
                 'empty_option'  => "Sélectionner une service ...",
-                'value_options' => $this->getStructureService()->getStructuresAsOptions(),
+                'value_options' => $this->getStructureService()->getStructuresAsGroupOptions(),
             ],
             'attributes' => [
                 'id'                => 'structure',
