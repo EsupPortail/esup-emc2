@@ -218,7 +218,7 @@ class FichierService {
      */
     public function fetchContenuFichier(Fichier $fichier)
     {
-        $filePath = '/app/upload/' . $fichier->getNomStockage();
+        $filePath = '/var/www/html/upload/' . $fichier->getNomStockage();
 
         if (! is_readable($filePath)) {
             throw new RuntimeException(
