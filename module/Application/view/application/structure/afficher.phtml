@@ -5,8 +5,6 @@
  * @var Structure $structure
  */
 
-use Application\Controller\FichePoste\FichePosteController;
-use Application\Controller\MissionSpecifique\MissionSpecifiqueController;
 use Application\Entity\Db\Structure;
 
 $this->headTitle("Affichage de la structure : " . $structure->getLibelleLong());
@@ -61,12 +59,12 @@ $canAfficheAffectation = true;
         <tbody>
             <?php foreach ($structure->getPostes() as $poste): ?>
             <tr>
-                <td> <?php echo $poste->getFichePoste()->getAgent()->getDenomination(); ?> </td>
-                <td> <?php echo $poste->getFichePoste()->getLibelle(); ?> </td>
+                <td> <?php //echo $poste->getFichePoste()->getAgent()->getDenomination(); ?> </td>
+                <td> <?php //echo $poste->getFichePoste()->getLibelle(); ?> </td>
                 <td>
                     <?php if ($canAfficheFichePoste) : ?>
                     <a <?php /** @see FichePosteController::afficherAction() */ ?>
-                        href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $poste->getFichePoste()->getId()], [], true); ?>"
+                        href="<?php //echo $this->url('fiche-poste/afficher', ['fiche-poste' => $poste->getFichePoste()->getId()], [], true); ?>"
                         class="ajax-modal"
                     >
                         <span class="icon voir" title="Voir la fiche de poste"></span>
