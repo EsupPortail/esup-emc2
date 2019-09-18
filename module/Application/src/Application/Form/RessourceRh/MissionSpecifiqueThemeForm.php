@@ -1,12 +1,14 @@
 <?php
 
-namespace Application\Form\MissionSpecifique;
+namespace Application\Form\RessourceRh;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
-class MissionSpecifiqueForm extends Form {
+class MissionSpecifiqueThemeForm extends Form
+{
 
     public function init()
     {
@@ -26,7 +28,7 @@ class MissionSpecifiqueForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer la mission',
+                'label' => '<i class="fas fa-save"></i> Enregistrer',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -36,5 +38,12 @@ class MissionSpecifiqueForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'libelle' => [
+                'required' => false,
+            ],
+        ]));
     }
-}
+
+};

@@ -5,6 +5,7 @@ namespace Application\Service\FichePoste;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
+use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
@@ -315,5 +316,35 @@ class FichePosteService {
     {
         $fiches = $this->getFichesPostes();
         return end($fiches);
+    }
+
+    /**
+     * @param Structure $structure
+     * @return FichePoste[]
+     */
+    public function getFichesPostesByStructure($structure)
+    {
+        try {
+            $today = new DateTime();
+            $noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la création des dates");
+        }
+
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->addSelect('agent')->join('fiche.agent', 'agent')
+            ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->andWhere('statut.structure = :structure')
+            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.administratif = :true')
+            ->setParameter('structure', $structure)
+            ->setParameter('today', $today)
+            ->setParameter('noEnd', $noEnd)
+            ->setParameter('true', 'O')
+            ->orderBy('agent.nomUsuel, agent.prenom')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

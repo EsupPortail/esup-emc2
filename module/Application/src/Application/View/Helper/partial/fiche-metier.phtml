@@ -73,6 +73,10 @@ use Application\Entity\Db\FicheMetierTypeActivite;
         $applications[] = $application->getLibelle();
         foreach ($application->getFormations() as $formation) $formations[] = $formation->getLibelle();
     }
+    foreach ($fiche->getFormations() as $formation) {
+        $formations[] = $formation->getLibelle();
+    }
+
     sort($applications);
     $applications = array_unique($applications);
 

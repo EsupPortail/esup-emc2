@@ -50,9 +50,17 @@ class MissionSpecifiqueController extends AbstractActionController
 
     public function ajouterAction() {
 
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $affectation = new AgentMissionSpecifique();
         $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], [], true));
+        if ($structure === null) {
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], [], true));
+        } else {
+            $form = $form->reinitWithStructure($structure);
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
+        }
         $form->bind($affectation);
 
         /** @var Request $request */
@@ -68,7 +76,7 @@ class MissionSpecifiqueController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Affection d\'une nouvelle mission spécifique à un agent',
+            'title' => 'Affectation d\'une nouvelle mission spécifique à un agent',
             'form' => $form,
         ]);
         return $vm;
@@ -86,9 +94,18 @@ class MissionSpecifiqueController extends AbstractActionController
     }
 
     public function editerAction() {
+
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
         $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], [], true));
+        if ($structure === null) {
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], [], true));
+        } else {
+            $form = $form->reinitWithStructure($structure);
+            $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], ["query" =>["structure" => $structure->getId()]], true));
+        }
         $form->bind($affectation);
 
         /** @var Request $request */
@@ -122,9 +139,32 @@ class MissionSpecifiqueController extends AbstractActionController
         return $this->redirect()->toRoute('agent-mission-specifique', [], [], true);
     }
 
-    public function detruireAction() {
+    public function detruireAction()
+    {
         $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
-        $this->getMissionSpecifiqueService()->delete($affectation);
-        return $this->redirect()->toRoute('agent-mission-specifique', [], [], true);
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+        $params = [];
+        if ($structure !== null) $params["structure"] = $structure->getId();
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueService()->delete($affectation);
+            //TODO c'est vraiment crade ...
+            return $this->redirect()->toRoute('home');
+        }
+
+        $vm = new ViewModel();
+        if ($affectation != null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'affectation de " . $affectation->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent-mission-specifique/detruire', ["affectation" => $affectation->getId()], ["query" => $params], true),
+            ]);
+        }
+        return $vm;
     }
 }

@@ -4,10 +4,10 @@ namespace Application;
 
 use Application\Controller\RessourceRhController;
 use Application\Controller\RessourceRhControllerFactory;
-use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
-use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
-use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
-use Application\Form\MissionSpecifique\MissionSpecifiqueHydratorFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueForm;
+use Application\Form\RessourceRh\MissionSpecifiqueFormFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueHydrator;
+use Application\Form\RessourceRh\MissionSpecifiqueHydratorFactory;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
@@ -21,6 +21,14 @@ use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
 use Application\Form\RessourceRh\MetierHydratorFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueThemeForm;
+use Application\Form\RessourceRh\MissionSpecifiqueThemeFormFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueThemeHydrator;
+use Application\Form\RessourceRh\MissionSpecifiqueThemeHydratorFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueTypeForm;
+use Application\Form\RessourceRh\MissionSpecifiqueTypeFormFactory;
+use Application\Form\RessourceRh\MissionSpecifiqueTypeHydrator;
+use Application\Form\RessourceRh\MissionSpecifiqueTypeHydratorFactory;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\Domaine\DomaineServiceFactory;
@@ -52,6 +60,10 @@ return [
                         'get-grades-json',
                         'cartographie',
                         'export-cartographie',
+
+                        'afficher-mission-specifique',
+                        'afficher-mission-specifique-type',
+                        'afficher-mission-specifique-theme',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AFFICHER,
@@ -64,7 +76,10 @@ return [
                         'creer-famille',
                         'ajouter-domaine',
                         'ajouter-fonction',
+
                         'ajouter-mission-specifique',
+                        'ajouter-mission-specifique-type',
+                        'ajouter-mission-specifique-theme',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AJOUTER,
@@ -81,6 +96,12 @@ return [
                         'modifier-mission-specifique',
                         'historiser-mission-specifique',
                         'restaurer-mission-specifique',
+                        'modifier-mission-specifique-type',
+                        'historiser-mission-specifique-type',
+                        'restaurer-mission-specifique-type',
+                        'modifier-mission-specifique-theme',
+                        'historiser-mission-specifique-theme',
+                        'restaurer-mission-specifique-theme',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::MODIFIER,
@@ -94,6 +115,8 @@ return [
                         'supprimer-domaine',
                         'supprimer-fonction',
                         'supprimer-mission-specifique',
+                        'detruire-mission-specifique-type',
+                        'detruire-mission-specifique-theme',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::EFFACER,
@@ -369,6 +392,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'afficher' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher/:mission',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'afficher-mission-specifique',
+                                    ],
+                                ],
+                            ],
                             'modifier' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -411,6 +444,156 @@ return [
                             ],
                         ],
                     ],
+                    'mission-specifique-type' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/mission-specifique-type',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'ajouter-mission-specifique-type',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'afficher' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher/:mission-specifique-type',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'afficher-mission-specifique-type',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'modifier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:mission-specifique-type',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-mission-specifique-type',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'historiser' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:mission-specifique-type',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'historiser-mission-specifique-type',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'restaurer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:mission-specifique-type',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'restaurer-mission-specifique-type',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'detruire' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/detruire/:mission-specifique-type',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'detruire-mission-specifique-type',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ],
+                    ],
+                    'mission-specifique-theme' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/mission-specifique-theme',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'ajouter-mission-specifique-theme',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'afficher' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher/:mission-specifique-theme',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'afficher-mission-specifique-theme',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'modifier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:mission-specifique-theme',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'modifier-mission-specifique-theme',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'historiser' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:mission-specifique-theme',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'historiser-mission-specifique-theme',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'restaurer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:mission-specifique-theme',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'restaurer-mission-specifique-theme',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'detruire' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/detruire/:mission-specifique-theme',
+                                    'defaults' => [
+                                        'controller' => RessourceRhController::class,
+                                        'action'     => 'detruire-mission-specifique-theme',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -436,7 +619,10 @@ return [
             FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
 //            FonctionForm::class => FonctionFormFactory::class,
             DomaineForm::class => DomaineFormFactory::class,
+
             MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
+            MissionSpecifiqueTypeForm::class => MissionSpecifiqueTypeFormFactory::class,
+            MissionSpecifiqueThemeForm::class => MissionSpecifiqueThemeFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -445,9 +631,12 @@ return [
         ],
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,
-            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
             DomaineHydrator::class => DomaineHydratorFactory::class,
             FonctionHydrator::class => FonctionHydratorFactory::class,
+
+            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
+            MissionSpecifiqueTypeHydrator::class => MissionSpecifiqueTypeHydratorFactory::class,
+            MissionSpecifiqueThemeHydrator::class => MissionSpecifiqueThemeHydratorFactory::class,
         ],
     ]
 

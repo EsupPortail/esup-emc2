@@ -3,9 +3,11 @@
 namespace Application\Service\Formation;
 
 use Application\Entity\Db\Formation;
+use Application\Entity\Db\FormationTheme;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -32,6 +34,20 @@ class FormationService {
         return $result;
     }
 
+    /**
+     * @param string $champ
+     * @param string $order
+     * @return Formation[]
+     */
+    private function getFormationsSansThemes($champ = 'libelle', $order = 'ASC')
+    {
+        $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+            ->andWhere('formation.theme IS NULL')
+            ->andWhere('formation.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
     /**
      * @param int $id
      * @return Formation
@@ -176,5 +192,218 @@ class FormationService {
             $result[$formation->getId()] = $formation->getLibelle();
         }
         return $result;
+    }
+
+    /** FORMATION THEME ***********************************************************************************************/
+    /** TODO Quid en faire un service à part entière */
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $order
+     * @return FormationTheme[]
+     */
+    public function getFormationsThemes($historiser = false, $champ = 'libelle', $order = 'ASC')
+    {
+        $qb = $this->getEntityManager()->getRepository(FormationTheme::class)->createQueryBuilder('theme')
+            ->addSelect('formation')->leftJoin('theme.formations', 'formation')
+            ->orderBy('theme.'.$champ, $order);
+
+        if ($historiser === false) {
+            $qb = $qb->andWhere('theme.histoDestruction IS NULL');
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $order
+     * @return array
+     */
+    public function getFormationsThemesAsOptions($historiser = false, $champ = 'libelle', $order = 'ASC') {
+        $themes = $this->getFormationsThemes($historiser, $champ, $order);
+
+        $array = [];
+        foreach ($themes as $theme) {
+            $array[$theme->getId()] = $theme->getLibelle();
+        }
+        return $array;
+    }
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $order
+     * @return array
+     */
+    public function getFormationsThemesAsGroupOptions($historiser = false, $champ = 'libelle', $order = 'ASC')
+    {
+        $themes = $this->getFormationsThemes();
+        $sanstheme = $this->getFormationsSansThemes();
+        $options = [];
+
+        foreach ($themes as $theme) {
+            $optionsoptions = [];
+            foreach ($theme->getFormations() as $formation) {
+                $optionsoptions[$formation->getId()] = $formation->getLibelle();
+            }
+            $array = [
+                'label' => $theme->getLibelle(),
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        if (!empty($sanstheme)) {
+            $optionsoptions = [];
+            foreach ($sanstheme as $formation) {
+                $optionsoptions[$formation->getId()] = $formation->getLibelle();
+            }
+            $array = [
+                'label' => "Sans thème",
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param integer $id
+     * @return FormationTheme
+     */
+    public function getFormationTheme($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(FormationTheme::class)->createQueryBuilder('theme')
+            ->andWhere('theme.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (ORMException $e) {
+            throw new RuntimeException('Plusieurs FormationTheme partagent le même identifiant ['.$id.'].', $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return FormationTheme
+     */
+    public function getRequestedFormationTheme($controller, $paramName = "formation-theme")
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $theme = $this->getFormationTheme($id);
+        return $theme;
+    }
+
+
+    /**
+     * @param FormationTheme $theme
+     * @return FormationTheme
+     */
+    public function createTheme($theme)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération des données d'historisation.", $e);
+        }
+        $theme->setHistoCreation($date);
+        $theme->setHistoCreateur($user);
+        $theme->setHistoModification($date);
+        $theme->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->persist($theme);
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
+        }
+        return $theme;
+    }
+
+    /**
+     * @param FormationTheme $theme
+     * @return FormationTheme
+     */
+    public function updateTheme($theme)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération des données d'historisation.", $e);
+        }
+        $theme->setHistoModification($date);
+        $theme->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
+        }
+        return $theme;
+    }
+
+    /**
+     * @param FormationTheme $theme
+     * @return FormationTheme
+     */
+    public function historizeTheme($theme)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération des données d'historisation.", $e);
+        }
+        $theme->setHistoDestruction($date);
+        $theme->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
+        }
+        return $theme;
+    }
+
+    /**
+     * @param FormationTheme $theme
+     * @return FormationTheme
+     */
+    public function restoreTheme($theme)
+    {
+        $theme->setHistoDestruction(null);
+        $theme->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
+        }
+        return $theme;
+    }
+
+    /**
+     * @param FormationTheme $theme
+     * @return FormationTheme
+     */
+    public function deleteTheme($theme)
+    {
+        try {
+            $this->getEntityManager()->remove($theme);
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
+        }
+        return $theme;
     }
 }

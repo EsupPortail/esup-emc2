@@ -9,6 +9,8 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use UnicaenAuth\Service\Traits\UserContextServiceAwareTrait;
 use Utilisateur\Entity\Db\Role;
@@ -68,10 +70,14 @@ class IndexController extends AbstractActionController
 
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
+        $missions = $agent->getMissionsSpecifiques();
+        usort($missions, function (AgentMissionSpecifique $a, AgentMissionSpecifique $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
         return new ViewModel([
-           'user' => $user,
+            'user' => $user,
             'agent' => $agent,
+            'fiche' => $agent->getFiche(),
+            'missions' => $missions,
         ]);
     }
 

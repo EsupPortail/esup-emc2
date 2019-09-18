@@ -1,12 +1,23 @@
 <?php
 
 /**
- * @var \Application\Entity\Db\Agent $agent
- * @var \Utilisateur\Entity\Db\User $user
+ * @var Agent $agent
+ * @var User $user
+ * @var FichePoste $fiche
+ * @var AgentMissionSpecifique[] $missions
  */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\FichePoste;
+use Utilisateur\Entity\Db\User;
 
 $this->headTitle('Accueil de '.$user->getDisplayName());
 
+
+$canVoirFichePoste  = true;
+$canExporterFichePoste  = true;
+$canVoirFicheSigner = true;
 ?>
 
 <h1 class="page-header">
@@ -62,3 +73,115 @@ $this->headTitle('Accueil de '.$user->getDisplayName());
     <br/>
     <br/>
 </div>
+
+<div class="main">
+    <h2>Fiche de poste</h2>
+
+    <?php if ($fiche !== null) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th class="libelle-cell"> Poste </th>
+                <th> Intitulé </th>
+                <th> État </th>
+                <th class="action-cell"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> <?php echo ($fiche->getPoste())?$fiche->getPoste()->getNumeroPoste():"<span class='icon attention' style='color:darkred;'></span> Aucun poste"; ?> </td>
+                    <td>
+                        <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
+                        <?php if($fiche->getLibelle() !== null) : ?>
+                            (<?php echo $fiche->getLibelle(); ?>)
+                        <?php endif; ?>
+                    </td>
+                    <td> <span class="icon attention" style="color: darkred"></span>Non validée</td>
+                    <td class="action-cell">
+                        <?php if ($canVoirFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               class="ajax-modal">
+                                <span class="icon voir" title="Voir la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                        <?php if ($canExporterFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               class="ajax-modal">
+                                <span class="icon pdf" title="Exporter la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon pdf" style="color:lightgray;"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canVoirFicheSigner) : ?>
+                            <a href="">
+                                <span class="icon ok" title="Valider la fiche de poste"></span></a>
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    <?php else : ?>
+        Aucune fiche de poste.
+    <?php endif; ?>
+</div>
+
+<div class="main">
+    <h2>
+        Missions spécifiques
+        <span class="badge">
+            <?php echo count($missions); ?>
+        </span>
+    </h2>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th class="libelle-cell"> Missions </th>
+            <th class="libelle-cell"> Structure </th>
+            <th> Période</th>
+            <th class="action-cell"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($missions as $missionSpecifique) : ?>
+            <tr>
+                <td> <?php echo $missionSpecifique->getMission()->getLibelle(); ?> </td>
+                <td> <?php echo $missionSpecifique->getStructure()->getLibelleCourt(); ?> </td>
+                <td>
+                    <?php
+                    $debut = ($missionSpecifique->getDateDebut())?$missionSpecifique->getDateDebut()->format('d/m/Y'):'---';
+                    $fin   = ($missionSpecifique->getDateFin())?$missionSpecifique->getDateFin()->format('d/m/Y'):'---';
+                    ?>
+                    <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
+                </td>
+                <td class="action-cell">
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+
+<style>
+    th.agent-cell {
+        width:25rem;
+    }
+    th.libelle-cell {
+        width:25rem;
+    }
+    th.action-cell {
+        width:10rem;
+    }
+    td.action-cell {
+        text-align: right;
+    }
+
+    h2 {
+        color: #3c6c8b;
+        text-decoration: none;
+    }
+
+</style>

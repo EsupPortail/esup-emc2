@@ -9,13 +9,16 @@ use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
+use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
+use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -25,12 +28,21 @@ class FichePosteController extends AbstractActionController {
     /** Service **/
     use AgentServiceAwareTrait;
     use FichePosteServiceAwareTrait;
+    use StructureServiceAwareTrait;
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
     use AssocierAgentFormAwareTrait;
-    use FichePosteCreationFormAwareTrait;
     use AssocierPosteFormAwareTrait;
+    use AssocierTitreFormAwareTrait;
+    use FichePosteCreationFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
+
+    private $renderer;
+
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function indexAction()
     {
@@ -72,18 +84,34 @@ class FichePosteController extends AbstractActionController {
     public function afficherAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $titre = 'Fiche de poste <br/>';
+        $titre .= '<strong>';
+        if ($fiche->getFicheTypeExternePrincipale()) {
+            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+        } else {
+            $titre .= "<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale";
+        }
+        if($fiche->getLibelle() !== null) {
+            $titre .= "(" .$fiche->getLibelle(). ")";
+        }
+        $titre .= '</strong>';
+
         return new ViewModel([
-            'title' => 'Fiche de poste <br/> <em>'.$fiche->getLibelle().'</em>',
+            'title' => $titre,
            'fiche' => $fiche,
         ]);
     }
 
     public function editerAction()
     {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
         return new ViewModel([
             'fiche' => $fiche,
+            'structure' => $structure,
         ]);
     }
 
@@ -104,19 +132,78 @@ class FichePosteController extends AbstractActionController {
     public function detruireAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $this->getFichePosteService()->delete($fiche);
-        return $this->redirect()->toRoute('fiche-poste', [], [], true);
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+        $params = [];
+        if ($structure !== null) $params["structure"] = $structure->getId();
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFichePosteService()->delete($fiche);
+            //TODO c'est vraiment crade ...
+            return $this->redirect()->toRoute('home');
+        }
+
+        $vm = new ViewModel();
+        if ($fiche !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la fiche de poste  de " . $fiche->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-poste/detruire', ["affectation" => $fiche->getId()], ["query" => $params], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** TITRE *********************************************************************************************************/
+
+    public function associerTitreAction()
+    {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
+        /** @var AssocierAgentForm $form */
+        $form = $this->getAssocierTitreForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /**@var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFichePosteService()->update($fiche);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Associer un titre',
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
     /** AGENT *********************************************************************************************************/
 
     public function associerAgentAction()
     {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
         /** @var AssocierAgentForm $form */
         $form = $this->getAssocierAgentForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-agent', ['fiche-poste' => $fiche->getId()], [], true));
+
+        if ($structure !== null) {
+            $form = $form->reinitWithStructure($structure);
+        }
         $form->bind($fiche);
 
         /**@var Request $request */
@@ -143,11 +230,17 @@ class FichePosteController extends AbstractActionController {
 
     public function associerPosteAction()
     {
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
-        /** @var AssocierAgentForm $form */
+        /** @var AssocierPosteForm $form */
         $form = $this->getAssocierPosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-poste', ['fiche-poste' => $fiche->getId()], [], true));
+
+        if ($structure !== null) {
+            $form = $form->reinitWithStructure($structure);
+        }
         $form->bind($fiche);
 
         /**@var Request $request */
@@ -195,7 +288,7 @@ class FichePosteController extends AbstractActionController {
                 $this->getFichePosteService()->createFicheTypeExterne($ficheTypeExterne);
 
                 if ($ficheTypeExterne->getPrincipale()) {
-                    var_dump('principale is 1');
+//                    var_dump('principale is 1');
                     foreach ($fiche->getFichesMetiers() as $ficheMetier) {
                         if ($ficheMetier !== $ficheTypeExterne && $ficheMetier->getPrincipale()) {
                             $ficheMetier->setPrincipale(false);
@@ -231,6 +324,7 @@ class FichePosteController extends AbstractActionController {
         $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
         $ficheTypeExterne = $this->getFichePosteService()->getFicheTypeExterne($ficheTypeExterneId);
+        $previous = $ficheTypeExterne->getQuotite();
 
         $form = $this->getAjouterFicheTypeForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fichePoste->getId(), 'fiche-type-externe' => $ficheTypeExterne->getId()], [], true));
@@ -240,9 +334,8 @@ class FichePosteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-
             $form->setData($data);
-
+            $data["old"] = $previous;
             $res = $this->checkValidite($fichePoste, $data);
             if ($res) return $res;
 
@@ -353,15 +446,15 @@ class FichePosteController extends AbstractActionController {
     private function checkValidite($fiche, $data)
     {
         $cut = false;
-        if ($data['est_principale'] === "1"  && $data['quotite'] < 50) {
+        if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La fichie métier principale doit avoir une quotité d'au moins 50%.");
         }
-        if ($data['est_principale'] === "0" && $data['quotite'] >= 50) {
+        if ($data['est_principale'] === "0" && ((int) $data['quotite']) >= 50) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La fichie métier non principale doit avoir une quotité infiérieure à 50%.");
         }
-        if ($fiche->getQuotiteTravaillee() + $data['quotite'] > 100) {
+        if ($fiche->getQuotiteTravaillee() + ((int) $data['quotite']) - ((int) $data['old']) > 100) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La somme des quotités travaillées ne peut dépasser 100%.");
         }
@@ -375,10 +468,9 @@ class FichePosteController extends AbstractActionController {
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
-        /* @var PhpRenderer $renderer  */
-        $renderer = $this->getServiceLocator()->get('ViewRenderer');
 
-        $exporter = new FichePostePdfExporter($renderer, 'A4');
+
+        $exporter = new FichePostePdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'fiche' => $fiche,
         ]);

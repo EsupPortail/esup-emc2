@@ -201,5 +201,24 @@ class MissionSpecifiqueService {
         return $affectation;
     }
 
+    public function getMissionsSpecifiquesByStructure(Structure $structure)
+    {
+        try {
+            $today = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la création des dates");
+        }
+
+        $qb = $this->getEntityManager()->getRepository(AgentMissionSpecifique::class)->createQueryBuilder('mission')
+            ->andWhere('mission.structure = :structure')
+            ->andWhere('mission.dateFin >= :today OR mission.dateFin IS NULL')
+            ->setParameter('structure', $structure)
+            ->setParameter('today', $today);
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
 
 }

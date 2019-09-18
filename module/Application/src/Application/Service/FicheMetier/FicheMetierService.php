@@ -2,6 +2,7 @@
 
 namespace Application\Service\FicheMetier;
 
+use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -179,6 +180,25 @@ class FicheMetierService {
     {
         $fiches = $this->getFichesMetiers('id');
         return end($fiches);
+    }
+
+    /**
+     * @param FamilleProfessionnelle $famille
+     * @return FicheMetier[]
+     */
+    public function getFicheByFamille($famille)
+    {
+        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('fiche')
+            ->addSelect('metier')->join('fiche.metier', 'metier')
+            ->addSelect('domaine')->join('metier.domaine', 'domaine')
+            ->addSelect('famille')->join('domaine.famille', 'famille')
+            ->andWhere('famille = :famille')
+            ->setParameter('famille', $famille)
+            ->orderBy('metier.libelle')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }

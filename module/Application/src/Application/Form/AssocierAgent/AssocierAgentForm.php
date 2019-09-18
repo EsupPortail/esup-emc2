@@ -2,6 +2,7 @@
 
 namespace Application\Form\AssocierAgent;
 
+use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -18,6 +19,7 @@ class AssocierAgentForm extends Form {
             'name' => 'agent',
             'options' => [
                 'label' => "Agent :",
+                'empty_option' => "Sélectionner un agent ...",
                 'value_options' => $this->generateSelectOptions(),
             ],
             'attributes' => [
@@ -46,13 +48,30 @@ class AssocierAgentForm extends Form {
 
     private function generateSelectOptions()
     {
-        $agents = $this->getAgentService()->getAgents();
+        $agents = $this->getAgentService()->getAgentsSansFichePosteByStructure();
         $options = [];
-        $options[0] = "Sélectionner un agent ... ";
         foreach ($agents as $agent) {
             $options[$agent->getId()] = $agent->getDenomination(); /* . ' ('.$agent->getNumeroPoste().')';*/
         }
         return $options;
 
+    }
+
+    /**
+     * @param Structure $structure
+     * @return AssocierAgentForm
+     */
+    public function reinitWithStructure($structure)
+    {
+        //agent
+        $agents = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure);
+        $agentOptions = [];
+        foreach ($agents as $agent) {
+            $agentOptions[$agent->getId()] = $agent->getDenomination();
+        }
+        /** @var Select $this->get('agent') */
+        $this->get('agent')->setValueOptions($agentOptions);
+
+        return $this;
     }
 }

@@ -22,15 +22,17 @@ class FicheMetier {
 
     /** @var ArrayCollection */
     private $applications;
-
     /** @var ArrayCollection */
     private $activites;
+    /** @var ArrayCollection */
+    private $formations;
 
 
     public function __construct()
     {
         $this->applications = new ArrayCollection();
         $this->activites = new ArrayCollection();
+        $this->formations = new ArrayCollection();
     }
 
 
@@ -184,5 +186,47 @@ class FicheMetier {
     {
         $this->activites->removeElement($activite);
         return $this;
+    }
+
+    /**
+     * @return Formation[]
+     */
+    public function getFormations()
+    {
+        return $this->formations->toArray();
+    }
+
+    /**
+     * @param Formation $formation
+     * @return FicheMetier
+     */
+    public function addFormation($formation)
+    {
+        $this->formations->add($formation);
+        return $this;
+    }
+
+    /**
+     * @param Formation $formation
+     * @return FicheMetier
+     */
+    public function removeFormation($formation)
+    {
+        $this->formations->removeElement($formation);
+        return $this;
+    }
+
+    /**
+     * @param Formation $formation
+     * @return boolean
+     */
+    public function hasFormation($formation)
+    {
+        return $this->formations->contains($formation);
+    }
+
+    public function clearFormations()
+    {
+        $this->formations->clear();
     }
 }

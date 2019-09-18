@@ -3,8 +3,11 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Structure;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Utilisateur\Entity\Db\User;
@@ -55,7 +58,7 @@ class AgentService {
      * @param string $paramName
      * @return Agent
      */
-    public function getRequestedAgent($controller, $paramName)
+    public function getRequestedAgent($controller, $paramName = 'agent')
     {
         $id = $controller->params()->fromRoute($paramName);
         $agent = $this->getAgent($id);
@@ -136,5 +139,76 @@ class AgentService {
             $agents[$item->getId()] = $item->getDenomination();
         }
         return $agents;
+    }
+
+    /**
+     * @param Structure $structure
+     * @return Agent[]
+     */
+    public function getAgentsSansFichePosteByStructure($structure = null)
+    {
+        try {
+            $today = new DateTime();
+            $noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la création des dates");
+        }
+
+        /** !!TODO!! faire le lien entre agent et fiche de poste */
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
+            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.administratif = :true')
+            ->andWhere('fiche.id IS NULL')
+            ->setParameter('today', $today)
+            ->setParameter('noEnd', $noEnd)
+            ->setParameter('true', 'O')
+            ->orderBy('agent.nomUsuel, agent.prenom')
+        ;
+
+        if ($structure !== null) {
+            $qb = $qb->andWhere('statut.structure = :structure')
+                     ->setParameter('structure', $structure);
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+
+    }
+
+    /**
+     * @param Structure $structure
+     * @return Agent[]
+     */
+    public function getAgentsByStructure(Structure $structure)
+    {
+        try {
+            $today = new DateTime();
+            $noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème lors de la création des dates");
+        }
+
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.administratif = :true')
+            ->setParameter('today', $today)
+            ->setParameter('noEnd', $noEnd)
+            ->setParameter('true', 'O')
+
+        ;
+
+        if ($structure !== null) {
+            $qb = $qb->andWhere('statut.structure = :structure')
+                ->setParameter('structure', $structure);
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+
     }
 }

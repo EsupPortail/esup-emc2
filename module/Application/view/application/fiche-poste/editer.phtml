@@ -2,28 +2,51 @@
 
 /**
  * @var FichePoste $fiche
+ * @var Structure $structure
  */
 
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FicheTypeExterne;
-use Application\Entity\Db\SpecificitePoste;
-use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Entity\Db\Structure;
+use Application\Provider\Privilege\FichePostePrivileges;
 
 $canAssocierAgent = true;
 $canAssocierMetierType = true;
 
-$canEditerSpecificte = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
-$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::EDITER));
+$canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 ?>
 
 <style>
     a.action {width: 18em;}
 </style>
 
-<h1 class="page-header">
-    Fiche métier : <?php echo $fiche->getLibelle(); ?> <br/>
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Fiche métier <br/>
+            <strong>
+                <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
+                <?php if($fiche->getLibelle() !== null) : ?>
+                    (<?php echo $fiche->getLibelle(); ?>)
+                <?php endif; ?>
+            </strong>
+        </h1>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <a href="<?php echo $this->url('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+           class="btn btn-primary action ajax-modal"
+           data-event="modification"
+        >
+            <span class="icon editer"></span>
+            Modifier le titre
+        </a>
+    </div>
+</div>
 
 
 <div class="panel panel-info">
@@ -34,7 +57,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </div>
             <div class="col-md-6">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], [], true); ?>"
+                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null]], true); ?>"
                        class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >
@@ -70,7 +93,7 @@ $canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPr
             </div>
             <div class="col-md-6">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], [], true); ?>"
+                    <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null]], true); ?>"
                        class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >

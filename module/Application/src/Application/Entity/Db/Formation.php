@@ -16,6 +16,8 @@ class Formation {
     private $description;
     /** @var string */
     private $lien;
+    /** @var FormationTheme */
+    private $theme;
 
     /** @var ArrayCollection */
     private $applications;
@@ -88,6 +90,24 @@ class Formation {
     public function setLien($lien)
     {
         $this->lien = $lien;
+        return $this;
+    }
+
+    /**
+     * @return FormationTheme
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param FormationTheme $theme
+     * @return Formation
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
         return $this;
     }
 

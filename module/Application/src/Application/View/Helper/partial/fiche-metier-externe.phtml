@@ -24,7 +24,7 @@ use Application\Entity\Db\FicheTypeExterne;
                     <a href="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
                        <span class="icon listing" title="Sélectionner les activités associées"></span></a>
-                    <a href="<?php $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>">
+                    <a href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>">
                         <span class="icon detruire" title="Retirer la fiche type externe"></span></a>
                 <?php endif; ?>
             </div>
@@ -69,6 +69,10 @@ use Application\Entity\Db\FicheTypeExterne;
 
                     <?php
                         $applications = [];
+                        foreach ($fiche->getFicheType()->getApplications() as $application) {
+                            $applications[] = $application->getLibelle();
+                        }
+
                         foreach ($fiche->getFicheType()->getActivites() as $activite) {
                             $idActivite = $activite->getActivite()->getId();
                             if (array_search($idActivite, $activites) !== false) {
@@ -91,6 +95,10 @@ use Application\Entity\Db\FicheTypeExterne;
 
                      <?php
                         $formations = [];
+                        //formations de base
+                        foreach ($fiche->getFicheType()->getFormations() as $formation) {
+                            $formations[] = $formation->getLibelle();
+                        }
 
                         //formations liees aux missions actives
                         foreach($fiche->getFicheType()->getActivites() as $activite) {
