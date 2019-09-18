@@ -16,6 +16,7 @@ $this->headTitle('Accueil de '.$user->getDisplayName());
 
 
 $canVoirFichePoste  = true;
+$canExporterFichePoste  = true;
 $canVoirFicheSigner = true;
 ?>
 
@@ -103,6 +104,13 @@ $canVoirFicheSigner = true;
                                 <span class="icon voir" title="Voir la fiche"></span></a>
                         <?php else : ?>
                             <span class="icon voir" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                        <?php if ($canExporterFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                               class="ajax-modal">
+                                <span class="icon pdf" title="Exporter la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon pdf" style="color:lightgray;"></span>
                         <?php endif; ?>
 
                         <?php if ($canVoirFicheSigner) : ?>
