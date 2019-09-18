@@ -160,8 +160,9 @@ class StructureService
     public function getStructuresByGestionnaire($user)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.gestionnaires', 'gestionnaireSelection')
             ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
-            ->andWhere('gestionnaire.id = :userId')
+            ->andWhere('gestionnaireSelection.id = :userId')
             ->setParameter('userId', $user->getId())
             ->orderBy('structure.libelleCourt')
         ;
