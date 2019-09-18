@@ -12,6 +12,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Zend\View\Renderer\PhpRenderer;
 
 class FichePosteControllerFactory {
 
@@ -40,8 +41,12 @@ class FichePosteControllerFactory {
         $fichePosteCreation = $container->get('FormElementManager')->get(FichePosteCreationForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
 
+        /* @var PhpRenderer $renderer  */
+        $renderer = $container->get('ViewRenderer');
+
         /** @var FichePosteController $controller */
         $controller = new FichePosteController();
+        $controller->setRenderer($renderer);
 
         $controller->setAgentService($agentService);
         $controller->setFichePosteService($fichePosteService);

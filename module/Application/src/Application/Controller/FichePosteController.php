@@ -37,6 +37,13 @@ class FichePosteController extends AbstractActionController {
     use FichePosteCreationFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
 
+    private $renderer;
+
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
     public function indexAction()
     {
         $fiches = $this->getFichePosteService()->getFichesPostes();
@@ -461,10 +468,9 @@ class FichePosteController extends AbstractActionController {
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
-        /* @var PhpRenderer $renderer  */
-        $renderer = $this->getServiceLocator()->get('ViewRenderer');
 
-        $exporter = new FichePostePdfExporter($renderer, 'A4');
+
+        $exporter = new FichePostePdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'fiche' => $fiche,
         ]);
