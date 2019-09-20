@@ -15,5 +15,12 @@ use Application\Controller\CompetenceController;use Application\Entity\Db\Compet
     <dt> Modificateur </dt>
     <dd> <?php echo $type->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $type->getHistoModification()->format('d/m/Y à H:m:s'); ?> </dd>
     <dt> Compétences associées </dt>
-    <dd> TODO </dd>
+    <dd>
+        <span class="badge"> <?php echo count($type->getCompetences()); ?></span>
+        <ul>
+            <?php foreach ($type->getCompetences() as $competence) : ?>
+                <li> <?php echo $competence->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
 </dl>

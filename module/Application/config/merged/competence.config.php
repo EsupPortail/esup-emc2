@@ -4,6 +4,11 @@ namespace Application;
 
 use Application\Controller\CompetenceController;
 use Application\Controller\CompetenceControllerFactory;
+use Application\Entity\Db\Competence;
+use Application\Form\Competence\CompetenceForm;
+use Application\Form\Competence\CompetenceFormFactory;
+use Application\Form\Competence\CompetenceHydrator;
+use Application\Form\Competence\CompetenceHydratorFactory;
 use Application\Form\CompetenceTheme\CompetenceThemeForm;
 use Application\Form\CompetenceTheme\CompetenceThemeFormFactory;
 use Application\Form\CompetenceTheme\CompetenceThemeHydrator;
@@ -27,6 +32,7 @@ return [
                     'controller' => CompetenceController::class,
                     'action' => [
                         'index',
+                        'afficher',
                         'afficher-competence-type',
                         'afficher-competence-theme',
                     ],
@@ -37,6 +43,7 @@ return [
                 [
                     'controller' => CompetenceController::class,
                     'action' => [
+                        'ajouter',
                         'ajouter-competence-type',
                         'ajouter-competence-theme',
                     ],
@@ -47,6 +54,9 @@ return [
                 [
                     'controller' => CompetenceController::class,
                     'action' => [
+                        'modifier',
+                        'historiser',
+                        'restaurer',
                         'modifier-competence-type',
                         'historiser-competence-type',
                         'restaurer-competence-type',
@@ -61,6 +71,7 @@ return [
                 [
                     'controller' => CompetenceController::class,
                     'action' => [
+                        'detruire',
                         'detruire-competence-type',
                         'detruire-competence-theme',
                     ],
@@ -84,6 +95,74 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
+                'child_routes' => [
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:competence',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:competence',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:competence',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:competence',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'detruire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire/:competence',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'detruire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                ],
             ],
             'competence-theme' => [
                 'type'  => Literal::class,
@@ -275,12 +354,14 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            CompetenceForm::class => CompetenceFormFactory::class,
             CompetenceThemeForm::class => CompetenceThemeFormFactory::class,
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            CompetenceHydrator::class => CompetenceHydratorFactory::class,
             CompetenceThemeHydrator::class => CompetenceThemeHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
         ],

@@ -2,8 +2,10 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceTheme;
 use Application\Entity\Db\CompetenceType;
+use Application\Form\Competence\CompetenceFormAwareTrait;
 use Application\Form\CompetenceTheme\CompetenceThemeFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
@@ -13,6 +15,7 @@ use Zend\View\Model\ViewModel;
 
 class CompetenceController extends AbstractActionController {
     use CompetenceServiceAwareTrait;
+    use CompetenceFormAwareTrait;
     use CompetenceThemeFormAwareTrait;
     use CompetenceTypeFormAwareTrait;
 
@@ -26,6 +29,90 @@ class CompetenceController extends AbstractActionController {
             'themes' => $themes,
             'types' => $types,
         ]);
+    }
+
+    /** COMPETENCE ****************************************************************************************************/
+
+    public function ajouterAction()
+    {
+        $competence = new Competence();
+        $form = $this->getCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter', [], [], true));
+        $form->bind($competence);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getCompetenceService()->create($competence);
+            }
+        }
+
+        $vm =  new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une compétence",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierAction()
+    {
+        $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+        $form = $this->getCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('competence/modifier', ['competence' => $competence->getId()], [], true));
+        $form->bind($competence);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getCompetenceService()->update($competence);
+            }
+        }
+
+        $vm =  new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une compétence",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function afficherAction()
+    {
+        $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+        return new ViewModel([
+            'title' => "Affiche d'une compétence",
+            'competence' => $competence,
+        ]);
+    }
+
+    public function historiserAction()
+    {
+        $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+        $this->getCompetenceService()->historise($competence);
+        return $this->redirect()->toRoute('competence', [], [], true);
+    }
+
+    public function restaurerAction()
+    {
+        $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+        $this->getCompetenceService()->restore($competence);
+        return $this->redirect()->toRoute('competence', [], [], true);
+    }
+
+    public function detruireAction()
+    {
+        $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+        $this->getCompetenceService()->delete($competence);
+        return $this->redirect()->toRoute('competence', [], [], true);
     }
 
     /** COMPETENCE THEME **********************************************************************************************/

@@ -7,7 +7,7 @@
         </id>
 
         <field name="libelle"           type="string" length="255"      column="libelle"                nullable="false"/>
-
+        <one-to-many target-entity="Application\Entity\Db\Competence" mapped-by="theme" field="competences"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

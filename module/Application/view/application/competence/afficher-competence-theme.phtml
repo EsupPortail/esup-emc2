@@ -17,5 +17,12 @@ use Application\Entity\Db\CompetenceTheme;
     <dt> Modificateur </dt>
     <dd> <?php echo $theme->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $theme->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
     <dt> Compétences associées </dt>
-    <dd> TODO </dd>
+    <dd>
+        <span class="badge"> <?php echo count($theme->getCompetences()); ?></span>
+        <ul>
+            <?php foreach ($theme->getCompetences() as $competence) : ?>
+                <li> <?php echo $competence->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
 </dl>

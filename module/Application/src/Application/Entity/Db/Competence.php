@@ -15,6 +15,10 @@ class Competence {
     private $precision;
     /** @var string */
     private $description;
+    /** @var CompetenceType */
+    private $type;
+    /** @car CompetenceTheme */
+    private $theme;
 
     /**
      * @return int
@@ -75,6 +79,42 @@ class Competence {
     public function setDescription($description)
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return CompetenceType
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param CompetenceType $type
+     * @return Competence
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param mixed $theme
+     * @return Competence
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
         return $this;
     }
 }

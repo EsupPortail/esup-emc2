@@ -6,6 +6,7 @@ use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
+use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FormationPrivileges;
 use Application\Provider\Privilege\MesStructuresPrivileges;
@@ -291,6 +292,12 @@ return [
                                 'privileges' => PostePrivileges::AFFICHER,
                                 'dropdown-header' => true,
                                 'icon' => 'fas fa-angle-right'
+                            ],
+                            'competence' => [
+                                'label'    => 'Les compétences',
+                                'route'    => 'competence',
+                                'privileges' => CompetencePrivileges::AFFICHER,
+                                'order'    => 5000,
                             ],
                         ],
                     ],
