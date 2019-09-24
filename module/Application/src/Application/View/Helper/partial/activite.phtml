@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @var Activite $activite
+ * @var array $options
+ */
+
+use Application\Entity\Db\Activite;
+
+$competences   = $activite->getCompetences();
+$nbCompetence  = count($competences);
+$applications  = $activite->getApplications();
+$nbApplication = count($applications);
+$formations    = $activite->getFormations();
+$nbFormation   = count($formations);
+
+$nbObject      = $nbCompetence + $nbFormation + $nbApplication;
+?>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>
+            <?php echo $activite->getLibelle(); ?>
+        </h2>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-1" >
+            <!-- TODO add here controls -->
+        </div>
+        <div class="col-md-7">
+            <h4> Description </h4>
+            <?php echo $activite->getDescription(); ?>
+        </div>
+
+        <?php if ($nbObject !== 0) : ?>
+            <div class="col-md-4" style="border:1px lightblue solid">
+                <small>
+                <?php if ($nbCompetence > 0) : ?>
+                    <h4>
+                        <span class="icon competence"></span>
+                        Compétences
+                        <span class="badge"> <?php echo $nbCompetence; ?></span>
+                    </h4>
+
+                    <ul>
+                        <?php foreach ($competences as $competence) : ?>
+                        <li>
+                            <?php echo $competence->getLibelle(); ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+
+                <?php if ($nbApplication > 0) : ?>
+                    <h4>
+                        <span class="icon application"></span>
+                        Compétences
+                        <span class="badge"> <?php echo $nbApplication; ?></span>
+                    </h4>
+
+                    <ul>
+                        <?php foreach ($applications as $application) : ?>
+                            <li>
+                                <?php echo $application->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+
+                <?php if ($nbFormation > 0) : ?>
+                    <h4>
+                        <span class="icon formation"></span>
+                        Formations
+                        <span class="badge"> <?php echo $nbFormation; ?></span>
+                    </h4>
+
+                    <ul>
+                        <?php foreach ($formations as $formation) : ?>
+                            <li>
+                                <?php echo $formation->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                </small>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

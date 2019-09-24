@@ -244,6 +244,18 @@ span.icon.cloner:before {
     content: "\f24d ";
 }
 
+span.icon.competence:before {
+    content: "\f02b ";
+}
+
+span.icon.application:before {
+    content: "\f109 ";
+}
+
+span.icon.formation:before {
+    content: "\f51c ";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }

@@ -35,10 +35,11 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 
     <?php foreach($activites as $activite) : ?>
         <?php if ($activite->getActivite()->estNonHistorise()) : ?>
-            <div class="activite">
-                <h3> <?php echo $activite->getActivite()->getLibelle(); ?> </h3>
-                <?php echo $activite->getActivite()->getDescription(); ?>
-            </div>
+<!--            <div class="activite">-->
+<!--                <h3> --><?php //echo $activite->getActivite()->getLibelle(); ?><!-- </h3>-->
+<!--                --><?php //echo $activite->getActivite()->getDescription(); ?>
+<!--            </div>-->
+            <?php echo $this->activite($activite->getActivite(), []); ?>
         <?php endif ;?>
     <?php endforeach; ?>
     </div>
