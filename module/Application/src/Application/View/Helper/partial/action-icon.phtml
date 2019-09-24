@@ -1,0 +1,43 @@
+<?php
+
+use UnicaenApp\Exception\RuntimeException;
+
+/**
+ * @var array $options
+ */
+
+$icon = $options['icone'];
+if ($icon === null) throw new RuntimeException("<strong>ActionIcon</strong> ne possèdent pas d'icone ! <br/> Veuillez renseigner l'option 'icone' ");
+
+$titre = '';
+if (isset($options['titre'])) $titre = $options['titre'];
+
+$url = $options['url'];
+if ($url === null) throw new RuntimeException("<strong>ActionIcon</strong> ne possèdent pas d'url ! <br/> Veuillez renseigner l'option 'url' ");
+
+$isAllowed = $options['isAllowed'];
+if ($isAllowed === null) throw new RuntimeException("<strong>ActionIcon</strong> ne possèdent pas d'url ! <br/> Veuillez renseigner l'option 'url' ");
+
+$displayOff = false;
+if (isset($options['displayOff'])) $displayOff = $options['displayOff'];
+
+$class = '';
+if (isset($options['class'])) $class = $options['class'];
+$event = '';
+if (isset($options['event'])) $event = $options['event'];
+//TODO event confirmation
+?>
+
+<?php if ($isAllowed === true) : ?>
+<a href="<?php echo $url; ?>"
+   <?php if ($class !== '') : ?>
+        class="<?php echo $class; ?>"
+    <?php endif; ?>
+    <?php if ($event !== '') : ?>
+        data-event="<?php echo $event; ?>"
+    <?php endif; ?>
+>
+    <span class="icon <?php echo $icon; ?>" title="<?php echo $titre; ?>"></span></a>
+<?php else : ?>
+    <span class="icon <?php echo $icon; ?>" style="color:lightgray;"></span>
+<?php endif; ?>

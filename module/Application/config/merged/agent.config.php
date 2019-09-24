@@ -6,7 +6,7 @@ use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
 use Application\Controller\AgentFichierController;
 use Application\Controller\AgentFichierControllerFactory;
-use Application\Controller\EntretienProfessionnel\EntretienProfessionnelController;
+use Application\Controller\EntretienProfessionnelController;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
@@ -29,7 +29,12 @@ return [
                     'action' => [
                         'index',
                         'afficher',
-
+                        'ajouter-agent-competence',
+                        'afficher-agent-competence',
+                        'modifier-agent-competence',
+                        'historiser-agent-competence',
+                        'restaurer-agent-competence',
+                        'detruire-agent-competence',
                     ],
                     'privileges' => [
                         AgentPrivileges::AFFICHER,
@@ -89,6 +94,66 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'ajouter-agent-competence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-agent-competence/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'ajouter-agent-competence',
+                            ],
+                        ],
+                    ],
+                    'afficher-agent-competence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-agent-competence/:agent-competence',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'afficher-agent-competence',
+                            ],
+                        ],
+                    ],
+                    'modifier-agent-competence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-agent-competence/:agent-competence',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'modifier-agent-competence',
+                            ],
+                        ],
+                    ],
+                    'historiser-agent-competence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-agent-competence/:agent-competence',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'historiser-agent-competence',
+                            ],
+                        ],
+                    ],
+                    'restaurer-agent-competence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-agent-competence/:agent-competence',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'restaurer-agent-competence',
+                            ],
+                        ],
+                    ],
+                    'detruire-agent-competence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire-agent-competence/:agent-competence',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'detruire-agent-competence',
+                            ],
+                        ],
+                    ],
                     'modifier' => [
                         'type'  => Segment::class,
                         'options' => [

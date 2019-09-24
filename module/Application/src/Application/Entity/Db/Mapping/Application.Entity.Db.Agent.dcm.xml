@@ -22,6 +22,7 @@
         <one-to-one target-entity="Application\Entity\Db\FichePoste" mapped-by="agent" field="fiche" />
 
         <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="agent" field="missionsSpecifiques"/>
+        <one-to-many target-entity="Application\Entity\Db\AgentCompetence" mapped-by="agent" field="competences"/>
 
         <many-to-many field="fichiers" target-entity="Fichier\Entity\Db\Fichier" inversed-by="fichier" fetch="LAZY">
             <join-table name="agent_fichier">

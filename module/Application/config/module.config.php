@@ -2,6 +2,7 @@
 
 namespace Application;
 
+use Application\View\Helper\ActionIconViewHelper;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -91,6 +92,12 @@ return [
         ]
     ],
 
+    'view_helpers' => [
+        'invokables' => [
+            'actionIcon' => ActionIconViewHelper::class,
+        ],
+    ],
+
     'view_manager'    => [
         'template_map'             => [
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
@@ -98,6 +105,7 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+
     ],
 
     'translator'      => [

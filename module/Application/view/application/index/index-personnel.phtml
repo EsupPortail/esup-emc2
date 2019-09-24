@@ -7,6 +7,7 @@
  * @var AgentMissionSpecifique[] $missions
  */
 
+use Application\Controller\AgentController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
@@ -15,9 +16,15 @@ use Utilisateur\Entity\Db\User;
 $this->headTitle('Accueil de '.$user->getDisplayName());
 
 
-$canVoirFichePoste  = true;
-$canExporterFichePoste  = true;
-$canVoirFicheSigner = true;
+$canVoirFichePoste     = true;
+$canExporterFichePoste = true;
+$canVoirFicheSigner    = true;
+$canVoirCompetence     = true;
+$canAjouterCompetence  = true;
+$canDetruireCompetence = true;
+
+$competences = $agent->getCompetences();
+
 ?>
 
 <h1 class="page-header">
@@ -164,6 +171,108 @@ $canVoirFicheSigner = true;
     </table>
 </div>
 
+<div class="main">
+    <div class="row">
+        <div class="col-md-8">
+        <h2>
+            Competences
+            <span class="badge">
+                <?php echo count($competences); ?>
+            </span>
+        </h2>
+        </div>
+        <div class="pull-right">
+            <br/>
+            <?php /** @see AgentController::ajouterAgentCompetenceAction() */ ?>
+            <a href="<?php echo $this->url('agent/ajouter-agent-competence', ['agent' => $agent->getId()], [], true); ?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification">
+                <span class="icon ajouter"></span>
+                Renseigner une compétence
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Compétence </th>
+                <th> Niveau </th>
+                <th> Validation </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($competences as $competence) : ?>
+            <tr>
+                <td> <?php echo $competence->getCompetence()->getLibelle(); ?> </td>
+                <td> <?php echo $competence->getNiveau(); ?> </td>
+                <td>
+                    <?php if ($competence->getDate() !== null && $competence->getValidateur() !== null) : ?>
+                        <small>
+                            <?php echo $competence->getDate()->format('d/m/Y'); ?>
+                            par <?php echo $competence->getValidateur()->getDisplayName(); ?>
+                        </small>
+                    <?php else : ?>
+                            <span class="icon attention" style="color: darkred"></span> Pas de validation
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php /** @see AgentController::afficherAgentCompetenceAction() */ ?>
+                    <?php echo $this->actionIcon([
+                        'icone' => "voir",
+                        'titre' => "Voir la compétence d'agent",
+                        'url' => $this->url('agent/afficher-agent-competence', ['agent-competence' => $competence->getId()], [], true),
+                        'isAllowed' => $canVoirCompetence,
+                        'class' => 'ajax-modal',
+                        'displayOff' => true,
+                     ]); ?>
+                    <?php /** @see AgentController::modifierAgentCompetenceAction() */ ?>
+                    <?php echo $this->actionIcon([
+                        'icone' => "editer",
+                        'titre' => "Modifier la compétence d'agent",
+                        'url' => $this->url('agent/modifier-agent-competence', ['agent-competence' => $competence->getId()], [], true),
+                        'isAllowed' => $canAjouterCompetence,
+                        'class' => 'ajax-modal',
+                        'event' => 'modification',
+                        'displayOff' => true,
+                    ]); ?>
+                    <?php if ($competence->estNonHistorise()) : ?>
+                        <?php /** @see AgentController::historiserAgentCompetenceAction() */ ?>
+                        <?php echo $this->actionIcon([
+                            'icone' => "historiser",
+                            'titre' => "Historiser la compétence d'agent",
+                            'url' => $this->url('agent/historiser-agent-competence', ['agent-competence' => $competence->getId()], [], true),
+                            'isAllowed' => $canAjouterCompetence,
+                            'displayOff' => true,
+                        ]); ?>
+                    <?php else : ?>
+                        <?php /** @see AgentController::restaurerAgentCompetenceAction() */ ?>
+                        <?php echo $this->actionIcon([
+                            'icone' => "restaurer",
+                            'titre' => "Restaurer la compétence d'agent",
+                            'url' => $this->url('agent/restaurer-agent-competence', ['agent-competence' => $competence->getId()], [], true),
+                            'isAllowed' => $canAjouterCompetence,
+                            'displayOff' => true,
+                        ]); ?>
+                    <?php endif; ?>
+                    <?php /** @see AgentController::detruireAgentCompetenceAction() */ ?>
+                    <?php echo $this->actionIcon([
+                        'icone' => "detruire",
+                        'titre' => "Détruire la compétence d'agent",
+                        'url' => $this->url('agent/detruire-agent-competence', ['agent-competence' => $competence->getId()], [], true),
+                        'isAllowed' => $canDetruireCompetence,
+                        'class' => 'ajax-modal',
+                        'event' => 'modification',
+                        'displayOff' => true,
+                    ]); ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
 
 <style>
     th.agent-cell {
@@ -185,3 +294,20 @@ $canVoirFicheSigner = true;
     }
 
 </style>
+
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    } );
+
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

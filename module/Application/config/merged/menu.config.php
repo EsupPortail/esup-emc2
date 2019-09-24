@@ -298,6 +298,7 @@ return [
                                 'route'    => 'competence',
                                 'privileges' => CompetencePrivileges::AFFICHER,
                                 'order'    => 5000,
+                                'icon' => 'fas fa-angle-right'
                             ],
                         ],
                     ],

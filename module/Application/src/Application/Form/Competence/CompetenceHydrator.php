@@ -35,8 +35,9 @@ class CompetenceHydrator implements HydratorInterface {
         $object->setPrecision($data['precision']);
         $object->setDescription($data['description']);
 
-        $type  = $this->getCompetenceService()->getCompetenceType($data['type']);
-        $theme = $this->getCompetenceService()->getCompetenceTheme($data['theme']);
+        $type  = null; $theme = null;
+        if (isset($data['type']) AND $data['type'] != '') $type = $this->getCompetenceService()->getCompetenceType($data['type']);
+        if (isset($data['theme']) AND $data['theme'] != '') $theme = $this->getCompetenceService()->getCompetenceTheme($data['theme']);
 
         $object->setTheme($theme);
         $object->setType($type);

@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\Agent\AgentForm;
+use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
@@ -25,6 +26,7 @@ class AgentControllerFactory {
          * @var AgentForm $agentForm
          */
         $agentForm = $container->get('FormElementManager')->get(AgentForm::class);
+        $agentCompetenceForm = $container->get('FormElementManager')->get(AgentCompetenceForm::class);
 
         /** @var AgentController $controller */
         $controller = new AgentController();
@@ -34,6 +36,7 @@ class AgentControllerFactory {
         $controller->setRessourceRhService($ressourceService);
 
         $controller->setAgentForm($agentForm);
+        $controller->setAgentCompetenceForm($agentCompetenceForm);
 
         return $controller;
     }

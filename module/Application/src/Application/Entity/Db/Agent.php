@@ -41,12 +41,15 @@ class Agent {
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
+    /** @var ArrayCollection (AgentCompetence) */
+    private $competences;
 
     public function __construct()
     {
         $this->statuts = new ArrayCollection();
         $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
+        $this->competences = new ArrayCollection();
     }
 
     /**
@@ -316,4 +319,36 @@ class Agent {
     public function getMissionsSpecifiques() {
         return $this->missionsSpecifiques->toArray();
     }
+
+    /** @return AgentCompetence[] */
+    public function getCompetences() {
+        return $this->competences->toArray();
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return Agent
+     */
+    public function addCompetence($competence) {
+        $this->competences->add($competence);
+        return $this;
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return Agent
+     */
+    public function removeCompetence($competence) {
+        $this->competences->removeElement($competence);
+        return $this;
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return boolean
+     */
+    public function hasCompetence($competence) {
+        return $this->competences->contains($competence);
+    }
+
 }
