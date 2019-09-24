@@ -8,6 +8,10 @@ use UnicaenApp\Entity\HistoriqueAwareTrait;
 class CompetenceType {
     use HistoriqueAwareTrait;
 
+    const CODE_CONNAISSANCE    = 3;
+    const CODE_OPERATIONNELLE  = 2;
+    const CODE_COMPORTEMENTALE = 1;
+
     /** @var integer */
     private $id;
     /** @var string */

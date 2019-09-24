@@ -36,6 +36,21 @@ class CompetenceService {
     /**
      * @param string $champ
      * @param string $order
+     * @return Competence[]
+     */
+    public function getCompetencesSansTheme($champ = 'libelle', $order = 'ASC')
+    {
+        $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
+            ->andWhere('competence.theme IS NULL')
+            ->orderBy('competence.'.$champ, $order)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $order
      * @return array
      */
     public function getCompetencesAsOptions($champ = 'libelle', $order = 'ASC')
@@ -44,6 +59,44 @@ class CompetenceService {
         $options = [];
         foreach ($types as $type) {
             $options[$type->getId()] = $type->getLibelle();
+        }
+        return $options;
+    }
+
+    /**
+     * @param bool $historiser
+     * @param string $champ
+     * @param string $order
+     * @return array
+     */
+    public function getCompetencesAsGroupOptions($historiser = false, $champ = 'libelle', $order = 'ASC')
+    {
+        $themes = $this->getCompetencesThemes();
+        $sanstheme = $this->getCompetencesSansTheme();
+        $options = [];
+
+        foreach ($themes as $theme) {
+            $optionsoptions = [];
+            foreach ($theme->getCompetences() as $competence) {
+                $optionsoptions[$competence->getId()] = $competence->getLibelle();
+            }
+            $array = [
+                'label' => $theme->getLibelle(),
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        if (!empty($sanstheme)) {
+            $optionsoptions = [];
+            foreach ($sanstheme as $competence) {
+                $optionsoptions[$competence->getId()] = $competence->getLibelle();
+            }
+            $array = [
+                'label' => "Sans thème",
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
         }
         return $options;
     }

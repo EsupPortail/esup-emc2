@@ -4,11 +4,13 @@ namespace Application\Form\Activite;
 
 use Application\Entity\Db\Activite;
 use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ActiviteHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
+    use CompetenceServiceAwareTrait;
     use FormationServiceAwareTrait;
 
     /**
@@ -22,6 +24,11 @@ class ActiviteHydrator implements HydratorInterface {
             $applicationIds[] = $application->getId();
         }
 
+        $competenceIds = [];
+        foreach ($object->getCompetences() as $competence) {
+            $competenceIds[] = $competence->getId();
+        }
+
         $formationIds = [];
         foreach ($object->getFormations() as $formation) {
             $formationIds[] = $formation->getId();
@@ -31,6 +38,7 @@ class ActiviteHydrator implements HydratorInterface {
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
             'applications' => $applicationIds,
+            'competences' => $competenceIds,
             'formations' => $formationIds,
         ];
         return $data;
@@ -46,9 +54,7 @@ class ActiviteHydrator implements HydratorInterface {
         $object->setLibelle($data['libelle']);
         $object->setDescription($data['description']);
 
-        foreach ($object->getApplications() as $application) {
-            $object->removeApplication($application);
-        }
+        $object->clearApplications();
         if (isset($data['applications'])) {
             foreach ($data['applications'] as $id) {
                 $application = $this->getApplicationService()->getApplication($id);
@@ -56,10 +62,15 @@ class ActiviteHydrator implements HydratorInterface {
             }
         }
 
-        foreach ($object->getFormations() as $formation) {
-            $object->removeFormation($formation);
+        $object->clearCompetences();
+        if (isset($data['competences'])) {
+            foreach ($data['competences'] as $id) {
+                $competence = $this->getCompetenceService()->getCompetence($id);
+                if ($competence) $object->addCompetence($competence);
+            }
         }
 
+        $object->clearFormations();
         if (isset($data['formations'])) {
             foreach ($data['formations'] as $id) {
                 $formation = $this->getFormationService()->getFormation($id);

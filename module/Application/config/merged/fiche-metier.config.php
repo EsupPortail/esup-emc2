@@ -23,6 +23,10 @@ use Application\Form\FicheMetier\FormationsForm;
 use Application\Form\FicheMetier\FormationsFormFactory;
 use Application\Form\FicheMetier\FormationsHydrator;
 use Application\Form\FicheMetier\FormationsHydratorFactory;
+use Application\Form\FicheMetier\GererCompetenceForm;
+use Application\Form\FicheMetier\GererCompetenceFormFactory;
+use Application\Form\FicheMetier\GererCompetenceHydrator;
+use Application\Form\FicheMetier\GererCompetenceHydratorFactory;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
@@ -70,6 +74,7 @@ return [
                         'modifier-comportementale',
                         'modifier-application',
                         'modifier-formation',
+                        'gerer-competences',
                         'ajouter',
                     ],
                     'privileges' => [
@@ -111,6 +116,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'gerer-competences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-competences/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'gerer-competences',
                             ],
                         ],
                         'may_terminate' => true,
@@ -298,8 +314,6 @@ return [
         ],
     ],
     'form_elements' => [
-        'invokables' => [
-        ],
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
@@ -308,8 +322,7 @@ return [
             FormationComportementaleForm::class => FormationComportementaleFormFactory::class,
             ApplicationsForm::class => ApplicationsFormFactory::class,
             FormationsForm::class => FormationsFormFactory::class,
-
-
+            GererCompetenceForm::class => GererCompetenceFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -322,6 +335,7 @@ return [
             LibelleHydrator::class => LibelleHydratorFactory::class,
             ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
             FormationsHydrator::class => FormationsHydratorFactory::class,
+            GererCompetenceHydrator::class => GererCompetenceHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

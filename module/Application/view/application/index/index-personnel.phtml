@@ -225,7 +225,6 @@ $competences = $agent->getCompetences();
                         'url' => $this->url('agent/afficher-agent-competence', ['agent-competence' => $competence->getId()], [], true),
                         'isAllowed' => $canVoirCompetence,
                         'class' => 'ajax-modal',
-                        'displayOff' => true,
                      ]); ?>
                     <?php /** @see AgentController::modifierAgentCompetenceAction() */ ?>
                     <?php echo $this->actionIcon([
@@ -235,7 +234,6 @@ $competences = $agent->getCompetences();
                         'isAllowed' => $canAjouterCompetence,
                         'class' => 'ajax-modal',
                         'event' => 'modification',
-                        'displayOff' => true,
                     ]); ?>
                     <?php if ($competence->estNonHistorise()) : ?>
                         <?php /** @see AgentController::historiserAgentCompetenceAction() */ ?>
@@ -244,7 +242,6 @@ $competences = $agent->getCompetences();
                             'titre' => "Historiser la compétence d'agent",
                             'url' => $this->url('agent/historiser-agent-competence', ['agent-competence' => $competence->getId()], [], true),
                             'isAllowed' => $canAjouterCompetence,
-                            'displayOff' => true,
                         ]); ?>
                     <?php else : ?>
                         <?php /** @see AgentController::restaurerAgentCompetenceAction() */ ?>
@@ -253,7 +250,6 @@ $competences = $agent->getCompetences();
                             'titre' => "Restaurer la compétence d'agent",
                             'url' => $this->url('agent/restaurer-agent-competence', ['agent-competence' => $competence->getId()], [], true),
                             'isAllowed' => $canAjouterCompetence,
-                            'displayOff' => true,
                         ]); ?>
                     <?php endif; ?>
                     <?php /** @see AgentController::detruireAgentCompetenceAction() */ ?>
@@ -264,7 +260,6 @@ $competences = $agent->getCompetences();
                         'isAllowed' => $canDetruireCompetence,
                         'class' => 'ajax-modal',
                         'event' => 'modification',
-                        'displayOff' => true,
                     ]); ?>
                 </td>
             </tr>

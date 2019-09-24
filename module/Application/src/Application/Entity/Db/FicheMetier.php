@@ -21,17 +21,21 @@ class FicheMetier {
     private $competencesComportementales;
 
     /** @var ArrayCollection */
+    private $activites;
+    /** @var ArrayCollection */
     private $applications;
     /** @var ArrayCollection */
-    private $activites;
+    private $competences;
     /** @var ArrayCollection */
     private $formations;
 
 
+
     public function __construct()
     {
-        $this->applications = new ArrayCollection();
         $this->activites = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->competences = new ArrayCollection();
         $this->formations = new ArrayCollection();
     }
 
@@ -132,33 +136,7 @@ class FicheMetier {
         return $this;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getApplications()
-    {
-        return $this->applications;
-    }
-
-    /**
-     * @param Application $application
-     * @return FicheMetier
-     */
-    public function addApplication($application)
-    {
-        $this->applications->add($application);
-        return $this;
-    }
-
-    /**
-     * @param Application $application
-     * @return FicheMetier
-     */
-    public function removeApplication($application)
-    {
-        $this->applications->removeElement($application);
-        return $this;
-    }
+    /** ACTIVITE ******************************************************************************************************/
 
     /**
      * @return FicheMetierTypeActivite[]
@@ -187,6 +165,86 @@ class FicheMetier {
         $this->activites->removeElement($activite);
         return $this;
     }
+
+    /** APPLICATION ***************************************************************************************************/
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @param Application $application
+     * @return FicheMetier
+     */
+    public function addApplication($application)
+    {
+        $this->applications->add($application);
+        return $this;
+    }
+
+    /**
+     * @param Application $application
+     * @return FicheMetier
+     */
+    public function removeApplication($application)
+    {
+        $this->applications->removeElement($application);
+        return $this;
+    }
+
+    /** COMPETENCE ****************************************************************************************************/
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCompetences()
+    {
+        return $this->competences;
+    }
+
+    /**
+     * @param Competence $competence
+     * @return FicheMetier
+     */
+    public function addCompetence($competence)
+    {
+        $this->competences->add($competence);
+        return $this;
+    }
+
+    /**
+     * @param Competence $competence
+     * @return FicheMetier
+     */
+    public function removeCompetence($competence)
+    {
+        $this->competences->removeElement($competence);
+        return $this;
+    }
+
+    /**
+     * @param Competence $competence
+     * @return boolean
+     */
+    public function hasCompetence($competence)
+    {
+        return $this->competences->contains($competence);
+    }
+
+    /**
+     * @return FicheMetier
+     */
+    public function clearCompetences()
+    {
+        $this->competences->clear();
+        return $this;
+    }
+
+    /** FORMATION *****************************************************************************************************/
 
     /**
      * @return Formation[]

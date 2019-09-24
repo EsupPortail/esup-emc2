@@ -18,11 +18,14 @@ class Activite
     /** @var ArrayCollection */
     private $applications;
     /** @var ArrayCollection */
+    private $competences;
+    /** @var ArrayCollection */
     private $formations;
 
     public function __construct()
     {
         $this->applications = new ArrayCollection();
+        $this->competences = new ArrayCollection();
         $this->formations = new ArrayCollection();
     }
     /**
@@ -69,6 +72,8 @@ class Activite
         return $this;
     }
 
+    /** APPLICATIONS **************************************************************************************************/
+
     /**
      * @return Application[]
      */
@@ -107,6 +112,65 @@ class Activite
     }
 
     /**
+     * @return Activite
+     */
+    public function clearApplications()
+    {
+        $this->applications->clear();
+        return $this;
+    }
+
+    /** COMPETENCES ***************************************************************************************************/
+
+    /**
+     * @return Competence[]
+     */
+    public function getCompetences()
+    {
+        return $this->competences->toArray();
+    }
+
+    /**
+     * @param Competence $competence
+     * @return Activite
+     */
+    public function addCompetence($competence)
+    {
+        $this->competences->add($competence);
+        return $this;
+    }
+
+    /**
+     * @param Competence $competence
+     * @return Activite
+     */
+    public function removeCompetence($competence)
+    {
+        $this->competences->removeElement($competence);
+        return $this;
+    }
+
+    /**
+     * @param Competence $competence
+     * @return boolean
+     */
+    public function hasCompetence($competence)
+    {
+        return $this->competences->contains($competence);
+    }
+
+    /**
+     * @return Activite
+     */
+    public function clearCompetences()
+    {
+        $this->competences->clear();
+        return $this;
+    }
+
+    /** FORMATIONS ****************************************************************************************************/
+
+    /**
      * @return Formation[]
      */
     public function getFormations()
@@ -131,6 +195,24 @@ class Activite
     public function removeFormation($formation)
     {
         $this->formations->removeElement($formation);
+        return $this;
+    }
+
+    /**
+     * @param Formation $formation
+     * @return boolean
+     */
+    public function hasFormation($formation)
+    {
+        return $this->formations->contains($formation);
+    }
+
+    /**
+     * @return Activite
+     */
+    public function clearFormations()
+    {
+        $this->formations->clear();
         return $this;
     }
 }

@@ -3,6 +3,7 @@
 namespace Application\Form\Activite;
 
 use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -12,6 +13,7 @@ use Zend\InputFilter\Factory;
 
 class ActiviteForm extends Form {
     use ApplicationServiceAwareTrait;
+    use CompetenceServiceAwareTrait;
     use FormationServiceAwareTrait;
 
     public function init()
@@ -58,6 +60,23 @@ class ActiviteForm extends Form {
                 'multiple' => 'multiple',
             ]
         ]);
+        //competence
+        $this->add([
+            'name' => 'competences',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Compétences : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
+            ],
+            'attributes' => [
+                'class' => 'description form-control',
+                'style' => 'height:300px;',
+                'multiple' => 'multiple',
+            ]
+        ]);
         // formation
         $this->add([
             'type' => Select::class,
@@ -94,7 +113,9 @@ class ActiviteForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'               => [ 'required' => true,  ],
             'description'           => [ 'required' => true,  ],
-            'applications'           => [ 'required' => false,  ],
+            'applications'          => [ 'required' => false,  ],
+            'competences'           => [ 'required' => false,  ],
+            'formations'            => [ 'required' => false,  ],
         ]));
     }
 

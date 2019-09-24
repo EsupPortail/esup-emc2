@@ -56,7 +56,7 @@ class FicheMetierService {
      * @param bool $notNull
      * @return FicheMetier
      */
-    public function getRequestedFicheMetier($controller, $name, $notNull = false)
+    public function getRequestedFicheMetier($controller, $name = 'fiche', $notNull = false)
     {
         $ficheId = $controller->params()->fromRoute($name);
         $fiche = $this->getFicheMetier($ficheId);

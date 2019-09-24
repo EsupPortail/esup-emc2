@@ -44,6 +44,7 @@ class FormationService {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
             ->andWhere('formation.theme IS NULL')
             ->andWhere('formation.histoDestruction IS NULL')
+            ->orderBy('formation.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
         return $result;

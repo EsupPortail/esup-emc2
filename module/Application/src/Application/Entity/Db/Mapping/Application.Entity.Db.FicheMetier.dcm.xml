@@ -26,6 +26,17 @@
             </join-table>
         </many-to-many>
 
+        <many-to-many field="competences" target-entity="Application\Entity\Db\Competence" inversed-by="competence" fetch="LAZY">
+            <join-table name="fichemetier_competence">
+                <join-columns>
+                    <join-column name="fiche_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="competence_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <many-to-many field="formations" target-entity="Application\Entity\Db\Formation">
             <join-table name="fiche_metier_formation">
                 <join-columns>

@@ -2,6 +2,7 @@
 
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 
@@ -16,6 +17,14 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
 $canEditer = true;
 
 
+$array = $fiche->getCompetences();
+$competences = [];
+/** @var Competence $competence */
+foreach ($array as $competence)  {
+    $type = $competence->getType();
+    if (!isset($competences[$type->getLibelle()])) $competences[$type->getLibelle()] = [];
+    $competences[$type->getLibelle()][] = $competence;
+}
 ?>
 
 <div class="row">
@@ -124,6 +133,32 @@ $canEditer = true;
     <div class="panel-body">
         <div class="row">
             <div class="col-md-1">
+            </div>
+            <div class="col-md-11">
+                <a href="" class="btn btn-primary action">
+                    <span class="icon ajouter"></span>
+                    Ajouter une application
+                </a>
+
+                <?php /** @see FicheMetierController::gererCompetencesAction() */ ?>
+                <a href="<?php echo $this->url('fiche-metier-type/gerer-competences', ['fiche' => $fiche->getId()], [], true); ?>"
+                   class="btn btn-primary action ajax-modal"
+                   data-event="modification"
+                >
+                    <span class="icon ajouter"></span>
+                    Gérer les compétences
+                </a>
+
+                <a href="" class="btn btn-primary action">
+                    <span class="icon ajouter"></span>
+                    Ajouter une formation
+                </a>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-1">
                 <a class="btn btn-default mini ajax-modal"
                    data-event="modification"
                    href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true); ?>"
@@ -133,7 +168,21 @@ $canEditer = true;
             </div>
             <div class="col-md-11">
                 <h3> Connaissances </h3>
+                <i>
                 <?php echo $fiche->getConnaissances(); ?>
+                </i>
+                <br/>
+
+                <?php $connaissances = $competences['Connaissance']; ?>
+                <ul>
+                    <?php if ($connaissances !== null) : ?>
+                        <?php foreach ($connaissances as $competence): ?>
+                            <li>
+                                <?php echo $competence->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
         <div class="row">
@@ -147,7 +196,20 @@ $canEditer = true;
             </div>
             <div class="col-md-11">
                 <h3> Compétences opérationnelles </h3>
+                <i>
                 <?php echo $fiche->getCompetencesOperationnelles(); ?>
+                </i>
+
+                <?php $connaissances = $competences['Opérationnelle']; ?>
+                <ul>
+                    <?php if ($connaissances !== null) : ?>
+                        <?php foreach ($connaissances as $competence): ?>
+                            <li>
+                                <?php echo $competence->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
         <div class="row">
@@ -161,7 +223,21 @@ $canEditer = true;
             </div>
             <div class="col-md-11">
                 <h3> Compétences comportementales </h3>
+                <i>
                 <?php echo $fiche->getCompetencesComportementales(); ?>
+                </i>
+
+                <?php $connaissances = $competences['Comportementale']; ?>
+                <ul>
+                    <?php if ($connaissances !== null) : ?>
+                        <?php foreach ($connaissances as $competence): ?>
+                            <li>
+                                <?php echo $competence->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+                </ul>
             </div>
         </div>
         <div class="row">
