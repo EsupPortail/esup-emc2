@@ -72,11 +72,9 @@ class FicheMetierController extends  AbstractActionController{
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);
         if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
-        $activites = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
 
         return new ViewModel([
             'fiche' => $fiche,
-            'activites' => $activites,
         ]);
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+use Application\Controller\ActiviteController;
+use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetierTypeActivite;
 
@@ -38,6 +40,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
     <div class="panel-body">
         <?php if ($editMode === true && $type !== null) : ?>
         <div class="col-md-1" style="border:1px lightgray solid; padding: 5px; text-align: center;">
+            <?php /** @see ActiviteController::editerAction() */ ?>
             <a href="<?php echo $this->url('activite/editer', ['activite' => $activite->getId()], [], true); ?>"
                class="btn btn-default ajax-modal"
                data-event="modification"
@@ -45,16 +48,19 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
             >
                 <span class="icon editer"></span><br/>
             </a>
+            <?php /** @see FicheMetierController::retirerActiviteAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $type->getId()], [], true); ?>"
                class="btn btn-default"
                style="width:5rem; margin: 5px;">
                 <span class="icon detruire"></span><br/>
             </a>
+            <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
                class="btn btn-default"
                style="width:5rem; margin: 5px;">
                 <span class="icon monter"></span><br/>
             </a>
+            <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
                class="btn btn-default"
                style="width:5rem; margin: 5px;">
