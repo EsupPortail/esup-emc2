@@ -53,7 +53,7 @@ class AssocierPosteForm extends Form {
         $postes = $this->getPosteService()->getPostes();
         $options = [];
         foreach ($postes as $poste) {
-            $options[$poste->getId()] = $poste->getNumeroPoste();
+            $options[$poste->getId()] = $poste->getNumeroPoste() . " - ". $poste->getDomaine()->getLibelle() . " - ".$poste->getStructure()->getLibelleCourt();
         }
         return $options;
     }
@@ -68,7 +68,7 @@ class AssocierPosteForm extends Form {
         $postes = $this->getPosteService()->getPostesByStructure($structure);
         $posteOptions = [];
         foreach ($postes as $poste) {
-            $posteOptions[$poste->getId()] = $poste->getNumeroPoste();
+            $posteOptions[$poste->getId()] = $poste->getNumeroPoste() . " - ". $poste->getDomaine()->getLibelle() . " - ".$poste->getStructure()->getLibelleCourt();
         }
         /** @var Select $this->get('agent') */
         $this->get('poste')->setValueOptions($posteOptions);

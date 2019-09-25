@@ -198,7 +198,7 @@ class FichierService {
             ;
             $fichier->setNomStockage($date->format('Ymd-His')."-".$uid."-".$nature->getCode()."-".$nomFichier);
 
-            $newPath = '/app/upload/' . $fichier->getNomStockage();
+            $newPath = '/var/www/html/upload/' . $fichier->getNomStockage();
             $res = move_uploaded_file($path, $newPath);
 
             if ($res === false) {
@@ -218,7 +218,7 @@ class FichierService {
      */
     public function fetchContenuFichier(Fichier $fichier)
     {
-        $filePath = '/app/upload/' . $fichier->getNomStockage();
+        $filePath = '/var/www/html/upload/' . $fichier->getNomStockage();
 
         if (! is_readable($filePath)) {
             throw new RuntimeException(
