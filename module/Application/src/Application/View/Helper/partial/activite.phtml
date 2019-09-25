@@ -1,11 +1,23 @@
 <?php
 
+use Application\Entity\Db\Activite;
+use Application\Entity\Db\FicheMetierTypeActivite;
+
 /**
- * @var Activite $activite
+ * @var Activite|FicheMetierTypeActivite $activite
  * @var array $options
  */
 
-use Application\Entity\Db\Activite;
+$type = null;
+if ($activite instanceof FicheMetierTypeActivite) {
+    $type = $activite;
+    $activite  = $activite->getActivite();
+}
+
+$editMode = false;
+if (isset($options['edit-mode'])) $editMode = ($options['edit-mode'] === true);
+
+
 
 $competences   = $activite->getCompetences();
 $nbCompetence  = count($competences);
@@ -24,13 +36,41 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         </h2>
     </div>
     <div class="panel-body">
-        <div class="col-md-1" >
-            <!-- TODO add here controls -->
+        <?php if ($editMode === true && $type !== null) : ?>
+        <div class="col-md-1" style="border:1px lightgray solid; padding: 5px; text-align: center;">
+            <a href="<?php echo $this->url('activite/editer', ['activite' => $activite->getId()], [], true); ?>"
+               class="btn btn-default ajax-modal"
+               data-event="modification"
+               style="width:5rem; margin: 5px;"
+            >
+                <span class="icon editer"></span><br/>
+            </a>
+            <a href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $type->getId()], [], true); ?>"
+               class="btn btn-default"
+               style="width:5rem; margin: 5px;">
+                <span class="icon detruire"></span><br/>
+            </a>
+            <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
+               class="btn btn-default"
+               style="width:5rem; margin: 5px;">
+                <span class="icon monter"></span><br/>
+            </a>
+            <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
+               class="btn btn-default"
+               style="width:5rem; margin: 5px;">
+                <span class="icon descendre"></span><br/>
+            </a>
         </div>
         <div class="col-md-7">
             <h4> Description </h4>
             <?php echo $activite->getDescription(); ?>
         </div>
+        <?php else : ?>
+            <div class="col-md-8">
+                <h4> Description </h4>
+                <?php echo $activite->getDescription(); ?>
+            </div>
+        <?php endif; ?>
 
         <?php if ($nbObject !== 0) : ?>
             <div class="col-md-4" style="border:1px lightblue solid">
@@ -54,7 +94,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                 <?php if ($nbApplication > 0) : ?>
                     <h4>
                         <span class="icon application"></span>
-                        Compétences
+                        Applications
                         <span class="badge"> <?php echo $nbApplication; ?></span>
                     </h4>
 
@@ -87,3 +127,12 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         <?php endif; ?>
     </div>
 </div>
+
+<style>
+    a.btn-default {
+        background-color: lightgrey;
+    }
+    a.btn-default:hover {
+        background-color: #aaaaaa;
+    }
+</style>
