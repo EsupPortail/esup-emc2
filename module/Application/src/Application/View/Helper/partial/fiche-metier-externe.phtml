@@ -6,9 +6,9 @@
  */
 
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Entity\Db\Formation;
 
 ?>
-
 
 <div class="panel panel-info">
     <div class="panel-heading">
@@ -37,102 +37,6 @@ use Application\Entity\Db\FicheTypeExterne;
         </div>
     </div>
     <div class="panel-body">
-        <h3>Missions principales</h3>
-        <?php echo $fiche->getFicheType()->getMissionsPrincipales(); ?>
-
-        <h3> Activités </h3>
-        <?php
-            $activites = explode(";", $fiche->getActivites());
-        ?>
-
-        <?php foreach($fiche->getFicheType()->getActivites() as $activite)  : ?>
-            <?php $idActivite = $activite->getActivite()->getId(); ?>
-            <?php if (array_search($idActivite, $activites) !== false)  : ?>
-                <h4> <?php echo $activite->getActivite()->getLibelle(); ?> </h4>
-                <?php echo $activite->getActivite()->getDescription(); ?>
-            <?php endif; ?>
-        <?php endforeach; ?>
-
-        <?php if ($fiche->getPrincipale()) : ?>
-            <h3>Parcours de formation de base pour la prise de poste </h3>
-
-            <h4> Connaissances </h4>
-            <?php echo  $fiche->getFicheType()->getConnaissances(); ?>
-            <h4> Compétences opérationnelles </h4>
-            <?php echo  $fiche->getFicheType()->getCompetencesOperationnelles(); ?>
-            <h4> Compétences comportementales </h4>
-            <?php $fiche->getFicheType()->getCompetencesComportementales(); ?>
-
-             <div class="row">
-                 <div class="col-md-6">
-                     <h4> Applications métiers</h4>
-
-                    <?php
-                        $applications = [];
-                        foreach ($fiche->getFicheType()->getApplications() as $application) {
-                            $applications[] = $application->getLibelle();
-                        }
-
-                        foreach ($fiche->getFicheType()->getActivites() as $activite) {
-                            $idActivite = $activite->getActivite()->getId();
-                            if (array_search($idActivite, $activites) !== false) {
-                                foreach ($activite->getActivite()->getApplications() as $application) {
-                                    $applications[] = $application->getLibelle();
-                                }
-                            }
-                        }
-                    ?>
-
-                     <ul>
-                    <?php foreach ($applications as $application) : ?>
-                        <li> <?php echo $application; ?> </li>
-                    <?php endforeach; ?>
-                    </ul>
-
-                 </div>
-                 <div class="col-md-6">
-                      <h4> Plan de formation </h4>
-
-                     <?php
-                        $formations = [];
-                        //formations de base
-                        foreach ($fiche->getFicheType()->getFormations() as $formation) {
-                            $formations[] = $formation->getLibelle();
-                        }
-
-                        //formations liees aux missions actives
-                        foreach($fiche->getFicheType()->getActivites() as $activite) {
-                            $idActivite = $activite->getActivite()->getId();
-                            if (array_search($idActivite, $activites) !== false) {
-                                foreach ($activite->getActivite()->getFormations() as $formation) {
-                                    $formations[] = $formation->getLibelle();
-                                }
-                                foreach ($activite->getActivite()->getApplications() as $application) {
-                                    foreach ($application->getFormations() as $formation) {
-                                        $formations[] = $formation->getLibelle();
-                                    }
-                                }
-                            }
-                        }
-
-                        //formation liees aux logiciels lies à la fiche metier
-                        foreach ($fiche->getFicheType()->getApplications() as $application) {
-                            foreach ($application->getFormations() as $formation) {
-                                $formations[] = $formation->getLibelle();
-                            }
-                        }
-
-                        sort($formations);
-                        $formations = array_unique($formations);
-                    ?>
-
-                     <ul>
-                         <?php foreach($formations as $formation): ?>
-                            <li> <?php echo $formation; ?> </li>
-                         <?php endforeach; ?>
-                     </ul>
-                 </div>
-             </div>
-    <?php endif; ?>
+        <?php echo $this->ficheMetier($fiche->getFicheType(), ['sans-titre' => true, 'activite-liste' => $fiche->getActivites()]); ?>
     </div>
 </div>

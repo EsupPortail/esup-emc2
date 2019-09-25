@@ -458,3 +458,17 @@ span.badge.structure.Établissement {
 span.badge.structure.Structurederecherche {
     background-color: #3c763d;
 }
+
+span.fiche-metier {
+    font-weight: bolder;
+    color: blue;
+    font-family: monospace;
+    cursor: help;
+}
+
+span.activite {
+    font-weight: bolder;
+    color: orangered;
+    font-family: monospace;
+    cursor: help;
+}

@@ -2,7 +2,6 @@
 
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Application;
-use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\Formation;
@@ -11,55 +10,66 @@ use Application\Entity\Db\Formation;
  * @var FicheMetier $fiche
  */
 
+
 /**
  * @var FicheMetierTypeActivite[] $activites
  */
 $activites = $fiche->getActivites();
 usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() > $b->getPosition();});
 
-$this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
+$activitesListe = [];
+if (isset($options['activite-liste'])) {
+    $activitesListe = explode(';', $options['activite-liste']);
+} else {
+    foreach ($activites as $activite) $activitesListe[] = $activite->getActivite()->getId();
+}
 
 $editMode = false;
 if (isset($options['edit-mode'])) $editMode = ($options['edit-mode'] === true);
+$sansTitre = false;
+if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true);
 
-$array = $fiche->getCompetences();
-$competences = [];
-/** @var Competence $competence */
-foreach ($array as $competence)  {
-    $type = $competence->getType();
-    if (!isset($competences[$type->getLibelle()])) $competences[$type->getLibelle()] = [];
-    $competences[$type->getLibelle()][] = $competence;
-}
+$this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
 ?>
 
-<div class="row">
-    <div class="col-md-8">
-        <h1 class="page-header">
-            Fiche métier #<?php echo $fiche->getId(); ?> <br/>
-            <em><?php echo $fiche->getMetier()->getLibelle(); ?></em>
-        </h1>
+<?php if ($sansTitre !== true) : ?>
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="page-header">
+                Fiche métier #<?php echo $fiche->getId(); ?> <br/>
+                <em><?php echo $fiche->getMetier()->getLibelle(); ?></em>
+            </h1>
+        </div>
+        <div class="col-md-4">
+            <?php if ($editMode) : ?>
+                <br/>
+                <br/>
+                <br/>
+                <?php /** @see FicheMetierController::editerLibelleAction() */ ?>
+                <a  class="btn btn-primary action ajax-modal pull-right"
+                    data-event="modification"
+                    href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [] , true); ?>">
+                    <span class="icon editer"></span>
+                    Éditer libellé
+                </a>
+            <?php endif; ?>
+        </div>
     </div>
-    <div class="col-md-4">
-        <?php if ($editMode) : ?>
-            <br/>
-            <br/>
-            <br/>
-            <?php /** @see FicheMetierController::editerLibelleAction() */ ?>
-            <a  class="btn btn-primary action ajax-modal pull-right"
-                data-event="modification"
-                href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [] , true); ?>">
-                <span class="icon editer"></span>
-                Éditer libellé
-            </a>
-        <?php endif; ?>
-    </div>
-</div>
+<?php endif; ?>
 
 <!-- MISSIONS PRINCIPALE ------------------------------------------------------------------------------------------>
 <div class="main">
     <h2> Missions principales</h2>
 
-    <?php echo $fiche->getMissionsPrincipales(); ?>
+    <ul>
+        <?php foreach ($activites as $activite) : ?>
+            <?php if (array_search($activite->getActivite()->getId(), $activitesListe) !== false) : ?>
+                <li>
+                    <?php echo $activite->getActivite()->getLibelle(); ?>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </ul>
 </div>
 
 <!-- ACTIVITES ASSOCIEES ------------------------------------------------------------------------------------------>
@@ -94,7 +104,9 @@ foreach ($array as $competence)  {
     </div>
 
     <?php foreach ($activites as $ficheActivite): ?>
-        <?php echo $this->activite($ficheActivite, ['edit-mode' => $editMode]); ?>
+        <?php if (array_search($ficheActivite->getActivite()->getId(), $activitesListe) !== false) : ?>
+            <?php echo $this->activite($ficheActivite, ['edit-mode' => $editMode]); ?>
+        <?php endif; ?>
     <?php endforeach;?>
 </div>
 
@@ -114,9 +126,11 @@ foreach ($array as $competence)  {
         $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'fiche|'. $fiche->getMetier()->getLibelle();
     }
     foreach($fiche->getActivites() as $element) {
-        foreach ($element->getActivite()->getCompetences() as $competence) {
-            $type = $competence->getType()->getLibelle();
-            $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'activite|'. $element->getActivite()->getLibelle();
+        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+            foreach ($element->getActivite()->getCompetences() as $competence) {
+                $type = $competence->getType()->getLibelle();
+                $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+            }
         }
     }
     $count = 0;
@@ -225,8 +239,10 @@ foreach ($array as $competence)  {
         $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fiche->getMetier()->getLibelle();
     }
     foreach($fiche->getActivites() as $element) {
-        foreach ($element->getActivite()->getApplications() as $application) {
-            $dictionnaireApplication[$application->getLibelle()][] = 'activite|'. $element->getActivite()->getLibelle();
+        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+            foreach ($element->getActivite()->getApplications() as $application) {
+                $dictionnaireApplication[$application->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+            }
         }
     }
     ?>
@@ -290,7 +306,9 @@ foreach ($array as $competence)  {
     }
     foreach($fiche->getActivites() as $element) {
         foreach ($element->getActivite()->getFormations() as $formation) {
-            $dictionnaireFormation[$formation->getLibelle()][] = 'activite|'. $element->getActivite()->getLibelle();
+            if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+                $dictionnaireFormation[$formation->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+            }
         }
     }
     ?>
@@ -361,19 +379,4 @@ foreach ($array as $competence)  {
         text-decoration: none;
         margin-bottom: 2rem;
     }
-
-    span.fiche-metier {
-        font-weight: bolder;
-        color: blue;
-        font-family: monospace;
-        cursor: help;
-    }
-
-    span.activite {
-        font-weight: bolder;
-        color: orangered;
-        font-family: monospace;
-        cursor: help;
-    }
-
 </style>
