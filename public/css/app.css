@@ -472,3 +472,10 @@ span.activite {
     font-family: monospace;
     cursor: help;
 }
+
+div.panel div.main {
+
+    margin: 0px;
+    padding: 0px;
+
+}
