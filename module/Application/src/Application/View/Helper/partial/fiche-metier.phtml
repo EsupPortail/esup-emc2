@@ -194,38 +194,49 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
                         </ul>
                     <?php endforeach; ?>
                 </div>
-                <div class="col-md-6 pull-right" style="border: 1px dashed gray">
-                    <h5>
-                        Connaissances
-                        <?php if ($editMode) : ?>
-                        <?php /** @see FicheMetierController::modifierConnaissancesAction() */ ?>
-                        <a class="ajax-modal" data-event="modification"
-                           href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true); ?>">
-                            <span class="icon editer"></span></a>
+
+                <?php if ($fiche->getConnaissances() !== null OR $fiche->getCompetencesOperationnelles() !== null OR $fiche->getCompetencesComportementales() !== null) : ?>
+                    <div class="col-md-6 pull-right" style="border: 1px dashed gray">
+                        <?php if ($fiche->getConnaissances() !== null) : ?>
+                            <h5>
+                                Connaissances
+                                <?php if ($editMode) : ?>
+                                <?php /** @see FicheMetierController::modifierConnaissancesAction() */ ?>
+                                <a class="ajax-modal" data-event="modification"
+                                   href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true); ?>">
+                                    <span class="icon editer"></span></a>
+                                <?php endif; ?>
+                            </h5>
+                                <?php echo $fiche->getConnaissances(); ?>
                         <?php endif; ?>
-                    </h5>
-                    <?php echo $fiche->getConnaissances(); ?>
-                    <h5>
-                        Competénces opérationnelles
-                        <?php if ($editMode) : ?>
-                            <?php /** @see FicheMetierController::modifierOperationnelleAction() */ ?>
-                        <a class="ajax-modal" data-event="modification"
-                           href="<?php echo $this->url('fiche-metier-type/modifier-operationnelle', ['id' => $fiche->getId()], [], true); ?>">
-                            <span class="icon editer"></span></a>
+
+                        <?php if ($fiche->getCompetencesOperationnelles() !== null) : ?>
+                            <h5>
+                                Competénces opérationnelles
+                                <?php if ($editMode) : ?>
+                                    <?php /** @see FicheMetierController::modifierOperationnelleAction() */ ?>
+                                <a class="ajax-modal" data-event="modification"
+                                   href="<?php echo $this->url('fiche-metier-type/modifier-operationnelle', ['id' => $fiche->getId()], [], true); ?>">
+                                    <span class="icon editer"></span></a>
+                                <?php endif; ?>
+                            </h5>
+                            <?php echo $fiche->getCompetencesOperationnelles(); ?>
                         <?php endif; ?>
-                    </h5>
-                    <?php echo $fiche->getCompetencesOperationnelles(); ?>
-                    <h5>
-                        Competénces comportementales
-                        <?php if ($editMode) : ?>
-                        <?php /** @see FicheMetierController::modifierComportementaleAction() */ ?>
-                        <a class="ajax-modal" data-event="modification"
-                           href="<?php echo $this->url('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true); ?>">
-                            <span class="icon editer"></span></a>
+
+                        <?php if ($fiche->getCompetencesComportementales() !== null) : ?>
+                            <h5>
+                                Competénces comportementales
+                                <?php if ($editMode) : ?>
+                                <?php /** @see FicheMetierController::modifierComportementaleAction() */ ?>
+                                <a class="ajax-modal" data-event="modification"
+                                   href="<?php echo $this->url('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true); ?>">
+                                    <span class="icon editer"></span></a>
+                                <?php endif; ?>
+                            </h5>
+                            <?php echo $fiche->getCompetencesComportementales(); ?>
                         <?php endif; ?>
-                    </h5>
-                    <?php echo $fiche->getCompetencesComportementales(); ?>
-                </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
