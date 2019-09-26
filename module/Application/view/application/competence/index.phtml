@@ -48,7 +48,7 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
             <th> Libellé </th>
             <th> Type </th>
             <th> Thème </th>
-            <th> Modificateur </th>
+            <th class="modificateur-cell"> Modificateur </th>
             <th class="action-cell"> Action </th>
         </tr>
         </thead>
@@ -140,7 +140,7 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
             <tr>
                 <th> Libellé </th>
                 <th> #Compétence </th>
-                <th> Modificateur </th>
+                <th class="modificateur-cell"> Modificateur </th>
                 <th class="action-cell"> Action </th>
             </tr>
         </thead>
@@ -231,7 +231,7 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
         <tr>
             <th> Libellé </th>
             <th> #Compétence </th>
-            <th> Modificateur </th>
+            <th class="modificateur-cell"> Modificateur </th>
             <th class="action-cell"> Action </th>
         </tr>
         </thead>
@@ -297,6 +297,14 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
 </div>
 
 
+<style>
+    th.action-cell {
+        width:6rem;
+    }
+    th.modificateur-cell {
+        width:12rem;
+    }
+</style>
 <script>
     $(document).ready(function() {
         $('.datatable').DataTable( {
