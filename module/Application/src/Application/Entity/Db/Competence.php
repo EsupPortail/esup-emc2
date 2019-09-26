@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Competence {
@@ -17,8 +18,19 @@ class Competence {
     private $description;
     /** @var CompetenceType */
     private $type;
-    /** @car CompetenceTheme */
+    /** @var CompetenceTheme */
     private $theme;
+
+    /** @var ArrayCollection (FicheMetier) */
+    private $fiches;
+    /** @var ArrayCollection (Activite) */
+    private $activites;
+
+    public function __construct()
+    {
+        $this->fiches = new ArrayCollection();
+        $this->activites = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -116,5 +128,21 @@ class Competence {
     {
         $this->theme = $theme;
         return $this;
+    }
+
+    /**
+     * @return FicheMetier[]
+     */
+    public function getFichesMetiers()
+    {
+        return $this->fiches->toArray();
+    }
+
+    /**
+     * @return Activite[]
+     */
+    public function getActivites()
+    {
+        return $this->activites->toArray();
     }
 }
