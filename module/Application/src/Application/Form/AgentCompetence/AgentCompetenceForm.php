@@ -23,7 +23,7 @@ class AgentCompetenceForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner une compétence ... ",
-                'value_options' => $this->getCompetenceService()->getCompetencesAsOptions(),
+                'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [
                 'id'                => 'competence',
