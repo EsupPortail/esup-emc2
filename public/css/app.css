@@ -479,3 +479,16 @@ div.panel div.main {
     padding: 0px;
 
 }
+
+span.Connaissance {
+    background-color: darkgreen;
+    width: 13rem;
+}
+span.Comportementale {
+    background-color: darkred;
+    width: 13rem;
+}
+span.Opérationnelle {
+    background-color: darkblue;
+    width: 13rem;
+}

@@ -98,6 +98,7 @@ class StructureService
             foreach ($structuresStored as $structure) {
                 $optionsoptions[$structure->getId()] = $structure->getLibelleCourt();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => $type,
                 'options' => $optionsoptions,

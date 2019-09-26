@@ -73,12 +73,22 @@ class CompetenceService {
     {
         $themes = $this->getCompetencesThemes();
         $sanstheme = $this->getCompetencesSansTheme();
+        usort($sanstheme, function ($a, $b) { return $a->getLibelle() > $b->getLibelle();});
         $options = [];
 
         foreach ($themes as $theme) {
             $optionsoptions = [];
+            $competences = $theme->getCompetences();
+            usort($competences, function ($a, $b) { return $a->getLibelle() > $b->getLibelle();});
             foreach ($theme->getCompetences() as $competence) {
-                $optionsoptions[$competence->getId()] = $competence->getLibelle();
+                $this_option = [
+                    'value' =>  $competence->getId(),
+                    'attributes' => [
+                          'data-content' => "<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle(),
+                    ],
+                    'label' => $competence->getLibelle(),
+                ];
+                $optionsoptions[] = $this_option;
             }
             $array = [
                 'label' => $theme->getLibelle(),
@@ -90,7 +100,15 @@ class CompetenceService {
         if (!empty($sanstheme)) {
             $optionsoptions = [];
             foreach ($sanstheme as $competence) {
-                $optionsoptions[$competence->getId()] = $competence->getLibelle();
+                //TODO sort competences here
+                $this_option = [
+                    'value' =>  $competence->getId(),
+                    'attributes' => [
+                        'data-content' => "<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle(),
+                    ],
+                    'label' => $competence->getLibelle(),
+                ];
+                $optionsoptions[] = $this_option;
             }
             $array = [
                 'label' => "Sans thème",

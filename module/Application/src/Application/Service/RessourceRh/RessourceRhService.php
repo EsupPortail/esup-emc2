@@ -296,6 +296,7 @@ class RessourceRhService {
             foreach ($theme->getMissions() as $mission) {
                 $optionsoptions[$mission->getId()] = $mission->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => $theme->getLibelle(),
                 'options' => $optionsoptions,
@@ -308,6 +309,7 @@ class RessourceRhService {
             foreach ($sanstheme as $mission) {
                 $optionsoptions[$mission->getId()] = $mission->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => "Sans thème",
                 'options' => $optionsoptions,

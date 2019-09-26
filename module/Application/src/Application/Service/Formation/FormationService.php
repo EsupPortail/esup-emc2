@@ -250,6 +250,7 @@ class FormationService {
             foreach ($theme->getFormations() as $formation) {
                 $optionsoptions[$formation->getId()] = $formation->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => $theme->getLibelle(),
                 'options' => $optionsoptions,
@@ -262,6 +263,7 @@ class FormationService {
             foreach ($sanstheme as $formation) {
                 $optionsoptions[$formation->getId()] = $formation->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => "Sans thème",
                 'options' => $optionsoptions,
