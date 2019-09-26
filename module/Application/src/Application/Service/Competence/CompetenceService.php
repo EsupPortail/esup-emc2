@@ -80,7 +80,7 @@ class CompetenceService {
             $optionsoptions = [];
             $competences = $theme->getCompetences();
             usort($competences, function ($a, $b) { return $a->getLibelle() > $b->getLibelle();});
-            foreach ($theme->getCompetences() as $competence) {
+            foreach ($competences as $competence) {
                 $this_option = [
                     'value' =>  $competence->getId(),
                     'attributes' => [
