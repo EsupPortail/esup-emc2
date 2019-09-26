@@ -195,9 +195,9 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
                     <?php endforeach; ?>
                 </div>
 
-                <?php if ($fiche->getConnaissances() !== null OR $fiche->getCompetencesOperationnelles() !== null OR $fiche->getCompetencesComportementales() !== null) : ?>
+                <?php if ($fiche->getConnaissances() != '' OR $fiche->getCompetencesOperationnelles() != '' OR $fiche->getCompetencesComportementales() != '') : ?>
                     <div class="col-md-6 pull-right" style="border: 1px dashed gray">
-                        <?php if ($fiche->getConnaissances() !== null) : ?>
+                        <?php if ($fiche->getConnaissances() != '') : ?>
                             <h5>
                                 Connaissances
                                 <?php if ($editMode) : ?>
@@ -210,7 +210,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
                                 <?php echo $fiche->getConnaissances(); ?>
                         <?php endif; ?>
 
-                        <?php if ($fiche->getCompetencesOperationnelles() !== null) : ?>
+                        <?php if ($fiche->getCompetencesOperationnelles() != '') : ?>
                             <h5>
                                 Competénces opérationnelles
                                 <?php if ($editMode) : ?>
@@ -223,7 +223,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
                             <?php echo $fiche->getCompetencesOperationnelles(); ?>
                         <?php endif; ?>
 
-                        <?php if ($fiche->getCompetencesComportementales() !== null) : ?>
+                        <?php if ($fiche->getCompetencesComportementales() != '') : ?>
                             <h5>
                                 Competénces comportementales
                                 <?php if ($editMode) : ?>
