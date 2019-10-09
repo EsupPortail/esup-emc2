@@ -34,10 +34,6 @@ $modules = [
 
 ];
 
-if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {
-    $modules[] = 'ZendDeveloperTools';
-}
-
 $moduleListenerOptions = [
     'config_glob_paths'    => [
         'config/autoload/{,*.}{global,local}.php',

@@ -26,7 +26,9 @@ class AgentService {
      */
     public function getAgents($order = null)
     {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent');
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+        ;
+
 
         if ($order !== null) {
             $qb = $qb->orderBy('agent.' . $order);
@@ -161,10 +163,10 @@ class AgentService {
         /** !!TODO!! faire le lien entre agent et fiche de poste */
         $qb1 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
+            //->addSelect('fiche')->leftJoin('agent.fiche', 'fiche')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('statut.administratif = :true')
-            ->andWhere('fiche.id IS NULL')
+            //->andWhere('fiche.id IS NULL')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
             ->orderBy('agent.nomUsuel, agent.prenom')
@@ -175,23 +177,13 @@ class AgentService {
         }
         $result1 = $qb1->getQuery()->getResult();
 
-        /** !!TODO!! faire le lien entre agent et fiche de poste */
-//        $qb2 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-//            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
-//            ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
-//            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-//            ->andWhere('fiche.id IS NULL')
-//            ->setParameter('today', $today)
-//            ->orderBy('agent.nomUsuel, agent.prenom')
-//        ;
-//        if ($structure !== null) {
-//            $qb2 = $qb2->andWhere('grade.structure = :structure' )
-//                ->setParameter('structure', $structure);
-//        }
-//        $result2 = $qb2->getQuery()->getResult();
-        $result2 = [];
+        //TODO ! faire la jointure ...
+        $result = [];
+        /** @var Agent $agent */
+        foreach ($result1 as $agent) {
+            if ($agent->getFiche() === null) $result[] = $agent;
+        }
 
-        $result = array_merge($result1, $result2);
         return $result;
 
     }
