@@ -159,25 +159,39 @@ class AgentService {
         }
 
         /** !!TODO!! faire le lien entre agent et fiche de poste */
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->addSelect('statut')->join('agent.statuts', 'statut')
+        $qb1 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
             ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
-            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('statut.administratif = :true')
             ->andWhere('fiche.id IS NULL')
             ->setParameter('today', $today)
-            ->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
-
         if ($structure !== null) {
-            $qb = $qb->andWhere('statut.structure = :structure')
+            $qb1 = $qb1->andWhere('statut.structure = :structure' )
                      ->setParameter('structure', $structure);
         }
+        $result1 = $qb1->getQuery()->getResult();
 
-        $result = $qb->getQuery()->getResult();
+        /** !!TODO!! faire le lien entre agent et fiche de poste */
+//        $qb2 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+//            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+//            ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
+//            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
+//            ->andWhere('fiche.id IS NULL')
+//            ->setParameter('today', $today)
+//            ->orderBy('agent.nomUsuel, agent.prenom')
+//        ;
+//        if ($structure !== null) {
+//            $qb2 = $qb2->andWhere('grade.structure = :structure' )
+//                ->setParameter('structure', $structure);
+//        }
+//        $result2 = $qb2->getQuery()->getResult();
+        $result2 = [];
 
+        $result = array_merge($result1, $result2);
         return $result;
 
     }

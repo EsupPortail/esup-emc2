@@ -26,6 +26,7 @@ $this->headTitle('Ma structure');
 }
 
 /** PRIVILEGE */
+$canAfficherAgent                   = true;
 $canEditerDescription               = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER_DESCRIPTION));
 $canVoirFichePoste                  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
 $canExporterFichePoste              = $canVoirFichePoste;
@@ -281,6 +282,12 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
                     <td> <?php echo $agent->getDenomination() ; ?> </td>
                     <td></td>
                     <td class="action-cell">
+                        <?php if ($canAfficherAgent) : ?>
+                            <a href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"
+                               class="ajax-modal"
+                            >
+                                <span class="icon voir"  title="Afficher l'agent"></span></a>
+                        <?php endif; ?>
                         <?php if ($canEditerFichePoste) : ?>
                             <?php /** @see MesStructuresController::ajouterFichePosteAction() */ ?>
                             <a href="<?php echo $this->url('mes-structures/ajouter-fiche-poste', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>">
