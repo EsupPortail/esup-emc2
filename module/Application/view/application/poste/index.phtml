@@ -45,7 +45,6 @@ $this->headTitle("Index des postes")
             <th> Fonction </th>
             <th> Domaine </th>
             <th> Affectation </th>
-            <th> Localisation </th>
             <th> Action </th>
         </tr>
         </thead>
@@ -58,7 +57,6 @@ $this->headTitle("Index des postes")
                 <td>
                     <?php echo $poste->getStructure()->getLibelleCourt(); ?>
                 </td>
-                <td> <?php echo $poste->getLocalisation(); ?> </td>
                 <td>
                     <?php if($canAfficherPoste) : ?>
                         <a href="<?php echo $this->url('poste/afficher', ['poste' => $poste->getId()], [], true); ?>"

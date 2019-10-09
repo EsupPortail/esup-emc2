@@ -4,7 +4,6 @@ namespace Application\Form\Poste;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\Domaine\DomaineService;
-use Application\Service\Immobilier\ImmobilierService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
@@ -18,13 +17,11 @@ class PosteHydratorFactory {
          * @var DomaineService $domaineService
          * @var StructureService $structureService
          * @var RessourceRhService $ressourceService
-         * @var ImmobilierService $immobilierService
          */
         $agentService = $container->get(AgentService::class);
         $domaineService = $container->get(DomaineService::class);
         $structureService = $container->get(StructureService::class);
         $ressourceService = $container->get(RessourceRhService::class);
-        $immobilierService = $container->get(ImmobilierService::class);
 
 
         $hydrator = new PosteHydrator();
@@ -32,7 +29,6 @@ class PosteHydratorFactory {
         $hydrator->setDomaineService($domaineService);
         $hydrator->setStructureService($structureService);
         $hydrator->setRessourceRhService($ressourceService);
-        $hydrator->setImmobilierService($immobilierService);
 
         return $hydrator;
     }

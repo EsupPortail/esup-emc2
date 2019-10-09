@@ -19,7 +19,7 @@ $now = new DateTime();
     </ul>
 </div>
 
-<h3> Présentation de l'agent </h3>
+<h2> Présentation de l'agent </h2>
 
 <?php
 ?>
@@ -33,56 +33,72 @@ $now = new DateTime();
     <dd> <?php echo $agent->getQuotite(); ?> </dd>
 </dl>
 
-<h3>Statuts actifs </h3>
-
 <?php
-    $statuts = $agent->getStatuts();
-    usort($statuts, function (AgentStatut $a, AgentStatut $b) { return $a->getDebut() < $b->getDebut();});
+    $statutAll = $agent->getStatuts();
+    usort($statutAll, function (AgentStatut $a, AgentStatut $b) { return $a->getDebut() < $b->getDebut();});
+    $statuts = [];
+    foreach($statutAll as $statut) {
+        if ($statut->getFin() === null or $statut->getFin() > $now) {
+            $statuts[] = $statut;
+        }
+    }
+    $nbStatus = count($statuts);
 ?>
 
-<?php foreach ($statuts as $statut) : ?>
-    <?php if ($statut->getFin() === null or $statut->getFin() > $now) : ?>
+
+<?php if ($nbStatus !== 0) : ?>
+    <h2>
+        Statuts actifs
+        <span class="badge">
+        <?php echo $nbStatus; ?>
+        </span>
+    </h2>
+
+    <?php foreach ($statuts as $statut) : ?>
         <?php echo $this->agentStatut($statut, ['denomination' => false]); ?>
-    <?php endif; ?>
-<?php endforeach; ?>
-
-<h3>Grade </h3>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <?php
-$grades = $agent->getGrades();
-usort($grades, function (AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut();});
+    $gradeAll = $agent->getGrades();
+    usort($gradeAll, function (AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut();});
+    $grades = [];
+    foreach($gradeAll as $grade) {
+        if ($grade->getDateFin() === null or $grade->getDateFin() > $now) {
+            $grades[] = $grade;
+        }
+    }
+    $nbGrades = count($grades);
 ?>
 
-<?php foreach ($grades as $grade) : ?>
-    <?php if ($grade->getDateFin() === null or $grade->getDateFin() > $now) : ?>
+<?php if ($nbGrades !== 0) : ?>
+    <h2>
+        Grades actifs
+        <span class="badge">
+        <?php echo $nbGrades; ?>
+        </span>
+    </h2>
+
+    <?php foreach ($grades as $grade) : ?>
         <?php echo $this->agentGrade($grade, ['id' => false, 'denomination' => false]); ?>
-    <?php endif; ?>
-<?php endforeach; ?>
-<!--<ul>-->
-<!--    --><?php //foreach ($grades as $grade) : ?>
-<!--    <li>-->
-<!--        --><?php //echo ($grade->getStructure())?$grade->getStructure()->getLibelleLong():""; ?>
-<!--        --><?php //echo ($grade->getGrade())?$grade->getGrade()->getLibelleLong():""; ?>
-<!--        --><?php //echo ($grade->getCorps())?$grade->getCorps()->getLibelleLong():""; ?>
-<!--        --><?php //echo ($grade->getBap())?$grade->getBap()->getLibelleLong():""; ?>
-<!--    </li>-->
-<!--    --><?php //endforeach; ?>
-<!--</ul>-->
-
-
-
-<h3> Missions spécifiques </h3>
-
-<ul>
-    <?php /** @var AgentMissionSpecifique $mission */ ?>
-    <?php foreach ($agent->getMissionsSpecifiques() as $mission) : ?>
-        <li>
-            <?php echo $mission->getMission()->getLibelle(); ?>
-            <?php if ($mission->getStructure()) echo  " pour ".$mission->getStructure()->getLibelleCourt(); ?>
-             du
-            <?php echo ($mission->getDateDebut()?$mission->getDateDebut()->format('d/m/Y'):"---"); ?>
-            au
-            <?php echo ($mission->getDateFin()?$mission->getDateFin()->format('d/m/Y'):"---"); ?>
-        </li>
     <?php endforeach; ?>
-</ul>
+<?php endif; ?>
+
+
+<?php if (!empty($agent->getMissionsSpecifiques())) : ?>
+    <h2> Missions spécifiques </h2>
+
+    <ul>
+        <?php /** @var AgentMissionSpecifique $mission */ ?>
+        <?php foreach ($agent->getMissionsSpecifiques() as $mission) : ?>
+            <li>
+                <?php echo $mission->getMission()->getLibelle(); ?>
+                <?php if ($mission->getStructure()) echo  " pour ".$mission->getStructure()->getLibelleCourt(); ?>
+                 du
+                <?php echo ($mission->getDateDebut()?$mission->getDateDebut()->format('d/m/Y'):"---"); ?>
+                au
+                <?php echo ($mission->getDateFin()?$mission->getDateFin()->format('d/m/Y'):"---"); ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

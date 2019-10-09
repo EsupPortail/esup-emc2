@@ -3,7 +3,6 @@
 namespace Application\Form\Poste;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Immobilier\ImmobilierService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\Structure\StructureService;
 use Doctrine\ORM\EntityManager;
@@ -16,13 +15,11 @@ class PosteFormFactory {
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
-         * @var ImmobilierService $immobilierService
          * @var StructureService $structureService
          * @var RessourceRhService $ressourceService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService  = $container->get(AgentService::class);
-        $immobilierService = $container->get(ImmobilierService::class);
         $structureService = $container->get(StructureService::class);
         $ressourceService  = $container->get(RessourceRhService::class);
 
@@ -33,7 +30,6 @@ class PosteFormFactory {
         $form = new PosteForm();
         $form->setEntityManager($entityManager);
         $form->setAgentService($agentService);
-        $form->setImmobilierService($immobilierService);
         $form->setStructureService($structureService);
         $form->setRessourceRhService($ressourceService);
         $form->init();
