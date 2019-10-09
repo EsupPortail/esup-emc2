@@ -9,6 +9,7 @@ use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -108,7 +109,7 @@ class MissionSpecifiqueService {
         try {
             $this->getEntityManager()->persist($affectation);
             $this->getEntityManager()->flush($affectation);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
         }
         return $affectation;
@@ -132,7 +133,7 @@ class MissionSpecifiqueService {
 
         try {
             $this->getEntityManager()->flush($affectation);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
         }
         return $affectation;
@@ -156,7 +157,7 @@ class MissionSpecifiqueService {
 
         try {
             $this->getEntityManager()->flush($affectation);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
         }
         return $affectation;
@@ -180,7 +181,7 @@ class MissionSpecifiqueService {
 
         try {
             $this->getEntityManager()->flush($affectation);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
         }
         return $affectation;
@@ -195,7 +196,7 @@ class MissionSpecifiqueService {
         try {
             $this->getEntityManager()->remove($affectation);
             $this->getEntityManager()->flush($affectation);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
         }
         return $affectation;

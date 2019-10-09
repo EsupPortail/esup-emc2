@@ -130,6 +130,7 @@ class FichePosteService {
     public function getFichesPostes()
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->andWhere('fiche.histoDestruction IS NULL')
             ->orderBy('fiche.id', 'ASC');
 
         $result = $qb->getQuery()->getResult();

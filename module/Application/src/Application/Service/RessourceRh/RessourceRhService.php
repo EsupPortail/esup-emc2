@@ -260,6 +260,8 @@ class RessourceRhService {
      */
     public function getMissionsSpecifiques() {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
+            ->addSelect('type')->leftJoin('mission.type', 'type')
+            ->addSelect('theme')->leftJoin('mission.theme', 'theme')
             ->orderBy('mission.libelle', 'ASC');
 
         $result = $qb->getQuery()->getResult();
@@ -381,10 +383,10 @@ class RessourceRhService {
         $mission->setHistoModification($date);
         $mission->setHistoModificateur($user);
 
-        $this->getEntityManager()->persist($mission);
         try {
+            $this->getEntityManager()->persist($mission);
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -409,7 +411,7 @@ class RessourceRhService {
 
         try {
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -434,7 +436,7 @@ class RessourceRhService {
 
         try {
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -452,7 +454,7 @@ class RessourceRhService {
 
         try {
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -465,11 +467,10 @@ class RessourceRhService {
      */
     public function deleteMissionSpecifique($mission)
     {
-
-        $this->getEntityManager()->remove($mission);
         try {
+            $this->getEntityManager()->remove($mission);
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -487,6 +488,7 @@ class RessourceRhService {
     public function getMissionsSpecifiquesTypes($historiser= false, $champ = 'libelle', $ordre ='ASC')
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueType::class)->createQueryBuilder('type')
+            ->addSelect('mission')->leftJoin('type.missions', 'mission')
             ->orderBy('type.' . $champ, $ordre)
         ;
 
@@ -660,6 +662,7 @@ class RessourceRhService {
     public function getMissionsSpecifiquesThemes($historiser= false, $champ = 'libelle', $ordre ='ASC')
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('type')
+            ->addSelect('mission')->leftJoin('type.missions', 'mission')
             ->orderBy('type.' . $champ, $ordre)
         ;
 
