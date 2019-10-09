@@ -36,7 +36,6 @@ $modules = [
 
 if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {
     $modules[] = 'ZendDeveloperTools';
-    $modules[] = 'UnicaenCode';
 }
 
 $moduleListenerOptions = [
