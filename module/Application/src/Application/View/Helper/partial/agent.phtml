@@ -5,17 +5,23 @@
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentStatut;
 
+$now = new DateTime();
 ?>
+
+<div class="alert alert-warning">
+    <strong><span class="icon information"></span> Informations affichés :</strong>
+    <ul>
+        <li> Seuls les statuts et les grades actifs sont affichés par choix voir avec le groupe GPEEC pour ce que l'on affiche. </li>
+    </ul>
+</div>
 
 <h3> Présentation de l'agent </h3>
 
 <?php
-    $correspondance = ($agent->getCorrespondance()) ? ($agent->getCorrespondance()->getLibelleCourt())  . " - "     . $agent->getCorrespondance()->getLibelleLong()     : "---";
-    $corps          = ($agent->getCorps())          ? ($agent->getCorps()->getLibelleCourt())           . " - "     . $agent->getCorps()->getLibelleLong()              : "---";
-    $grade          = ($agent->getGrade())          ? ($agent->getGrade()->getLibelleCourt())           . " - "     . $agent->getGrade()->getLibelleLong()              : "---";
 ?>
 
 <dl class="dl-horizontal">
@@ -25,15 +31,9 @@ use Application\Entity\Db\AgentStatut;
     <dd> <?php echo $agent->getNomUsuel(); ?> </dd>
     <dt> Quotité travaillée </dt>
     <dd> <?php echo $agent->getQuotite(); ?> </dd>
-    <dt> Correspondance </dt>
-    <dd> <?php echo $correspondance; ?> </dd>
-    <dt> Corps </dt>
-    <dd> <?php echo $corps; ?></dd>
-    <dt> Grade </dt>
-    <dd> <?php echo $grade; ?></dd>
 </dl>
 
-<h3>Statuts</h3>
+<h3>Statuts actifs </h3>
 
 <?php
     $statuts = $agent->getStatuts();
@@ -41,8 +41,35 @@ use Application\Entity\Db\AgentStatut;
 ?>
 
 <?php foreach ($statuts as $statut) : ?>
-    <?php echo $this->agentStatut($statut, ['denomination' => false]); ?>
+    <?php if ($statut->getFin() === null or $statut->getFin() > $now) : ?>
+        <?php echo $this->agentStatut($statut, ['denomination' => false]); ?>
+    <?php endif; ?>
 <?php endforeach; ?>
+
+<h3>Grade </h3>
+
+<?php
+$grades = $agent->getGrades();
+usort($grades, function (AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut();});
+?>
+
+<?php foreach ($grades as $grade) : ?>
+    <?php if ($grade->getDateFin() === null or $grade->getDateFin() > $now) : ?>
+        <?php echo $this->agentGrade($grade, ['id' => false, 'denomination' => false]); ?>
+    <?php endif; ?>
+<?php endforeach; ?>
+<!--<ul>-->
+<!--    --><?php //foreach ($grades as $grade) : ?>
+<!--    <li>-->
+<!--        --><?php //echo ($grade->getStructure())?$grade->getStructure()->getLibelleLong():""; ?>
+<!--        --><?php //echo ($grade->getGrade())?$grade->getGrade()->getLibelleLong():""; ?>
+<!--        --><?php //echo ($grade->getCorps())?$grade->getCorps()->getLibelleLong():""; ?>
+<!--        --><?php //echo ($grade->getBap())?$grade->getBap()->getLibelleLong():""; ?>
+<!--    </li>-->
+<!--    --><?php //endforeach; ?>
+<!--</ul>-->
+
+
 
 <h3> Missions spécifiques </h3>
 

@@ -9,10 +9,21 @@ return [
      * Configuration globale du module UnicaenDbImport.
      */
     'import' => [
+        //
+        // Connexions.
+        //
+        'connections' => [
+            //
+            // Bases de données.
+            // Format: 'identifiant unique' => 'nom de la connexion Doctrine'
+            //
+            'default' => 'doctrine.connection.orm_default',
+            'octopus' => 'doctrine.connection.orm_octopus',
+        ],
         /**
          * Liste des imports.
          */
-        'imports' => [
+        'synchros' => [
 //            [
 //                'name' => 'Import_AGENT',
                 /**
@@ -28,7 +39,7 @@ return [
 //                    'name'               => 'Agents geres par la DRH',
 //                    'table'              => 'V_AGENT',
 //                    'select'              => 'SELECT * FROM V_AGENT',
-//                    'connection'         => 'doctrine.connection.orm_octopus',
+//                    'connection'         => 'octopus',
 //                    'source_code_column' => 'C_INDIVIDU',
 //                    'columns'            => ['C_SRC_INDIVIDU', 'C_SOURCE', 'PRENOM', 'NOM_USAGE'],
 //                ],
@@ -52,7 +63,7 @@ return [
 //                'destination' => [
 //                    'name'               => 'Agents gérés par la DRH',
 //                    'table'              => 'agent',
-//                    'connection'         => 'doctrine.connection.orm_default',
+//                    'connection'         => 'default',
 //                    'source_code_column' => 'c_individu',
 //                    'columns'            => ['c_src_individu', 'c_source', 'prenom', 'nom_usage'],
 //                    'columns_to_char' => [
@@ -66,17 +77,35 @@ return [
                 'source' => [
                     'name'               => 'Agents geres par la DRH',
                     'select'             => 'SELECT * FROM V_PREECOG_AGENT',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'C_INDIVIDU',
-                    'columns'            => ['C_SRC_INDIVIDU', 'C_SOURCE', 'PRENOM', 'NOM_USAGE', 'BAP_ID', 'CORPS_ID', 'GRADE_ID'],
+//                    'columns'            => ['C_SRC_INDIVIDU', 'C_SOURCE', 'PRENOM', 'NOM_USAGE'],
                 ],
-                'intermediate_table' => 'src_agent',
+//                'intermediate_table' => 'src_agent',
                 'destination' => [
                     'name'               => 'Agents gérés par la DRH',
                     'table'              => 'agent',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'c_individu',
-                    'columns'            => ['c_src_individu', 'c_source', 'prenom', 'nom_usage', 'bap_id', 'corps_id', 'grade_id'],
+//                    'columns'            => ['c_src_individu', 'c_source', 'prenom', 'nom_usage'],
+                ],
+            ],
+            [
+                'name' => 'Import_AGENT_GRADE',
+                'source' => [
+                    'name'               => 'Grades liés aux agents de PreeCog',
+                    'select'             => 'SELECT * FROM V_PREECOG_AGENT_GRADE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'AG_ID',
+                    'columns'            => ['AGENT_ID', 'STRUCTURE_ID', 'CORPS_ID', 'GRADE_ID', 'BAP_ID', 'DATE_DEBUT', 'DATE_FIN'],
+                ],
+                'intermediate_table' => 'src_agent_grade',
+                'destination' => [
+                    'name'               => 'Grade des agents gérés par la DRH',
+                    'table'              => 'agent_grade',
+                    'connection'         => 'default',
+                    'source_code_column' => 'ag_id',
+                    'columns'            => ['agent_id', 'structure_id', 'corps_id', 'grade_id', 'bap_id', 'date_debut', 'date_fin'],
                 ],
             ],
             [
@@ -84,7 +113,7 @@ return [
                 'source' => [
                     'name'               => 'Statut des agents geres par la DRH',
                     'select'             => 'SELECT * FROM V_PREECOG_STATUT',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['ID_ORIG', 'C_SOURCE', 'INDIVIDU_ID', 'STRUCTURE_ID', 'D_DEBUT', 'D_FIN', 'T_TITULAIRE', 'T_CDI', 'T_CDD', 'T_VACATAIRE', 'T_ENSEIGNANT', 'T_ADMINISTRATIF', 'T_CHERCHEUR', 'T_ETUDIANT', 'T_AUDITEUR_LIBRE', 'T_DOCTORANT', 'T_DETACHE_IN', 'T_DETACHE_OUT', 'T_DISPO', 'T_HEBERGE', 'T_EMERITE', 'T_RETRAITE'],
                 ],
@@ -92,7 +121,7 @@ return [
                 'destination' => [
                     'name'               => 'Statut des agents geres par la DRH',
                     'table'              => 'agent_statut',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['id_orig', 'c_source', 'individu_id', 'structure_id', 'd_debut', 'd_fin', 't_titulaire', 't_cdi', 't_cdd', 't_vacataire', 't_enseignant', 't_administratif', 't_chercheur', 't_etudiant', 't_auditeur_libre', 't_doctorant', 't_detache_in', 't_detache_out', 't_dispo', 't_heberge', 't_emerite', 't_retraite'],
                     'columns_to_char' => [
@@ -106,7 +135,7 @@ return [
                 'source' => [
                     'name'               => 'Agents geres par la DRH',
                     'select'             => 'SELECT * FROM V_PREECOG_STRUCTURE',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['CODE', 'LIBELLE_COURT', 'LIBELLE_LONG', 'TYPE', 'HISTO'],
                 ],
@@ -114,7 +143,7 @@ return [
                 'destination' => [
                     'name'               => 'Structure stockees dans octopus',
                     'table'              => 'structure',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['code', 'libelle_court', 'libelle_long', 'type', 'histo'],
                 ],
@@ -124,7 +153,7 @@ return [
                 'source' => [
                     'name'               => 'Sites remontés de PrEECoG',
                     'select'             => 'SELECT * FROM V_PREECOG_SITE',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['NOM', 'LIBELLE'],
                 ],
@@ -132,7 +161,7 @@ return [
                 'destination' => [
                     'name'               => 'Sites stockes dans octopus',
                     'table'              => 'site',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['nom', 'libelle'],
                 ],
@@ -142,7 +171,7 @@ return [
                 'source' => [
                     'name'               => 'Batiments remontés de PrEECoG',
                     'select'             => 'SELECT * FROM V_PREECOG_BATIMENT',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['NOM', 'LIBELLE', 'SITE_ID'],
                 ],
@@ -150,7 +179,7 @@ return [
                 'destination' => [
                     'name'               => 'Batiments stockes dans octopus',
                     'table'              => 'batiment',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['nom', 'libelle', 'site_id'],
                 ],
@@ -160,7 +189,7 @@ return [
                 'source' => [
                     'name'               => 'Fonctions remontées de PrEECoG',
                     'select'             => 'SELECT * FROM V_PREECOG_FONCTION',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['PARENT_ID', 'CODE', 'NIVEAU'],
                 ],
@@ -168,7 +197,7 @@ return [
                 'destination' => [
                     'name'               => 'Fonctions remontées de OCTOPUS',
                     'table'              => 'fonction',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['parent_id', 'code', 'niveau'],
                 ],
@@ -178,7 +207,7 @@ return [
                 'source' => [
                     'name'               => 'Libellés des fonctions remontées de PrEECoG',
                     'select'             => 'SELECT * FROM V_PREECOG_FONCTION_LIBELLE',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['FONCTION_ID', 'LIBELLE', 'GENRE', 'DEFAUT'],
                 ],
@@ -186,7 +215,7 @@ return [
                 'destination' => [
                     'name'               => 'Libellés des fonctions remontées de OCTOPUS',
                     'table'              => 'fonction_libelle',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['fonction_id', 'libelle', 'genre', 'defaut'],
                 ],
@@ -196,7 +225,7 @@ return [
                 'source' => [
                     'name'               => 'BAP des agents remonté depuis OCTOPUS',
                     'select'             => 'SELECT * FROM V_PREECOG_BAP',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['C_BAP', 'LIB_COURT', 'LIB_LONG', 'HISTO'],
                 ],
@@ -204,7 +233,7 @@ return [
                 'destination' => [
                     'name'               => 'BAP des agents remonté depuis OCTOPUS',
                     'table'              => 'correspondance',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['c_bap', 'lib_court', 'lib_long', 'histo'],
                 ],
@@ -214,7 +243,7 @@ return [
                 'source' => [
                     'name'               => 'Grades des agents remonté depuis OCTOPUS',
                     'select'             => 'SELECT * FROM V_PREECOG_GRADE',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'HISTO'],
                 ],
@@ -222,7 +251,7 @@ return [
                 'destination' => [
                     'name'               => 'Grades des agents remonté depuis OCTOPUS',
                     'table'              => 'grade',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['lib_court', 'lib_long', 'code', 'histo'],
                 ],
@@ -232,7 +261,7 @@ return [
                 'source' => [
                     'name'               => 'Corps des agents remonté depuis OCTOPUS',
                     'select'             => 'SELECT * FROM V_PREECOG_CORPS',
-                    'connection'         => 'doctrine.connection.orm_octopus',
+                    'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'CATEGORIE', 'HISTO'],
                 ],
@@ -240,7 +269,7 @@ return [
                 'destination' => [
                     'name'               => 'Corps des agents remonté depuis OCTOPUS',
                     'table'              => 'corps',
-                    'connection'         => 'doctrine.connection.orm_default',
+                    'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['lib_court', 'lib_long', 'code', 'categorie', 'histo'],
                 ],
@@ -256,6 +285,7 @@ return [
                     'controller' => 'UnicaenDbImport\Controller\Console',
                     'action'     => [
                         'runImport',
+                        'runSynchro',
                     ],
                     'roles' => [],
                 ],

@@ -38,8 +38,8 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 <!--                <th> Id </th>-->
                 <th> Source Id </th>
                 <th> Dénomination </th>
-                <th> BAP </th>
-                <th> Grade </th>
+<!--                <th> BAP </th>-->
+<!--                <th> Grade </th>-->
                 <th class="action"> Action </th>
             </tr>
             </thead>
@@ -49,8 +49,8 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 <!--                    <td> --><?php //echo $agent->getId(); ?><!-- </td>-->
                     <td> <span class="badge"><?php echo $agent->getSourceName(); ?> - <?php echo $agent->getSourceId(); ?></span></td>
                     <td> <?php echo $agent->getDenomination(); ?></td>
-                    <td> <?php echo ($agent->getCorrespondance())?$agent->getCorrespondance():"---"; ?></td>
-                    <td> <?php echo ($agent->getGrade())?$agent->getGrade():"---"; ?></td>
+<!--                    <td> --><?php //echo ($agent->getCorrespondance())?$agent->getCorrespondance():"---"; ?><!--</td>-->
+<!--                    <td> --><?php //echo ($agent->getGrade())?$agent->getGrade():"---"; ?><!--</td>-->
                     <td>
                         <?php if ($canAfficher) : ?>
                             <a href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"

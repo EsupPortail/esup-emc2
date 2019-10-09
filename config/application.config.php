@@ -27,7 +27,6 @@ $modules = [
     'Autoform',
     'Fichier',
     'Mailing',
-    'Octopus',
     'Utilisateur',
     'Indicateur',
     'Application',

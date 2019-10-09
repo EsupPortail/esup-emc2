@@ -7,7 +7,6 @@ use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
-use Octopus\Service\Individu\IndividuService;
 
 class AgentControllerFactory {
 
@@ -15,11 +14,9 @@ class AgentControllerFactory {
     {
         /**
          * @var AgentService $agentService
-         * @var IndividuService $individuService
          * @var RessourceRhService $ressourceService
          */
         $agentService = $container->get(AgentService::class);
-        $individuService = $container->get(IndividuService::class);
         $ressourceService = $container->get(RessourceRhService::class);
 
         /**
@@ -32,7 +29,6 @@ class AgentControllerFactory {
         $controller = new AgentController();
 
         $controller->setAgentService($agentService);
-        $controller->setIndividuService($individuService);
         $controller->setRessourceRhService($ressourceService);
 
         $controller->setAgentForm($agentForm);

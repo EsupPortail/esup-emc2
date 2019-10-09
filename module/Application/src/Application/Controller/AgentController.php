@@ -7,8 +7,6 @@ use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
-use Octopus\Entity\Db\Individu;
-use Octopus\Service\Individu\IndividuServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -18,7 +16,6 @@ class AgentController extends AbstractActionController
 {
     /** Trait utilisés pour les services */
     use AgentServiceAwareTrait;
-    use IndividuServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     /** Trait de formulaire */
     use AgentFormAwareTrait;

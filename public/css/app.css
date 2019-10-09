@@ -492,3 +492,11 @@ span.Opérationnelle {
     background-color: darkblue;
     width: 13rem;
 }
+
+span.badge.structure {
+    background-color: darkgreen;
+    border-radius: 2px;
+    min-width:20rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
