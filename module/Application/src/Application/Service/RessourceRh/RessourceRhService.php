@@ -262,6 +262,7 @@ class RessourceRhService {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
             ->addSelect('type')->leftJoin('mission.type', 'type')
             ->addSelect('theme')->leftJoin('mission.theme', 'theme')
+            ->addSelect('affectation')->leftJoin('mission.affectations', 'affectation')
             ->orderBy('mission.libelle', 'ASC');
 
         $result = $qb->getQuery()->getResult();
