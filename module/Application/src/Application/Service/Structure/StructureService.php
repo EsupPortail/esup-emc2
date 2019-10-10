@@ -22,6 +22,9 @@ class StructureService
     public function getStructures($ouverte = true)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
+            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
             ->orderBy('structure.code');
         if ($ouverte) $qb = $qb->andWhere("structure.histo = 'O'");
         $result = $qb->getQuery()->getResult();
