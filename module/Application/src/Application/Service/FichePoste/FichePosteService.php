@@ -8,7 +8,7 @@ use Application\Entity\Db\SpecificitePoste;
 use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -20,116 +20,16 @@ class FichePosteService {
     use UserServiceAwareTrait;
 
     /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function create($fiche)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $fiche->setHistoCreation($date);
-        $fiche->setHistoCreateur($user);
-        $fiche->setHistoModification($date);
-        $fiche->setHistoModificateur($user);
-
-        $this->getEntityManager()->persist($fiche);
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function update($fiche)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $fiche->setHistoModification($date);
-        $fiche->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function historise($fiche)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $fiche->setHistoDestruction($date);
-        $fiche->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de l\'historisation en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function restore($fiche)
-    {
-        $fiche->setHistoDestruction(null);
-        $fiche->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la restauration en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function delete($fiche)
-    {
-
-        $this->getEntityManager()->remove($fiche);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la restauration en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
      * @return FichePoste[]
      */
     public function getFichesPostes()
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
+            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+            ->andWhere('fiche.histoDestruction IS NULL')
             ->orderBy('fiche.id', 'ASC');
 
         $result = $qb->getQuery()->getResult();
@@ -170,6 +70,110 @@ class FichePosteService {
 
     }
 
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function create($fiche)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $fiche->setHistoCreation($date);
+        $fiche->setHistoCreateur($user);
+        $fiche->setHistoModification($date);
+        $fiche->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->persist($fiche);
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
+        }
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function update($fiche)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $fiche->setHistoModification($date);
+        $fiche->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function historise($fiche)
+    {
+        try {
+            $date = new DateTime();
+            $user = $this->getUserService()->getConnectedUser();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
+        }
+        $fiche->setHistoDestruction($date);
+        $fiche->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de l\'historisation en BD', $e);
+        }
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function restore($fiche)
+    {
+        $fiche->setHistoDestruction(null);
+        $fiche->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la restauration en BD', $e);
+        }
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function delete($fiche)
+    {
+        try {
+            $this->getEntityManager()->remove($fiche);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la restauration en BD', $e);
+        }
+        return $fiche;
+    }
+
     /** SPECIFICITE POSTE  ********************************************************************************************/
 
     /**
@@ -208,10 +212,10 @@ class FichePosteService {
      */
     public function createSpecificitePoste($specificite)
     {
-        $this->getEntityManager()->persist($specificite);
         try {
+            $this->getEntityManager()->persist($specificite);
             $this->getEntityManager()->flush($specificite);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la création de la spécificité du poste.", $e);
         }
         return $specificite;
@@ -225,7 +229,7 @@ class FichePosteService {
     {
         try {
             $this->getEntityManager()->flush($specificite);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la spécificité du poste.", $e);
         }
         return $specificite;
@@ -236,10 +240,10 @@ class FichePosteService {
      */
     public function deleteSpecificitePoste($specificite)
     {
-        $this->getEntityManager()->remove($specificite);
         try {
+            $this->getEntityManager()->remove($specificite);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la spécificité du poste.", $e);
         }
     }
@@ -252,10 +256,10 @@ class FichePosteService {
      */
     public function createFicheTypeExterne($ficheTypeExterne)
     {
-        $this->getEntityManager()->persist($ficheTypeExterne);
         try {
+            $this->getEntityManager()->persist($ficheTypeExterne);
             $this->getEntityManager()->flush($ficheTypeExterne);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de l'ajout d'une fiche metier externe.", $e);
         }
         return $ficheTypeExterne;
@@ -269,7 +273,7 @@ class FichePosteService {
     {
         try {
             $this->getEntityManager()->flush($ficheTypeExterne);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la mise à jour d'une fiche metier externe.", $e);
         }
         return $ficheTypeExterne;
@@ -281,10 +285,10 @@ class FichePosteService {
      */
     public function deleteFicheTypeExterne($ficheTypeExterne)
     {
-        $this->getEntityManager()->remove($ficheTypeExterne);
         try {
+            $this->getEntityManager()->remove($ficheTypeExterne);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors du retrait d'une fiche metier externe.", $e);
         }
         return $ficheTypeExterne;
@@ -333,13 +337,15 @@ class FichePosteService {
 
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->addSelect('agent')->join('fiche.agent', 'agent')
+            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->andWhere('statut.structure = :structure')
-            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+//            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('statut.administratif = :true')
             ->setParameter('structure', $structure)
             ->setParameter('today', $today)
-            ->setParameter('noEnd', $noEnd)
+            //->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;

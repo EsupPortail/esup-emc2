@@ -1,0 +1,74 @@
+<?php
+
+
+/**
+ * @var AgentGrade $grade
+ * @var array $options
+ */
+
+use Application\Entity\Db\AgentGrade;
+
+?>
+
+<div class="agent-grade">
+    <?php if (!isset($options['id']) || $options['id'] !== false) : ?>
+        <span class="badge">
+            <?php echo $grade->getId(); ?>
+        </span>
+    <?php endif; ?>
+
+    <?php if (!isset($options['denomination']) || $options['denomination'] !== false) : ?>
+        <span class="badge">
+            <?php echo $grade->getAgent()->getDenomination(); ?>
+        </span>
+    <?php endif; ?>
+
+    <?php if (!isset($options['structure']) || $options['structure'] !== false) : ?>
+        <span class="badge structure" title="<?php echo $grade->getStructure()->getLibelleLong(); ?>">
+            <?php echo $grade->getStructure()->getLibelleCourt(); ?>
+        </span>
+    <?php endif; ?>
+
+    <?php if (!isset($options['periode']) || $options['periode'] !== false) : ?>
+        <?php
+            $debut  = ($grade->getDateDebut())?$grade->getDateDebut()->format('d/m/Y'):'---';
+            $fin    = ($grade->getDateFin() && $grade->getDateFin()->format('d/m/Y') !== '31/12/1999')?$grade->getDateFin()->format('d/m/Y'):'---';
+        ?>
+        <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
+    <?php endif; ?>
+
+    <br/>
+    <dl class="dl-horizontal">
+        <?php if ($grade->getCorps() AND (!isset($options['corps']) || $options['corps'] !== false)) : ?>
+            <dt> Corps </dt>
+            <dd>
+                <?php echo $grade->getCorps()->getLibelleLong(); ?>
+            </dd>
+        <?php endif; ?>
+        <?php if ($grade->getGrade() AND (!isset($options['grade']) || $options['grade'] !== false)) : ?>
+                <dt> Grade </dt>
+                <dd>
+                    <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                </dd>
+        <?php endif; ?>
+        <?php if ($grade->getBap() AND (!isset($options['bap']) || $options['bap'] !== false)) : ?>
+            <dt> Correspondance </dt>
+            <dd>
+                BAP
+                <?php echo $grade->getBap()->getCategorie(); ?> -
+                <?php echo $grade->getBap()->getLibelleLong(); ?>
+            </dd>
+        <?php endif; ?>
+    </dl>
+</div>
+
+<style>
+    div.agent-grade {
+        border: solid lightblue 1px;
+        margin: 1rem;
+        padding: 1rem;
+        min-width: 80rem;
+        width: 80%;
+        /*border-radius: 5px;*/
+    }
+</style>

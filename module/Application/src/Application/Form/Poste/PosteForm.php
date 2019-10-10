@@ -5,7 +5,6 @@ namespace Application\Form\Poste;
 use Application\Entity\Db\Domaine;
 use Application\Form\AutocompleteAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
@@ -21,7 +20,6 @@ class PosteForm extends Form  {
     use RessourceRhServiceAwareTrait;
     use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
-    use ImmobilierServiceAwareTrait;
 
     use AutocompleteAwareTrait;
 
@@ -49,22 +47,6 @@ class PosteForm extends Form  {
             ],
             'attributes' => [
                 'id'                => 'structure',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
-
-        // localisation
-        $this->add([
-            'type' => Select::class,
-            'name' => 'localisation',
-            'options' => [
-                'label' => "Localisation du poste :",
-                'empty_option'  => "Sélectionner un bâtiment ...",
-                'value_options' => $this->getImmobilierService()->getBatimentsAsOptions(),
-            ],
-            'attributes' => [
-                'id'                => 'localisation',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ],

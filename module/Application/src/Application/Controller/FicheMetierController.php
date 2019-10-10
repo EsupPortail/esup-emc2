@@ -18,6 +18,7 @@ use Application\Form\FicheMetier\FormationOperationnelleForm;
 use Application\Form\FicheMetier\FormationOperationnelleFormAwareTrait;
 use Application\Form\FicheMetier\FormationsForm;
 use Application\Form\FicheMetier\FormationsFormAwareTrait;
+use Application\Form\FicheMetier\GererCompetenceFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -41,6 +42,7 @@ class FicheMetierController extends  AbstractActionController{
     use ApplicationsFormAwareTrait;
     use FormationsFormAwareTrait;
     use LibelleFormAwareTrait;
+    use GererCompetenceFormAwareTrait;
 
     use FormationBaseFormAwareTrait;
     use FormationComportementaleFormAwareTrait;
@@ -70,11 +72,9 @@ class FicheMetierController extends  AbstractActionController{
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);
         if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
-        $activites = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
 
         return new ViewModel([
             'fiche' => $fiche,
-            'activites' => $activites,
         ]);
     }
 
@@ -401,5 +401,31 @@ class FicheMetierController extends  AbstractActionController{
         ]);
         $exporter->export('export.pdf');
         exit;
+    }
+
+    public function gererCompetencesAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
+        $form = $this->getGererCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/gerer-competences',['fiche' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /**  @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fiche);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Gestion des compétences de la fiche métier ". $fiche->getMetier()->getLibelle(),
+            'form'  => $form,
+        ]);
+        return $vm;
     }
 }

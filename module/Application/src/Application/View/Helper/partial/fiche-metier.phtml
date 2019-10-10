@@ -1,106 +1,393 @@
 <?php
 
+use Application\Controller\FicheMetierController;
+use Application\Entity\Db\Application;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\Formation;
+
 /**
  * @var FicheMetier $fiche
  */
 
-use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierTypeActivite;
 
+/**
+ * @var FicheMetierTypeActivite[] $activites
+ */
+$activites = $fiche->getActivites();
+usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() > $b->getPosition();});
+
+$activitesListe = [];
+if (isset($options['activite-liste'])) {
+    $activitesListe = explode(';', $options['activite-liste']);
+} else {
+    foreach ($activites as $activite) $activitesListe[] = $activite->getActivite()->getId();
+}
+
+$editMode = false;
+if (isset($options['edit-mode'])) $editMode = ($options['edit-mode'] === true);
+$sansTitre = false;
+if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true);
+
+$this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
 ?>
 
-<?php
-    $activites = $fiche->getActivites();
-    usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() < $b->getPosition();});
-?>
-
-<h1>
-    <?php echo $fiche->getMetier()->getLibelle(); ?>
-</h1>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2>Missions principales</h2>
-    </div>
-    <div class="panel-body">
-        <?php echo $fiche->getMissionsPrincipales(); ?>
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2>Activités</h2>
-    </div>
-    <div class="panel-body">
-
-    <?php foreach($activites as $activite) : ?>
-        <?php if ($activite->getActivite()->estNonHistorise()) : ?>
-            <div class="activite">
-                <h3> <?php echo $activite->getActivite()->getLibelle(); ?> </h3>
-                <?php echo $activite->getActivite()->getDescription(); ?>
-            </div>
-        <?php endif ;?>
-    <?php endforeach; ?>
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2>Parcours de formation de base pour la prise de poste</h2>
-    </div>
-    <div class="panel-body">
-        <h3> Connaissances </h3>
-        <?php echo $fiche->getConnaissances(); ?>
-        <h3>Compétences opérationnelles </h3>
-        <?php echo $fiche->getCompetencesOperationnelles(); ?>
-        <h3> Compétences comportementales </h3>
-        <?php echo $fiche->getCompetencesComportementales(); ?>
-    </div>
-
-<?php
-    $applications = [];
-    $formations = [];
-    foreach ($fiche->getActivites() as $activite) {
-        foreach ($activite->getActivite()->getApplications() as $application) {
-            $applications[] = $application->getLibelle();
-            foreach ($application->getFormations() as $formation) $formations[] = $formation->getLibelle();
-        }
-        foreach ($activite->getActivite()->getFormations() as $formation) {
-            $formations[] = $formation->getLibelle();
-        }
-    }
-    foreach ($fiche->getApplications() as $application) {
-        $applications[] = $application->getLibelle();
-        foreach ($application->getFormations() as $formation) $formations[] = $formation->getLibelle();
-    }
-    foreach ($fiche->getFormations() as $formation) {
-        $formations[] = $formation->getLibelle();
-    }
-
-    sort($applications);
-    $applications = array_unique($applications);
-
-    sort( $formations);
-    $formations = array_unique($formations);
-?>
-
+<?php if ($sansTitre !== true) : ?>
     <div class="row">
-        <div class="col-md-6">
-            <h3> Applications métiers</h3>
-                <ul>
-                    <?php foreach ($applications as $application) : ?>
-                        <li> <?php echo $application; ?> </li>
-                    <?php endforeach; ?>
-                </ul>
+        <div class="col-md-8">
+            <h1 class="page-header">
+                Fiche métier #<?php echo $fiche->getId(); ?> <br/>
+                <em><?php echo $fiche->getMetier()->getLibelle(); ?></em>
+            </h1>
         </div>
+        <div class="col-md-4">
+            <?php if ($editMode) : ?>
+                <br/>
+                <br/>
+                <br/>
+                <?php /** @see FicheMetierController::editerLibelleAction() */ ?>
+                <a  class="btn btn-primary action ajax-modal pull-right"
+                    data-event="modification"
+                    href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [] , true); ?>">
+                    <span class="icon editer"></span>
+                    Éditer libellé
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
 
-        <div class="col-md-6">
-            <h3> Plan de formation </h3>
+<!-- MISSIONS PRINCIPALE ------------------------------------------------------------------------------------------>
+<div class="main">
+    <h2> Missions principales</h2>
+
+    <ul>
+        <?php foreach ($activites as $activite) : ?>
+            <?php if (array_search($activite->getActivite()->getId(), $activitesListe) !== false) : ?>
+                <li>
+                    <?php echo $activite->getActivite()->getLibelle(); ?>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
+<!-- ACTIVITES ASSOCIEES ------------------------------------------------------------------------------------------>
+<div class="main">
+    <div class="row">
+        <div class="col-md-5">
+            <h2>
+                Activités associées
+                <span class="badge"> <?php echo count($activites); ?> </span>
+            </h2>
+        </div>
+        <div class="pull-right">
+            <br/>
+            <?php if ($editMode) : ?>
+                <?php /** @see FicheMetierController::ajouterNouvelleActiviteAction() */ ?>
+                <a  class="btn btn-primary action ajax-modal pull-right"
+                    href="<?php echo $this->url('fiche-metier-type/ajouter-nouvelle-activite', ['id' => $fiche->getId()], [] , true); ?>"
+                    data-event="modification"
+                >
+                    <span class="icon ajouter"></span>
+                    Ajouter une nouvelle activité
+                </a>
+                <?php /** @see FicheMetierController::ajouterActiviteExistanteAction() */ ?>
+                <a  class="btn btn-primary action ajax-modal pull-right"
+                    data-event="modification"
+                    href="<?php echo $this->url('fiche-metier-type/ajouter-activite-existante', ['id' => $fiche->getId()], [] , true); ?>">
+                    <span class="icon selectionner"></span>
+                    Ajouter une activité existante
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php foreach ($activites as $ficheActivite): ?>
+        <?php if (array_search($ficheActivite->getActivite()->getId(), $activitesListe) !== false) : ?>
+            <?php echo $this->activite($ficheActivite, ['edit-mode' => $editMode]); ?>
+        <?php endif; ?>
+    <?php endforeach;?>
+</div>
+
+<!-- AUTRE INFO --------------------------------------------------------------------------------------------------->
+<div class="main">
+    <h2>
+        Parcours de formation pour la prise de poste
+    </h2>
+
+    <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
+
+    <?php /** @var Application $application */ ?>
+    <?php
+    $dictionnaireCompetence = [];
+    foreach($fiche->getCompetences() as $competence) {
+        $type = $competence->getType()->getLibelle();
+        $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'fiche|'. $fiche->getMetier()->getLibelle();
+    }
+    foreach($fiche->getActivites() as $element) {
+        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+            foreach ($element->getActivite()->getCompetences() as $competence) {
+                $type = $competence->getType()->getLibelle();
+                $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+            }
+        }
+    }
+    $count = 0;
+    foreach ($dictionnaireCompetence as $type => $dictionnaire) {
+        $count += count($dictionnaire);
+    }
+    ?>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>
+                        <span class="icon competence"></span>
+                        Compétences
+                        <span class="badge">
+                            <?php echo $count; ?>
+                        </span>
+                    </h2>
+                </div>
+                <?php if ($editMode) : ?>
+                    <div class="pull-right">
+                        <?php /** @see FicheMetierController::gererCompetencesAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/gerer-competences', ['fiche' => $fiche->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal"
+                           data-event="modification"
+                        >
+                            <span class="icon ajouter"></span>
+                            Gérer les compétences
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <?php foreach ($dictionnaireCompetence as $type => $dictionnaire) : ?>
+                        <h3>
+                            <?php echo $type; ?>
+                            <span class="badge"><?php echo count($dictionnaire); ?></span>
+                        </h3>
+                        <ul>
+                            <?php ksort($dictionnaire); ?>
+                            <?php foreach($dictionnaire as $competence => $source) : ?>
+                                <li>
+                                    <?php echo $competence; ?>
+                                    <sup>
+                                        <?php foreach($source as $item) : ?>
+                                            <?php $split = explode('|', $item); ?>
+                                            <?php if($split[0] === 'fiche') : ?>
+                                                <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
+                                            <?php endif; ?>
+                                            <?php if($split[0] === 'activite') : ?>
+                                                <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </sup>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endforeach; ?>
+                </div>
+
+                <?php if ($fiche->getConnaissances() != '' OR $fiche->getCompetencesOperationnelles() != '' OR $fiche->getCompetencesComportementales() != '') : ?>
+                    <div class="col-md-6 pull-right" style="border: 1px dashed gray">
+                        <?php if ($fiche->getConnaissances() != '') : ?>
+                            <h5>
+                                Connaissances
+                                <?php if ($editMode) : ?>
+                                <?php /** @see FicheMetierController::modifierConnaissancesAction() */ ?>
+                                <a class="ajax-modal" data-event="modification"
+                                   href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fiche->getId()], [], true); ?>">
+                                    <span class="icon editer"></span></a>
+                                <?php endif; ?>
+                            </h5>
+                                <?php echo $fiche->getConnaissances(); ?>
+                        <?php endif; ?>
+
+                        <?php if ($fiche->getCompetencesOperationnelles() != '') : ?>
+                            <h5>
+                                Competénces opérationnelles
+                                <?php if ($editMode) : ?>
+                                    <?php /** @see FicheMetierController::modifierOperationnelleAction() */ ?>
+                                <a class="ajax-modal" data-event="modification"
+                                   href="<?php echo $this->url('fiche-metier-type/modifier-operationnelle', ['id' => $fiche->getId()], [], true); ?>">
+                                    <span class="icon editer"></span></a>
+                                <?php endif; ?>
+                            </h5>
+                            <?php echo $fiche->getCompetencesOperationnelles(); ?>
+                        <?php endif; ?>
+
+                        <?php if ($fiche->getCompetencesComportementales() != '') : ?>
+                            <h5>
+                                Competénces comportementales
+                                <?php if ($editMode) : ?>
+                                <?php /** @see FicheMetierController::modifierComportementaleAction() */ ?>
+                                <a class="ajax-modal" data-event="modification"
+                                   href="<?php echo $this->url('fiche-metier-type/modifier-comportementale', ['id' => $fiche->getId()], [], true); ?>">
+                                    <span class="icon editer"></span></a>
+                                <?php endif; ?>
+                            </h5>
+                            <?php echo $fiche->getCompetencesComportementales(); ?>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION -------------------------------------------------------------------------------------------------->
+
+    <?php /** @var Application $application */ ?>
+    <?php
+    $dictionnaireApplication = [];
+    foreach($fiche->getApplications() as $application) {
+        $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fiche->getMetier()->getLibelle();
+    }
+    foreach($fiche->getActivites() as $element) {
+        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+            foreach ($element->getActivite()->getApplications() as $application) {
+                $dictionnaireApplication[$application->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+            }
+        }
+    }
+    ?>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>
+                        <span class="icon application"></span>
+                        Applications
+                        <span class="badge">
+                            <?php echo count($dictionnaireApplication); ?>
+                        </span>
+                    </h2>
+                </div>
+                <?php if ($editMode) : ?>
+                <div class="pull-right">
+                    <?php /** @see FicheMetierController::modifierApplicationAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <span class="icon ajouter"></span>
+                        Gérer les applications
+                    </a>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="panel-body">
             <ul>
-                <?php foreach($formations as $formation) : ?>
-                    <li> <?php echo $formation; ?> </li>
+                <?php ksort($dictionnaireApplication); ?>
+                <?php foreach($dictionnaireApplication as $application => $source) : ?>
+                    <li>
+                        <?php echo $application; ?>
+                        <sup>
+                            <?php foreach($source as $item) : ?>
+                                <?php $split = explode('|', $item); ?>
+                                <?php if($split[0] === 'fiche') : ?>
+                                    <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
+                                <?php endif; ?>
+                                <?php if($split[0] === 'activite') : ?>
+                                    <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </sup>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FORMATION ---------------------------------------------------------------------------------------------------->
+
+    <?php /** @var Formation $formation */ ?>
+    <?php
+    $dictionnaireFormation = [];
+    foreach($fiche->getFormations() as $formation) {
+        $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fiche->getMetier()->getLibelle();
+    }
+    foreach($fiche->getActivites() as $element) {
+        foreach ($element->getActivite()->getFormations() as $formation) {
+            if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+                $dictionnaireFormation[$formation->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+            }
+        }
+    }
+    ?>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>
+                        <span class="icon formation"></span>
+                        Formations
+                        <span class="badge">
+                            <?php echo count($dictionnaireFormation); ?>
+                        </span>
+                    </h2>
+                </div>
+                <?php if ($editMode) : ?>
+                <div class="pull-right">
+                    <?php /** @see FicheMetierController::modifierFormationAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier-type/modifier-formation', ['id' => $fiche->getId()], [], true); ?>"
+                       class="btn btn-primary action ajax-modal"
+                       data-event="modification"
+                    >
+                        <span class="icon ajouter"></span>
+                        Gérer les formations
+                    </a>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <?php ksort($dictionnaireFormation); ?>
+                <?php foreach($dictionnaireFormation as $formation => $source) : ?>
+                    <li>
+                        <?php echo $formation; ?>
+                        <sup>
+                            <?php foreach($source as $item) : ?>
+                                <?php $split = explode('|', $item); ?>
+                                <?php if($split[0] === 'fiche') : ?>
+                                    <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
+                                <?php endif; ?>
+                                <?php if($split[0] === 'activite') : ?>
+                                    <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </sup>
+                    </li>
                 <?php endforeach; ?>
             </ul>
         </div>
     </div>
 </div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+</script>
+
+<style>
+    h2 {
+        color: #3c6c8b;
+        text-decoration: none;
+        margin-bottom: 2rem;
+    }
+</style>

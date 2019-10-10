@@ -8,12 +8,11 @@
         }
     ],
     "require": {
-        "unicaen/app":           "dev-zf-3.x",
-        "unicaen/auth":          "dev-zf-3.x",
-        "unicaen/bjy-authorize": "dev-zf-3.x",
-        "unicaen/ldap":          "dev-zf-3.x",
-        "unicaen/octopus":       "dev-zf-3.x",
-        "unicaen/db-import":     "dev-zf-3.x"
+        "unicaen/app":           "^3.0",
+        "unicaen/auth":          "^3.0",
+        "unicaen/bjy-authorize": "^3.0",
+        "unicaen/ldap":          "^3.0",
+        "unicaen/db-import":     "^3.0"
     },
     "require-dev": {
         "unicaen/code":                         "^1.0",

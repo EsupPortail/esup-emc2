@@ -10,6 +10,9 @@ FROM unicaen-dev-php${PHP_VERSION}-apache
 
 LABEL maintainer="Bertrand GAUTHIER <bertrand.gauthier at unicaen.fr>"
 
+RUN echo $PHP_VERSION
+RUN php --version
+
 ## Installation de packages requis.
 RUN apt-get update -qq && \
     apt-get install -y \

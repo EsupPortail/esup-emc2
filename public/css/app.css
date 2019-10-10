@@ -244,6 +244,30 @@ span.icon.cloner:before {
     content: "\f24d ";
 }
 
+span.icon.competence:before {
+    content: "\f02b ";
+}
+
+span.icon.application:before {
+    content: "\f109 ";
+}
+
+span.icon.formation:before {
+    content: "\f51c ";
+}
+
+span.icon.activite:before {
+    content: "\f1b2 ";
+}
+
+span.icon.fiche-metier:before {
+    content: "\f1b3 ";
+}
+
+span.icon.agent:before {
+    content: "\f007 ";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }
@@ -297,13 +321,13 @@ div.panel h2 {
 }
 
 div.panel h3 {
-    font-weight: bold;
-    font-size: large;
-    margin: 5px 0px 5px 5px;
-    padding: 5px 0px 5px 5px;
-    background-color: lightblue;
-    color: #123456;
-    border-radius: 5px 5px 0px 0px;
+    /*font-weight: bold;*/
+    /*font-size: large;*/
+    /*margin: 5px 0px 5px 5px;*/
+    /*padding: 5px 0px 5px 5px;*/
+    /*background-color: lightblue;*/
+    /*color: #123456;*/
+    /*border-radius: 5px 5px 0px 0px;*/
 }
 
 div.panel h4 {
@@ -433,4 +457,46 @@ span.badge.structure.Établissement {
 
 span.badge.structure.Structurederecherche {
     background-color: #3c763d;
+}
+
+span.fiche-metier {
+    font-weight: bolder;
+    color: blue;
+    font-family: monospace;
+    cursor: help;
+}
+
+span.activite {
+    font-weight: bolder;
+    color: orangered;
+    font-family: monospace;
+    cursor: help;
+}
+
+div.panel div.main {
+
+    margin: 0px;
+    padding: 0px;
+
+}
+
+span.Connaissance {
+    background-color: darkgreen;
+    width: 13rem;
+}
+span.Comportementale {
+    background-color: darkred;
+    width: 13rem;
+}
+span.Opérationnelle {
+    background-color: darkblue;
+    width: 13rem;
+}
+
+span.badge.structure {
+    background-color: darkgreen;
+    border-radius: 2px;
+    min-width:20rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
 }

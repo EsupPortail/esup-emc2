@@ -5,7 +5,6 @@ namespace Application\Form\Poste;
 use Application\Entity\Db\Poste;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
-use Application\Service\Immobilier\ImmobilierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
@@ -13,7 +12,6 @@ use Zend\Hydrator\HydratorInterface;
 class PosteHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
-    use ImmobilierServiceAwareTrait;
     use StructureServiceAwareTrait;
     use DomaineServiceAwareTrait;
 
@@ -26,7 +24,6 @@ class PosteHydrator implements HydratorInterface {
 
         $data = [
             'numero_poste'      => $object->getNumeroPoste(),
-            'localisation'      => ($object->getLocalisation())?$object->getLocalisation()->getId():null,
             'structure'         => ($object->getStructure())?$object->getStructure()->getId():null,
             'correspondance'    => ($object->getCorrespondance())?$object->getCorrespondance()->getId():null,
             'rattachement'      => ($object->getRattachementHierarchique())?$object->getRattachementHierarchique()->getId():null,
@@ -48,10 +45,8 @@ class PosteHydrator implements HydratorInterface {
         $correspondance = $this->getRessourceRhService()->getCorrespondance($data['correspondance']);
         $rattachement = $this->getAgentService()->getAgent($data['rattachement']);
         $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
-        $batiment = $this->getImmobilierService()->getBatiment($data['localisation']);
 
         $object->setNumeroPoste($data['numero_poste']);
-        $object->setLocalisation($batiment);
         $object->setStructure($structure);
         $object->setCorrespondance($correspondance);
         $object->setRattachementHierarchique($rattachement);

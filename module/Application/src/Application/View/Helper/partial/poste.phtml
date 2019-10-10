@@ -22,8 +22,6 @@ use Application\Entity\Db\Poste;
         <span class="badge"><?php echo $poste->getStructure()->getType(); ?></span>
         <?php echo $poste->getStructure()->getLibelleLong(); ?>
     </dd>
-    <dt> Localisation du poste </dt>
-    <dd class="siham"> <?php echo $poste->getLocalisation(); ?> </dd>
     <dt> Rattachement hiérarchique </dt>
     <dd class="siham"> <?php echo $rattachement; ?> </dd>
     <dt> Correspondance </dt>

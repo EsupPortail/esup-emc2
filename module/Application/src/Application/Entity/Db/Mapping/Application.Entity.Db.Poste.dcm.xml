@@ -12,9 +12,6 @@
 
         <one-to-one target-entity="Application\Entity\Db\FichePoste" mapped-by="poste" field="fichePoste"/>
 
-        <many-to-one target-entity="Application\Entity\Db\Batiment" field="localisation">
-            <join-column name="localisation" referenced-column-name="id" />
-        </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Agent" field="rattachementHierarchique">
             <join-column name="rattachement_hierarchique" referenced-column-name="c_individu" />
         </many-to-one>

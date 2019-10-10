@@ -6,7 +6,7 @@ use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -24,6 +24,10 @@ class FicheMetierService {
     public function getFichesMetiers($order = 'id')
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+            ->addSelect('metier')->leftJoin('ficheMetier.metier', 'metier')
+            ->addSelect('application')->leftJoin('ficheMetier.applications', 'application')
+            ->addSelect('formation')->leftJoin('ficheMetier.formations', 'formation')
+            ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
             ->orderBy('ficheMetier.', $order)
         ;
 
@@ -56,7 +60,7 @@ class FicheMetierService {
      * @param bool $notNull
      * @return FicheMetier
      */
-    public function getRequestedFicheMetier($controller, $name, $notNull = false)
+    public function getRequestedFicheMetier($controller, $name = 'fiche', $notNull = false)
     {
         $ficheId = $controller->params()->fromRoute($name);
         $fiche = $this->getFicheMetier($ficheId);
@@ -83,10 +87,10 @@ class FicheMetierService {
         $fiche->setHistoModification($date);
         $fiche->setHistoModificateur($connectedUtilisateur);
 
-        $this->getEntityManager()->persist($fiche);
         try {
+            $this->getEntityManager()->persist($fiche);
             $this->getEntityManager()->flush($fiche);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la création de la fiche.");
         }
 
@@ -111,7 +115,7 @@ class FicheMetierService {
 
         try {
             $this->getEntityManager()->flush($fiche);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche.");
         }
 
@@ -135,7 +139,7 @@ class FicheMetierService {
 
         try {
             $this->getEntityManager()->flush($ficheMetier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de l'historisation de la fiche métier.", $e);
         }
         return $ficheMetier;
@@ -152,7 +156,7 @@ class FicheMetierService {
 
         try {
             $this->getEntityManager()->flush($ficheMetier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de la restauration de la fiche métier.", $e);
         }
         return $ficheMetier;
@@ -164,10 +168,10 @@ class FicheMetierService {
      */
     public function delete($ficheMetier)
     {
-        $this->getEntityManager()->remove($ficheMetier);
         try {
+            $this->getEntityManager()->remove($ficheMetier);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la fiche métier.", $e);
         }
         return $ficheMetier;

@@ -26,6 +26,7 @@ class FormationService {
     public function getFormations($ordre = null)
     {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+            ->addSelect('theme')->leftJoin('formation.theme', 'theme')
             ->andWhere('formation.histoDestruction IS NULL')
         ;
         if ($ordre) $qb = $qb->orderBy('formation.' . $ordre);
@@ -44,6 +45,7 @@ class FormationService {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
             ->andWhere('formation.theme IS NULL')
             ->andWhere('formation.histoDestruction IS NULL')
+            ->orderBy('formation.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -249,6 +251,7 @@ class FormationService {
             foreach ($theme->getFormations() as $formation) {
                 $optionsoptions[$formation->getId()] = $formation->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => $theme->getLibelle(),
                 'options' => $optionsoptions,
@@ -261,6 +264,7 @@ class FormationService {
             foreach ($sanstheme as $formation) {
                 $optionsoptions[$formation->getId()] = $formation->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => "Sans thème",
                 'options' => $optionsoptions,

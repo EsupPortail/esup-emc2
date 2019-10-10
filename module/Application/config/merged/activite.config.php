@@ -11,6 +11,7 @@ use Application\Form\Activite\ActiviteHydratorFactory;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Activite\ActiviteServiceFactory;
+use Application\View\Helper\ActiviteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -141,8 +142,6 @@ return [
     ],
 
     'service_manager' => [
-        'invokables' => [
-        ],
         'factories' => [
             ActiviteService::class => ActiviteServiceFactory::class,
         ],
@@ -161,6 +160,11 @@ return [
         'factories' => [
             ActiviteHydrator::class => ActiviteHydratorFactory::class,
         ]
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'activite'  => ActiviteViewHelper::class,
+        ],
+    ],
 
 ];

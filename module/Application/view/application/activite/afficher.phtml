@@ -6,45 +6,9 @@ use Application\Entity\Db\Activite;
  * @var Activite $activite
  */
 
+$applications   = $activite->getApplications();
+$competences    = $activite->getCompetences();
+$formations      = $activite->getFormations();
 ?>
 
-<div class="activite">
-
-<h3>
-    <?php echo $activite->getLibelle(); ?>
-</h3>
-
-<div>
-    <?php echo $activite->getDescription(); ?>
-</div>
-
-<?php if (!empty($activite->getApplications())) : ?>
-    <h3>
-        Applications métiers associées
-        <span class="badge">
-            <?php echo count($activite->getApplications()); ?>
-        </span>
-    </h3>
-
-    <ul>
-        <?php foreach ($activite->getApplications() as $application) : ?>
-            <li><?php echo $application->getLibelle(); ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
-
-<?php if (!empty($activite->getFormations())) : ?>
-    <h3>
-        Formations associées
-        <span class="badge">
-        <?php echo count($activite->getFormations()); ?>
-    </span>
-    </h3>
-
-    <ul>
-        <?php foreach ($activite->getFormations() as $formation) : ?>
-            <li><?php echo $formation->getLibelle(); ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
-</div>
+<?php echo $this->activite($activite, []); ?>

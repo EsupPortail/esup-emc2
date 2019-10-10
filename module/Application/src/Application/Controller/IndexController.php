@@ -76,7 +76,7 @@ class IndexController extends AbstractActionController
         return new ViewModel([
             'user' => $user,
             'agent' => $agent,
-            'fiche' => $agent->getFiche(),
+            'fiche' => (!empty($agent->getFiches()))?current($agent->getFiches()):null,
             'missions' => $missions,
         ]);
     }

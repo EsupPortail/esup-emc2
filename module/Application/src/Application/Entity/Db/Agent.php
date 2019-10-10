@@ -26,27 +26,27 @@ class Agent {
     /** @var int */
     private $quotite;
 
-    /** @var Correspondance */
-    private $correspondance;
-    /** @var Grade */
-    private $grade;
-    /** @var Corps */
-    private $corps;
-    /** @var FichePoste */
-    private $fiche;
-
+    /** @var ArrayCollection (FichePoste) */
+    private $fiches;
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
     /** @var ArrayCollection (AgentMissionSpecifique) */
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
+    /** @var ArrayCollection (AgentCompetence) */
+    private $competences;
+    /** @var ArrayCollection (AgentGrade) */
+    private $grades;
 
     public function __construct()
     {
+        $this->fiches = new ArrayCollection();
         $this->statuts = new ArrayCollection();
         $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
+        $this->competences = new ArrayCollection();
+        $this->grades = new ArrayCollection();
     }
 
     /**
@@ -174,65 +174,11 @@ class Agent {
     }
 
     /**
-     * @return Correspondance
+     * @return FichePoste[]
      */
-    public function getCorrespondance()
+    public function getFiches()
     {
-        return $this->correspondance;
-    }
-
-    /**
-     * @param Correspondance $correspondance
-     * @return Agent
-     */
-    public function setCorrespondance($correspondance)
-    {
-        $this->correspondance = $correspondance;
-        return $this;
-    }
-
-    /**
-     * @return Grade
-     */
-    public function getGrade()
-    {
-        return $this->grade;
-    }
-
-    /**
-     * @param Grade $grade
-     * @return Agent
-     */
-    public function setGrade($grade)
-    {
-        $this->grade = $grade;
-        return $this;
-    }
-
-    /**
-     * @return Corps
-     */
-    public function getCorps()
-    {
-        return $this->corps;
-    }
-
-    /**
-     * @param Corps $corps
-     * @return Agent
-     */
-    public function setCorps($corps)
-    {
-        $this->corps = $corps;
-        return $this;
-    }
-
-    /**
-     * @return FichePoste
-     */
-    public function getFiche()
-    {
-        return $this->fiche;
+        return $this->fiches->toArray();
     }
 
     /**
@@ -315,5 +261,70 @@ class Agent {
     /** @return AgentMissionSpecifique[] */
     public function getMissionsSpecifiques() {
         return $this->missionsSpecifiques->toArray();
+    }
+
+    /** @return AgentCompetence[] */
+    public function getCompetences() {
+        return $this->competences->toArray();
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return Agent
+     */
+    public function addCompetence($competence) {
+        $this->competences->add($competence);
+        return $this;
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return Agent
+     */
+    public function removeCompetence($competence) {
+        $this->competences->removeElement($competence);
+        return $this;
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return boolean
+     */
+    public function hasCompetence($competence) {
+        return $this->competences->contains($competence);
+    }
+
+
+
+
+    /** @return AgentGrade[] */
+    public function getGrades() {
+        return $this->grades->toArray();
+    }
+
+    /**
+     * @param AgentGrade $grade
+     * @return Agent
+     */
+    public function addGrade($grade) {
+        $this->grades->add($grade);
+        return $this;
+    }
+
+    /**
+     * @param AgentGrade $grade
+     * @return Agent
+     */
+    public function removeGrade($grade) {
+        $this->grades->removeElement($grade);
+        return $this;
+    }
+
+    /**
+     * @param AgentGrade $grade
+     * @return boolean
+     */
+    public function hasGrade($grade) {
+        return $this->grades->contains($grade);
     }
 }

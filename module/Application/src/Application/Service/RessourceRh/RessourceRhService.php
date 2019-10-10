@@ -260,6 +260,10 @@ class RessourceRhService {
      */
     public function getMissionsSpecifiques() {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
+            ->addSelect('type')->leftJoin('mission.type', 'type')
+            ->addSelect('theme')->leftJoin('mission.theme', 'theme')
+            ->addSelect('affectation')->leftJoin('mission.affectations', 'affectation')
+            ->addSelect('modificateur')->join('mission.histoModificateur', 'modificateur')
             ->orderBy('mission.libelle', 'ASC');
 
         $result = $qb->getQuery()->getResult();
@@ -296,6 +300,7 @@ class RessourceRhService {
             foreach ($theme->getMissions() as $mission) {
                 $optionsoptions[$mission->getId()] = $mission->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => $theme->getLibelle(),
                 'options' => $optionsoptions,
@@ -308,6 +313,7 @@ class RessourceRhService {
             foreach ($sanstheme as $mission) {
                 $optionsoptions[$mission->getId()] = $mission->getLibelle();
             }
+            asort($optionsoptions);
             $array = [
                 'label' => "Sans thème",
                 'options' => $optionsoptions,
@@ -379,10 +385,10 @@ class RessourceRhService {
         $mission->setHistoModification($date);
         $mission->setHistoModificateur($user);
 
-        $this->getEntityManager()->persist($mission);
         try {
+            $this->getEntityManager()->persist($mission);
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -407,7 +413,7 @@ class RessourceRhService {
 
         try {
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -432,7 +438,7 @@ class RessourceRhService {
 
         try {
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -450,7 +456,7 @@ class RessourceRhService {
 
         try {
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -463,11 +469,10 @@ class RessourceRhService {
      */
     public function deleteMissionSpecifique($mission)
     {
-
-        $this->getEntityManager()->remove($mission);
         try {
+            $this->getEntityManager()->remove($mission);
             $this->getEntityManager()->flush($mission);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
         }
 
@@ -485,6 +490,8 @@ class RessourceRhService {
     public function getMissionsSpecifiquesTypes($historiser= false, $champ = 'libelle', $ordre ='ASC')
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueType::class)->createQueryBuilder('type')
+            ->addSelect('mission')->leftJoin('type.missions', 'mission')
+            ->addSelect('modificateur')->join('type.histoModificateur', 'modificateur')
             ->orderBy('type.' . $champ, $ordre)
         ;
 
@@ -657,12 +664,14 @@ class RessourceRhService {
      */
     public function getMissionsSpecifiquesThemes($historiser= false, $champ = 'libelle', $ordre ='ASC')
     {
-        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('type')
-            ->orderBy('type.' . $champ, $ordre)
+        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('theme')
+            ->addSelect('mission')->leftJoin('theme.missions', 'mission')
+            ->addSelect('modificateur')->join('theme.histoModificateur', 'modificateur')
+            ->orderBy('theme.' . $champ, $ordre)
         ;
 
         if ($historiser === false) {
-            $qb = $qb->andWhere('type.histoDestruction IS NULL');
+            $qb = $qb->andWhere('theme.histoDestruction IS NULL');
         }
 
         $result = $qb->getQuery()->getResult();

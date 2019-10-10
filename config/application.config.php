@@ -27,18 +27,12 @@ $modules = [
     'Autoform',
     'Fichier',
     'Mailing',
-    'Octopus',
     'Utilisateur',
     'Indicateur',
     'Application',
     'ZendDeveloperTools',
 
 ];
-
-if ( 'development' == getenv('APPLICATION_ENV') ?: 'production' ) {
-    $modules[] = 'ZendDeveloperTools';
-    $modules[] = 'UnicaenCode';
-}
 
 $moduleListenerOptions = [
     'config_glob_paths'    => [

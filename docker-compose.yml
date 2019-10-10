@@ -5,7 +5,7 @@ services:
     container_name: preecog
     build:
       args:
-        PHP_VERSION: 7.0
+        PHP_VERSION: 7.3
       context: .
     ports:
       - "8111:80"

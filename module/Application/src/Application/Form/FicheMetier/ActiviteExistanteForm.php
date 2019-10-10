@@ -24,6 +24,8 @@ class ActiviteExistanteForm extends Form {
             ],
             'attributes' => [
                 'id' => 'activite',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => true,
             ],
         ]);
         // button

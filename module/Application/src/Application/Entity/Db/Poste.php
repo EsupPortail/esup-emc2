@@ -10,8 +10,6 @@ class Poste {
     private $numeroPoste;
     /** @var Structure */
     private $structure;
-    /** @var Batiment */
-    private $localisation;
     /** @var Correspondance */
     private $correspondance;
     /** @var Agent */
@@ -67,24 +65,6 @@ class Poste {
     public function setStructure($structure)
     {
         $this->structure = $structure;
-        return $this;
-    }
-
-    /**
-     * @return Batiment
-     */
-    public function getLocalisation()
-    {
-        return $this->localisation;
-    }
-
-    /**
-     * @param Batiment $localisation
-     * @return Poste
-     */
-    public function setLocalisation($localisation)
-    {
-        $this->localisation = $localisation;
         return $this;
     }
 

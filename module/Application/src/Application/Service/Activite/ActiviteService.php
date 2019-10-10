@@ -25,6 +25,7 @@ class ActiviteService {
     public function getActivites($ordre = null)
     {
         $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+            ->addSelect('modificateur')->join('activite.histoModificateur', 'modificateur')
         ;
         if ($ordre) $qb = $qb->orderBy('activite.' . $ordre);
 

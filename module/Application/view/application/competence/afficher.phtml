@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @see CompetenceController::afficherAction()
+ *
+ * @var Competence $competence
+ */
+
+use Application\Controller\CompetenceController;
+use Application\Entity\Db\Competence;
+
+?>
+
+<dl class="dl-horizontal">
+    <dt> Libellé </dt>
+    <dd> <?php echo $competence->getLibelle(); ?> </dd>
+    <dt> Type </dt>
+    <dd> <?php echo ($competence->getType())?$competence->getType()->getLibelle():"Aucun"; ?> </dd>
+    <dt> Thème </dt>
+    <dd> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </dd>
+    <dt> Précision </dt>
+    <dd> <?php echo $competence->getPrecision(); ?> </dd>
+    <dt> Description </dt>
+    <dd> <?php echo $competence->getDescription(); ?> </dd>
+
+    <dt> Modificateur </dt>
+    <dd> <?php echo $competence->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $competence->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
+
+    <dt> Fiches metiers </dt>
+    <dd>
+        <!-- Nombre de fiches metiers : -->
+        <?php echo count($competence->getFichesMetiers()); ?>
+        <ul>
+            <?php foreach ($competence->getFichesMetiers() as $fiche) : ?>
+                <li> #<?php echo $fiche->getId(); ?> - <?php echo $fiche->getMetier()->getLibelle(); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
+    <dt> Activités </dt>
+    <dd>
+        <!-- Nombre de fiches metiers : -->
+        <?php echo count($competence->getActivites()); ?>
+        <ul>
+            <?php foreach ($competence->getActivites() as $activite) : ?>
+                <li> #<?php echo $activite->getId(); ?> - <?php echo $activite->getLibelle(); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
+<!--    <dt> Agents </dt>-->
+<!--    <dd>-->
+<!--        <span class="badge"> --><?php //echo count($theme->getCompetences()); ?><!--</span>-->
+<!--        <ul>-->
+<!--            --><?php //foreach ($theme->getCompetences() as $competence) : ?>
+<!--                <li> --><?php //echo $competence->getLibelle(); ?><!-- </li>-->
+<!--            --><?php //endforeach; ?>
+<!--        </ul>-->
+<!--    </dd>-->
+</dl>

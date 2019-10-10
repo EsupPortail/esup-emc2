@@ -2,11 +2,11 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\AgentCompetence;
 use Application\Form\Agent\AgentFormAwareTrait;
+use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
-use Octopus\Entity\Db\Individu;
-use Octopus\Service\Individu\IndividuServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -16,10 +16,10 @@ class AgentController extends AbstractActionController
 {
     /** Trait utilisés pour les services */
     use AgentServiceAwareTrait;
-    use IndividuServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     /** Trait de formulaire */
     use AgentFormAwareTrait;
+    use AgentCompetenceFormAwareTrait;
 
     public function indexAction() {
         $agents = $this->getAgentService()->getAgents();
@@ -61,6 +61,109 @@ class AgentController extends AbstractActionController
             'title' => 'Éditer l\'agent',
             'form' => $form,
         ]);
+        return $vm;
+    }
+
+    public function ajouterAgentCompetenceAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $competence = new AgentCompetence();
+        $competence->setAgent($agent);
+        $form = $this->getAgentCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-competence', ['agent' => $agent->getId()]));
+        $form->bind($competence);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentService()->createAgentCompetence($competence);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+           'title' => "Ajout d'une compétence associée à un agent",
+           'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function afficherAgentCompetenceAction()
+    {
+        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
+        return new ViewModel([
+            'title' => "Affichage d'une compétence",
+            'competence' => $competence,
+        ]);
+    }
+
+    public function modifierAgentCompetenceAction()
+    {
+        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
+        $form = $this->getAgentCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-competence', ['agent-competence' => $competence->getId()]));
+        $form->bind($competence);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentService()->updateAgentCompetence($competence);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une compétence associée à un agent",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserAgentCompetenceAction()
+    {
+        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
+        $this->getAgentService()->historiserAgentCompetence($competence);
+        return $this->redirect()->toRoute('index-personnel', [], [], true);
+    }
+
+    public function restaurerAgentCompetenceAction()
+    {
+        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
+        $this->getAgentService()->restoreAgentCompetence($competence);
+        return $this->redirect()->toRoute('index-personnel', [], [], true);
+    }
+
+    public function detruireAgentCompetenceAction()
+    {
+        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentService()->deleteAgentCompetence($competence);
+            //TODO c'est vraiment crade ...
+            return $this->redirect()->toRoute('home');
+        }
+
+        $vm = new ViewModel();
+        if ($competence !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la compétence  de " . $competence->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/detruire-agent-competence', ["competence" => $competence->getId()], [], true),
+            ]);
+        }
         return $vm;
     }
 

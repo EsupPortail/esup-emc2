@@ -7,23 +7,10 @@
         </id>
 
         <field name="libelle"           type="string" length="256"      column="libelle"            nullable="false"/>
-        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
-        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
-        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
 
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoCreateur">
-            <join-column name="histo_createur_id" referenced-column-name="id"/>
-        </many-to-one>
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoModificateur">
-            <join-column name="histo_modificateur_id" referenced-column-name="id"/>
-        </many-to-one>
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
-            <join-column name="histo_destructeur_id" referenced-column-name="id"/>
-        </many-to-one>
-
-        <one-to-one field="agent" target-entity="Application\Entity\Db\Agent">
+        <many-to-one field="agent" target-entity="Application\Entity\Db\Agent">
             <join-column name="agent" referenced-column-name="c_individu" />
-        </one-to-one>
+        </many-to-one>
 
         <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste">
             <join-column name="specificite" referenced-column-name="id" />
@@ -34,6 +21,20 @@
         </one-to-one>
 
         <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="fichePoste" field="fichesMetiers"/>
+
+        <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="id"/>
+        </many-to-one>
 
 
     </entity>

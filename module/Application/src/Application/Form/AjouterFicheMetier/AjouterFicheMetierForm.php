@@ -109,40 +109,8 @@ class AjouterFicheMetierForm extends Form {
         ]));
     }
 
-
-//array(
-//    'european' => array(
-//        'label' => 'European languages',
-//        'options' => array(
-//            '0' => 'French',
-//            '1' => 'Italian',
-//        ),
-//    ),
-//    'asian' => array(
-//        'label' => 'Asian languages',
-//        'options' => array(
-//            '2' => 'Japanese',
-//            '3' => 'Chinese',
-//        ),
-//    ),
-//)
-
-/**
-<?php foreach ($familles as $famille) : ?>
-            <optgroup label="<?php echo $famille->getLibelle(); ?>">
-                <?php $metiers = $famille->getMetiers() ; ?>
-                <?php foreach ($metiers as $metierOpt) : ?>
-                    <option value="<?php $metierOpt->getId()?>" <?php if($metier) echo ($metier->getId() === $metierOpt->getId())?"selected":""; ?> >
-                        <?php echo $metierOpt->getLibelle(); ?>
-                    </option>
-                <?php endforeach; ?>
-            </optgroup>
-        <?php endforeach; ?>
-   */
     private function generateFicheTypeOptions()
     {
-//        $fiches = $this->getFicheMetierService()->getFichesMetiers();
-
         $options = [];
         $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
         foreach ($familles as $famille) {

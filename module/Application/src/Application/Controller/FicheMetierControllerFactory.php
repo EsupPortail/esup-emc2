@@ -9,6 +9,7 @@ use Application\Form\FicheMetier\FormationBaseForm;
 use Application\Form\FicheMetier\FormationComportementaleForm;
 use Application\Form\FicheMetier\FormationOperationnelleForm;
 use Application\Form\FicheMetier\FormationsForm;
+use Application\Form\FicheMetier\GererCompetenceForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\FicheMetier\FicheMetierService;
@@ -34,6 +35,7 @@ class FicheMetierControllerFactory {
          * @var ActiviteExistanteForm $activiteExistanteForm
          * @var ApplicationsForm $applicationsForm
          * @var FormationsForm $formationsForm
+         * @var GererCompetenceForm $gererCompetenceForm
          *
          * @var FormationBaseForm $formationBaseForm
          * @var FormationComportementaleForm $formationComportementalForm
@@ -44,6 +46,7 @@ class FicheMetierControllerFactory {
         $activiteExistanteForm = $container->get('FormElementManager')->get(ActiviteExistanteForm::class);
         $applicationsForm = $container->get('FormElementManager')->get(ApplicationsForm::class);
         $formationsForm = $container->get('FormElementManager')->get(FormationsForm::class);
+        $gererCompetenceForm = $container->get('FormElementManager')->get(GererCompetenceForm::class);
 
         $formationBaseForm = $container->get('FormElementManager')->get(FormationBaseForm::class);
         $formationComportementalForm = $container->get('FormElementManager')->get(FormationComportementaleForm::class);
@@ -63,6 +66,7 @@ class FicheMetierControllerFactory {
         $controller->setActiviteExistanteForm($activiteExistanteForm);
         $controller->setApplicationsForm($applicationsForm);
         $controller->setFormationsForm($formationsForm);
+        $controller->setGererCompetenceForm($gererCompetenceForm);
 
         $controller->setFormationBaseForm($formationBaseForm);
         $controller->setFormationComportementaleForm($formationComportementalForm);

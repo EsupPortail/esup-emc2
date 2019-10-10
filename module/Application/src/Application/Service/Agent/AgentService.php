@@ -3,18 +3,22 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Utilisateur\Entity\Db\User;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentService {
     use EntityManagerAwareTrait;
+    use UserServiceAwareTrait;
 
     /**
      * @param string $order
@@ -22,7 +26,9 @@ class AgentService {
      */
     public function getAgents($order = null)
     {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent');
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+        ;
+
 
         if ($order !== null) {
             $qb = $qb->orderBy('agent.' . $order);
@@ -155,24 +161,28 @@ class AgentService {
         }
 
         /** !!TODO!! faire le lien entre agent et fiche de poste */
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+        $qb1 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->addSelect('fiche')->leftJoin('agent.fiche', 'fiche', 'WITH', 'fiche.agent = agent.id')
-            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->addSelect('fiche')->leftJoin('agent.fiches', 'fiche')
+            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('statut.administratif = :true')
-            ->andWhere('fiche.id IS NULL')
+            //->andWhere('fiche.id IS NULL')
             ->setParameter('today', $today)
-            ->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
-
         if ($structure !== null) {
-            $qb = $qb->andWhere('statut.structure = :structure')
+            $qb1 = $qb1->andWhere('statut.structure = :structure' )
                      ->setParameter('structure', $structure);
         }
+        $result1 = $qb1->getQuery()->getResult();
 
-        $result = $qb->getQuery()->getResult();
+        //TODO ! faire la jointure ...
+        $result = [];
+        /** @var Agent $agent */
+        foreach ($result1 as $agent) {
+            if (empty($agent->getFiches())) $result[] = $agent;
+        }
 
         return $result;
 
@@ -211,4 +221,137 @@ class AgentService {
         return $result;
 
     }
+
+    /**
+     * @param integer $id
+     * @return AgentCompetence
+     */
+    public function getAgentCompetence($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(AgentCompetence::class)->createQueryBuilder('competence')
+            ->andWhere('competence.id = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Plusieurs AgentCompetence partagent le même identifiant [". $id ."].", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return AgentCompetence
+     */
+    public function getRequestedAgentCompetence($controller, $paramName = 'agent-competence')
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $result = $this->getAgentCompetence($id);
+        return $result;
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return AgentCompetence
+     */
+    public function createAgentCompetence($competence)
+    {
+        try {
+            $user = $this->getUserService()->getConnectedUser();
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenue l'ors de la récupération des données d'historisation.", $e);
+        }
+
+        $competence->setHistoCreation($date);
+        $competence->setHistoCreateur($user);
+        $competence->setHistoModification($date);
+        $competence->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->persist($competence);
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $competence;
+    }
+
+    /**
+     * @param AgentCompetence $competence
+     * @return AgentCompetence
+     */
+    public function updateAgentCompetence($competence)
+    {
+        try {
+            $user = $this->getUserService()->getConnectedUser();
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenue l'ors de la récupération des données d'historisation.", $e);
+        }
+
+        $competence->setHistoModification($date);
+        $competence->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $competence;
+    }
+
+    public function historiserAgentCompetence(AgentCompetence $competence)
+    {
+        try {
+            $user = $this->getUserService()->getConnectedUser();
+            $date = new DateTime();
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenue l'ors de la récupération des données d'historisation.", $e);
+        }
+
+        $competence->setHistoDestruction($date);
+        $competence->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $competence;
+    }
+
+    public function restoreAgentCompetence(AgentCompetence $competence)
+    {
+        $competence->setHistoDestruction(null);
+        $competence->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $competence;
+    }
+
+    public function deleteAgentCompetence(AgentCompetence $competence)
+    {
+
+        try {
+            $this->getEntityManager()->remove($competence);
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $competence;
+    }
+
+
 }

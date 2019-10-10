@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @see CompetenceController::afficherCompetenceThemeAction()
+ *
+ * @var CompetenceTheme $theme
+ */
+
+use Application\Controller\CompetenceController;
+use Application\Entity\Db\CompetenceTheme;
+
+?>
+
+<dl class="dl-horizontal">
+    <dt> Libellé </dt>
+    <dd> <?php echo $theme->getLibelle(); ?> </dd>
+    <dt> Modificateur </dt>
+    <dd> <?php echo $theme->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $theme->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
+    <dt> Compétences associées </dt>
+    <dd>
+        <span class="badge"> <?php echo count($theme->getCompetences()); ?></span>
+        <ul>
+            <?php foreach ($theme->getCompetences() as $competence) : ?>
+                <li> <?php echo $competence->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
+</dl>
