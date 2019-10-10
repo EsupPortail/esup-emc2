@@ -42,7 +42,7 @@ class CompetenceForm extends Form {
             'type' => Textarea::class,
             'name' => 'description',
             'options' => [
-                'label' => "Description* :",
+                'label' => "Description :",
             ],
             'attributes' => [
                 'id' => 'description',
@@ -98,7 +98,7 @@ class CompetenceForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => [ 'required' => true,  ],
             'precision' => [ 'required' => false,  ],
-            'description' => [ 'required' => true,  ],
+            'description' => [ 'required' => false,  ],
             'type'    => [ 'required' => false, ],
             'theme'   => [ 'required' => false, ],
         ]));
