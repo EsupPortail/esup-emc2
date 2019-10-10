@@ -55,7 +55,7 @@ $now = new DateTime();
     </h2>
 
     <?php foreach ($statuts as $statut) : ?>
-        <?php echo $this->agentStatut($statut, ['denomination' => false]); ?>
+        <?php echo $this->agentStatut($statut, ['denomination' => false, 'id' => false]); ?>
     <?php endforeach; ?>
 <?php endif; ?>
 
