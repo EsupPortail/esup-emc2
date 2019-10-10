@@ -8,7 +8,6 @@ use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
@@ -169,13 +168,6 @@ class MissionSpecifiqueService {
      */
     public function restore($affectation)
     {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
-        $user = $this->getUserService()->getConnectedUser();
-
         $affectation->setHistoDestruction(null);
         $affectation->setHistoDestructeur(null);
 

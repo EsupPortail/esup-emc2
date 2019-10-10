@@ -181,7 +181,7 @@ class AgentService {
         $result = [];
         /** @var Agent $agent */
         foreach ($result1 as $agent) {
-            if ($agent->getFiche() === null) $result[] = $agent;
+            if (empty($agent->getFiches())) $result[] = $agent;
         }
 
         return $result;

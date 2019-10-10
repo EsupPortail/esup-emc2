@@ -25,9 +25,9 @@ class Agent {
     private $utilisateur;
     /** @var int */
     private $quotite;
-    /** @var FichePoste */
-    private $fiche;
 
+    /** @var ArrayCollection (FichePoste) */
+    private $fiches;
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
     /** @var ArrayCollection (AgentMissionSpecifique) */
@@ -41,6 +41,7 @@ class Agent {
 
     public function __construct()
     {
+        $this->fiches = new ArrayCollection();
         $this->statuts = new ArrayCollection();
         $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
@@ -173,11 +174,11 @@ class Agent {
     }
 
     /**
-     * @return FichePoste
+     * @return FichePoste[]
      */
-    public function getFiche()
+    public function getFiches()
     {
-        return $this->fiche;
+        return $this->fiches->toArray();
     }
 
     /**

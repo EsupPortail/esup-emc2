@@ -272,7 +272,7 @@ $competences = $agent->getCompetences();
     <?php
     $dictionnaire = [];
 
-    $fichePoste   = $agent->getFiche();
+    $fichePoste   = (!empty($agent->getFiches()))?current($agent->getFiches()):null;
     $fichesTypes  = ($fichePoste !== null)?$fichePoste->getFichesMetiers():[];
     /** @var  FicheTypeExterne $ficheType */
     foreach ($fichesTypes as $ficheType) {

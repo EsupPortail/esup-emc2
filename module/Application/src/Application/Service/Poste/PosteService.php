@@ -18,6 +18,11 @@ class PosteService {
      */
     public function getPostes($order = null) {
         $qb = $this->getEntityManager()->getRepository(Poste::class)->createQueryBuilder('poste')
+            ->addSelect('structure')->join('poste.structure', 'structure')
+            ->addSelect('correspondance')->join('poste.correspondance', 'correspondance')
+            ->addSelect('responsable')->join('poste.rattachementHierarchique', 'responsable')
+            ->addSelect('domaine')->join('poste.domaine', 'domaine')
+            ->addSelect('fiche')->leftJoin('poste.fichePoste','fiche')
             ;
 
         if ($order) {
