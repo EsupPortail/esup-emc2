@@ -149,42 +149,6 @@ return [
                 ],
             ],
             [
-                'name' => 'Import_SITE',
-                'source' => [
-                    'name'               => 'Sites remontés de PrEECoG',
-                    'select'             => 'SELECT * FROM V_PREECOG_SITE',
-                    'connection'         => 'octopus',
-                    'source_code_column' => 'ID',
-                    'columns'            => ['NOM', 'LIBELLE'],
-                ],
-                'intermediate_table' => 'src_site',
-                'destination' => [
-                    'name'               => 'Sites stockes dans octopus',
-                    'table'              => 'site',
-                    'connection'         => 'default',
-                    'source_code_column' => 'id',
-                    'columns'            => ['nom', 'libelle'],
-                ],
-            ],
-            [
-                'name' => 'Import_BATIMENT',
-                'source' => [
-                    'name'               => 'Batiments remontés de PrEECoG',
-                    'select'             => 'SELECT * FROM V_PREECOG_BATIMENT',
-                    'connection'         => 'octopus',
-                    'source_code_column' => 'ID',
-                    'columns'            => ['NOM', 'LIBELLE', 'SITE_ID'],
-                ],
-                'intermediate_table' => 'src_batiment',
-                'destination' => [
-                    'name'               => 'Batiments stockes dans octopus',
-                    'table'              => 'batiment',
-                    'connection'         => 'default',
-                    'source_code_column' => 'id',
-                    'columns'            => ['nom', 'libelle', 'site_id'],
-                ],
-            ],
-            [
                 'name' => 'Import_FONCTION',
                 'source' => [
                     'name'               => 'Fonctions remontées de PrEECoG',
