@@ -27,6 +27,8 @@ class CompetenceService {
     public function getCompetences($champ = 'libelle', $order = 'ASC')
     {
         $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
+            ->addSelect('type')->leftJoin('competence.type', 'type')
+            ->addSelect('theme')->leftJoin('competence.theme', 'theme')
             ->orderBy('competence.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
@@ -41,6 +43,8 @@ class CompetenceService {
     public function getCompetencesSansTheme($champ = 'libelle', $order = 'ASC')
     {
         $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
+            ->addSelect('type')->leftJoin('competence.type', 'type')
+            ->addSelect('theme')->leftJoin('competence.theme', 'theme')
             ->andWhere('competence.theme IS NULL')
             ->orderBy('competence.'.$champ, $order)
         ;
@@ -266,6 +270,7 @@ class CompetenceService {
     public function getCompetencesThemes($champ = 'libelle', $order = 'ASC')
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
+            ->addSelect('competence')->leftJoin('theme.competences', 'competence')
             ->orderBy('theme.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
@@ -434,6 +439,7 @@ class CompetenceService {
     public function getCompetencesTypes($champ = 'libelle', $order = 'ASC')
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceType::class)->createQueryBuilder('type')
+            ->addSelect('competence')->leftJoin('type.competences', 'competence')
             ->orderBy('type.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();

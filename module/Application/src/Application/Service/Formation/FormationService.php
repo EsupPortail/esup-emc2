@@ -26,6 +26,7 @@ class FormationService {
     public function getFormations($ordre = null)
     {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+            ->addSelect('theme')->leftJoin('formation.theme', 'theme')
             ->andWhere('formation.histoDestruction IS NULL')
         ;
         if ($ordre) $qb = $qb->orderBy('formation.' . $ordre);
