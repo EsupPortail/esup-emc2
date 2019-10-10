@@ -337,13 +337,15 @@ class FichePosteService {
 
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->addSelect('agent')->join('fiche.agent', 'agent')
+            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->andWhere('statut.structure = :structure')
-            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+//            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('statut.administratif = :true')
             ->setParameter('structure', $structure)
             ->setParameter('today', $today)
-            ->setParameter('noEnd', $noEnd)
+            //->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
