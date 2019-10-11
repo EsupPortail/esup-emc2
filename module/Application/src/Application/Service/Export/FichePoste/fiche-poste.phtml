@@ -315,28 +315,32 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
                 </ul>
             </dd>
             <?php endif; ?>
-            <dt> Applications  </dt>
-            <dd>
-                <ul>
-                <?php
-                    /** @var \Application\Entity\Db\Application $application */
-                foreach ($ficheMetier->getFicheType()->getApplications() as $application) :
-                ?>
-                    <li> <?php echo $application->getLibelle(); ?> </li>
-                <?php endforeach; ?>
-                </ul>
-            </dd>
-            <dt> Formations  </dt>
-            <dd>
-                <ul>
+            <?php if (!empty($ficheMetier->getFicheType()->getApplications()->toArray())) : ?>
+                <dt> Applications  </dt>
+                <dd>
+                    <ul>
                     <?php
-                    /** @var \Application\Entity\Db\Formation $formation */
-                    foreach ($ficheMetier->getFicheType()->getFormations() as $formation) :
-                        ?>
-                        <li> <?php echo $formation->getLibelle(); ?> </li>
+                        /** @var \Application\Entity\Db\Application $application */
+                    foreach ($ficheMetier->getFicheType()->getApplications() as $application) :
+                    ?>
+                        <li> <?php echo $application->getLibelle(); ?> </li>
                     <?php endforeach; ?>
-                </ul>
-            </dd>
+                    </ul>
+                </dd>
+            <?php endif; ?>
+            <?php if (!empty($ficheMetier->getFicheType()->getFormations())) : ?>
+                <dt> Formations  </dt>
+                <dd>
+                    <ul>
+                        <?php
+                        /** @var \Application\Entity\Db\Formation $formation */
+                        foreach ($ficheMetier->getFicheType()->getFormations() as $formation) :
+                            ?>
+                            <li> <?php echo $formation->getLibelle(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </dd>
+            <?php endif; ?>
         </dl>
     <?php endforeach; ?>
 
