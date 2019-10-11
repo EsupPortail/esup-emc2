@@ -7,7 +7,10 @@ _Serveur de test_ : https://preecog-pp.unicaen.fr/
 _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
-
+version **0.3.3** (11/10/2019) :
+* La description des compétences n'est plus obligatoire
+* Récupération des grades modifiée pour la gestion des agents ayant plusieurs grades simultanement,
+* Amélioration graphique de l'exportation des fiche de poste 
 version **0.3.0** (18/09/2019) : 
 * Gestion de sa structure : 
     - listing des agents, des fiches de postes et des missions spécifiques ;
