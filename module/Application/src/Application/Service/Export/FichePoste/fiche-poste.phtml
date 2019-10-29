@@ -111,8 +111,14 @@ $now = new DateTime();
                 <td>
                     <ul>
                         <?php foreach ($grades as $grade): ?>
+                            <?php
+                                $structure = $grade->getStructure();
+                                $corps = $grade->getCorps();
+                                $tgrade = $grade->getGrade();
+                                $bap = $grade->getBap();
+                            ?>
                         <li>
-                            <?php echo $grade->getStructure()->getLibelleLong(); ?>
+                            <?php echo ($structure)?$structure->getLibelleLong():"<span class='manquant'>Non renseignée</span>"; ?>
                             (Du <?php echo $grade->getDateDebut()->format('d/m/Y'); ?>
                             au
                             <?php if ($grade->getDateFin()): ?>
@@ -121,13 +127,19 @@ $now = new DateTime();
                                 ---)
                             <?php endif; ?>
                             <ul>
-                                <li> <?php echo strtolower($grade->getCorps()->getLibelleLong()); ?> </li>
+                                <li> <?php echo ($corps)?strtolower($grade->getCorps()->getLibelleLong()):"<span class='manquant'>Non renseigné</span>"; ?> </li>
                                 <li> <?php echo strtolower($grade->getGrade()->getLibelleLong()); ?> </li>
                                 <li>
-                                    BAP
-                                    <?php echo $grade->getBap()->getCategorie(); ?>
-                                    -
-                                    <?php echo strtolower($grade->getBap()->getLibelleLong()); ?>
+                                    <?php if ($bap) : ?>
+                                        BAP
+                                        <?php echo $bap->getCategorie(); ?>
+                                        -
+                                        <?php echo strtolower($bap->getLibelleLong()); ?>
+                                    <?php else : ?>
+                                        <span class='manquant'>
+                                            Non renseignée
+                                        </span>
+                                    <?php endif; ?>
                                 </li>
                             </ul>
                         </li>
@@ -169,7 +181,7 @@ $now = new DateTime();
         <table class="info">
             <tr>
                 <th> Numéro de poste </th>
-                <td> <?php echo $poste->getId(); ?> </td>
+                <td> <?php echo $poste->getNumeroPoste(); ?> </td>
             </tr>
             <tr>
                 <th> Affectation  </th>
@@ -427,4 +439,5 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
     dl dt {
         font-weight: bold;
     }
+
 </style>

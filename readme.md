@@ -8,8 +8,12 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.3.5** (29/10/2019) :
+* Correction du numéro de poste qui était remonté comme l'identifiant du poste sur l'export
+* Ajout de garde pour les infos du grade en de données manquantes
+
 version **0.3.4** (17/10/2019) :
-* Correction du bug de remonter des agent d'une structure (null est pris en compte et on a plus besoin de 1999/12/31)
+* Correction du bug de remonté des agents d'une structure (null est pris en compte et on a plus besoin de 1999/12/31)
 
 version **0.3.3** (11/10/2019) :
 * La description des compétences n'est plus obligatoire
