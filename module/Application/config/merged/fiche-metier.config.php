@@ -61,7 +61,6 @@ return [
                         'detruire',
                         'historiser',
                         'restaurer',
-                        'export',
 
                         'editer-libelle',
                         'retirer-activite',
@@ -127,17 +126,6 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'gerer-competences',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'export' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/export/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'export',
                             ],
                         ],
                         'may_terminate' => true,
