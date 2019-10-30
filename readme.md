@@ -8,6 +8,9 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.3.6** (30/10/2019) :
+* Correction du bug empèchant l'affichage des compétences sur l'export PDF des fiches de poste
+
 version **0.3.5** (29/10/2019) :
 * Correction du numéro de poste qui était remonté comme l'identifiant du poste sur l'export
 * Correction du problème lié au vidage des compétences, formations et applications des fiches metiers (surement lié à une interaction de boostrap-select et multiple) 
