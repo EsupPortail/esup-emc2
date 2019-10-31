@@ -48,15 +48,16 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
         <?php if ($canCreerDemande) : ?>
             <?php /**  @see \Application\Controller\ValidationController::creerDemandesFicheMetierDomaineAction() */ ?>
             <a href="<?php echo $this->url('validation/creer-demandes-fiche-metier-domaine', [], []); ?>"
-               class="btn btn-primary action zzz-ajax-modal"
+               class="btn btn-primary action ajax-modal"
                data-event="modification"
             >
                 <span class="icon ajouter"></span>
                 Créer des demandes pour un domaine
             </a>
 
+            <?php /**  @see \Application\Controller\ValidationController::creerDemandeFicheMetierAction() */ ?>
             <a href="<?php echo $this->url('validation/creer-demande-fiche-metier', [], []); ?>"
-               class="btn btn-primary action zzz-ajax-modal"
+               class="btn btn-primary action ajax-modal"
                data-event="modification"
             >
                 <span class="icon ajouter"></span>

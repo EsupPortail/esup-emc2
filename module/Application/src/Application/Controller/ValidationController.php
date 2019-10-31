@@ -2,7 +2,10 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Validation;
+use Application\Entity\Db\ValidationDemande;
+use Application\Entity\Db\ValidationType;
 use Application\Form\Validation\ValidateurFormAwareTrait;
 use Application\Form\ValidationDemande\ValidationDemandeFormAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
@@ -132,81 +135,75 @@ class ValidationController extends AbstractActionController {
     }
 
     public function creerDemandesFicheMetierDomaineAction() {
-        $domaines = $this->getDomaineService()->getDomaines();
-        $validateurs = $this->getUserService()->getUtilisateursByRoleId('Validateur');
+        $cibles = $this->getDomaineService()->getDomainesAsOptions();
+        $demande = new ValidationDemande();
+        $form = $this->getValidationDemandeForm();
+        $form->setCibles($cibles);
+        $form->init();
+        $form->setAttribute('action', $this->url()->fromRoute('validation/creer-demandes-fiche-metier-domaine', [], [], true));
+        $form->bind($demande);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $validateur = $this->getUserService()->getUtilisateur($data['validateur']);
-            $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
-
-            if ($domaine !== null AND $validateur !== null) {
+            $form->setData($data);
+            if ($form->isValid()) {
+                $validateur = $demande->getValidateur();
+                $domaine = $this->getDomaineService()->getDomaine($demande->getObjectId());
                 $demandes = $this->getValidationDemandeService()->creerDemandesFicheMetierDomaine($validateur, $domaine);
 
-                $string  =  count($demandes) . " demande(s) ont été crées : <ul>";
+                $message  =  count($demandes) . " demandes de validation viennent d'être créées : <ul>";
                 foreach ($demandes as $demande) {
-                    $fiche = $this->getFicheMetierService()->getFicheMetier($demande->getObjectId());
-                    $string .= " <li> #" . $demande->getId() . " - " . $fiche->getMetier()->getLibelle().";</li>";
+                    $titre = $this->getFicheMetierService()->getFicheMetier($demande->getObjectId())->getMetier()->getLibelle();
+                    $message .= "<li>#" . $demande->getId() . " - " . $titre . "</li>";
                 }
-                $string .=  "</ul>";
-                $this->flashMessenger()->addSuccessMessage($string);
-                $this->getMailingService()->notificationDemandesValidations($validateur, $demandes);
-                return $this->redirect()->toRoute('validation', [], [] , true);
+                $message .= "</ul>";
+                $this->flashMessenger()->addSuccessMessage($message);
+                $this->getMailingService()->notificationDemandesValidations($demande->getValidateur(), $demandes);
             }
         }
 
-        $options = [
-            'validateur' => true,
-            'domaine' => true,
-        ];
         $vm = new ViewModel();
-        $vm->setTemplate('application/validation/creation-demande');
+        $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-           'validateurs' => $validateurs,
-           'domaines' => $domaines,
-           'options' => $options,
-            'url' => $this->url()->fromRoute('validation/creer-demandes-fiche-metier-domaine', [], [], true),
+            'title' => "Modification de la demande #".$demande->getId(),
+            'form' => $form,
         ]);
         return $vm;
     }
 
     public function creerDemandeFicheMetierAction() {
-        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
-        $validateurs = $this->getUserService()->getUtilisateursByRoleId('Validateur');
+        $cibles = $this->getFicheMetierService()->getFichesMetiersAsOptions();
+        $demande = new ValidationDemande();
+        $form = $this->getValidationDemandeForm();
+        $form->setCibles($cibles);
+        $form->init();
+        $form->setAttribute('action', $this->url()->fromRoute('validation/creer-demande-fiche-metier', [], [], true));
+        $form->bind($demande);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $validateur  = $this->getUserService()->getUtilisateur($data['validateur']);
-            $ficheMetier = $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']);
+            $form->setData($data);
+            if ($form->isValid()) {
+                $demande->setType($this->getValidationTypeService()->getValidationTypebyCode(ValidationType::FICHE_METIER_RELECTURE));
+                $demande->setEntity(FicheMetier::class);
+                $this->getValidationDemandeService()->create($demande);
 
-            $demandes = $this->getValidationDemandeService()->creerDemandeFicheMetier($validateur, $ficheMetier);
-
-            $string  =  count($demandes) . " demande(s) ont été crées : <ul>";
-            foreach ($demandes as $demande) {
-                $fiche = $this->getFicheMetierService()->getFicheMetier($demande->getObjectId());
-                $string .= " <li> #" . $demande->getId() . " - " . $fiche->getMetier()->getLibelle().";</li>";
+                $titre    = $this->getFicheMetierService()->getFicheMetier($demande->getObjectId())->getMetier()->getLibelle();
+                $message  =  "Une demande de validation vient d'être créée : <ul><li>#".$demande->getId()." - ".$titre."</li></ul>";
+                $this->flashMessenger()->addSuccessMessage($message);
+                $this->getMailingService()->notificationDemandesValidations($demande->getValidateur(), [ $demande ]);
             }
-            $string .=  "</ul>";
-            $this->flashMessenger()->addSuccessMessage($string);
-            $this->getMailingService()->notificationDemandesValidations($validateur, $demandes);
-            return $this->redirect()->toRoute('validation', [], [] , true);
         }
 
-        $options = [
-            'validateur' => true,
-            'fiche-metier' => true,
-        ];
         $vm = new ViewModel();
-        $vm->setTemplate('application/validation/creation-demande');
+        $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'validateurs' => $validateurs,
-            'fichesMetiers' => $fichesMetiers,
-            'options' => $options,
-            'url' => $this->url()->fromRoute('validation/creer-demande-fiche-metier', [], [], true),
+            'title' => "Modification de la demande #".$demande->getId(),
+            'form' => $form,
         ]);
         return $vm;
     }
