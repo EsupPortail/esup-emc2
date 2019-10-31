@@ -1,0 +1,217 @@
+<?php
+
+/**
+ * @see \Application\Controller\ValidationController::indexAction()
+ * @var \Doctrine\ORM\EntityManager $em
+ * @var ValidationDemande[] $demandes
+ */
+
+use Application\Entity\Db\ValidationDemande;
+use Application\Entity\Db\ValidationType;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\ValidationPrivileges;
+
+$this->headTitle("Index des demandes");
+
+$canVoir    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
+$canVerfier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::VERIFIER));
+
+$enAttentes = [];
+$completees  = [];
+foreach ($demandes as $demande) {
+    if ($demande->getValidation() === null) {
+        $enAttentes[] = $demande;
+    } else {
+        $completees[] = $demande;
+    }
+}
+usort($enAttentes, function (ValidationDemande $a, ValidationDemande $b) { return $a->getHistoCreation() < $b->getHistoCreation(); });
+usort($completees, function (ValidationDemande $a, ValidationDemande $b) { return $a->getValidation()->getHistoModification() < $b->getValidation()->getHistoModification(); });
+?>
+
+<h1 class="page-header">
+    Index des demandes <br/>
+    Fiche Metier / ...
+</h1>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<div class="main">
+    <?php echo $this->isAllowed(ValidationPrivileges::getResourceId(ValidationPrivileges::AFFICHER)); ?>
+
+    <h2> Demandes de validations associées aux fiches métiers</h2>
+
+    <div class="row">
+        <a href="<?php echo $this->url('validation/creer-demandes-fiche-metier-domaine', [], []); ?>"
+           class="btn btn-primary action zzz-ajax-modal"
+           data-event="modification"
+        >
+            <span class="icon ajouter"></span>
+            Créer des demandes pour un domaine
+        </a>
+
+        <a href="<?php echo $this->url('validation/creer-demande-fiche-metier', [], []); ?>"
+           class="btn btn-primary action zzz-ajax-modal"
+           data-event="modification"
+        >
+            <span class="icon ajouter"></span>
+            Créer une demande pour une fiche
+        </a>
+    </div>
+
+    <h3>
+        Demandes en attentes
+        <span class="badge">
+            <?php echo count($enAttentes); ?>
+        </span>
+    </h3>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id. </th>
+            <th> Type </th>
+            <th> Objet </th>
+            <th> Création </th>
+            <th> Validateur </th>
+            <th> Validation </th>
+            <th> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($enAttentes as $demande) : ?>
+            <tr>
+                <td> <?php echo $demande->getId(); ?> </td>
+                <td> <?php echo $demande->getType()->getLibelle(); ?> </td>
+                <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
+                <td>
+                    <small>
+                        <?php echo $demande->getHistoCreation()->format("d/m/Y à H:i:s"); ?> <br/>
+                        <?php echo $demande->getHistoCreateur(); ?>
+                    </small>
+                </td>
+                <td>
+                    <small>
+                        <?php echo $demande->getValidateur()->getDisplayName(); ?>
+                    </small>
+                </td>
+                <td>
+                    <?php if ($demande->getValidation() !== null) : ?>
+                        <?php echo $this->validationBadge($demande->getValidation()); ?>
+                    <?php else : ?>
+                        Aucune
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php
+                    if ($demande->getType()->getCode() === ValidationType::FICHE_METIER_RELECTURE) : ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
+                            <span class="icon voir" ></span></a>
+                    <?php else : ?>
+                        <span class="icon voir" style="color:lightgrey;"></span>
+                    <?php endif; ?>
+                    <?php if ($canValider) : ?>
+                        <?php if ($demande->getValidation() === null) : ?>
+                            <?php $query = ["query" => ["demande" => $demande->getId()]]; ?>
+                            <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>"
+                               class="ajax-modal"
+                               data-event="modification">
+                                <span class="icon verification"></span></a>
+                        <?php else : ?>
+                            <a href="<?php echo $this->url('validation/modifier', ['validation' => $demande->getValidation()->getId()], [], true); ?>"
+                               class="ajax-modal"
+                               data-event="modification">
+                                <span class="icon verification"></span></a>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <span class="icon verification" style="color:lightgrey;"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h3>
+        Demandes complétées
+        <span class="badge">
+            <?php echo count($completees); ?>
+        </span>
+    </h3>
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Id. </th>
+            <th> Type </th>
+            <th> Objet </th>
+            <th> Création </th>
+            <th> Validateur </th>
+            <th> Validation </th>
+            <th> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($completees as $demande) : ?>
+            <tr>
+                <td> <?php echo $demande->getId(); ?> </td>
+                <td> <?php echo $demande->getType()->getLibelle(); ?> </td>
+                <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
+                <td>
+                    <small>
+                        <?php echo $demande->getHistoCreation()->format("d/m/Y à H:i:s"); ?> <br/>
+                        <?php echo $demande->getHistoCreateur(); ?>
+                    </small>
+                </td>
+                <td>
+                    <small>
+                        <?php echo $demande->getValidateur()->getDisplayName(); ?>
+                    </small>
+                </td>
+                <td>
+                    <?php if ($demande->getValidation() !== null) : ?>
+                        <?php echo $this->validationBadge($demande->getValidation()); ?>
+                    <?php else : ?>
+                        Aucune
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php
+                    if ($demande->getType()->getCode() === ValidationType::FICHE_METIER_RELECTURE) : ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
+                            <span class="icon voir" ></span></a>
+                    <?php else : ?>
+                        <span class="icon voir" style="color:lightgrey;"></span>
+                    <?php endif; ?>
+                    <?php if ($canValider) : ?>
+                        <?php if ($demande->getValidation() === null) : ?>
+                            <?php $query = ["query" => ["demande" => $demande->getId()]]; ?>
+                            <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>"
+                               class="ajax-modal"
+                               data-event="modification">
+                                <span class="icon verification"></span></a>
+                        <?php else : ?>
+                            <a href="<?php echo $this->url('validation/modifier', ['validation' => $demande->getValidation()->getId()], [], true); ?>"
+                               class="ajax-modal"
+                               data-event="modification">
+                                <span class="icon verification"></span></a>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <span class="icon verification" style="color:lightgrey;"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

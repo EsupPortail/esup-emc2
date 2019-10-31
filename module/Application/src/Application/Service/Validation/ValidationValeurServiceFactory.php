@@ -5,7 +5,7 @@ namespace Application\Service\Validation;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 
-class ValidationTypeServiceFactory {
+class ValidationValeurServiceFactory {
 
     public function __invoke(ContainerInterface $container)
     {
@@ -14,8 +14,8 @@ class ValidationTypeServiceFactory {
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var ValidationTypeService $service */
-        $service = new ValidationTypeService();
+        /** @var ValidationValeurService $service */
+        $service = new ValidationValeurService();
         $service->setEntityManager($entityManager);
         return $service;
     }

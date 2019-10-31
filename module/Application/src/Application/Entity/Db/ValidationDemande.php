@@ -2,16 +2,25 @@
 
 namespace Application\Entity\Db;
 
-class ValidationType {
+use Doctrine\ORM\EntityManager;
+use Utilisateur\Entity\Db\User;
+use Utilisateur\Entity\HistoriqueAwareTrait;
 
-    const FICHE_METIER_RELECTURE = 'FICHE_METIER_RELECTURE';
+class ValidationDemande {
+    use HistoriqueAwareTrait;
 
     /** @var integer */
     private $id;
+    /** @var ValidationType */
+    private $type;
     /** @var string */
-    private $code;
+    private $entity;
     /** @var string */
-    private $libelle;
+    private $objectId;
+    /** @var User */
+    private $validateur;
+    /** @var Validation */
+    private $validation;
 
     /**
      * @return int
@@ -22,39 +31,102 @@ class ValidationType {
     }
 
     /**
-     * @return string
+     * @return ValidationType
      */
-    public function getCode()
+    public function getType()
     {
-        return $this->code;
+        return $this->type;
     }
 
     /**
-     * @param string $code
-     * @return ValidationType
+     * @param ValidationType $type
+     * @return ValidationDemande
      */
-    public function setCode($code)
+    public function setType($type)
     {
-        $this->code = $code;
+        $this->type = $type;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getEntity()
     {
-        return $this->libelle;
+        return $this->entity;
     }
 
     /**
-     * @param string $libelle
-     * @return ValidationType
+     * @param string $entity
+     * @return ValidationDemande
      */
-    public function setLibelle($libelle)
+    public function setEntity($entity)
     {
-        $this->libelle = $libelle;
+        $this->entity = $entity;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
+    }
+
+    /**
+     * @param string $objectId
+     * @return ValidationDemande
+     */
+    public function setObjectId($objectId)
+    {
+        $this->objectId = $objectId;
+        return $this;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     * @return object
+     */
+    public function getObject(EntityManager $entityManager) {
+        return $entityManager->getRepository($this->getEntity())->find($this->getObjectId());
+    }
+
+    /**
+     * @return User
+     */
+    public function getValidateur()
+    {
+        return $this->validateur;
+    }
+
+    /**
+     * @param User $validateur
+     * @return ValidationDemande
+     */
+    public function setValidateur($validateur)
+    {
+        $this->validateur = $validateur;
+        return $this;
+    }
+
+    /**
+     * @return Validation
+     */
+    public function getValidation()
+    {
+        return $this->validation;
+    }
+
+    /**
+     * @param Validation $validation
+     * @return ValidationDemande
+     */
+    public function setValidation($validation)
+    {
+        $this->validation = $validation;
+        return $this;
+    }
+
 }
 

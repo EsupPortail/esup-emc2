@@ -3,38 +3,39 @@
 namespace Application\Service\Validation;
 
 use Application\Entity\Db\Validation;
-use DateTime;
+use Application\Entity\Db\ValidationType;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class ValidationService {
+class ValidationTypeService {
     use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
 
     /**
      * @param string $champ
      * @param string $order
-     * @return Validation[]
+     * @return ValidationType[]
      */
-    public function getValidations($champ = 'histoModification', $order = 'DESC')
+    public function getValidationsTypes($champ = 'id', $order = 'DESC')
     {
-        $qb = $this->getEntityManager()->getRepository(Validation::class)->createQueryBuilder('validation')
-            ->orderBy('validation.' . $champ, $order)
+        $qb = $this->getEntityManager()->getRepository(ValidationType::class)->createQueryBuilder('vtype')
+            ->orderBy('vtype.' . $champ, $order)
         ;
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getValidation($id)
+    /**
+     * @param $id
+     * @return ValidationType
+     */
+    public function getValidationType($id)
     {
-        $qb = $this->getEntityManager()->getRepository(Validation::class)->createQueryBuilder('validation')
-            ->andWhere('validation.id = :id')
+        $qb = $this->getEntityManager()->getRepository(Validation::class)->createQueryBuilder('vtype')
+            ->andWhere('vtype.id = :id')
             ->setParameter('id', $id)
         ;
 
@@ -47,128 +48,105 @@ class ValidationService {
     }
 
     /**
+     * @param string $code
+     * @return ValidationType
+     */
+    public function getValidationTypebyCode($code)
+    {
+        $qb = $this->getEntityManager()->getRepository(ValidationType::class)->createQueryBuilder('vtype')
+            ->andWhere('vtype.code = :code')
+            ->setParameter('code', $code)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs ValidationType partagent le même id [".$code."]", $e);
+        }
+        return $result;
+    }
+
+    /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return Validation
+     * @return ValidationType
      */
-    public function getRequestedValidation($controller, $paramName = 'validation')
+    public function getRequestedValidationType($controller, $paramName = 'type')
     {
         $id = $controller->params()->fromRoute($paramName);
-        $validation = $this->getValidation($id);
+        $validation = $this->getValidationType($id);
         return $validation;
     }
 
     /**
-     * @param Validation $validation
-     * @return Validation
+     * @param ValidationType $type
+     * @return ValidationType
      */
-    public function create($validation)
+    public function create($type)
     {
         try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des données d'historisation.", $e);
-        }
-
-        $validation->setHistoCreateur($user);
-        $validation->setHistoCreation($date);
-        $validation->setHistoModificateur($user);
-        $validation->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->persist($validation);
-            $this->getEntityManager()->flush($validation);
+            $this->getEntityManager()->persist($type);
+            $this->getEntityManager()->flush($type);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
         }
-        return $validation;
+        return $type;
     }
 
     /**
-     * @param Validation $validation
-     * @return Validation
+     * @param ValidationType $type
+     * @return ValidationType
      */
-    public function update($validation)
+    public function update($type)
     {
         try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des données d'historisation.", $e);
-        }
-
-        $validation->setHistoModificateur($user);
-        $validation->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($validation);
+            $this->getEntityManager()->flush($type);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
         }
-        return $validation;
+        return $type;
     }
 
     /**
-     * @param Validation $validation
-     * @return Validation
+     * @param ValidationType $type
+     * @return ValidationType
      */
-    public function historise($validation)
+    public function historise($type)
     {
         try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des données d'historisation.", $e);
-        }
-
-        $validation->setHistoDestructeur($user);
-        $validation->setHistoDestruction($date);
-
-        try {
-            $this->getEntityManager()->flush($validation);
+            $this->getEntityManager()->flush($type);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
         }
-        return $validation;
+        return $type;
     }
 
     /**
-     * @param Validation $validation
-     * @return Validation
+     * @param ValidationType $type
+     * @return ValidationType
      */
-    public function restore($validation)
+    public function restore($type)
     {
         try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des données d'historisation.", $e);
-        }
-
-        $validation->setHistoModificateur($user);
-        $validation->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($validation);
+            $this->getEntityManager()->flush($type);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
         }
-        return $validation;
+        return $type;
     }
 
     /**
-     * @param Validation $validation
-     * @return Validation
+     * @param ValidationType $type
+     * @return ValidationType
      */
-    public function delete($validation)
+    public function delete($type)
     {
         try {
-            $this->getEntityManager()->remove($validation);
-            $this->getEntityManager()->flush($validation);
+            $this->getEntityManager()->remove($type);
+            $this->getEntityManager()->flush($type);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
         }
-        return $validation;
+        return $type;
     }
 }

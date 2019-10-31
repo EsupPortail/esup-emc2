@@ -1,0 +1,53 @@
+<?php
+
+use Application\Entity\Db\Domaine;
+use Application\Entity\Db\FicheMetier;
+use Utilisateur\Entity\Db\User;
+
+/**
+ * @var string $url;
+ * @var array[] options;
+ * @var User[] $validateurs
+ * @var FicheMetier[] $fichesMetiers
+ * @var Domaine[] $domaines
+ */
+
+?>
+
+<form method="post" action="<?php echo $url; ?>">
+    <?php if ($options['validateur'] === true) : ?>
+            <label for="validateur"> Validateur* :</label>
+            <br/>
+            <select id="validateur" name="validateur" class="selectpicker" data-live-search="true">
+                <option value="null"> Sélectionner un validateur </option>
+                <?php foreach ($validateurs as $validateur) : ?>
+                    <option value="<?php echo $validateur->getId(); ?>"> <?php echo $validateur->getDisplayName(); ?> </option>
+                <?php endforeach; ?>
+            </select>
+        <br/>
+    <?php endif; ?>
+    <?php if ($options['domaine'] === true) : ?>
+        <label for="domaine"> Domaine* :</label>
+        <br/>
+        <select id="domaine" name="domaine" class="selectpicker" data-live-search="true">
+            <option value="null"> Sélectionner un domaine </option>
+            <?php foreach ($domaines as $domaine) : ?>
+                <option value="<?php echo $domaine->getId(); ?>"> <?php echo $domaine->getLibelle(); ?> </option>
+            <?php endforeach; ?>
+        </select>
+        <br/>
+    <?php endif; ?>
+    <?php if ($options['fiche-metier'] === true) : ?>
+        <label for="domaine"> Fiche Metier* :</label>
+        <br/>
+        <select id="fiche-metier" name="fiche-metier" class="selectpicker" data-live-search="true">
+            <option value="null"> Sélectionner une fiche métier </option>
+            <?php foreach ($fichesMetiers as $ficheMetier) : ?>
+                <option value="<?php echo $ficheMetier->getId(); ?>"> <?php echo $ficheMetier->getMetier()->getLibelle(); ?> </option>
+            <?php endforeach; ?>
+        </select>
+        <br/>
+    <?php endif; ?>
+    <br/>
+    <input type="submit" class="btn btn-primary" value="Créer les demandes associées" />
+</form>

@@ -222,11 +222,25 @@ class UserService
         return $result;
     }
 
+    /**
+     * @param string $role
+     * @return User[]
+     */
+    public function getUtilisateursByRoleId($role)
+    {
+        $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('user')
+            ->addSelect('role')->join('user.roles', 'role')
+            ->andWhere('role.roleId = :role')
+            ->setParameter('role', $role)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     public function getServiceUserContext()
     {
         return $this->serviceUserContext;
     }
-
-
 }
 

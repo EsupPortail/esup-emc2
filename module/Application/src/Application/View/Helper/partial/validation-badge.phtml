@@ -1,8 +1,11 @@
 <?php
 
+use Application\Entity\Db\Validation;
+use Application\Entity\Db\ValidationValeur;
 use UnicaenApp\Exception\RuntimeException;
 
 /**
+ * @var Validation $validation
  * @var array $options
  */
 
@@ -27,6 +30,39 @@ use UnicaenApp\Exception\RuntimeException;
 //if (isset($options['event'])) $event = $options['event'];
 ?>
 
-<span class="badge">
-    Validation
-</span>
+<?php
+    $vclass = "";
+    $etiquette = "";
+    $texte = "Date: ".$validation->getHistoModification()->format('d/m/Y à H:i:s')."\nValidateur: ".$validation->getHistoModificateur()->getDisplayName();
+    switch($validation->getValeur()->getCode()) {
+        case ValidationValeur::VALIDER;
+            $vclass='validation-badge-valider';
+            $etiquette = 'Validée';
+            break;
+        case ValidationValeur::REJETER;
+            $vclass='validation-badge-rejeter';
+            $etiquette = 'Rejetée';
+            break;
+        case ValidationValeur::A_MODIFIER;
+            $vclass='validation-badge-a_modifier';
+            $etiquette = 'À modifier';
+            break;
+    }
+?>
+<a href="<?php echo $this->url('validation/afficher', ["validation" => $validation->getId()], [], true); ?>" class="ajax-modal">
+    <span class="badge <?php echo $vclass; ?>" title="<?php echo $texte; ?>">
+        <?php echo $etiquette; ?>
+    </span>
+</a>
+
+<style>
+    span.validation-badge-valider {
+        background-color: darkgreen;
+    }
+    span.validation-badge-rejeter {
+        background-color: darkred;
+    }
+    span.validation-badge-a_modifier {
+        background-color: darkorange;
+    }
+</style>

@@ -2,9 +2,11 @@
 
 namespace Application\Entity\Db;
 
-class ValidationType {
+class ValidationValeur {
 
-    const FICHE_METIER_RELECTURE = 'FICHE_METIER_RELECTURE';
+    const VALIDER = 'VALIDER';
+    const REJETER = 'REJETER';
+    const A_MODIFIER = 'A MODIFIER';
 
     /** @var integer */
     private $id;
@@ -31,7 +33,7 @@ class ValidationType {
 
     /**
      * @param string $code
-     * @return ValidationType
+     * @return ValidationValeur
      */
     public function setCode($code)
     {
@@ -49,7 +51,7 @@ class ValidationType {
 
     /**
      * @param string $libelle
-     * @return ValidationType
+     * @return ValidationValeur
      */
     public function setLibelle($libelle)
     {

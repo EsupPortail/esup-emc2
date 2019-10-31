@@ -167,7 +167,7 @@ return [
                                 'label' => 'Mailing',
                                 'route' => 'mailing',
                                 'roles' => [], //'privileges' => MailingPrivileges::AFFICHER,
-                                'icon' => 'fas fa-angle-right'
+                                'icon' => 'fas fa-envelope'
 
                             ],
                             [
@@ -175,7 +175,7 @@ return [
                                 'route' => 'utilisateur',
                                 'roles' => [],// 'privileges' => UtilisateurPrivileges::AFFICHER,
                                 'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right',
+                                'icon' => 'fas fa-user',
                             ],
                             'privileges' => [
                                 'label'      => "Privilèges",
@@ -184,7 +184,7 @@ return [
                                 'resource'   => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
                                 'withtarget' => true,
                                 'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
+                                'icon' => 'fas fa-balance-scale'
                             ],
                             'autoform' => [
                                 'label'      => "Autoform",
@@ -193,7 +193,7 @@ return [
                                 'roles'      => [],
 //                                'withtarget' => true,
                                 'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
+                                'icon' => 'fas fa-paste'
                             ],
                             'fichier' => [
                                 'label'      => "Fichier",
@@ -202,7 +202,7 @@ return [
                                 'roles'      => [],
 //                                'withtarget' => true,
                                 'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
+                                'icon' => 'fas fa-file-alt'
                             ],
                             'indicateurs' => [
                                 'label'      => "Indicateurs",
@@ -210,7 +210,7 @@ return [
                                 'route'      => 'indicateurs',
                                 'roles'      => [],
                                 'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
+                                'icon' => 'fas fa-chart-pie'
                             ],
                         ],
                     ],

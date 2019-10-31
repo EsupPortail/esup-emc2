@@ -2,16 +2,21 @@
 
 namespace Application\Entity\Db;
 
-class ValidationType {
+use Utilisateur\Entity\HistoriqueAwareTrait;
 
-    const FICHE_METIER_RELECTURE = 'FICHE_METIER_RELECTURE';
+class Validation {
+    use HistoriqueAwareTrait;
 
     /** @var integer */
     private $id;
+    /** @var ValidationType */
+    private $type;
+    /** @var ValidationValeur */
+    private $valeur;
     /** @var string */
-    private $code;
+    private $commentaire;
     /** @var string */
-    private $libelle;
+    private $objectId;
 
     /**
      * @return int
@@ -22,39 +27,76 @@ class ValidationType {
     }
 
     /**
-     * @return string
+     * @return ValidationType
      */
-    public function getCode()
+    public function getType()
     {
-        return $this->code;
+        return $this->type;
     }
 
     /**
-     * @param string $code
-     * @return ValidationType
+     * @param ValidationType $type
+     * @return Validation
      */
-    public function setCode($code)
+    public function setType($type)
     {
-        $this->code = $code;
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return ValidationValeur
+     */
+    public function getValeur()
+    {
+        return $this->valeur;
+    }
+
+    /**
+     * @param ValidationValeur $valeur
+     * @return Validation
+     */
+    public function setValeur($valeur)
+    {
+        $this->valeur = $valeur;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getCommentaire()
     {
-        return $this->libelle;
+        return $this->commentaire;
     }
 
     /**
-     * @param string $libelle
-     * @return ValidationType
+     * @param string $commentaire
+     * @return Validation
      */
-    public function setLibelle($libelle)
+    public function setCommentaire($commentaire)
     {
-        $this->libelle = $libelle;
+        $this->commentaire = $commentaire;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
+    }
+
+    /**
+     * @param string $object_id
+     * @return Validation
+     */
+    public function setObjectId($object_id)
+    {
+        $this->objectId = $object_id;
+        return $this;
+    }
+
 }
 

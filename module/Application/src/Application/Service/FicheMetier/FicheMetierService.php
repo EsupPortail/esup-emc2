@@ -2,6 +2,7 @@
 
 namespace Application\Service\FicheMetier;
 
+use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
 use DateTime;
@@ -198,6 +199,25 @@ class FicheMetierService {
             ->addSelect('famille')->join('domaine.famille', 'famille')
             ->andWhere('famille = :famille')
             ->setParameter('famille', $famille)
+            ->orderBy('metier.libelle')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return FicheMetier[]
+     */
+    public function getFicheByDomaine($domaine)
+    {
+        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('fiche')
+            ->addSelect('metier')->join('fiche.metier', 'metier')
+            ->addSelect('domaine')->join('metier.domaine', 'domaine')
+            ->addSelect('famille')->join('domaine.famille', 'famille')
+            ->andWhere('domaine = :domaine')
+            ->setParameter('domaine', $domaine)
             ->orderBy('metier.libelle')
         ;
 

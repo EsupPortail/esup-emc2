@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\ValidationType" table="validation_type">
+    <entity name="Application\Entity\Db\Validation" table="validation_validation">
 
         <id    name="id"                        column="id"                 type="integer">
+            <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="code"                      column="code"               type="string" length="255" />
-        <field name="libelle"                   column="libelle"            type="string" length="1023"/>
+        <many-to-one field="type" target-entity="Application\Entity\Db\ValidationType">
+            <join-column name="type_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one field="valeur" target-entity="Application\Entity\Db\ValidationValeur">
+            <join-column name="valeur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="commentaire"     type="string" length="4096"       column="commentaire"     nullable="true"/>
+        <field name="objectId"        type="string" length="40"         column="object_id"       nullable="true"/>
+
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="id"/>
+        </many-to-one>
     </entity>
 </doctrine-mapping>

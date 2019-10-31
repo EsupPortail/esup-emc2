@@ -8,6 +8,9 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.0** (31/10/2019) :
+* Début de mise en place des validations des fiches metiers  
+
 version **0.3.6** (30/10/2019) :
 * Correction du bug empèchant l'affichage des compétences sur l'export PDF des fiches de poste
 

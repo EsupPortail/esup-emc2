@@ -111,8 +111,17 @@ $canRole        = $this->isAllowed(UtilisateurPrivileges::getResourceId(Utilisat
                 <h3> Rôles affectés </h3>
 
                 <?php foreach ($roles as $role) : ?>
+                    <?php
+                        $affecter = false;
+                        foreach ($rolesDisponibles as $roleDisponible) {
+                            if ($roleDisponible->getId() === $role->getId()) {
+                                $affecter = true;
+                                break;
+                            }
+                        }
+                    ?>
                     <div class="cliquable remove-role" id="affecte_<?php echo $utilisateur->getId(); ?>_<?php echo $role->getId(); ?>"
-                         style="<?php if (array_search($role,$rolesDisponibles)!== false) echo 'display:none;'; ?>"
+                         style="<?php if ($affecter === true) echo 'display:none;'; ?>"
                     >
                         <?php if ($canRole): ?>
                             <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"
@@ -129,8 +138,17 @@ $canRole        = $this->isAllowed(UtilisateurPrivileges::getResourceId(Utilisat
                 <h3> Rôles disponibles </h3>
 
                 <?php foreach ($roles as $role) : ?>
+                    <?php
+                        $affecter = false;
+                        foreach ($rolesDisponibles as $roleDisponible) {
+                            if ($roleDisponible->getId() === $role->getId()) {
+                                $affecter = true;
+                                break;
+                            }
+                        }
+                    ?>
                     <div class="cliquable add-role" id="disponible_<?php echo $utilisateur->getId(); ?>_<?php echo $role->getId(); ?>"
-                         style="<?php if (array_search($role,$rolesAffectes) !== false) echo 'display:none;'; ?>"
+                         style="<?php if ($affecter === false) echo 'display:none;'; ?>"
                     >
                         <?php if ($canRole): ?>
                         <span id="<?php echo $utilisateur->getId().'_'.$role->getId(); ?>"

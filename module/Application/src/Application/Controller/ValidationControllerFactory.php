@@ -2,37 +2,52 @@
 
 namespace Application\Controller;
 
-use Application\Form\Structure\StructureForm;
-use Application\Service\Structure\StructureService;
+use Application\Form\Validation\ValidationForm;
+use Application\Service\Domaine\DomaineService;
+use Application\Service\FicheMetier\FicheMetierService;
+use Application\Service\Validation\ValidationDemandeService;
+use Application\Service\Validation\ValidationService;
+use Application\Service\Validation\ValidationTypeService;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\Role\RoleService;
+use Mailing\Service\Mailing\MailingService;
 use Utilisateur\Service\User\UserService;
-use Zend\Mvc\Controller\ControllerManager;
 
-class StructureControllerFactory {
+class ValidationControllerFactory {
 
     public function __invoke(ContainerInterface $container)
     {
         /**
-         * @var RoleService $roleService
-         * @var StructureService $structureService
+         * @var DomaineService $domaineService
+         * @var FicheMetierService $ficheMetierService
+         * @var ValidationService $validationService
+         * @var ValidationTypeService $validationTypeService
+         * @var ValidationDemandeService $validationDemandeService
          * @var UserService $userService
+         * @var MailingService $mailingService
+         *
+         * @var ValidationForm $validationForm
          */
-        $roleService = $container->get(RoleService::class);
-        $structureService = $container->get(StructureService::class);
+        $domaineService = $container->get(DomaineService::class);
+        $ficheMetierService = $container->get(FicheMetierService::class);
+        $validationService = $container->get(ValidationService::class);
+        $validationTypeService = $container->get(ValidationTypeService::class);
+        $validationDemandeService = $container->get(ValidationDemandeService::class);
+        $mailingService = $container->get(MailingService::class);
         $userService = $container->get(UserService::class);
 
-        /**
-         * @var StructureForm $structureForm
-         */
-        $structureForm = $container->get('FormElementManager')->get(StructureForm::class);
+        $validationForm = $container->get('FormElementManager')->get(ValidationForm::class);
 
-        /** @var StructureController $controller */
-        $controller = new StructureController();
-        $controller->setRoleService($roleService);
-        $controller->setStructureService($structureService);
+        /** @var ValidationController $controller */
+        $controller = new ValidationController();
+        $controller->setDomaineService($domaineService);
+        $controller->setFicheMetierService($ficheMetierService);
+        $controller->setValidationService($validationService);
+        $controller->setValidationTypeService($validationTypeService);
+        $controller->setValidationDemandeService($validationDemandeService);
+        $controller->setMailingService($mailingService);
         $controller->setUserService($userService);
-        $controller->setStructureForm($structureForm);
+
+        $controller->setValidationForm($validationForm);
         return $controller;
     }
 }

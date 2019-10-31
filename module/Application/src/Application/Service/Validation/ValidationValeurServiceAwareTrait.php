@@ -2,29 +2,28 @@
 
 namespace Application\Service\Validation;
 
-trait ValidationTypeServiceAwareTrait {
+trait ValidationValeurServiceAwareTrait {
 
-    /** @var ValidationTypeService $validationTypeService */
-    private $validationTypeService;
+    /** @var ValidationValeurService $validationValeurService */
+    private $validationValeurService;
 
     /**
-     * @return ValidationTypeService
+     * @return ValidationValeurService
      */
-    public function getValidationTypeService()
+    public function getValidationValeurService()
     {
-        return $this->validationTypeService;
+        return $this->validationValeurService;
     }
 
     /**
-     * @param ValidationTypeService $validationTypeService
-     * @return ValidationTypeService
+     * @param ValidationValeurService $validationValeurService
+     * @return ValidationValeurService
      */
-    public function setValidationTypeService($validationTypeService)
+    public function setValidationValeurService($validationValeurService)
     {
-        $this->validationTypeService = $validationTypeService;
-        return $this->validationTypeService;
+        $this->validationValeurService = $validationValeurService;
+        return $this->validationValeurService;
     }
-
 
 
 

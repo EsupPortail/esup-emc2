@@ -8,4 +8,5 @@ class FicheMetierPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
     const HISTORISER    = 'fichemetier-historiser';
     const EDITER        = 'fichemetier-editer-fiche';
     const AJOUTER       = 'fichemetier-ajouter-fiche';
+    const VERIFIER      = 'fichemetier-verifier-fiche';
 }
