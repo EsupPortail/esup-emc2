@@ -8,6 +8,10 @@ use Application\Form\Validation\ValidationForm;
 use Application\Form\Validation\ValidationFormFactory;
 use Application\Form\Validation\ValidationHydrator;
 use Application\Form\Validation\ValidationHydratorFactory;
+use Application\Form\ValidationDemande\ValidationDemandeForm;
+use Application\Form\ValidationDemande\ValidationDemandeFormFactory;
+use Application\Form\ValidationDemande\ValidationDemandeHydrator;
+use Application\Form\ValidationDemande\ValidationDemandeHydratorFactory;
 use Application\Provider\Privilege\ValidationPrivileges;
 use Application\Service\Validation\ValidationDemandeService;
 use Application\Service\Validation\ValidationDemandeServiceFactory;
@@ -38,6 +42,8 @@ return [
                         'afficher',
                         'creer-demandes-fiche-metier-domaine',
                         'creer-demande-fiche-metier',
+                        'modifier-demande',
+                        'detruire-demande',
                     ],
 //                    'privileges' => [
 //                        AdministrationPrivileges::AFFICHER,
@@ -116,6 +122,28 @@ return [
                             ],
                         ],
                     ],
+                    'modifier-demande' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/modifier-demande/:demande',
+                            'defaults' => [
+                                'controller' => ValidationController::class,
+                                'action'     => 'modifier-demande',
+                            ],
+                        ],
+                    ],
+                    'detruire-demande' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/detruire-demande/:demande',
+                            'defaults' => [
+                                'controller' => ValidationController::class,
+                                'action'     => 'detruire-demande',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -138,11 +166,13 @@ return [
     'form_elements' => [
         'factories' => [
             ValidationForm::class => ValidationFormFactory::class,
+            ValidationDemandeForm::class => ValidationDemandeFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             ValidationHydrator::class => ValidationHydratorFactory::class,
+            ValidationDemandeHydrator::class => ValidationDemandeHydratorFactory::class,
         ],
     ],
 

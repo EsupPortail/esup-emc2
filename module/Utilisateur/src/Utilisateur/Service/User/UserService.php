@@ -232,6 +232,7 @@ class UserService
             ->addSelect('role')->join('user.roles', 'role')
             ->andWhere('role.roleId = :role')
             ->setParameter('role', $role)
+            ->orderBy('user.displayName', 'ASC')
         ;
 
         $result = $qb->getQuery()->getResult();
@@ -241,6 +242,20 @@ class UserService
     public function getServiceUserContext()
     {
         return $this->serviceUserContext;
+    }
+
+    /**
+     * @param string $roleId
+     * @return array
+     */
+    public function getUtilisateursByRoleIdAsOptions($roleId)
+    {
+        $users =  $this->getUtilisateursByRoleId($roleId);
+        $options = [];
+        foreach ($users as $user) {
+            $options[$user->getId()] = $user->getDisplayName();
+        }
+        return $options;
     }
 }
 

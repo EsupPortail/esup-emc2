@@ -225,4 +225,16 @@ class FicheMetierService {
         return $result;
     }
 
+    /**
+     * @return array
+     */
+    public function getFichesMetiersAsOptions()
+    {
+        $fiches = $this->getFichesMetiers();
+        $array = [];
+        foreach ($fiches as $fiche) {
+            $array[$fiche->getId()] = $fiche->getMetier()->getLibelle();
+        }
+        return $array;
+    }
 }

@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\Validation\ValidationForm;
+use Application\Form\ValidationDemande\ValidationDemandeForm;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\Validation\ValidationDemandeService;
@@ -26,6 +27,7 @@ class ValidationControllerFactory {
          * @var MailingService $mailingService
          *
          * @var ValidationForm $validationForm
+         * @var ValidationDemandeForm $validationDemandeForm
          */
         $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -36,6 +38,7 @@ class ValidationControllerFactory {
         $userService = $container->get(UserService::class);
 
         $validationForm = $container->get('FormElementManager')->get(ValidationForm::class);
+        $validationDemandeForm = $container->get('FormElementManager')->get(ValidationDemandeForm::class);
 
         /** @var ValidationController $controller */
         $controller = new ValidationController();
@@ -48,6 +51,7 @@ class ValidationControllerFactory {
         $controller->setUserService($userService);
 
         $controller->setValidationForm($validationForm);
+        $controller->setValidationDemandeForm($validationDemandeForm);
         return $controller;
     }
 }

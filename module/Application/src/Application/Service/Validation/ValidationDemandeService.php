@@ -148,7 +148,22 @@ class ValidationDemandeService {
         }
 
         return $demande;
+    }
 
+    /**
+     * @param ValidationDemande $demande
+     * @return ValidationDemande
+     */
+    public function delete($demande)
+    {
+        try {
+            $this->getEntityManager()->remove($demande);
+            $this->getEntityManager()->flush($demande);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de lenregistrement en BD.", $e);
+        }
+
+        return $demande;
     }
 
     /**
@@ -197,6 +212,4 @@ class ValidationDemandeService {
 
         return $demandes;
     }
-
-
 }

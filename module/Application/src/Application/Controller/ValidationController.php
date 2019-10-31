@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Validation;
 use Application\Form\Validation\ValidateurFormAwareTrait;
+use Application\Form\ValidationDemande\ValidationDemandeFormAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\Validation\ValidationDemandeServiceAwareTrait;
@@ -24,6 +25,8 @@ class ValidationController extends AbstractActionController {
     use ValidationDemandeServiceAwareTrait;
     use UserServiceAwareTrait;
     use MailingServiceAwareTrait;
+
+    use ValidationDemandeFormAwareTrait;
 
     public function indexAction()
     {
@@ -206,5 +209,39 @@ class ValidationController extends AbstractActionController {
             'url' => $this->url()->fromRoute('validation/creer-demande-fiche-metier', [], [], true),
         ]);
         return $vm;
+    }
+
+    public function modifierDemandeAction() {
+        $cibles = $this->getFicheMetierService()->getFichesMetiersAsOptions();
+        $demande = $this->getValidationDemandeService()->getRequestedDemandeValidation($this);
+        $form = $this->getValidationDemandeForm();
+        $form->setCibles($cibles);
+        $form->init();
+        $form->setAttribute('action', $this->url()->fromRoute('validation/modifier-demande', ['demande' => $demande->getId()], [], true));
+        $form->bind($demande);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getValidationDemandeService()->update($demande);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification de la demande #".$demande->getId(),
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function detruireDemandeAction() {
+        $demande = $this->getValidationDemandeService()->getRequestedDemandeValidation($this);
+        $this->getValidationDemandeService()->delete($demande);
+        return $this->redirect()->toRoute('validation', [], [], true);
     }
 }
