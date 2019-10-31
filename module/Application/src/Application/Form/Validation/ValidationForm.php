@@ -65,7 +65,7 @@ class ValidationForm extends Form
             'attributes' => [
                 'name' => 'commentaire',
                 'id' => 'commentaire',
-//                'class' => "type2",
+                'class' => "type2",
             ],
         ]);
         //submit (button)
@@ -80,7 +80,7 @@ class ValidationForm extends Form
             ],
             'attributes' => [
                 'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-primary action',
             ],
         ]);
 

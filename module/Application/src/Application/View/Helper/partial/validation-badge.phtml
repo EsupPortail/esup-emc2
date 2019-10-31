@@ -34,16 +34,18 @@ use UnicaenApp\Exception\RuntimeException;
     $vclass = "";
     $etiquette = "";
     $texte = "Date: ".$validation->getHistoModification()->format('d/m/Y à H:i:s')."\nValidateur: ".$validation->getHistoModificateur()->getDisplayName();
-    switch($validation->getValeur()->getCode()) {
-        case ValidationValeur::VALIDER;
+    $valeur = ($validation->getValeur())?$validation->getValeur()->getCode():null;
+    switch($valeur) {
+        case ValidationValeur::VALIDER :
             $vclass='validation-badge-valider';
             $etiquette = 'Validée';
             break;
-        case ValidationValeur::REJETER;
+        case ValidationValeur::REJETER :
             $vclass='validation-badge-rejeter';
             $etiquette = 'Rejetée';
             break;
-        case ValidationValeur::A_MODIFIER;
+        //case ValidationValeur::A_MODIFIER :
+        default :
             $vclass='validation-badge-a_modifier';
             $etiquette = 'À modifier';
             break;

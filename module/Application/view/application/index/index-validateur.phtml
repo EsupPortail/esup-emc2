@@ -80,9 +80,9 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
 
                         <?php if ($canValider) : ?>
                             <?php $query = ["query" => ["demande" => $demande->getId()]]; ?>
-                            <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>"
-                               class="ajax-modal"
-                               data-event="modification">
+                            <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>">
+<!--                               class="ajax-modal"-->
+<!--                               data-event="modification"-->
                                 <span class="icon verification"></span></a>
                         <?php else : ?>
                             <span class="icon verification" style="color:lightgrey;"></span>
@@ -140,9 +140,9 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
                     <?php endif; ?>
 
                     <?php if ($canValider) : ?>
-                            <a href="<?php echo $this->url('validation/modifier', ['validation' => $demande->getValidation()->getId()], [], true); ?>"
-                               class="ajax-modal"
-                               data-event="modification">
+                            <a href="<?php echo $this->url('validation/redux', ['validation' => $demande->getValidation()->getId()], [], true); ?>">
+<!--                               class="ajax-modal"-->
+<!--                               data-event="modification">-->
                                 <span class="icon verification"></span></a>
                     <?php else : ?>
                         <span class="icon verification" style="color:lightgrey;"></span>

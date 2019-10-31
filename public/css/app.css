@@ -377,6 +377,12 @@ a.action {
     text-indent: 0em;
     margin: 5px;
 }
+button.action {
+    width: 20em;
+    text-indent: 0em;
+    margin: 5px;
+}
+
 input.action {
     width: 20em;
     text-indent: 0em;

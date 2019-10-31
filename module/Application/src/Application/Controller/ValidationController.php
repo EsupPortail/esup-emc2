@@ -6,6 +6,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Validation;
 use Application\Entity\Db\ValidationDemande;
 use Application\Entity\Db\ValidationType;
+use Application\Entity\Db\ValidationValeur;
 use Application\Form\Validation\ValidateurFormAwareTrait;
 use Application\Form\ValidationDemande\ValidationDemandeFormAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
@@ -13,6 +14,7 @@ use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\Validation\ValidationDemandeServiceAwareTrait;
 use Application\Service\Validation\ValidationServiceAwareTrait;
 use Application\Service\Validation\ValidationTypeServiceAwareTrait;
+use Application\Service\Validation\ValidationValeurServiceAwareTrait;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
@@ -25,6 +27,7 @@ class ValidationController extends AbstractActionController {
     use ValidateurFormAwareTrait;
     use ValidationServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
+    use ValidationValeurServiceAwareTrait;
     use ValidationDemandeServiceAwareTrait;
     use UserServiceAwareTrait;
     use MailingServiceAwareTrait;
@@ -68,6 +71,7 @@ class ValidationController extends AbstractActionController {
         $typeCode = $this->params()->fromRoute('type');
         $objectId = $this->params()->fromRoute('objectId');
         $demandeId = $this->params()->fromQuery('demande');
+        $modifier = $this->getValidationValeurService()->getValidationValeurbyCode(ValidationValeur::A_MODIFIER);
 
         $query = [];
         if ($demandeId !== null) $query = ["query" => ["demande" => $demandeId]];
@@ -76,35 +80,43 @@ class ValidationController extends AbstractActionController {
         $validation = new Validation();
         $validation->setType($type);
         $validation->setObjectId($objectId);
+        $validation->setValeur($modifier);
 
-        $form = $this->getValidationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('validation/creer', ['type' => $type->getCode(), 'objectId' => $objectId], $query, true));
-        $form->bind($validation);
+        $demande = $this->getValidationDemandeService()->getValidationDemande($demandeId);
+        $demande->setValidation($validation);
+        $this->getValidationService()->create($validation);
+        $this->getValidationDemandeService()->update($demande);
 
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getValidationService()->create($validation);
+        return $this->redirect()->toRoute('validation/redux', ['validation' => $validation->getId()], [], true);
 
-
-                $demande = $this->getValidationDemandeService()->getValidationDemande($demandeId);
-                if ($demande !== null) {
-                    $demande->setValidation($validation);
-                    $this->getValidationDemandeService()->update($demande);
-                }
-            }
-        }
-
-        $vm =  new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Création d'une validation",
-            'form' => $form,
-        ]);
-        return $vm;
+//        $form = $this->getValidationForm();
+//        $form->setAttribute('action', $this->url()->fromRoute('validation/creer', ['type' => $type->getCode(), 'objectId' => $objectId], $query, true));
+//        $form->bind($validation);
+//
+//        /** @var Request $request */
+//        $request = $this->getRequest();
+//        if ($request->isPost()) {
+//            $data = $request->getPost();
+//            $form->setData($data);
+//            if ($form->isValid()) {
+//                $this->getValidationService()->create($validation);
+//
+//
+//                $demande = $this->getValidationDemandeService()->getValidationDemande($demandeId);
+//                if ($demande !== null) {
+//                    $demande->setValidation($validation);
+//                    $this->getValidationDemandeService()->update($demande);
+//                }
+//            }
+//        }
+//
+//        $vm =  new ViewModel();
+//        $vm->setTemplate('application/default/default-form');
+//        $vm->setVariables([
+//            'title' => "Création d'une validation",
+//            'form' => $form,
+//        ]);
+//        return $vm;
     }
 
     public function modifierAction()
@@ -240,5 +252,32 @@ class ValidationController extends AbstractActionController {
         $demande = $this->getValidationDemandeService()->getRequestedDemandeValidation($this);
         $this->getValidationDemandeService()->delete($demande);
         return $this->redirect()->toRoute('validation', [], [], true);
+    }
+
+    public function reduxAction()
+    {
+        $validation = $this->getValidationService()->getRequestedValidation($this);
+        $ficheMetier = $this->getFicheMetierService()->getFicheMetier($validation->getObjectId());
+        $form = $this->getValidationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('validation/redux', ['validation' => $validation->getId()], [], true));
+        $form->bind($validation);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getValidationService()->update($validation);
+            }
+        }
+
+        $vm = new ViewModel();
+//        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'ficheMetier' => $ficheMetier,
+            'form' => $form,
+        ]);
+        return $vm;
     }
 }

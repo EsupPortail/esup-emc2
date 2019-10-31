@@ -44,6 +44,7 @@ return [
                         'creer-demande-fiche-metier',
                         'modifier-demande',
                         'detruire-demande',
+                        'redux',
                     ],
 //                    'privileges' => [
 //                        AdministrationPrivileges::AFFICHER,
@@ -67,6 +68,17 @@ return [
                     ],
                 ],
                 'child_routes' => [
+                    'redux' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/redux/:validation',
+                            'defaults' => [
+                                'controller' => ValidationController::class,
+                                'action'     => 'redux',
+                            ],
+                        ],
+                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
