@@ -45,32 +45,28 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
     <table class="table table-condensed">
         <thead>
             <tr>
-                <th> Id. </th>
-                <th> Type </th>
+                <th style="width:3em;"> Id. </th>
+                <th style="width:10rem;"> Type </th>
                 <th> Objet </th>
-                <th> Création </th>
-                <th> Validation </th>
-                <th> Actions </th>
+                <th style="width:14rem;" > Création </th>
+                <th style="width:5em;"> Action </th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($enAttentes as $demande) : ?>
                 <tr>
                     <td> <?php echo $demande->getId(); ?> </td>
-                    <td> <?php echo $demande->getType()->getLibelle(); ?> </td>
+                    <td>
+                        <small>
+                            <?php echo $demande->getType()->getLibelle(); ?>
+                        </small>
+                    </td>
                     <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
                     <td>
                         <small>
                             <?php echo $demande->getHistoCreation()->format("d/m/Y à H:i:s"); ?> <br/>
                             <?php echo $demande->getHistoCreateur(); ?>
                         </small>
-                    </td>
-                    <td>
-                        <?php if ($demande->getValidation() !== null) : ?>
-                            <?php echo $this->validationBadge($demande->getValidation()); ?>
-                        <?php else : ?>
-                            Aucune
-                        <?php endif; ?>
                     </td>
                     <td>
                         <?php
@@ -111,19 +107,20 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
     <table class="table table-condensed">
         <thead>
         <tr>
-            <th> Id. </th>
-            <th> Type </th>
+            <th style="width:3em;"> Id. </th>
+            <th style="width:10rem;"> Type </th>
             <th> Objet </th>
-            <th> Création </th>
-            <th> Validation </th>
-            <th> Actions </th>
+            <th style="width:14rem;" colspan="2"> Validation </th>
+            <th style="width:5em;"> Action </th>
         </tr>
         </thead>
         <tbody>
         <?php foreach ($completees as $demande) : ?>
             <tr>
                 <td> <?php echo $demande->getId(); ?> </td>
-                <td> <?php echo $demande->getType()->getLibelle(); ?> </td>
+                <td>
+                    <small><?php echo $demande->getType()->getLibelle(); ?></small>
+                </td>
                 <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
                 <td>
                     <small>
