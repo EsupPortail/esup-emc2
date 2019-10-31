@@ -10,12 +10,14 @@
 
 use Application\Entity\Db\ValidationDemande;
 use Application\Entity\Db\ValidationType;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\ValidationPrivileges;
 use Utilisateur\Entity\Db\User;
 
 $this->headTitle('Index de vos validations');
 
-$canVoir = true;
-$canValider = true;
+$canVoir = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
+$canValider = $this->isAllowed(ValidationPrivileges::getResourceId(ValidationPrivileges::MODIFIER));
 
 $enAttentes = [];
 $completees  = [];
@@ -69,26 +71,19 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
                         </small>
                     </td>
                     <td>
-                        <?php
-                            if ($demande->getType()->getCode() === ValidationType::FICHE_METIER_RELECTURE) : ?>
+                        <?php if ($canVoir) : ?>
                             <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
                                 <span class="icon voir" ></span></a>
                         <?php else : ?>
                             <span class="icon voir" style="color:lightgrey;"></span>
                         <?php endif; ?>
+
                         <?php if ($canValider) : ?>
-                            <?php if ($demande->getValidation() === null) : ?>
-                                <?php $query = ["query" => ["demande" => $demande->getId()]]; ?>
-                                <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>"
-                                   class="ajax-modal"
-                                   data-event="modification">
-                                    <span class="icon verification"></span></a>
-                            <?php else : ?>
-                                <a href="<?php echo $this->url('validation/modifier', ['validation' => $demande->getValidation()->getId()], [], true); ?>"
-                                   class="ajax-modal"
-                                   data-event="modification">
-                                    <span class="icon verification"></span></a>
-                            <?php endif; ?>
+                            <?php $query = ["query" => ["demande" => $demande->getId()]]; ?>
+                            <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>"
+                               class="ajax-modal"
+                               data-event="modification">
+                                <span class="icon verification"></span></a>
                         <?php else : ?>
                             <span class="icon verification" style="color:lightgrey;"></span>
                         <?php endif; ?>
@@ -137,25 +132,18 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
                 </td>
                 <td>
                     <?php
-                    if ($demande->getType()->getCode() === ValidationType::FICHE_METIER_RELECTURE) : ?>
+                    if ($canVoir) : ?>
                         <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
                             <span class="icon voir" ></span></a>
                     <?php else : ?>
                         <span class="icon voir" style="color:lightgrey;"></span>
                     <?php endif; ?>
+
                     <?php if ($canValider) : ?>
-                        <?php if ($demande->getValidation() === null) : ?>
-                            <?php $query = ["query" => ["demande" => $demande->getId()]]; ?>
-                            <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>"
-                               class="ajax-modal"
-                               data-event="modification">
-                                <span class="icon verification"></span></a>
-                        <?php else : ?>
                             <a href="<?php echo $this->url('validation/modifier', ['validation' => $demande->getValidation()->getId()], [], true); ?>"
                                class="ajax-modal"
                                data-event="modification">
                                 <span class="icon verification"></span></a>
-                        <?php endif; ?>
                     <?php else : ?>
                         <span class="icon verification" style="color:lightgrey;"></span>
                     <?php endif; ?>

@@ -8,6 +8,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\FormationPrivileges;
 use Application\Provider\Privilege\MesStructuresPrivileges;
 use Application\Provider\Privilege\PersoPrivileges;
@@ -219,7 +220,7 @@ return [
                         'label' => 'Fiches',
 //                        'title' => "Fiche métier",
                         'route' => 'fiche-poste',
-                        'resource' => FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER),
+                        'resource' => FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER),
                         'pages' => [
                             [
                                 'order' => 1,
