@@ -88,7 +88,7 @@ class CompetenceService {
                 $this_option = [
                     'value' =>  $competence->getId(),
                     'attributes' => [
-                          'data-content' => "<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle(),
+                          'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle():"",
                     ],
                     'label' => $competence->getLibelle(),
                 ];
@@ -108,7 +108,7 @@ class CompetenceService {
                 $this_option = [
                     'value' =>  $competence->getId(),
                     'attributes' => [
-                        'data-content' => "<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle(),
+                        'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle():"",
                     ],
                     'label' => $competence->getLibelle(),
                 ];
