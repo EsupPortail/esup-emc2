@@ -13,7 +13,7 @@ class ApplicationsForm extends Form {
 
     public function init()
     {
-        // description
+        // applications
         $this->add([
             'name' => 'applications',
             'type' => Select::class,
@@ -30,20 +30,6 @@ class ApplicationsForm extends Form {
                 'multiple' => 'multiple',
             ]
         ]);
-        // formation
-//        $this->add([
-//            'name' => 'formation',
-//            'type' => 'textarea',
-//            'options' => [
-//                'label' => 'Formation : ',
-//                'label_attributes' => [
-//                    'class' => 'control-label',
-//                ],
-//            ],
-//            'attributes' => [
-//                'class' => 'formation form-control',
-//            ]
-//        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -64,9 +50,6 @@ class ApplicationsForm extends Form {
             'applications' => [
                 'required' => false,
             ],
-//            'formation' => [
-//                'required' => false,
-//            ],
         ]));
     }
 

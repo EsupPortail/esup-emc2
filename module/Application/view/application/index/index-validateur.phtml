@@ -1,0 +1,164 @@
+<?php
+
+/**
+ * @see \Application\Controller\IndexController::indexValidateurAction()
+ *
+ * @var \Doctrine\ORM\EntityManager $em
+ * @var User $user
+ * @var ValidationDemande[]  $demandes
+ */
+
+use Application\Entity\Db\ValidationDemande;
+use Application\Entity\Db\ValidationType;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\ValidationPrivileges;
+use Utilisateur\Entity\Db\User;
+
+$this->headTitle('Index de vos validations');
+
+$canVoir = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
+$canValider = $this->isAllowed(ValidationPrivileges::getResourceId(ValidationPrivileges::MODIFIER));
+
+$enAttentes = [];
+$completees  = [];
+foreach ($demandes as $demande) {
+    if ($demande->getValidation() === null) {
+        $enAttentes[] = $demande;
+    } else {
+        $completees[] = $demande;
+    }
+}
+usort($enAttentes, function (ValidationDemande $a, ValidationDemande $b) { return $a->getHistoCreation() < $b->getHistoCreation(); });
+usort($completees, function (ValidationDemande $a, ValidationDemande $b) { return $a->getValidation()->getHistoModification() < $b->getValidation()->getHistoModification(); });
+?>
+
+<h1 class="page-header">
+    Index de vos validations
+</h1>
+
+<div class="main">
+
+    <h2>
+        Demandes en attentes
+        <span class="badge">
+            <?php echo count($enAttentes); ?>
+        </span>
+    </h2>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th style="width:3em;"> Id. </th>
+                <th style="width:10rem;"> Type </th>
+                <th> Objet </th>
+                <th style="width:14rem;" > Création </th>
+                <th style="width:5em;"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($enAttentes as $demande) : ?>
+                <tr>
+                    <td> <?php echo $demande->getId(); ?> </td>
+                    <td>
+                        <small>
+                            <?php echo $demande->getType()->getLibelle(); ?>
+                        </small>
+                    </td>
+                    <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
+                    <td>
+                        <small>
+                            <?php echo $demande->getHistoCreation()->format("d/m/Y à H:i:s"); ?> <br/>
+                            <?php echo $demande->getHistoCreateur(); ?>
+                        </small>
+                    </td>
+                    <td>
+                        <?php if ($canVoir) : ?>
+                            <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
+                                <span class="icon voir" ></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canValider) : ?>
+                            <?php $query = ["query" => ["demande" => $demande->getId()]]; ?>
+                            <a href="<?php echo $this->url('validation/creer', ['type' => $demande->getType()->getCode(), 'objectId' => $demande->getObjectId()], $query, true); ?>">
+<!--                               class="ajax-modal"-->
+<!--                               data-event="modification"-->
+                                <span class="icon verification"></span></a>
+                        <?php else : ?>
+                            <span class="icon verification" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h2>
+        Demandes complétées
+        <span class="badge">
+            <?php echo count($completees); ?>
+        </span>
+    </h2>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th style="width:3em;"> Id. </th>
+            <th style="width:10rem;"> Type </th>
+            <th> Objet </th>
+            <th style="width:14rem;" colspan="2"> Validation </th>
+            <th style="width:5em;"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($completees as $demande) : ?>
+            <tr>
+                <td> <?php echo $demande->getId(); ?> </td>
+                <td>
+                    <small><?php echo $demande->getType()->getLibelle(); ?></small>
+                </td>
+                <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
+                <td>
+                    <small>
+                        <?php echo $demande->getHistoCreation()->format("d/m/Y à H:i:s"); ?> <br/>
+                        <?php echo $demande->getHistoCreateur(); ?>
+                    </small>
+                </td>
+                <td>
+                    <?php if ($demande->getValidation() !== null) : ?>
+                        <?php echo $this->validationBadge($demande->getValidation()); ?>
+                    <?php else : ?>
+                        Aucune
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php
+                    if ($canVoir) : ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
+                            <span class="icon voir" ></span></a>
+                    <?php else : ?>
+                        <span class="icon voir" style="color:lightgrey;"></span>
+                    <?php endif; ?>
+
+                    <?php if ($canValider) : ?>
+                            <a href="<?php echo $this->url('validation/redux', ['validation' => $demande->getValidation()->getId()], [], true); ?>">
+<!--                               class="ajax-modal"-->
+<!--                               data-event="modification">-->
+                                <span class="icon verification"></span></a>
+                    <?php else : ?>
+                        <span class="icon verification" style="color:lightgrey;"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

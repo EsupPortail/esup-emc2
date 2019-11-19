@@ -31,8 +31,8 @@ class FormationsHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
+        $object->clearFormations();
         if (isset($data['formations'])) {
-            $object->clearFormations();
             foreach ($data['formations'] as $formationId) {
                 $formation = $this->getFormationService()->getFormation($formationId);
                 if ($formation) $object->addFormation($formation);

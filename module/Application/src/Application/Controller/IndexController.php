@@ -12,6 +12,7 @@ namespace Application\Controller;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Validation\ValidationDemandeServiceAwareTrait;
 use UnicaenAuth\Service\Traits\UserContextServiceAwareTrait;
 use Utilisateur\Entity\Db\Role;
 use Utilisateur\Service\Role\RoleServiceAwareTrait;
@@ -26,6 +27,8 @@ class IndexController extends AbstractActionController
     use UserServiceAwareTrait;
     use UserContextServiceAwareTrait;
 
+    use ValidationDemandeServiceAwareTrait;
+
     public function indexAction()
     {
         $identity = null;
@@ -38,6 +41,9 @@ class IndexController extends AbstractActionController
             switch ($connectedRole->getRoleId()) {
                 case Role::PERSONNEL :
                     return $this->redirect()->toRoute('index-personnel', [], [], true);
+                    break;
+                case Role::VALIDATEUR :
+                    return $this->redirect()->toRoute('index-validateur', [], [], true);
                     break;
                 default :
                     //var_dump($connectedRole);
@@ -78,6 +84,18 @@ class IndexController extends AbstractActionController
             'agent' => $agent,
             'fiche' => (!empty($agent->getFiches()))?current($agent->getFiches()):null,
             'missions' => $missions,
+        ]);
+    }
+
+    public function indexValidateurAction() {
+
+        $user = $this->getUserService()->getConnectedUser();
+        $demandes = $this->getValidationDemandeService()->getValidationsDemandesByValidateur($user);
+
+        return new ViewModel([
+            'em' => $this->getValidationDemandeService()->getEntityManager(),
+            'user' => $user,
+            'demandes' => $demandes,
         ]);
     }
 

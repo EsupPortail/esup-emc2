@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @var FicheMetier $ficheMetier
+ * @var ValidationForm $form
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Form\Validation\ValidationForm;
+
+?>
+
+<h1> Validation </h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <?php echo $this->ficheMetier($ficheMetier) ?>
+    </div>
+    <div class="col-md-4" id="validation">
+            <?php echo $this->form()->openTag($form); ?>
+
+        <div class="row">
+            <div class="col-md-6">
+                <?php echo $this->formControlGroup($form->get('creer')); ?>
+            </div>
+            <div class="col-md-6">
+                <a href="<?php echo $this->url('index-validateur'); ?>" class="btn btn-primary action">
+                    <span class="icon retour"></span>
+                    Retour à l'index
+                </a>
+            </div>
+        </div>
+
+            <?php echo $this->formControlGroup($form->get('type')); ?>
+            <?php echo $this->formControlGroup($form->get('valeur')); ?>
+            <?php echo $this->formControlGroup($form->get('commentaire')); ?>
+
+            <?php echo $this->form()->closeTag(); ?>
+    </div>
+</div>
+
+
+<style>
+    textarea.type2 {
+        min-height:40rem;
+    }
+
+    div#validation {
+        border: 1px grey solid;
+        border-radius: 5px;
+        padding: 1rem;
+        position: fixed;
+        left:64%;
+        top:80px;
+        width:36%;
+        height:75%;
+
+    }
+</style>
+
+<script>
+    $('select').selectpicker();
+</script>

@@ -196,6 +196,14 @@ class FicheMetier {
         return $this;
     }
 
+    /**
+     * @return FicheMetier
+     */
+    public function clearApplications()
+    {
+        $this->applications->clear();
+        return $this;
+    }
     /** COMPETENCE ****************************************************************************************************/
 
     /**

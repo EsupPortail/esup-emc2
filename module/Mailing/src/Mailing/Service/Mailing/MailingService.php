@@ -259,4 +259,37 @@ class MailingService {
         $mail = $this->update($mail);
         return $mail;
     }
+
+    public function notificationDemandesValidations($validateur, $demandes)
+    {
+        $nb = count($demandes);
+
+        $mail = $validateur->getEmail();
+
+        $titre = "De nouvelles demandes de validations vous attendes";
+        if ($nb === 1) {
+            $titre = "Une nouvelle demande de validation vous attend";
+        }
+
+        $texte  = "Bonjour,";
+
+        if ($nb === 1) {
+            $texte .= "<p>";
+            $texte .= "Une nouvelle demande de validations vous a été affectée.";
+            $texte .= "</p>";
+            $texte .= "<p>";
+            $texte .= "Pour examiner cette demande, connectez-vous à l'aplication PrEECoG et sélectionnez le rôle de validateur.";
+            $texte .= "</p>";
+        } else {
+            $texte .= "<p>";
+            $texte .= count($demandes) . " nouvelles demandes de validations vous ont été affectées.";
+            $texte .= "</p>";
+            $texte .= "<p>";
+            $texte .= "Pour examiner ces demandes, connectez-vous à l'aplication PrEECoG et sélectionnez le rôle de validateur.";
+            $texte .= "</p>";
+        }
+
+        $texte .= "<p>Pour vous connecter à PrEECoG, suivez le lien suivant : <a href='".$this->rendererService->url('home', [], ['force_canonical' => true], true)."'>PrEECoG</a>.</p>";
+        $this->sendMail($mail, $titre, $texte);
+    }
 }

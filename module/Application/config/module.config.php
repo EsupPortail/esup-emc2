@@ -64,6 +64,17 @@ return [
                     ],
                 ],
             ],
+            'index-validateur' => [
+                'type'          => Literal::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route'    => '/index-validateur',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action'     => 'index-validateur',
+                    ],
+                ],
+            ],
             'administration'        => [
                 'type'    => Literal::class,
                 'options' => [

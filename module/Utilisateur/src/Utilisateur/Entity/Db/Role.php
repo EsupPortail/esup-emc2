@@ -16,6 +16,7 @@ class Role extends AbstractRole
     const ADMIN_FONC = 'Administrateur fonctionnel';
     const UTILISATEUR = 'Utilisateur';
     const PERSONNEL = 'Agent';
+    const VALIDATEUR = 'Validateur';
 
 
     /** @var ArrayCollection */

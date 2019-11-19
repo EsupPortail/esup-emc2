@@ -68,7 +68,7 @@ class DomaineService {
      * @param string $paramName
      * @return Domaine
      */
-    public function getRequestedDomaine($controller, $paramName)
+    public function getRequestedDomaine($controller, $paramName = 'domaine')
     {
         $id = $controller->params()->fromRoute($paramName);
         $domaine = $this->getDomaine($id);

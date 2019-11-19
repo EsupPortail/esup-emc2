@@ -196,17 +196,15 @@ class AgentService {
     {
         try {
             $today = new DateTime();
-            $noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
         } catch (Exception $e) {
             throw new RuntimeException("Problème lors de la création des dates");
         }
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('statut.administratif = :true')
             ->setParameter('today', $today)
-            ->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
 
         ;

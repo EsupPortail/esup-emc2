@@ -37574,7 +37574,7 @@ define(
       pluginLoadError: pluginLoadError,
       uploadError: uploadError,
       displayError: displayError,
-      contentCssError: contentCssError,
+      contentCssError: null,
       initError: initError
     };
   }

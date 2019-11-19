@@ -344,6 +344,8 @@ class FicheMetierController extends  AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
+            //Pourquoi on ne passe pas dans l'hydration quand $data['applications'] est null (bizarrerie du multiple et du bootstrapselet ???);
+            if($data['applications'] === null) $data['applications'] = [];
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->update($fiche);
@@ -372,6 +374,8 @@ class FicheMetierController extends  AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
+            //Pourquoi on ne passe pas dans l'hydration quand $data['applications'] est null (bizarrerie du multiple et du bootstrapselet ???);
+            if($data['formations'] === null) $data['formations'] = [];
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->update($fiche);
@@ -387,22 +391,6 @@ class FicheMetierController extends  AbstractActionController{
         return $vm;
     }
 
-    /** Document pour la signature en présidence */
-    public function exportAction()
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
-
-        /* @var PhpRenderer $renderer  */
-        $renderer = $this->getServiceLocator()->get('ViewRenderer');
-
-        $exporter = new FicheMetierPdfExporter($renderer, 'A4');
-        $exporter->setVars([
-            'fiche' => $fiche,
-        ]);
-        $exporter->export('export.pdf');
-        exit;
-    }
-
     public function gererCompetencesAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
@@ -414,6 +402,8 @@ class FicheMetierController extends  AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
+            //Pourquoi on ne passe pas dans l'hydration quand $data['applications'] est null (bizarrerie du multiple et du bootstrapselet ???);
+            if($data['competences'] === null) $data['competences'] = [];
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->update($fiche);
