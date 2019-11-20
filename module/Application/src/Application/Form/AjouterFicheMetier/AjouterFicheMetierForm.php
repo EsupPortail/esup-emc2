@@ -37,13 +37,13 @@ class AjouterFicheMetierForm extends Form {
 
     public function init()
     {
-        //Fiche Type
+        //Fiche Métier
         $this->add([
             'type' => Select::class,
             'name' => 'fiche_type',
             'options' => [
-                'label' => "Fiche type :",
-                'empty_option' => 'Sélectionner une fiche type ...',
+                'label' => "Fiche métier :",
+                'empty_option' => 'Sélectionner une fiche métier ...',
                 'value_options' => $this->generateFicheTypeOptions(),
             ],
             'attributes' => [
@@ -60,7 +60,6 @@ class AjouterFicheMetierForm extends Form {
         ]);
 
         //Quotite
-        //Fiche Type
         $this->add([
             'type' => Select::class,
             'name' => 'quotite',

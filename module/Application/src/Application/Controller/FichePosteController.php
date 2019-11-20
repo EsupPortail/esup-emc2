@@ -313,7 +313,7 @@ class FichePosteController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Ajout d\'une fiche type',
+            'title' => 'Ajout d\'une fiche métier',
             'form'  => $form,
         ]);
         return $vm;
@@ -357,7 +357,7 @@ class FichePosteController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Modification d\'une fiche type',
+            'title' => 'Modification d\'une fiche métier',
             'form'  => $form,
         ]);
         return $vm;
@@ -395,7 +395,7 @@ class FichePosteController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => 'Liste des activités de la fiche type <br/> <strong>'. $ficheTypeExterne->getFicheType()->getMetier() .'</strong>',
+            'title' => 'Liste des activités de la fiche métier <br/> <strong>'. $ficheTypeExterne->getFicheType()->getMetier() .'</strong>',
             'fichePoste' => $fichePoste,
             'ficheTypeExterne' => $ficheTypeExterne,
         ]);

@@ -60,6 +60,7 @@ class StructureController extends AbstractActionController {
                 /** @var User[] $gestionnaires */
                 $roleGestionnaire = $this->getRoleService()->getRoleByCode(Role::GESTIONNAIRE);
                 $gestionnaires = array_diff($this->getUserService()->getUtilisateursByRole($roleGestionnaire),$structure->getGestionnaires());
+                usort($gestionnaires, function(User $a, User $b) {return $a->getDisplayName()>$b->getDisplayName();});
                 return new ViewModel([
                     'title' => 'Ajout d \'un gestionnaire', // pour ['.$composante->getLibelle().']',
                     'structure' => $structure,
@@ -90,6 +91,7 @@ class StructureController extends AbstractActionController {
             } else {
                 /** @var User[] $gestionnaires */
                 $gestionnaires = $structure->getGestionnaires();
+                usort($gestionnaires, function(User $a, User $b) {return $a->getDisplayName()>$b->getDisplayName();});
                 return new ViewModel([
                     'title' => 'Retrait d \'un gestionnaire', // pour ['.$composante->getLibelle().']',
                     'structure' => $structure,

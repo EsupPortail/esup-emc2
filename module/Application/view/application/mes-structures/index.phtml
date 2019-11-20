@@ -58,8 +58,11 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
             Sélectionner une structure :
         </label>
         <select id="structure">
+                <option value="0"> Aucune structure</option>
             <?php foreach ($structures as $structureOption) : ?>
-                <option> <?php echo $structureOption->getId(); ?> <?php echo $structureOption->getLibelleCourt(); ?></option>
+                <option value="<?php echo $structureOption->getId(); ?>"  <?php echo ((($structure)?$structure->getId():0) === $structureOption->getId())?"selected":""?>>
+                    <?php echo $structureOption->getLibelleCourt(); ?>
+                </option>
             <?php endforeach; ?>
         </select>
     </form>
@@ -69,7 +72,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         Aucune structure de remontée.
     <?php else : ?>
 
-    <div class="row">
+        <div class="row">
 
         <?php /** DESCRIPTION *****************************************************************************************/ ?>
         <div class="col-md-8" >
@@ -119,8 +122,9 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         </div>
     </div>
 
-    <?php /** FICHES DE POSTE *****************************************************************************************/ ?>
-    <div >
+        <?php /** FICHES DE POSTE *****************************************************************************************/ ?>
+
+        <div >
 
     <div class="row" >
         <div class="col-md-6" >
@@ -198,8 +202,9 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
     </table>
     </div>
 
-    <?php /** MISSIONS SPECIFIQUE *************************************************************************************/ ?>
-    <div>
+        <?php /** MISSIONS SPECIFIQUE *************************************************************************************/ ?>
+
+        <div>
         <div class="row" >
             <div class="col-md-6" >
                 <h2>
@@ -263,12 +268,12 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
     </table>
     </div>
 
-    <h2>
+        <h2>
         Agents non liés à une fiche de poste
         <span class="badge"> <?php echo count($agentsSansFiche); ?> </span>
     </h2>
 
-    <table class="table table-condensed">
+        <table class="table table-condensed">
         <thead>
             <tr>
                 <th class="agent-cell"> Agent </th>
@@ -310,9 +315,6 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
             <?php endforeach; ?>
         </tbody>
     </table>
-    <ul>
-
-    </ul>
     <?php endif; ?>
 </div>
 
@@ -349,7 +351,15 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
     $(function() {
         $("body").on("duplication", function (event) {
             event.div.modal('hide');
-            window.location.href = '../fiche-poste/editer?structure=' + <?php echo $structure->getId(); ?>
+            window.location.href = '../fiche-poste/editer?structure=' + <?php echo ($structure)?$structure->getId():0; ?>
         });
+    });
+
+    $(function() {
+       $('select#structure').change(function() {
+           let id = $('select#structure option:selected').val();
+           window.location.href = './' + id;
+           // alert('CHANGED -' + $('select#structure option:selected').text() + '- -' + $('select#structure option:selected').val() + '-');
+       });
     });
 </script>
