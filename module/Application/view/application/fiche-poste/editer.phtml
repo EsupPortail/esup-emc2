@@ -150,7 +150,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-8">
-            <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
+            <h2>Fiche de poste composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) métier(s).</h2>
             <ul>
                 <?php if ($principal) : ?>
                     <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
@@ -166,7 +166,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
                    data-event="modification"
                 >
                     <span class="icon ajouter"></span>
-                    Ajouter une fiche type
+                    Ajouter une fiche métier
                     </a>
             </div>
         </div>

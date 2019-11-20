@@ -276,13 +276,13 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
         /** @var \Application\Entity\Db\Competence $competence */
         foreach ($competences as $competence) {
             switch ($competence->getType()->getLibelle()) {
-                case 'Connaissances':
+                case 'Connaissance':
                     $connaissances[] = $competence;
                     break;
-                case 'Opérationnelles':
+                case 'Opérationnelle':
                     $operationnelles[] = $competence;
                     break;
-                case 'Comportementales':
+                case 'Comportementale':
                     $comportementalles[] = $competence;
                     break;
             }

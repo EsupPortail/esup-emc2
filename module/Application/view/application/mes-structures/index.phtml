@@ -60,7 +60,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         <select id="structure">
                 <option value="0"> Aucune structure</option>
             <?php foreach ($structures as $structureOption) : ?>
-                <option value="<?php echo $structureOption->getId(); ?>"  <?php echo ($structure->getId() === $structureOption->getId())?"selected":""?>>
+                <option value="<?php echo $structureOption->getId(); ?>"  <?php echo ((($structure)?$structure->getId():0) === $structureOption->getId())?"selected":""?>>
                     <?php echo $structureOption->getLibelleCourt(); ?>
                 </option>
             <?php endforeach; ?>
