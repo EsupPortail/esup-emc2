@@ -10,17 +10,25 @@ $this->headTitle("Ajouter un gestionnaire")
 
 <?php if ($structure) : ?>
     <form method="post" action="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [] ,true); ?>">
-        <p>
-        <select id="gestionnaire" name="gestionnaire" style="width:100%;">
-            <option value=""> Sélectionner un gestionnaire ...</option>
-            <?php foreach ($gestionnaires as $gestionnaire) : ?>
-                <option value="<?php echo $gestionnaire->getId(); ?>">
-                    <?php echo $gestionnaire->getDisplayName(); ?>
-                    <?php echo $gestionnaire->getEmail(); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        </p>
-        <input type="submit" value="Ajouter ce gestionnaire" class="action btn btn-primary">
+        <table><tr><td>
+            <select id="gestionnaire" name="gestionnaire" style="width:100%;" class="selectpicker" data-live-search="true">
+                <option value=""> Sélectionner un gestionnaire ...</option>
+                <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                    <option
+                            value="<?php echo $gestionnaire->getId(); ?>"
+                            data-content="<?php echo $gestionnaire->getDisplayName(); ?> &nbsp; <span class='badge badge-success'><?php echo $gestionnaire->getEmail(); ?></span>"
+                    >
+                        <?php echo $gestionnaire->getDisplayName(); ?>
+                        <?php echo $gestionnaire->getEmail(); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </td><td>
+            <input type="submit" value="Ajouter ce gestionnaire" class="action btn btn-primary">
+        </td></tr></table>
     </form>
 <?php endif; ?>
+
+<script>
+    $('select').selectpicker();
+</script>
