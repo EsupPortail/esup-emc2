@@ -24,6 +24,9 @@ use Application\Form\CompetenceType\CompetenceTypeHydratorFactory;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
+use Application\View\Helper\AgentViewHelper;
+use Application\View\Helper\CompetencesViewHelper;
+use Application\View\Helper\CompetenceViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -373,6 +376,12 @@ return [
 
             AgentCompetenceHydrator::class => AgentCompetenceHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'competence' => CompetenceViewHelper::class,
+            'competences' => CompetencesViewHelper::class,
+        ],
+    ],
 
 ];

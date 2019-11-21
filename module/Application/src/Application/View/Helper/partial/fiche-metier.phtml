@@ -119,26 +119,20 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
     <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
 
     <?php /** @var Application $application */ ?>
+
     <?php
-    $dictionnaireCompetence = [];
-    $dictionnaireCompetence['Connaissances'] = [];
-    $dictionnaireCompetence['Opérationnelles'] = [];
-    $dictionnaireCompetence['Comportementales'] = [];
+    $competences = [];
     foreach($fiche->getCompetences() as $competence) {
-        $type = $competence->getType()->getLibelle();
-        $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'fiche|'. $fiche->getMetier()->getLibelle();
+        $competences[$competence->getId()]['competence'] = $competence;
+        $competences[$competence->getId()]['source'][] = 'fiche|'. $fiche->getMetier()->getLibelle();
     }
     foreach($fiche->getActivites() as $element) {
         if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
             foreach ($element->getActivite()->getCompetences() as $competence) {
-                $type = $competence->getType()->getLibelle();
-                $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+                $competences[$competence->getId()]['competence'] = $competence;
+                $competences[$competence->getId()]['source'][] = 'activite|' . $element->getActivite()->getLibelle();
             }
         }
-    }
-    $count = 0;
-    foreach ($dictionnaireCompetence as $type => $dictionnaire) {
-        $count += count($dictionnaire);
     }
     ?>
 
@@ -150,7 +144,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
                         <span class="icon competence"></span>
                         Compétences
                         <span class="badge">
-                            <?php echo $count; ?>
+                            <?php echo count($competences); ?>
                         </span>
                     </h2>
                 </div>
@@ -171,31 +165,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
-                    <?php foreach ($dictionnaireCompetence as $type => $dictionnaire) : ?>
-                        <h3>
-                            <?php echo $type; ?>
-                            <span class="badge"><?php echo count($dictionnaire); ?></span>
-                        </h3>
-                        <ul>
-                            <?php ksort($dictionnaire); ?>
-                            <?php foreach($dictionnaire as $competence => $source) : ?>
-                                <li>
-                                    <?php echo $competence; ?>
-                                    <sup>
-                                        <?php foreach($source as $item) : ?>
-                                            <?php $split = explode('|', $item); ?>
-                                            <?php if($split[0] === 'fiche') : ?>
-                                                <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
-                                            <?php endif; ?>
-                                            <?php if($split[0] === 'activite') : ?>
-                                                <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </sup>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endforeach; ?>
+                    <?php echo $this->competences($competences, ['type' => false, 'theme' => true]); ?>
                 </div>
 
                 <?php if ($fiche->getConnaissances() != '' OR $fiche->getCompetencesOperationnelles() != '' OR $fiche->getCompetencesComportementales() != '') : ?>

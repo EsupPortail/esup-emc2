@@ -17,6 +17,7 @@ class CompetenceTypeHydrator implements HydratorInterface {
     {
         $data = [
             'libelle' => $object->getLibelle(),
+            'ordre' => $object->getOrdre(),
         ];
 
         return $data;
@@ -30,6 +31,7 @@ class CompetenceTypeHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $object->setLibelle($data['libelle']);
+        $object->setOrdre($data['ordre']);
         return $object;
     }
 

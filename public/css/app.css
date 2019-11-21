@@ -474,6 +474,7 @@ span.fiche-metier {
     color: blue;
     font-family: monospace;
     cursor: help;
+    font-variant-position: super;
 }
 
 span.activite {
@@ -481,6 +482,15 @@ span.activite {
     color: orangered;
     font-family: monospace;
     cursor: help;
+    font-variant-position: super;
+}
+
+span.agent {
+    font-weight: bolder;
+    color: darkgreen;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
 }
 
 div.panel div.main {
@@ -494,11 +504,23 @@ span.Connaissance {
     background-color: darkgreen;
     width: 13rem;
 }
+span.Connaissances {
+    background-color: darkgreen;
+    width: 13rem;
+}
 span.Comportementale {
     background-color: darkred;
     width: 13rem;
 }
+span.Comportementales {
+    background-color: darkred;
+    width: 13rem;
+}
 span.Opérationnelle {
+    background-color: darkblue;
+    width: 13rem;
+}
+span.Opérationnelles {
     background-color: darkblue;
     width: 13rem;
 }

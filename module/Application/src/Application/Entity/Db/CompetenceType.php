@@ -18,6 +18,8 @@ class CompetenceType {
     private $libelle;
     /** @var ArrayCollection (Competence) */
     private $competences;
+    /** @var integer */
+    private $ordre;
 
     public function __construct()
     {
@@ -87,4 +89,23 @@ class CompetenceType {
     {
         return $this->competences->contains($competence);
     }
+
+    /**
+     * @return int
+     */
+    public function getOrdre()
+    {
+        return $this->ordre;
+    }
+
+    /**
+     * @param int $ordre
+     * @return CompetenceType
+     */
+    public function setOrdre($ordre)
+    {
+        $this->ordre = $ordre;
+        return $this;
+    }
+
 }

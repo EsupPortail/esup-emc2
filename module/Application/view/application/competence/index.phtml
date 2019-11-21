@@ -140,6 +140,7 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
             <tr>
                 <th> Libellé </th>
                 <th> #Compétence </th>
+                <th> Ordre </th>
                 <th class="modificateur-cell"> Modificateur </th>
                 <th class="action-cell"> Action </th>
             </tr>
@@ -149,6 +150,7 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
                 <tr>
                     <td> <?php echo $type->getLibelle(); ?> </td>
                     <td> <?php echo count($type->getCompetences()); ?> </td>
+                    <td> <?php echo $type->getOrdre(); ?> </td>
                     <td>
                         <small>
                             <?php echo $type->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
