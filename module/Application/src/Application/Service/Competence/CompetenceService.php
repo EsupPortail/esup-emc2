@@ -7,6 +7,7 @@ use Application\Entity\Db\CompetenceTheme;
 use Application\Entity\Db\CompetenceType;
 use DateTime;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -20,15 +21,27 @@ class CompetenceService {
     /** COMPETENCE ****************************************************************************************************/
 
     /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilderForCompetence()
+    {
+        $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
+            ->addSelect('type')->leftJoin('competence.type', 'type')
+            ->addSelect('theme')->leftJoin('competence.theme', 'theme')
+            //->addSelect('fiche-metier')->leftJoin('competence.fiches', 'fiche-metier')
+            //->addSelect('activite')->leftJoin('competence.activites', 'activite')
+        ;
+        return $qb;
+    }
+
+    /**
      * @param string $champ
      * @param string $order
      * @return Competence[]
      */
     public function getCompetences($champ = 'libelle', $order = 'ASC')
     {
-        $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
-            ->addSelect('type')->leftJoin('competence.type', 'type')
-            ->addSelect('theme')->leftJoin('competence.theme', 'theme')
+        $qb = $this->createQueryBuilderForCompetence()
             ->orderBy('competence.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
@@ -42,10 +55,25 @@ class CompetenceService {
      */
     public function getCompetencesSansTheme($champ = 'libelle', $order = 'ASC')
     {
-        $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
-            ->addSelect('type')->leftJoin('competence.type', 'type')
-            ->addSelect('theme')->leftJoin('competence.theme', 'theme')
+        $qb = $this->createQueryBuilderForCompetence()
             ->andWhere('competence.theme IS NULL')
+            ->orderBy('competence.'.$champ, $order)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param CompetenceType $type
+     * @param string $champ
+     * @param string $order
+     * @return Competence[]
+     */
+    public function getCompetencesByType($type, $champ = 'libelle', $order = 'ASC')
+    {
+        $qb = $this->createQueryBuilderForCompetence()
+            ->andWhere('type.id = :typeId')
+            ->setParameter('typeId', $type->getId())
             ->orderBy('competence.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
@@ -129,14 +157,14 @@ class CompetenceService {
      */
     public function getCompetence($id)
     {
-        $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
+        $qb = $this->createQueryBuilderForCompetence()
             ->andWhere('competence.id = :id')
             ->setParameter('id', $id)
         ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch(ORMException $e) {
-            throw new RuntimeException("Plusieurs CompetenceTheme partagent le même id [".$id."]", $e);
+            throw new RuntimeException("Plusieurs Competence partagent le même id [".$id."]", 0, $e);
         }
         return $result;
     }
@@ -597,4 +625,6 @@ class CompetenceService {
         }
         return $type;
     }
+
+
 }
