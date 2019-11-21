@@ -21,14 +21,30 @@ class CompetenceController extends AbstractActionController {
 
     public function indexAction()
     {
-        $competences = $this->getCompetenceService()->getCompetences();
-        $themes = $this->getCompetenceService()->getCompetencesThemes();
+        $competencesByType = [];
         $types = $this->getCompetenceService()->getCompetencesTypes();
+
+        foreach ($types as $type) {
+            $competences = $this->getCompetenceService()->getCompetencesByType($type);
+            $competencesByType[] = [
+                'type' => $type,
+                'competences' => $competences,
+            ];
+        }
+
         return new ViewModel([
-            'competences' => $competences,
-            'themes' => $themes,
-            'types' => $types,
+            'competencesByType' => $competencesByType,
         ]);
+
+
+//        $competences = $this->getCompetenceService()->getCompetences();
+//        $themes = $this->getCompetenceService()->getCompetencesThemes();
+//
+//        return new ViewModel([
+//            'competences' => $competences,
+//            'themes' => $themes,
+//            'types' => $types,
+//        ]);
     }
 
     /** COMPETENCE ****************************************************************************************************/
