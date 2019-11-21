@@ -151,8 +151,8 @@ class AgentController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getAgentService()->deleteAgentCompetence($competence);
-            //TODO c'est vraiment crade ...
-            return $this->redirect()->toRoute('home');
+            //return $this->redirect()->toRoute('home');
+            exit();
         }
 
         $vm = new ViewModel();
