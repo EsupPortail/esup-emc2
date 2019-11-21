@@ -22,7 +22,7 @@ class CompetenceController extends AbstractActionController {
     public function indexAction()
     {
         $competencesByType = [];
-        $types = $this->getCompetenceService()->getCompetencesTypes();
+        $types = $this->getCompetenceService()->getCompetencesTypes('ordre');
 
         foreach ($types as $type) {
             $competences = $this->getCompetenceService()->getCompetencesByType($type);
