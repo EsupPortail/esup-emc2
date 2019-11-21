@@ -271,6 +271,10 @@ $competences = $agent->getCompetences();
 
     <?php
     $dictionnaire = [];
+    $dictionnaire['Connaissances'] = [];
+    $dictionnaire['Opérationnelles'] = [];
+    $dictionnaire['Comportementales'] = [];
+
 
     $fichePoste   = (!empty($agent->getFiches()))?current($agent->getFiches()):null;
     $fichesTypes  = ($fichePoste !== null)?$fichePoste->getFichesMetiers():[];
@@ -302,7 +306,7 @@ $competences = $agent->getCompetences();
         <span class="badge"><?php echo count($dictionnaire); ?></span>
     </h2>
 
-        <?php ksort($dictionnaire); ?>
+        <?php //ksort($dictionnaire); ?>
         <?php foreach($dictionnaire as $type => $sub_dictionnaire) : ?>
             <h3>
                 <?php echo $type; ?>

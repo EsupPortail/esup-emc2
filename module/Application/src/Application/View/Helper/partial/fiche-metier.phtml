@@ -121,9 +121,9 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
     <?php /** @var Application $application */ ?>
     <?php
     $dictionnaireCompetence = [];
-    $dictionnaireCompetence['Connaissance'] = [];
-    $dictionnaireCompetence['Opérationnelle'] = [];
-    $dictionnaireCompetence['Comportementale'] = [];
+    $dictionnaireCompetence['Connaissances'] = [];
+    $dictionnaireCompetence['Opérationnelles'] = [];
+    $dictionnaireCompetence['Comportementales'] = [];
     foreach($fiche->getCompetences() as $competence) {
         $type = $competence->getType()->getLibelle();
         $dictionnaireCompetence[$type][$competence->getLibelle()][] = 'fiche|'. $fiche->getMetier()->getLibelle();
