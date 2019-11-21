@@ -26,7 +26,10 @@ class Structure implements ResourceInterface{
     private $type;
     /** @var string */
     private $histo;
-
+    /** @var Structure */
+    private $parent;
+    /** @var ArrayCollection (Structure) */
+    private $enfants;
 
     /** @var string */
     private $description;
@@ -41,6 +44,7 @@ class Structure implements ResourceInterface{
     {
         $this->gestionnaires = new ArrayCollection();
         $this->postes = new ArrayCollection();
+        $this->enfants = new ArrayCollection();
     }
 
     /**
@@ -259,6 +263,44 @@ class Structure implements ResourceInterface{
         $this->histo = $histo;
         return $this;
     }
+
+    /**
+     * @return Structure
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param Structure $parent
+     * @return Structure
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getEnfants()
+    {
+        return $this->enfants;
+    }
+
+    /**
+     * @param ArrayCollection $enfants
+     * @return Structure
+     */
+    public function setEnfants($enfants)
+    {
+        $this->enfants = $enfants;
+        return $this;
+    }
+
+
 
     /**
      * @return string
