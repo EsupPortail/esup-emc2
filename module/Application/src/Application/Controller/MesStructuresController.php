@@ -30,11 +30,14 @@ class MesStructuresController extends AbstractActionController {
         $user = $this->getUserService()->getConnectedUser();
         $structures = $this->getStructureService()->getStructuresByGestionnaire($user);
 
+        $structureId = $this->params()->fromRoute('structure');
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
         if ($structure === null && count($structures) === 1) {
             return $this->redirect()->toRoute('mes-structures', ['structure' => $structures[0]->getId()], [], true);
         }
+
+        if ($structureId === null) return $this->redirect()->toRoute('mes-structures', ['structure' => 0], [], true);
 
 
         $agentsSansFiche = null;

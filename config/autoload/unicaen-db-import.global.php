@@ -137,7 +137,7 @@ return [
                     'select'             => 'SELECT * FROM V_PREECOG_STRUCTURE',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
-                    'columns'            => ['CODE', 'LIBELLE_COURT', 'LIBELLE_LONG', 'TYPE', 'HISTO'],
+                    'columns'            => ['CODE', 'LIBELLE_COURT', 'LIBELLE_LONG', 'TYPE', 'HISTO', 'PARENT_ID'],
                 ],
                 'intermediate_table' => 'src_structure',
                 'destination' => [
@@ -145,7 +145,7 @@ return [
                     'table'              => 'structure',
                     'connection'         => 'default',
                     'source_code_column' => 'id',
-                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type', 'histo'],
+                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type', 'histo','parent_id'],
                 ],
             ],
             [

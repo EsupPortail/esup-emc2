@@ -40,6 +40,40 @@ $canAfficheAffectation = true;
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Structure parente</h2>
+            <?php if ($structure->getParent() !== null) : ?>
+                <a href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
+                    <?php echo $structure->getParent()->getLibelleCourt(); ?>
+                    -
+                    <?php echo $structure->getParent()->getLibelleLong(); ?>
+                </a>
+            <?php else: ?>
+                Aucune structure parente.
+            <?php endif; ?>
+        </div>
+        <div class="col-md-6">
+            <h2>
+                Structures filles
+                <span class="badge">
+                    <?php echo count($structure->getEnfants()); ?>
+                </span>
+            </h2>
+            <ul>
+                <?php foreach ($structure->getEnfants() as $enfant) : ?>
+                    <li>
+                        <a href="<?php echo $this->url('structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
+                            <?php echo $enfant->getLibelleCourt(); ?>
+                            -
+                            <?php echo $enfant->getLibelleLong(); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+
 
 
 
