@@ -152,8 +152,8 @@ class MissionSpecifiqueController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getMissionSpecifiqueService()->delete($affectation);
-            //TODO c'est vraiment crade ...
-            return $this->redirect()->toRoute('home');
+//            return $this->redirect()->toRoute('home');
+            exit();
         }
 
         $vm = new ViewModel();
