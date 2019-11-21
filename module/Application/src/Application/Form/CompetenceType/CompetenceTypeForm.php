@@ -24,6 +24,17 @@ class CompetenceTypeForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
+        //libelle
+        $this->add([
+            'type' => Text::class,
+            'name' => 'ordre',
+            'options' => [
+                'label' => "Ordre :",
+            ],
+            'attributes' => [
+                'id' => 'ordre',
+            ],
+        ]);
         //submit
         $this->add([
             'type' => Button::class,
@@ -43,6 +54,7 @@ class CompetenceTypeForm extends Form {
         //filter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'               => [ 'required' => true,  ],
+            'ordre'                 => [ 'required' => true,  ],
         ]));
     }
 }

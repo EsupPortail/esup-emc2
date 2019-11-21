@@ -12,7 +12,7 @@ version **0.4.1** (21/11/2019) :
 * Importation et stockage des structures parentes
 * Correction du bug de sélection de structure sur la page 'mes-structures'
 * Amélioration retour des modales de confirmation
-* Correction des s manquants pour l'ordre des compétences (faire mieux ici!)
+* Ajout d'un ordre pour les type de compétences et de viewhelper competence et competences
 
 version **0.4.0** (31/10/2019) :
 * Début de mise en place des validations des fiches metiers  

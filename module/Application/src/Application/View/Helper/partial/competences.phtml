@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @var array $competences
+ * @var array $options
+ */
+
+use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceType;
+
+$option_theme = (isset($options['theme']) AND $options['theme'] === true );
+$option_type = (isset($options['type']) AND $options['type'] === true );
+
+$types = [];
+foreach ($competences as $id => $array) {
+    /**
+     * @var Competence $array['competence']
+     * @var string[] $array['source']
+     */
+    $types[$array['competence']->getType()->getId()] = $array['competence']->getType();
+}
+
+$sortedTypes = [];
+foreach ($types as $id => $type) {
+    $sortedTypes[] = $type;
+}
+usort($sortedTypes, function (CompetenceType $a, CompetenceType $b) { return $a->getOrdre()>$b->getOrdre();});
+$a= 1;
+?>
+
+<?php foreach ($sortedTypes as $type) : ?>
+    <?php
+        $competencesType = [];
+        foreach ($competences as $id => $array) {
+            if ($array['competence']->getType()->getId() === $type->getId()) $competencesType[$id] = $array;
+        }
+    ?>
+    <h3>
+        <?php echo $type->getLibelle(); ?>
+        <span class="badge">
+            <?php echo count($competencesType); ?>
+        </span>
+    </h3>
+
+    <ul>
+    <?php foreach ($competencesType as $id => $array) : ?>
+            <?php echo $this->competence($array['competence'], ['li' => true, 'type' => $option_type, 'theme' => $option_theme, 'source' => $array['source']]); ?>
+    <?php endforeach; ?>
+    </ul>
+<?php endforeach; ?>
