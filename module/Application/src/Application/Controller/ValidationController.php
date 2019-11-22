@@ -146,6 +146,9 @@ class ValidationController extends AbstractActionController {
         return $vm;
     }
 
+    /** On utilise maintenant un multiple et non plus un simple select. On ne passe plus par l'hydrator pour la creation
+     *  mais des créations individualisées pour chaque élement d'un tableau.
+     */
     public function creerDemandesFicheMetierDomaineAction() {
         $cibles = $this->getDomaineService()->getDomainesAsOptions();
         $demande = new ValidationDemande();
@@ -161,9 +164,13 @@ class ValidationController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $validateur = $demande->getValidateur();
-                $domaine = $this->getDomaineService()->getDomaine($demande->getObjectId());
-                $demandes = $this->getValidationDemandeService()->creerDemandesFicheMetierDomaine($validateur, $domaine);
+                $demandes = [];
+                foreach ($data['cible'] as $cibleId) {
+                    $validateur = $demande->getValidateur();
+                    $domaine = $this->getDomaineService()->getDomaine($cibleId);
+                    $demandesL = $this->getValidationDemandeService()->creerDemandesFicheMetierDomaine($validateur, $domaine);
+                    foreach ($demandesL as $demande) $demandes[] = $demande;
+                }
 
                 $message  =  count($demandes) . " demandes de validation viennent d'être créées : <ul>";
                 foreach ($demandes as $demande) {
@@ -185,6 +192,9 @@ class ValidationController extends AbstractActionController {
         return $vm;
     }
 
+    /** On utilise maintenant un multiple et non plus un simple select. On ne passe plus par l'hydrator pour la creation
+     *  mais des créations individualisées pour chaque élement d'un tableau.
+     */
     public function creerDemandeFicheMetierAction() {
         $cibles = $this->getFicheMetierService()->getFichesMetiersAsOptions();
         $demande = new ValidationDemande();
@@ -200,12 +210,23 @@ class ValidationController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $demande->setType($this->getValidationTypeService()->getValidationTypebyCode(ValidationType::FICHE_METIER_RELECTURE));
-                $demande->setEntity(FicheMetier::class);
-                $this->getValidationDemandeService()->create($demande);
+                $message  =  "Une demande de validation vient d'être créée pour le(s) fiche(s): <ul>";
+                foreach ($data['cible'] as $cibleId) {
+                    $demande1 = new ValidationDemande();
+                    $demande1->setType($this->getValidationTypeService()->getValidationTypebyCode(ValidationType::FICHE_METIER_RELECTURE));
+                    $demande1->setEntity(FicheMetier::class);
+                    $demande1->setValidateur($demande->getValidateur());
+                    $demande1->setObjectId($cibleId);
+                    $this->getValidationDemandeService()->create($demande1);
+                    $titre    = $this->getFicheMetierService()->getFicheMetier($demande1->getObjectId())->getMetier()->getLibelle();
+                    $message .= "<li>#".$demande1->getId()." - ".$titre."</li>";
 
-                $titre    = $this->getFicheMetierService()->getFicheMetier($demande->getObjectId())->getMetier()->getLibelle();
-                $message  =  "Une demande de validation vient d'être créée : <ul><li>#".$demande->getId()." - ".$titre."</li></ul>";
+                }
+                $message .= "</ul>";
+//                $demande->setType($this->getValidationTypeService()->getValidationTypebyCode(ValidationType::FICHE_METIER_RELECTURE));
+//                $demande->setEntity(FicheMetier::class);
+//                $this->getValidationDemandeService()->create($demande);
+
                 $this->flashMessenger()->addSuccessMessage($message);
                 $this->getMailingService()->notificationDemandesValidations($demande->getValidateur(), [ $demande ]);
             }

@@ -32,15 +32,14 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
     ?>
 <div class="main">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <h2>
-                Compétence <?php echo ($type)?$type->getLibelle():"Sans type"; ?>
+                Compétence <span style="color:#2B6FB6;"><?php echo ($type)?$type->getLibelle():"Sans type"; ?></span>
                 <span class="badge">
                     <?php echo count($competences); ?>
                 </span>
             </h2>
         </div>
-
         <div class="pull-right">
             <?php /** @see CompetenceController::ajouterAction() */ ?>
             <a href="<?php echo $this->url('competence/ajouter', ['competence-type' => ($type)?$type->getId():null], [], true); ?>"

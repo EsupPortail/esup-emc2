@@ -39,6 +39,7 @@ class ValidationDemandeForm extends Form {
                 'attributes' => [
                     'class' => 'selectpicker form-control',
                     'style' => 'height:300px;',
+                    'multiple' => 'multiple',
                     'data-live-search' => true,
                 ]
         ]);
