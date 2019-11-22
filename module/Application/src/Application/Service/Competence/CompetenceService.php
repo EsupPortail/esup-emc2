@@ -81,6 +81,22 @@ class CompetenceService {
     }
 
     /**
+     * @param CompetenceType $type
+     * @param string $champ
+     * @param string $order
+     * @return Competence[]
+     */
+    public function getCompetencesSansType($champ = 'libelle', $order = 'ASC')
+    {
+        $qb = $this->createQueryBuilderForCompetence()
+            ->andWhere('competence.type IS NULL')
+            ->orderBy('competence.'.$champ, $order)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param string $champ
      * @param string $order
      * @return array
