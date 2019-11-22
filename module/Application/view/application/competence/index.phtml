@@ -23,33 +23,6 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
     Index des compétences
 </h1>
 
-<div class="main">
-    <div class="row">
-        <center>
-        <?php /** @see CompetenceController::ajouterAction() */ ?>
-        <a href="<?php echo $this->url('competence/ajouter', [], [], true); ?>"
-           class="btn btn-primary action ajax-modal"
-           data-event="modification"
-        >
-            <span class="icon ajouter"></span> Ajouter une compétence</a>
-
-        <?php /** @see CompetenceController::ajouterCompetenceTypeAction() */ ?>
-        <a href="<?php echo $this->url('competence-type/ajouter', [], [], true); ?>"
-           class="btn btn-primary action ajax-modal"
-           data-event="modification"
-        >
-            <span class="icon ajouter"></span> Ajouter un type de compétence</a>
-
-        <?php /** @see CompetenceController::ajouterCompetenceThemeAction() */ ?>
-        <a href="<?php echo $this->url('competence-theme/ajouter', [], [], true); ?>"
-           class="btn btn-primary action ajax-modal"
-           data-event="modification"
-        >
-            <span class="icon ajouter"></span> Ajouter un thème de compétence</a>
-        </center>
-    </div>
-</div>
-
 <?php foreach ($competencesByType as $competencesArray) : ?>
     <?php
         /** @var CompetenceType $type */
@@ -58,18 +31,30 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
         $competences = $competencesArray['competences'];
     ?>
 <div class="main">
-    <h2>
-        Compétence <?php echo $type->getLibelle(); ?>
-        <span class="badge">
-            <?php echo count($competences); ?>
-        </span>
-    </h2>
+    <div class="row">
+        <div class="col-md-9">
+            <h2>
+                Compétence <?php echo ($type)?$type->getLibelle():"Sans type"; ?>
+                <span class="badge">
+                    <?php echo count($competences); ?>
+                </span>
+            </h2>
+        </div>
 
-    <table class="datatable table table-condensed">
+        <div class="pull-right">
+            <?php /** @see CompetenceController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('competence/ajouter', ['competence-type' => ($type)?$type->getId():null], [], true); ?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <span class="icon ajouter"></span> Ajouter une compétence</a>
+        </div>
+    </div>
+
+    <table class="datatable table table-condensed" data-order='[ 1, "asc" ]'>
         <thead>
         <tr>
             <th> Libellé </th>
-<!--            <th> Type </th>-->
             <th> Thème </th>
             <th class="modificateur-cell"> Modificateur </th>
             <th class="action-cell"> Action </th>
@@ -79,7 +64,6 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
         <?php foreach ($competences as $competence) : ?>
             <tr>
                 <td> <?php echo $competence->getLibelle(); ?> </td>
-<!--                <td> --><?php //echo ($competence->getType())?$competence->getType()->getLibelle():"Auncun"; ?><!-- </td>-->
                 <td> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Auncun"; ?> </td>
                 <td>
                     <small>
@@ -125,7 +109,8 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
                     <?php endif; ?>
                     <?php if ($canDetruire): ?>
                         <?php /** @see CompetenceController::detruireAction() */?>
-                        <a href="<?php echo $this->url('competence/detruire', ['competence' => $competence->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('competence/detruire', ['competence' => $competence->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification">
                             <span class="icon detruire" title="Detruire la compétence"></span></a>
                     <?php else: ?>
                         <span class="icon detruire" style="color:lightgray;"></span>
@@ -138,7 +123,190 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
 </div>
 <?php endforeach; ?>
 
+<!-- COMPETENCE TYPE -------------------------------------------------------------------------------------------------->
+<div class="main">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>
+                Types de compétences
+                <span class="badge">
+                    <?php echo count($types); ?>
+                </span>
+            </h2>
+        </div>
+        <div class="pull-right">
+            <?php /** @see CompetenceController::ajouterCompetenceTypeAction() */ ?>
+            <a href="<?php echo $this->url('competence-type/ajouter', [], [], true); ?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <span class="icon ajouter"></span> Ajouter un type de compétence</a>
+        </div>
+    </div>
 
+    <table class="datatable table table-condensed">
+        <thead>
+        <tr>
+            <th> Libellé </th>
+            <!--            <th> Type </th>-->
+            <th> #Compétence </th>
+            <th> Ordre </th>
+            <th class="modificateur-cell"> Modificateur </th>
+            <th class="action-cell"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($types as $type) : ?>
+            <tr>
+                <td> <?php echo $type->getLibelle(); ?> </td>
+                <td> <?php echo count($type->getCompetences()); ?> </td>
+                <td> <?php echo $type->getOrdre(); ?> </td>
+                <td>
+                    <small>
+                        <?php echo $type->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
+                        <?php echo $type->getHistoModificateur()->getDisplayName(); ?> <br/>
+                    </small>
+                </td>
+                <td>
+                    <?php if ($canVoir) : ?>
+                        <?php /** @see CompetenceController::afficherCompetenceTypeAction() */ ?>
+                        <a href="<?php echo $this->url('competence-type/afficher', ['competence-type' => $type->getId()], [], true); ?>"
+                           class="ajax-modal">
+                            <span class="icon voir" title="Afficher le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                    <?php else : ?>
+                        <span class="icon voir" style="color: lightgrey"></span>
+                    <?php endif; ?>
+                    <?php if ($canModifier) : ?>
+                        <?php /** @see CompetenceController::modifierCompetenceTypeAction() */ ?>
+                        <a href="<?php echo $this->url('competence-type/modifier', ['competence-type' => $type->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification">
+                        <span class="icon editer" title="Modifier le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                    <?php else : ?>
+                        <span class="icon editer" style="color: lightgrey"></span>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser): ?>
+                        <?php if($competence->estNonHistorise()) : ?>
+                            <?php /** @see CompetenceController::historiserCompetenceTypeAction() */?>
+                            <a href="<?php echo $this->url('competence-type/historiser', ['competence-type' => $type->getId()], [], true); ?>">
+                                <span class="icon historiser" title="Historiser le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                        <?php else : ?>
+                            <?php /** @see CompetenceController::restaurerCompetenceTypeAction() */?>
+                            <a href="<?php echo $this->url('competence-type/restaurer', ['competence-type' => $type->getId()], [], true); ?>">
+                                <span class="icon restaurer" title="Restaurer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <?php if($competence->estNonHistorise()) : ?>
+                            <span class="icon historiser" style="color:lightgray;"></span>
+                        <?php else : ?>
+                            <span class="icon restaurer" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruire) : ?>
+                        <?php /** @see CompetenceController::detruireCompetenceTypeAction() */ ?>
+                        <a href="<?php echo $this->url('competence-type/detruire', ['competence-type' => $type->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                            <span class="icon detruire" title="Supprimer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                    <?php else : ?>
+                        <span class="icon detruire" style="color: lightgrey"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<!-- COMPETENCE THEME ------------------------------------------------------------------------------------------------->
+<div class="main">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>
+                Thèmes de compétences
+                <span class="badge">
+                    <?php echo count($themes); ?>
+                </span>
+            </h2>
+        </div>
+        <div class="pull-right">
+            <?php /** @see CompetenceController::ajouterCompetenceThemeAction() */ ?>
+            <a href="<?php echo $this->url('competence-theme/ajouter', [], [], true); ?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <span class="icon ajouter"></span> Ajouter un thème de compétence</a>
+        </div>
+    </div>
+
+    <table class="datatable table table-condensed">
+        <thead>
+        <tr>
+            <th> Libellé </th>
+            <!--            <th> Type </th>-->
+            <th> #Compétence </th>
+            <th class="modificateur-cell"> Modificateur </th>
+            <th class="action-cell"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($themes as $theme) : ?>
+            <tr>
+                <td> <?php echo $theme->getLibelle(); ?> </td>
+                <td> <?php echo count($theme->getCompetences()); ?> </td>
+                <td>
+                    <small>
+                        <?php echo $theme->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
+                        <?php echo $theme->getHistoModificateur()->getDisplayName(); ?> <br/>
+                    </small>
+                </td>
+                <td>
+                    <?php if ($canVoir) : ?>
+                        <?php /** @see CompetenceController::afficherCompetenceThemeAction() */ ?>
+                        <a href="<?php echo $this->url('competence-theme/afficher', ['competence-theme' => $theme->getId()], [], true); ?>"
+                           class="ajax-modal">
+                            <span class="icon voir" title="Afficher le thème de compétence [<?php echo $theme->getLibelle(); ?>]"></span></a>
+                    <?php else : ?>
+                        <span class="icon voir" style="color: lightgrey"></span>
+                    <?php endif; ?>
+                    <?php if ($canModifier) : ?>
+                        <?php /** @see CompetenceController::modifierCompetenceThemeAction() */ ?>
+                        <a href="<?php echo $this->url('competence-theme/modifier', ['competence-theme' => $theme->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                            <span class="icon editer" title="Modifier le thème de compétence [<?php echo $theme->getLibelle(); ?>]"></span></a>
+                    <?php else : ?>
+                        <span class="icon editer" style="color: lightgrey"></span>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser): ?>
+                        <?php if($competence->estNonHistorise()) : ?>
+                            <?php /** @see CompetenceController::historiserCompetenceThemeAction() */?>
+                            <a href="<?php echo $this->url('competence-theme/historiser', ['competence-theme' => $theme->getId()], [], true); ?>">
+                                <span class="icon historiser" title="Historiser le thème de compétence [<?php echo $theme->getLibelle(); ?>]"></span></a>
+                        <?php else : ?>
+                            <?php /** @see CompetenceController::restaurerCompetenceThemeAction() */?>
+                            <a href="<?php echo $this->url('competence-theme/restaurer', ['competence-theme' => $theme->getId()], [], true); ?>">
+                                <span class="icon restaurer" title="Restaurer le thème de compétence [<?php echo $theme->getLibelle(); ?>]"></span></a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <?php if($competence->estNonHistorise()) : ?>
+                            <span class="icon historiser" style="color:lightgray;"></span>
+                        <?php else : ?>
+                            <span class="icon restaurer" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruire) : ?>
+                        <?php /** @see CompetenceController::detruireCompetenceThemeAction() */ ?>
+                        <a href="<?php echo $this->url('competence-theme/detruire', ['competence-theme' => $theme->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                            <span class="icon detruire" title="Supprimer le thème de compétence [<?php echo $theme->getLibelle(); ?>]"></span></a>
+                    <?php else : ?>
+                        <span class="icon detruire" style="color: lightgrey"></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
 
 <style>
     th.action-cell {
@@ -152,7 +320,26 @@ $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
     $(document).ready(function() {
         $('.datatable').DataTable( {
             language: {
-                url: '/localisation/fr_FR.json'
+                processing:     "Traitement en cours...",
+                search:         "Rechercher&nbsp;:",
+                lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                infoPostFix:    "",
+                loadingRecords: "Chargement en cours...",
+                zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                emptyTable:     "Aucune donnée disponible dans le tableau",
+                paginate: {
+                    first:      "Premier",
+                    previous:   "Pr&eacute;c&eacute;dent",
+                    next:       "Suivant",
+                    last:       "Dernier"
+                },
+                aria: {
+                    sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
             }
         });
     } );

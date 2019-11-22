@@ -23,6 +23,7 @@ class CompetenceController extends AbstractActionController {
     {
         $competencesByType = [];
         $types = $this->getCompetenceService()->getCompetencesTypes('ordre');
+        $themes = $this->getCompetenceService()->getCompetencesThemes();
 
         foreach ($types as $type) {
             $competences = $this->getCompetenceService()->getCompetencesByType($type);
@@ -31,27 +32,25 @@ class CompetenceController extends AbstractActionController {
                 'competences' => $competences,
             ];
         }
+        $competencesByType[] = [
+            'type' => null,
+            'competences' => $this->getCompetenceService()->getCompetencesSansType(),
+        ];
 
         return new ViewModel([
             'competencesByType' => $competencesByType,
+            'themes' => $themes,
+            'types' => $types,
         ]);
-
-
-//        $competences = $this->getCompetenceService()->getCompetences();
-//        $themes = $this->getCompetenceService()->getCompetencesThemes();
-//
-//        return new ViewModel([
-//            'competences' => $competences,
-//            'themes' => $themes,
-//            'types' => $types,
-//        ]);
     }
 
     /** COMPETENCE ****************************************************************************************************/
 
     public function ajouterAction()
     {
+        $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
         $competence = new Competence();
+        if ($type !== null) $competence->setType($type);
         $form = $this->getCompetenceForm();
         $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter', [], [], true));
         $form->bind($competence);
@@ -127,8 +126,26 @@ class CompetenceController extends AbstractActionController {
     public function detruireAction()
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
-        $this->getCompetenceService()->delete($competence);
-        return $this->redirect()->toRoute('competence', [], [], true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getCompetenceService()->delete($competence);
+            //return $this->redirect()->toRoute('competence', [], [], true);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($competence !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la compétence  " . $competence->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('competence/detruire', ["competence" => $competence->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     /** COMPETENCE THEME **********************************************************************************************/
@@ -211,8 +228,26 @@ class CompetenceController extends AbstractActionController {
     public function detruireCompetenceThemeAction()
     {
         $theme = $this->getCompetenceService()->getRequestedCompetenceTheme($this);
-        $this->getCompetenceService()->deleteTheme($theme);
-        return $this->redirect()->toRoute('competence', [], [], true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getCompetenceService()->deleteTheme($theme);
+            //return $this->redirect()->toRoute('competence', [], [], true);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($theme !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de le thème de compétence  " . $theme->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('competence-theme/detruire', ["competence-theme" => $theme->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     /** COMPETENCE TYPE ***********************************************************************************************/
@@ -295,8 +330,26 @@ class CompetenceController extends AbstractActionController {
     public function detruireCompetenceTypeAction()
     {
         $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
-        $this->getCompetenceService()->deleteType($type);
-        return $this->redirect()->toRoute('competence', [], [], true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getCompetenceService()->deleteType($type);
+            //return $this->redirect()->toRoute('competence', [], [], true);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($type !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de le type de compétence  " . $type->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('competence-type/detruire', ["competence-type" => $type->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 }
 

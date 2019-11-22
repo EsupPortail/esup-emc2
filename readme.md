@@ -8,6 +8,10 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.2** (22/11/2019) :
+* Eclatement de l'affichage des compétences par types
+* Ajout de l'ajout de compétences typées
+
 version **0.4.1** (21/11/2019) :
 * Importation et stockage des structures parentes
 * Correction du bug de sélection de structure sur la page 'mes-structures'

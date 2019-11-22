@@ -4,7 +4,6 @@ namespace Application;
 
 use Application\Controller\CompetenceController;
 use Application\Controller\CompetenceControllerFactory;
-use Application\Entity\Db\Competence;
 use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentCompetence\AgentCompetenceFormFactory;
 use Application\Form\AgentCompetence\AgentCompetenceHydrator;
@@ -24,7 +23,6 @@ use Application\Form\CompetenceType\CompetenceTypeHydratorFactory;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
-use Application\View\Helper\AgentViewHelper;
 use Application\View\Helper\CompetencesViewHelper;
 use Application\View\Helper\CompetenceViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -104,9 +102,9 @@ return [
                 'may_terminate' => true,
                 'child_routes' => [
                     'ajouter' => [
-                        'type'  => Literal::class,
+                        'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter',
+                            'route'    => '/ajouter[/:competence-type]',
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'ajouter',
