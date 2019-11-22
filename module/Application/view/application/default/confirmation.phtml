@@ -27,9 +27,11 @@
 </table>
 
 <script>
-    // $('input#non').click(function(){
-        // alert("nein nein nein");
-        // event.div.modal('hide');
-    // });
+    $(function() {
+        $("input#non").click(function(e){
+            $('div.modal').modal('hide');
+            e.preventDefault(e);
+        });
+    });
 </script>
 

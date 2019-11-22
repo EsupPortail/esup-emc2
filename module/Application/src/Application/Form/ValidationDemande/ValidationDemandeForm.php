@@ -33,12 +33,13 @@ class ValidationDemandeForm extends Form {
                     'label_attributes' => [
                         'class' => 'control-label',
                     ],
-                    'empty_option' => 'Sélectionner une cible pour la validation ...',
+//                    'empty_option' => 'Sélectionner une cible pour la validation ...',
                     'value_options' => $this->cibles,
                 ],
                 'attributes' => [
                     'class' => 'selectpicker form-control',
                     'style' => 'height:300px;',
+                    'multiple' => 'multiple',
                     'data-live-search' => true,
                 ]
         ]);
