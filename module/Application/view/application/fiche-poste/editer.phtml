@@ -24,7 +24,7 @@ $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePriv
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
-            Fiche métier <br/>
+            Fiche de poste #<?php echo $fiche->getId(); ?><br/>
             <strong>
                 <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
                 <?php if($fiche->getLibelle() !== null) : ?>

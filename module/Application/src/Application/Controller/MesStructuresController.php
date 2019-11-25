@@ -112,7 +112,7 @@ class MesStructuresController extends AbstractActionController {
             }
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */
-            // return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+            return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
         }
 
         return new ViewModel([
