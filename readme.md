@@ -8,6 +8,10 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.3** (25/11/2019) :
+* Correction du bug de clonage lorsque la spécificité a pour valeur NULL
+* Changement de la redirection après le clonage (retour sur la fiche identifiée et non la dernière créée)
+
 version **0.4.2** (22/11/2019) :
 * Eclatement de l'affichage des compétences par types
 * Ajout de l'ajout de compétences typées
