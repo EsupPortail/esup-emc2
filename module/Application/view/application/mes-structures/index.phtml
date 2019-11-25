@@ -350,16 +350,21 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
 
     $(function() {
         $("body").on("duplication", function (event) {
+            let content = event.div.html();
+            let match_regex = content.match(/#[0-9]*/g)[0];
+            let id = match_regex.split('#')[1];
             event.div.modal('hide');
-            window.location.href = '../fiche-poste/editer?structure=' + <?php echo ($structure)?$structure->getId():0; ?>
+            console.log("fiche-de-poste: " + id);
+            window.location.href = '../fiche-poste/editer/' + id + '?structure=' + <?php echo ($structure)?$structure->getId():0; ?>
         });
     });
 
     $(function() {
-       $('select#structure').change(function() {
-           let id = $('select#structure option:selected').val();
-           window.location.href = './' + id;
-           // alert('CHANGED -' + $('select#structure option:selected').text() + '- -' + $('select#structure option:selected').val() + '-');
-       });
-    });
+      $('select#structure').change(function() {
+          let id = $('select#structure option:selected').val();
+          console.log("structure: " + id);
+          window.location.href = './' + id;
+      });
+   });
 </script>
+

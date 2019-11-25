@@ -97,10 +97,11 @@ class MesStructuresController extends AbstractActionController {
             $nouvelleFiche->setAgent($agent);
 
             //dupliquer specificite
-            $specifite = $fiche->getSpecificite()->clone_it();
-            $this->getFichePosteService()->createSpecificitePoste($specifite);
-            $nouvelleFiche->setSpecificite($specifite);
-
+            if ($fiche->getSpecificite()) {
+                $specifite = $fiche->getSpecificite()->clone_it();
+                $this->getFichePosteService()->createSpecificitePoste($specifite);
+                $nouvelleFiche->setSpecificite($specifite);
+            }
             $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
 
             //dupliquer fiche metier externe
@@ -111,7 +112,7 @@ class MesStructuresController extends AbstractActionController {
             }
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */
-            // return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+            return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
         }
 
         return new ViewModel([
