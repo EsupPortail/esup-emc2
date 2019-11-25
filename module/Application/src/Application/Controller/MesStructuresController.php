@@ -97,10 +97,11 @@ class MesStructuresController extends AbstractActionController {
             $nouvelleFiche->setAgent($agent);
 
             //dupliquer specificite
-            $specifite = $fiche->getSpecificite()->clone_it();
-            $this->getFichePosteService()->createSpecificitePoste($specifite);
-            $nouvelleFiche->setSpecificite($specifite);
-
+            if ($fiche->getSpecificite()) {
+                $specifite = $fiche->getSpecificite()->clone_it();
+                $this->getFichePosteService()->createSpecificitePoste($specifite);
+                $nouvelleFiche->setSpecificite($specifite);
+            }
             $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
 
             //dupliquer fiche metier externe
