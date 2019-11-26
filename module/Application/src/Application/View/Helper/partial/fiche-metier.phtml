@@ -165,11 +165,11 @@ $this->headTitle("Affichage de la fiche métier : ".$fiche->getId());
         <div class="panel-body">
             <div class="row">
                 <?php if ($fiche->getConnaissances() == '' AND $fiche->getCompetencesOperationnelles() == '' AND $fiche->getCompetencesComportementales() == '') : ?>
-                    <?php echo $this->competences($competences, ['type' => false, 'theme' => true]); ?>
+                    <?php echo $this->competences($competences, ['type' => false, 'theme' => false]); ?>
 
                 <?php else : ?>
                     <div class="col-md-6">
-                    <?php echo $this->competences($competences, ['type' => false, 'theme' => true]); ?>
+                    <?php echo $this->competences($competences, ['type' => false, 'theme' => false]); ?>
                     </div>
 
                     <div class="col-md-6 pull-right" style="border: 1px dashed gray">
