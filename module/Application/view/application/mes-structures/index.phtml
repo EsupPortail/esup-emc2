@@ -148,6 +148,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         <thead>
             <tr>
                 <th class="agent-cell"> Agent </th>
+                <th class="agent-cell"> Structure </th>
                 <th class="libelle-cell"> Poste </th>
                 <th> Intitulé </th>
                 <th class="action-cell"> Action </th>
@@ -157,6 +158,12 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
             <?php foreach ($fichesPostes as $fiche): ?>
                 <tr>
                     <td> <?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"<span class='icon attention' style='color:darkred;'></span> Aucun agent"; ?> </td>
+                    <td>
+                        <?php $first = true; foreach ($fiche->getAgent()->getGrades() as $grade) : ?>
+                            <?php echo (!$first)?"<br>":""; $first=false; ?>
+                            <span class="badge structure <?php echo $grade->getStructure()->getType(); ?>"><?php echo $grade->getStructure()->getLibelleCourt(); ?></span>
+                        <?php endforeach; ?>
+                    </td>
                     <td> <?php echo ($fiche->getPoste())?$fiche->getPoste()->getNumeroPoste():"<span class='icon attention' style='color:darkred;'></span> Aucun poste"; ?> </td>
                     <td>
                         <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
@@ -227,6 +234,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         <thead>
         <tr>
             <th class="agent-cell"> Agent </th>
+            <th class="agent-cell"> Structure </th>
             <th class="libelle-cell"> Missions </th>
             <th> Période</th>
             <th class="action-cell"> Action </th>
@@ -236,6 +244,11 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         <?php foreach($missionsSpecifiques as $missionSpecifique) : ?>
             <tr>
                 <td> <?php echo $missionSpecifique->getAgent()->getDenomination(); ?> </td>
+                <td>
+                    <span class="badge structure <?php echo $missionSpecifique->getStructure()->getType(); ?>">
+                        <?php echo $missionSpecifique->getStructure()->getLibelleCourt(); ?>
+                    </span>
+                </td>
                 <td> <?php echo $missionSpecifique->getMission()->getLibelle(); ?> </td>
                 <td>
                     <?php
@@ -277,6 +290,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
         <thead>
             <tr>
                 <th class="agent-cell"> Agent </th>
+                <th class="agent-cell"> Structure </th>
                 <th></th>
                 <th class="action-cell"> Action</th>
             </tr>
@@ -285,6 +299,13 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
             <?php foreach ($agentsSansFiche as $agent)  :?>
                 <tr>
                     <td> <?php echo $agent->getDenomination() ; ?> </td>
+                    <td>
+                            <?php $first = true; foreach ($agent->getGrades() as $grade) : ?>
+                                <?php echo (!$first)?"<br>":""; $first=false; ?>
+                                <span class="badge structure <?php echo $grade->getStructure()->getType(); ?>"><?php echo $grade->getStructure()->getLibelleCourt(); ?></span>
+                            <?php endforeach; ?>
+
+                    </td>
                     <td></td>
                     <td class="action-cell">
                         <?php if ($canAfficherAgent) : ?>
@@ -321,7 +342,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
 
 <style>
     th.agent-cell {
-      width:25rem;
+      width:20rem;
     }
     th.libelle-cell {
         width:25rem;

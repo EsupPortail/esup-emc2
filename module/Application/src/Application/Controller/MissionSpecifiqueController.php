@@ -58,7 +58,7 @@ class MissionSpecifiqueController extends AbstractActionController
         if ($structure === null) {
             $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], [], true));
         } else {
-            $form = $form->reinitWithStructure($structure);
+            $form = $form->reinitWithStructure($structure, true);
             $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
         }
         $form->bind($affectation);
@@ -103,7 +103,7 @@ class MissionSpecifiqueController extends AbstractActionController
         if ($structure === null) {
             $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], [], true));
         } else {
-            $form = $form->reinitWithStructure($structure);
+            $form = $form->reinitWithStructure($structure, true);
             $form->setAttribute('action', $this->url()->fromRoute('agent-mission-specifique/editer', [], ["query" =>["structure" => $structure->getId()]], true));
         }
         $form->bind($affectation);

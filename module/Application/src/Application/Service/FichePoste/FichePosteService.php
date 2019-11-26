@@ -324,9 +324,10 @@ class FichePosteService {
 
     /**
      * @param Structure $structure
+     * @param boolean $sousstructure
      * @return FichePoste[]
      */
-    public function getFichesPostesByStructure($structure)
+    public function getFichesPostesByStructure($structure, $sousstructure = false)
     {
         try {
             $today = new DateTime();
@@ -339,17 +340,27 @@ class FichePosteService {
             ->addSelect('agent')->join('fiche.agent', 'agent')
             ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
             ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->andWhere('statut.structure = :structure')
-//            ->andWhere('statut.fin >= :today OR statut.fin = :noEnd')
+            ->addSelect('grade')->join('agent.grades', 'grade')
+            ->addSelect('structure')->join('grade.structure', 'structure')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('statut.administratif = :true')
-            ->setParameter('structure', $structure)
             ->setParameter('today', $today)
             //->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
+        if ($structure !== null && $sousstructure === false) {
+            $qb = $qb
+                ->andWhere('statut.structure = :structure')
+                ->setParameter('structure', $structure);
+        }
+        if ($structure !== null && $sousstructure === true) {
+            $qb = $qb
+                ->andWhere('statut.structure = :structure OR structure.parent = :structure')
+                ->setParameter('structure', $structure);
+        }
         $result = $qb->getQuery()->getResult();
         return $result;
     }

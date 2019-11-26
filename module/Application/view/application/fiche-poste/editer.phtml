@@ -3,7 +3,10 @@
 /**
  * @var FichePoste $fiche
  * @var Structure $structure
+ * @var boolean $sousstructure
  */
+
+$sousstructure = true;
 
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
@@ -57,7 +60,8 @@ $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePriv
             </div>
             <div class="col-md-6">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null]], true); ?>"
+                    <?php /** @see \Application\Controller\FichePosteController::associerAgentAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
                        class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >
@@ -93,7 +97,8 @@ $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePriv
             </div>
             <div class="col-md-6">
                 <?php if($canAssocierAgent) : ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null]], true); ?>"
+                    <?php /** @see \Application\Controller\FichePosteController::associerPosteAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
                        class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >

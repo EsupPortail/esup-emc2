@@ -174,4 +174,24 @@ class StructureService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /**
+     * @param Structure $structure
+     * @param boolean $ouverte
+     * @return Structure[]
+     */
+    public function getSousStructures($structure, $ouverte = true)
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
+            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
+            ->andWhere('structure.parent = :structure')
+            ->setParameter('structure', $structure)
+            ->orderBy('structure.code');
+        if ($ouverte) $qb = $qb->andWhere("structure.histo = 'O'");
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
 }

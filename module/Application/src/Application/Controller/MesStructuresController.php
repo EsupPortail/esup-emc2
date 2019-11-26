@@ -45,9 +45,9 @@ class MesStructuresController extends AbstractActionController {
         $fichesPostes = null;
         if ($structure != null) {
             //TODO sans fiche de poste
-            $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructure($structure);
-            $agentsSansFiche = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure);
-            $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructure($structure);
+            $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructure($structure, true);
+            $agentsSansFiche = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure, true);
+            $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructure($structure, true);
         }
 
 
@@ -76,14 +76,14 @@ class MesStructuresController extends AbstractActionController {
             $fiche->setAgent($agent);
         }
         $this->getFichePosteService()->create($fiche);
-        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId(), "sous-structure" => true]], true);
     }
 
     public function dupliquerFichePosteAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $agent = $this->getAgentService()->getRequestedAgent($this);
-        $fiches = $this->getFichePosteService()->getFichesPostesByStructure($structure);
+        $fiches = $this->getFichePosteService()->getFichesPostesByStructure($structure, true);
 
         /** @var Request $request */
         $request = $this->getRequest();
