@@ -8,6 +8,9 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.4** (26/11/2019) :
+* Dans l'interface 'Ma structure' utilisation des sous-structures afin de faciliter la composition des fiche de postes 
+
 version **0.4.3** (25/11/2019) :
 * Correction du bug de clonage lorsque la spécificité a pour valeur NULL
 * Changement de la redirection après le clonage (retour sur la fiche identifiée et non la dernière créée)
