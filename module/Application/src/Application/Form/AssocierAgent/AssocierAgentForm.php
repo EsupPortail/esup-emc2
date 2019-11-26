@@ -59,12 +59,13 @@ class AssocierAgentForm extends Form {
 
     /**
      * @param Structure $structure
+     * @param bool $sousstructure
      * @return AssocierAgentForm
      */
-    public function reinitWithStructure($structure)
+    public function reinitWithStructure($structure, $sousstructure = false)
     {
         //agent
-        $agents = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure);
+        $agents = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure, $sousstructure);
         $agentOptions = [];
         foreach ($agents as $agent) {
             $agentOptions[$agent->getId()] = $agent->getDenomination();

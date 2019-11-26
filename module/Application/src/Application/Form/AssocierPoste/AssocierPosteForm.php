@@ -60,12 +60,13 @@ class AssocierPosteForm extends Form {
 
     /**
      * @param Structure $structure
+     * @param boolean $sousstructure
      * @return AssocierPosteForm
      */
-    public function reinitWithStructure($structure)
+    public function reinitWithStructure($structure, $sousstructure = false)
     {
         //agent
-        $postes = $this->getPosteService()->getPostesByStructure($structure);
+        $postes = $this->getPosteService()->getPostesByStructure($structure, $sousstructure);
         $posteOptions = [];
         foreach ($postes as $poste) {
             $posteOptions[$poste->getId()] = $poste->getNumeroPoste() . " - ". $poste->getDomaine()->getLibelle() . " - ".$poste->getStructure()->getLibelleCourt();

@@ -193,6 +193,8 @@ class FichePosteController extends AbstractActionController {
     public function associerAgentAction()
     {
         $structureId = $this->params()->fromQuery('structure');
+        $sousstructure = ($this->params()->fromQuery('sous-structure') == '1');
+
         $structure = $this->getStructureService()->getStructure($structureId);
 
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
@@ -202,7 +204,7 @@ class FichePosteController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-agent', ['fiche-poste' => $fiche->getId()], [], true));
 
         if ($structure !== null) {
-            $form = $form->reinitWithStructure($structure);
+            $form = $form->reinitWithStructure($structure, $sousstructure);
         }
         $form->bind($fiche);
 
@@ -232,6 +234,7 @@ class FichePosteController extends AbstractActionController {
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
+        $sousstructure = ($this->params()->fromQuery('sous-structure') == '1');
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
         /** @var AssocierPosteForm $form */
@@ -239,7 +242,7 @@ class FichePosteController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-poste', ['fiche-poste' => $fiche->getId()], [], true));
 
         if ($structure !== null) {
-            $form = $form->reinitWithStructure($structure);
+            $form = $form->reinitWithStructure($structure, $sousstructure);
         }
         $form->bind($fiche);
 

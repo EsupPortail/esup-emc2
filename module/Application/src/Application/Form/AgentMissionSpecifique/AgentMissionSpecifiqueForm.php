@@ -119,12 +119,13 @@ class AgentMissionSpecifiqueForm extends Form {
 
     /**
      * @param Structure $structure
+     * @param bool $sousstructure
      * @return  AgentMissionSpecifiqueForm
      */
-    public function reinitWithStructure($structure)
+    public function reinitWithStructure($structure, $sousstructure = false)
     {
         //agent
-        $agents = $this->getAgentService()->getAgentsByStructure($structure);
+        $agents = $this->getAgentService()->getAgentsByStructure($structure, $sousstructure);
         $agentOptions = [];
         foreach ($agents as $agent) {
             $agentOptions[$agent->getId()] = $agent->getDenomination();
@@ -135,6 +136,13 @@ class AgentMissionSpecifiqueForm extends Form {
         //structure
         $structureOptions = [];
         $structureOptions[$structure->getId()] = $structure->getLibelleCourt();
+
+        if ($sousstructure === true) {
+            $sousstructures = $this->getStructureService()->getSousStructures($structure);
+            foreach ($sousstructures as $sous) {
+                $structureOptions[$sous->getId()] = $sous->getLibelleCourt();
+            }
+        }
         $this->get('structure')->setValueOptions($structureOptions);
         $this->get('structure')->setEmptyOption(null);
 

@@ -194,7 +194,12 @@ class MissionSpecifiqueService {
         return $affectation;
     }
 
-    public function getMissionsSpecifiquesByStructure(Structure $structure)
+    /**
+     * @param Structure $structure
+     * @param bool $sousstructure
+     * @return AgentMissionSpecifique[]
+     */
+    public function getMissionsSpecifiquesByStructure(Structure $structure, $sousstructure = false)
     {
         try {
             $today = new DateTime();
@@ -203,7 +208,8 @@ class MissionSpecifiqueService {
         }
 
         $qb = $this->getEntityManager()->getRepository(AgentMissionSpecifique::class)->createQueryBuilder('mission')
-            ->andWhere('mission.structure = :structure')
+            ->addSelect('structure')->join('mission.structure', 'structure')
+            ->andWhere('mission.structure = :structure OR structure.parent = :structure')
             ->andWhere('mission.dateFin >= :today OR mission.dateFin IS NULL')
             ->setParameter('structure', $structure)
             ->setParameter('today', $today);

@@ -92,15 +92,21 @@ class PosteService {
 
     /**
      * @param Structure $structure
+     * @param bool $sousstructure
      * @return  Poste[]
      */
-    public function getPostesByStructure($structure = null)
+    public function getPostesByStructure($structure = null, $sousstructure = false)
     {
         $qb = $this->getEntityManager()->getRepository(Poste::class)->createQueryBuilder('poste')
             ->orderBy('poste.numeroPoste');
 
-        if ($structure !== null) {
+        if ($structure !== null AND $sousstructure === false) {
             $qb = $qb->andWhere('poste.structure = :structure')
+                ->setParameter('structure', $structure);
+        }
+        if ($structure !== null AND $sousstructure === true) {
+            $qb = $qb->addSelect('structure')->join('poste.structure', 'structure')
+                ->andWhere('poste.structure = :structure OR structure.parent = :structure')
                 ->setParameter('structure', $structure);
         }
 

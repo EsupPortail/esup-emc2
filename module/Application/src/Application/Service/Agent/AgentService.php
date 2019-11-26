@@ -149,9 +149,10 @@ class AgentService {
 
     /**
      * @param Structure $structure
+     * @param boolean $sousstructure
      * @return Agent[]
      */
-    public function getAgentsSansFichePosteByStructure($structure = null)
+    public function getAgentsSansFichePosteByStructure($structure = null, $sousstructure = false)
     {
         try {
             $today = new DateTime();
@@ -163,19 +164,27 @@ class AgentService {
         /** !!TODO!! faire le lien entre agent et fiche de poste */
         $qb1 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->addSelect('grade')->join('agent.grades', 'grade')
+            ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('fiche')->leftJoin('agent.fiches', 'fiche')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('statut.administratif = :true')
             //->andWhere('fiche.id IS NULL')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
-        if ($structure !== null) {
-            $qb1 = $qb1->andWhere('statut.structure = :structure' )
+        if ($structure !== null && $sousstructure === true) {
+            $qb1 = $qb1->andWhere('grade.structure = :structure OR structure.parent = :structure')
                      ->setParameter('structure', $structure);
         }
+        if ($structure !== null && $sousstructure === false) {
+            $qb1 = $qb1->andWhere('statut.structure = :structure' )
+                ->setParameter('structure', $structure);
+        }
         $result1 = $qb1->getQuery()->getResult();
+
 
         //TODO ! faire la jointure ...
         $result = [];
@@ -190,9 +199,10 @@ class AgentService {
 
     /**
      * @param Structure $structure
+     * @param boolean $sousstructure
      * @return Agent[]
      */
-    public function getAgentsByStructure(Structure $structure)
+    public function getAgentsByStructure(Structure $structure, $sousstructure = false)
     {
         try {
             $today = new DateTime();
@@ -202,15 +212,22 @@ class AgentService {
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->addSelect('grade')->join('agent.grades', 'grade')
+            ->addSelect('structure')->join('grade.structure', 'structure')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('statut.administratif = :true')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
 
         ;
 
-        if ($structure !== null) {
-            $qb = $qb->andWhere('statut.structure = :structure')
+        if ($structure !== null AND $sousstructure === false) {
+            $qb = $qb->andWhere('grade.structure = :structure')
+                ->setParameter('structure', $structure);
+        }
+        if ($structure !== null AND $sousstructure === true) {
+            $qb = $qb->andWhere('grade.structure = :structure OR structure.parent = :structure')
                 ->setParameter('structure', $structure);
         }
 
