@@ -64,7 +64,7 @@ class AjouterFicheMetierForm extends Form {
             'type' => Select::class,
             'name' => 'quotite',
             'options' => [
-                'label' => "Quotité* :",
+                'label' => "Quotité travaillée sur la fiche métier* :",
                 'empty_option' => 'Préciser la quotité associée ...',
                 'value_options' => $this->generateQuotiteOptions(),
             ],

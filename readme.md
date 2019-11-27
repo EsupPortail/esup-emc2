@@ -8,6 +8,16 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.5** (27/11/2019) :
+* Formulaire d'ajout de fiche métier à une fiche de poste : correction du libellé de quotité et sélection "atuomatique" de l'aspect principal d'une fiche 
+
+version **0.4.4** (26/11/2019) :
+* Dans l'interface 'Ma structure' utilisation des sous-structures afin de faciliter la composition des fiche de postes 
+
+version **0.4.3** (25/11/2019) :
+* Correction du bug de clonage lorsque la spécificité a pour valeur NULL
+* Changement de la redirection après le clonage (retour sur la fiche identifiée et non la dernière créée)
+
 version **0.4.2** (22/11/2019) :
 * Eclatement de l'affichage des compétences par types
 * Ajout de l'ajout de compétences typées

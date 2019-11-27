@@ -1,0 +1,28 @@
+<?php
+
+
+/**
+ * @see \Application\Controller\FichePosteController::ajouterFicheMetierAction()
+ *
+ * @var AjouterFicheMetierForm $form
+ */
+
+use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $('select').selectpicker();
+
+    $('select#quotite').on ("change", function(event) {
+        let value = $('select#quotite').find(":selected").val();
+       if (value > 50) {
+           $('input#est_principale').prop('checked', true);
+       }
+        if (value < 50) {
+            $('input#est_principale').prop('checked', false);
+        }
+    });
+</script>
