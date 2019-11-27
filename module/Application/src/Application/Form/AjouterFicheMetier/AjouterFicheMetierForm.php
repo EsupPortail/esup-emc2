@@ -2,7 +2,7 @@
 
 namespace Application\Form\AjouterFicheMetier;
 
-use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
@@ -13,7 +13,7 @@ use Zend\InputFilter\Factory;
 
 class AjouterFicheMetierForm extends Form {
     use FicheMetierServiceAwareTrait;
-    use FamilleProfessionnelleServiceAwareTrait;
+    use DomaineServiceAwareTrait;
 
     private $previous;
 
@@ -111,25 +111,19 @@ class AjouterFicheMetierForm extends Form {
     private function generateFicheTypeOptions()
     {
         $options = [];
-        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
-        foreach ($familles as $famille) {
-            $fiches = $this->getFicheMetierService()->getFicheByFamille($famille);
+        $domaines = $this->getDomaineService()->getDomaines();
+        foreach ($domaines as $domaine) {
+            $fiches = $this->getFicheMetierService()->getFicheByDomaine($domaine);
             $optionsoptions = [];
             foreach ($fiches as $fiche) {
                 $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle();
             }
             $array = [
-                'label' => $famille->getLibelle(),
+                'label' => $domaine->getLibelle(),
                 'options' => $optionsoptions,
             ];
             $options[] = $array;
         }
-
-//
-//
-//        foreach ($fiches as $fiche) {
-//            $options[$fiche->getId()] = $fiche->getMetier()->getLibelle();
-//        }
         return $options;
     }
 

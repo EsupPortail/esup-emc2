@@ -11,6 +11,9 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 version **0.4.5** (27/11/2019) :
 * Formulaire d'ajout de fiche métier à une fiche de poste : correction du libellé de quotité et sélection "atuomatique" de l'aspect principal d'une fiche
 * Ajout d'un bouton retour sur l'édition des fiches de poste 
+* Affichage des métier par domaine et non plus par familles professionnelles
+* "Dé" -association des agents et des postes d'une fiche de poste 
+* Modification de jarguons : "Cloner" => "Dupliquer", "Éditer" => "Modifier" 
 
 version **0.4.4** (26/11/2019) :
 * Dans l'interface 'Ma structure' utilisation des sous-structures afin de faciliter la composition des fiche de postes 

@@ -435,7 +435,7 @@ class FichePosteController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => 'Éditer spécificité du poste',
+            'title' => 'Modifier spécificité du poste',
             'form' => $form,
         ]);
 
@@ -453,9 +453,9 @@ class FichePosteController extends AbstractActionController {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La fichie métier principale doit avoir une quotité d'au moins 50%.");
         }
-        if ($data['est_principale'] === "0" && ((int) $data['quotite']) >= 50) {
+        if ($data['est_principale'] === "0" && ((int) $data['quotite']) > 50) {
             $cut = true;
-            $this->flashMessenger()->addErrorMessage("La fichie métier non principale doit avoir une quotité infiérieure à 50%.");
+            $this->flashMessenger()->addErrorMessage("La fichie métier non principale doit avoir une quotité d'au plus 50%.");
         }
         if ($fiche->getQuotiteTravaillee() + ((int) $data['quotite']) - ((int) $data['old']) > 100) {
             $cut = true;

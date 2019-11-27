@@ -29,7 +29,8 @@ class AssocierPosteHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $metierType = $this->getPosteService()->getPoste($data['poste']);
+        $metierType = null;
+        if ($data['poste'] !== null AND $data['poste'] !== "") $metierType = $this->getPosteService()->getPoste($data['poste']);
 
         if ($metierType) {
             $object->setPoste($metierType);

@@ -8,6 +8,7 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
 class AssocierPosteForm extends Form {
     use EntityManagerAwareTrait;
@@ -46,6 +47,13 @@ class AssocierPosteForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'poste' => [
+                'name' => 'poste',
+                'required' => false,
+            ],
+        ]));
     }
 
     private function generateSelectOptions()

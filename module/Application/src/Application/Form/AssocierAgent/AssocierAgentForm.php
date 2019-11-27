@@ -7,6 +7,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
 class AssocierAgentForm extends Form {
     use AgentServiceAwareTrait;
@@ -44,6 +45,13 @@ class AssocierAgentForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'agent' => [
+                'name' => 'agent',
+                'required' => false,
+            ],
+        ]));
     }
 
     private function generateSelectOptions()

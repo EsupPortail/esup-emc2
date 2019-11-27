@@ -58,7 +58,7 @@ class AgentController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Éditer l\'agent',
+            'title' => 'Modifier l\'agent',
             'form' => $form,
         ]);
         return $vm;
