@@ -314,7 +314,7 @@ class FichePosteController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+//        $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Ajout d\'une fiche métier',
             'form'  => $form,
