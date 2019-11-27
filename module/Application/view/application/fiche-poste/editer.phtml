@@ -52,6 +52,8 @@ $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePriv
 </div>
 
 
+<?php echo $this->partial("partial/retour-structure.phtml"); ?>
+
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="row">
@@ -216,7 +218,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
     </div>
 </div>
 
-
+<?php echo $this->partial("partial/retour-structure.phtml"); ?>
 
 <script>
     $(function() {

@@ -1,0 +1,19 @@
+<?php
+
+/** @var Structure $structure */
+
+use Application\Entity\Db\Structure;
+use Application\Provider\Privilege\MesStructuresPrivileges;
+
+$canGereStructure = $this->isAllowed(MesStructuresPrivileges::getResourceId(MesStructuresPrivileges::GESTION));
+?>
+
+<div class="row">
+    <?php if ($structure !== null AND $canGereStructure) : ?>
+        <a href="<?php echo $this->url('mes-structures', ['structure' => $structure->getId()], [], true); ?>"
+           class="btn btn-primary action" style="margin:1rem;">
+            <span class="icon retour"></span>
+            Retour vers  la structure
+        </a>
+    <?php endif; ?>
+</div>
