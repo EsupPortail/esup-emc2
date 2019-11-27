@@ -153,7 +153,7 @@ class RessourceRhController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Éditer un métier',
+            'title' => 'Modifier un métier',
             'form' => $form,
         ]);
         return $vm;
@@ -222,7 +222,7 @@ class RessourceRhController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Éditer une famille de métiers',
+            'title' => 'Modifier une famille de métiers',
             'form' => $form,
         ]);
         return $vm;

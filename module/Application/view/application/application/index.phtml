@@ -60,7 +60,7 @@ $this->headTitle("Index des applications");
                         <?php endif; ?>
                         <?php if ($canEditer) : ?>
                             <a href="<?php echo $this->url('application/editer', ['id' => $application->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
-                                <span class="icon editer" title="Éditer l'application"></span></a>
+                                <span class="icon editer" title="Modifier l'application"></span></a>
                         <?php endif; ?>
 <!--                        --><?php //if ($canEditer) : ?>
 <!--                            <a href="--><?php ////echo $this->url('application/formation', ['id' => $application->getId()], [], true); ?><!--"  class="ajax-modal" data-event="modification">-->

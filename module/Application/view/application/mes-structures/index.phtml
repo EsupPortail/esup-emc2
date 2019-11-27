@@ -189,7 +189,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
                         <?php if ($canEditerFichePoste) : ?>
                             <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
                                class="">
-                                <span class="icon editer" title="Éditer la fiche"></span></a>
+                                <span class="icon editer" title="Modifier la fiche"></span></a>
                         <?php else : ?>
                             <span class="icon editer" style="color:lightgray;"></span>
                         <?php endif; ?>
@@ -263,7 +263,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
                            class="ajax-modal"
                            data-event="modification"
                         >
-                            <span class="icon editer" title="Éditer l'affectation"></span></a>
+                            <span class="icon editer" title="Modifier l'affectation"></span></a>
                     <?php else : ?>
                         <span class="icon editer" style="color:lightgray;"></span>
                     <?php endif; ?>
@@ -326,7 +326,7 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
                             <a href="<?php echo $this->url('mes-structures/dupliquer-fiche-poste', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
                                class="ajax-modal" data-event="duplication"
                             >
-                                <span class="icon cloner"       title="Cloner une fiche pour cet&middot;te agent"></span>
+                                <span class="icon cloner"       title="Dupliquer une fiche pour cet&middot;te agent"></span>
                         <?php else : ?>
                             <span class="icon cloner"       style="color:lightgray"></span>
                         <?php endif; ?>

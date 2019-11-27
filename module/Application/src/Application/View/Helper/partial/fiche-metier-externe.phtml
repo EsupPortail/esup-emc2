@@ -20,7 +20,7 @@ use Application\Entity\Db\Formation;
                 <?php if ($actionnable === true) : ?>
                     <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                       <span class="icon editer" title="Éditer la fiche métier"></span></a>
+                       <span class="icon editer" title="Modifier la fiche métier"></span></a>
                     <a href="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
                        <span class="icon listing" title="Sélectionner les activités associées"></span></a>

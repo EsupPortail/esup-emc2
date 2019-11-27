@@ -80,7 +80,7 @@ class ActiviteController  extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Éditer une activité',
+            'title' => 'Modifier une activité',
             'form' => $form,
         ]);
         return $vm;

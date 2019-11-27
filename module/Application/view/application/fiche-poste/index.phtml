@@ -72,7 +72,7 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
                         <?php endif; ?>
                         <?php if ($canEditer) : ?>
                             <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>">
-                                <span class="icon editer" title="Éditer la fiche de poste"></span></a>
+                                <span class="icon editer" title="Modifier la fiche de poste"></span></a>
                         <?php endif; ?>
                         <?php if ($canHistoriser) : ?>
                             <?php if ($fiche->estNonHistorise()) : ?>

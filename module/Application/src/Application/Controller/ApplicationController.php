@@ -81,7 +81,7 @@ class ApplicationController  extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Éditer une application',
+            'title' => 'Modifier une application',
             'form' => $form,
         ]);
         return $vm;
