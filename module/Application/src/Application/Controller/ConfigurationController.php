@@ -59,7 +59,7 @@ class ConfigurationController extends AbstractActionController  {
         $configuration = new ConfigurationFicheMetier();
 
         $form = $this->getConfigurationFicheMetierForm();
-        $form->setAttribute('action', $this->url()->fromRoute('configuration/ajouter-configuration-fiche-metier', ['type' => 'application'], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('configuration/ajouter-configuration-fiche-metier', ['type' => $entity], [], true));
         $form->bind($configuration);
         $form->get('operation')->setValue('ajout');
         $form->get('type')->setValue($type);

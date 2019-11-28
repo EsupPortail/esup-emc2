@@ -15,7 +15,7 @@ class ConfigurationFicheMetierForm extends Form {
     {
         //type
         $this->add([
-            'type' => Text::class,
+            'type' => Hidden::class,
             'name' => 'type',
             'options' => [],
             'attributes' => [
@@ -25,7 +25,7 @@ class ConfigurationFicheMetierForm extends Form {
         ]);
         //operation
         $this->add([
-            'type' => Text::class,
+            'type' => Hidden::class,
             'name' => 'operation',
             'options' => [],
             'attributes' => [
@@ -40,6 +40,8 @@ class ConfigurationFicheMetierForm extends Form {
             'options' => [],
             'attributes' => [
                 'id' => 'select',
+                'class' => 'selectpicker form-control',
+                'data-live-search' => true,
             ],
         ]);
         // button
