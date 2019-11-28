@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @var ConfigurationFicheMetier[] $applications
+ * @var ConfigurationFicheMetier[] $competences
+ * @var ConfigurationFicheMetier[] $formations
+ */
+
+use Application\Entity\Db\ConfigurationFicheMetier;
+
+$this->headTitle("Configuration de l'application");
+?>
+
+<h1 class="page-header">
+    Configuration de l'application
+</h1>
+
+<div class="main">
+    <h2> Configuration des fiches métiers</h2>
+
+    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Applications', 'type' => 'application', 'configurations' => $applications]); ?>
+    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Compétences',  'type' => 'competence',  'configurations' => $competences]); ?>
+    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Formations',   'type' => 'formation',   'configurations' => $formations]); ?>
+
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

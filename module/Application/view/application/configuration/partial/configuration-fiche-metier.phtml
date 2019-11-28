@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @var string $display
+ * @var string $type
+ * @var ConfigurationFicheMetier[] $configurations
+ */
+
+use Application\Entity\Db\ConfigurationFicheMetier;
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>
+            <?php echo $display; ?> par défaut
+            <span class="badge">
+                    <?php echo count($configurations); ?>
+                </span>
+        </h3>
+    </div>
+    <div class="pull-right">
+        <?php /**  @see \Application\Controller\ConfigurationController::ajouterConfigurationFicheMetierAction() */ ?>
+        <a href="<?php echo $this->url('configuration/ajouter-configuration-fiche-metier', ['type' => $type], [], true); ?>"
+           class="btn btn-primary ajax-modal action" data-event="modification">
+            <span class="icon ajouter">Ajouter une <?php echo $type; ?></a>
+    </div>
+</div>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th>Entité</th>
+        <th style="width:2rem;">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($configurations as $element) : ?>
+        <tr>
+            <td>
+                <?php echo $element->getEntity()->getLibelle(); ?>
+            </td>
+            <td>
+                <?php /**  @see \Application\Controller\ConfigurationController::detruireConfigurationFicheMetierAction() */ ?>
+                <a href="<?php echo $this->url('configuration/detruire-configuration-fiche-metier', ['configuration' => $element->getId()], [] , true); ?>"
+                   title="retirer cet élément de la configuration">
+                    <span class="icon detruire"></span></a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
