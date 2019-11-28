@@ -6,6 +6,7 @@ use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
@@ -13,35 +14,56 @@ class PosteService {
     use EntityManagerAwareTrait;
 
     /**
-     * @param string $order
-     * @return Poste[]
+     *
+     * @param string $champ
+     * @param string $ordre
+     * @return QueryBuilder
      */
-    public function getPostes($order = null) {
+    public function createQueryBuilder($champ = 'id', $ordre = 'ASC') {
         $qb = $this->getEntityManager()->getRepository(Poste::class)->createQueryBuilder('poste')
             ->addSelect('structure')->join('poste.structure', 'structure')
             ->addSelect('correspondance')->join('poste.correspondance', 'correspondance')
             ->addSelect('responsable')->join('poste.rattachementHierarchique', 'responsable')
             ->addSelect('domaine')->join('poste.domaine', 'domaine')
             ->addSelect('fiche')->leftJoin('poste.fichePoste','fiche')
-            ;
+            ->orderBy('poste.' . $champ, $ordre)
+        ;
 
-        if ($order) {
-            $qb = $qb->orderBy('poste.'.$order, 'ASC');
+        return $qb;
+    }
 
-        } else {
-            $qb = $qb->orderBy('poste.numeroPoste', 'ASC');
-        }
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return Poste[]
+     */
+    public function getPostes($champ = 'id', $ordre = 'ASC') {
+        $qb = $this->createQueryBuilder($champ = 'id', $ordre = 'ASC');
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     /**
+     * @param string $champ
+     * @param string $ordre
+     * @return Poste[]
+     */
+    public function getPostesLibres($champ = 'id', $ordre = 'ASC') {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fiche IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
+    /**
      * @param integer $id
      * @return Poste
      */
     public function getPoste($id) {
-        $qb = $this->getEntityManager()->getRepository(Poste::class)->createQueryBuilder('poste')
+        $qb = $this->createQueryBuilder()
             ->andWhere('poste.id = :id')
             ->setParameter('id', $id)
         ;
@@ -93,20 +115,23 @@ class PosteService {
     /**
      * @param Structure $structure
      * @param bool $sousstructure
+     * @param bool $libre
      * @return  Poste[]
      */
-    public function getPostesByStructure($structure = null, $sousstructure = false)
+    public function getPostesByStructure($structure = null, $sousstructure = false, $libre = false)
     {
-        $qb = $this->getEntityManager()->getRepository(Poste::class)->createQueryBuilder('poste')
-            ->orderBy('poste.numeroPoste');
+        /** @var QueryBuilder $qb */
+        $qb = $this->createQueryBuilder();
+        if ($libre === true) {
+            $qb = $qb->andWhere('fiche IS NULL');
+        }
 
         if ($structure !== null AND $sousstructure === false) {
             $qb = $qb->andWhere('poste.structure = :structure')
                 ->setParameter('structure', $structure);
         }
         if ($structure !== null AND $sousstructure === true) {
-            $qb = $qb->addSelect('structure')->join('poste.structure', 'structure')
-                ->andWhere('poste.structure = :structure OR structure.parent = :structure')
+            $qb = $qb->andWhere('poste.structure = :structure OR structure.parent = :structure')
                 ->setParameter('structure', $structure);
         }
 

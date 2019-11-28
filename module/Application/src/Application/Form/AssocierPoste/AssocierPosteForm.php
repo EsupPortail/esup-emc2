@@ -58,7 +58,7 @@ class AssocierPosteForm extends Form {
 
     private function generateSelectOptions()
     {
-        $postes = $this->getPosteService()->getPostes();
+        $postes = $this->getPosteService()->getPostesLibres();
         $options = [];
         foreach ($postes as $poste) {
             $options[$poste->getId()] = $poste->getNumeroPoste() . " - ". $poste->getDomaine()->getLibelle() . " - ".$poste->getStructure()->getLibelleCourt();
@@ -74,7 +74,7 @@ class AssocierPosteForm extends Form {
     public function reinitWithStructure($structure, $sousstructure = false)
     {
         //agent
-        $postes = $this->getPosteService()->getPostesByStructure($structure, $sousstructure);
+        $postes = $this->getPosteService()->getPostesByStructure($structure, $sousstructure, true);
         $posteOptions = [];
         foreach ($postes as $poste) {
             $posteOptions[$poste->getId()] = $poste->getNumeroPoste() . " - ". $poste->getDomaine()->getLibelle() . " - ".$poste->getStructure()->getLibelleCourt();
