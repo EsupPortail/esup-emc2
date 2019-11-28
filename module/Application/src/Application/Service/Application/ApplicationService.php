@@ -27,6 +27,21 @@ class ApplicationService {
     }
 
     /**
+     * @param string $ordre nom de champ présent dans l'entité
+     * @return Application[]
+     */
+    public function getApplicationsAsOptions($ordre = null)
+    {
+        $result = $this->getApplications($ordre);
+        $array = [];
+        foreach ($result as $item) {
+            $array[$item->getId()] = $item->getLibelle();
+        }
+
+        return $array;
+    }
+
+    /**
      * @param int $id
      * @return Application
      */

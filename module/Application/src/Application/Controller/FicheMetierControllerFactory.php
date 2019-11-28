@@ -12,6 +12,7 @@ use Application\Form\FicheMetier\FormationsForm;
 use Application\Form\FicheMetier\GererCompetenceForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Service\Activite\ActiviteService;
+use Application\Service\Configuration\ConfigurationService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
@@ -24,10 +25,13 @@ class FicheMetierControllerFactory {
          * @var ActiviteService $activiteService
          * @var FicheMetierService $ficheMetierService
          * @var RessourceRhService $ressourceRhService
+         * @var ConfigurationService $configurationService
          */
         $activiteService = $container->get(ActiviteService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $ressourceRhService = $container->get(RessourceRhService::class);
+        $configurationService = $container->get(ConfigurationService::class);
+
 
         /**
          * @var LibelleForm $libelleForm
@@ -60,6 +64,7 @@ class FicheMetierControllerFactory {
         $controller->setActiviteService($activiteService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setRessourceRhService($ressourceRhService);
+        $controller->setConfigurationService($configurationService);
 
         $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);

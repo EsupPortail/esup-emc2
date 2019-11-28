@@ -178,6 +178,15 @@ class FicheMetier {
 
     /**
      * @param Application $application
+     * @return bool
+     */
+    public function hadApplication($application)
+    {
+        return $this->applications->contains($application);
+    }
+
+    /**
+     * @param Application $application
      * @return FicheMetier
      */
     public function addApplication($application)
@@ -295,4 +304,6 @@ class FicheMetier {
     {
         $this->formations->clear();
     }
+
+
 }

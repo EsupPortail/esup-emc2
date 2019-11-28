@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @var ConfigurationFicheMetier[] $applications
+ * @var ConfigurationFicheMetier[] $competences
+ * @var ConfigurationFicheMetier[] $formations
+ */
+
+use Application\Entity\Db\ConfigurationFicheMetier;
+use Application\Provider\Privilege\ConfigurationPrivileges;
+
+$canAjouter     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
+$canDetruire    = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_DETRUIRE));
+$canReappliquer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_REAPPLIQUER));
+
+$this->headTitle("Configuration de l'application");
+?>
+
+<h1 class="page-header">
+    Configuration de l'application
+</h1>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<div class="main">
+    <h2> Configuration des fiches métiers</h2>
+
+    <?php if ($canReappliquer) : ?>
+        <?php /** @see \Application\Controller\ConfigurationController::reappliquerConfigurationFicheMetierAction() */ ?>
+        <a href="<?php echo $this->url('configuration/reappliquer-configuration-fiche-metier', [], [], true); ?>" class="btn btn-primary action">
+            <span class="icon synchoniser"></span>
+            Ré-appliquer sur toutes les fiches
+        </a>
+    <?php endif; ?>
+
+    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Applications', 'type' => 'application', 'configurations' => $applications, 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
+    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Compétences',  'type' => 'competence',  'configurations' => $competences , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
+    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Formations',   'type' => 'formation',   'configurations' => $formations  , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
