@@ -2,7 +2,11 @@
 
 namespace Application\Service\Configuration;
 
+use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\ConfigurationFicheMetier;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\Formation;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -116,5 +120,22 @@ class ConfigurationService {
             throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
         }
         return $configuration;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @return FicheMetier
+     */
+    public function addDefaultToFicheMetier($fiche)
+    {
+        $ajouts = $this->getConfigurationsFicheMetier();
+
+        foreach ($ajouts as $ajout) {
+            if ($ajout->getEntityType() === Application::class) $fiche->addApplication($ajout->getEntity());
+            if ($ajout->getEntityType() === Competence::class) $fiche->addCompetence($ajout->getEntity());
+            if ($ajout->getEntityType() === Formation::class) $fiche->addFormation($ajout->getEntity());
+        }
+
+        return $fiche;
     }
 }

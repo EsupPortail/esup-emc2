@@ -22,6 +22,7 @@ use Application\Form\FicheMetier\GererCompetenceFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
@@ -43,6 +44,8 @@ class FicheMetierController extends  AbstractActionController{
     use FormationsFormAwareTrait;
     use LibelleFormAwareTrait;
     use GererCompetenceFormAwareTrait;
+
+    use ConfigurationServiceAwareTrait;
 
     use FormationBaseFormAwareTrait;
     use FormationComportementaleFormAwareTrait;
@@ -119,6 +122,9 @@ class FicheMetierController extends  AbstractActionController{
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->create($fiche);
+
+                $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
+                $this->getFicheMetierService()->update($fiche);
             }
         }
 
