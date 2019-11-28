@@ -131,9 +131,9 @@ class ConfigurationService {
         $ajouts = $this->getConfigurationsFicheMetier();
 
         foreach ($ajouts as $ajout) {
-            if ($ajout->getEntityType() === Application::class) $fiche->addApplication($ajout->getEntity());
-            if ($ajout->getEntityType() === Competence::class) $fiche->addCompetence($ajout->getEntity());
-            if ($ajout->getEntityType() === Formation::class) $fiche->addFormation($ajout->getEntity());
+            if ($ajout->getEntityType() === Application::class AND !$fiche->hadApplication($ajout->getEntity())) $fiche->addApplication($ajout->getEntity());
+            if ($ajout->getEntityType() === Competence::class  AND !$fiche->hasCompetence($ajout->getEntity()))  $fiche->addCompetence($ajout->getEntity());
+            if ($ajout->getEntityType() === Formation::class   AND !$fiche->hasFormation($ajout->getEntity()))   $fiche->addFormation($ajout->getEntity());
         }
 
         return $fiche;

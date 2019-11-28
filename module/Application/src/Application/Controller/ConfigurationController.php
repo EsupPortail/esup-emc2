@@ -10,6 +10,7 @@ use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierFormAwareT
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -21,6 +22,7 @@ class ConfigurationController extends AbstractActionController  {
     use ApplicationServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use FormationServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
 
     public function indexAction()
     {
@@ -88,5 +90,17 @@ class ConfigurationController extends AbstractActionController  {
         $configuration = $this->getConfigurationService()->getRequestedConfigurationFicheMetier($this);
         $this->getConfigurationService()->delete($configuration);
         return $this->redirect()->toRoute('configuration', [], [],true);
+    }
+
+    public function reappliquerConfigurationFicheMetierAction()
+    {
+        $fiches = $this->getFicheMetierService()->getFichesMetiers();
+        foreach ($fiches as $fiche) {
+            $fiche = $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
+            $this->getFicheMetierService()->update($fiche);
+        }
+        $this->flashMessenger()->addSuccessMessage("Ré-application terminée");
+        return $this->redirect()->toRoute('configuration', [], [],true);
+
     }
 }

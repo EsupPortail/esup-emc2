@@ -4,6 +4,9 @@
  * @var string $display
  * @var string $type
  * @var ConfigurationFicheMetier[] $configurations
+ *
+ * @var boolean $canAjouter
+ * @var boolean $canDetruire
  */
 
 use Application\Entity\Db\ConfigurationFicheMetier;
@@ -20,10 +23,12 @@ use Application\Entity\Db\ConfigurationFicheMetier;
         </h3>
     </div>
     <div class="pull-right">
-        <?php /**  @see \Application\Controller\ConfigurationController::ajouterConfigurationFicheMetierAction() */ ?>
-        <a href="<?php echo $this->url('configuration/ajouter-configuration-fiche-metier', ['type' => $type], [], true); ?>"
-           class="btn btn-primary ajax-modal action" data-event="modification">
-            <span class="icon ajouter">Ajouter une <?php echo $type; ?></a>
+        <?php if ($canAjouter) : ?>
+            <?php /**  @see \Application\Controller\ConfigurationController::ajouterConfigurationFicheMetierAction() */ ?>
+            <a href="<?php echo $this->url('configuration/ajouter-configuration-fiche-metier', ['type' => $type], [], true); ?>"
+               class="btn btn-primary ajax-modal action" data-event="modification">
+                <span class="icon ajouter">Ajouter une <?php echo $type; ?></a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -41,10 +46,14 @@ use Application\Entity\Db\ConfigurationFicheMetier;
                 <?php echo $element->getEntity()->getLibelle(); ?>
             </td>
             <td>
-                <?php /**  @see \Application\Controller\ConfigurationController::detruireConfigurationFicheMetierAction() */ ?>
-                <a href="<?php echo $this->url('configuration/detruire-configuration-fiche-metier', ['configuration' => $element->getId()], [] , true); ?>"
-                   title="retirer cet élément de la configuration">
-                    <span class="icon detruire"></span></a>
+                <?php if ($canDetruire) : ?>
+                    <?php /**  @see \Application\Controller\ConfigurationController::detruireConfigurationFicheMetierAction() */ ?>
+                    <a href="<?php echo $this->url('configuration/detruire-configuration-fiche-metier', ['configuration' => $element->getId()], [] , true); ?>"
+                       title="retirer cet élément de la configuration">
+                        <span class="icon detruire"></span></a>
+                <?php else : ?>
+                        <span class="icon detruire" style="color:lightgrey;"></span>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

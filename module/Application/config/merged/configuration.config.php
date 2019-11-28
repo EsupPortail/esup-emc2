@@ -24,11 +24,36 @@ return [
                     'controller' => ConfigurationController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        ConfigurationPrivileges::CONFIGURATION_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => ConfigurationController::class,
+                    'action' => [
                         'ajouter-configuration-fiche-metier',
+                    ],
+                    'privileges' => [
+                        ConfigurationPrivileges::CONFIGURATION_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ConfigurationController::class,
+                    'action' => [
                         'detruire-configuration-fiche-metier',
                     ],
                     'privileges' => [
-                        CompetencePrivileges::AFFICHER,
+                        ConfigurationPrivileges::CONFIGURATION_DETRUIRE
+                    ],
+                ],
+                [
+                    'controller' => ConfigurationController::class,
+                    'action' => [
+                        'reappliquer-configuration-fiche-metier'
+                    ],
+                    'privileges' => [
+                        ConfigurationPrivileges::CONFIGURATION_REAPPLIQUER
                     ],
                 ],
             ],
@@ -65,6 +90,16 @@ return [
                             'defaults' => [
                                 'controller' => ConfigurationController::class,
                                 'action'     => 'detruire-configuration-fiche-metier',
+                            ],
+                        ],
+                    ],
+                    'reappliquer-configuration-fiche-metier' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => 'reappliquer-configuration-fiche-metier',
+                            'defaults' => [
+                                'controller' => ConfigurationController::class,
+                                'action'     => 'reappliquer-configuration-fiche-metier',
                             ],
                         ],
                     ],

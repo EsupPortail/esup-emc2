@@ -6,6 +6,7 @@ use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierForm;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Configuration\ConfigurationService;
+use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
@@ -22,12 +23,14 @@ class ConfigurationControllerFactory {
          * @var ApplicationService $applicationService
          * @var CompetenceService $competenceService
          * @var FormationService $formationService
+         * @var FicheMetierService $ficheMetierService
          * @var ConfigurationFicheMetierForm $configurationFicheMetierForm
          */
         $configurationService = $container->get(ConfigurationService::class);
         $applicationService = $container->get(ApplicationService::class);
         $competenceService = $container->get(CompetenceService::class);
         $formationService = $container->get(FormationService::class);
+        $ficheMetierService = $container->get(FicheMetierService::class);
         $configurationFicheMetierForm = $container->get('FormElementManager')->get(ConfigurationFicheMetierForm::class);
 
         /** @var ConfigurationController $controller */
@@ -36,6 +39,7 @@ class ConfigurationControllerFactory {
         $controller->setApplicationService($applicationService);
         $controller->setCompetenceService($competenceService);
         $controller->setFormationService($formationService);
+        $controller->setFicheMetierService($ficheMetierService);
         $controller->setConfigurationFicheMetierForm($configurationFicheMetierForm);
         return $controller;
     }
