@@ -8,6 +8,9 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.6** (28/11/2019) :
+* Ajout de la configuration par défaut des fiches métiers
+
 version **0.4.5** (27/11/2019) :
 * Formulaire d'ajout de fiche métier à une fiche de poste : correction du libellé de quotité et sélection "atuomatique" de l'aspect principal d'une fiche
 * Ajout d'un bouton retour sur l'édition des fiches de poste 
