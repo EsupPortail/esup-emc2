@@ -168,47 +168,59 @@ class StructureController extends AbstractActionController {
             foreach ($agents as $agent) {
                 $agentsTexte .= "- " . $agent->getDenomination() . "\n";
             }
-            $vertex = $graph->createVertex($structure->getId() . " - " . $structure->getLibelleCourt() . "\n" . $agentsTexte);
+            $header = $structure->getId()." - ".$structure->getLibelleCourt();
+            $vertex = $graph->createVertex($header);
+            $vertex->setAttribute('graphviz.shape', 'plaintext');
+            $text  = "<table>";
+            $text .= "<tr><td>".$structure->getId()."</td><td>".$structure->getLibelleCourt()."</td></tr>";
+            $text .= "<tr><td colspan='2' style='text-align: left'>";
+            foreach ($agents as $agent) $text .= $agent->getDenomination() . "<br/>";
+            $text .= "</td></tr>";
+            $text .= "</table>";
+            $vertex->setAttribute('graphviz.label', GraphViz::raw("<".$text.">"));
+
+//            $raw = GraphViz::raw("<table><tr><td>Hello</td></tr></table>"); //"<table><tr><td>".$structure->getId()."</td><td>" . $structure->getLibelleCourt() . "</td></tr></table>"); // . $agentsTexte);
+//            $vertex->setAttribute("graphviz.label", $raw);
             switch ($structure->getType()) {
                 case "Établissement" :
-                    $vertex->setAttribute('graphviz.shape', 'box3d');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
                     break;
                 case "Composante" :
-                    $vertex->setAttribute('graphviz.shape', 'rect');
-                    $vertex->setAttribute('graphviz.color', 'blue');
-                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    $vertex->setAttribute('graphviz.color', 'blue');
+//                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
                     break;
                 case "Bibliothèque" :
-                    $vertex->setAttribute('graphviz.shape', 'egg');
-                    $vertex->setAttribute('graphviz.color', 'Hotpink');
-                    $vertex->setAttribute('graphviz.fontcolor', 'Hotpink');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    $vertex->setAttribute('graphviz.color', 'Hotpink');
+//                    $vertex->setAttribute('graphviz.fontcolor', 'Hotpink');
                     break;
                 case "Antenne" :
                 case "Département" :
-                    $vertex->setAttribute('graphviz.shape', 'rect');
-                    $vertex->setAttribute('graphviz.color', 'blue');
-                    $vertex->setAttribute('graphviz.style', 'dashed');
-                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    $vertex->setAttribute('graphviz.color', 'blue');
+//                    $vertex->setAttribute('graphviz.style', 'dashed');
+//                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
                     break;
                 case "Structure de recherche" :
-                    $vertex->setAttribute('graphviz.shape', 'rect');
-                    $vertex->setAttribute('graphviz.style', 'rounded');
-                    $vertex->setAttribute('graphviz.color', 'green');
-                    $vertex->setAttribute('graphviz.fontcolor', 'green');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    $vertex->setAttribute('graphviz.style', 'rounded');
+//                    $vertex->setAttribute('graphviz.color', 'green');
+//                    $vertex->setAttribute('graphviz.fontcolor', 'green');
                     break;
                 case "Service central" :
-                    $vertex->setAttribute('graphviz.shape', 'hexagon');
-                    $vertex->setAttribute('graphviz.color', 'red');
-                    $vertex->setAttribute('graphviz.fontcolor', 'red');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    $vertex->setAttribute('graphviz.color', 'red');
+//                    $vertex->setAttribute('graphviz.fontcolor', 'red');
                     break;
                 case "Service commun" :
-                    $vertex->setAttribute('graphviz.shape', 'hexagon');
-                    $vertex->setAttribute('graphviz.color', 'darkorange');
-                    $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    $vertex->setAttribute('graphviz.color', 'darkorange');
+//                    $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
                     break;
                 case "Sous-structure administrative" :
-                    $vertex->setAttribute('graphviz.shape', 'hexagon');
-                    $vertex->setAttribute('graphviz.style', 'dashed');
+//                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    $vertex->setAttribute('graphviz.style', 'dashed');
                     $typeParent = null;
                     $parent = $structure->getParent();
                     while ($typeParent === null AND $parent !== null) {
@@ -216,16 +228,16 @@ class StructureController extends AbstractActionController {
                         $parent = $parent->getParent();
                     }
                     if ($typeParent === "Service central") {
-                        $vertex->setAttribute('graphviz.color', 'red');
-                        $vertex->setAttribute('graphviz.fontcolor', 'red');
+//                        $vertex->setAttribute('graphviz.color', 'red');
+//                        $vertex->setAttribute('graphviz.fontcolor', 'red');
                     }
                     if ($typeParent === "Service commun") {
-                        $vertex->setAttribute('graphviz.color', 'darkorange');
-                        $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
+//                        $vertex->setAttribute('graphviz.color', 'darkorange');
+//                        $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
                     }
                     if ($typeParent === "Composante" OR $typeParent === "Antenne" OR $typeParent === "Département" ) {
-                        $vertex->setAttribute('graphviz.color', 'blue');
-                        $vertex->setAttribute('graphviz.fontcolor', 'blue');
+//                        $vertex->setAttribute('graphviz.color', 'blue');
+//                        $vertex->setAttribute('graphviz.fontcolor', 'blue');
                     }
                     break;
             }
