@@ -5,11 +5,10 @@ namespace Application\Service\Activite;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
-use Exception;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Utilisateur\Service\User\UserServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -18,28 +17,151 @@ class ActiviteService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
+    /** GESTION DES ENTITÉS *******************************************************************************************/
+
     /**
-     * @param string $ordre nom de champ présent dans l'entité
+     * @param Activite $activite
+     * @return Activite
+     */
+    public function create($activite)
+    {
+        $activite->updateCreation($this->getUserService());
+        $activite->updateModification($this->getUserService());
+
+        try {
+            $this->getEntityManager()->persist($activite);
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
+        }
+        return $activite;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return Activite
+     */
+    public function update($activite)
+    {
+        $activite->updateModification($this->getUserService());
+
+        try {
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $activite;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return Activite
+     */
+    public function historise($activite)
+    {
+        $activite->updateDestructeur($this->getUserService());
+
+        try {
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $activite;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return Activite
+     */
+    public function restore($activite)
+    {
+        $activite->setHistoDestruction(null);
+        $activite->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $activite;
+    }
+
+    /**
+     * @param Activite $activite
+     */
+    public function delete($activite)
+    {
+        try {
+            $this->getEntityManager()->remove($activite);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
+        }
+    }
+
+    /** REQUETES ******************************************************************************************************/
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder() {
+        $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+            ->addSelect('createur')->join('activite.histoCreateur', 'createur')
+            ->addSelect('modificateur')->join('activite.histoModificateur', 'modificateur')
+            ->addSelect('destructeur')->leftJoin('activite.histoDestructeur', 'destructeur')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
      * @return Activite[]
      */
-    public function getActivites($ordre = null)
+    public function getActivites($champ = 'libelle', $ordre = 'ASC')
     {
-        $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
-            ->addSelect('modificateur')->join('activite.histoModificateur', 'modificateur')
+        $qb = $this->createQueryBuilder()
+            ->addOrderBy('activite.' . $champ, $ordre)
         ;
-        if ($ordre) $qb = $qb->orderBy('activite.' . $ordre);
-
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
+    /**
+     * @param FicheMetier $ficheMetier
+     * @return array
+     */
+    public function getActivitesAsOptions($ficheMetier = null)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('activite.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $activites = [];
+        if ($ficheMetier) {
+            $activites = [];
+            foreach ($ficheMetier->getActivites() as $activite) {
+                $activites[] = $activite->getActivite();
+            }
+        }
+
+        $options = [];
+        $options[null] = "Choississez une activité ... ";
+        /** @var Activite $item */
+        foreach ($result as $item) {
+            $res = array_filter($activites, function (Activite $a) use ($item) {return $a->getId() === $item->getId();});
+            if (empty($res)) $options[$item->getId()] = $item->getLibelle();
+        }
+        return $options;
+    }
     /**
      * @param int $id
      * @return Activite mixed
      */
     public function getActivite($id)
     {
-        $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
+        $qb = $this->createQueryBuilder()
             ->andWhere('activite.id = :id')
             ->setParameter('id', $id)
         ;
@@ -62,109 +184,6 @@ class ActiviteService {
         $id = $controller->params()->fromRoute($paramName);
         $activite = $this->getActivite($id);
         return $activite;
-    }
-
-
-    /**
-     * @param Activite $activite
-     * @return Activite
-     */
-    public function create($activite)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $activite->setHistoCreation($date);
-        $activite->setHistoCreateur($user);
-        $activite->setHistoModification($date);
-        $activite->setHistoModificateur($user);
-
-        $this->getEntityManager()->persist($activite);
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
-        return $activite;
-    }
-
-    /**
-     * @param Activite $activite
-     * @return Activite
-     */
-    public function update($activite)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $activite->setHistoModification($date);
-        $activite->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
-        return $activite;
-    }
-
-    /**
-     * @param Activite $activite
-     * @return Activite
-     */
-    public function historise($activite)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $activite->setHistoDestruction($date);
-        $activite->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
-        return $activite;
-    }
-
-    /**
-     * @param Activite $activite
-     * @return Activite
-     */
-    public function restore($activite)
-    {
-        $activite->setHistoDestruction(null);
-        $activite->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
-        return $activite;
-    }
-
-    /**
-     * @param Activite $activite
-     */
-    public function delete($activite)
-    {
-        $this->getEntityManager()->remove($activite);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
-        }
     }
 
     /**
@@ -232,7 +251,7 @@ class ActiviteService {
     }
 
     /**
-     * @param FicheMetierTypeActivite$couple
+     * @param FicheMetierTypeActivite $couple
      */
     public function moveDown($couple) {
         $currentPosition = $couple->getPosition();
@@ -277,10 +296,10 @@ class ActiviteService {
         $couple->setActivite($activite);
         $couple->setPosition(count($activites) + 1);
 
-        $this->getEntityManager()->persist($couple);
         try {
+            $this->getEntityManager()->persist($couple);
             $this->getEntityManager()->flush($couple);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
         }
         return $couple;
@@ -290,7 +309,7 @@ class ActiviteService {
     {
         try {
             $this->getEntityManager()->flush($couple);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
         }
         return $couple;
@@ -302,42 +321,15 @@ class ActiviteService {
      */
     public function removeFicheMetierTypeActivite($couple)
     {
-        $this->getEntityManager()->remove($couple);
+
         try {
+            $this->getEntityManager()->remove($couple);
             $this->getEntityManager()->flush($couple);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
         }
 
         $this->compacting($couple->getFiche());
     }
 
-    /**
-     * @param FicheMetier $ficheMetier
-     * @return array
-     */
-    public function getActivitesAsOptions($ficheMetier = null)
-    {
-        $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
-            ->andWhere('activite.histoDestruction IS NULL')
-        ;
-        $result = $qb->getQuery()->getResult();
-
-        $activites = [];
-        if ($ficheMetier) {
-            $activites = [];
-            foreach ($ficheMetier->getActivites() as $activite) {
-                $activites[] = $activite->getActivite();
-            }
-        }
-
-        $options = [];
-        $options[null] = "Choississez une activité ... ";
-        /** @var Activite $item */
-        foreach ($result as $item) {
-            $res = array_filter($activites, function (Activite $a) use ($item) {return $a->getId() === $item->getId();});
-            if (empty($res)) $options[$item->getId()] = $item->getLibelle();
-        }
-        return $options;
-    }
 }

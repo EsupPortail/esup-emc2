@@ -7,7 +7,6 @@ use Interop\Container\ContainerInterface;
 use Utilisateur\Service\User\UserService;
 
 class ActiviteServiceFactory {
-
     /**
      * @param ContainerInterface $serviceLocator
      * @return ActiviteService
