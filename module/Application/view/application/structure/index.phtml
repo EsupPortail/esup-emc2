@@ -8,8 +8,8 @@ $this->headTitle("Index des structures");
 
 /**
  * @var Application\Entity\Db\Structure[] $structures
- * @var \Utilisateur\Entity\Db\User $user
- * @var \Utilisateur\Entity\Db\Role $role
+ * @var User $user
+ * @var Role $role
  */
 
 $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER));
@@ -32,6 +32,15 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
     </div>
 </div>
 <div class="main">
+
+    <div class="row">
+        <a  href="<?php echo $this->url('structure/graphe', [], [], true); ?>"
+            class="btn btn-warning"
+        >
+            Générer le graphe des structures</a>
+    </div>
+
+    </a>
 
     <table id="structures" class="table table-condensed">
         <thead>

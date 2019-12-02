@@ -12,7 +12,8 @@
         "unicaen/auth":          "^3.0",
         "unicaen/bjy-authorize": "^3.0",
         "unicaen/ldap":          "^3.0",
-        "unicaen/db-import":     "3.0"
+        "unicaen/db-import":     "3.0",
+        "graphp/graphviz": "^0.2.2"
     },
     "require-dev": {
         "unicaen/code":                         "^1.0",
