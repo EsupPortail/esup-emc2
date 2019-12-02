@@ -23,6 +23,10 @@ use Application\Form\CompetenceType\CompetenceTypeHydratorFactory;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
+use Application\Service\CompetenceTheme\CompetenceThemeService;
+use Application\Service\CompetenceTheme\CompetenceThemeServiceFactory;
+use Application\Service\CompetenceType\CompetenceTypeService;
+use Application\Service\CompetenceType\CompetenceTypeServiceFactory;
 use Application\View\Helper\CompetencesViewHelper;
 use Application\View\Helper\CompetenceViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -350,6 +354,8 @@ return [
     'service_manager' => [
         'factories' => [
             CompetenceService::class => CompetenceServiceFactory::class,
+            CompetenceThemeService::class => CompetenceThemeServiceFactory::class,
+            CompetenceTypeService::class => CompetenceTypeServiceFactory::class,
         ],
     ],
     'controllers'     => [

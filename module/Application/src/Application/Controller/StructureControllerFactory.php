@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\Structure\StructureForm;
+use Application\Service\Agent\AgentService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use Utilisateur\Service\Role\RoleService;
@@ -14,11 +15,13 @@ class StructureControllerFactory {
     public function __invoke(ContainerInterface $container)
     {
         /**
+         * @var AgentService $agentService
          * @var RoleService $roleService
          * @var StructureService $structureService
          * @var UserService $userService
          */
         $roleService = $container->get(RoleService::class);
+        $agentService = $container->get(AgentService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
@@ -30,6 +33,7 @@ class StructureControllerFactory {
         /** @var StructureController $controller */
         $controller = new StructureController();
         $controller->setRoleService($roleService);
+        $controller->setAgentService($agentService);
         $controller->setStructureService($structureService);
         $controller->setUserService($userService);
         $controller->setStructureForm($structureForm);

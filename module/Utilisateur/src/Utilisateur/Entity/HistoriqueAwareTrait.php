@@ -5,6 +5,8 @@ namespace Utilisateur\Entity;
 use DateTime;
 use UnicaenApp\Entity\UserInterface;
 use UnicaenApp\Exception\RuntimeException;
+use Utilisateur\Service\User\UserService;
+use Utilisateur\Service\User\UserServiceAwareTrait;
 
 /**
  * Code commun aux entités possédant une gestion d'historique.
@@ -266,5 +268,73 @@ trait HistoriqueAwareTrait
         if ($dFin && !($dObs < $dFin)) return false;
 
         return true;
+    }
+
+    /**
+     * @param UserService $userService
+     * @return $this
+     */
+    public function updateCreation(UserService $userService = null)
+    {
+        $date = null;
+        $user = null;
+        try {
+            $date = new DateTime();
+        } catch (\Exception $e) {
+            throw new RuntimeException("Impossible d'instancier un DateTime!", null, $e);
+        }
+
+        if ($userService !== null) $user = $userService->getConnectedUser();
+
+        $this->setHistoCreation($date);
+        $this->setHistoCreateur($user);
+        $this->setHistoModification($date);
+        $this->setHistoModificateur($user);
+
+        return $this;
+    }
+
+    /**
+     * @param UserService $userService
+     * @return $this
+     */
+    public function updateModification(UserService $userService = null)
+    {
+        $date = null;
+        $user = null;
+        try {
+            $date = new DateTime();
+        } catch (\Exception $e) {
+            throw new RuntimeException("Impossible d'instancier un DateTime!", null, $e);
+        }
+
+        if ($userService !== null) $user = $userService->getConnectedUser();
+
+        $this->setHistoModification($date);
+        $this->setHistoModificateur($user);
+
+        return $this;
+    }
+
+    /**
+     * @param UserService $userService
+     * @return $this
+     */
+    public function updateDestructeur(UserService $userService = null)
+    {
+        $date = null;
+        $user = null;
+        try {
+            $date = new DateTime();
+        } catch (\Exception $e) {
+            throw new RuntimeException("Impossible d'instancier un DateTime!", null, $e);
+        }
+
+        if ($userService !== null) $user = $userService->getConnectedUser();
+
+        $this->setHistoDestruction($date);
+        $this->setHistoDestructeur($user);
+
+        return $this;
     }
 }

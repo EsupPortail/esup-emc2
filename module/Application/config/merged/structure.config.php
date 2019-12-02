@@ -26,6 +26,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'graphe',
                     ],
                     'privileges' => [
                         StructurePrivileges::AFFICHER,
@@ -89,6 +90,18 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'graphe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/graphe[/:structure]',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'graphe',
                             ],
                         ],
                         'may_terminate' => true,

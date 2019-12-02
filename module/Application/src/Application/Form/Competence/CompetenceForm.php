@@ -3,6 +3,8 @@
 namespace Application\Form\Competence;
 
 use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
+use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
@@ -12,6 +14,8 @@ use Zend\InputFilter\Factory;
 
 class CompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
+    use CompetenceThemeServiceAwareTrait;
+    use CompetenceTypeServiceAwareTrait;
 
     public function init()
     {
@@ -56,7 +60,7 @@ class CompetenceForm extends Form {
             'options' => [
                 'label' => "Type de la compétence :",
                 'empty_option' => "Sélectionner le type de la compétence ...",
-                'value_options' => $this->getCompetenceService()->getCompetencesTypesAsOptions(),
+                'value_options' => $this->getCompetenceTypeService()->getCompetencesTypesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'type',
@@ -71,7 +75,7 @@ class CompetenceForm extends Form {
             'options' => [
                 'label' => "Thème de compétence :",
                 'empty_option' => "Sélectionner le thème de la compétence ...",
-                'value_options' => $this->getCompetenceService()->getCompetencesThemesAsOptions(),
+                'value_options' => $this->getCompetenceThemeService()->getCompetencesThemesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'type',

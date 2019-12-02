@@ -4,10 +4,14 @@ namespace Application\Form\Competence;
 
 use Application\Entity\Db\Competence;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
+use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class CompetenceHydrator implements HydratorInterface {
     use CompetenceServiceAwareTrait;
+    use CompetenceThemeServiceAwareTrait;
+    use CompetenceTypeServiceAwareTrait;
 
     /**
      * @param Competence $object
@@ -36,8 +40,8 @@ class CompetenceHydrator implements HydratorInterface {
         $object->setDescription($data['description']);
 
         $type  = null; $theme = null;
-        if (isset($data['type']) AND $data['type'] != '') $type = $this->getCompetenceService()->getCompetenceType($data['type']);
-        if (isset($data['theme']) AND $data['theme'] != '') $theme = $this->getCompetenceService()->getCompetenceTheme($data['theme']);
+        if (isset($data['type']) AND $data['type'] != '') $type = $this->getCompetenceTypeService()->getCompetenceType($data['type']);
+        if (isset($data['theme']) AND $data['theme'] != '') $theme = $this->getCompetenceThemeService()->getCompetenceTheme($data['theme']);
 
         $object->setTheme($theme);
         $object->setType($type);

@@ -9,12 +9,16 @@ use Application\Form\Competence\CompetenceFormAwareTrait;
 use Application\Form\CompetenceTheme\CompetenceThemeFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
+use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class CompetenceController extends AbstractActionController {
     use CompetenceServiceAwareTrait;
+    use CompetenceThemeServiceAwareTrait;
+    use CompetenceTypeServiceAwareTrait;
     use CompetenceFormAwareTrait;
     use CompetenceThemeFormAwareTrait;
     use CompetenceTypeFormAwareTrait;
@@ -22,8 +26,8 @@ class CompetenceController extends AbstractActionController {
     public function indexAction()
     {
         $competencesByType = [];
-        $types = $this->getCompetenceService()->getCompetencesTypes('ordre');
-        $themes = $this->getCompetenceService()->getCompetencesThemes();
+        $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
+        $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
 
         foreach ($types as $type) {
             $competences = $this->getCompetenceService()->getCompetencesByType($type);
@@ -48,7 +52,7 @@ class CompetenceController extends AbstractActionController {
 
     public function ajouterAction()
     {
-        $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
+        $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
         $competence = new Competence();
         if ($type !== null) $competence->setType($type);
         $form = $this->getCompetenceForm();
@@ -163,7 +167,7 @@ class CompetenceController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getCompetenceService()->createTheme($theme);
+                $this->getCompetenceThemeService()->create($theme);
             }
         }
 
@@ -178,7 +182,7 @@ class CompetenceController extends AbstractActionController {
 
     public function modifierCompetenceThemeAction()
     {
-        $theme = $this->getCompetenceService()->getRequestedCompetenceTheme($this);
+        $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
         $form = $this->getCompetenceThemeForm();
         $form->setAttribute('action', $this->url()->fromRoute('competence-theme/modifier', ['competence-theme' => $theme->getId()], [], true));
         $form->bind($theme);
@@ -189,7 +193,7 @@ class CompetenceController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getCompetenceService()->updateTheme($theme);
+                $this->getCompetenceThemeService()->update($theme);
             }
         }
 
@@ -204,7 +208,7 @@ class CompetenceController extends AbstractActionController {
 
     public function afficherCompetenceThemeAction()
     {
-        $theme = $this->getCompetenceService()->getRequestedCompetenceTheme($this);
+        $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
         return new ViewModel([
             'title' => "Affiche d'un thème de compétence",
             'theme' => $theme,
@@ -213,27 +217,27 @@ class CompetenceController extends AbstractActionController {
 
     public function historiserCompetenceThemeAction()
     {
-        $theme = $this->getCompetenceService()->getRequestedCompetenceTheme($this);
-        $this->getCompetenceService()->historiseTheme($theme);
+        $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
+        $this->getCompetenceThemeService()->historise($theme);
         return $this->redirect()->toRoute('competence', [], [], true);
     }
 
     public function restaurerCompetenceThemeAction()
     {
-        $theme = $this->getCompetenceService()->getRequestedCompetenceTheme($this);
-        $this->getCompetenceService()->restoreTheme($theme);
+        $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
+        $this->getCompetenceThemeService()->restore($theme);
         return $this->redirect()->toRoute('competence', [], [], true);
     }
 
     public function detruireCompetenceThemeAction()
     {
-        $theme = $this->getCompetenceService()->getRequestedCompetenceTheme($this);
+        $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getCompetenceService()->deleteTheme($theme);
+            if ($data["reponse"] === "oui") $this->getCompetenceThemeService()->delete($theme);
             //return $this->redirect()->toRoute('competence', [], [], true);
             exit();
         }
@@ -265,7 +269,7 @@ class CompetenceController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getCompetenceService()->createType($type);
+                $this->getCompetenceTypeService()->create($type);
             }
         }
 
@@ -280,7 +284,7 @@ class CompetenceController extends AbstractActionController {
 
     public function modifierCompetenceTypeAction()
     {
-        $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
+        $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
         $form = $this->getCompetenceTypeForm();
         $form->setAttribute('action', $this->url()->fromRoute('competence-type/modifier', ['competence-type' => $type->getId()], [], true));
         $form->bind($type);
@@ -291,7 +295,7 @@ class CompetenceController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getCompetenceService()->updateType($type);
+                $this->getCompetenceTypeService()->update($type);
             }
         }
 
@@ -306,7 +310,7 @@ class CompetenceController extends AbstractActionController {
 
     public function afficherCompetenceTypeAction()
     {
-        $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
+        $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
         return new ViewModel([
             'title' => "Affiche d'un type de compétence",
             'type' => $type,
@@ -315,27 +319,27 @@ class CompetenceController extends AbstractActionController {
 
     public function historiserCompetenceTypeAction()
     {
-        $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
-        $this->getCompetenceService()->historiseType($type);
+        $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
+        $this->getCompetenceTypeService()->historise($type);
         return $this->redirect()->toRoute('competence', [], [], true);
     }
 
     public function restaurerCompetenceTypeAction()
     {
-        $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
-        $this->getCompetenceService()->restoreType($type);
+        $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
+        $this->getCompetenceTypeService()->restore($type);
         return $this->redirect()->toRoute('competence', [], [], true);
     }
 
     public function detruireCompetenceTypeAction()
     {
-        $type = $this->getCompetenceService()->getRequestedCompetenceType($this);
+        $type = $this->getCompetenceTypeService()->getRequestedCompetenceType($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getCompetenceService()->deleteType($type);
+            if ($data["reponse"] === "oui") $this->getCompetenceTypeService()->delete($type);
             //return $this->redirect()->toRoute('competence', [], [], true);
             exit();
         }
