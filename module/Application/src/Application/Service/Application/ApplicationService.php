@@ -4,7 +4,7 @@ namespace Application\Service\Application;
 
 use Application\Entity\Db\Application;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -12,27 +12,76 @@ use Zend\Mvc\Controller\AbstractActionController;
 class ApplicationService {
     use EntityManagerAwareTrait;
 
+    /** GESTION DE L'ENTITÉ *******************************************************************************************/
+
     /**
-     * @param string $ordre nom de champ présent dans l'entité
+     * @param Application $application
+     * @return Application
+     */
+    public function create($application)
+    {
+        $application->setActif(true);
+        try {
+            $this->getEntityManager()->persist($application);
+            $this->getEntityManager()->flush($application);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
+        }
+        return $application;
+    }
+
+    /**
+     * @param Application $application
+     * @return Application
+     */
+    public function update($application)
+    {
+        try {
+            $this->getEntityManager()->flush($application);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $application;
+    }
+
+    /**
+     * @param Application $application
+     */
+    public function delete($application)
+    {
+        try {
+            $this->getEntityManager()->remove($application);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
+        }
+    }
+
+    /** REQUETES ******************************************************************************************************/
+
+    /**
+     * @param string $champ
+     * @param string $ordre
      * @return Application[]
      */
-    public function getApplications($ordre = null)
+    public function getApplications($champ = 'libelle', $ordre='ASC')
     {
         $qb = $this->getEntityManager()->getRepository(Application::class)->createQueryBuilder('application')
+            ->orderBy('application.' . $champ, $ordre)
         ;
-        if ($ordre) $qb = $qb->orderBy('application.' . $ordre);
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     /**
-     * @param string $ordre nom de champ présent dans l'entité
+     * @param string $champ
+     * @param string $ordre
      * @return Application[]
      */
-    public function getApplicationsAsOptions($ordre = null)
+    public function getApplicationsAsOptions($champ = 'libelle', $ordre='ASC')
     {
-        $result = $this->getApplications($ordre);
+        $result = $this->getApplications($champ, $ordre);
         $array = [];
         foreach ($result as $item) {
             $array[$item->getId()] = $item->getLibelle();
@@ -69,48 +118,5 @@ class ApplicationService {
     {
         $id = $controller->params()->fromRoute($paramName);
         return $this->getApplication($id);
-    }
-
-    /**
-     * @param Application $application
-     * @return Application
-     */
-    public function create($application)
-    {
-        $application->setActif(true);
-        $this->getEntityManager()->persist($application);
-        try {
-            $this->getEntityManager()->flush($application);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
-        return $application;
-    }
-
-    /**
-     * @param Application $application
-     * @return Application
-     */
-    public function update($application)
-    {
-        try {
-            $this->getEntityManager()->flush($application);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
-        return $application;
-    }
-
-    /**
-     * @param Application $application
-     */
-    public function delete($application)
-    {
-        $this->getEntityManager()->remove($application);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
-        }
     }
 }

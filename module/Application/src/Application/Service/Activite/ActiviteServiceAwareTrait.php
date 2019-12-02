@@ -3,7 +3,7 @@
 namespace Application\Service\Activite;
 
 
-Trait ActiviteServiceAwareTrait {
+trait ActiviteServiceAwareTrait {
 
     /** @var ActiviteService */
     private $activiteService;

@@ -7,7 +7,6 @@ use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
@@ -20,6 +19,23 @@ class AgentService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
+    /** GESTION DES ENTITÉS *******************************************************************************************/
+
+    /**
+     * @param Agent $agent
+     * @return Agent
+     */
+    public function update($agent)
+    {
+        try {
+            $this->getEntityManager()->flush($agent);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème a été recontré lors de la mise à jour de l'agent", $e);
+        }
+        return $agent;
+    }
+
+    /** REQUETES ******************************************************************************************************/
     /**
      * @param string $order
      * @return Agent[]
@@ -28,7 +44,6 @@ class AgentService {
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
         ;
-
 
         if ($order !== null) {
             $qb = $qb->orderBy('agent.' . $order);
@@ -87,20 +102,6 @@ class AgentService {
             throw new RuntimeException("Plusieurs Agent liés au même User [".$user->getId()."]", $e);
         }
         return $result;
-    }
-
-    /**
-     * @param Agent $agent
-     * @return Agent
-     */
-    public function update($agent)
-    {
-        try {
-            $this->getEntityManager()->flush($agent);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème a été recontré lors de la mise à jour de l'agent", $e);
-        }
-        return $agent;
     }
 
     /**

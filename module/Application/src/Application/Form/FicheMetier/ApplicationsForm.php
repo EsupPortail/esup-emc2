@@ -22,7 +22,7 @@ class ApplicationsForm extends Form {
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'value_options' => $this->getApplicationOptions()
+                'value_options' => $this->getApplicationService()->getApplicationsAsOptions(),
             ],
             'attributes' => [
                 'class' => 'description form-control',
@@ -51,15 +51,5 @@ class ApplicationsForm extends Form {
                 'required' => false,
             ],
         ]));
-    }
-
-    private function getApplicationOptions()
-    {
-        $applications = $this->getApplicationService()->getApplications('libelle');
-        $options = [];
-        foreach ($applications as $application) {
-            $options[$application->getId()] = $application->getLibelle();
-        }
-        return $options;
     }
 }
