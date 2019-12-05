@@ -24,10 +24,16 @@ class FichePoste
 
     /** @var ArrayCollection */
     private $fichesMetiers;
+    /** @var ArrayCollection (FicheposteApplicationConservee) */
+    private $applicationsConservees;
+    /** @var ArrayCollection (FicheposteCompetenceConservee) */
+    private $competencesConservees;
 
     public function __invoke()
     {
         $this->fichesMetiers = new ArrayCollection();
+        $this->applicationsConservees = new ArrayCollection();
+        $this->competencesConservees = new ArrayCollection();
     }
 
     public function getId()
@@ -163,6 +169,48 @@ class FichePoste
             $somme += $ficheMetier->getQuotite();
         }
         return $somme;
+    }
+
+    /** Competences Conservées ****************************************************************************************/
+
+    /** @return ArrayCollection */
+    public function getCompetencesConservees() {
+        return $this->competencesConservees;
+    }
+
+    /** @param FicheposteCompetenceConservee $competence */
+    public function addCompetenceConservee(FicheposteCompetenceConservee $competence) {
+        $this->competencesConservees->add($competence);
+    }
+
+    /** @param FicheposteCompetenceConservee $competence */
+    public function removeCompetenceConservee(FicheposteCompetenceConservee $competence) {
+        $this->competencesConservees->removeElement($competence);
+    }
+
+    public function clearCompetencesConservees() {
+        $this->competencesConservees->clear();
+    }
+
+    /** Applications Conservées ***************************************************************************************/
+
+    /** @return ArrayCollection */
+    public function getApplicationsConservees() {
+        return $this->applicationsConservees;
+    }
+
+    /** @param FicheposteApplicationConservee $application */
+    public function addApplicationConservee(FicheposteApplicationConservee $application) {
+        $this->applicationsConservees->add($application);
+    }
+
+    /** @param FicheposteApplicationConservee $application */
+    public function removeApplicationConservee(FicheposteApplicationConservee $application) {
+        $this->applicationsConservees->removeElement($application);
+    }
+
+    public function clearApplicationsConservees() {
+        $this->applicationsConservees->clear();
     }
 
 

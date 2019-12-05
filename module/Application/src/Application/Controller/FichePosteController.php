@@ -2,8 +2,10 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteApplicationConservee;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
@@ -16,19 +18,26 @@ use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\ApplicationsConservees\ApplicationsConserveesServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
+use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
+
+/** @method FlashMessenger flashMessenger() */
 
 class FichePosteController extends AbstractActionController {
     /** Service **/
     use AgentServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use ApplicationsConserveesServiceAwareTrait;
+
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
     use AssocierAgentFormAwareTrait;
@@ -480,4 +489,53 @@ class FichePosteController extends AbstractActionController {
         $exporter->export('export.pdf');
         exit;
     }
+
+    /** ApplicationConserveesService **********************************************************************************/
+
+    public function selectionnerApplicationsConserveesAction() {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        /**
+         * @var Application[] $applications
+         * @var FicheposteApplicationConservee[] $conservees
+         */
+        $applications = $fichemetier->getApplications()->toArray();
+        $conservees = $ficheposte->getApplicationsConservees()->toArray();
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            foreach ($applications as $application) {
+                $found = null;
+                foreach ($conservees as $conservee) {
+                    if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) {
+                        $found = $conservee;
+                    }
+                }
+                $checked = (isset($data[$application->getId()]) AND $data[$application->getId()] === "on");
+
+                if ($found !== null AND !$checked) $this->getApplicationsConserveesService()->delete($found);
+                if ($found === null AND $checked) {
+                    $item = new FicheposteApplicationConservee();
+                    $item->setFichePoste($ficheposte);
+                    $item->setFicheMetier($fichemetier);
+                    $item->setApplication($application);
+                    $this->getApplicationsConserveesService()->create($item);
+                }
+            }
+//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
+        }
+
+        return new ViewModel([
+            'title' => "Sélection d'applicaiton pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'ficheposte' => $ficheposte,
+            'fichemetier' => $fichemetier,
+            'applications' => $applications,
+            'conservees' => $conservees,
+        ]);
+    }
+
 }

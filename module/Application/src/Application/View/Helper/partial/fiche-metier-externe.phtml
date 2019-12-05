@@ -37,6 +37,6 @@ use Application\Entity\Db\Formation;
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->ficheMetier($fiche->getFicheType(), ['sans-titre' => true, 'activite-liste' => $fiche->getActivites()]); ?>
+        <?php echo $this->ficheMetier($fiche->getFicheType(), $fiche->getFichePoste(), ['sans-titre' => true, 'activite-liste' => $fiche->getActivites(), ]); ?>
     </div>
 </div>

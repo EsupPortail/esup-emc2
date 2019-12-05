@@ -9,6 +9,8 @@ use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\FichePosteCreation\FichePosteCreationForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\ApplicationsConservees\ApplicationsConserveesService;
+use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
@@ -20,11 +22,15 @@ class FichePosteControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
+         * @var ApplicationsConserveesService $applicationsConserveesService
          */
         $agentService = $container->get(AgentService::class);
+        $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $structureService = $container->get(StructureService::class);
+        $applicationsConserveesService = $container->get(ApplicationsConserveesService::class);
 
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
@@ -49,8 +55,10 @@ class FichePosteControllerFactory {
         $controller->setRenderer($renderer);
 
         $controller->setAgentService($agentService);
+        $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setStructureService($structureService);
+        $controller->setApplicationsConserveesService($applicationsConserveesService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierAgentForm($associerAgentForm);

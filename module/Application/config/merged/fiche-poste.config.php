@@ -27,6 +27,8 @@ use Application\Form\FichePosteCreation\FichePosteCreationHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
+use Application\Service\ApplicationsConservees\ApplicationConserveesServiceFactory;
+use Application\Service\ApplicationsConservees\ApplicationsConserveesService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -55,6 +57,7 @@ return [
                         'retirer-fiche-metier',
                         'modifier-fiche-metier',
                         'selectionner-activite',
+                        'selectionner-applications-conservees',
                         'export',
                     ],
                     'roles' => [
@@ -242,6 +245,17 @@ return [
                             ],
                         ],
                     ],
+                    'selectionner-applications-conservees' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/selectionner-applications-conservees/:fiche-poste/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'selectionner-applications-conservees',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -250,6 +264,7 @@ return [
     'service_manager' => [
         'factories' => [
             FichePosteService::class => FichePosteServiceFactory::class,
+            ApplicationsConserveesService::class => ApplicationConserveesServiceFactory::class,
         ],
     ],
     'controllers'     => [

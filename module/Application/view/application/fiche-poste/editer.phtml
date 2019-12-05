@@ -183,7 +183,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
 
 <?php if ($principal) echo $this->ficheMetierExterne($principal, true);  ?>
 <?php foreach ($fichesMetiers as $ficheType) : ?>
-    <?php echo $this->ficheMetierExterne($ficheType, true);  ?>
+    <?php echo $this->ficheMetierExterne($ficheType, true, $fiche);  ?>
 <?php endforeach; ?>
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->

@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @var FichePoste $ficheposte
+ * @var FicheMetier $fichemetier
+ * @var Application[] $applications
+ * @var FicheposteApplicationConservee[] $conservees
+ */
+
+use Application\Entity\Db\Application;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteApplicationConservee;
+
+/**
+ * @param FicheposteApplicationConservee[] $conservees
+ * @param Application $application
+ * @return boolean
+ */
+function isIn($conservees, $application) {
+    foreach ($conservees as $conservee) {
+        if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) return true;
+    }
+    return false;
+}
+?>
+
+<form
+    action="<?php echo $this->url('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    method="post"
+>
+
+<?php foreach ($applications as $application) : ?>
+    <div class="checkbox">
+        <label>
+            <input
+                    type="checkbox"
+                    id="<?php echo $application->getId(); ?>"
+                    name="<?php echo $application->getId(); ?>"
+                    <?php if (isIn($conservees, $application)) echo "checked"; ?>
+            />
+            <?php echo $application->getLibelle(); ?>
+        </label>
+    </div>
+<?php endforeach; ?>
+
+    <input type="submit" class="btn btn-primary action" value="Enregistrer"/>
+</form>

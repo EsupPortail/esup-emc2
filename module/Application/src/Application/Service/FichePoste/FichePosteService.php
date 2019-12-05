@@ -61,7 +61,7 @@ class FichePosteService {
      * @param bool $notNull
      * @return FichePoste
      */
-    public function getRequestedFichePoste($controller, $paramName, $notNull = false)
+    public function getRequestedFichePoste($controller, $paramName = 'fiche-poste', $notNull = false)
     {
         $id = $controller->params()->fromRoute($paramName);
         $fiche = $this->getFichePoste($id);
