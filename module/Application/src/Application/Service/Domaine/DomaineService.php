@@ -5,6 +5,7 @@ namespace Application\Service\Domaine;
 use Application\Entity\Db\Domaine;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -13,15 +14,16 @@ class DomaineService {
     use EntityManagerAwareTrait;
 
     /**
+     * @param string $champ
+     * @param string $ordre
      * @return Domaine[]
      */
-    public function getDomaines()
+    public function getDomaines($champ = 'libelle', $ordre = 'ASC')
     {
         $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
             ->addSelect('famille')->leftJoin('domaine.famille', 'famille')
             ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
-        ;
-        $qb = $qb->addOrderBy('domaine.libelle', 'ASC');
+            ->orderBy('domaine.' . $champ, $ordre);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -82,10 +84,11 @@ class DomaineService {
      */
     public function create($domaine)
     {
-        $this->getEntityManager()->persist($domaine);
+
         try {
+            $this->getEntityManager()->persist($domaine);
             $this->getEntityManager()->flush($domaine);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la création d'un Domaine", $e);
         }
         return $domaine;
@@ -99,7 +102,7 @@ class DomaineService {
     {
         try {
             $this->getEntityManager()->flush($domaine);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Domaine.", $e);
         }
         return $domaine;
@@ -110,12 +113,11 @@ class DomaineService {
      */
     public function delete($domaine)
     {
-        $this->getEntityManager()->remove($domaine);
         try {
+            $this->getEntityManager()->remove($domaine);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Domaine", $e);
         }
     }
-
 }

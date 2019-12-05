@@ -373,9 +373,9 @@ dl.dl-horizontal dt:after {
 }
 
 a.action {
-    width: 20em;
+    width: 21em;
     text-indent: 0em;
-    margin: 5px;
+    margin: 1px;
 }
 button.action {
     width: 20em;

@@ -1,10 +1,13 @@
 <?php
 
-use Application\Entity\Db\FicheMetierType;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\Domaine;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 
 /**
- * @var FicheMetierType[] $fiches
+ * @var Domaine[] $domaines
+ * @var Domaine $domaineSelect
+ * @var FicheMetier[] $fiches
  */
 
 $this->headTitle('Index des fiches métiers');
@@ -24,6 +27,8 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
 
 <div class="main">
 
+    <div class="row">
+        <div class="col-md-6">
     <?php if ($canAjouter) : ?>
         <a href="<?php echo $this->url('fiche-metier-type/ajouter', [], [], true); ?>"
            class="btn btn-primary action ajax-modal"
@@ -34,6 +39,26 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         </a>
         <br/> <br/>
     <?php endif; ?>
+        </div>
+
+        <div class="pull-right" style="margin-right: 1em; ">
+            <label for="domaine"> Sélection d'un domaine : </label>
+            <select id="domaine" class="selectpicker" data-live-search="true">
+                <option value="0"> Tous les domaines</option>
+                <?php foreach ($domaines as $domaine) : ?>
+                    <option
+                            value="<?php echo $domaine->getId(); ?>"
+                            <?php if ($domaine === $domaineSelect) echo "selected"; ?>
+                    >
+                        <?php echo $domaine->getLibelle(); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+
+
+
 
     <table id="datatable" class="table table-condensed">
     <thead>
@@ -109,4 +134,15 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
             window.location.href = 'fiche-metier-type/editer';
         });
     });
+
+    $(function() {
+        $('select#domaine').on("change", function() {
+            let domaine = $('select#domaine').find(":selected").val();
+            if (domaine == 0) {
+                window.location.href = 'fiche-metier-type';
+            } else {
+                window.location.href = 'fiche-metier-type?domaine=' + domaine;
+            }
+        });
+    })
 </script>

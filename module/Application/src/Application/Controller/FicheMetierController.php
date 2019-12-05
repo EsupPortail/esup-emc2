@@ -23,6 +23,7 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Form\Element\Select;
@@ -33,6 +34,7 @@ use Zend\View\Model\ViewModel;
 class FicheMetierController extends  AbstractActionController{
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
+    use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     /** Traits associé aux formulaires */
@@ -52,10 +54,21 @@ class FicheMetierController extends  AbstractActionController{
 
     public function indexAction()
     {
-        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
+        $domaineId = $this->params()->fromQuery('domaine');
+        $domaines = $this->getDomaineService()->getDomaines();
+
+        if ($domaineId === null) {
+            $domaine = null;
+            $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
+        } else {
+            $domaine  = $this->getDomaineService()->getDomaine($domaineId);
+            $fichesMetiers = $this->getFicheMetierService()->getFicheByDomaine($domaine);
+        }
 
         return new ViewModel([
-            'fiches' => $fichesMetiers,
+            'domaineSelect'  => $domaine,
+            'domaines' => $domaines,
+            'fiches'   => $fichesMetiers,
         ]);
     }
 
