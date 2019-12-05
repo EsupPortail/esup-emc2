@@ -58,10 +58,12 @@ class AssocierPosteForm extends Form {
 
     private function generateSelectOptions()
     {
-        $postes = $this->getPosteService()->getPostesLibres();
+        $postes = $this->getPosteService()->getPostes();
         $options = [];
         foreach ($postes as $poste) {
-            $options[$poste->getId()] = $poste->getNumeroPoste() . " - ". $poste->getDomaine()->getLibelle() . " - ".$poste->getStructure()->getLibelleCourt();
+            if ($poste->getFichePoste() === NULL) {
+                $options[$poste->getId()] = $poste->getNumeroPoste() . " - " . $poste->getDomaine()->getLibelle() . " - " . $poste->getStructure()->getLibelleCourt();
+            }
         }
         return $options;
     }
