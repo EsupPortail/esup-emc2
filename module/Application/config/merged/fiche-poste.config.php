@@ -35,6 +35,7 @@ use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
 use Application\Service\FormationsRetirees\FormationsRetireesServiceFactory;
+use Application\View\Helper\FichesPostesAsArrayViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -336,6 +337,11 @@ return [
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
             FichePosteCreationHydrator::class => FichePosteCreationHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'fichesPostesAsArray' => FichesPostesAsArrayViewHelper::class,
+        ],
+    ],
 
 ];

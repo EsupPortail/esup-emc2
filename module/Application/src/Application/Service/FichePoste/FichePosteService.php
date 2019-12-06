@@ -11,6 +11,7 @@ use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -20,6 +21,20 @@ use Zend\Mvc\Controller\AbstractActionController;
 class FichePosteService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
+            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+            ;
+        return $qb;
+    }
 
     /**
      * @return FichePoste[]
@@ -422,5 +437,53 @@ class FichePosteService {
         }
 
         return $applications;
+    }
+
+    /**
+     * @return FichePoste[]
+     */
+    public function getFichesPostesSansAgent() {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agent is NULL')
+            ->andWhere('poste is NOT NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @return FichePoste[]
+     */
+    public function getFichesPostesSansPoste()
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('poste is NULL')
+            ->andWhere('agent is NOT NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @return FichePoste[]
+     */
+    public function getFichesPostesSansAgentEtPoste()
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('poste is NULL and agent is NULL')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getFichesPostesAvecAgentEtPoste()
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('poste is NOT NULL')
+            ->andWhere('agent is NOT NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

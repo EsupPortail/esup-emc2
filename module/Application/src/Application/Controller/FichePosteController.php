@@ -63,10 +63,18 @@ class FichePosteController extends AbstractActionController {
 
     public function indexAction()
     {
-        $fiches = $this->getFichePosteService()->getFichesPostes();
+        $fiches             = $this->getFichePosteService()->getFichesPostes();
+        $fichesSansAgent    = $this->getFichePosteService()->getFichesPostesSansAgent();
+        $fichesSansPoste    = $this->getFichePosteService()->getFichesPostesSansPoste();
+        $fichesProblemes    = $this->getFichePosteService()->getFichesPostesSansAgentEtPoste();
+        $fichesOks          = $this->getFichePosteService()->getFichesPostesAvecAgentEtPoste();
 
         return new ViewModel([
             'fiches' => $fiches,
+            'fichesSansAgent' => $fichesSansAgent,
+            'fichesSansPoste' => $fichesSansPoste,
+            'fichesProblemes' => $fichesProblemes,
+            'fichesOks'       => $fichesOks,
         ]);
     }
 
@@ -169,7 +177,7 @@ class FichePosteController extends AbstractActionController {
         if ($fiche !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la fiche de poste  de " . $fiche->getAgent()->getDenomination(),
+                'title' => "Suppression de la fiche de poste  de " . (($fiche->getAgent())?$fiche->getAgent()->getDenomination():"[Aucun Agent]"),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-poste/detruire', ["affectation" => $fiche->getId()], ["query" => $params], true),
             ]);

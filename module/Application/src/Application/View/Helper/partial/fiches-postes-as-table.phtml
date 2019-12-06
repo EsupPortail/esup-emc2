@@ -1,0 +1,112 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
+
+/**
+ * @var FichePoste[] $fiches
+ */
+
+$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
+$canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
+$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+
+?>
+
+<table class="table table-condensed datatable">
+    <thead>
+    <tr>
+        <th> Agent </th>
+        <th> Poste </th>
+        <th> Fiche principale </th>
+        <th> Modification </th>
+        <th style="width:10rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($fiches as $fiche) : ?>
+    <tr>
+        <td>
+            <small>
+            <?php if ($fiche->getAgent() !== null) : ?>
+                <?php echo $fiche->getAgent()->getDenomination(); ?>
+            <?php else : ?>
+                <span class="text-danger">
+                    <strong>
+                        Aucun agent
+                    </strong>
+                </span>
+            <?php endif; ?>
+            </small>
+        </td>
+        <td>
+            <small>
+            <?php if ($fiche->getPoste()) : ?>
+                <?php echo $fiche->getPoste()->getNumeroPoste(); ?> <br/>
+                <?php echo $fiche->getPoste()->getStructure()->getLibelleCourt(); ?>
+            <?php else : ?>
+                <span class="text-danger">
+                    <strong>
+                        Aucun poste
+                    </strong>
+                </span>
+            <?php endif; ?>
+            </small>
+        </td>
+        <td>
+            <small>
+            <?php if ($fiche->getFicheTypeExternePrincipale()) : ?>
+                <?php echo $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle(); ?>
+            <?php else :?>
+                <span class="text-danger">
+                    <strong>
+                        Aucun métier prinical
+                    </strong>
+                </span>
+            <?php endif; ?>
+            </small>
+        </td>
+        <td>
+            <small>
+                <?php echo $fiche->getHistoModificateur()->getDisplayName(); ?> <br/>
+                <?php echo $fiche->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+            </small>
+        </td>
+        <td>
+            <?php if ($canVoir) : ?>
+                <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                   class="ajax-modal">
+                    <span class="icon voir" title="Visualiser la fiche de poste"></span></a>
+            <?php endif; ?>
+            <?php if ($canVoir) : ?>
+                <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                   title="Exporter en PDF la fiche de poste"
+                >
+                    <span class="icon pdf"></span></a>
+            <?php endif; ?>
+            <?php if ($canEditer) : ?>
+                <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>">
+                    <span class="icon editer" title="Modifier la fiche de poste"></span></a>
+            <?php endif; ?>
+            <?php if ($canHistoriser) : ?>
+                <?php if ($fiche->estNonHistorise()) : ?>
+                    <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $fiche->getId()], [], true); ?>">
+                        <span class="icon historiser" title="Historiser la fiche de poste"></span></a>
+                <?php else: ?>
+                    <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' => $fiche->getId()], [], true); ?>">
+                        <span class="icon restaurer" title="Restaurer la fiche de poste"></span></a>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($canDetruire) : ?>
+                <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                   class="ajax-modal" data-event="modification"
+                >
+                    <span class="icon detruire" title="Détruire la fiche de poste"></span></a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

@@ -6,6 +6,10 @@ use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
  * @var FichePoste[] $fiches
+ * @var FichePoste[] $fichesSansAgent
+ * @var FichePoste[] $fichesSansPoste
+ * @var FichePoste[] $fichesProblemes
+ * @var FichePoste[] $fichesOks
  */
 
 $this->headTitle('Index des fiches de postes');
@@ -15,6 +19,7 @@ $canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
 $canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
 $canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+
 ?>
 
 <h1 class="page-header">
@@ -24,77 +29,58 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </span>
 </h1>
 
+<?php if ($canAjouter) : ?>
+    <?php /** @see FichePosteController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
+        <span class="icon ajouter"></span>
+        Ajouter une fiche de poste
+    </a>
+<?php endif; ?>
+
 <div class="main">
+    <h2>
+        Fiches sans agent
+        <span class="badge">
+            <?php echo count($fichesSansAgent); ?>
+        </span>
+    </h2>
 
-    <?php if ($canAjouter) : ?>
-        <?php /** @see FichePosteController::ajouterAction() */ ?>
-        <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
-            <span class="icon ajouter"></span>
-            Ajouter une fiche de poste
-        </a>
-    <?php endif; ?>
-
-    <table class="table table-condensed">
-        <thead>
-            <tr>
-                <th> Libellé </th>
-                <th> Métier principal </th>
-                <th> Modification </th>
-                <th> Modificateur </th>
-                <th> Action </th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($fiches as $fiche) : ?>
-                <tr>
-                    <td> <?php echo $fiche->getLibelle(); ?> </td>
-                    <td>
-                        <?php $principale = $fiche->getFicheTypeExternePrincipale();
-                         if($principale === null) : ?>
-                            Aucune fiche principale
-                        <?php else : ?>
-                            <?php echo $principale->getFicheType()->getMetier()->getLibelle(); ?>
-                        <?php endif; ?>
-                    </td>
-                    <td> <?php echo $fiche->getHistoModification()->format('d/m/Y'); ?> </td>
-                    <td> <?php echo $fiche->getHistoModificateur()->getDisplayName(); ?> </td>
-                    <td>
-                        <?php if ($canVoir) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                              class="ajax-modal">
-                                <span class="icon voir" title="Visualiser la fiche de poste"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canVoir) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                               title="Exporter en PDF la fiche de poste"
-                            >
-                                <span class="icon pdf"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canEditer) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>">
-                                <span class="icon editer" title="Modifier la fiche de poste"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canHistoriser) : ?>
-                            <?php if ($fiche->estNonHistorise()) : ?>
-                                <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $fiche->getId()], [], true); ?>">
-                                    <span class="icon historiser" title="Historiser la fiche de poste"></span></a>
-                            <?php else: ?>
-                                <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' => $fiche->getId()], [], true); ?>">
-                                    <span class="icon restaurer" title="Restaurer la fiche de poste"></span></a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if ($canDetruire) : ?>
-                            <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                               class="ajax-modal" data-event="modification"
-                            >
-                                <span class="icon detruire" title="Détruire la fiche de poste"></span></a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+    <?php echo $this->fichesPostesAsArray($fichesSansAgent); ?>
 </div>
+
+<div class="main">
+    <h2>
+        Fiches sans poste
+        <span class="badge">
+            <?php echo count($fichesSansPoste); ?>
+        </span>
+    </h2>
+
+    <?php echo $this->fichesPostesAsArray($fichesSansPoste); ?>
+</div>
+
+<div class="main">
+    <h2>
+        Fiches problèmatiques
+        <span class="badge">
+            <?php echo count($fichesProblemes); ?>
+        </span>
+    </h2>
+
+    <?php echo $this->fichesPostesAsArray($fichesProblemes); ?>
+</div>
+
+<div class="main">
+    <h2>
+        Fiches avec agent et postes
+        <span class="badge">
+            <?php echo count($fichesOks); ?>
+        </span>
+    </h2>
+
+    <?php echo $this->fichesPostesAsArray($fichesOks); ?>
+</div>
+
 
 
 <script>
@@ -109,6 +95,14 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
         $("body").on("edition", function (event) {
             event.div.modal('hide');
             window.location.href = 'fiche-poste/editer';
+        });
+    });
+
+    $(document).ready(function() {
+        $('.datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
         });
     });
 </script>
