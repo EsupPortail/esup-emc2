@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @var FichePoste $ficheposte
+ * @var FicheMetier $fichemetier
+ * @var Competence[] $competence
+ * @var FicheposteCompetenceConservee[] $conservees
+ */
+;
+use Application\Entity\Db\Competence;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteCompetenceConservee;
+
+/**
+ * @param FicheposteCompetenceConservee[] $conservees
+ * @param Competence $competence
+ * @return boolean
+ */
+function isIn($conservees, $competence) {
+    foreach ($conservees as $conservee) {
+        if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) return true;
+    }
+    return false;
+}
+
+$array = [];
+foreach ($competences as $competence)
+    $array[$competence->getType()->getOrdre() . "_" . $competence->getType()->getId()][] = $competence;
+?>
+
+<form
+    action="<?php echo $this->url('fiche-poste/selectionner-competences-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    method="post"
+>
+
+<?php foreach ($array as $order => $competencesA) : ?>
+    <h3>
+        <?php echo $competencesA[0]->getType()->getLibelle(); ?>
+        <span class="badge">
+            <?php echo count($competencesA); ?>
+        </span>
+    </h3>
+    <?php foreach ($competencesA as $competence) : ?>
+        <div class="checkbox">
+            <label>
+                <input
+                        type="checkbox"
+                        id="<?php echo $competence->getId(); ?>"
+                        name="<?php echo $competence->getId(); ?>"
+                        <?php if (isIn($conservees, $competence)) echo "checked"; ?>
+                />
+                <?php echo $competence->getLibelle(); ?>
+            </label>
+        </div>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+
+    <input type="submit" class="btn btn-primary action" value="Enregistrer"/>
+</form>

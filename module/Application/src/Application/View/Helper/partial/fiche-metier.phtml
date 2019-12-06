@@ -2,10 +2,12 @@
 
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationConservee;
+use Application\Entity\Db\FicheposteCompetenceConservee;
 use Application\Entity\Db\Formation;
 
 /**
@@ -114,6 +116,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
 </div>
 
 <!-- AUTRE INFO --------------------------------------------------------------------------------------------------->
+
 <div class="main">
     <h2>
         Parcours de formation pour la prise de poste
@@ -121,22 +124,54 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
 
     <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
 
-    <?php /** @var Application $application */ ?>
-
+    <?php /** @var Competence $competence */ ?>
     <?php
-    $competences = [];
+    $dictionnaireCompetence = [];
     foreach($fichemetier->getCompetences() as $competence) {
-        $competences[$competence->getId()]['competence'] = $competence;
-        $competences[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+        if ($ficheposte === null) {
+            $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
+            $dictionnaireCompetence[$competence->getId()]['source'][]  = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+        }
+        else {
+            $conservees = $ficheposte->getCompetencesConservees();
+            $found = null;
+            /** @var FicheposteCompetenceConservee $conservee */
+            foreach ($conservees as $conservee) {
+                if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) {
+                    $found = $conservee;
+                    break;
+                }
+            }
+            if ($found != null) {
+                $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
+                $dictionnaireCompetence[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+            }
+        }
     }
     foreach($fichemetier->getActivites() as $element) {
         if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
             foreach ($element->getActivite()->getCompetences() as $competence) {
-                $competences[$competence->getId()]['competence'] = $competence;
-                $competences[$competence->getId()]['source'][] = 'activite|' . $element->getActivite()->getLibelle();
+                $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
+                $dictionnaireCompetence[$competence->getId()]['source'][] = 'activite|' . $element->getActivite()->getLibelle();
             }
         }
     }
+    ?>
+
+    <?php
+//    $competences = [];
+//    foreach($fichemetier->getCompetences() as $competence) {
+//        $competences[$competence->getId()]['competence'] = $competence;
+//        $competences[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+//    }
+//    foreach($fichemetier->getActivites() as $element) {
+//        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+//            foreach ($element->getActivite()->getCompetences() as $competence) {
+//                $competences[$competence->getId()]['competence'] = $competence;
+//                $competences[$competence->getId()]['source'][] = 'activite|' . $element->getActivite()->getLibelle();
+//            }
+//        }
+//    }
     ?>
 
     <div class="panel panel-info">
@@ -147,7 +182,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         <span class="icon competence"></span>
                         Compétences
                         <span class="badge">
-                            <?php echo count($competences); ?>
+                            <?php echo count($dictionnaireCompetence); ?>
                         </span>
                     </h2>
                 </div>
@@ -163,16 +198,26 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         </a>
                     </div>
                 <?php endif; ?>
+
+                <?php if($ficheposte ) : ?>
+                    <div class="pull-right">
+                        <a
+                                href="<?php echo $this->url('fiche-poste/selectionner-competences-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon listing" title="Sélectionner des compétences"></span></a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         <div class="panel-body">
             <div class="row">
                 <?php if ($fichemetier->getConnaissances() == '' AND $fichemetier->getCompetencesOperationnelles() == '' AND $fichemetier->getCompetencesComportementales() == '') : ?>
-                    <?php echo $this->competences($competences, ['type' => false, 'theme' => false]); ?>
+                    <?php echo $this->competences($dictionnaireCompetence, ['type' => false, 'theme' => false]); ?>
 
                 <?php else : ?>
                     <div class="col-md-6">
-                    <?php echo $this->competences($competences, ['type' => false, 'theme' => false]); ?>
+                    <?php echo $this->competences($dictionnaireCompetence, ['type' => false, 'theme' => false]); ?>
                     </div>
 
                     <div class="col-md-6 pull-right" style="border: 1px dashed gray">
@@ -257,7 +302,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                 <div class="col-md-8">
                     <h2>
                         <span class="icon application"></span>
-                        Applications rezrzrez
+                        Applications
                         <span class="badge">
                             <?php echo count($dictionnaireApplication); ?>
                         </span>
@@ -274,8 +319,6 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         Gérer les applications
                     </a>
                 </div>
-
-
                 <?php endif; ?>
 
                 <?php if($ficheposte ) : ?>

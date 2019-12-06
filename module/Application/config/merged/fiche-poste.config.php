@@ -29,6 +29,8 @@ use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
 use Application\Service\ApplicationsConservees\ApplicationConserveesServiceFactory;
 use Application\Service\ApplicationsConservees\ApplicationsConserveesService;
+use Application\Service\CompetencesConservees\CompetencesConserveesService;
+use Application\Service\CompetencesConservees\CompetencesConserveesServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
@@ -57,8 +59,11 @@ return [
                         'retirer-fiche-metier',
                         'modifier-fiche-metier',
                         'selectionner-activite',
-                        'selectionner-applications-conservees',
                         'export',
+
+                        'selectionner-applications-conservees',
+                        'selectionner-competences-conservees',
+                        'test-affichage-application-bloc',
                     ],
                     'roles' => [
                     ],
@@ -256,6 +261,28 @@ return [
                             ],
                         ],
                     ],
+                    'test-affichage-application-bloc' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/test-affichage-application-bloc/:fiche-poste/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'test-affichage-application-bloc',
+                            ],
+                        ],
+                    ],
+                    'selectionner-competences-conservees' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/selectionner-competences-conservees/:fiche-poste/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'selectionner-competences-conservees',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -265,6 +292,7 @@ return [
         'factories' => [
             FichePosteService::class => FichePosteServiceFactory::class,
             ApplicationsConserveesService::class => ApplicationConserveesServiceFactory::class,
+            CompetencesConserveesService::class => CompetencesConserveesServiceFactory::class,
         ],
     ],
     'controllers'     => [

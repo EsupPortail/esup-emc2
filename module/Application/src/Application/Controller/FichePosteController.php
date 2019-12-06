@@ -3,9 +3,11 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationConservee;
+use Application\Entity\Db\FicheposteCompetenceConservee;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
@@ -19,6 +21,7 @@ use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationsConservees\ApplicationsConserveesServiceAwareTrait;
+use Application\Service\CompetencesConservees\CompetencesConserveesServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -37,6 +40,7 @@ class FichePosteController extends AbstractActionController {
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
     use ApplicationsConserveesServiceAwareTrait;
+    use CompetencesConserveesServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -116,8 +120,10 @@ class FichePosteController extends AbstractActionController {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
 
+
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
+
         return new ViewModel([
             'fiche' => $fiche,
             'structure' => $structure,
@@ -538,4 +544,63 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
+    public function testAffichageApplicationBlocAction() {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $applications = $this->getFichePosteService()->getApplicationsAssocieesFicheMetier($ficheposte, $fichemetier);
+        return new ViewModel([
+            'ficheposte' => $ficheposte,
+            'fichemetier' => $fichemetier,
+            'applications' => $applications,
+        ]);
+    }
+
+    /** Compétences conservées ****************************************************************************************/
+
+    public function selectionnerCompetencesConserveesAction() {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        /**
+         * @var Competence[] $competences
+         * @var FicheposteCompetenceConservee[] $conservees
+         */
+        $competences = $fichemetier->getCompetences()->toArray();
+        $conservees = $ficheposte->getCompetencesConservees()->toArray();
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            foreach ($competences as $competence) {
+                $found = null;
+                foreach ($conservees as $conservee) {
+                    if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) {
+                        $found = $conservee;
+                    }
+                }
+                $checked = (isset($data[$competence->getId()]) AND $data[$competence->getId()] === "on");
+
+                if ($found !== null AND !$checked) $this->getCompetencesConserveesService()->delete($found);
+                if ($found === null AND $checked) {
+                    $item = new FicheposteCompetenceConservee();
+                    $item->setFichePoste($ficheposte);
+                    $item->setFicheMetier($fichemetier);
+                    $item->setCompetence($competence);
+                    $this->getCompetencesConserveesService()->create($item);
+                }
+            }
+//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
+        }
+
+        return new ViewModel([
+            'title' => "Sélection d'applicaiton pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'ficheposte' => $ficheposte,
+            'fichemetier' => $fichemetier,
+            'competences' => $competences,
+            'conservees' => $conservees,
+        ]);
+    }
 }

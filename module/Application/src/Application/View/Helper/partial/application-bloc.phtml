@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @var array $applications
+ * @var array $options
+ *
+ * la sutrcture de application est la suivante :
+ *
+ * $applications = [
+ *      ID => [
+ *          'entite' => Application,
+ *          'display' => true|false,
+ *          'raison' => [
+ *                  [ 'source', SourceEntity ],
+ *                  [ 'source', SourceEntity ],
+ *                  ...
+ *              ]
+ *          ],
+ *      ...
+ *  ]
+ */
+
+use Application\Entity\Db\Activite;
+use Application\Entity\Db\FicheMetier;
+
+$nbApplications = 0;
+foreach ($applications as $id => $bloc) {
+    if ($bloc['display'] === true) $nbApplications++;
+}
+usort($applications, function ($a, $b) { return $a['entity']->getLibelle() > $b['entity']->getLibelle();});
+
+?>
+
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>
+                    Applications
+                    <span class="badge">
+                        <?php echo $nbApplications; ?>
+                    </span>
+                </h2>
+            </div>
+            <div class="pull-right">
+                <span class="icon listing"></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <ul>
+            <?php foreach ($applications as $id => $bloc) : ?>
+                <?php if ($bloc['display'] === true) : ?>
+                    <li>
+                        <?php echo $bloc['entity']->getLibelle(); ?>
+                        <?php foreach ($bloc['raisons'] as $raison) : ?>
+                            <?php $text = "";
+                                switch ($raison[0]) {
+                                    case "Fiche métier" :
+                                        /** @var FicheMetier $fm */
+                                        $fm = $raison[1];
+                                        $text = $fm->getMetier()->getLibelle();
+                                        $label = "F";
+                                        $class = 'fiche-metier';
+                                        break;
+                                    case "Activité" :
+                                        /** @var Activite $ac*/
+                                        $ac = $raison[1];
+                                        $text = $ac->getLibelle();
+                                        $label = "A";
+                                        $class = 'activite';
+                                }
+                            ?>
+                            <span class="<?php echo $class; ?>" title="<?php echo $text; ?>"><?php echo $label; ?></span>
+                        <?php endforeach; ?>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

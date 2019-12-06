@@ -2,7 +2,9 @@
 
 namespace Application\Service\FichePoste;
 
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteApplicationConservee;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Entity\Db\Structure;
@@ -363,5 +365,61 @@ class FichePosteService {
         }
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * Calcul du set d'applications associées à une fiche de poste et/ou une fiche metier "externe".
+     * Va tenir compte de applications conservées (ou retirées par l'auteur de la fiche de poste)
+     * @param FichePoste $ficheposte
+     * @param FicheMetier $fichemetier
+     */
+    public function getApplicationsAssocieesFicheMetier(FichePoste $ficheposte, FicheMetier $fichemetier) {
+
+        //provenant de la fiche metier
+        $applications = [];
+        foreach ($ficheposte->getFichesMetiers() as $fichemetiertype) {
+            if ($fichemetiertype->getFicheType() === $fichemetier) {
+
+                //provenant de la fiche metier
+                foreach ($fichemetier->getApplications() as $application) {
+                    if (!isset($applications[$application->getId()])) {
+                        $applications[$application->getId()] = [
+                            'entity' => $application,
+                            'display' => false,
+                            'raisons' => [[ 'Fiche métier' , $fichemetier]]
+                        ];
+                    } else {
+                        $applications[$application->getId()]['raisons'][] = [ 'FicheMetier' , $fichemetier];
+                    }
+                }
+
+                //provenant des activités
+                $keptActivites = explode(";", $fichemetiertype->getActivites());
+                foreach ($fichemetier->getActivites() as $activite) {
+                    if (array_search($activite->getId(), $keptActivites) !== false) {
+                        foreach ($activite->getActivite()->getApplications() as $application) {
+                            if (!isset($applications[$application->getId()])) {
+                                $applications[$application->getId()] = [
+                                    'entity' => $application,
+                                    'display' => false,
+                                    'raisons' => [[ 'Activité' , $activite->getActivite()]]
+                                ];
+                            } else {
+                                $applications[$application->getId()]['raisons'][] = [ 'Activité' , $activite->getActivite()];
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        $conservees = $ficheposte->getApplicationsConservees();
+        /** @var FicheposteApplicationConservee $conservee */
+        foreach ($conservees as $conservee) {
+            if ($conservee->getHistoDestruction() === null) $applications[$conservee->getApplication()->getId()]['display'] = true;
+        }
+
+        return $applications;
     }
 }
