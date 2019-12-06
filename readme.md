@@ -8,6 +8,10 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.7** (06/12/2019) :
+* Menu de sélection du domaine sur l'index des fiches metiers
+* Possiblité de retirer des compétences, applications et formations des fiches de postes
+
 version **0.4.6** (28/11/2019) :
 * Ajout de la configuration par défaut des fiches métiers
 * La liste des poste associable dans une fiche métier n'est plus que la listes des postes "libres"
