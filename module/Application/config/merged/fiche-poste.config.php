@@ -33,6 +33,8 @@ use Application\Service\CompetencesConservees\CompetencesConserveesService;
 use Application\Service\CompetencesConservees\CompetencesConserveesServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
+use Application\Service\FormationsConservees\FormationsConserveesService;
+use Application\Service\FormationsConservees\FormationsConserveesServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -63,6 +65,7 @@ return [
 
                         'selectionner-applications-conservees',
                         'selectionner-competences-conservees',
+                        'selectionner-formations-conservees',
                         'test-affichage-application-bloc',
                     ],
                     'roles' => [
@@ -283,6 +286,17 @@ return [
                             ],
                         ],
                     ],
+                    'selectionner-formations-conservees' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/selectionner-formations-conservees/:fiche-poste/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'selectionner-formations-conservees',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -293,6 +307,7 @@ return [
             FichePosteService::class => FichePosteServiceFactory::class,
             ApplicationsConserveesService::class => ApplicationConserveesServiceFactory::class,
             CompetencesConserveesService::class => CompetencesConserveesServiceFactory::class,
+            FormationsConserveesService::class => FormationsConserveesServiceFactory::class,
         ],
     ],
     'controllers'     => [

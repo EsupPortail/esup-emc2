@@ -28,12 +28,15 @@ class FichePoste
     private $applicationsConservees;
     /** @var ArrayCollection (FicheposteCompetenceConservee) */
     private $competencesConservees;
+    /** @var ArrayCollection (FicheposteFormationConservee) */
+    private $formationsConservees;
 
     public function __invoke()
     {
         $this->fichesMetiers = new ArrayCollection();
         $this->applicationsConservees = new ArrayCollection();
         $this->competencesConservees = new ArrayCollection();
+        $this->formationsConservees = new ArrayCollection();
     }
 
     public function getId()
@@ -192,6 +195,27 @@ class FichePoste
         $this->competencesConservees->clear();
     }
 
+    /** Formations Conservées ****************************************************************************************/
+
+    /** @return ArrayCollection */
+    public function getFormationsConservees() {
+        return $this->formationsConservees;
+    }
+
+    /** @param FicheposteFormationConservee $formation */
+    public function addFormationConservee(FicheposteFormationConservee $formation) {
+        $this->formationsConservees->add($formation);
+    }
+
+    /** @param FicheposteFormationConservee $formation */
+    public function removeFormationConservee(FicheposteFormationConservee $formation) {
+        $this->formationsConservees->removeElement($formation);
+    }
+
+    public function clearFormationsConservees() {
+        $this->formationsConservees->clear();
+    }
+
     /** Applications Conservées ***************************************************************************************/
 
     /** @return ArrayCollection */
@@ -201,7 +225,7 @@ class FichePoste
 
     /** @param FicheposteApplicationConservee $application */
     public function addApplicationConservee(FicheposteApplicationConservee $application) {
-        $this->applicationsConservees->add($application);
+        $this->formationsConservees->add($application);
     }
 
     /** @param FicheposteApplicationConservee $application */

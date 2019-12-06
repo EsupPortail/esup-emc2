@@ -8,6 +8,7 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationConservee;
 use Application\Entity\Db\FicheposteCompetenceConservee;
+use Application\Entity\Db\FicheposteFormationConservee;
 use Application\Entity\Db\Formation;
 
 /**
@@ -361,11 +362,25 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
     <?php
     $dictionnaireFormation = [];
     foreach($fichemetier->getFormations() as $formation) {
-        $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+        if ($ficheposte === null) $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+        else {
+            $conservees = $ficheposte->getFormationsConservees();
+            $found = null;
+            /** @var FicheposteFormationConservee $conservee */
+            foreach ($conservees as $conservee) {
+                if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) {
+                    $found = $conservee;
+                    break;
+                }
+            }
+            if ($found != null) {
+                $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+            }
+        }
     }
     foreach($fichemetier->getActivites() as $element) {
-        foreach ($element->getActivite()->getFormations() as $formation) {
-            if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+            foreach ($element->getActivite()->getFormations() as $formation) {
                 $dictionnaireFormation[$formation->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
             }
         }
@@ -395,6 +410,16 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         Gérer les formations
                     </a>
                 </div>
+                <?php endif; ?>
+
+                <?php if($ficheposte ) : ?>
+                    <div class="pull-right">
+                        <a
+                            href="<?php echo $this->url('fiche-poste/selectionner-formations-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon listing" title="Sélectionner des formations"></span></a>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>

@@ -8,7 +8,9 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationConservee;
 use Application\Entity\Db\FicheposteCompetenceConservee;
+use Application\Entity\Db\FicheposteFormationConservee;
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Entity\Db\Formation;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierAgent\AssocierAgentForm;
@@ -25,6 +27,7 @@ use Application\Service\CompetencesConservees\CompetencesConserveesServiceAwareT
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\FormationsConservees\FormationsConserveesServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -41,6 +44,7 @@ class FichePosteController extends AbstractActionController {
     use StructureServiceAwareTrait;
     use ApplicationsConserveesServiceAwareTrait;
     use CompetencesConserveesServiceAwareTrait;
+    use FormationsConserveesServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -596,10 +600,58 @@ class FichePosteController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => "Sélection d'applicaiton pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'title' => "Sélection de compétence pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
             'ficheposte' => $ficheposte,
             'fichemetier' => $fichemetier,
             'competences' => $competences,
+            'conservees' => $conservees,
+        ]);
+    }
+
+    /** Formation conservées ****************************************************************************************/
+
+    public function selectionnerFormationsConserveesAction() {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        /**
+         * @var Formation[] $formations
+         * @var FicheposteFormationConservee[] $conservees
+         */
+        $formations = $fichemetier->getFormations();
+        $conservees = $ficheposte->getFormationsConservees()->toArray();
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            foreach ($formations as $formation) {
+                $found = null;
+                foreach ($conservees as $conservee) {
+                    if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) {
+                        $found = $conservee;
+                    }
+                }
+                $checked = (isset($data[$formation->getId()]) AND $data[$formation->getId()] === "on");
+
+                if ($found !== null AND !$checked) $this->getFormationsConserveesService()->delete($found);
+                if ($found === null AND $checked) {
+                    $item = new FicheposteFormationConservee();
+                    $item->setFichePoste($ficheposte);
+                    $item->setFicheMetier($fichemetier);
+                    $item->setFormation($formation);
+                    $this->getFormationsConserveesService()->create($item);
+                }
+            }
+//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
+        }
+
+        return new ViewModel([
+            'title' => "Sélection de formation pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'ficheposte' => $ficheposte,
+            'fichemetier' => $fichemetier,
+            'formations' => $formations,
             'conservees' => $conservees,
         ]);
     }

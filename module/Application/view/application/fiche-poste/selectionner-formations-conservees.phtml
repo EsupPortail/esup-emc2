@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @var FichePoste $ficheposte
+ * @var FicheMetier $fichemetier
+ * @var Formation[] $formations
+ * @var FicheposteFormationConservee[] $conservees
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteFormationConservee;
+use Application\Entity\Db\Formation;
+
+/**
+ * @param FicheposteFormationConservee[] $conservees
+ * @param Formation $formation
+ * @return boolean
+ */
+function isIn($conservees, $formation) {
+    foreach ($conservees as $conservee) {
+        if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) return true;
+    }
+    return false;
+}
+?>
+
+<form
+    action="<?php echo $this->url('fiche-poste/selectionner-formations-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    method="post"
+>
+
+<?php foreach ($formations as $formation) : ?>
+    <div class="checkbox">
+        <label>
+            <input
+                    type="checkbox"
+                    id="<?php echo $formation->getId(); ?>"
+                    name="<?php echo $formation->getId(); ?>"
+                    <?php if (isIn($conservees, $formation)) echo "checked"; ?>
+            />
+            <?php echo $formation->getLibelle(); ?>
+        </label>
+    </div>
+<?php endforeach; ?>
+
+    <input type="submit" class="btn btn-primary action" value="Enregistrer"/>
+</form>
