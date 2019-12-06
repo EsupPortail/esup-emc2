@@ -9,7 +9,7 @@ use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\FichePosteCreation\FichePosteCreationForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Agent\AgentService;
-use Application\Service\ApplicationsConservees\ApplicationsConserveesService;
+use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesConservees\CompetencesConserveesService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
@@ -26,7 +26,7 @@ class FichePosteControllerFactory {
          * @var AgentService $agentService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
-         * @var ApplicationsConserveesService $applicationsConserveesService
+         * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesConserveesService $competencesConserveesService
          * @var FormationsConserveesService $formationsConserseesService
          */
@@ -34,7 +34,7 @@ class FichePosteControllerFactory {
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $structureService = $container->get(StructureService::class);
-        $applicationsConserveesService = $container->get(ApplicationsConserveesService::class);
+        $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesConserveesService = $container->get(CompetencesConserveesService::class);
         $formationsConserseesService = $container->get(FormationsConserveesService::class);
 
@@ -64,7 +64,7 @@ class FichePosteControllerFactory {
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setStructureService($structureService);
-        $controller->setApplicationsConserveesService($applicationsConserveesService);
+        $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesConserveesService($competencesConserveesService);
         $controller->setFormationsConserveesService($formationsConserseesService);
 

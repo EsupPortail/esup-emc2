@@ -6,7 +6,7 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteApplicationConservee;
+use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheposteCompetenceConservee;
 use Application\Entity\Db\FicheposteFormationConservee;
 use Application\Entity\Db\Formation;
@@ -274,16 +274,16 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
     foreach($fichemetier->getApplications() as $application) {
         if ($ficheposte === null) $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
         else {
-            $conservees = $ficheposte->getApplicationsConservees();
+            $conservees = $ficheposte->getApplicationsRetirees();
             $found = null;
-            /** @var FicheposteApplicationConservee $conservee */
+            /** @var FicheposteApplicationRetiree $conservee */
             foreach ($conservees as $conservee) {
                 if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) {
                     $found = $conservee;
                     break;
                 }
             }
-            if ($found != null) {
+            if ($found === null) {
                 $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
             }
         }
@@ -325,7 +325,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                 <?php if($ficheposte ) : ?>
                 <div class="pull-right">
                     <a
-                            href="<?php echo $this->url('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                            href="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                     >
                         <span class="icon listing" title="Sélectionner des applications"></span></a>

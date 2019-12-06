@@ -24,8 +24,8 @@ class FichePoste
 
     /** @var ArrayCollection */
     private $fichesMetiers;
-    /** @var ArrayCollection (FicheposteApplicationConservee) */
-    private $applicationsConservees;
+    /** @var ArrayCollection (FicheposteApplicationRetiree) */
+    private $applicationsRetirees;
     /** @var ArrayCollection (FicheposteCompetenceConservee) */
     private $competencesConservees;
     /** @var ArrayCollection (FicheposteFormationConservee) */
@@ -34,7 +34,7 @@ class FichePoste
     public function __invoke()
     {
         $this->fichesMetiers = new ArrayCollection();
-        $this->applicationsConservees = new ArrayCollection();
+        $this->applicationsRetirees = new ArrayCollection();
         $this->competencesConservees = new ArrayCollection();
         $this->formationsConservees = new ArrayCollection();
     }
@@ -219,22 +219,22 @@ class FichePoste
     /** Applications Conservées ***************************************************************************************/
 
     /** @return ArrayCollection */
-    public function getApplicationsConservees() {
-        return $this->applicationsConservees;
+    public function getApplicationsRetirees() {
+        return $this->applicationsRetirees;
     }
 
-    /** @param FicheposteApplicationConservee $application */
-    public function addApplicationConservee(FicheposteApplicationConservee $application) {
-        $this->formationsConservees->add($application);
+    /** @param FicheposteApplicationRetiree $application */
+    public function addApplicationRetiree(FicheposteApplicationRetiree $application) {
+        $this->applicationsRetirees->add($application);
     }
 
-    /** @param FicheposteApplicationConservee $application */
-    public function removeApplicationConservee(FicheposteApplicationConservee $application) {
-        $this->applicationsConservees->removeElement($application);
+    /** @param FicheposteApplicationRetiree $application */
+    public function removeApplicationRetiree(FicheposteApplicationRetiree $application) {
+        $this->applicationsRetirees->removeElement($application);
     }
 
-    public function clearApplicationsConservees() {
-        $this->applicationsConservees->clear();
+    public function clearApplicationsRetirees() {
+        $this->applicationsRetirees->clear();
     }
 
 

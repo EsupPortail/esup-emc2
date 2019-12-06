@@ -6,7 +6,7 @@ use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteApplicationConservee;
+use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheposteCompetenceConservee;
 use Application\Entity\Db\FicheposteFormationConservee;
 use Application\Entity\Db\FicheTypeExterne;
@@ -22,7 +22,7 @@ use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\ApplicationsConservees\ApplicationsConserveesServiceAwareTrait;
+use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesConservees\CompetencesConserveesServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -42,7 +42,7 @@ class FichePosteController extends AbstractActionController {
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use ApplicationsConserveesServiceAwareTrait;
+    use ApplicationsRetireesServiceAwareTrait;
     use CompetencesConserveesServiceAwareTrait;
     use FormationsConserveesServiceAwareTrait;
 
@@ -502,16 +502,16 @@ class FichePosteController extends AbstractActionController {
 
     /** ApplicationConserveesService **********************************************************************************/
 
-    public function selectionnerApplicationsConserveesAction() {
+    public function selectionnerApplicationsRetireesAction() {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
         /**
          * @var Application[] $applications
-         * @var FicheposteApplicationConservee[] $conservees
+         * @var FicheposteApplicationRetiree[] $retirees
          */
         $applications = $fichemetier->getApplications()->toArray();
-        $conservees = $ficheposte->getApplicationsConservees()->toArray();
+        $retirees = $ficheposte->getApplicationsRetirees()->toArray();
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -520,31 +520,31 @@ class FichePosteController extends AbstractActionController {
 
             foreach ($applications as $application) {
                 $found = null;
-                foreach ($conservees as $conservee) {
-                    if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) {
-                        $found = $conservee;
+                foreach ($retirees as $retiree) {
+                    if ($retiree->getHistoDestruction() === null AND $retiree->getApplication() === $application) {
+                        $found = $retiree;
                     }
                 }
                 $checked = (isset($data[$application->getId()]) AND $data[$application->getId()] === "on");
 
-                if ($found !== null AND !$checked) $this->getApplicationsConserveesService()->delete($found);
-                if ($found === null AND $checked) {
-                    $item = new FicheposteApplicationConservee();
+                if ($found !== null AND $checked) $this->getApplicationsRetireesService()->delete($found);
+                if ($found === null AND !$checked) {
+                    $item = new FicheposteApplicationRetiree();
                     $item->setFichePoste($ficheposte);
                     $item->setFicheMetier($fichemetier);
                     $item->setApplication($application);
-                    $this->getApplicationsConserveesService()->create($item);
+                    $this->getApplicationsRetireesService()->create($item);
                 }
             }
-//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
+//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
         }
 
         return new ViewModel([
-            'title' => "Sélection d'applicaiton pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'title' => "Sélection d'application pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
             'ficheposte' => $ficheposte,
             'fichemetier' => $fichemetier,
             'applications' => $applications,
-            'conservees' => $conservees,
+            'retirees' => $retirees,
         ]);
     }
 

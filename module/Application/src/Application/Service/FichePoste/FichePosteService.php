@@ -4,7 +4,7 @@ namespace Application\Service\FichePoste;
 
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteApplicationConservee;
+use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Entity\Db\Structure;
@@ -372,6 +372,7 @@ class FichePosteService {
      * Va tenir compte de applications conservées (ou retirées par l'auteur de la fiche de poste)
      * @param FichePoste $ficheposte
      * @param FicheMetier $fichemetier
+     * @return array
      */
     public function getApplicationsAssocieesFicheMetier(FichePoste $ficheposte, FicheMetier $fichemetier) {
 
@@ -385,7 +386,7 @@ class FichePosteService {
                     if (!isset($applications[$application->getId()])) {
                         $applications[$application->getId()] = [
                             'entity' => $application,
-                            'display' => false,
+                            'display' => true,
                             'raisons' => [[ 'Fiche métier' , $fichemetier]]
                         ];
                     } else {
@@ -401,7 +402,7 @@ class FichePosteService {
                             if (!isset($applications[$application->getId()])) {
                                 $applications[$application->getId()] = [
                                     'entity' => $application,
-                                    'display' => false,
+                                    'display' => true,
                                     'raisons' => [[ 'Activité' , $activite->getActivite()]]
                                 ];
                             } else {
@@ -414,10 +415,10 @@ class FichePosteService {
             }
         }
 
-        $conservees = $ficheposte->getApplicationsConservees();
-        /** @var FicheposteApplicationConservee $conservee */
-        foreach ($conservees as $conservee) {
-            if ($conservee->getHistoDestruction() === null) $applications[$conservee->getApplication()->getId()]['display'] = true;
+        $retirees = $ficheposte->getApplicationsRetirees();
+        /** @var FicheposteApplicationRetiree $conservee */
+        foreach ($retirees as $retiree) {
+            if ($retiree->getHistoDestruction() === null) $applications[$retiree->getApplication()->getId()]['display'] = false;
         }
 
         return $applications;

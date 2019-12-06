@@ -1,32 +1,34 @@
 <?php
 
 /**
+ * @see \Application\Controller\FichePosteController::selectionnerApplicationsRetireesAction()
+ *
  * @var FichePoste $ficheposte
  * @var FicheMetier $fichemetier
  * @var Application[] $applications
- * @var FicheposteApplicationConservee[] $conservees
+ * @var FicheposteApplicationRetiree[] $retirees
  */
 
 use Application\Entity\Db\Application;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteApplicationConservee;
+use Application\Entity\Db\FicheposteApplicationRetiree;
 
 /**
- * @param FicheposteApplicationConservee[] $conservees
+ * @param FicheposteApplicationRetiree[] $retirees
  * @param Application $application
  * @return boolean
  */
-function isIn($conservees, $application) {
-    foreach ($conservees as $conservee) {
-        if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) return true;
+function isIn($retirees, $application) {
+    foreach ($retirees as $retiree) {
+        if ($retiree->getHistoDestruction() === null AND $retiree->getApplication() === $application) return true;
     }
     return false;
 }
 ?>
 
 <form
-    action="<?php echo $this->url('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    action="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
     method="post"
 >
 
@@ -37,7 +39,7 @@ function isIn($conservees, $application) {
                     type="checkbox"
                     id="<?php echo $application->getId(); ?>"
                     name="<?php echo $application->getId(); ?>"
-                    <?php if (isIn($conservees, $application)) echo "checked"; ?>
+                    <?php if (! isIn($retirees, $application)) echo "checked"; ?>
             />
             <?php echo $application->getLibelle(); ?>
         </label>

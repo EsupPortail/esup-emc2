@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Service\ApplicationsConservees;
+namespace Application\Service\ApplicationsRetirees;
 
-use Application\Entity\Db\FicheposteApplicationConservee;
+use Application\Entity\Db\FicheposteApplicationRetiree;
 use DateTime;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -10,17 +10,17 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 
-class ApplicationsConserveesService {
+class ApplicationsRetireesService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * @param FicheposteApplicationConservee $applicationConservee
-     * @return FicheposteApplicationConservee
+     * @param FicheposteApplicationRetiree $applicationConservee
+     * @return FicheposteApplicationRetiree
      */
-    public function create(FicheposteApplicationConservee $applicationConservee) {
+    public function create(FicheposteApplicationRetiree $applicationConservee) {
         try {
             $date = new DateTime();
             $user = $this->getUserService()->getConnectedUser();
@@ -43,10 +43,10 @@ class ApplicationsConserveesService {
     }
 
     /**
-     * @param FicheposteApplicationConservee $applicationConservee
-     * @return FicheposteApplicationConservee
+     * @param FicheposteApplicationRetiree $applicationConservee
+     * @return FicheposteApplicationRetiree
      */
-    public function update(FicheposteApplicationConservee $applicationConservee) {
+    public function update(FicheposteApplicationRetiree $applicationConservee) {
         try {
             $date = new DateTime();
             $user = $this->getUserService()->getConnectedUser();
@@ -66,10 +66,10 @@ class ApplicationsConserveesService {
     }
 
     /**
-     * @param FicheposteApplicationConservee $applicationConservee
-     * @return FicheposteApplicationConservee
+     * @param FicheposteApplicationRetiree $applicationConservee
+     * @return FicheposteApplicationRetiree
      */
-    public function delete(FicheposteApplicationConservee $applicationConservee) {
+    public function delete(FicheposteApplicationRetiree $applicationConservee) {
         try {
             $date = new DateTime();
             $user = $this->getUserService()->getConnectedUser();

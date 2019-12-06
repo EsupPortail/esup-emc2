@@ -27,8 +27,8 @@ use Application\Form\FichePosteCreation\FichePosteCreationHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
-use Application\Service\ApplicationsConservees\ApplicationConserveesServiceFactory;
-use Application\Service\ApplicationsConservees\ApplicationsConserveesService;
+use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
+use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceFactory;
 use Application\Service\CompetencesConservees\CompetencesConserveesService;
 use Application\Service\CompetencesConservees\CompetencesConserveesServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
@@ -63,7 +63,7 @@ return [
                         'selectionner-activite',
                         'export',
 
-                        'selectionner-applications-conservees',
+                        'selectionner-applications-retirees',
                         'selectionner-competences-conservees',
                         'selectionner-formations-conservees',
                         'test-affichage-application-bloc',
@@ -253,14 +253,14 @@ return [
                             ],
                         ],
                     ],
-                    'selectionner-applications-conservees' => [
+                    'selectionner-applications-retirees' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-applications-conservees/:fiche-poste/:fiche-metier',
+                            'route'    => '/selectionner-applications-retirees/:fiche-poste/:fiche-metier',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-applications-conservees',
+                                'action'     => 'selectionner-applications-retirees',
                             ],
                         ],
                     ],
@@ -305,7 +305,7 @@ return [
     'service_manager' => [
         'factories' => [
             FichePosteService::class => FichePosteServiceFactory::class,
-            ApplicationsConserveesService::class => ApplicationConserveesServiceFactory::class,
+            ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
             CompetencesConserveesService::class => CompetencesConserveesServiceFactory::class,
             FormationsConserveesService::class => FormationsConserveesServiceFactory::class,
         ],
