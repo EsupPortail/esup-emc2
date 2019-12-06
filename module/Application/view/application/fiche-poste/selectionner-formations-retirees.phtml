@@ -4,29 +4,29 @@
  * @var FichePoste $ficheposte
  * @var FicheMetier $fichemetier
  * @var Formation[] $formations
- * @var FicheposteFormationConservee[] $conservees
+ * @var FicheposteFormationRetiree[] $retirees
  */
 
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteFormationConservee;
+use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\Formation;
 
 /**
- * @param FicheposteFormationConservee[] $conservees
+ * @param FicheposteFormationRetiree[] $retirees
  * @param Formation $formation
  * @return boolean
  */
-function isIn($conservees, $formation) {
-    foreach ($conservees as $conservee) {
-        if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) return true;
+function isIn($retirees, $formation) {
+    foreach ($retirees as $retiree) {
+        if ($retiree->getHistoDestruction() === null AND $retiree->getFormation() === $formation) return true;
     }
     return false;
 }
 ?>
 
 <form
-    action="<?php echo $this->url('fiche-poste/selectionner-formations-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    action="<?php echo $this->url('fiche-poste/selectionner-formations-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
     method="post"
 >
 
@@ -37,7 +37,7 @@ function isIn($conservees, $formation) {
                     type="checkbox"
                     id="<?php echo $formation->getId(); ?>"
                     name="<?php echo $formation->getId(); ?>"
-                    <?php if (isIn($conservees, $formation)) echo "checked"; ?>
+                    <?php if (! isIn($retirees, $formation)) echo "checked"; ?>
             />
             <?php echo $formation->getLibelle(); ?>
         </label>

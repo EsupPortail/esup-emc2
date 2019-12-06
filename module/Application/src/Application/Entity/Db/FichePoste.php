@@ -28,15 +28,15 @@ class FichePoste
     private $applicationsRetirees;
     /** @var ArrayCollection (FicheposteCompetenceConservee) */
     private $competencesConservees;
-    /** @var ArrayCollection (FicheposteFormationConservee) */
-    private $formationsConservees;
+    /** @var ArrayCollection (FicheposteFormationRetiree) */
+    private $formationsRetirees;
 
     public function __invoke()
     {
         $this->fichesMetiers = new ArrayCollection();
         $this->applicationsRetirees = new ArrayCollection();
         $this->competencesConservees = new ArrayCollection();
-        $this->formationsConservees = new ArrayCollection();
+        $this->formationsRetirees = new ArrayCollection();
     }
 
     public function getId()
@@ -198,22 +198,22 @@ class FichePoste
     /** Formations Conservées ****************************************************************************************/
 
     /** @return ArrayCollection */
-    public function getFormationsConservees() {
-        return $this->formationsConservees;
+    public function getFormationsRetirees() {
+        return $this->formationsRetirees;
     }
 
-    /** @param FicheposteFormationConservee $formation */
-    public function addFormationConservee(FicheposteFormationConservee $formation) {
-        $this->formationsConservees->add($formation);
+    /** @param FicheposteFormationRetiree $formation */
+    public function addFormationRetiree(FicheposteFormationRetiree $formation) {
+        $this->formationsRetirees->add($formation);
     }
 
-    /** @param FicheposteFormationConservee $formation */
-    public function removeFormationConservee(FicheposteFormationConservee $formation) {
-        $this->formationsConservees->removeElement($formation);
+    /** @param FicheposteFormationRetiree $formation */
+    public function removeFormationRetiree(FicheposteFormationRetiree $formation) {
+        $this->formationsRetirees->removeElement($formation);
     }
 
-    public function clearFormationsConservees() {
-        $this->formationsConservees->clear();
+    public function clearFormationsRetirees() {
+        $this->formationsRetirees->clear();
     }
 
     /** Applications Conservées ***************************************************************************************/

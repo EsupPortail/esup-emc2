@@ -8,7 +8,7 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheposteCompetenceConservee;
-use Application\Entity\Db\FicheposteFormationConservee;
+use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\Formation;
 
 /**
@@ -364,16 +364,16 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
     foreach($fichemetier->getFormations() as $formation) {
         if ($ficheposte === null) $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
         else {
-            $conservees = $ficheposte->getFormationsConservees();
+            $conservees = $ficheposte->getFormationsRetirees();
             $found = null;
-            /** @var FicheposteFormationConservee $conservee */
+            /** @var FicheposteFormationRetiree $conservee */
             foreach ($conservees as $conservee) {
                 if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) {
                     $found = $conservee;
                     break;
                 }
             }
-            if ($found != null) {
+            if ($found === null) {
                 $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
             }
         }
@@ -415,7 +415,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                 <?php if($ficheposte ) : ?>
                     <div class="pull-right">
                         <a
-                            href="<?php echo $this->url('fiche-poste/selectionner-formations-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                            href="<?php echo $this->url('fiche-poste/selectionner-formations-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
                             <span class="icon listing" title="Sélectionner des formations"></span></a>

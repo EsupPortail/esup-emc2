@@ -8,7 +8,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheposteCompetenceConservee;
-use Application\Entity\Db\FicheposteFormationConservee;
+use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\Formation;
 use Application\Entity\Db\SpecificitePoste;
@@ -27,7 +27,7 @@ use Application\Service\CompetencesConservees\CompetencesConserveesServiceAwareT
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\FormationsConservees\FormationsConserveesServiceAwareTrait;
+use Application\Service\FormationsRetirees\FormationsRetireesServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -44,7 +44,7 @@ class FichePosteController extends AbstractActionController {
     use StructureServiceAwareTrait;
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesConserveesServiceAwareTrait;
-    use FormationsConserveesServiceAwareTrait;
+    use FormationsRetireesServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -587,8 +587,8 @@ class FichePosteController extends AbstractActionController {
                 }
                 $checked = (isset($data[$competence->getId()]) AND $data[$competence->getId()] === "on");
 
-                if ($found !== null AND !$checked) $this->getCompetencesConserveesService()->delete($found);
-                if ($found === null AND $checked) {
+                if ($found !== null AND $checked) $this->getCompetencesConserveesService()->delete($found);
+                if ($found === null AND !$checked) {
                     $item = new FicheposteCompetenceConservee();
                     $item->setFichePoste($ficheposte);
                     $item->setFicheMetier($fichemetier);
@@ -610,16 +610,16 @@ class FichePosteController extends AbstractActionController {
 
     /** Formation conservées ****************************************************************************************/
 
-    public function selectionnerFormationsConserveesAction() {
+    public function selectionnerFormationsRetireesAction() {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
         /**
          * @var Formation[] $formations
-         * @var FicheposteFormationConservee[] $conservees
+         * @var FicheposteFormationRetiree[] $retirees
          */
         $formations = $fichemetier->getFormations();
-        $conservees = $ficheposte->getFormationsConservees()->toArray();
+        $retirees = $ficheposte->getFormationsRetirees()->toArray();
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -628,20 +628,20 @@ class FichePosteController extends AbstractActionController {
 
             foreach ($formations as $formation) {
                 $found = null;
-                foreach ($conservees as $conservee) {
-                    if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) {
-                        $found = $conservee;
+                foreach ($retirees as $retiree) {
+                    if ($retiree->getHistoDestruction() === null AND $retiree->getFormation() === $formation) {
+                        $found = $retiree;
                     }
                 }
                 $checked = (isset($data[$formation->getId()]) AND $data[$formation->getId()] === "on");
 
-                if ($found !== null AND !$checked) $this->getFormationsConserveesService()->delete($found);
-                if ($found === null AND $checked) {
-                    $item = new FicheposteFormationConservee();
+                if ($found !== null AND $checked) $this->getFormationsRetireesService()->delete($found);
+                if ($found === null AND !$checked) {
+                    $item = new FicheposteFormationRetiree();
                     $item->setFichePoste($ficheposte);
                     $item->setFicheMetier($fichemetier);
                     $item->setFormation($formation);
-                    $this->getFormationsConserveesService()->create($item);
+                    $this->getFormationsRetireesService()->create($item);
                 }
             }
 //            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
@@ -652,7 +652,7 @@ class FichePosteController extends AbstractActionController {
             'ficheposte' => $ficheposte,
             'fichemetier' => $fichemetier,
             'formations' => $formations,
-            'conservees' => $conservees,
+            'retirees' => $retirees,
         ]);
     }
 }

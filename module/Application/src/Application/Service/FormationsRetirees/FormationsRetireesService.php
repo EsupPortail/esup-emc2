@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Service\FormationsConservees;
+namespace Application\Service\FormationsRetirees;
 
-use Application\Entity\Db\FicheposteFormationConservee;
+use Application\Entity\Db\FicheposteFormationRetiree;
 use DateTime;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -10,17 +10,17 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Utilisateur\Service\User\UserServiceAwareTrait;
 
-class FormationsConserveesService {
+class FormationsRetireesService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * @param FicheposteFormationConservee $formationConservee
-     * @return FicheposteFormationConservee
+     * @param FicheposteFormationRetiree $formationConservee
+     * @return FicheposteFormationRetiree
      */
-    public function create(FicheposteFormationConservee $formationConservee) {
+    public function create(FicheposteFormationRetiree $formationConservee) {
         try {
             $date = new DateTime();
             $user = $this->getUserService()->getConnectedUser();
@@ -43,10 +43,10 @@ class FormationsConserveesService {
     }
 
     /**
-     * @param FicheposteFormationConservee $formationConservee
-     * @return FicheposteFormationConservee
+     * @param FicheposteFormationRetiree $formationConservee
+     * @return FicheposteFormationRetiree
      */
-    public function update(FicheposteFormationConservee $formationConservee) {
+    public function update(FicheposteFormationRetiree $formationConservee) {
         try {
             $date = new DateTime();
             $user = $this->getUserService()->getConnectedUser();
@@ -66,10 +66,10 @@ class FormationsConserveesService {
     }
 
     /**
-     * @param FicheposteFormationConservee $formationConservee
-     * @return FicheposteFormationConservee
+     * @param FicheposteFormationRetiree $formationConservee
+     * @return FicheposteFormationRetiree
      */
-    public function delete(FicheposteFormationConservee $formationConservee) {
+    public function delete(FicheposteFormationRetiree $formationConservee) {
         try {
             $date = new DateTime();
             $user = $this->getUserService()->getConnectedUser();

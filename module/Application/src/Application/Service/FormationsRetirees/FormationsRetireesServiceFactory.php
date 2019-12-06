@@ -1,16 +1,16 @@
 <?php
 
-namespace Application\Service\FormationsConservees;
+namespace Application\Service\FormationsRetirees;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Utilisateur\Service\User\UserService;
 
-class FormationsConserveesServiceFactory {
+class FormationsRetireesServiceFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return FormationsConserveesService
+     * @return FormationsRetireesService
      */
     public function __invoke(ContainerInterface $container)
     {
@@ -21,8 +21,8 @@ class FormationsConserveesServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $userService = $container->get(UserService::class);
 
-        /** @var FormationsConserveesService $service */
-        $service = new FormationsConserveesService();
+        /** @var FormationsRetireesService $service */
+        $service = new FormationsRetireesService();
         $service->setEntityManager($entityManager);
         $service->setUserService($userService);
         return $service;

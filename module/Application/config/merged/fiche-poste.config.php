@@ -33,8 +33,8 @@ use Application\Service\CompetencesConservees\CompetencesConserveesService;
 use Application\Service\CompetencesConservees\CompetencesConserveesServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
-use Application\Service\FormationsConservees\FormationsConserveesService;
-use Application\Service\FormationsConservees\FormationsConserveesServiceFactory;
+use Application\Service\FormationsRetirees\FormationsRetireesService;
+use Application\Service\FormationsRetirees\FormationsRetireesServiceFactory;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -65,7 +65,7 @@ return [
 
                         'selectionner-applications-retirees',
                         'selectionner-competences-conservees',
-                        'selectionner-formations-conservees',
+                        'selectionner-formations-retirees',
                         'test-affichage-application-bloc',
                     ],
                     'roles' => [
@@ -286,14 +286,14 @@ return [
                             ],
                         ],
                     ],
-                    'selectionner-formations-conservees' => [
+                    'selectionner-formations-retirees' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-formations-conservees/:fiche-poste/:fiche-metier',
+                            'route'    => '/selectionner-formations-retirees/:fiche-poste/:fiche-metier',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-formations-conservees',
+                                'action'     => 'selectionner-formations-retirees',
                             ],
                         ],
                     ],
@@ -307,7 +307,7 @@ return [
             FichePosteService::class => FichePosteServiceFactory::class,
             ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
             CompetencesConserveesService::class => CompetencesConserveesServiceFactory::class,
-            FormationsConserveesService::class => FormationsConserveesServiceFactory::class,
+            FormationsRetireesService::class => FormationsRetireesServiceFactory::class,
         ],
     ],
     'controllers'     => [
