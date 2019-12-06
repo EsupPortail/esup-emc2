@@ -26,8 +26,8 @@ class FichePoste
     private $fichesMetiers;
     /** @var ArrayCollection (FicheposteApplicationRetiree) */
     private $applicationsRetirees;
-    /** @var ArrayCollection (FicheposteCompetenceConservee) */
-    private $competencesConservees;
+    /** @var ArrayCollection (FicheposteCompetenceRetiree) */
+    private $competencesRetirees;
     /** @var ArrayCollection (FicheposteFormationRetiree) */
     private $formationsRetirees;
 
@@ -35,7 +35,7 @@ class FichePoste
     {
         $this->fichesMetiers = new ArrayCollection();
         $this->applicationsRetirees = new ArrayCollection();
-        $this->competencesConservees = new ArrayCollection();
+        $this->competencesRetirees = new ArrayCollection();
         $this->formationsRetirees = new ArrayCollection();
     }
 
@@ -174,28 +174,28 @@ class FichePoste
         return $somme;
     }
 
-    /** Competences Conservées ****************************************************************************************/
+    /** Competences Retirées ******************************************************************************************/
 
     /** @return ArrayCollection */
-    public function getCompetencesConservees() {
-        return $this->competencesConservees;
+    public function getCompetencesRetirees() {
+        return $this->competencesRetirees;
     }
 
-    /** @param FicheposteCompetenceConservee $competence */
-    public function addCompetenceConservee(FicheposteCompetenceConservee $competence) {
-        $this->competencesConservees->add($competence);
+    /** @param FicheposteCompetenceRetiree $competence */
+    public function addCompetenceRetiree(FicheposteCompetenceRetiree $competence) {
+        $this->competencesRetirees->add($competence);
     }
 
-    /** @param FicheposteCompetenceConservee $competence */
-    public function removeCompetenceConservee(FicheposteCompetenceConservee $competence) {
-        $this->competencesConservees->removeElement($competence);
+    /** @param FicheposteCompetenceRetiree $competence */
+    public function removeCompetenceRetiree(FicheposteCompetenceRetiree $competence) {
+        $this->competencesRetirees->removeElement($competence);
     }
 
-    public function clearCompetencesConservees() {
-        $this->competencesConservees->clear();
+    public function clearCompetencesRetirees() {
+        $this->competencesRetirees->clear();
     }
 
-    /** Formations Conservées ****************************************************************************************/
+    /** Formations Retirées *******************************************************************************************/
 
     /** @return ArrayCollection */
     public function getFormationsRetirees() {
@@ -216,7 +216,7 @@ class FichePoste
         $this->formationsRetirees->clear();
     }
 
-    /** Applications Conservées ***************************************************************************************/
+    /** Applications Retirées *****************************************************************************************/
 
     /** @return ArrayCollection */
     public function getApplicationsRetirees() {

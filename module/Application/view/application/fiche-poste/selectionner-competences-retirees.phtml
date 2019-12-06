@@ -1,25 +1,27 @@
 <?php
 
 /**
+ * @see \Application\Controller\FichePosteController::selectionnerCompetencesRetireesAction()
+ *
  * @var FichePoste $ficheposte
  * @var FicheMetier $fichemetier
  * @var Competence[] $competence
- * @var FicheposteCompetenceConservee[] $conservees
+ * @var FicheposteCompetenceRetiree[] $retirees
  */
 ;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteCompetenceConservee;
+use Application\Entity\Db\FicheposteCompetenceRetiree;
 
 /**
- * @param FicheposteCompetenceConservee[] $conservees
+ * @param FicheposteCompetenceRetiree[] $retirees
  * @param Competence $competence
  * @return boolean
  */
-function isIn($conservees, $competence) {
-    foreach ($conservees as $conservee) {
-        if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) return true;
+function isIn($retirees, $competence) {
+    foreach ($retirees as $retiree) {
+        if ($retiree->getHistoDestruction() === null AND $retiree->getCompetence() === $competence) return true;
     }
     return false;
 }
@@ -30,7 +32,7 @@ foreach ($competences as $competence)
 ?>
 
 <form
-    action="<?php echo $this->url('fiche-poste/selectionner-competences-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    action="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
     method="post"
 >
 
@@ -48,7 +50,7 @@ foreach ($competences as $competence)
                         type="checkbox"
                         id="<?php echo $competence->getId(); ?>"
                         name="<?php echo $competence->getId(); ?>"
-                        <?php if (isIn($conservees, $competence)) echo "checked"; ?>
+                        <?php if (! isIn($retirees, $competence)) echo "checked"; ?>
                 />
                 <?php echo $competence->getLibelle(); ?>
             </label>

@@ -7,7 +7,7 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
-use Application\Entity\Db\FicheposteCompetenceConservee;
+use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\Formation;
@@ -23,7 +23,7 @@ use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
-use Application\Service\CompetencesConservees\CompetencesConserveesServiceAwareTrait;
+use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -43,7 +43,7 @@ class FichePosteController extends AbstractActionController {
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
     use ApplicationsRetireesServiceAwareTrait;
-    use CompetencesConserveesServiceAwareTrait;
+    use CompetencesRetireesServiceAwareTrait;
     use FormationsRetireesServiceAwareTrait;
 
     /** Form **/
@@ -562,16 +562,16 @@ class FichePosteController extends AbstractActionController {
 
     /** Compétences conservées ****************************************************************************************/
 
-    public function selectionnerCompetencesConserveesAction() {
+    public function selectionnerCompetencesRetireesAction() {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
         /**
          * @var Competence[] $competences
-         * @var FicheposteCompetenceConservee[] $conservees
+         * @var FicheposteCompetenceRetiree[] $retirees
          */
         $competences = $fichemetier->getCompetences()->toArray();
-        $conservees = $ficheposte->getCompetencesConservees()->toArray();
+        $retirees = $ficheposte->getCompetencesRetirees()->toArray();
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -580,23 +580,23 @@ class FichePosteController extends AbstractActionController {
 
             foreach ($competences as $competence) {
                 $found = null;
-                foreach ($conservees as $conservee) {
-                    if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) {
-                        $found = $conservee;
+                foreach ($retirees as $retiree) {
+                    if ($retiree->getHistoDestruction() === null AND $retiree->getCompetence() === $competence) {
+                        $found = $retiree;
                     }
                 }
                 $checked = (isset($data[$competence->getId()]) AND $data[$competence->getId()] === "on");
 
-                if ($found !== null AND $checked) $this->getCompetencesConserveesService()->delete($found);
+                if ($found !== null AND $checked) $this->getCompetencesRetireesService()->delete($found);
                 if ($found === null AND !$checked) {
-                    $item = new FicheposteCompetenceConservee();
+                    $item = new FicheposteCompetenceRetiree();
                     $item->setFichePoste($ficheposte);
                     $item->setFicheMetier($fichemetier);
                     $item->setCompetence($competence);
-                    $this->getCompetencesConserveesService()->create($item);
+                    $this->getCompetencesRetireesService()->create($item);
                 }
             }
-//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
+//            return $this->redirect()->toRoute('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
         }
 
         return new ViewModel([
@@ -604,7 +604,7 @@ class FichePosteController extends AbstractActionController {
             'ficheposte' => $ficheposte,
             'fichemetier' => $fichemetier,
             'competences' => $competences,
-            'conservees' => $conservees,
+            'retirees' => $retirees,
         ]);
     }
 

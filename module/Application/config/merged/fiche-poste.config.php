@@ -29,8 +29,8 @@ use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceFactory;
-use Application\Service\CompetencesConservees\CompetencesConserveesService;
-use Application\Service\CompetencesConservees\CompetencesConserveesServiceFactory;
+use Application\Service\CompetencesRetirees\CompetencesRetireesService;
+use Application\Service\CompetencesRetirees\CompetencesRetireesServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
@@ -64,7 +64,7 @@ return [
                         'export',
 
                         'selectionner-applications-retirees',
-                        'selectionner-competences-conservees',
+                        'selectionner-competences-retirees',
                         'selectionner-formations-retirees',
                         'test-affichage-application-bloc',
                     ],
@@ -275,14 +275,14 @@ return [
                             ],
                         ],
                     ],
-                    'selectionner-competences-conservees' => [
+                    'selectionner-competences-retirees' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-competences-conservees/:fiche-poste/:fiche-metier',
+                            'route'    => '/selectionner-competences-retirees/:fiche-poste/:fiche-metier',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
-                                'action'     => 'selectionner-competences-conservees',
+                                'action'     => 'selectionner-competences-retirees',
                             ],
                         ],
                     ],
@@ -306,7 +306,7 @@ return [
         'factories' => [
             FichePosteService::class => FichePosteServiceFactory::class,
             ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
-            CompetencesConserveesService::class => CompetencesConserveesServiceFactory::class,
+            CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
             FormationsRetireesService::class => FormationsRetireesServiceFactory::class,
         ],
     ],

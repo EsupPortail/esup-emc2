@@ -1,16 +1,16 @@
 <?php
 
-namespace Application\Service\CompetencesConservees;
+namespace Application\Service\CompetencesRetirees;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Utilisateur\Service\User\UserService;
 
-class CompetencesConserveesServiceFactory {
+class CompetencesRetireesServiceFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return CompetencesConserveesService
+     * @return CompetencesRetireesService
      */
     public function __invoke(ContainerInterface $container)
     {
@@ -21,8 +21,8 @@ class CompetencesConserveesServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $userService = $container->get(UserService::class);
 
-        /** @var CompetencesConserveesService $service */
-        $service = new CompetencesConserveesService();
+        /** @var CompetencesRetireesService $service */
+        $service = new CompetencesRetireesService();
         $service->setEntityManager($entityManager);
         $service->setUserService($userService);
         return $service;

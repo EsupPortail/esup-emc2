@@ -7,7 +7,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
-use Application\Entity\Db\FicheposteCompetenceConservee;
+use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\Formation;
 
@@ -134,16 +134,16 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
             $dictionnaireCompetence[$competence->getId()]['source'][]  = 'fiche|'. $fichemetier->getMetier()->getLibelle();
         }
         else {
-            $conservees = $ficheposte->getCompetencesConservees();
+            $conservees = $ficheposte->getCompetencesRetirees();
             $found = null;
-            /** @var FicheposteCompetenceConservee $conservee */
+            /** @var FicheposteCompetenceRetiree $conservee */
             foreach ($conservees as $conservee) {
                 if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) {
                     $found = $conservee;
                     break;
                 }
             }
-            if ($found != null) {
+            if ($found === null) {
                 $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
                 $dictionnaireCompetence[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
             }
@@ -157,22 +157,6 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
             }
         }
     }
-    ?>
-
-    <?php
-//    $competences = [];
-//    foreach($fichemetier->getCompetences() as $competence) {
-//        $competences[$competence->getId()]['competence'] = $competence;
-//        $competences[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
-//    }
-//    foreach($fichemetier->getActivites() as $element) {
-//        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
-//            foreach ($element->getActivite()->getCompetences() as $competence) {
-//                $competences[$competence->getId()]['competence'] = $competence;
-//                $competences[$competence->getId()]['source'][] = 'activite|' . $element->getActivite()->getLibelle();
-//            }
-//        }
-//    }
     ?>
 
     <div class="panel panel-info">
@@ -203,7 +187,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                 <?php if($ficheposte ) : ?>
                     <div class="pull-right">
                         <a
-                                href="<?php echo $this->url('fiche-poste/selectionner-competences-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                                href="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                         >
                             <span class="icon listing" title="Sélectionner des compétences"></span></a>

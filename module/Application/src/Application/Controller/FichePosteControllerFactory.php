@@ -10,7 +10,7 @@ use Application\Form\FichePosteCreation\FichePosteCreationForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
-use Application\Service\CompetencesConservees\CompetencesConserveesService;
+use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
@@ -27,7 +27,7 @@ class FichePosteControllerFactory {
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
          * @var ApplicationsRetireesService $applicationsConserveesService
-         * @var CompetencesConserveesService $competencesConserveesService
+         * @var CompetencesRetireesService $competencesRetireesService
          * @var FormationsRetireesService $formationsConserseesService
          */
         $agentService = $container->get(AgentService::class);
@@ -35,7 +35,7 @@ class FichePosteControllerFactory {
         $fichePosteService = $container->get(FichePosteService::class);
         $structureService = $container->get(StructureService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
-        $competencesConserveesService = $container->get(CompetencesConserveesService::class);
+        $competencesRetireesService = $container->get(CompetencesRetireesService::class);
         $formationsConserseesService = $container->get(FormationsRetireesService::class);
 
         /**
@@ -65,7 +65,7 @@ class FichePosteControllerFactory {
         $controller->setFichePosteService($fichePosteService);
         $controller->setStructureService($structureService);
         $controller->setApplicationsRetireesService($applicationsConserveesService);
-        $controller->setCompetencesConserveesService($competencesConserveesService);
+        $controller->setCompetencesRetireesService($competencesRetireesService);
         $controller->setFormationsRetireesService($formationsConserseesService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);

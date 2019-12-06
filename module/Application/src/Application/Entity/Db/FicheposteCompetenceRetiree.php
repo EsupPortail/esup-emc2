@@ -4,7 +4,7 @@ namespace Application\Entity\Db;
 
 use Utilisateur\Entity\HistoriqueAwareTrait;
 
-class FicheposteCompetenceConservee {
+class FicheposteCompetenceRetiree {
     use HistoriqueAwareTrait;
 
     /** @var integer */
@@ -34,7 +34,7 @@ class FicheposteCompetenceConservee {
 
     /**
      * @param FichePoste $fichePoste
-     * @return FicheposteCompetenceConservee
+     * @return FicheposteCompetenceRetiree
      */
     public function setFichePoste($fichePoste)
     {
@@ -52,7 +52,7 @@ class FicheposteCompetenceConservee {
 
     /**
      * @param FicheMetier $ficheMetier
-     * @return FicheposteCompetenceConservee
+     * @return FicheposteCompetenceRetiree
      */
     public function setFicheMetier($ficheMetier)
     {
@@ -70,7 +70,7 @@ class FicheposteCompetenceConservee {
 
     /**
      * @param Competence $competence
-     * @return FicheposteCompetenceConservee
+     * @return FicheposteCompetenceRetiree
      */
     public function setCompetence($competence)
     {
