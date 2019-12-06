@@ -444,8 +444,8 @@ class FichePosteService {
      */
     public function getFichesPostesSansAgent() {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agent is NULL')
-            ->andWhere('poste is NOT NULL')
+            ->andWhere('agent.id is NULL')
+            ->andWhere('poste.id is NOT NULL')
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -457,8 +457,8 @@ class FichePosteService {
     public function getFichesPostesSansPoste()
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('poste is NULL')
-            ->andWhere('agent is NOT NULL');
+            ->andWhere('poste.id is NULL')
+            ->andWhere('agent.id is NOT NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -470,7 +470,8 @@ class FichePosteService {
     public function getFichesPostesSansAgentEtPoste()
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('poste is NULL and agent is NULL')
+            ->andWhere('poste.id is NULL')
+            ->andWhere('agent.id is NULL')
         ;
 
         $result = $qb->getQuery()->getResult();
@@ -480,8 +481,8 @@ class FichePosteService {
     public function getFichesPostesAvecAgentEtPoste()
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('poste is NOT NULL')
-            ->andWhere('agent is NOT NULL');
+            ->andWhere('poste.id is NOT NULL')
+            ->andWhere('agent.id is NOT NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;
