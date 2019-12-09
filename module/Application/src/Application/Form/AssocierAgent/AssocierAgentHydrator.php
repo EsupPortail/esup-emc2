@@ -28,7 +28,7 @@ class AssocierAgentHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $agent = null;
-        if ($data['poste'] !== null AND $data['poste'] !== "") $agent = $this->getAgentService()->getAgent($data['agent']);
+        if ($data['agent'] !== null AND $data['agent'] !== "") $agent = $this->getAgentService()->getAgent($data['agent']);
 
         if ($agent) {
             $object->setAgent($agent);

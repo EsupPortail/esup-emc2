@@ -1,12 +1,15 @@
 <?php
 
 /**
+ * @see MesStructuresController::indexAction()
+ *
  * @var User $user
  * @var Structure[] $structures
  * @var Structure $structure
  * @var Agent[] $agentsSansFiche
  * @var AgentMissionSpecifique[] $missionsSpecifiques
  * @var FichePoste[] $fichesPostes
+ * @var FichePoste[] $fichesSansAgent
  */
 
 use Application\Controller\MesStructuresController;
@@ -281,7 +284,56 @@ $canDetruireMissionSpecifique       = $this->isAllowed(FichePostePrivileges::get
     </table>
     </div>
 
-        <h2>
+    <h2>
+        Fiches de poste sans agents
+        <span class="badge"> <?php echo count($fichesSansAgent); ?> </span>
+    </h2>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th class="agent-cell"> Poste </th>
+                <th class="agent-cell"> Structure </th>
+                <th></th>
+                <th class="action-cell"> Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($fichesSansAgent as $fiche)  :?>
+                <tr>
+                    <td> <?php echo $fiche->getPoste()->getNumeroPoste(); ?> </td>
+                    <td>
+                        <?php $structureFiche = $fiche->getPoste()->getStructure(); ?>
+                        <span class="badge structure <?php echo $structureFiche->getType(); ?>"><?php echo $structureFiche->getLibelleCourt(); ?></span>
+                    </td>
+                    <td></td>
+                    <td class="action-cell"><?php if ($canVoirFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
+                               class="ajax-modal">
+                                <span class="icon voir" title="Voir la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                        <?php if ($canExporterFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            >
+                                <span class="icon pdf" title="Exporter la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon pdf" style="color:lightgray;"></span>
+                        <?php endif; ?>
+                        <?php if ($canEditerFichePoste) : ?>
+                            <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true); ?>"
+                               class="">
+                                <span class="icon editer" title="Modifier la fiche"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgray;"></span>
+                        <?php endif; ?> </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h2>
         Agents non liés à une fiche de poste
         <span class="badge"> <?php echo count($agentsSansFiche); ?> </span>
     </h2>

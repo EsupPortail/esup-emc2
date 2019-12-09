@@ -8,6 +8,11 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.8** (09/12/2019) :
+* Correction du bug de l'hydrator d'AssocierAgent
+* Amélioration des viewhelpers associés à l'affichage des fiches métiers
+* Ajout des fiches de postes sans agent dans la gestion des structures
+
 version **0.4.7** (06/12/2019) :
 * Menu de sélection du domaine sur l'index des fiches metiers
 * Possiblité de retirer des compétences, applications et formations des fiches de postes

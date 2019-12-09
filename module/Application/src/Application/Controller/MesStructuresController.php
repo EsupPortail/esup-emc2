@@ -48,6 +48,7 @@ class MesStructuresController extends AbstractActionController {
             $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructure($structure, true);
             $agentsSansFiche = $this->getAgentService()->getAgentsSansFichePosteByStructure($structure, true);
             $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructure($structure, true);
+            $fichesSansAgent = $this->getFichePosteService()->getFichesPostesSansAgentByStructure($structure, true);
         }
 
 
@@ -59,6 +60,7 @@ class MesStructuresController extends AbstractActionController {
             'missionsSpecifiques' => $missionsSpecifiques,
             'agentsSansFiche' => $agentsSansFiche,
             'fichesPostes' => $fichesPostes,
+            'fichesSansAgent' => $fichesSansAgent,
 
         ]);
     }

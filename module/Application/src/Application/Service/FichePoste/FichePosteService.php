@@ -383,6 +383,35 @@ class FichePosteService {
     }
 
     /**
+     * @param Structure $structure
+     * @param boolean $sousstructure
+     * @return FichePoste[]
+     */
+    public function getFichesPostesSansAgentByStructure($structure, $sousstructure = false)
+    {
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->addSelect('poste')->join('fiche.poste', 'poste')
+            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+            ->addSelect('structure')->join('poste.structure', 'structure')
+            ->andWhere('agent.id IS NULL')
+            ->orderBy('poste.numeroPoste')
+        ;
+
+        if ($structure !== null && $sousstructure === false) {
+            $qb = $qb
+                ->andWhere('structure = :structure')
+                ->setParameter('structure', $structure);
+        }
+        if ($structure !== null && $sousstructure === true) {
+            $qb = $qb
+                ->andWhere('structure = :structure OR structure.parent = :structure')
+                ->setParameter('structure', $structure);
+        }
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * Calcul du set d'applications associées à une fiche de poste et/ou une fiche metier "externe".
      * Va tenir compte de applications conservées (ou retirées par l'auteur de la fiche de poste)
      * @param FichePoste $ficheposte
