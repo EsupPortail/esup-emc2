@@ -95,25 +95,39 @@ $canAssocierMetierType = true;
     </div>
 </div>
 
-<?php if ($principal) echo $this->ficheMetierExterne($principal, false);  ?>
+<?php if ($principal) echo $this->ficheMetierExterne($principal, ['mode' => 'affichage']);  ?>
 <?php foreach ($fichesMetiers as $ficheType) : ?>
-    <?php echo $this->ficheMetierExterne($ficheType, false);  ?>
+    <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'affichage']);  ?>
 <?php endforeach; ?>
 
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2> Spécificité du poste </h2>
-    </div>
-    <div class="panel-body">
-        <?php if ($fiche->getSpecificite() === null) : ?>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                Aucune spécificité attachée à ce poste.
-            </div>
-        <?php else: ?>
+
+<?php if (isset($options['mode']) AND $options['mode'] === 'affichage' AND $fiche->getSpecificite() !== NULL) : ?>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2> Spécificité du poste </h2>
+        </div>
+        <div class="panel-body">
             <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
-        <?php endif; ?>
+        </div>
     </div>
-</div>
+<?php endif; ?>
+
+<?php if (isset($options['mode']) AND $options['mode'] !== 'affichage') :?>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2> Spécificité du poste </h2>
+        </div>
+        <div class="panel-body">
+            <?php if ($fiche->getSpecificite() === null) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucune spécificité attachée à ce poste.
+                </div>
+            <?php else: ?>
+                <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>

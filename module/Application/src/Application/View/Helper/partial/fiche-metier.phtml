@@ -30,12 +30,11 @@ if (isset($options['activite-liste'])) {
     foreach ($activites as $activite) $activitesListe[] = $activite->getActivite()->getId();
 }
 
-$editMode = false;
-if (isset($options['edit-mode'])) $editMode = ($options['edit-mode'] === true);
 $sansTitre = false;
 if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true);
 
 $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
+
 ?>
 
 <?php if ($sansTitre !== true) : ?>
@@ -47,10 +46,11 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
             </h1>
         </div>
         <div class="col-md-4">
-            <?php if ($editMode) : ?>
+            <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
                 <br/>
                 <br/>
                 <br/>
+            <div class="pull-right" style="margin-right:1rem;">
                 <?php /** @see FicheMetierController::editerLibelleAction() */ ?>
                 <a  class="btn btn-primary action ajax-modal pull-right"
                     data-event="modification"
@@ -58,6 +58,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                     <span class="icon editer"></span>
                     Modifier libellé
                 </a>
+            </div>
             <?php endif; ?>
         </div>
     </div>
@@ -87,9 +88,9 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                 <span class="badge"> <?php echo count($activites); ?> </span>
             </h2>
         </div>
-        <div class="pull-right">
+        <div class="pull-right" style="margin-right:1rem;">
             <br/>
-            <?php if ($editMode) : ?>
+            <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
                 <?php /** @see FicheMetierController::ajouterNouvelleActiviteAction() */ ?>
                 <a  class="btn btn-primary action ajax-modal pull-right"
                     href="<?php echo $this->url('fiche-metier-type/ajouter-nouvelle-activite', ['id' => $fichemetier->getId()], [] , true); ?>"
@@ -111,7 +112,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
 
     <?php foreach ($activites as $ficheActivite): ?>
         <?php if (array_search($ficheActivite->getActivite()->getId(), $activitesListe) !== false) : ?>
-            <?php echo $this->activite($ficheActivite, ['edit-mode' => $editMode]); ?>
+            <?php echo $this->activite($ficheActivite, ['edit-mode' => (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier')]); ?>
         <?php endif; ?>
     <?php endforeach;?>
 </div>
@@ -171,8 +172,8 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         </span>
                     </h2>
                 </div>
-                <?php if ($editMode) : ?>
-                    <div class="pull-right">
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+                    <div class="pull-right" style="margin-right:1rem;">
                         <?php /** @see FicheMetierController::gererCompetencesAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier-type/gerer-competences', ['fiche' => $fichemetier->getId()], [], true); ?>"
                            class="btn btn-primary action ajax-modal"
@@ -184,8 +185,8 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                     </div>
                 <?php endif; ?>
 
-                <?php if($ficheposte ) : ?>
-                    <div class="pull-right">
+                <?php if ((isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste')) : ?>
+                    <div class="pull-right" style="margin-right:1rem;">
                         <a
                                 href="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
@@ -209,7 +210,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         <?php if ($fichemetier->getConnaissances() != '') : ?>
                             <h5>
                                 Connaissances
-                                <?php if ($editMode) : ?>
+                                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
                                 <?php /** @see FicheMetierController::modifierConnaissancesAction() */ ?>
                                 <a class="ajax-modal" data-event="modification"
                                    href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fichemetier->getId()], [], true); ?>">
@@ -222,7 +223,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         <?php if ($fichemetier->getCompetencesOperationnelles() != '') : ?>
                             <h5>
                                 Competénces opérationnelles
-                                <?php if ($editMode) : ?>
+                                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
                                     <?php /** @see FicheMetierController::modifierOperationnelleAction() */ ?>
                                 <a class="ajax-modal" data-event="modification"
                                    href="<?php echo $this->url('fiche-metier-type/modifier-operationnelle', ['id' => $fichemetier->getId()], [], true); ?>">
@@ -235,7 +236,7 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         <?php if ($fichemetier->getCompetencesComportementales() != '') : ?>
                             <h5>
                                 Competénces comportementales
-                                <?php if ($editMode) : ?>
+                                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
                                 <?php /** @see FicheMetierController::modifierComportementaleAction() */ ?>
                                 <a class="ajax-modal" data-event="modification"
                                    href="<?php echo $this->url('fiche-metier-type/modifier-comportementale', ['id' => $fichemetier->getId()], [], true); ?>">
@@ -293,8 +294,8 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         </span>
                     </h2>
                 </div>
-                <?php if ($editMode) : ?>
-                <div class="pull-right">
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
+                <div class="pull-right" style="margin-right:1rem;">
                     <?php /** @see FicheMetierController::modifierApplicationAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fichemetier->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal"
@@ -306,8 +307,8 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                 </div>
                 <?php endif; ?>
 
-                <?php if($ficheposte ) : ?>
-                <div class="pull-right">
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+                <div class="pull-right" style="margin-right:1rem;">
                     <a
                             href="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
@@ -383,8 +384,8 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                         </span>
                     </h2>
                 </div>
-                <?php if ($editMode) : ?>
-                <div class="pull-right">
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+                <div class="pull-right" style="margin-right:1rem;">
                     <?php /** @see FicheMetierController::modifierFormationAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier-type/modifier-formation', ['id' => $fichemetier->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal"
@@ -396,8 +397,8 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
                 </div>
                 <?php endif; ?>
 
-                <?php if($ficheposte ) : ?>
-                    <div class="pull-right">
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+                    <div class="pull-right" style="margin-right:1rem;">
                         <a
                             href="<?php echo $this->url('fiche-poste/selectionner-formations-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"

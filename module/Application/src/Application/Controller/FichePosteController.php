@@ -169,7 +169,6 @@ class FichePosteController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getFichePosteService()->delete($fiche);
-            //return $this->redirect()->toRoute('home');
             exit();
         }
 

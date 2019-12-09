@@ -2,7 +2,7 @@
 
 /**
  * @var FicheTypeExterne $fiche
- * @var boolean $actionnable
+ * @var array $options
  */
 
 use Application\Entity\Db\FicheTypeExterne;
@@ -17,7 +17,7 @@ use Application\Entity\Db\Formation;
                 <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelle(); ?> </h2>
             </div>
             <div class="col-md-1 pull-right">
-                <?php if ($actionnable === true) : ?>
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
                     <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
                        <span class="icon editer" title="Modifier la fiche métier"></span></a>
@@ -37,6 +37,10 @@ use Application\Entity\Db\Formation;
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->ficheMetier($fiche->getFicheType(), $fiche->getFichePoste(), ['sans-titre' => true, 'activite-liste' => $fiche->getActivites(), ]); ?>
+        <?php
+            $options['sans-titre'] = true;
+            $options['activite-liste'] = $fiche->getActivites();
+            echo $this->ficheMetier($fiche->getFicheType(), $fiche->getFichePoste(), $options);
+        ?>
     </div>
 </div>
