@@ -8,6 +8,11 @@ _Serveur de prod_ : https://preecog.unicaen.fr/
 
 ## Guide des versions
 
+version **0.4.9** (13/12/2019) :
+* Affichage des statuts et grades comme discuté lors de la réunion précédente
+* Possibilité de sélectionner des sous-activité dans une fiche de poste
+* Action pour convertir des sous-activités dans le nouveau modèle 
+
 version **0.4.8** (09/12/2019) :
 * Correction du bug de l'hydrator d'AssocierAgent
 * Amélioration des viewhelpers associés à l'affichage des fiches métiers

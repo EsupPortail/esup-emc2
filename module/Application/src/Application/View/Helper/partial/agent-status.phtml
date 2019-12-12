@@ -11,74 +11,75 @@ use Application\Entity\Db\AgentStatut;
 ?>
 
 <div class="agent-status">
+    <div class="row">
+    <div class="col-md-4">
     <?php if (!isset($options['structure']) || $options['structure'] !== false) : ?>
         <span class="badge structure" title="<?php echo $statut->getStructure()->getLibelleLong(); ?>">
             <?php echo $statut->getStructure()->getLibelleCourt(); ?>
         </span>
     <?php endif; ?>
+    </div>
 
-    <?php if (!isset($options['periode']) || $options['periode'] !== false) : ?>
-        <?php
-            $debut  = ($statut->getDebut())?$statut->getDebut()->format('d/m/Y'):'---';
-            $fin    = ($statut->getFin() && $statut->getFin()->format('d/m/Y') !== '31/12/1999')?$statut->getFin()->format('d/m/Y'):'---';
-        ?>
-        <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
-    <?php endif; ?>
-
-    <br/>
-
-    <dl class="dl-horizontal">
-        <?php if (!isset($options['id']) || $options['id'] !== false) : ?>
-            <dt> Identifiant </dt>
-            <dd>
-                <span class="badge">
-                    <?php echo $statut->getIdOrigine(); ?>
-                </span>
-            </dd>
-        <?php endif; ?>
-
-        <?php if (!isset($options['denomination']) || $options['denomination'] !== false) : ?>
-            <dt> Agent </dt>
-            <dd>
-                <span class="badge">
-                    <?php echo $statut->getAgent()->getDenomination(); ?>
-                </span>
-            </dd>
-        <?php endif; ?>
-
-    <?php if (!isset($options['statut']) || $options['statut'] !== false) : ?>
-        <dt> Témoins actifs</dt>
-        <dd>
-            <ul>
+    <div class="col-md-4">
+        <?php if (!isset($options['periode']) || $options['periode'] !== false) : ?>
             <?php
-                if ($statut->isTitulaire())         echo '<li>Titulaire</li>';
-                if ($statut->isCdi())               echo '<li>C.D.I.</li>';
-                if ($statut->isCdd())               echo '<li>C.D.D.</li>';
-                if ($statut->isVacataire())         echo '<li>Vacataire</li>';
-                if ($statut->isEnseignant())        echo '<li>Enseignant</li>';
-                if ($statut->isAdministratif())     echo '<li>Administratif</li>';
-                if ($statut->isChercheur())         echo '<li>Chercheur</li>';
-                if ($statut->isEtudiant())          echo '<li>Etudiant</li>';
-                if ($statut->isAuditeurLibre())     echo '<li>Auditeur libre</li>';
-                if ($statut->isDoctorant())         echo '<li>Doctorant</li>';
-                if ($statut->isDetacheIn())         echo '<li>Détaché (in)</li>';
-                if ($statut->isDetacheOut())        echo '<li>Détaché (out)</li>';
-                if ($statut->isDispo())             echo '<li>Disponibilité</li>';
-                if ($statut->isHeberge())           echo '<li>Hébergé</li>';
-                if ($statut->isEmerite())           echo '<li>Émerite</li>';
-                if ($statut->isRetraite())          echo '<li>Retraité</li>';
+                $debut  = ($statut->getDebut())?$statut->getDebut()->format('d/m/Y'):'---';
+                $fin    = ($statut->getFin() && $statut->getFin()->format('d/m/Y') !== '31/12/1999')?$statut->getFin()->format('d/m/Y'):'---';
             ?>
-            </ul>
-        </dd>
-    <?php endif; ?>
-    </dl>
+            <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
+        <?php endif; ?>
+    </div>
+
+    <div class="col-md-4">
+            <?php if (!isset($options['id']) || $options['id'] !== false) : ?>
+                <strong> Identifiant </strong> <br/>
+                    <span class="badge">
+                        <?php echo $statut->getIdOrigine(); ?>
+                    </span>
+            <?php endif; ?>
+
+            <?php if (!isset($options['denomination']) || $options['denomination'] !== false) : ?>
+                <strong> Agent  : </strong> <br/>
+                    <span class="badge">
+                        <?php echo $statut->getAgent()->getDenomination(); ?>
+                    </span>
+            <?php endif; ?>
+
+        <?php if (!isset($options['statut']) || $options['statut'] !== false) : ?>
+            <strong> Témoins actifs : </strong>
+
+                <ul>
+                <?php
+                    if ($statut->isTitulaire())         echo '<li>Titulaire</li>';
+                    if ($statut->isCdi())               echo '<li>C.D.I.</li>';
+                    if ($statut->isCdd())               echo '<li>C.D.D.</li>';
+                    if ($statut->isVacataire())         echo '<li>Vacataire</li>';
+                    if ($statut->isEnseignant())        echo '<li>Enseignant</li>';
+                    if ($statut->isAdministratif())     echo '<li>Administratif</li>';
+                    if ($statut->isChercheur())         echo '<li>Chercheur</li>';
+                    if ($statut->isEtudiant())          echo '<li>Etudiant</li>';
+                    if ($statut->isAuditeurLibre())     echo '<li>Auditeur libre</li>';
+                    if ($statut->isDoctorant())         echo '<li>Doctorant</li>';
+                    if ($statut->isDetacheIn())         echo '<li>Détaché (in)</li>';
+                    if ($statut->isDetacheOut())        echo '<li>Détaché (out)</li>';
+                    if ($statut->isDispo())             echo '<li>Disponibilité</li>';
+                    if ($statut->isHeberge())           echo '<li>Hébergé</li>';
+                    if ($statut->isEmerite())           echo '<li>Émerite</li>';
+                    if ($statut->isRetraite())          echo '<li>Retraité</li>';
+                ?>
+                </ul>
+        <?php endif; ?>
+
+    </div>
+    </div>
 </div>
 
 <style>
     div.agent-status {
         border: solid lightblue 1px;
-        margin: 1rem;
-        padding: 1rem;
+        margin: 0.5rem;
+        padding-top 0.5rem;
+        padding-left: 1rem;
         min-width: 80rem;
         width: 80%;
         /*border-radius: 5px;*/
