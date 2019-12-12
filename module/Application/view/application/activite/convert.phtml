@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @see \Application\Controller\ActiviteController::convertAction()
+ *
+ * @var Activite $activite
+ * @var ActiviteDescription[] $new
+ * @var string $action
+ */
+
+use Application\Entity\Db\Activite;
+use Application\Entity\Db\ActiviteDescription;
+
+?>
+
+<h2> Description précédente </h2>
+
+<?php echo $activite->getDescription(); ?>
+
+<h2> Nouvelle description </h2>
+
+<ul>
+    <?php foreach ($new as $item) : ?>
+        <li> <?php echo $item->getDescription(); ?> </li>
+    <?php endforeach;?>
+</ul>
+
+<table>
+    <tr><td>
+            <form method="post" action="<?php echo $action; ?>">
+                <input type="hidden" name="reponse" value="oui">
+                <input type="submit" name="reponse" class="btn btn-success action" value="Oui, je suis sûr&middot;e">
+            </form>
+        </td><td>
+            <form method="post" action="<?php echo $action; ?>">
+                <input type="hidden" name="reponse" value="non">
+                <input type="submit" id="non" name="reponse" class="btn btn-danger action"  value="Non, je ne veux pas">
+            </form>
+        </td></tr>
+</table>

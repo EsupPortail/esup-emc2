@@ -177,6 +177,7 @@ class ActiviteController  extends AbstractActionController {
 //        $form->bind($activite);
 
         return new ViewModel([
+            'title' => 'Modification des sous-activités',
             'activite' => $activite,
         ]);
     }
@@ -195,17 +196,40 @@ class ActiviteController  extends AbstractActionController {
         $descriptions = preg_replace("/<\/li><\/ul>$/", "", $descriptions);
         $elements = explode("</li><li>", $descriptions);
 
-        $activite->clearDescriptions();
-        foreach($elements as $element) {
+        $new = [];
+        foreach ($elements as $element) {
             $description = new ActiviteDescription();
             $description->setActivite($activite);
             $description->setDescription($element);
-            $this->getActiviteDescriptionService()->create($description);
-            $activite->addDescription($description);
+            $new[] = $description;
         }
-        $this->getActiviteService()->update($activite);
 
-        //return new ViewModel();
-        exit();
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            if($data['reponse'] === 'oui') {
+                $descriptions = $activite->getDescriptions();
+                foreach ($descriptions as $description) $this->getActiviteDescriptionService()->delete($description);
+                $activite->clearDescriptions();
+                $this->getActiviteService()->update($activite);
+
+                foreach ($new as $item) {
+                    $item->setActivite($activite);
+                    $this->getActiviteDescriptionService()->create($item);
+                    $activite->addDescription($item);
+                }
+                $this->getActiviteService()->update($activite);
+            }
+            exit();
+        }
+
+        return new ViewModel([
+            'title' => "Convertion de l'activite [".$activite->getLibelle()."].",
+            'activite' => $activite,
+            'new' => $new,
+            'action' => $this->url()->fromRoute('activite/convert', ['activite' => $activite->getId()], [], true),
+        ]);
     }
 }

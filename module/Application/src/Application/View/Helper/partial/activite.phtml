@@ -109,10 +109,12 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                     <?php foreach ($activite->getDescriptions() as $description) : ?>
                         <?php
                             $display = true;
-                            foreach ($retirees as $retiree) {
-                                if ($retiree->getDescription()->getId() === $description->getId()) {
-                                    $display = false;
-                                    break;
+                            if ($retirees !== null) {
+                                foreach ($retirees as $retiree) {
+                                    if ($retiree->getDescription()->getId() === $description->getId()) {
+                                        $display = false;
+                                        break;
+                                    }
                                 }
                             }
                         ?>
