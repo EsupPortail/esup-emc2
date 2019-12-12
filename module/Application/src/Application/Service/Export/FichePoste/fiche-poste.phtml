@@ -1,12 +1,21 @@
 <?php
 
 /**
+ * TODO tenir compte des "choses" (Compétences, Applications, Formation) provenant des activités
  * @var FichePoste $fiche
  */
 
+use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
+use Application\Entity\Db\FicheposteApplicationRetiree;
+use Application\Entity\Db\FicheposteCompetenceRetiree;
+use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Entity\Db\Formation;
 use Application\Entity\Db\Poste;
 
 $canAssocierAgent = true;
@@ -263,94 +272,166 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
         <?php foreach ($ficheMetier->getFicheType()->getActivites() as $activite) : ?>
             <?php if (array_search($activite->getActivite()->getId(), $activites) !== false) : ?>
                 <dt> <?php echo $activite->getActivite()->getLibelle(); ?> </dt>
-                <dd> <?php echo $activite->getActivite()->getDescription(); ?> </dd>
+                <dd>
+                    <?php if (empty($activite->getActivite()->getDescriptions())) : ?>
+                        <?php echo $activite->getActivite()->getDescription(); ?>
+                    <?php else: ?>
+
+                    <?php
+                        /** @var ActiviteDescription[]  $descriptions */
+                        $descriptions = $activite->getActivite()->getDescriptions();
+                        /** @var FicheposteActiviteDescriptionRetiree[] $descriptionsRetirees */
+                        $descriptionsRetirees = $fiche->getDescriptionsRetirees()->toArray();
+                    ?>
+
+                    <ul>
+                        <?php foreach ($descriptions as $description) : ?>
+                            <?php
+                                $found = false;
+                                foreach ($descriptionsRetirees as $descriptionRetiree) {
+                                    if ($descriptionRetiree->getDescription()->getId() === $description->getId()) {
+                                        $found = true;
+                                        break;
+                                    }
+                                }
+                            ?>
+                            <?php if (!$found) : ?>
+                                <li> <?php echo $description->getDescription(); ?> </li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
+                    </ul>
+
+
+                    <?php endif; ?>
+                </dd>
             <?php endif; ?>
         <?php endforeach; ?>
         </dl>
 
         <h3> Parcours de formation pour la prise de poste : </h3>
 
+        <!-- COMPETENCE -------------------------------------------------------------------------------------------- -->
         <?php
+
+        /** @var Competence[]  $competences */
         $competences = $ficheMetier->getFicheType()->getCompetences()->toArray();
-        $connaissances = []; $operationnelles = []; $comportementalles = [];
-        /** @var \Application\Entity\Db\Competence $competence */
+        /** @var FicheposteCompetenceRetiree[] $competencesRetirees */
+        $competencesRetirees = $fiche->getCompetencesRetirees()->toArray();
+        usort($competences, function(Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle(); });
+
+        $result = [];
+
         foreach ($competences as $competence) {
-            switch ($competence->getType()->getLibelle()) {
-                case 'Connaissance':
-                    $connaissances[] = $competence;
+            $found = false;
+            foreach ($competencesRetirees as $competenceRetiree) {
+                if ($competenceRetiree->getCompetence()->getId() === $competence->getId()) {
+                    $found = true;
                     break;
-                case 'Opérationnelle':
-                    $operationnelles[] = $competence;
-                    break;
-                case 'Comportementale':
-                    $comportementalles[] = $competence;
-                    break;
+                }
             }
+            if (!$found) $result[$competence->getType()->getLibelle()][] = $competence;
         }
+
+
         ?>
 
         <dl>
-            <?php if (!empty($connaissances)) : ?>
+            <?php if (!empty($result['Connaissances'])) : ?>
             <dt> Connaissances  </dt>
             <dd>
                 <ul>
                     <?php
-                    /** @var \Application\Entity\Db\Competence $competence */
-                    foreach ($connaissances as $competence) :
+                    /** @var Competence $competence */
+                    foreach ($result['Connaissances'] as $competence) :
                         ?>
                         <li> <?php echo $competence->getLibelle(); ?> </li>
                     <?php endforeach; ?>
                 </ul>
             </dd>
             <?php endif; ?>
-            <?php if (!empty($operationnelles)) : ?>
-            <dt> Compétences opérationnelles   </dt>
-            <dd>
-                <ul>
-                    <?php
-                    /** @var \Application\Entity\Db\Competence $competence */
-                    foreach ($operationnelles as $competence) :
-                        ?>
-                        <li> <?php echo $competence->getLibelle(); ?> </li>
-                    <?php endforeach; ?>
-                </ul>
-            </dd>
+            <?php if (!empty($result['Opérationnelles'])) : ?>
+                <dt> Compétences opérationnelles  </dt>
+                <dd>
+                    <ul>
+                        <?php
+                        /** @var Competence $competence */
+                        foreach ($result['Opérationnelles'] as $competence) :
+                            ?>
+                            <li> <?php echo $competence->getLibelle(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </dd>
             <?php endif; ?>
-            <?php if (!empty($comportementalles)) : ?>
-            <dt> Compétences comportementales  </dt>
-            <dd>
-                <ul>
-                    <?php
-                    /** @var \Application\Entity\Db\Competence $competence */
-                    foreach ($comportementalles as $competence) :
-                        ?>
-                        <li> <?php echo $competence->getLibelle(); ?> </li>
-                    <?php endforeach; ?>
-                </ul>
-            </dd>
+            <?php if (!empty($result['Comportementales'])) : ?>
+                <dt> Compétences comportementales  </dt>
+                <dd>
+                    <ul>
+                        <?php
+                        /** @var Competence $competence */
+                        foreach ($result['Comportementales'] as $competence) :
+                            ?>
+                            <li> <?php echo $competence->getLibelle(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </dd>
             <?php endif; ?>
+
+            <!-- APPLICATION --------------------------------------------------------------------------------------- -->
             <?php if (!empty($ficheMetier->getFicheType()->getApplications()->toArray())) : ?>
                 <dt> Applications  </dt>
                 <dd>
                     <ul>
                     <?php
-                        /** @var \Application\Entity\Db\Application $application */
-                    foreach ($ficheMetier->getFicheType()->getApplications() as $application) :
+                        /** @var Application[]  $applications */
+                        $applications = $ficheMetier->getFicheType()->getApplications()->toArray();
+                        /** @var FicheposteApplicationRetiree[] $applicationsRetirees */
+                        $applicationsRetirees = $fiche->getApplicationsRetirees()->toArray();
+                        usort($applications, function(Application $a, Application $b) { return $a->getLibelle() > $b->getLibelle(); });
                     ?>
-                        <li> <?php echo $application->getLibelle(); ?> </li>
+                    <?php foreach ($applications as $application) : ?>
+                        <?php
+                            $found = false;
+                            foreach ($applicationsRetirees as $applicationRetiree) {
+                                if ($applicationRetiree->getApplication()->getId() === $application->getId()) {
+                                    $found = true;
+                                    break;
+                                }
+                            }
+                        ?>
+                        <?php if (!$found) : ?>
+                            <li> <?php echo $application->getLibelle(); ?> </li>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                     </ul>
                 </dd>
             <?php endif; ?>
+
+            <!-- FORMATION ----------------------------------------------------------------------------------------- -->
             <?php if (!empty($ficheMetier->getFicheType()->getFormations())) : ?>
                 <dt> Formations  </dt>
                 <dd>
                     <ul>
                         <?php
-                        /** @var \Application\Entity\Db\Formation $formation */
-                        foreach ($ficheMetier->getFicheType()->getFormations() as $formation) :
+                        /** @var Formation[]  $formations */
+                        $formations = $ficheMetier->getFicheType()->getFormations();
+                        /** @var FicheposteFormationRetiree[] $formationsRetirees */
+                        $formationsRetirees = $fiche->getFormationsRetirees()->toArray();
+                        usort($formations, function(Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle(); });
+                        ?>
+                        <?php foreach ($formations as $formation) : ?>
+                            <?php
+                            $found = false;
+                            foreach ($formationsRetirees as $formationRetiree) {
+                                if ($formationRetiree->getFormation()->getId() === $formation->getId()) {
+                                    $found = true;
+                                    break;
+                                }
+                            }
                             ?>
-                            <li> <?php echo $formation->getLibelle(); ?> </li>
+                            <?php if (!$found) : ?>
+                                <li> <?php echo $formation->getLibelle(); ?> </li>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </ul>
                 </dd>
@@ -361,18 +442,16 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
 <br/>
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
+<?php if ($fiche->getSpecificite() !== null) : ?>
 <div class="">
     <div class="titre-banner">
         Spécificité du poste
     </div>
 
-    <?php if ($fiche->getSpecificite() === null) : ?>
-        Aucune spécificité attachée à ce poste.
-    <?php else: ?>
         <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
-    <?php endif; ?>
 </div>
 
+<?php endif; ?>
 
 <style>
     body {
