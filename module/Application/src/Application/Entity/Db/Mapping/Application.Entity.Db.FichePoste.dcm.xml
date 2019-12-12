@@ -24,6 +24,7 @@
         <one-to-many target-entity="Application\Entity\Db\FicheposteApplicationRetiree" mapped-by="fichePoste" field="applicationsRetirees"/>
         <one-to-many target-entity="Application\Entity\Db\FicheposteCompetenceRetiree" mapped-by="fichePoste" field="competencesRetirees"/>
         <one-to-many target-entity="Application\Entity\Db\FicheposteFormationRetiree" mapped-by="fichePoste" field="formationsRetirees"/>
+        <one-to-many target-entity="Application\Entity\Db\FicheposteActiviteDescriptionRetiree" mapped-by="fichePoste" field="descriptionsRetirees"/>
 
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

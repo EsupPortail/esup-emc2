@@ -11,6 +11,8 @@ use Application\Form\Activite\ActiviteHydratorFactory;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Activite\ActiviteServiceFactory;
+use Application\Service\ActiviteDescription\ActiviteDescriptionService;
+use Application\Service\ActiviteDescription\ActiviteDescriptionServiceFactory;
 use Application\View\Helper\ActiviteViewHelper;
 use UnicaenAuth\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -43,6 +45,8 @@ return [
                     'controller' => ActiviteController::class,
                     'action' => [
                         'editer',
+                        'modifier',
+                        'convert',
                         'historiser',
                         'restaurer',
                     ],
@@ -96,6 +100,16 @@ return [
                             ],
                         ],
                     ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier[/:activite]',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                    ],
                     'historiser' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -126,6 +140,16 @@ return [
                             ],
                         ],
                     ],
+                    'convert' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/convert/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'convert',
+                            ],
+                        ],
+                    ],
                     'creer' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -144,6 +168,7 @@ return [
     'service_manager' => [
         'factories' => [
             ActiviteService::class => ActiviteServiceFactory::class,
+            ActiviteDescriptionService::class => ActiviteDescriptionServiceFactory::class,
         ],
     ],
     'controllers'     => [

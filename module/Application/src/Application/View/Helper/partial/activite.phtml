@@ -3,11 +3,21 @@
 use Application\Controller\ActiviteController;
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 
 /**
+ * Provient de l'appel de l'aide de vue
  * @var Activite|FicheMetierTypeActivite $activite
+ * @var string $mode
  * @var array $options
+ *
+ * Récupéré du tableau d'options
+ * @var FichePoste $ficheposte
+ * @var FicheMetier $fichemetier
+ * @var FicheposteActiviteDescriptionRetiree[] $retirees
  */
 
 $type = null;
@@ -16,10 +26,9 @@ if ($activite instanceof FicheMetierTypeActivite) {
     $activite  = $activite->getActivite();
 }
 
-$editMode = false;
-if (isset($options['edit-mode'])) $editMode = ($options['edit-mode'] === true);
-
-
+$ficheposte  = (isset($options['ficheposte'])) ?   $ficheposte  = $options['ficheposte'] : null;
+$fichemetier = (isset($options['fichemetier'])) ?  $fichemetier = $options['fichemetier'] : null;
+$retirees    = (isset($options['retirees'])) ?     $retirees    = $options['retirees'] : null;
 
 $competences   = $activite->getCompetences();
 $nbCompetence  = count($competences);
@@ -32,13 +41,36 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
 ?>
 
 <div class="panel panel-info">
+
     <div class="panel-heading">
-        <h2>
-            <?php echo $activite->getLibelle(); ?>
-        </h2>
+        <div class="row">
+
+            <!-- NOM DE L'ACTVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            <div class="col-md-11">
+                <h2 style="text-align: justify;">
+                    <?php echo $activite->getLibelle(); ?>
+                </h2>
+            </div>
+            <!-- SELECTION DES SOUS-ACTIVITE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            <div class="col-md-1">
+                <?php if ($mode === 'edition-fiche-poste') : ?>
+                    <?php if ($ficheposte !== null AND $fichemetier !== null AND !empty($activite->getDescriptions())) : ?>
+                        <a      <?php /** @see \Application\Controller\FichePosteController::selectionnerDescriptionsRetireesAction() */ ?>
+                                href="<?php echo $this->url('fiche-poste/selectionner-descriptions-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId(), 'activite' => $activite->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification">
+                            <span class="icon listing" title="Sélection des sous-activités"></span></a>
+                    <?php else: ?>
+                        <span class="icon listing" style="color:darkred;" title="Pas de fiche de poste, ou de fiche métier, ou pas de sous-activités"></span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
+
     <div class="panel-body">
-        <?php if ($editMode === true && $type !== null) : ?>
+
+        <!-- MODIFICATION DE L'ACTIVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <?php if ($mode == 'edition-fiche-metier') : ?>
         <div class="col-md-1" style="border:1px lightgray solid; padding: 5px; text-align: center;">
             <?php /** @see ActiviteController::editerAction() */ ?>
             <a href="<?php echo $this->url('activite/editer', ['activite' => $activite->getId()], [], true); ?>"
@@ -67,17 +99,36 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                 <span class="icon descendre"></span><br/>
             </a>
         </div>
-        <div class="col-md-7">
-            <h4> Description </h4>
-            <?php echo $activite->getDescription(); ?>
-        </div>
-        <?php else : ?>
-            <div class="col-md-8">
-                <h4> Description </h4>
-                <?php echo $activite->getDescription(); ?>
-            </div>
         <?php endif; ?>
 
+        <!-- AFFICHAGE DES SOUS ACTIVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <div class="<?php echo ($mode == 'edition-fiche-metier')?"col-md-7":"col-md-8"; ?>">
+            <h4> Description </h4>
+            <?php if (! empty($activite->getDescriptions())) : ?>
+                <ul>
+                    <?php foreach ($activite->getDescriptions() as $description) : ?>
+                        <?php
+                            $display = true;
+                            foreach ($retirees as $retiree) {
+                                if ($retiree->getDescription()->getId() === $description->getId()) {
+                                    $display = false;
+                                    break;
+                                }
+                            }
+                        ?>
+                        <?php if ($display) : ?>
+                            <li> <?php echo $description->getDescription(); ?></li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else : ?>
+                <i>
+                    <?php echo $activite->getDescription(); ?>
+                </i>
+            <?php endif; ?>
+        </div>
+
+        <!-- CARTOUCHE LATERAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <?php if ($nbObject !== 0) : ?>
             <div class="col-md-4" style="border:1px lightblue solid">
                 <small>

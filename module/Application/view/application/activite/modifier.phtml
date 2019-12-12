@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @see \Application\Controller\ActiviteController::modifierAction()
+ * @var Activite $activite
+ */
+
+use Application\Entity\Db\Activite;
+
+$NB_MIN = 3;
+?>
+
+<form
+        action="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [] , true); ?>"
+        method="post">
+
+    <div id="descriptions">
+    <?php $position = 1; ?>
+    <?php foreach ($activite->getDescriptions() as $description) : ?>
+        <div>
+            <input id="reference_<?php echo $position; ?>"  name="reference_<?php echo $position; ?>"  type="hidden" value="<?php echo $description->getId(); ?>" />
+            <textarea id="description_<?php echo $position; ?>" name="description_<?php echo $position; ?>"><?php echo trim($description->getDescription()); ?></textarea>
+            <input type="button" class="remove btn btn-danger action" value="Retirer"/>
+        </div>
+        <?php $position++; ?>
+    <?php endforeach; ?>
+    <?php for (; $position <= $NB_MIN ; $position++) : ?>
+        <div>
+            <input id="reference_<?php echo $position; ?>"  name="reference_<?php echo $position; ?>"  type="hidden" value="" />
+            <textarea id="description_<?php echo $position; ?>" name="description_<?php echo $position; ?>"></textarea>
+            <input type="button" class="remove btn btn-danger action" value="Retirer"/>
+        </div>
+    <?php endfor; ?>
+    </div>
+    <input id="count" name="count" type="hidden" value="<?php echo $position; ?>"/>
+    <input type="button" class="add btn btn-success action" value="Ajouter"/>
+    <input id="submit" class="btn btn-primary action" value="Enregistrer"/>
+</form>
+
+
+<script>
+    $('input.add').click(function () {
+        let position = $('input#count').val();
+        alert(position);
+        $('div#descriptions').append("<div>\n" +
+            "            <input id=\"reference_<?php echo $position; ?>\"  name=\"reference_<?php echo $position; ?>\"  type=\"hidden\" value=\"\" />\n" +
+            "            <textarea id=\"description_<?php echo $position; ?>\" name=\"description_<?php echo $position; ?>\"></textarea>\n" +
+            "            <input type=\"button\" class=\"remove btn btn-danger action\" value=\"Retirer\"/>\n" +
+            "        </div>");
+        $('input#count').val( parseInt(position) + 1);
+    });
+    $('input.remove').click(function () {
+        $(this).parent().remove();
+    })
+</script>

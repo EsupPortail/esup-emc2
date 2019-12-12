@@ -16,6 +16,8 @@ class Activite
     /** @var string */
     private $description;
     /** @var ArrayCollection */
+    private $descriptions;
+    /** @var ArrayCollection */
     private $applications;
     /** @var ArrayCollection */
     private $competences;
@@ -24,6 +26,7 @@ class Activite
 
     public function __construct()
     {
+        $this->descriptions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
         $this->formations = new ArrayCollection();
@@ -70,6 +73,58 @@ class Activite
     {
         $this->description = $description;
         return $this;
+    }
+
+    /** DESCRIPTIONS **************************************************************************************************/
+
+    /**
+     * @return ActiviteDescription[]
+     */
+    public function getDescriptions()
+    {
+        return $this->descriptions->toArray();
+    }
+
+    /**
+     * @param ActiviteDescription $description
+     * @return Activite
+     */
+    public function addDescription($description)
+    {
+        $this->descriptions->add($description);
+        return $this;
+    }
+
+    /**
+     * @param ActiviteDescription $description
+     * @return Activite
+     */
+    public function removeDescription($description)
+    {
+        $this->descriptions->removeElement($description);
+        return $this;
+    }
+
+    /**
+     * @return Activite
+     */
+    public function clearDescriptions()
+    {
+        $this->descriptions->clear();
+        return $this;
+    }
+
+    /**
+     * @param integer $id
+     * @return boolean
+     */
+    public function getDescriptionById($id)
+    {
+        /** @var ActiviteDescription $description */
+        foreach ($this->descriptions as $description) {
+            if ($description->getId() === $id) return $description;
+        }
+        return null;
     }
 
     /** APPLICATIONS **************************************************************************************************/

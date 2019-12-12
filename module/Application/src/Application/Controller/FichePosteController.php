@@ -2,10 +2,12 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Application\Entity\Db\FicheposteFormationRetiree;
@@ -21,6 +23,8 @@ use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
+use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
@@ -42,6 +46,8 @@ class FichePosteController extends AbstractActionController {
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use ActiviteServiceAwareTrait;
+    use ActivitesDescriptionsRetireesServiceAwareTrait;
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
     use FormationsRetireesServiceAwareTrait;
@@ -659,6 +665,57 @@ class FichePosteController extends AbstractActionController {
             'ficheposte' => $ficheposte,
             'fichemetier' => $fichemetier,
             'formations' => $formations,
+            'retirees' => $retirees,
+        ]);
+    }
+
+    /** Descriprition conservées **************************************************************************************/
+
+    public function selectionnerDescriptionsRetireesAction() {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+
+        /**
+         * @var ActiviteDescription[] $descriptions
+         * @var FicheposteActiviteDescriptionRetiree[] $retirees
+         */
+        $descriptions = $activite->getDescriptions();
+        $retirees = $this->getActivitesDescriptionsRetireesService()->getActivitesDescriptionsRetirees($ficheposte, $fichemetier, $activite);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            foreach ($descriptions as $description) {
+                $found = null;
+                foreach ($retirees as $retiree) {
+                    if ($retiree->getHistoDestruction() === null AND $retiree->getDescription() === $description) {
+                        $found = $retiree;
+                    }
+                }
+                $checked = (isset($data[$description->getId()]) AND $data[$description->getId()] === "on");
+
+                if ($found !== null AND $checked) $this->getActivitesDescriptionsRetireesService()->delete($found);
+                if ($found === null AND !$checked) {
+                    $item = new FicheposteActiviteDescriptionRetiree();
+                    $item->setFichePoste($ficheposte);
+                    $item->setFicheMetier($fichemetier);
+                    $item->setActivite($activite);
+                    $item->setDescription($description);
+                    $this->getActivitesDescriptionsRetireesService()->create($item);
+                }
+            }
+//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
+        }
+
+        return new ViewModel([
+            'title' => "Sélection de sous-activité pour l'activité [" .$activite->getLibelle() ."]",
+            'ficheposte' => $ficheposte,
+            'fichemetier' => $fichemetier,
+            'activite' => $activite,
+            'descriptions' => $descriptions,
             'retirees' => $retirees,
         ]);
     }

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @see \Application\Controller\FichePosteController::selectionnerApplicationsRetireesAction()
+ *
+ * @var FichePoste $ficheposte
+ * @var FicheMetier $fichemetier
+ * @var Activite $activite
+ * @var ActiviteDescription[] $descriptions
+ * @var FicheposteActiviteDescriptionRetiree[] $retirees
+ */
+
+use Application\Entity\Db\Activite;
+use Application\Entity\Db\ActiviteDescription;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
+
+/**
+ * @param FicheposteActiviteDescriptionRetiree[] $retirees
+ * @param ActiviteDescription $description
+ * @return boolean
+ */
+function isIn($retirees, $description) {
+    foreach ($retirees as $retiree) {
+        if ($retiree->getHistoDestruction() === null AND $retiree->getDescription() === $description) return true;
+    }
+    return false;
+}
+?>
+
+<form
+    action="<?php echo $this->url('fiche-poste/selectionner-descriptions-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId(), 'activite' => $activite->getId()], [], true); ?>"
+    method="post"
+>
+
+<?php foreach ($descriptions as $description) : ?>
+    <div class="checkbox">
+        <label>
+            <input
+                    type="checkbox"
+                    id="<?php echo $description->getId(); ?>"
+                    name="<?php echo $description->getId(); ?>"
+                    <?php if (! isIn($retirees, $description)) echo "checked"; ?>
+            />
+            <?php echo $description->getDescription(); ?>
+        </label>
+    </div>
+<?php endforeach; ?>
+
+    <input type="submit" class="btn btn-primary action" value="Enregistrer"/>
+</form>

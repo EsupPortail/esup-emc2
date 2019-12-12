@@ -24,6 +24,8 @@ class FichePoste
 
     /** @var ArrayCollection */
     private $fichesMetiers;
+    /** @var ArrayCollection (FicheposteActiviteDescriptionRetiree) */
+    private $descriptionsRetirees;
     /** @var ArrayCollection (FicheposteApplicationRetiree) */
     private $applicationsRetirees;
     /** @var ArrayCollection (FicheposteCompetenceRetiree) */
@@ -34,6 +36,7 @@ class FichePoste
     public function __invoke()
     {
         $this->fichesMetiers = new ArrayCollection();
+        $this->descriptionsRetirees = new ArrayCollection();
         $this->applicationsRetirees = new ArrayCollection();
         $this->competencesRetirees = new ArrayCollection();
         $this->formationsRetirees = new ArrayCollection();
@@ -172,6 +175,27 @@ class FichePoste
             $somme += $ficheMetier->getQuotite();
         }
         return $somme;
+    }
+
+    /** Descriptions Retirées ******************************************************************************************/
+
+    /** @return ArrayCollection */
+    public function getDescriptionsRetirees() {
+        return $this->descriptionsRetirees;
+    }
+
+    /** @param FicheposteActiviteDescriptionRetiree $description */
+    public function addDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description) {
+        $this->descriptionsRetirees->add($description);
+    }
+
+    /** @param FicheposteActiviteDescriptionRetiree $description */
+    public function removeDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description) {
+        $this->descriptionsRetirees->removeElement($description);
+    }
+
+    public function clearDescriptionsRetirees() {
+        $this->descriptionsRetirees->clear();
     }
 
     /** Competences Retirées ******************************************************************************************/

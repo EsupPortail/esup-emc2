@@ -6,6 +6,7 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Application\Entity\Db\FicheposteFormationRetiree;
@@ -112,7 +113,17 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
 
     <?php foreach ($activites as $ficheActivite): ?>
         <?php if (array_search($ficheActivite->getActivite()->getId(), $activitesListe) !== false) : ?>
-            <?php echo $this->activite($ficheActivite, ['edit-mode' => (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier')]); ?>
+            <?php
+                $retirees = [];
+                if ($ficheposte) {
+                    $allRetirees = $ficheposte->getDescriptionsRetirees();
+                    /** @var FicheposteActiviteDescriptionRetiree $retiree */
+                    foreach ($allRetirees as $retiree) {
+                        if ($retiree->getHistoDestruction() === null AND $retiree->getActivite() === $activite->getActivite()) $retirees[] = $retiree;
+                    }
+                }
+            ?>
+            <?php echo $this->activite($ficheActivite, $options['mode'], ['ficheposte' => $ficheposte, 'fichemetier' => $fichemetier, 'retirees' => $retirees]); ?>
         <?php endif; ?>
     <?php endforeach;?>
 </div>

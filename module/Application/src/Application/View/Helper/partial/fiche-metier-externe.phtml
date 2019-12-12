@@ -17,7 +17,7 @@ use Application\Entity\Db\Formation;
                 <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelle(); ?> </h2>
             </div>
             <div class="col-md-1 pull-right">
-                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
                     <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
                        <span class="icon editer" title="Modifier la fiche métier"></span></a>
