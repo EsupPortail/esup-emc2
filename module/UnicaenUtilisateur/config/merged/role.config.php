@@ -49,6 +49,7 @@ return [
         ],
     ],
 
+    //'Zend\Navigation\Navigation' => [
     'navigation' => [
         'default' => [
             'home' => [

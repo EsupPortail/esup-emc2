@@ -69,8 +69,6 @@ class UserService implements RechercheIndividuServiceInterface
     public function getUtilisateurByUsername($username)
     {
         $qb = $this->getEntityManager()->getRepository($this->userEntityClass)->createQueryBuilder("utilisateur")
-//            ->addSelect('role')->join('utilisateur.roles', 'role')
-//            ->addSelect('lrole')->leftJoin('utilisateur.lastRole', 'lrole')
             ->andWhere("utilisateur.username = :username")
             ->setParameter("username", $username)
         ;
@@ -295,9 +293,6 @@ class UserService implements RechercheIndividuServiceInterface
         return null;
     }
 
-    /**
-     * @return Role
-     */
     public function getConnectedRole()
     {
         $identity = $this->authenticationService->getIdentity();
@@ -305,25 +300,15 @@ class UserService implements RechercheIndividuServiceInterface
         return $dbRole;
     }
 
-    /**
-     * @param $code
-     * @param $term
-     * @return User[]
-     */
-    public function getUsersByRoleAndTerm($code, $term)
-    {
-        $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('user')
-            ->addSelect('role')->join('user.roles', 'role')
-            ->andWhere('LOWER(user.displayName) like :search')
-            ->andWhere('role.roleId = :code')
-            ->setParameter('search', '%'.strtolower($term).'%')
-            ->setParameter('code', $code)
-        ;
+    public function getType() {
+        $identity = $this->authenticationService->getIdentity();
+        $uid = $identity['ldap']->getUid();
 
-        $result = $qb->getQuery()->getResult();
-        return $result;
+        switch($uid[0]) {
+            case 'p' : return 'PERSONNEL';
+            case 'e' : return 'ETUDIANT';
+        }
+        return 'INCONNU';
     }
-
-
 }
 

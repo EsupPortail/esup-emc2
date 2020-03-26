@@ -25,11 +25,13 @@ $canEffacer     = $this->isAllowed(RolePrivileges::getResourceId(RolePrivileges:
 
 <div class="main">
 
+    <?php if ($canAjouter): ?>
     <a  <?php /** @see RoleController::ajouterAction() */ ?>
         href="<?php echo $this->url('role/ajouter', [], [], true); ?>"
         class="btn btn-primary action ajax-modal" data-event="modification">
         <span class="icon ajouter"> Ajouter un rôle</span>
     </a>
+    <?php endif; ?>
 
     <table class="table table-condensed">
         <thead>

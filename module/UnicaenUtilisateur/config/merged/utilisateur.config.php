@@ -142,9 +142,9 @@ return [
                         ],
                     ],
                     'rechercher' => [
-                        'type'          => Literal::class,
+                        'type'          => Segment::class,
                         'options'       => [
-                            'route'       => '/rechercher',
+                            'route'       => '/rechercher[/:service-name]',
                             'defaults'    => [
                                 'controller' => UtilisateurController::class,
                                 'action' => 'rechercher',

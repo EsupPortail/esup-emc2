@@ -85,7 +85,7 @@ L'affichage du listing des utilisateurs utilise DataTable.
 HistoriqueAwareTrait a été décallé dans Unicaen/Utilisateur. Il faut penser à changer les **use** associés de
 
 ```php  
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 ```
 en
 ```php  

@@ -258,9 +258,9 @@ trait HistoriqueAwareTrait
             }
         }
 
-        $dObs = $dateObs->format('Y-m-d H-i-s');
-        $dDeb = $this->getHistoCreation() ? $this->getHistoCreation()->format('Y-m-d H-i-s') : null;
-        $dFin = $this->getHistoDestruction() ? $this->getHistoDestruction()->format('Y-m-d H-i-s') : null;
+        $dObs = $dateObs->format('Y-m-d');
+        $dDeb = $this->getHistoCreation() ? $this->getHistoCreation()->format('Y-m-d') : null;
+        $dFin = $this->getHistoDestruction() ? $this->getHistoDestruction()->format('Y-m-d') : null;
 
         if ($dDeb && !($dDeb <= $dObs)) return false;
         if ($dFin && !($dObs < $dFin)) return false;

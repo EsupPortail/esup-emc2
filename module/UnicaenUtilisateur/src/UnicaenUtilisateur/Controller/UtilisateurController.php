@@ -220,6 +220,7 @@ class UtilisateurController extends AbstractActionController {
     /** @TODO afficher si mail manquant ... */
     public function rechercherAction() {
         $term = $this->params()->fromQuery('term');
+        $serviceName = $this->params()->fromRoute('service-name');
         
 
         /** @var RechercheIndividuServiceInterface $service
@@ -230,12 +231,15 @@ class UtilisateurController extends AbstractActionController {
 
         $result= [];
         foreach ($res as $key => $individus) {
-            foreach ($individus as $individu) {
-                $result[] = array(
-                    'id' => $key . '||' . $individu->getId(),
-                    'label' => $individu->getDisplayName(),
-                    'extra' => "<span class='badge' id='". $key ."' >" . $individu->getEmail() . "</span>",
-                );
+
+            if ($serviceName === null OR $key === $serviceName ) {
+                foreach ($individus as $individu) {
+                    $result[] = array(
+                        'id' => $key . '||' . $individu->getId(),
+                        'label' => $individu->getDisplayName(),
+                        'extra' => "<span class='badge' id='" . $key . "' >" . $individu->getEmail() . "</span>",
+                    );
+                }
             }
         }
         return new JsonModel($result);

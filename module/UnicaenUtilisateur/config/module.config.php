@@ -2,7 +2,7 @@
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-//use UnicaenUtilisateur\Event\UserAuthenticatedEventListenerFactory;
+use UnicaenUtilisateur\Event\UserAuthenticatedEventListenerFactory;
 use UnicaenUtilisateur\Event\UserRoleSelectedEventListener;
 use UnicaenUtilisateur\View\Helper\UserCurrent;
 use UnicaenUtilisateur\View\Helper\UserCurrentFactory;
@@ -46,8 +46,8 @@ return [
             'UserRoleSelectedEventListener' => UserRoleSelectedEventListener::class,
             ],
         'factories' => [
-//            'UserAuthenticatedEventListener' => UserAuthenticatedEventListenerFactory::class,
-//            HistoriqueListener::class => HistoriqueListenerFactory::class,
+            'UserAuthenticatedEventListener' => UserAuthenticatedEventListenerFactory::class,
+            HistoriqueListener::class => HistoriqueListenerFactory::class,
         ],
     ],
 
