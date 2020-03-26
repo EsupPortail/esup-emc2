@@ -1,0 +1,21 @@
+<?php
+
+use UnicaenUtilisateur\Entity\Db\User;
+
+/**
+ * @var User $utilisateur
+ */
+?>
+
+
+<!--<td> --><?php //echo $utilisateur->getDisplayName(); ?><!-- </td>-->
+<td> <?php if($utilisateur->getState() == 1) echo "Actif"; else echo "<i>Inactif</i>"; ?> </td>
+<!--<td>-->
+<!--    <a href="--><?php //echo $this->url('utilisateur', [], ["query" => ["id" => $utilisateur->getId()], "fragment" => "recherche"], true);?><!--"-->
+<!--       title="Afficher les informations et éditer les rôles affectés"-->
+<!--    >-->
+<!--        <span class="glyphicon glyphicon-pencil"></span>-->
+<!--    </a>-->
+<!--    <span title="Modifier le status du compte" id="--><?php //echo $utilisateur->getId(); ?><!--" class="status-refresh glyphicon glyphicon-refresh"></span>-->
+<!--</td>-->
+

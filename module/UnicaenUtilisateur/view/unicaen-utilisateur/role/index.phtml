@@ -1,0 +1,88 @@
+<?php
+
+use UnicaenUtilisateur\Controller\RoleController;
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
+
+/**
+ * @see UnicaenUtilisateur\Controller\RoleController::indexAction()
+ * @var Role[] $roles
+ */
+
+$canAfficher    = $this->isAllowed(RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER));
+$canAjouter     = $this->isAllowed(RolePrivileges::getResourceId(RolePrivileges::ROLE_MODIFIER));
+$canModifier    = $this->isAllowed(RolePrivileges::getResourceId(RolePrivileges::ROLE_MODIFIER));
+$canEffacer     = $this->isAllowed(RolePrivileges::getResourceId(RolePrivileges::ROLE_EFFACER));
+
+?>
+
+<?php $this->headTitle($this->translate("Administration des rôles")) ?>
+
+<h1 class="page-header" > Administration des rôles </h1>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<div class="main">
+
+    <a  <?php /** @see RoleController::ajouterAction() */ ?>
+        href="<?php echo $this->url('role/ajouter', [], [], true); ?>"
+        class="btn btn-primary action ajax-modal" data-event="modification">
+        <span class="icon ajouter"> Ajouter un rôle</span>
+    </a>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Role </th>
+                <th> Utilisateurs </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($roles as $role) : ?>
+                <?php
+                    $nbUser = count($role->getUsers()->toArray());
+                    $listing = [];
+                    /** @var User $user */
+                    foreach ($role->getUsers() as $user) $listing[] = $user->getDisplayName();
+                    sort($listing);
+                ?>
+                <tr>
+                    <td> <?php echo $role->getLibelle(); ?></td>
+                    <td> <span title="<?php echo implode("\n",$listing); ?>"><?php echo $nbUser; ?> <i class="fas fa-user"></i></span> </td>
+                    <td>
+                        <?php if ($canModifier) : ?>
+                            <a <?php /** @see RoleController::modifierAction() */ ?>
+                               href="<?php echo $this->url('role/modifier', ['role' => $role->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification">
+                                <span class="icon editer" title="Modifier le rôle"></span>
+                            </a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canEffacer) : ?>
+                            <a <?php /** @see RoleController::supprimerAction() */ ?>
+                                    href="<?php echo $this->url('role/supprimer', ['role' => $role->getId()], [], true); ?>"
+                                    class="ajax-modal" data-event="modification">
+                                <span class="icon detruire" title="Supprimer le rôle"></span>
+                            </a>
+                        <?php else : ?>
+                            <span class="icon detruire" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

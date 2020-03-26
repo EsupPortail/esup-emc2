@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @var CategoriePrivilege $categorie
+ */
+
+use UnicaenPrivilege\Entity\Db\CategoriePrivilege;
+
+$namespace = ($categorie->getNamespace() ? $categorie->getNamespace() : "<span class='missing-data'>NONE_GIVEN</span>");
+$classname = ucfirst(strtolower($categorie->getCode())) . "Privileges";
+?>
+
+<h2> Chemin du fichier </h2>
+<pre>
+<?php echo $namespace;?>\<?php echo $classname; ?>.php
+</pre>
+<h2> Contenu du fichier </h2>
+<pre>
+&lt;?php
+
+namespace <?php echo $namespace;?>;
+
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class <?php echo $classname ?> extends Privileges
+{
+<?php foreach ($categorie->getPrivilege() as $privilege): ?>
+    const <?php echo strtoupper($privilege->getCode()); ?> = '<?php echo $privilege->getFullCode(); ?>';
+<?php endforeach; ?>
+}
+</pre>
+
+<style>
+    span.missing-data {
+        background-color: lightpink;
+        color: indianred;
+        font-weight: bolder;
+    }
+</style>

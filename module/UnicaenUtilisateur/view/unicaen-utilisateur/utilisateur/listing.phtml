@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @var User[] $users
+ */
+
+use UnicaenUtilisateur\Entity\Db\User;
+
+?>
+
+<h1 class="page-header">
+    Listing des utilisateurs de l'application
+    <span class="badge"><?php echo count($users); ?></span>
+</h1>
+
+<div class="main">
+
+    <div class="row">
+    <a  <?php /** @see UtilisateurController::indexAction() */ ?>
+        href="<?php echo $this->url('utilisateur-preecog', [], [], true); ?>"
+        class="btn btn-primary action">
+        <span class="icon retour"></span>
+        Retour à l'administration
+    </a>
+
+    <a  <?php /** @see UtilisateurController::exportAction() */ ?>
+        href="<?php echo $this->url('utilisateur-preecog/export', [], [], true); ?>"
+        class="btn btn-primary action">
+        <span class="icon csv"></span>
+        Exportation du listing
+    </a>
+    </div>
+
+    <table id="datatable" class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Nom d'utilisateur </th>
+                <th> Nom affiché </th>
+                <th> Actif </th>
+                <th> Rôle </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($users as $user) : ?>
+                <tr>
+                    <td> <?php echo $user->getUsername(); ?> </td>
+                    <td> <?php echo $user->getDisplayName(); ?> </td>
+                    <td>
+                        <?php if ($user->getState() == 1) : ?>
+                            <span style="color: darkgreen;"><span class="icon ok"></span></span>
+                        <?php else : ?>
+                            <span style="color: darkred;"><span class="icon ko"></span></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <ul>
+                            <?php foreach ($user->getRoles() as $role) : ?>
+                                <li> <?php echo $role->getLibelle(); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </td>
+                    <td>
+                        <?php /** @see UtilisateurController::indexAction() */ ?>
+                        <a href="<?php echo $this->url('utilisateur-preecog', [], ['query' => ['id' => $user->getId()]], true); ?>">
+                            <span class="icon voir"></span>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    } );
+</script>

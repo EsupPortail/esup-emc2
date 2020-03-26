@@ -1,0 +1,19 @@
+<?php
+
+use UnicaenUtilisateur\Form\User\UserForm;
+
+/**
+ * @var UserForm $form
+ * @var string $title
+ */
+
+$this->headTitle($title)
+?>
+
+<h1 class="page-header">
+    <?php echo $title; ?>
+</h1>
+
+<div class="main">
+    <?php echo $this->form($form); ?>
+</div>
