@@ -21,7 +21,7 @@ return array(
                         'index',
                     ],
                     'privileges' => [
-                        MailingPrivileges::HISTORIQUE,
+                        MailingPrivileges::MAILING_AFFICHER,
 
                     ],
                 ],
@@ -31,7 +31,7 @@ return array(
                         'afficher',
                     ],
                     'privileges' => [
-                        MailingPrivileges::AFFICHER,
+                        MailingPrivileges::MAILING_AFFICHER,
 
                     ],
                 ],
@@ -41,7 +41,7 @@ return array(
                         'mail-test',
                     ],
                     'privileges' => [
-                        MailingPrivileges::ENVOI_TEST,
+                        MailingPrivileges::MAILING_TEST,
 
                     ],
                 ],
@@ -51,7 +51,7 @@ return array(
                         're-envoi',
                     ],
                     'privileges' => [
-                        MailingPrivileges::RE_ENVOI,
+                        MailingPrivileges::MAILING_REENVOI,
 
                     ],
                 ],
@@ -61,7 +61,7 @@ return array(
                         'effacer',
                     ],
                     'privileges' => [
-                        MailingPrivileges::EFFACER,
+                        MailingPrivileges::MAILING_EFFACER,
 
                     ],
                 ],
@@ -91,22 +91,22 @@ return array(
         ],
     ],
 
-//    'navigation'      => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration-preecog' => [
-//                        'mailing' => [
-//                            'label'    => 'Mailingbis',
-//                            'route'    => 'mailing',
-//                            'resource' => MailingPrivileges::getResourceId(MailingPrivileges::AFFICHER),
-//                            'order'    => 1,
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'mailing' => [
+                            'label'    => 'Mail',
+                            'route'    => 'mailing',
+                            'resource' => MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER),
+                            'order'    => 1,
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

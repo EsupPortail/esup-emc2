@@ -9,10 +9,10 @@ use Mailing\Provider\Privilege\MailingPrivileges;
 
 $this->headTitle("Index des mails envoyées");
 
-$canTest        = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::ENVOI_TEST));
-$canAfficher    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::AFFICHER));
-$canReEnvoi     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::RE_ENVOI));
-$canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::EFFACER));
+$canTest        = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_TEST));
+$canAfficher    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER));
+$canReEnvoi     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_REENVOI));
+$canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_EFFACER));
 
 ?>
 

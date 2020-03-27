@@ -108,25 +108,24 @@ return [
         ],
     ],
 
-//    'navigation'      => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'configuration' => [
-//                                'label'    => 'Configuration',
-//                                'route'    => 'configuration',
-//                                'resource' => ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AFFICHER),
-//                                'order'    => 213456,
-//                                'icon' => 'fas fa-wrench'
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'configuration' => [
+                                'label'    => 'Configuration',
+                                'route'    => 'configuration',
+                                'resource' => ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AFFICHER),
+                                'order'    => 213456,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'service_manager' => [
         'factories' => [
