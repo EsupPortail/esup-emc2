@@ -532,3 +532,9 @@ span.badge.structure {
     padding-left: 3rem;
     padding-right: 3rem;
 }
+
+span.probleme {
+    color: darkred;
+    background-color: lightpink;
+    font-style: italic;
+}

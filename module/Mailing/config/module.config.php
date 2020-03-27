@@ -96,11 +96,13 @@ return array(
             'home' => [
                 'pages' => [
                     'administration' => [
-                        'mailing' => [
-                            'label'    => 'Mail',
-                            'route'    => 'mailing',
-                            'resource' => MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER),
-                            'order'    => 1,
+                        'pages' => [
+                            'mailing' => [
+                                'label'    => 'Mail',
+                                'route'    => 'mailing',
+                                'resource' => MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER),
+                                'order'    => 1,
+                            ],
                         ],
                     ],
                 ],

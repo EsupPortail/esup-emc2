@@ -34,24 +34,24 @@ return array(
         ],
     ],
 
-//    'navigation'      => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'autoform' => [
-//                                'label'    => 'Formulaires',
-//                                'route'    => 'autoform/formulaires',
-//                                'resource' => IndexPrivileges::getResourceId(IndexPrivileges::AFFICHER_INDEX),
-//                                'order'    => 1,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'autoform' => [
+                                'label'    => 'Formulaire',
+                                'route'    => 'autoform/formulaires',
+                                'resource' => IndexPrivileges::getResourceId(IndexPrivileges::AFFICHER_INDEX),
+                                'order'    => 1,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

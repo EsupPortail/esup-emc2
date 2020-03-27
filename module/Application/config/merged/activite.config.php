@@ -67,6 +67,25 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'mission-pincipale' => [
+                                'label'    => 'Missions principales',
+                                'route'    => 'activite',
+                                'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::AFFICHER),
+                                'order'    => 1000,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router'          => [
         'routes' => [
             'activite' => [

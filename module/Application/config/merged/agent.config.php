@@ -220,6 +220,25 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'agent' => [
+                                'label'    => 'Agents',
+                                'route'    => 'agent',
+                                'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AFFICHER),
+                                'order'    => 100,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'service_manager' => [
         'invokables' => [
         ],

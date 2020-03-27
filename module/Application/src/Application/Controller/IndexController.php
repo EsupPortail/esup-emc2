@@ -9,6 +9,7 @@
 
 namespace Application\Controller;
 
+use Application\Constant\RoleConstant;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -39,10 +40,10 @@ class IndexController extends AbstractActionController
 
         if ($connectedRole) {
             switch ($connectedRole->getRoleId()) {
-                case Role::PERSONNEL :
+                case RoleConstant::PERSONNEL :
                     return $this->redirect()->toRoute('index-personnel', [], [], true);
                     break;
-                case Role::VALIDATEUR :
+                case RoleConstant::VALIDATEUR :
                     return $this->redirect()->toRoute('index-validateur', [], [], true);
                     break;
                 default :

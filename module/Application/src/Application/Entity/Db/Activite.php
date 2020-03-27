@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class Activite
@@ -13,6 +14,8 @@ class Activite
     private $id;
     /** @var string */
     private $libelle;
+    /** @var ArrayCollection */
+    private $libelles;
     /** @var string */
     private $description;
     /** @var ArrayCollection */
@@ -26,6 +29,7 @@ class Activite
 
     public function __construct()
     {
+        $this->libelles = new ArrayCollection();
         $this->descriptions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
@@ -44,7 +48,17 @@ class Activite
      */
     public function getLibelle()
     {
-        return $this->libelle;
+        $libelle = null;
+        /** @var ActiviteLibelle $instance */
+        foreach ($this->libelles as $instance) {
+            if ($instance->getHistoDestruction() === null) {
+                if ($libelle === null) $libelle = $instance->getLibelle();
+                else $libelle = "<span class='probleme'><strong>PLUSIEURS LIBELLÉS ACTIFS !</strong></span>";
+            }
+        }
+        if ($libelle === null && $this->libelle !== null) $libelle = "<span class='probleme'>".$this->libelle."</span>";
+        if ($libelle === null) $libelle = "<span class='probleme'><strong>AUCUN LIBELLÉ !</strong></span>";
+        return $libelle;
     }
 
     /**

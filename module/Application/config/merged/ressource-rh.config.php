@@ -29,6 +29,7 @@ use Application\Form\RessourceRh\MissionSpecifiqueTypeForm;
 use Application\Form\RessourceRh\MissionSpecifiqueTypeFormFactory;
 use Application\Form\RessourceRh\MissionSpecifiqueTypeHydrator;
 use Application\Form\RessourceRh\MissionSpecifiqueTypeHydratorFactory;
+use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\Domaine\DomaineServiceFactory;
@@ -120,6 +121,22 @@ return [
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::EFFACER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'order' => 500,
+                        'label' => 'Ressources',
+                        'title' => "Ressources",
+                        'route' => 'ressource-rh',
+                        'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
                     ],
                 ],
             ],
