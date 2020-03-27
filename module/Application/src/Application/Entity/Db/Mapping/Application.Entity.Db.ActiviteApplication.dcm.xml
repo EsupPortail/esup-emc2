@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\Activite" table="activite">
+    <entity name="Application\Entity\Db\ActiviteApplication" table="activite_application">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"           type="string" length="255"      column="libelle"                nullable="false"/>
-        <field name="description"       type="string" length="2047"     column="description"            nullable="false"/>
-
-        <one-to-many field="libelles" target-entity="Application\Entity\Db\ActiviteLibelle" mapped-by="activite"/>
-        <one-to-many field="descriptions" target-entity="Application\Entity\Db\ActiviteDescription" mapped-by="activite"/>
-        <one-to-many field="applications" target-entity="Application\Entity\Db\ActiviteApplication" mapped-by="activite"/>
-        <one-to-many field="competences"  target-entity="Application\Entity\Db\ActiviteCompetence"  mapped-by="activite"/>
-        <one-to-many field="formations"   target-entity="Application\Entity\Db\ActiviteFormation"   mapped-by="activite"/>
+        <many-to-one target-entity="Application\Entity\Db\Activite"  field="activite">
+            <join-column name="activite_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Application"  field="application">
+            <join-column name="application_id" referenced-column-name="id"/>
+        </many-to-one>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

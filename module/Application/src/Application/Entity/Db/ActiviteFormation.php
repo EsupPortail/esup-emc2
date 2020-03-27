@@ -1,0 +1,63 @@
+<?php
+
+namespace Application\Entity\Db;
+
+use Application\Entity\Db\Activite;
+use Application\Entity\Db\Formation;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+
+class ActiviteFormation {
+    use HistoriqueAwareTrait;
+
+    /** @var integer */
+    private $id;
+    /** @var Activite */
+    private $activite;
+    /** @var Formation */
+    private $formation;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Activite
+     */
+    public function getActivite()
+    {
+        return $this->activite;
+    }
+
+    /**
+     * @param Activite $activite
+     * @return ActiviteFormation
+     */
+    public function setActivite($activite)
+    {
+        $this->activite = $activite;
+        return $this;
+    }
+
+    /**
+     * @return Formation
+     */
+    public function getFormation()
+    {
+        return $this->formation;
+    }
+
+    /**
+     * @param Formation $formation
+     * @return ActiviteFormation
+     */
+    public function setFormation($formation)
+    {
+        $this->formation = $formation;
+        return $this;
+    }
+
+}
