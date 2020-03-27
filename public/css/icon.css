@@ -1,0 +1,113 @@
+/** Icons used for actions ********************************************************************************************/
+span.icon:before {
+    font-family: "Font Awesome 5 Free";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    font-size:large;
+}
+
+span.icon.retour:before {
+    content: "\f104";
+}
+
+span.icon.voir:before {
+    content: "\f06e";
+}
+
+span.icon.pdf:before {
+    content: "\f1c1";
+}
+
+span.icon.csv:before {
+    content: "\f6dd";
+}
+
+span.icon.code:before {
+    content: "\f1c9";
+}
+
+span.icon.ajouter:before {
+    content: "\f0fe";
+}
+
+span.icon.editer:before {
+    content: "\f303";
+}
+
+span.icon.historiser:before {
+    content: "\f1f8";
+}
+
+span.icon.restaurer:before {
+    content: "\f829";
+}
+
+span.icon.detruire:before {
+    content: "\f00d";
+}
+
+span.icon.monter:before {
+    content: "\f062";
+}
+
+span.icon.descendre:before {
+    content: "\f063";
+}
+
+span.icon.valider:before {
+    content: "\f00c";
+}
+
+span.icon.affecter:before {
+    content: "\f055";
+}
+
+span.icon.plus:before {
+    content: "\f067";
+}
+
+span.icon.minus:before {
+    content: "\f068";
+}
+
+span.icon.batiment:before {
+    content: "\f1ad";
+}
+
+span.icon.etudiant:before {
+    content: "\f501";
+}
+
+span.icon.synchroniser:before {
+    content: "\f021";
+}
+
+span.icon.notifier:before {
+    content: "\f0e0";
+}
+
+span.icon.ok:before {
+    content: "\f00c ";
+}
+
+span.icon.ko:before {
+    content: "\f00d ";
+}
+
+span.icon.listing:before {
+    content: "\f03a ";
+}
+
+span.icon.gerer:before {
+    content: "\f013 ";
+}
+
+span.icon.rejouer:before {
+    content: "\f03d ";
+}
+
+span.icon.question:before {
+    content: "\f059 ";
+}
