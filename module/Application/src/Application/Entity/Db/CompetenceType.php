@@ -3,7 +3,7 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Utilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class CompetenceType {
     use HistoriqueAwareTrait;

@@ -12,7 +12,7 @@ use Application\Service\Validation\ValidationTypeService;
 use Application\Service\Validation\ValidationValeurService;
 use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
 class ValidationControllerFactory {
 

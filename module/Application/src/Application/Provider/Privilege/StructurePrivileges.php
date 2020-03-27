@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class StructurePrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class StructurePrivileges extends Privileges
 {
     const AFFICHER              = 'structure-afficher-structure';
     const AJOUTER               = 'structure-ajouter-structure';

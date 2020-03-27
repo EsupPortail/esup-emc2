@@ -9,7 +9,7 @@ use Mailing\Service\Mailing\MailingService;
 use Mailing\Service\Mailing\MailingServiceFactory;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return array(
     'bjyauthorize'    => [

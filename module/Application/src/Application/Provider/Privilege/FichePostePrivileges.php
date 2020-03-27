@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class FichePostePrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class FichePostePrivileges extends Privileges
 {
     const AFFICHER      = 'ficheposte-fp-afficher';
     const HISTORISER    = 'ficheposte-fp-historiser';

@@ -17,7 +17,7 @@
         <field name="importationModification"   column="updated_on"         type="datetime"  />
         <field name="importationHistorisation"  column="deleted_on"         type="datetime"  />
 
-        <many-to-many field="gestionnaires" target-entity="Utilisateur\Entity\Db\User" inversed-by="gestionnaire" fetch="LAZY">
+        <many-to-many field="gestionnaires" target-entity="UnicaenUtilisateur\Entity\Db\User" inversed-by="gestionnaire" fetch="LAZY">
             <join-table name="structure_gestionnaire">
                 <join-columns>
                     <join-column name="structure_id" referenced-column-name="id"/>

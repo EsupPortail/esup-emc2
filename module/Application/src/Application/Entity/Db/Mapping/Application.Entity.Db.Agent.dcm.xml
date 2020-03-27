@@ -15,7 +15,7 @@
 
         <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
 
-        <one-to-one target-entity="Utilisateur\Entity\Db\User" field="utilisateur">
+        <one-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="utilisateur">
             <join-column name="utilisateur_id" referenced-column-name="id" />
         </one-to-one>
 

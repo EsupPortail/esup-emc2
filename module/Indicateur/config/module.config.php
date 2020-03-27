@@ -3,7 +3,7 @@
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Indicateur\Provider\Privilege\IndicateurPrivileges;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return array(
     'bjyauthorize'    => [
@@ -34,24 +34,24 @@ return array(
         ],
     ],
 
-    '\Zend\Navigation\Navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'indicateurs' => [
-                                'label'    => 'Indicateur',
-                                'route'    => 'indicateurs',
-                                'resource' => IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER),
-                                'order'    => 1000,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration' => [
+//                        'pages' => [
+//                            'indicateurs' => [
+//                                'label'    => 'Indicateur',
+//                                'route'    => 'indicateurs',
+//                                'resource' => IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER),
+//                                'order'    => 1000,
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

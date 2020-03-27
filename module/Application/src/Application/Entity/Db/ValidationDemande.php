@@ -3,8 +3,8 @@
 namespace Application\Entity\Db;
 
 use Doctrine\ORM\EntityManager;
-use Utilisateur\Entity\Db\User;
-use Utilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class ValidationDemande {
     use HistoriqueAwareTrait;

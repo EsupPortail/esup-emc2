@@ -2,7 +2,9 @@
 
 namespace Autoform\Provider\Privilege;
 
-class FormulairePrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class FormulairePrivileges extends Privileges
 {
     const AFFICHER    = 'autoform-afficher-formulaire';
     const CREER       = 'autoform-creer-formulaire';

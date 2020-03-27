@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class ValidationPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class ValidationPrivileges extends Privileges
 {
     const AFFICHER         = 'validation-afficher-validation-main';
     const MODIFIER         = 'validation-modifier-validation-main';

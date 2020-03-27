@@ -11,7 +11,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactor
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

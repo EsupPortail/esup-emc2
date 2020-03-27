@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class ActivitePrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class ActivitePrivileges extends Privileges
 {
     const AFFICHER          = 'activite-afficher-activite';
     const AJOUTER           = 'activite-ajouter-activite';

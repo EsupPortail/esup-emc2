@@ -14,7 +14,7 @@ use Application\Service\Activite\ActiviteServiceFactory;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceFactory;
 use Application\View\Helper\ActiviteViewHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

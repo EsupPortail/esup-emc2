@@ -11,7 +11,7 @@ use Application\Form\Application\ApplicationHydratorFactory;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

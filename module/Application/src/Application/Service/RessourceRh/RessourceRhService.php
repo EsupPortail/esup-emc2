@@ -17,7 +17,7 @@ use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAuth\Entity\Db\User;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class RessourceRhService {

@@ -10,7 +10,7 @@ use Autoform\Service\Validation\ValidationReponseService;
 use Autoform\Service\Validation\ValidationReponseServiceFactory;
 use Autoform\Service\Validation\ValidationService;
 use Autoform\Service\Validation\ValidationServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
@@ -38,10 +38,10 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
 //                    'gestion' => [
 //                        'pages' => [
 //                            'validation' => [
@@ -52,10 +52,10 @@ return [
 //                            ],
 //                        ],
 //                    ],
-                ],
-            ],
-        ],
-    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

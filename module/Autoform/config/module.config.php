@@ -3,7 +3,7 @@
 use Autoform\Provider\Privilege\IndexPrivileges;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return array(
     'bjyauthorize'    => [
@@ -34,24 +34,24 @@ return array(
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'autoform' => [
-                                'label'    => 'Formulaires',
-                                'route'    => 'autoform/formulaires',
-                                'resource' => IndexPrivileges::getResourceId(IndexPrivileges::AFFICHER_INDEX),
-                                'order'    => 1,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration' => [
+//                        'pages' => [
+//                            'autoform' => [
+//                                'label'    => 'Formulaires',
+//                                'route'    => 'autoform/formulaires',
+//                                'resource' => IndexPrivileges::getResourceId(IndexPrivileges::AFFICHER_INDEX),
+//                                'order'    => 1,
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

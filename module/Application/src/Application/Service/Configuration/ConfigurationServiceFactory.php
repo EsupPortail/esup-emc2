@@ -4,7 +4,7 @@ namespace Application\Service\Configuration;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
 class ConfigurationServiceFactory {
 

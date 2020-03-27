@@ -12,8 +12,8 @@ use Application\Form\Structure\StructureHydrator;
 use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\Structure\StructureService;
 use Application\Service\Structure\StructureServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
-use UnicaenAuth\Provider\Rule\PrivilegeRuleProvider;
+use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

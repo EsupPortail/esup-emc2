@@ -2,7 +2,9 @@
 
 namespace Autoform\Provider\Privilege;
 
-class CategoriePrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class CategoriePrivileges extends Privileges
 {
     const AFFICHER    = 'autoform-afficher-categorie';
     const CREER       = 'autoform-creer-categorie';

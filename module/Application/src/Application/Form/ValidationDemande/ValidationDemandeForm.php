@@ -2,7 +2,7 @@
     
 namespace Application\Form\ValidationDemande;
 
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;

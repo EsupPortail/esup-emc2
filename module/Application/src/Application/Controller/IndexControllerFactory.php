@@ -5,9 +5,9 @@ namespace Application\Controller;
 use Application\Service\Agent\AgentService;
 use Application\Service\Validation\ValidationDemandeService;
 use Interop\Container\ContainerInterface;
-use UnicaenAuth\Service\UserContext;
-use Utilisateur\Service\Role\RoleService;
-use Utilisateur\Service\User\UserService;
+use UnicaenAuthentification\Service\UserContext;
+use UnicaenUtilisateur\Service\Role\RoleService;
+use UnicaenUtilisateur\Service\User\UserService;;
 use Zend\Mvc\Controller\ControllerManager;
 
 class IndexControllerFactory {

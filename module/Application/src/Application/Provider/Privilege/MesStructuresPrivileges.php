@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class MesStructuresPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class MesStructuresPrivileges extends Privileges
 {
     const GESTION           = 'mes-structures-gestion-mes-structures';
 }

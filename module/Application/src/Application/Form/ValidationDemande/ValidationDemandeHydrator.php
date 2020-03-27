@@ -3,7 +3,7 @@
 namespace Application\Form\ValidationDemande;
 
 use Application\Entity\Db\ValidationDemande;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ValidationDemandeHydrator implements HydratorInterface {

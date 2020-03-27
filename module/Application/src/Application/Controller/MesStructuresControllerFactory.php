@@ -8,7 +8,7 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\Poste\PosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
 class MesStructuresControllerFactory {
 

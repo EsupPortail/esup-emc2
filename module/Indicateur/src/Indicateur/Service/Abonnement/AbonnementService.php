@@ -10,7 +10,7 @@ use Indicateur\Entity\Db\Indicateur;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Utilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AbonnementService {

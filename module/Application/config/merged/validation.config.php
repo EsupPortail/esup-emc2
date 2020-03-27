@@ -22,7 +22,7 @@ use Application\Service\Validation\ValidationTypeServiceFactory;
 use Application\Service\Validation\ValidationValeurService;
 use Application\Service\Validation\ValidationValeurServiceFactory;
 use Application\View\Helper\ValidationBadgeViewHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
@@ -194,23 +194,23 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'validations' => [
-                                'label'    => 'Validations',
-                                'route'    => 'validation',
-                                'resource' => ValidationPrivileges::getResourceId(ValidationPrivileges::AFFICHER),
-                                'order'    => 1111,
-                                'icon' => 'fas fa-certificate',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration' => [
+//                        'pages' => [
+//                            'validations' => [
+//                                'label'    => 'Validations',
+//                                'route'    => 'validation',
+//                                'resource' => ValidationPrivileges::getResourceId(ValidationPrivileges::AFFICHER),
+//                                'order'    => 1111,
+//                                'icon' => 'fas fa-certificate',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 ];

@@ -7,7 +7,7 @@ use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
 class AgentFichierControllerFactory {
 

@@ -38,7 +38,7 @@ use Application\View\Helper\ApplicationBlocViewHelper;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FicheMetierViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

@@ -23,13 +23,21 @@ $modules = [
 
     'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'BjyAuthorize' => 'BjyAuthorize',
     'UnicaenApp',
-    'UnicaenApp', 'UnicaenAuth', 'UnicaenLdap', 'UnicaenDbImport',
+    //'UnicaenAuth',
+    'UnicaenLdap', 'UnicaenDbImport',
+
+    'UnicaenPrivilege',
+    'UnicaenAuthentification',
+    'UnicaenUtilisateurLdapAdapter',
+    'Mailing',
+    'UnicaenUtilisateur',
+//    'UnicaenValidation',
     'Autoform',
     'Fichier',
-    'Mailing',
-    'Utilisateur',
     'Indicateur',
     'Application',
+//    'Document',
+
     'ZendDeveloperTools',
 
 ];

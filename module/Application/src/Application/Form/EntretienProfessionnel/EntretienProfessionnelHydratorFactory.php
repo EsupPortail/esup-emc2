@@ -4,7 +4,7 @@ namespace Application\Form\EntretienProfessionnel;
 
 use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
 class EntretienProfessionnelHydratorFactory {
 

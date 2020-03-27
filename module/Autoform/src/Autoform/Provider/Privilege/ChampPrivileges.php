@@ -2,7 +2,9 @@
 
 namespace Autoform\Provider\Privilege;
 
-class ChampPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class ChampPrivileges extends Privileges
 {
     const AFFICHER    = 'autoform-afficher-champ';
     const CREER       = 'autoform-creer-champ';

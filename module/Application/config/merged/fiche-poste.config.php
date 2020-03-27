@@ -38,7 +38,7 @@ use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
 use Application\Service\FormationsRetirees\FormationsRetireesServiceFactory;
 use Application\View\Helper\FichesPostesAsArrayViewHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

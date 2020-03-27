@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class FormationPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class FormationPrivileges extends Privileges
 {
     const AFFICHER          = 'formation-formation-afficher';
     const EDITER            = 'formation-formation-editer';

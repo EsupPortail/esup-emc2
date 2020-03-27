@@ -11,7 +11,7 @@ use Indicateur\Form\Indicateur\IndicateurHydratorFactory;
 use Indicateur\Provider\Privilege\IndicateurPrivileges;
 use Indicateur\Service\Indicateur\IndicateurService;
 use Indicateur\Service\Indicateur\IndicateurServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Mvc\Console\Router\Simple;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;

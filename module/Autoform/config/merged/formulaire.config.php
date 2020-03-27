@@ -21,7 +21,7 @@ use Autoform\Service\Formulaire\FormulaireReponseService;
 use Autoform\Service\Formulaire\FormulaireReponseServiceFactory;
 use Autoform\Service\Formulaire\FormulaireService;
 use Autoform\Service\Formulaire\FormulaireServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

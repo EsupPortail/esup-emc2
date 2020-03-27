@@ -11,7 +11,7 @@ use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydratorFactor
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

@@ -6,7 +6,7 @@ use Indicateur\Form\Indicateur\IndicateurForm;
 use Indicateur\Service\Abonnement\AbonnementService;
 use Indicateur\Service\Indicateur\IndicateurService;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
 class IndicateurControllerFactory {
 

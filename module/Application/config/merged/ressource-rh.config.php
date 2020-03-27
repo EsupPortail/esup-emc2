@@ -40,7 +40,7 @@ use Application\Service\Metier\MetierService;
 use Application\Service\Metier\MetierServiceFactory;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\RessourceRh\RessourceRhServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

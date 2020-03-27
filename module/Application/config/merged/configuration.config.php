@@ -12,7 +12,7 @@ use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\Configuration\ConfigurationServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
@@ -108,25 +108,25 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'configuration' => [
-                                'label'    => 'Configuration',
-                                'route'    => 'configuration',
-                                'resource' => ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AFFICHER),
-                                'order'    => 213456,
-                                'icon' => 'fas fa-wrench'
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration' => [
+//                        'pages' => [
+//                            'configuration' => [
+//                                'label'    => 'Configuration',
+//                                'route'    => 'configuration',
+//                                'resource' => ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AFFICHER),
+//                                'order'    => 213456,
+//                                'icon' => 'fas fa-wrench'
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'service_manager' => [
         'factories' => [

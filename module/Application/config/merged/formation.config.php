@@ -15,7 +15,7 @@ use Application\Form\FormationTheme\FormationThemeHydratorFactory;
 use Application\Provider\Privilege\FormationPrivileges;
 use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

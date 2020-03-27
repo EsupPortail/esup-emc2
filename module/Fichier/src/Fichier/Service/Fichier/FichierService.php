@@ -10,8 +10,8 @@ use Fichier\Entity\Db\Fichier;
 use Fichier\Entity\Db\Nature;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Utilisateur\Entity\Db\User;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichierService {

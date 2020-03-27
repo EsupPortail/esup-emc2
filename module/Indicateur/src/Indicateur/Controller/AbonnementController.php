@@ -7,7 +7,7 @@ use DateTime;
 use Indicateur\Entity\Db\Abonnement;
 use Indicateur\Service\Abonnement\AbonnementServiceAwareTrait;
 use Indicateur\Service\Indicateur\IndicateurServiceAwareTrait;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 

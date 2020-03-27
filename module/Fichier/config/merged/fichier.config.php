@@ -12,7 +12,7 @@ use Fichier\Service\Fichier\FichierServiceFactory;
 use Fichier\Service\Nature\NatureService;
 use Fichier\Service\Nature\NatureServiceFactory;
 use Fichier\View\Helper\FichierViewHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

@@ -5,7 +5,7 @@ namespace Application;
 use Application\Controller\MesStructuresController;
 use Application\Controller\MesStructuresControllerFactory;
 use Application\Provider\Privilege\MesStructuresPrivileges;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Segment;
 
 return [

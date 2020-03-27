@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class FicheMetierPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class FicheMetierPrivileges extends Privileges
 {
     const AFFICHER      = 'fichemetier-afficher';
     const HISTORISER    = 'fichemetier-historiser';

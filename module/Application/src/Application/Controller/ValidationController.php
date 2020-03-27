@@ -16,7 +16,7 @@ use Application\Service\Validation\ValidationServiceAwareTrait;
 use Application\Service\Validation\ValidationTypeServiceAwareTrait;
 use Application\Service\Validation\ValidationValeurServiceAwareTrait;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

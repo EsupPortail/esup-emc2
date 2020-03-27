@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class FonctionPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class FonctionPrivileges extends Privileges
 {
     const AFFICHER          = 'fonction-afficher-fonction';
     const AJOUTER           = 'fonction-ajouter-fonction';

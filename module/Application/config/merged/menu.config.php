@@ -15,296 +15,272 @@ use Application\Provider\Privilege\PersoPrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Provider\Privilege\StructurePrivileges;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 return [
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'droits' => [
-                        'visible' => false,
-                    ],
-                    'index-personnel' => [
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'droits' => [
 //                        'visible' => false,
-                        'label' => 'Accueil',
-                        'route' => 'index-personnel',
-                        'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::MENU),
-                        'pages' => [
-                            'index-personnel' => [
-                                'visible' => true,
-                                'order' => 100,
-                                'label' => 'Mon accueil',
-                                'icon' => 'fas fa-angle-right',
-                                'route' => 'index-personnel',
-                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::MENU),
-                            ],
-                            'entretien' => [
-                                'visible' => true,
-                                'order' => 200,
-                                'label' => 'Mes entretiens Pro.',
-                                'icon' => 'fas fa-angle-right',
-                                'route' => 'agent/entretien-professionnel',
-                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::ENTRETIEN),
-                            ],
-                            'fichier' => [
-                                'visible' => true,
-                                'order' => 300,
-                                'label' => 'Mes fichiers',
-                                'icon' => 'fas fa-angle-right',
-                                'route' => 'agent/fichiers',
-                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::FICHIER),
-                            ],
-//                            'rgpd' => [
+//                    ],
+//                    'index-personnel' => [
+//                        'label' => 'Accueil',
+//                        'route' => 'index-personnel',
+//                        'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::MENU),
+//                        'pages' => [
+//                            'index-personnel' => [
 //                                'visible' => true,
-//                                'order' => 400,
-//                                'label' => 'Mes données',
+//                                'order' => 100,
+//                                'label' => 'Mon accueil',
 //                                'icon' => 'fas fa-angle-right',
 //                                'route' => 'index-personnel',
-//                                'roles' => [
-//                                    'Personnel',
-//                                ],
+//                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::MENU),
 //                            ],
-
-                        ],
-                    ],
-                    'ressource' => [
-                        'order' => 100,
-                        'label' => 'Ressources',
-                        'route' => 'ressource-rh',
-                        'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                        'pages' => [
-                            [
-                                'order' => 1,
-                                'label' => 'Les agents',
-                                'route' => 'agent',
-                                'privileges' => FicheMetierPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 2,
-                                'label' => 'Les corps',
-                                'route' => 'ressource-rh/index-corps',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 2,
-                                'label' => 'Les grades',
-                                'route' => 'ressource-rh/index-grade',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 3,
-                                'label' => 'Les correspondances',
-                                'route' => 'ressource-rh/index-correspondance',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 4,
-                                'label' => 'Familles, domaines et métiers',
-                                'route' => 'ressource-rh/index-metier-famille-domaine',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 7,
-                                'label' => 'Sites et bâtiments',
-                                'route' => 'immobilier',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 8,
-                                'label' => 'Les structures',
-                                'route' => 'structure',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 100,
-                                'label' => 'Cartographie',
-                                'route' => 'ressource-rh/cartographie',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-
-                        ],
-                    ],
-                    'entretien' => [
-                        'order' => 100,
-                        'label' => 'Entretiens',
-                        'route' => 'entretien-professionnel',
-                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER),
-                        'pages' => [
-                        ],
-                    ],
-                    'mes-strustures' => [
-                        'order' => 100,
-                        'label' => 'Ma structure',
-                        'route' => 'mes-structures',
-                        'resource' => MesStructuresPrivileges::getResourceId(MesStructuresPrivileges::GESTION),
-                        'pages' => [
-                        ],
-                    ],
-                    'administration' => [
-                        'order' => 1000,
-                        'label' => 'Administration',
-                        'title' => "Administration",
-                        'route' => 'administration',
-
-                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
-                        'pages' => [
-                            [
-                                'label' => 'Mailing',
-                                'route' => 'mailing',
-                                'roles' => [], //'privileges' => MailingPrivileges::AFFICHER,
-                                'icon' => 'fas fa-envelope'
-
-                            ],
-                            [
-                                'label' => 'Utilisateurs',
-                                'route' => 'utilisateur',
-                                'roles' => [],// 'privileges' => UtilisateurPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-user',
-                            ],
-                            'privileges' => [
-                                'label'      => "Privilèges",
-                                'title'      => "Gestion des privilèges",
-                                'route'      => 'privilege',
-                                'resource'   => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
-                                'withtarget' => true,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-balance-scale'
-                            ],
-                            'autoform' => [
-                                'label'      => "Autoform",
-                                'title'      => "Module Autoform",
-                                'route'      => 'autoform/formulaires',
-                                'roles'      => [],
-//                                'withtarget' => true,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-paste'
-                            ],
-                            'fichier' => [
-                                'label'      => "Fichier",
-                                'title'      => "Module Fichier",
-                                'route'      => 'index-fichier',
-                                'roles'      => [],
-//                                'withtarget' => true,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-file-alt'
-                            ],
-                            'indicateurs' => [
-                                'label'      => "Indicateurs",
-                                'title'      => "Module Indicateur",
-                                'route'      => 'indicateurs',
-                                'roles'      => [],
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-chart-pie'
-                            ],
-                        ],
-                    ],
-                    'fiche-metier' => [
-//                        'order' => -10,
-                        'label' => 'Fiches',
-//                        'title' => "Fiche métier",
-                        'route' => 'fiche-poste',
-                        'resource' => FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER),
-                        'pages' => [
-                            [
-                                'order' => 1,
-                                'label' => 'Les missions principales',
-                                'route' => 'activite',
-                                'privileges' => ActivitePrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                            [
-                                'order' => 2,
-                                'label' => 'Les missions spécifiques',
-                                'route' => 'ressource-rh/index-mission-specifique',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 3,
-                                'label' => 'Affectations de missions',
-                                'route' => 'agent-mission-specifique',
-                                'resource' =>  AgentPrivileges::getResourceId(AgentPrivileges::AFFICHER) ,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 4,
-                                'label' => 'Les applications',
-                                'route' => 'application',
-                                'privileges' => ApplicationPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 5,
-                                'label' => 'Les formations',
-                                'route' => 'formation',
-                                'privileges' => FormationPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
+//                            'entretien' => [
+//                                'visible' => true,
+//                                'order' => 200,
+//                                'label' => 'Mes entretiens Pro.',
+//                                'icon' => 'fas fa-angle-right',
+//                                'route' => 'agent/entretien-professionnel',
+//                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::ENTRETIEN),
+//                            ],
+//                            'fichier' => [
+//                                'visible' => true,
+//                                'order' => 300,
+//                                'label' => 'Mes fichiers',
+//                                'icon' => 'fas fa-angle-right',
+//                                'route' => 'agent/fichiers',
+//                                'resource' =>  PersoPrivileges::getResourceId(PersoPrivileges::FICHIER),
+//                            ],
+//                        ],
+//                    ],
+//                    'ressource' => [
+//                        'order' => 100,
+//                        'label' => 'Ressources',
+//                        'route' => 'ressource-rh',
+//                        'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                        'pages' => [
+//                            [
+//                                'order' => 1,
+//                                'label' => 'Les agents',
+//                                'route' => 'agent',
+//                                'privileges' => FicheMetierPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 2,
+//                                'label' => 'Les corps',
+//                                'route' => 'ressource-rh/index-corps',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 2,
+//                                'label' => 'Les grades',
+//                                'route' => 'ressource-rh/index-grade',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 3,
+//                                'label' => 'Les correspondances',
+//                                'route' => 'ressource-rh/index-correspondance',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
 //                            [
 //                                'order' => 4,
-//                                'label' => 'Les formations',
+//                                'label' => 'Familles, domaines et métiers',
+//                                'route' => 'ressource-rh/index-metier-famille-domaine',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 7,
+//                                'label' => 'Sites et bâtiments',
+//                                'route' => 'immobilier',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 8,
+//                                'label' => 'Les structures',
+//                                'route' => 'structure',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 100,
+//                                'label' => 'Cartographie',
+//                                'route' => 'ressource-rh/cartographie',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//
+//                        ],
+//                    ],
+//                    'entretien' => [
+//                        'order' => 100,
+//                        'label' => 'Entretiens',
+//                        'route' => 'entretien-professionnel',
+//                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER),
+//                        'pages' => [
+//                        ],
+//                    ],
+//                    'mes-strustures' => [
+//                        'order' => 100,
+//                        'label' => 'Ma structure',
+//                        'route' => 'mes-structures',
+//                        'resource' => MesStructuresPrivileges::getResourceId(MesStructuresPrivileges::GESTION),
+//                        'pages' => [
+//                        ],
+//                    ],
+//                    'administration' => [
+//                        'order' => 1000,
+//                        'label' => 'Administration',
+//                        'title' => "Administration",
+//                        'route' => 'administration',
+//
+//                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
+//                        'pages' => [
+//                            [
+//                                'label' => 'Mailing',
+//                                'route' => 'mailing',
+//                                'roles' => [], //'privileges' => MailingPrivileges::AFFICHER,
+//                                'icon' => 'fas fa-envelope'
+//
+//                            ],
+//                            [
+//                                'label' => 'Utilisateurs',
+//                                'route' => 'utilisateur',
+//                                'roles' => [],// 'privileges' => UtilisateurPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-user',
+//                            ],
+//                            'privileges' => [
+//                                'label'      => "Privilèges",
+//                                'title'      => "Gestion des privilèges",
+//                                'route'      => 'privilege',
+//                                'resource'   => PrivilegeController::getResourceId('UnicaenAuth\Controller\Droits', 'privileges'),
+//                                'withtarget' => true,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-balance-scale'
+//                            ],
+//                            'autoform' => [
+//                                'label'      => "Autoform",
+//                                'title'      => "Module Autoform",
+//                                'route'      => 'autoform/formulaires',
+//                                'roles'      => [],
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-paste'
+//                            ],
+//                            'fichier' => [
+//                                'label'      => "Fichier",
+//                                'title'      => "Module Fichier",
+//                                'route'      => 'index-fichier',
+//                                'roles'      => [],
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-file-alt'
+//                            ],
+//                            'indicateurs' => [
+//                                'label'      => "Indicateurs",
+//                                'title'      => "Module Indicateur",
+//                                'route'      => 'indicateurs',
+//                                'roles'      => [],
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-chart-pie'
+//                            ],
+//                        ],
+//                    ],
+//                    'fiche-metier' => [
+//                        'label' => 'Fiches',
+//                        'route' => 'fiche-poste',
+//                        'resource' => FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER),
+//                        'pages' => [
+//                            [
+//                                'order' => 1,
+//                                'label' => 'Les missions principales',
+//                                'route' => 'activite',
+//                                'privileges' => ActivitePrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                            [
+//                                'order' => 2,
+//                                'label' => 'Les missions spécifiques',
+//                                'route' => 'ressource-rh/index-mission-specifique',
+//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 3,
+//                                'label' => 'Affectations de missions',
+//                                'route' => 'agent-mission-specifique',
+//                                'resource' =>  AgentPrivileges::getResourceId(AgentPrivileges::AFFICHER) ,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 4,
+//                                'label' => 'Les applications',
 //                                'route' => 'application',
 //                                'privileges' => ApplicationPrivileges::AFFICHER,
 //                                'dropdown-header' => true,
 //                                'icon' => 'fas fa-angle-right'
 //                            ],
-                            [
-                                'order' => 8,
-                                'label' => 'Les fiches de poste',
-                                'route' => 'fiche-poste',
-                                'privileges' => FicheMetierPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 7,
-                                'label' => 'Les fiches métiers',
-                                'route' => 'fiche-metier-type',
-                                'privileges' => FicheMetierPrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            [
-                                'order' => 6,
-                                'label' => 'Les postes',
-                                'route' => 'poste',
-                                'privileges' => PostePrivileges::AFFICHER,
-                                'dropdown-header' => true,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                            'competence' => [
-                                'label'    => 'Les compétences',
-                                'route'    => 'competence',
-                                'privileges' => CompetencePrivileges::AFFICHER,
-                                'order'    => 5000,
-                                'icon' => 'fas fa-angle-right'
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//                            [
+//                                'order' => 5,
+//                                'label' => 'Les formations',
+//                                'route' => 'formation',
+//                                'privileges' => FormationPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 8,
+//                                'label' => 'Les fiches de poste',
+//                                'route' => 'fiche-poste',
+//                                'privileges' => FicheMetierPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 7,
+//                                'label' => 'Les fiches métiers',
+//                                'route' => 'fiche-metier-type',
+//                                'privileges' => FicheMetierPrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            [
+//                                'order' => 6,
+//                                'label' => 'Les postes',
+//                                'route' => 'poste',
+//                                'privileges' => PostePrivileges::AFFICHER,
+//                                'dropdown-header' => true,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                            'competence' => [
+//                                'label'    => 'Les compétences',
+//                                'route'    => 'competence',
+//                                'privileges' => CompetencePrivileges::AFFICHER,
+//                                'order'    => 5000,
+//                                'icon' => 'fas fa-angle-right'
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 ];

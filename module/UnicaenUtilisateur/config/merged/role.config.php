@@ -50,24 +50,24 @@ return [
     ],
 
     //'Zend\Navigation\Navigation' => [
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'role' => [
-                                'label' => 'Rôle',
-                                'route' => 'role',
-                                'resource' => RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER),
-                                'order'    => 1002,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration' => [
+//                        'pages' => [
+//                            'role' => [
+//                                'label' => 'Rôle',
+//                                'route' => 'role',
+//                                'resource' => RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER),
+//                                'order'    => 1002,
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

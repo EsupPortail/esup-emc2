@@ -6,8 +6,8 @@ use Application\Form\Structure\StructureForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\Role\RoleService;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\Role\RoleService;
+use UnicaenUtilisateur\Service\User\UserService;;
 use Zend\Mvc\Controller\ControllerManager;
 
 class StructureControllerFactory {

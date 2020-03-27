@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class PersoPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class PersoPrivileges extends Privileges
 {
     const MENU               = 'perso-perso-menu';
     const ENTRETIEN          = 'perso-perso-entretien';

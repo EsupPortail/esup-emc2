@@ -7,7 +7,7 @@ use Indicateur\Controller\AbonnementControllerFactory;
 use Indicateur\Provider\Privilege\AbonnementPrivileges;
 use Indicateur\Service\Abonnement\AbonnementService;
 use Indicateur\Service\Abonnement\AbonnementServiceFactory;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Mvc\Console\Router\Simple;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;

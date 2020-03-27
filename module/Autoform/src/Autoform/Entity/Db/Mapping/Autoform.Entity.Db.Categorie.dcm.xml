@@ -20,13 +20,13 @@
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
 
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoCreateur">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoModificateur">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
             <join-column name="histo_modificateur_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="histoDestructeur">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="id"/>
         </many-to-one>
 

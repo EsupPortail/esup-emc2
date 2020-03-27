@@ -2,7 +2,9 @@
 
 namespace Indicateur\Provider\Privilege;
 
-class AbonnementPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class AbonnementPrivileges extends Privileges
 {
     const AFFICHER      = 'indicateur-afficher-abonnement';
     const EDITER        = 'indicateur-editer-abonnement';

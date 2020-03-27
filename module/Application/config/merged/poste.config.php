@@ -12,7 +12,7 @@ use Application\Provider\Privilege\PostePrivileges;
 use Application\Service\Poste\PosteService;
 use Application\Service\Poste\PosteServiceFactory;
 use Application\View\Helper\PosteViewHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 

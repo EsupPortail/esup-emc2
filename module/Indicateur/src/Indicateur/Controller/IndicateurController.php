@@ -8,7 +8,7 @@ use Indicateur\Form\Indicateur\IndicateurFormAwareTrait;
 use Indicateur\Service\Abonnement\AbonnementServiceAwareTrait;
 use Indicateur\Service\Indicateur\IndicateurServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

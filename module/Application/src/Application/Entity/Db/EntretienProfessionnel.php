@@ -5,7 +5,7 @@ namespace Application\Entity\Db;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
-use Utilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class EntretienProfessionnel {
     use HistoriqueAwareTrait;

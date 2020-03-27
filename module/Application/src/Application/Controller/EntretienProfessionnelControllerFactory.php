@@ -8,7 +8,7 @@ use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Autoform\Service\Formulaire\FormulaireInstanceService;
 use Autoform\Service\Formulaire\FormulaireService;
 use Interop\Container\ContainerInterface;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 use Zend\Mvc\Controller\ControllerManager;
 
 class EntretienProfessionnelControllerFactory {

@@ -29,7 +29,7 @@ use Application\Service\CompetenceType\CompetenceTypeService;
 use Application\Service\CompetenceType\CompetenceTypeServiceFactory;
 use Application\View\Helper\CompetencesViewHelper;
 use Application\View\Helper\CompetenceViewHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
@@ -332,24 +332,24 @@ return [
         ],
     ],
 
-    '\Zend\Navigation\Navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'fiche-metier' => [
-                        'pages' => [
-                            'competence' => [
-                                'label'    => 'Les compétences',
-                                'route'    => 'competence',
-                                'resource' => CompetencePrivileges::getResourceId(CompetencePrivileges::AFFICHER),
-                                'order'    => 5000,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    '\Zend\Navigation\Navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'fiche-metier' => [
+//                        'pages' => [
+//                            'competence' => [
+//                                'label'    => 'Les compétences',
+//                                'route'    => 'competence',
+//                                'resource' => CompetencePrivileges::getResourceId(CompetencePrivileges::AFFICHER),
+//                                'order'    => 5000,
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'service_manager' => [
         'factories' => [

@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class AdministrationPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class AdministrationPrivileges extends Privileges
 {
     const AFFICHER          = 'administration-administration-afficher';
 }

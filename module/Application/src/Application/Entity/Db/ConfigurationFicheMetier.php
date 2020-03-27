@@ -2,7 +2,7 @@
 
 namespace Application\Entity\Db;
 
-use Utilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class ConfigurationFicheMetier {
     use HistoriqueAwareTrait;

@@ -2,7 +2,9 @@
 
 namespace Autoform\Provider\Privilege;
 
-class ValidationPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class ValidationPrivileges extends Privileges
 {
     const AFFICHER    = 'autoform-afficher-validation';
     const CREER       = 'autoform-creer-validation';

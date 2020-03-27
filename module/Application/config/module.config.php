@@ -5,9 +5,9 @@ namespace Application;
 use Application\View\Helper\ActionIconViewHelper;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-use UnicaenAuth\Guard\PrivilegeController;
-use Utilisateur\Service\Role\RoleService;
-use Utilisateur\Service\Role\RoleServiceFactory;
+use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenUtilisateur\Service\Role\RoleService;
+use UnicaenUtilisateur\Service\Role\RoleServiceFactory;
 use Zend\Router\Http\Literal;
 
 return [

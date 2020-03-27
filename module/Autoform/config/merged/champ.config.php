@@ -16,7 +16,7 @@ use Autoform\View\Helper\InstanceAsDivHelper;
 use Autoform\View\Helper\InstanceAsFormulaireHelper;
 use Autoform\View\Helper\InstanceAsTextHelper;
 use Autoform\View\Helper\ValidationAsTextHelper;
-use UnicaenAuth\Guard\PrivilegeController;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [

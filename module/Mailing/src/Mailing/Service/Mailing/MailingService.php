@@ -2,8 +2,8 @@
 
 namespace Mailing\Service\Mailing;
 
-use Utilisateur\Entity\Db\Role;
-use Utilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\User;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;

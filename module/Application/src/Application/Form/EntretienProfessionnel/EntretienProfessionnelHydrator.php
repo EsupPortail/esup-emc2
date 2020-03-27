@@ -4,7 +4,7 @@ namespace Application\Form\EntretienProfessionnel;
 
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Zend\Hydrator\HydratorInterface;
 

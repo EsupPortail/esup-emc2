@@ -2,7 +2,7 @@
 
 namespace Mailing\Controller;
 
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Mailing\Model\Db\Mail;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;

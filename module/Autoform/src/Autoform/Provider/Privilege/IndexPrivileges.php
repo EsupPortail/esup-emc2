@@ -2,7 +2,9 @@
 
 namespace Autoform\Provider\Privilege;
 
-class IndexPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class IndexPrivileges extends Privileges
 {
     const AFFICHER_INDEX    = 'autoform-afficher-index';
 }

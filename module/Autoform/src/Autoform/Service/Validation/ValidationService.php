@@ -11,8 +11,8 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Utilisateur\Entity\Db\User;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ValidationService {

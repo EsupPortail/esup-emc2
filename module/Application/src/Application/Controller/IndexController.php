@@ -13,10 +13,10 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Validation\ValidationDemandeServiceAwareTrait;
-use UnicaenAuth\Service\Traits\UserContextServiceAwareTrait;
-use Utilisateur\Entity\Db\Role;
-use Utilisateur\Service\Role\RoleServiceAwareTrait;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 

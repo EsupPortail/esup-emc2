@@ -3,8 +3,8 @@
 namespace Application\Entity\Db;
 
 use DateTime;
-use Utilisateur\Entity\Db\User;
-use Utilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class AgentCompetence {
     use HistoriqueAwareTrait;

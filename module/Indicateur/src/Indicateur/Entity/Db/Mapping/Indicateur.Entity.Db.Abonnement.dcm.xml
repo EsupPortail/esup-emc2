@@ -6,7 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Utilisateur\Entity\Db\User"  field="user">
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="user">
             <join-column name="user_id" referenced-column-name="id"/>
         </many-to-one>
 

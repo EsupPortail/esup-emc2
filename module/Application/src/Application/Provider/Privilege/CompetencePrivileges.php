@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class CompetencePrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class CompetencePrivileges extends Privileges
 {
     const AFFICHER          = 'competence-afficher-competence';
     const AJOUTER           = 'competence-ajouter-competence';

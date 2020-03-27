@@ -2,11 +2,11 @@
 
 namespace Application\Assertion;
 
-use Application\Controller\Structure\StructureController;
+use Application\Controller\StructureController;
 use Application\Entity\Db\Structure;
-use UnicaenAuth\Assertion\AbstractAssertion;
-use Utilisateur\Entity\Db\Role;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenAuthentification\Assertion\AbstractAssertion;
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class EditionStructureAssertion extends AbstractAssertion {

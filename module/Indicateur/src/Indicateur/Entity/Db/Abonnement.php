@@ -3,7 +3,7 @@
 namespace Indicateur\Entity\Db;
 
 use DateTime;
-use Utilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class Abonnement {
 

@@ -9,7 +9,9 @@
 namespace Application\Provider\Privilege;
 
 
-class AgentPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class AgentPrivileges extends Privileges
 {
     const AFFICHER          = 'agent-afficher-agent';
     const AJOUTER           = 'agent-ajouter-agent';

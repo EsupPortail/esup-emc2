@@ -5,7 +5,7 @@ namespace Application\Entity\Db;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
-use Utilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class Agent {
     use ImportableAwareTrait;

@@ -3,10 +3,8 @@
 namespace UnicaenPrivilege\Entity\Db;
 
 use Doctrine\Common\Collections\Collection;
-//use UnicaenAuth\Provider\Privilege\Privileges;
-//use UnicaenPrivilege\Provider\Privilege\Privileges;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Doctrine\ORM\Mapping as ORM;
+
 
 /**
  * Privilege entity abstract mother class.

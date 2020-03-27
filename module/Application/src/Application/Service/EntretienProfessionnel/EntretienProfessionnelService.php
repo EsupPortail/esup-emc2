@@ -4,7 +4,7 @@ namespace Application\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
-use Utilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;

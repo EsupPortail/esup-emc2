@@ -3,7 +3,9 @@
 namespace Application\Provider\Privilege;
 
 
-class PostePrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class PostePrivileges extends Privileges
 {
     const AFFICHER          = 'poste-afficher-poste';
     const AJOUTER           = 'poste-ajouter-poste';

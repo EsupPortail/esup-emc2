@@ -2,7 +2,7 @@
 
 namespace Application\Assertion;
 
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class EditionStructureAssertionFactory {

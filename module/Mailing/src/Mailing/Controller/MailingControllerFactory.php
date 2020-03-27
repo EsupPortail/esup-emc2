@@ -4,7 +4,7 @@ namespace Mailing\Controller;
 
 use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
-use Utilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
 class MailingControllerFactory {
 

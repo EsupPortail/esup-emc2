@@ -2,7 +2,9 @@
 
 namespace Application\Provider\Privilege;
 
-class ConfigurationPrivileges extends \UnicaenAuth\Provider\Privilege\Privileges
+use UnicaenPrivilege\Provider\Privilege\Privileges;
+
+class ConfigurationPrivileges extends Privileges
 {
     const CONFIGURATION_AFFICHER          = 'configuration-configuration_afficher';
     const CONFIGURATION_AJOUTER           = 'configuration-configuration_afficher';
