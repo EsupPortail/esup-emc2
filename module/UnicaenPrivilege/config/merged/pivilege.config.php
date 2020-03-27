@@ -80,22 +80,22 @@ return [
         ],
     ],
 
-//    'navigation' => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'privilege' => [
-//                                'label' => 'Privilège',
-//                                'route' => 'privilege',
-//                                'resource' => \UnicaenPrivilege\Guard\PrivilegeController::getResourceId(PrivilegeController::class, 'index'),
-//                                'order'    => 5000,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'privilege' => [
+                                'label' => 'Privilège',
+                                'route' => 'privilege',
+                                'resource' => \UnicaenPrivilege\Guard\PrivilegeController::getResourceId(PrivilegeController::class, 'index'),
+                                'order'    => 5000,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];

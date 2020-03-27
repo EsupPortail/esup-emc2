@@ -17,6 +17,25 @@ use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Provider\Privilege\StructurePrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 return [
+
+
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'order' => 1000,
+                        'label' => 'Administration',
+                        'title' => "Administration",
+                        'route' => 'administration',
+                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+///
 //    'navigation' => [
 //        'default' => [
 //            'home' => [

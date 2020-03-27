@@ -47,7 +47,7 @@ return [
                         'changer-status',
                     ],
                     'privileges' => [
-                        UtilisateurPrivileges::STATUT_CHANGER,
+                        UtilisateurPrivileges::UTILISATEUR_CHANGERSTATUS,
                     ],
                 ],
                 [
@@ -57,46 +57,46 @@ return [
                         'remove-role',
                     ],
                     'privileges' => [
-                        UtilisateurPrivileges::MODIFIER_ROLE,
+                        UtilisateurPrivileges::UTILISATEUR_MODIFIERROLE,
                     ],
                 ],
             ],
         ],
     ],
 
-//    'navigation' => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'utilisateur' => [
-//                                'label' => 'Utilisateur',
-//                                'route' => 'utilisateur-preecog',
-//                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-//                                'order'    => 1001,
-//                                'pages' => [
-//                                    'listing-utilisateur' => [
-//                                        'label' => 'Listing',
-//                                        'route' => 'utilisateur-preecog/listing',
-//                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-//                                        'order'    => 10001,
-//                                    ],
-//                                    'ajouter-utilisateur' => [
-//                                        'label' => 'Listing',
-//                                        'route' => 'utilisateur-preecog/ajouter',
-//                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER),
-//                                        'order'    => 10001,
-//                                    ],
-//                                ],
-//                            ],
-//
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'utilisateur' => [
+                                'label' => 'Utilisateur',
+                                'route' => 'utilisateur-preecog',
+                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                'order'    => 1001,
+                                'pages' => [
+                                    'listing-utilisateur' => [
+                                        'label' => 'Listing',
+                                        'route' => 'utilisateur-preecog/listing',
+                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                        'order'    => 10001,
+                                    ],
+                                    'ajouter-utilisateur' => [
+                                        'label' => 'Listing',
+                                        'route' => 'utilisateur-preecog/ajouter',
+                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER),
+                                        'order'    => 10001,
+                                    ],
+                                ],
+                            ],
+
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

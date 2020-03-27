@@ -146,6 +146,7 @@ return [
 //            '111_' => 'https://gest.unicaen.fr/public/open-sans-gh-pages/open-sans.css',
             '111_' => 'vendor/DataTables-1.10.18/datatables.min.css',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
+            '999_' => 'css/icon.css',
         ],
         'images' => [
             '100_' => 'img/PrEECoG.svg',

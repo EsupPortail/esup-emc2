@@ -8,6 +8,6 @@ class UtilisateurPrivileges extends Privileges
 {
     const UTILISATEUR_AFFICHER  = 'utilisateur-utilisateur_afficher';
     const UTILISATEUR_AJOUTER   = 'utilisateur-utilisateur_ajouter';
-    const STATUT_CHANGER        = 'utilisateur-statut_changer';
-    const MODIFIER_ROLE         = 'utilisateur-modifier_role';
+    const UTILISATEUR_MODIFIERROLE = 'utilisateur-utilisateur_modifierrole';
+    const UTILISATEUR_CHANGERSTATUS = 'utilisateur-utilisateur_changerstatus';
 }

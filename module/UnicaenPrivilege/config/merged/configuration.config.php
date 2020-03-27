@@ -65,36 +65,36 @@ return [
         ],
     ],
 
-//    'navigation' => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'privilege' => [
-//                                'pages' => [
-//                                    'privilege-configuration' => [
-//                                        'label' => 'Configuration',
-//                                        'route' => 'configuration-categorie',
-//                                        'resource' => PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_AJOUTER),
-//                                        'order'    => 10001,
-//                                        'pages' => [
-//                                            'privilege-configuration' => [
-//                                                'label' => 'Gérer une catégorie',
-//                                                'route' => 'configuration-categorie/gerer',
-//                                                'resource' => PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_AJOUTER),
-//                                                'order'    => 10001,
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'privilege' => [
+                                'pages' => [
+                                    'privilege-configuration' => [
+                                        'label' => 'Configuration',
+                                        'route' => 'configuration-categorie',
+                                        'resource' => PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_AJOUTER),
+                                        'order'    => 10001,
+                                        'pages' => [
+                                            'privilege-configuration' => [
+                                                'label' => 'Gérer une catégorie',
+                                                'route' => 'configuration-categorie/gerer',
+                                                'resource' => PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_AJOUTER),
+                                                'order'    => 10001,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

@@ -17,8 +17,8 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
 $canAfficher    = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER));
 $canAjouter     = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER));
-$canStatus      = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::STATUT_CHANGER));
-$canRole        = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::MODIFIER_ROLE));
+$canStatus      = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_CHANGERSTATUS));
+$canRole        = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_MODIFIERROLE));
 
 $canListing = $canAfficher;
 $canCreerLocal = $canAjouter;
