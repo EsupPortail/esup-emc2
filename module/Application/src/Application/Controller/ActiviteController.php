@@ -6,9 +6,11 @@ use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
+use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
+use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
-use Mpdf\Tag\A;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -19,6 +21,9 @@ class ActiviteController  extends AbstractActionController {
     use ActiviteDescriptionServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
+    use SelectionApplicationFormAwareTrait;
+    use SelectionCompetenceFormAwareTrait;
+    use SelectionFormationFormAwareTrait;
 
     public function indexAction()
     {
@@ -232,4 +237,86 @@ class ActiviteController  extends AbstractActionController {
             'action' => $this->url()->fromRoute('activite/convert', ['activite' => $activite->getId()], [], true),
         ]);
     }
+
+    public function modifierLibelleAction() {
+
+    }
+
+    public function ajouterDescriptionsAction() {
+
+    }
+
+    public function modifierDescriptionAction() {
+
+    }
+
+    public function modifierApplicationAction() {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+
+        $form = $this->getSelectionApplicationForm();
+        $form->bind($activite);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $this->getActiviteService()->updateApplications($activite, $data);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Sélection des applications associées à l'activité",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierCompetenceAction() {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+
+        $form = $this->getSelectionCompetenceForm();
+        $form->bind($activite);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $this->getActiviteService()->updateCompetences($activite, $data);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Sélection des compétences associées à l'activité",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierFormationAction() {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+
+        $form = $this->getSelectionFormationForm();
+        $form->bind($activite);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $this->getActiviteService()->updateFormations($activite, $data);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Sélection des formations associées à l'activité",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
 }

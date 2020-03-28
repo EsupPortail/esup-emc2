@@ -8,6 +8,9 @@ use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormFactory;
 use Application\Form\Application\ApplicationHydrator;
 use Application\Form\Application\ApplicationHydratorFactory;
+use Application\Form\SelectionApplication\SelectionApplicationForm;
+use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
+use Application\Form\SelectionApplication\SelectionApplicationHydrator;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
@@ -144,9 +147,13 @@ return [
     'form_elements' => [
         'factories' => [
             ApplicationForm::class => ApplicationFormFactory::class,
+            SelectionApplicationForm::class => SelectionApplicationFormFactory::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            SelectionApplicationHydrator::class => SelectionApplicationHydrator::class,
+        ],
         'factories' => [
             ApplicationHydrator::class => ApplicationHydratorFactory::class,
         ]

@@ -49,6 +49,9 @@ return [
                         'convert',
                         'historiser',
                         'restaurer',
+                        'modifier-application',
+                        'modifier-competence',
+                        'modifier-formation',
                     ],
                     'privileges' => [
                         ActivitePrivileges::EDITER,
@@ -166,6 +169,36 @@ return [
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'convert',
+                            ],
+                        ],
+                    ],
+                    'modifier-application' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-application/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'modifier-application',
+                            ],
+                        ],
+                    ],
+                    'modifier-competence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-competence/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'modifier-competence',
+                            ],
+                        ],
+                    ],
+                    'modifier-formation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-formation/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'modifier-formation',
                             ],
                         ],
                     ],

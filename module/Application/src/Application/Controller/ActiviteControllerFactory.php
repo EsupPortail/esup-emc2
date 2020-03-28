@@ -3,8 +3,14 @@
 namespace Application\Controller;
 
 use Application\Form\Activite\ActiviteForm;
+use Application\Form\SelectionApplication\SelectionApplicationForm;
+use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
+use Application\Service\Application\ApplicationService;
+use Application\Service\Competence\CompetenceService;
+use Application\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
 class ActiviteControllerFactory {
@@ -18,10 +24,17 @@ class ActiviteControllerFactory {
         $activiteService = $container->get(ActiviteService::class);
         $activiteDescriptionService = $container->get(ActiviteDescriptionService::class);
 
+
         /**
          * @var ActiviteForm $activiteForm
+         * @var SelectionApplicationForm    $selectionApplicationForm
+         * @var SelectionCompetenceForm     $selectionCompetenceForm
+         * @var SelectionFormationForm      $selectionFormationForm
          */
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
+        $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
+        $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
+        $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
 
 
         /** @var ActiviteController $controller */
@@ -29,6 +42,9 @@ class ActiviteControllerFactory {
         $controller->setActiviteService($activiteService);
         $controller->setActiviteDescriptionService($activiteDescriptionService);
         $controller->setActiviteForm($activiteForm);
+        $controller->setSelectionApplicationForm($selectionApplicationForm);
+        $controller->setSelectionCompetenceForm($selectionCompetenceForm);
+        $controller->setSelectionFormationForm($selectionFormationForm);
         return $controller;
     }
 }

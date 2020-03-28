@@ -12,6 +12,9 @@ use Application\Form\FormationTheme\FormationThemeForm;
 use Application\Form\FormationTheme\FormationThemeFormFactory;
 use Application\Form\FormationTheme\FormationThemeHydrator;
 use Application\Form\FormationTheme\FormationThemeHydratorFactory;
+use Application\Form\SelectionFormation\SelectionFormationForm;
+use Application\Form\SelectionFormation\SelectionFormationFormFactory;
+use Application\Form\SelectionFormation\SelectionFormationHydrator;
 use Application\Provider\Privilege\FormationPrivileges;
 use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
@@ -230,9 +233,13 @@ return [
         'factories' => [
             FormationForm::class => FormationFormFactory::class,
             FormationThemeForm::class => FormationThemeFormFactory::class,
+            SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            SelectionFormationHydrator::class => SelectionFormationHydrator::class,
+        ],
         'factories' => [
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationThemeHydrator::class => FormationThemeHydratorFactory::class,

@@ -52,13 +52,12 @@ class Activite
         /** @var ActiviteLibelle $instance */
         foreach ($this->libelles as $instance) {
             if ($instance->getHistoDestruction() === null) {
-                if ($libelle === null) $libelle = $instance->getLibelle();
-                else $libelle = "<span class='probleme'><strong>PLUSIEURS LIBELLÉS ACTIFS !</strong></span>";
+                if ($libelle === null) return $instance->getLibelle();
+                else return "<span class='probleme'><strong>PLUSIEURS LIBELLÉS ACTIFS !</strong></span>";
             }
         }
-        if ($libelle === null && $this->libelle !== null) $libelle = "<span class='probleme'>".$this->libelle."</span>";
-        if ($libelle === null) $libelle = "<span class='probleme'><strong>AUCUN LIBELLÉ !</strong></span>";
-        return $libelle;
+        if ($this->libelle !== null) return "<span class='probleme'>".$this->libelle."</span>";
+        return  "<span class='probleme'><strong>AUCUN LIBELLÉ !</strong></span>";
     }
 
     /**
@@ -80,43 +79,16 @@ class Activite
     }
 
     /**
-     * @param string $description
-     * @return Activite
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /** DESCRIPTIONS **************************************************************************************************/
-
-    /**
      * @return ActiviteDescription[]
      */
     public function getDescriptions()
     {
-        return $this->descriptions->toArray();
-    }
-
-    /**
-     * @param ActiviteDescription $description
-     * @return Activite
-     */
-    public function addDescription($description)
-    {
-        $this->descriptions->add($description);
-        return $this;
-    }
-
-    /**
-     * @param ActiviteDescription $description
-     * @return Activite
-     */
-    public function removeDescription($description)
-    {
-        $this->descriptions->removeElement($description);
-        return $this;
+        $descriptions = [];
+        /** @var ActiviteDescription $activiteDescription */
+        foreach ($this->descriptions as $activiteDescription) {
+            if ($activiteDescription->estNonHistorise()) $descriptions[] = $activiteDescription;
+        }
+        return $descriptions;
     }
 
     /**
@@ -128,19 +100,6 @@ class Activite
         return $this;
     }
 
-    /**
-     * @param integer $id
-     * @return boolean
-     */
-    public function getDescriptionById($id)
-    {
-        /** @var ActiviteDescription $description */
-        foreach ($this->descriptions as $description) {
-            if ($description->getId() === $id) return $description;
-        }
-        return null;
-    }
-
     /** APPLICATIONS **************************************************************************************************/
 
     /**
@@ -148,45 +107,25 @@ class Activite
      */
     public function getApplications()
     {
-        return $this->applications->toArray();
-    }
-
-    /**
-     * @param Application $application
-     * @return Activite
-     */
-    public function addApplication($application)
-    {
-        $this->applications->add($application);
-        return $this;
-    }
-
-    /**
-     * @param Application $application
-     * @return Activite
-     */
-    public function removeApplication($application)
-    {
-        $this->applications->removeElement($application);
-        return $this;
+        $applications = [];
+        /** @var ActiviteApplication $activiteApplication */
+        foreach ($this->applications as $activiteApplication) {
+            if ($activiteApplication->estNonHistorise()) $applications[] = $activiteApplication->getApplication();
+        }
+        return $applications;
     }
 
     /**
      * @param Application $application
      * @return boolean
      */
-    public function hasApplication($application)
+    public function hasApplication(Application $application)
     {
-        return $this->applications->contains($application);
-    }
-
-    /**
-     * @return Activite
-     */
-    public function clearApplications()
-    {
-        $this->applications->clear();
-        return $this;
+        /** @var ActiviteApplication $activiteApplication */
+        foreach ($this->competences as $activiteApplication) {
+            if ($activiteApplication->estNonHistorise() AND $activiteApplication->getApplication() === $application) return true;
+        }
+        return false;
     }
 
     /** COMPETENCES ***************************************************************************************************/
@@ -196,45 +135,25 @@ class Activite
      */
     public function getCompetences()
     {
-        return $this->competences->toArray();
-    }
-
-    /**
-     * @param Competence $competence
-     * @return Activite
-     */
-    public function addCompetence($competence)
-    {
-        $this->competences->add($competence);
-        return $this;
-    }
-
-    /**
-     * @param Competence $competence
-     * @return Activite
-     */
-    public function removeCompetence($competence)
-    {
-        $this->competences->removeElement($competence);
-        return $this;
+        $competences = [];
+        /** @var ActiviteCompetence $activiteCompetence */
+        foreach ($this->competences as $activiteCompetence) {
+            if ($activiteCompetence->estNonHistorise()) $competences[] = $activiteCompetence->getCompetence();
+        }
+        return $competences;
     }
 
     /**
      * @param Competence $competence
      * @return boolean
      */
-    public function hasCompetence($competence)
+    public function hasCompetence(Competence $competence)
     {
-        return $this->competences->contains($competence);
-    }
-
-    /**
-     * @return Activite
-     */
-    public function clearCompetences()
-    {
-        $this->competences->clear();
-        return $this;
+        /** @var ActiviteCompetence $activiteCompetence */
+        foreach ($this->competences as $activiteCompetence) {
+            if ($activiteCompetence->estNonHistorise() AND $activiteCompetence->getCompetence() === $competence) return true;
+        }
+        return false;
     }
 
     /** FORMATIONS ****************************************************************************************************/
@@ -244,44 +163,25 @@ class Activite
      */
     public function getFormations()
     {
-        return $this->formations->toArray();
-    }
-
-    /**
-     * @param Formation $formation
-     * @return Activite
-     */
-    public function addFormation($formation)
-    {
-        $this->formations->add($formation);
-        return $this;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return Activite
-     */
-    public function removeFormation($formation)
-    {
-        $this->formations->removeElement($formation);
-        return $this;
+        $formations = [];
+        /** @var ActiviteFormation $activiteFormation */
+        foreach ($this->formations as $activiteFormation) {
+            if ($activiteFormation->estNonHistorise()) $formations[] = $activiteFormation->getFormation();
+        }
+        return $formations;
     }
 
     /**
      * @param Formation $formation
      * @return boolean
      */
-    public function hasFormation($formation)
+    public function hasFormation(Formation $formation)
     {
-        return $this->formations->contains($formation);
+        /** @var ActiviteFormation $activiteFormation */
+        foreach ($this->formations as $activiteFormation) {
+            if ($activiteFormation->estNonHistorise() AND $activiteFormation->getFormation() === $formation) return true;
+        }
+        return false;
     }
 
-    /**
-     * @return Activite
-     */
-    public function clearFormations()
-    {
-        $this->formations->clear();
-        return $this;
-    }
 }

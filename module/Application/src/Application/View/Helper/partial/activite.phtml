@@ -104,6 +104,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         <!-- AFFICHAGE DES SOUS ACTIVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <div class="<?php echo ($mode == 'edition-fiche-metier')?"col-md-7":"col-md-8"; ?>">
             <h4> Description </h4>
+            <?php $descriptions = $activite->getDescriptions(); ?>
             <?php if (! empty($activite->getDescriptions())) : ?>
                 <ul>
                     <?php foreach ($activite->getDescriptions() as $description) : ?>
@@ -119,14 +120,12 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                             }
                         ?>
                         <?php if ($display) : ?>
-                            <li> <?php echo $description->getDescription(); ?></li>
+                        <li> <?php echo $description->getDescription(); ?> </li>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </ul>
             <?php else : ?>
-                <i>
-                    <?php echo $activite->getDescription(); ?>
-                </i>
+                <span class="probleme"> <?php echo $activite->getDescription(); ?> </span>
             <?php endif; ?>
         </div>
 

@@ -20,6 +20,9 @@ use Application\Form\CompetenceType\CompetenceTypeForm;
 use Application\Form\CompetenceType\CompetenceTypeFormFactory;
 use Application\Form\CompetenceType\CompetenceTypeHydrator;
 use Application\Form\CompetenceType\CompetenceTypeHydratorFactory;
+use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Application\Form\SelectionCompetence\SelectionCompetenceFormFactory;
+use Application\Form\SelectionCompetence\SelectionCompetenceHydrator;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
@@ -368,11 +371,15 @@ return [
             CompetenceForm::class => CompetenceFormFactory::class,
             CompetenceThemeForm::class => CompetenceThemeFormFactory::class,
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
+            SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
 
             AgentCompetenceForm::class => AgentCompetenceFormFactory::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            SelectionCompetenceHydrator::class => SelectionCompetenceHydrator::class,
+        ],
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
             CompetenceThemeHydrator::class => CompetenceThemeHydratorFactory::class,

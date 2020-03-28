@@ -30,70 +30,69 @@ class ActiviteForm extends Form {
             ],
         ]);
         // description
-        $this->add([
-            'name' => 'description',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'type2 form-control',
-            ]
-        ]);
+//        $this->add([
+//            'name' => 'description',
+//            'type' => 'textarea',
+//            'options' => [
+//                'label' => 'Description : ',
+//                'label_attributes' => [
+//                    'class' => 'control-label',
+//                ],
+//            ],
+//            'attributes' => [
+//                'class' => 'type2 form-control',
+//            ]
+//        ]);
         //application
-        $this->add([
-            'name' => 'applications',
-            'type' => Select::class,
-            'options' => [
-                'label' => 'Applications : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-                'value_options' => $this->getApplicationOptions()
-            ],
-            'attributes' => [
-                'class' => 'description form-control',
-                'style' => 'height:300px;',
-                'multiple' => 'multiple',
-            ]
-        ]);
+//        $this->add([
+//            'name' => 'applications',
+//            'type' => Select::class,
+//            'options' => [
+//                'label' => 'Applications : ',
+//                'label_attributes' => [
+//                    'class' => 'control-label',
+//                ],
+//                'value_options' => $this->getApplicationOptions()
+//            ],
+//            'attributes' => [
+//                'class' => 'description form-control',
+//                'style' => 'height:300px;',
+//                'multiple' => 'multiple',
+//            ]
+//        ]);
         //competence
-        $this->add([
-            'name' => 'competences',
-            'type' => Select::class,
-            'options' => [
-                'label' => 'Compétences : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-                'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
-            ],
-            'attributes' => [
-                'class' => 'description form-control',
-                'style' => 'height:300px;',
-                'multiple' => 'multiple',
-            ]
-        ]);
+//        $this->add([
+//            'name' => 'competences',
+//            'type' => Select::class,
+//            'options' => [
+//                'label' => 'Compétences : ',
+//                'label_attributes' => [
+//                    'class' => 'control-label',
+//                ],
+//                'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
+//            ],
+//            'attributes' => [
+//                'class' => 'description form-control',
+//                'style' => 'height:300px;',
+//                'multiple' => 'multiple',
+//            ]
+//        ]);
         // formation
-        $this->add([
-            'type' => Select::class,
-            'name' => 'formations',
-            'options' => [
-                'label' => "Formations associées :",
-                'empty_option' => "Sélectionner la ou les formations ...",
-//                'value_options' => $this->getFormationService()->getFormationsAsOptions(),
-                'value_options' => $this->getFormationService()->getFormationsThemesAsGroupOptions(),
-            ],
-            'attributes' => [
-                'id' => 'formations',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-                'multiple'          => 'multiple',
-            ],
-        ]);
+//        $this->add([
+//            'type' => Select::class,
+//            'name' => 'formations',
+//            'options' => [
+//                'label' => "Formations associées :",
+//                'empty_option' => "Sélectionner la ou les formations ...",
+//                'value_options' => $this->getFormationService()->getFormationsThemesAsGroupOptions(),
+//            ],
+//            'attributes' => [
+//                'id' => 'formations',
+//                'class'             => 'bootstrap-selectpicker show-tick',
+//                'data-live-search'  => 'true',
+//                'multiple'          => 'multiple',
+//            ],
+//        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -112,20 +111,10 @@ class ActiviteForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'               => [ 'required' => true,  ],
-            'description'           => [ 'required' => true,  ],
-            'applications'          => [ 'required' => false,  ],
-            'competences'           => [ 'required' => false,  ],
-            'formations'            => [ 'required' => false,  ],
+//            'description'           => [ 'required' => true,  ],
+//            'applications'          => [ 'required' => false,  ],
+//            'competences'           => [ 'required' => false,  ],
+//            'formations'            => [ 'required' => false,  ],
         ]));
-    }
-
-    private function getApplicationOptions()
-    {
-        $applications = $this->getApplicationService()->getApplications('libelle');
-        $options = [];
-        foreach ($applications as $application) {
-            $options[$application->getId()] = $application->getLibelle();
-        }
-        return $options;
     }
 }
