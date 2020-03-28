@@ -3,7 +3,10 @@
 use Application\Entity\Db\Activite;
 
 /**
+ * @see \Application\Controller\ActiviteController::afficherAction()
+ * @see \Application\Controller\ActiviteController::modifierAction()
  * @var Activite $activite
+ * @var string $mode
  */
 
 $applications   = $activite->getApplications();
@@ -11,4 +14,23 @@ $competences    = $activite->getCompetences();
 $formations      = $activite->getFormations();
 ?>
 
-<?php echo $this->activite($activite, []); ?>
+<div class="alert alert-warning">
+    !!! Débug à retirer plus tard !!!
+    <dl class="dl-horizontal">
+        <dt> Activite Id</dt>
+        <dd> <?php echo $activite->getId(); ?></dd>
+        <dt> Mode </dt>
+        <dd> <?php echo $mode; ?></dd>
+    </dl>
+</div>
+
+<?php echo $this->activite($activite, $mode); ?>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

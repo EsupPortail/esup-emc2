@@ -9,6 +9,8 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 
 /**
+ * @see \Application\View\Helper\ActiviteViewHelper
+ *
  * Provient de l'appel de l'aide de vue
  * @var Activite|FicheMetierTypeActivite $activite
  * @var string $mode
@@ -19,6 +21,8 @@ use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
  * @var FicheMetier $fichemetier
  * @var FicheposteActiviteDescriptionRetiree[] $retirees
  */
+
+$canModifier = true;
 
 $type = null;
 if ($activite instanceof FicheMetierTypeActivite) {
@@ -133,11 +137,20 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         <?php if ($nbObject !== 0) : ?>
             <div class="col-md-4" style="border:1px lightblue solid">
                 <small>
-                <?php if ($nbCompetence > 0) : ?>
+                <?php if ($mode === 'modifier-activite' OR $nbCompetence > 0) : ?>
                     <h4>
                         <span class="icon competence"></span>
                         Compétences
                         <span class="badge"> <?php echo $nbCompetence; ?></span>
+                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+                            <a
+                                <?php /** @see ActiviteController::modifierCompetenceAction() */?>
+                                href="<?php echo $this->url("activite/modifier-competence", ["activite" => $activite->getId()], [], true); ?>"
+                                class="ajax-modal"
+                                data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier les compétences associées à la mission"></span></a>
+                        <?php endif; ?>
                     </h4>
 
                     <ul>
@@ -149,11 +162,20 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                     </ul>
                 <?php endif; ?>
 
-                <?php if ($nbApplication > 0) : ?>
+                <?php if ($mode === 'modifier-activite' OR $nbApplication > 0) : ?>
                     <h4>
                         <span class="icon application"></span>
                         Applications
                         <span class="badge"> <?php echo $nbApplication; ?></span>
+                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+                            <a
+                                <?php /** @see ActiviteController::modifierApplicationAction() */?>
+                                    href="<?php echo $this->url("activite/modifier-application", ["activite" => $activite->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier les applications associées à la mission"></span></a>
+                        <?php endif; ?>
                     </h4>
 
                     <ul>
@@ -165,11 +187,20 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                     </ul>
                 <?php endif; ?>
 
-                <?php if ($nbFormation > 0) : ?>
+                <?php if ($mode === 'modifier-activite' OR $nbFormation > 0) : ?>
                     <h4>
                         <span class="icon formation"></span>
                         Formations
                         <span class="badge"> <?php echo $nbFormation; ?></span>
+                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+                            <a
+                                <?php /** @see ActiviteController::modifierFormationAction() */?>
+                                    href="<?php echo $this->url("activite/modifier-formation", ["activite" => $activite->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier les formations associées à la mission"></span></a>
+                        <?php endif; ?>
                     </h4>
 
                     <ul>

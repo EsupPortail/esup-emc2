@@ -135,6 +135,7 @@ return [
 //            '100_' => 'js/jquery.ui.datepicker-fr.js',
             '110_' => 'vendor/DataTables-1.10.18/datatables.min.js',
 //            '112_' => 'vendor/font-awesome-5.0.9/fontawesome-all.min.js',
+            '114_' => 'vendor/bootstrap-select-1.13.2/dist/js/bootstrap-select.min.js',
             '150_' => 'js/tinymce/js/tinymce/tinymce.js',
             '151_' => 'js/form_fiche.js',
             '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',

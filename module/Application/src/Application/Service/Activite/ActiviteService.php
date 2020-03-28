@@ -358,8 +358,7 @@ class ActiviteService {
         if (isset($data['applications'])) $applicationIds = $data['applications'];
 
         /** @var ActiviteApplication $activiteApplication */
-        foreach ($activite->getFormations() as $activiteApplication) {
-            if ($activiteApplication->estNonHistorise()) {
+        foreach ($activite->getApplicationsCollection() as $activiteApplication) {
                 if (array_search($activiteApplication->getApplication()->getId(), $applicationIds) === false) {
                     $activiteApplication->setHistoDestructeur($user);
                     $activiteApplication->setHistoDestruction($date);
@@ -369,7 +368,6 @@ class ActiviteService {
                         throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
                     }
                 }
-            }
         }
 
         foreach ($applicationIds as $applicationId) {
@@ -408,7 +406,7 @@ class ActiviteService {
         if (isset($data['competences'])) $competenceIds = $data['competences'];
 
         /** @var ActiviteCompetence $activiteCompetence */
-        foreach ($activite->getCompetences() as $activiteCompetence) {
+        foreach ($activite->getCompetencesCollection() as $activiteCompetence) {
             if ($activiteCompetence->estNonHistorise()) {
                 if (array_search($activiteCompetence->getCompetence()->getId(), $competenceIds) === false) {
                     $activiteCompetence->setHistoDestructeur($user);
@@ -458,7 +456,7 @@ class ActiviteService {
         if (isset($data['formations'])) $formationIds = $data['formations'];
 
         /** @var ActiviteFormation $activiteFormation */
-        foreach ($activite->getFormations() as $activiteFormation) {
+        foreach ($activite->getFormationsCollection() as $activiteFormation) {
             if ($activiteFormation->estNonHistorise()) {
                 if (array_search($activiteFormation->getFormation()->getId(), $formationIds) === false) {
                     $activiteFormation->setHistoDestructeur($user);

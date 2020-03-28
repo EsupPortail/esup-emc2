@@ -103,6 +103,14 @@ class Activite
     /** APPLICATIONS **************************************************************************************************/
 
     /**
+     * @return ArrayCollection (ActiviteApplication)
+     */
+    public function getApplicationsCollection()
+    {
+        return $this->applications;
+    }
+
+    /**
      * @return Application[]
      */
     public function getApplications()
@@ -122,13 +130,21 @@ class Activite
     public function hasApplication(Application $application)
     {
         /** @var ActiviteApplication $activiteApplication */
-        foreach ($this->competences as $activiteApplication) {
+        foreach ($this->applications as $activiteApplication) {
             if ($activiteApplication->estNonHistorise() AND $activiteApplication->getApplication() === $application) return true;
         }
         return false;
     }
 
     /** COMPETENCES ***************************************************************************************************/
+
+    /**
+     * @return ArrayCollection (ActiviteCompetence)
+     */
+    public function getCompetencesCollection()
+    {
+        return $this->competences;
+    }
 
     /**
      * @return Competence[]
@@ -157,6 +173,14 @@ class Activite
     }
 
     /** FORMATIONS ****************************************************************************************************/
+
+    /**
+     * @return ArrayCollection (ActiviteFormation)
+     */
+    public function getFormationsCollection()
+    {
+        return $this->formations;
+    }
 
     /**
      * @return Formation[]
