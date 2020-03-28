@@ -43,6 +43,21 @@ class Activite
         return $this->id;
     }
 
+    /** LIBELLE *******************************************************************************************************/
+
+    /**
+     * @return ActiviteLibelle
+     */
+    public function getCurrentActiviteLibelle()
+    {
+        $current = null;
+        /** @var ActiviteLibelle $activiteLibelle */
+        foreach ($this->libelles as $activiteLibelle) {
+            if ($activiteLibelle->estNonHistorise()) return $activiteLibelle;
+        }
+        return null;
+    }
+
     /**
      * @return string
      */

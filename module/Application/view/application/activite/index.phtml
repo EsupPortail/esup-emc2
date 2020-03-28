@@ -24,9 +24,10 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
 <div class="main">
 
     <?php if ($canAjouter) : ?>
-        <a href="<?php echo $this->url('activite/creer', [], [], true); ?>"
-           class="btn btn-primary action ajax-modal"
-           data-event="modification">
+        <a  <?php /** @see \Application\Controller\ActiviteController::creerAction() */ ?>
+            href="<?php echo $this->url('activite/creer', [], [], true); ?>"
+            class="btn btn-primary action ajax-modal"
+            data-event="modification">
             <span class="icon ajouter"></span>
             Ajouter une mission principale
         </a>

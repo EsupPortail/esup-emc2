@@ -49,6 +49,14 @@ class ActiviteDescription {
     }
 
     /**
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->description;
+    }
+
+    /**
      * @param string $description
      * @return ActiviteDescription
      */

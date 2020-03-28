@@ -2,6 +2,9 @@
 
 namespace Application;
 
+use Application\Form\ModifierLibelle\ModifierLibelleForm;
+use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
+use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
 use Application\View\Helper\ActionIconViewHelper;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
@@ -101,6 +104,17 @@ return [
         'factories' => [
             'Application\Controller\Index' => Controller\IndexControllerFactory::class,
         ]
+    ],
+
+    'form_elements' => [
+        'factories' => [
+            ModifierLibelleForm::class => ModifierLibelleFormFactory::class,
+        ],
+    ],
+    'hydrators' => [
+        'invokables' => [
+            ModifierLibelleHydrator::class => ModifierLibelleHydrator::class,
+        ],
     ],
 
     'view_helpers' => [

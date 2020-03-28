@@ -35,7 +35,7 @@ return [
                         'afficher-theme',
                     ],
                     'privileges' => [
-                        FormationPrivileges::AFFICHER,
+                        FormationPrivileges::FORMATION_AFFICHER,
                     ],
                 ],
                 [
@@ -52,7 +52,7 @@ return [
                         'restaurer-theme',
                     ],
                     'privileges' => [
-                        FormationPrivileges::EDITER,
+                        FormationPrivileges::FORMATION_EDITER,
                     ],
                 ],
                 [
@@ -62,7 +62,26 @@ return [
                         'detruire-theme',
                     ],
                     'privileges' => [
-                        FormationPrivileges::DETRUIRE,
+                        FormationPrivileges::FORMATION_DETRUIRE,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'formation' => [
+                                'label'    => 'Formations',
+                                'route'    => 'formation',
+                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
+                                'order'    => 700,
+                            ],
+                        ],
                     ],
                 ],
             ],

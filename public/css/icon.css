@@ -32,6 +32,10 @@ span.icon.ajouter:before {
     content: "\f0fe";
 }
 
+span.icon.ajouter-plusieurs:before {
+    content: "\f067";
+}
+
 span.icon.editer:before {
     content: "\f303";
 }

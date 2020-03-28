@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\Activite\ActiviteForm;
+use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionFormation\SelectionFormationForm;
@@ -26,12 +27,14 @@ class ActiviteControllerFactory {
 
 
         /**
-         * @var ActiviteForm $activiteForm
+         * @var ActiviteForm                $activiteForm
+         * @var ModifierLibelleForm         $modifierLibelleForm
          * @var SelectionApplicationForm    $selectionApplicationForm
          * @var SelectionCompetenceForm     $selectionCompetenceForm
          * @var SelectionFormationForm      $selectionFormationForm
          */
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
+        $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
@@ -42,6 +45,7 @@ class ActiviteControllerFactory {
         $controller->setActiviteService($activiteService);
         $controller->setActiviteDescriptionService($activiteDescriptionService);
         $controller->setActiviteForm($activiteForm);
+        $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
         $controller->setSelectionFormationForm($selectionFormationForm);

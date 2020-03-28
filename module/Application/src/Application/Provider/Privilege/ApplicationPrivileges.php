@@ -6,8 +6,8 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class ApplicationPrivileges extends Privileges
 {
-    const AFFICHER          = 'application-afficher-application';
-    const AJOUTER           = 'application-ajouter-application';
-    const EDITER            = 'application-editer-application';
-    const EFFACER           = 'application-effacer-application';
+    const APPLICATION_AFFICHER          = 'application-application_afficher';
+    const APPLICATION_AJOUTER           = 'application-application_ajouter';
+    const APPLICATION_EDITER            = 'application-application_editer';
+    const APPLICATION_EFFACER           = 'application-application_effacer';
 }

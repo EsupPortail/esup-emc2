@@ -29,7 +29,7 @@ return [
                         'afficher',
                     ],
                     'privileges' => [
-                        ApplicationPrivileges::AFFICHER,
+                        ApplicationPrivileges::APPLICATION_AFFICHER,
                     ],
                 ],
                 [
@@ -39,7 +39,7 @@ return [
                         'editer',
                     ],
                     'privileges' => [
-                        ApplicationPrivileges::EDITER,
+                        ApplicationPrivileges::APPLICATION_EDITER,
                     ],
                 ],
                 [
@@ -48,7 +48,7 @@ return [
                         'creer',
                     ],
                     'privileges' => [
-                        ApplicationPrivileges::AJOUTER,
+                        ApplicationPrivileges::APPLICATION_AJOUTER,
                     ],
                 ],
                 [
@@ -57,7 +57,26 @@ return [
                         'effacer',
                     ],
                     'privileges' => [
-                        ApplicationPrivileges::EFFACER,
+                        ApplicationPrivileges::APPLICATION_EFFACER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'application' => [
+                                'label'    => 'Applications',
+                                'route'    => 'application',
+                                'resource' => ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER),
+                                'order'    => 200,
+                            ],
+                        ],
                     ],
                 ],
             ],

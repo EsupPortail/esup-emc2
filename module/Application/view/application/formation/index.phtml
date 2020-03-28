@@ -13,11 +13,11 @@ use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationTheme;
 use Application\Provider\Privilege\FormationPrivileges;
 
-$canAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::AFFICHER));
-$canAjouter = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::EDITER));
-$canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::EDITER));
-$canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::EDITER));
-$canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::DETRUIRE));
+$canAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+$canAjouter = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_EDITER));
+$canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_EDITER));
+$canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_EDITER));
+$canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_DETRUIRE));
 
 $this->headTitle("Index des formations");
 ?>

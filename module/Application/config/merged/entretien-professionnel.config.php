@@ -31,7 +31,7 @@ return [
                         'afficher',
                     ],
                     'privileges' => [
-                        ApplicationPrivileges::AFFICHER,
+                        ApplicationPrivileges::APPLICATION_AFFICHER,
                     ],
                 ],
             ],

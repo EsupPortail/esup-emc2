@@ -6,6 +6,7 @@ use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteApplication;
 use Application\Entity\Db\ActiviteCompetence;
 use Application\Entity\Db\ActiviteFormation;
+use Application\Entity\Db\ActiviteLibelle;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Service\Application\ApplicationServiceAwareTrait;
@@ -489,6 +490,50 @@ class ActiviteService {
             }
         }
 
+        return $activite;
+    }
+
+    /**
+     * @param Activite $activite
+     * @param array
+     * @return Activite
+     */
+    public function updateLibelle(Activite $activite,  $data)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $current = $activite->getCurrentActiviteLibelle();
+
+        $libelle = null;
+        $ok = false;
+        if (isset($data['libelle'])) $libelle = $data['libelle'];
+        if ($libelle !== null AND trim($libelle) !== '') {
+            $activiteLibelle = new ActiviteLibelle();
+            $activiteLibelle->setActivite($activite);
+            $activiteLibelle->setLibelle($libelle);
+            $activiteLibelle->setHistoCreateur($user);
+            $activiteLibelle->setHistoCreation($date);
+            $activiteLibelle->setHistoModificateur($user);
+            $activiteLibelle->setHistoModification($date);
+            try {
+                $this->getEntityManager()->persist($activiteLibelle);
+                $this->getEntityManager()->flush($activiteLibelle);
+            } catch (ORMException $e) {
+                throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
+            }
+            $ok = true;
+        }
+
+        if ($current !== null AND $ok === true) {
+            $current->setHistoDestruction($date);
+            $current->setHistoDestructeur($user);
+            try {
+                $this->getEntityManager()->flush($current);
+            } catch (ORMException $e) {
+                throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
+            }
+        }
         return $activite;
     }
 

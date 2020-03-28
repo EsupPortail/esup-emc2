@@ -48,9 +48,14 @@ return [
                         'convert',
                         'historiser',
                         'restaurer',
+                        'modifier-libelle',
                         'modifier-application',
                         'modifier-competence',
                         'modifier-formation',
+
+                        'ajouter-description',
+                        'modifier-description',
+                        'supprimer-description',
                     ],
                     'privileges' => [
                         ActivitePrivileges::EDITER,
@@ -201,6 +206,16 @@ return [
                             ],
                         ],
                     ],
+                    'modifier-libelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-libelle/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'modifier-libelle',
+                            ],
+                        ],
+                    ],
                     'creer' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -210,7 +225,37 @@ return [
                                 'action'     => 'creer',
                             ],
                         ],
-                    ]
+                    ],
+                    'ajouter-description' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-description/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'ajouter-description',
+                            ],
+                        ],
+                    ],
+                    'modifier-description' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-description/:description',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'modifier-description',
+                            ],
+                        ],
+                    ],
+                    'supprimer-description' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-description/:description',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'supprimer-description',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],

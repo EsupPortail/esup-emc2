@@ -6,6 +6,7 @@ use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
+use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Form\SelectionFormation\SelectionFormationFormAwareTrait;
@@ -21,6 +22,7 @@ class ActiviteController  extends AbstractActionController {
     use ActiviteDescriptionServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
+    use ModifierLibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionFormationFormAwareTrait;
@@ -115,67 +117,101 @@ class ActiviteController  extends AbstractActionController {
         return $this->redirect()->toRoute('activite');
     }
 
-    /**
-     * Action convertissant les anciennes description d'activité en nouvelles versions
-     */
-    public function convertAction()
-    {
-        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
-        $descriptions = $activite->getDescription();
 
-        /** retirer le <ul></ul> */
-        $descriptions = str_replace(["\n","\r"],["",""], $descriptions);
-        $descriptions = preg_replace("/^<ul><li>/", "", $descriptions);
-        $descriptions = preg_replace("/<\/li><\/ul>$/", "", $descriptions);
-        $elements = explode("</li><li>", $descriptions);
 
-        $new = [];
-        foreach ($elements as $element) {
-            $description = new ActiviteDescription();
-            $description->setActivite($activite);
-            $description->setDescription($element);
-            $new[] = $description;
-        }
+    public function modifierLibelleAction() {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+
+        $form = $this->getModifierLibelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('activite/modifier-libelle', ["activite" => $activite->getId()], [], true));
+        $form->bind($activite);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-
-            if($data['reponse'] === 'oui') {
-                $descriptions = $activite->getDescriptions();
-                foreach ($descriptions as $description) $this->getActiviteDescriptionService()->delete($description);
-                $activite->clearDescriptions();
-                $this->getActiviteService()->update($activite);
-
-                foreach ($new as $item) {
-                    $item->setActivite($activite);
-                    $this->getActiviteDescriptionService()->create($item);
-                    $activite->addDescription($item);
-                }
-                $this->getActiviteService()->update($activite);
-            }
-            exit();
+            $this->getActiviteService()->updateLibelle($activite, $data);
         }
 
-        return new ViewModel([
-            'title' => "Convertion de l'activite [".$activite->getLibelle()."].",
-            'activite' => $activite,
-            'new' => $new,
-            'action' => $this->url()->fromRoute('activite/convert', ['activite' => $activite->getId()], [], true),
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier le libellé de l'activité",
+            'form' => $form,
         ]);
+        return $vm;
     }
 
-    public function modifierLibelleAction() {
+    public function ajouterDescriptionAction() {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+        $description = new ActiviteDescription();
 
-    }
+        $form = $this->getModifierLibelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('activite/ajouter-description', ['activite' => $activite->getId()], [], true));
+        $form->bind($description);
 
-    public function ajouterDescriptionsAction() {
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $libelle = null;
+            if (isset($data['libelle'])) $libelle = $data['libelle'];
 
+            if ($libelle !== null AND trim($libelle) !== "") {
+                $description->setActivite($activite);
+                $description->setDescription($libelle);
+                $this->getActiviteDescriptionService()->create($description);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une description",
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
     public function modifierDescriptionAction() {
+        $description = $this->getActiviteDescriptionService()->getRequestedActiviteDescription($this);
 
+        $form = $this->getModifierLibelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('activite/modifier-description', ['description' => $description->getId()], [], true));
+        $form->bind($description);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $libelle = null;
+            if (isset($data['libelle'])) $libelle = $data['libelle'];
+
+            if ($libelle !== null AND trim($libelle) !== "") {
+                $newdescription = new ActiviteDescription();
+                $newdescription->setActivite($description->getActivite());
+                $newdescription->setDescription($libelle);
+                $this->getActiviteDescriptionService()->historise($description);
+                $this->getActiviteDescriptionService()->create($newdescription);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une description",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function supprimerDescriptionAction() {
+        $description = $this->getActiviteDescriptionService()->getRequestedActiviteDescription($this);
+        $activite = $description->getActivite();
+
+        $this->getActiviteDescriptionService()->historise($description);
+
+        return $this->redirect()->toRoute('activite/modifier', ['activite' => $activite->getId()], [], true);
     }
 
     public function modifierApplicationAction() {
@@ -249,4 +285,54 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
+    /**
+     * Action convertissant les anciennes description d'activité en nouvelles versions
+     */
+    public function convertAction()
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+        $descriptions = $activite->getDescription();
+
+        /** retirer le <ul></ul> */
+        $descriptions = str_replace(["\n","\r"],["",""], $descriptions);
+        $descriptions = preg_replace("/^<ul><li>/", "", $descriptions);
+        $descriptions = preg_replace("/<\/li><\/ul>$/", "", $descriptions);
+        $elements = explode("</li><li>", $descriptions);
+
+        $new = [];
+        foreach ($elements as $element) {
+            $description = new ActiviteDescription();
+            $description->setActivite($activite);
+            $description->setDescription($element);
+            $new[] = $description;
+        }
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            if($data['reponse'] === 'oui') {
+                $descriptions = $activite->getDescriptions();
+                foreach ($descriptions as $description) $this->getActiviteDescriptionService()->delete($description);
+                $activite->clearDescriptions();
+                $this->getActiviteService()->update($activite);
+
+                foreach ($new as $item) {
+                    $item->setActivite($activite);
+                    $this->getActiviteDescriptionService()->create($item);
+                    $activite->addDescription($item);
+                }
+                $this->getActiviteService()->update($activite);
+            }
+            exit();
+        }
+
+        return new ViewModel([
+            'title' => "Convertion de l'activite [".$activite->getLibelle()."].",
+            'activite' => $activite,
+            'new' => $new,
+            'action' => $this->url()->fromRoute('activite/convert', ['activite' => $activite->getId()], [], true),
+        ]);
+    }
 }

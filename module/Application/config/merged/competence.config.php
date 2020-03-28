@@ -49,7 +49,7 @@ return [
                         'afficher-competence-theme',
                     ],
                     'privileges' => [
-                        CompetencePrivileges::AFFICHER,
+                        CompetencePrivileges::COMPETENCE_AFFICHER,
                     ],
                 ],
                 [
@@ -60,7 +60,7 @@ return [
                         'ajouter-competence-theme',
                     ],
                     'privileges' => [
-                        CompetencePrivileges::AJOUTER,
+                        CompetencePrivileges::COMPETENCE_AJOUTER,
                     ],
                 ],
                 [
@@ -77,7 +77,7 @@ return [
                         'restaurer-competence-theme',
                     ],
                     'privileges' => [
-                        CompetencePrivileges::EDITER,
+                        CompetencePrivileges::COMPETENCE_EDITER,
                     ],
                 ],
                 [
@@ -88,7 +88,7 @@ return [
                         'detruire-competence-theme',
                     ],
                     'privileges' => [
-                        CompetencePrivileges::EFFACER,
+                        CompetencePrivileges::COMPETENCE_EFFACER,
                     ],
                 ],
             ],
@@ -335,24 +335,24 @@ return [
         ],
     ],
 
-//    '\Zend\Navigation\Navigation'      => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'fiche-metier' => [
-//                        'pages' => [
-//                            'competence' => [
-//                                'label'    => 'Les compétences',
-//                                'route'    => 'competence',
-//                                'resource' => CompetencePrivileges::getResourceId(CompetencePrivileges::AFFICHER),
-//                                'order'    => 5000,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'competence' => [
+                                'label'    => 'Compétences',
+                                'route'    => 'competence',
+                                'resource' => CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER),
+                                'order'    => 500,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'service_manager' => [
         'factories' => [

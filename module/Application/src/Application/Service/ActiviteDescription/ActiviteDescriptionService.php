@@ -8,6 +8,7 @@ use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteDescriptionService {
     use EntityManagerAwareTrait;
@@ -37,6 +38,38 @@ class ActiviteDescriptionService {
      * @return ActiviteDescription
      */
     public function update(ActiviteDescription $description)
+    {
+        $description->updateModification($this->getUserService());
+
+        try {
+            $this->getEntityManager()->flush($description);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregirstrement en base",0, $e);
+        }
+        return $description;
+    }
+
+    /**
+     * @param ActiviteDescription $description
+     * @return ActiviteDescription
+     */
+    public function historise(ActiviteDescription $description)
+    {
+        $description->updateDestructeur($this->getUserService());
+
+        try {
+            $this->getEntityManager()->flush($description);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregirstrement en base",0, $e);
+        }
+        return $description;
+    }
+
+    /**
+     * @param ActiviteDescription $description
+     * @return ActiviteDescription
+     */
+    public function restore(ActiviteDescription $description)
     {
         $description->updateModification($this->getUserService());
 
@@ -83,6 +116,18 @@ class ActiviteDescriptionService {
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs ActiviteDescription partagent le même id [".$id."]", 0 , $e);
         }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $param
+     * @return ActiviteDescription
+     */
+    public function getRequestedActiviteDescription($controller, $param = 'description')
+    {
+        $id = $controller->params()->fromRoute($param);
+        $result = $this->getActiviteDescription($id);
         return $result;
     }
 }

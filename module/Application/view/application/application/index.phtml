@@ -7,10 +7,10 @@ use Application\Provider\Privilege\ApplicationPrivileges;
  * @var Application[] $applications
  */
 
-$canAfficher    = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::AFFICHER));
-$canAjouter     = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::AJOUTER));
-$canEditer      = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::EDITER));
-$canEffacer     = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::EFFACER));
+$canAfficher    = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER));
+$canAjouter     = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AJOUTER));
+$canEditer      = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EDITER));
+$canEffacer     = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EFFACER));
 
 $this->headTitle("Index des applications");
 ?>

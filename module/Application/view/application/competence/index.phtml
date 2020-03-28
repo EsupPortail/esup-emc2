@@ -12,11 +12,11 @@ use Application\Entity\Db\CompetenceTheme;
 use Application\Entity\Db\CompetenceType;
 use Application\Provider\Privilege\CompetencePrivileges;
 
-$canVoir        = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::AFFICHER));
-$canAjouter     = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::AJOUTER));
-$canModifier    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::EDITER));
+$canVoir        = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+$canAjouter     = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AJOUTER));
+$canModifier    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EDITER));
 $canHistoriser  = $canModifier;
-$canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::EFFACER));
+$canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EFFACER));
 ?>
 
 <h1 class="page-header">
