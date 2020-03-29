@@ -4,8 +4,8 @@ namespace Application\Service\Domaine;
 
 use Application\Entity\Db\Domaine;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -13,70 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class DomaineService {
     use EntityManagerAwareTrait;
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Domaine[]
-     */
-    public function getDomaines($champ = 'libelle', $ordre = 'ASC')
-    {
-        $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
-            ->addSelect('famille')->leftJoin('domaine.famille', 'famille')
-            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
-            ->orderBy('domaine.' . $champ, $ordre);
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDomainesAsOptions()
-    {
-        $domaines = $this->getDomaines();
-
-        $options = [];
-        foreach ($domaines as $domaine) {
-            $options[$domaine->getId()] = $domaine->getLibelle();
-        }
-
-        return $options;
-    }
-
-    /**
-     * @param integer $id
-     * @return Domaine
-     */
-    public function getDomaine($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
-            ->addSelect('famille')->leftJoin('domaine.famille', 'famille')
-            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
-            ->andWhere('domaine.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Domaine partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return Domaine
-     */
-    public function getRequestedDomaine($controller, $paramName = 'domaine')
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $domaine = $this->getDomaine($id);
-
-        return $domaine;
-    }
+    /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
      * @param Domaine $domaine
@@ -84,7 +21,6 @@ class DomaineService {
      */
     public function create($domaine)
     {
-
         try {
             $this->getEntityManager()->persist($domaine);
             $this->getEntityManager()->flush($domaine);
@@ -119,5 +55,95 @@ class DomaineService {
         } catch (ORMException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Domaine", $e);
         }
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
+            ->addSelect('famille')->leftJoin('domaine.famille', 'famille')
+            ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return Domaine[]
+     */
+    public function getDomaines($champ = 'libelle', $ordre = 'ASC')
+    {
+        $qb = $this->createQueryBuilder()
+            ->orderBy('domaine.' . $champ, $ordre)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDomainesAsOptions()
+    {
+        $domaines = $this->getDomaines();
+        $options = [];
+        foreach ($domaines as $domaine) {
+            $options[$domaine->getId()] = $domaine->getLibelle();
+        }
+        return $options;
+    }
+
+    /**
+     * @param integer $id
+     * @return Domaine
+     */
+    public function getDomaine($id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('domaine.id = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Domaine partagent le même identifiant [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return Domaine
+     */
+    public function getRequestedDomaine($controller, $paramName = 'domaine')
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $domaine = $this->getDomaine($id);
+
+        return $domaine;
+    }
+
+    /**
+     * @param integer $oldid
+     * @return Domaine
+     */
+    public function getDomaineByOldId($oldid)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('domaine.oldId = :oldid')
+            ->setParameter('oldid', $oldid)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException('Plusieurs Domaine portent le même oldid ['.$oldid.']', $e);
+        }
+        return $result;
     }
 }

@@ -226,42 +226,10 @@ return [
 //                        'resource' => FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER),
 //                        'pages' => [
 //                            [
-//                                'order' => 1,
-//                                'label' => 'Les missions principales',
-//                                'route' => 'activite',
-//                                'privileges' => ActivitePrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                            [
-//                                'order' => 2,
-//                                'label' => 'Les missions spécifiques',
-//                                'route' => 'ressource-rh/index-mission-specifique',
-//                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                            [
 //                                'order' => 3,
 //                                'label' => 'Affectations de missions',
 //                                'route' => 'agent-mission-specifique',
 //                                'resource' =>  AgentPrivileges::getResourceId(AgentPrivileges::AFFICHER) ,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                            [
-//                                'order' => 4,
-//                                'label' => 'Les applications',
-//                                'route' => 'application',
-//                                'privileges' => ApplicationPrivileges::AFFICHER,
-//                                'dropdown-header' => true,
-//                                'icon' => 'fas fa-angle-right'
-//                            ],
-//                            [
-//                                'order' => 5,
-//                                'label' => 'Les formations',
-//                                'route' => 'formation',
-//                                'privileges' => FormationPrivileges::AFFICHER,
 //                                'dropdown-header' => true,
 //                                'icon' => 'fas fa-angle-right'
 //                            ],

@@ -70,6 +70,26 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'structure' => [
+                                'label' => 'Structures',
+                                'route' => 'structure',
+                                'resource' =>  StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER) ,
+                                'order'    => 1500,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+
     'router'          => [
         'routes' => [
             'structure' => [

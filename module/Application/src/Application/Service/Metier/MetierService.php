@@ -4,7 +4,7 @@ namespace Application\Service\Metier;
 
 use Application\Entity\Db\Metier;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -67,7 +67,7 @@ class MetierService {
      * @param string $paramName
      * @return Metier
      */
-    public function getRequestedMetier($controller, $paramName)
+    public function getRequestedMetier($controller, $paramName = 'metier')
     {
         $id = $controller->params()->fromRoute($paramName);
         $metier = $this->getMetier($id);
@@ -75,16 +75,16 @@ class MetierService {
         return $metier;
     }
 
-        /**
+    /**
      * @param Metier $metier
      * @return Metier
      */
     public function create($metier)
     {
-        $this->getEntityManager()->persist($metier);
         try {
+            $this->getEntityManager()->persist($metier);
             $this->getEntityManager()->flush($metier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la création d'un Metier", $e);
         }
         return $metier;
@@ -98,7 +98,7 @@ class MetierService {
     {
         try {
             $this->getEntityManager()->flush($metier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Metier.", $e);
         }
         return $metier;
@@ -110,12 +110,30 @@ class MetierService {
      */
     public function delete($metier)
     {
-        $this->getEntityManager()->remove($metier);
         try {
+            $this->getEntityManager()->remove($metier);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Metier", $e);
         }
         return $metier;
+    }
+
+    /**
+     * @param integer $oldid
+     * @return Metier
+     */
+    public function getMetierByOldId($oldid)
+    {
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+            ->andWhere('metier.oldId = :oldid')
+            ->setParameter('oldid', $oldid);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException('Plusieurs Metier portent le même oldid ['.$oldid.']', $e);
+        }
+        return $result;
     }
 }

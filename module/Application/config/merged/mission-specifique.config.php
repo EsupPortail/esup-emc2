@@ -9,6 +9,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormFactory;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydrator;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -40,6 +41,25 @@ return [
                     ],
                     'privileges' => [
                         AgentPrivileges::EDITER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'mission-specifique' => [
+                                'label' => 'Missions spécifiques',
+                                'route' => 'ressource-rh/index-mission-specifique',
+                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'order'    => 1100,
+                            ],
+                        ],
                     ],
                 ],
             ],

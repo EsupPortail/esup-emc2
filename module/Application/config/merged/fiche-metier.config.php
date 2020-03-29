@@ -85,6 +85,27 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'fiche' => [
+                        'label' => 'Fiches',
+                        'route' => 'home',
+                        'pages' => [
+                            'fiche-metier' => [
+                                'label' => 'Fiches métiers',
+                                'route' => 'fiche-metier-type',
+                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER) ,
+                                'order'    => 500,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router'          => [
         'routes' => [
             'fiche-metier-type' => [
@@ -335,5 +356,6 @@ return [
             'applicationBloc' => ApplicationBlocViewHelper::class,
         ],
     ],
+
 
 ];

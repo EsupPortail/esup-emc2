@@ -27,6 +27,8 @@ use Application\Form\FichePosteCreation\FichePosteCreationHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceFactory;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
@@ -73,6 +75,27 @@ return [
                         'test-affichage-application-bloc',
                     ],
                     'roles' => [
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'fiche' => [
+                        'label' => 'Fiches',
+                        'route' => 'home',
+                        'pages' => [
+                            'fiche-poste' => [
+                                'label' => 'Fiches de poste',
+                                'route' => 'fiche-poste',
+                                'resource' =>  FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER) ,
+                                'order'    => 1000,
+                            ],
+                        ],
                     ],
                 ],
             ],
