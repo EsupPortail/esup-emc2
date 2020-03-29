@@ -87,7 +87,7 @@ return [
                 'pages' => [
                     'fiche' => [
                         'label' => 'Fiches',
-                        'route' => 'home',
+                        'route' => 'fiche-poste',
                         'pages' => [
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',

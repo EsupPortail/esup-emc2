@@ -91,7 +91,6 @@ return [
                 'pages' => [
                     'fiche' => [
                         'label' => 'Fiches',
-                        'route' => 'home',
                         'pages' => [
                             'fiche-metier' => [
                                 'label' => 'Fiches métiers',

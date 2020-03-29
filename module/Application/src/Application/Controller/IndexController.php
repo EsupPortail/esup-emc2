@@ -26,7 +26,7 @@ class IndexController extends AbstractActionController
     use AgentServiceAwareTrait;
     use RoleServiceAwareTrait;
     use UserServiceAwareTrait;
-    use UserContextServiceAwareTrait;
+//    use UserContextServiceAwareTrait;
 
     use ValidationDemandeServiceAwareTrait;
 
@@ -52,20 +52,20 @@ class IndexController extends AbstractActionController
             }
         }
 
-        if ($this->getUserService()->getServiceUserContext()->getLdapUser()) {
-            $supannId = ((int)$this->getUserService()->getServiceUserContext()->getLdapUser()->getSupannEmpId());
-            $identity = $this->getUserService()->getConnectedUser();
-
-            // !TODO bouger cela pour faire plus propre ...
-            $agent = $this->getAgentService()->getAgentBySupannId($supannId);
-            if ($identity !== null && $agent !== null && $agent->getUtilisateur() === null) {
-                $agent->setUtilisateur($identity);
-                $this->getAgentService()->update($agent);
-                $personnel = $this->getRoleService()->getRoleByCode(Role::PERSONNEL);
-                $this->getUserService()->addRole($identity, $personnel);
-                return $this->redirect()->toRoute('home', [], [], true);
-            }
-        }
+//        if ($this->getUserService()->getServiceUserContext()->getLdapUser()) {
+//            $supannId = ((int)$this->getUserService()->getServiceUserContext()->getLdapUser()->getSupannEmpId());
+//            $identity = $this->getUserService()->getConnectedUser();
+//
+//            // !TODO bouger cela pour faire plus propre ...
+//            $agent = $this->getAgentService()->getAgentBySupannId($supannId);
+//            if ($identity !== null && $agent !== null && $agent->getUtilisateur() === null) {
+//                $agent->setUtilisateur($identity);
+//                $this->getAgentService()->update($agent);
+//                $personnel = $this->getRoleService()->getRoleByCode(Role::PERSONNEL);
+//                $this->getUserService()->addRole($identity, $personnel);
+//                return $this->redirect()->toRoute('home', [], [], true);
+//            }
+//        }
 
         return new ViewModel([
             'user' => $identity,
