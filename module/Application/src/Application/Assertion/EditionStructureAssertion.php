@@ -2,6 +2,7 @@
 
 namespace Application\Assertion;
 
+use Application\Constant\RoleConstant;
 use Application\Controller\StructureController;
 use Application\Entity\Db\Structure;
 use UnicaenAuthentification\Assertion\AbstractAssertion;
@@ -25,13 +26,13 @@ class EditionStructureAssertion extends AbstractAssertion {
 
         if ($controller === StructureController::class) {
 
-            if ($role->getRoleId() === Role::ADMIN_FONC OR $role->getRoleId() === Role::ADMIN_TECH) {
+            if ($role->getRoleId() === RoleConstant::ADMIN_FONC OR $role->getRoleId() === RoleConstant::ADMIN_TECH) {
                 return false;
             }
 
             switch($action) {
                 case 'editer-description' :
-                    if ($role->getRoleId() === Role::GESTIONNAIRE) {
+                    if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
                         return true;
                     }
                     return false;

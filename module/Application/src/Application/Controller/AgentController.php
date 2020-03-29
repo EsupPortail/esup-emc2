@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentCompetence;
 use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
@@ -180,6 +181,28 @@ class AgentController extends AbstractActionController
                     'id'    => $individu->getCIndividuChaine(),
                     'label' => $individu->getPrenom()." ".(($individu->getNomUsage())?$individu->getNomUsage():$individu->getNomFamille()),
                     'extra' => $individu->getCSource()->__toString(),
+                );
+            }
+            usort($result, function($a, $b) {
+                return strcmp($a['label'], $b['label']);
+            });
+
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $agents = $this->getAgentService()->getAgentsByTerm($term);
+            $result = [];
+            /** @var Agent[] $agents */
+            foreach ($agents as $agent) {
+                $result[] = array(
+                    'id'    => $agent->getId(),
+                    'label' => $agent->getDenomination(),
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$agent->getSourceName()."</span>",
                 );
             }
             usort($result, function($a, $b) {

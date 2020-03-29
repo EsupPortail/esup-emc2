@@ -7,8 +7,8 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class PostePrivileges extends Privileges
 {
-    const AFFICHER          = 'poste-afficher-poste';
-    const AJOUTER           = 'poste-ajouter-poste';
-    const EDITER            = 'poste-editer-poste';
-    const EFFACER           = 'poste-effacer-poste';
+    const POSTE_AFFICHER          = 'poste-poste_afficher';
+    const POSTE_AJOUTER           = 'poste-poste_ajouter';
+    const POSTE_EDITER            = 'poste-poste_editer';
+    const POSTE_EFFACER           = 'poste-poste_effacer';
 }

@@ -15,6 +15,7 @@ use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class StructureController extends AbstractActionController {
@@ -136,6 +137,29 @@ class StructureController extends AbstractActionController {
         ]);
         return $vm;
     }
+
+    public function rechercherAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $structures = $this->getStructureService()->getStructuresByTerm($term);
+            $result = [];
+            /** @var Structure[] $structures */
+            foreach ($structures as $structure) {
+                $result[] = array(
+                    'id'    => $structure->getId(),
+                    'label' => $structure->getLibelleLong(),
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$structure->getLibelleCourt()."</span>",
+                );
+            }
+            usort($result, function($a, $b) {
+                return strcmp($a['label'], $b['label']);
+            });
+
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
 
     public function grapheAction() {
         $graph = new Graph();

@@ -36,6 +36,29 @@ class AgentService {
     }
 
     /** REQUETES ******************************************************************************************************/
+
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+//            ->addSelect('aGrade')->leftJoin('agent.grades', 'aGrade')
+//            ->addSelect('structureG')->leftJoin('aGrade.structure', 'structureG')
+//            ->addSelect('corps')->leftJoin('aGrade.corps', 'corps')
+//            ->addSelect('grade')->leftJoin('aGrade.grade', 'grade')
+//            ->addSelect('bap')->leftJoin('aGrade.bap', 'bap')
+
+//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+//            ->addSelect('structureS')->leftJoin('statut.structure', 'structureS')
+//
+            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
+            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
+            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+
+            ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
+        ;
+        return $qb;
+    }
+
+
     /**
      * @param string $order
      * @return Agent[]
@@ -54,6 +77,22 @@ class AgentService {
         $result =  $qb->getQuery()->getResult();
         return $result;
     }
+
+    /**
+     * @param string $term
+     * @return Agent[]
+     */
+    public function getAgentsByTerm($term)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(CONCAT(agent.prenom, agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, agent.prenom)) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+        ;
+
+        $result =  $qb->getQuery()->getResult();
+        return $result;
+    }
+
 
     /**
      * @param integer $id

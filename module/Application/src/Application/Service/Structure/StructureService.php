@@ -4,7 +4,7 @@ namespace Application\Service\Structure;
 
 use Application\Entity\Db\Structure;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -17,6 +17,7 @@ class StructureService
     use UserServiceAwareTrait;
 
     /**
+     * @param bool $ouverte
      * @return Structure[]
      */
     public function getStructures($ouverte = true)
@@ -62,7 +63,21 @@ class StructureService
         return $structure;
     }
 
+    public function getStructuresByTerm($term)
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
+            ->setParameter('search', '%'.strtolower($term).'%')
+            ->andWhere('structure.histo = :nope')
+            ->setParameter('nope', 'O')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /**
+     * @param bool $ouverte
      * @return array
      */
     public function getStructuresAsOptions($ouverte = true)
@@ -121,7 +136,7 @@ class StructureService
         $structure->addGestionnaire($gestionnaire);
         try {
             $this->getEntityManager()->flush($structure);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
         }
         return $structure;
@@ -137,7 +152,7 @@ class StructureService
         $structure->removeGestionnaire($gestionnaire);
         try {
             $this->getEntityManager()->flush($structure);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
         }
         return $structure;
@@ -151,7 +166,7 @@ class StructureService
     {
         try {
             $this->getEntityManager()->flush($structure);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
         }
         return $structure;

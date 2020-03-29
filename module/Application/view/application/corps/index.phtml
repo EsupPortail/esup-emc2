@@ -1,0 +1,202 @@
+<?php
+
+/**
+ * @see \Application\Controller\CorpsController::indexAction()
+ * @var Corps[] $corps
+ * @var Grade[] $grades
+ * @var Correspondance[] $correspondances
+ */
+
+
+use Application\Entity\Db\Corps;
+use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Grade;
+
+$this->headTitle('Corps, grades et correspondances');
+
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Corps, grades et correspondances
+        </h1>
+    </div>
+    <div class="pull-right col-md-4 alert alert-info">
+        <span class="icon synchoniser"></span>
+        Les corps, les grades et les correspondances sont synchronisés depuis Octopus.
+    </div>
+</div>
+
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+
+        <li role="corps">
+            <a href="#corps" aria-controls="corps" role="tab" data-toggle="tabz">
+                Corps
+                <span class="badge">
+                    <?php echo count($corps); ?>
+                </span>
+            </a>
+        </li>
+
+        <li role="grade">
+            <a href="#grade" aria-controls="grade" role="tab" data-toggle="tabz">
+                Grades &nbsp;
+                <span class="badge">
+                    <?php echo count($grades); ?>
+                </span>
+            </a>
+        </li>
+
+        <li role="correspondance">
+            <a href="#correspondance" aria-controls="correspondance" role="tab" data-toggle="tabz" >
+                Correspondances &nbsp;
+                <span class="badge">
+                    <?php echo count($correspondances); ?>
+                </span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="main-with-tab">
+
+        <div class="tab-content">
+
+            <!-- CORPS ------------------------------------------------------------------------------------------------>
+            <div id="corps" class="tab-pane " role="tabpanel">
+<!--                <div class="row">-->
+<!--                    <div class="col-md-8">-->
+<!--                        <h2>-->
+<!--                            Corps-->
+<!--                        </h2>-->
+<!--                    </div>-->
+<!--                    <div class="pull-right">-->
+<!--                    </div>-->
+<!--                    <br/>-->
+<!--                </div>-->
+<!--                <br/>-->
+                <table class="datatable table table-condensed">
+                    <thead>
+                    <tr>
+                        <th> Libellé long</th>
+                        <th> Libellé court</th>
+                        <th> Code </th>
+                        <th> Catégorie </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($corps as $corp): ?>
+                        <tr>
+                            <td> <?php echo $corp->getLibelleLong(); ?> </td>
+                            <td> <?php echo $corp->getLibelleCourt(); ?> </td>
+                            <td> <?php echo $corp->getCode(); ?> </td>
+                            <td> <?php echo $corp->getCategorie(); ?> </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GRADES ----------------------------------------------------------------------------------------------->
+            <div id="grade" class="tab-pane " role="tabpanel">
+<!--                <div class="row">-->
+<!--                    <div class="col-md-8">-->
+<!--                        <h2>-->
+<!--                            Grades-->
+<!--                        </h2>-->
+<!--                    </div>-->
+<!--                    <div class="pull-right"><br/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <br/>-->
+                <table class="datatable table table-condensed">
+                    <thead>
+                    <tr>
+                        <th> Libellé long </th>
+                        <th> Libellé court </th>
+                        <th> Code </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($grades as $grade): ?>
+                        <tr>
+                            <td> <?php echo $grade->getLibelleLong(); ?> </td>
+                            <td> <?php echo $grade->getLibelleCourt(); ?> </td>
+                            <td> <?php echo $grade->getCode(); ?> </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CORRESPONDANCES -------------------------------------------------------------------------------------->
+            <div id="correspondance" class="tab-pane " role="tabpanel">
+<!--                <div class="row">-->
+<!--                    <div class="col-md-8">-->
+<!--                        <h2>-->
+<!--                            Correspondances-->
+<!--                        </h2>-->
+<!--                    </div>-->
+<!--                    <div class="pull-right">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <br/>-->
+                <table class="datatable table table-condensed">
+                    <thead>
+                    <tr>
+                        <th> Libellé long </th>
+                        <th> Libellé court </th>
+                        <th> Catégorie </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($correspondances as $correspondance): ?>
+                        <tr>
+                            <td> <?php echo $correspondance->getLibelleLong(); ?> </td>
+                            <td> <?php echo $correspondance->getLibelleCourt(); ?> </td>
+                            <td> <?php echo $correspondance->getCategorie(); ?> </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('.datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "corps";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

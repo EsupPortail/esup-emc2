@@ -30,6 +30,8 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'rechercher',
+                        'rechercher-responsable',
                         'ajouter-agent-competence',
                         'afficher-agent-competence',
                         'modifier-agent-competence',
@@ -95,6 +97,26 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'rechercher',
+                            ],
+                        ],
+                    ],
+                    'rechercher-responsable' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher-responsable',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'rechercher-responsable',
+                            ],
+                        ],
+                    ],
                     'ajouter-agent-competence' => [
                         'type'  => Segment::class,
                         'options' => [

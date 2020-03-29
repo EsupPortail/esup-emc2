@@ -26,6 +26,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'rechercher',
                         'graphe',
                     ],
                     'privileges' => [
@@ -114,6 +115,17 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [],
+                    ],
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'rechercher',
+                            ],
+                        ],
+                        'may_terminate' => true,
                     ],
                     'graphe' => [
                         'type'  => Segment::class,

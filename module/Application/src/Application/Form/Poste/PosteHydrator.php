@@ -24,9 +24,9 @@ class PosteHydrator implements HydratorInterface {
 
         $data = [
             'numero_poste'      => $object->getNumeroPoste(),
-            'structure'         => ($object->getStructure())?$object->getStructure()->getId():null,
+            'structure'         => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
             'correspondance'    => ($object->getCorrespondance())?$object->getCorrespondance()->getId():null,
-            'rattachement'      => ($object->getRattachementHierarchique())?$object->getRattachementHierarchique()->getId():null,
+            'rattachement'      => ($object->getRattachementHierarchique())?['id' => $object->getRattachementHierarchique()->getId(), 'label' => $object->getRattachementHierarchique()->getDenomination()]:null,
             'domaine'           => ($object->getDomaine())?$object->getDomaine()->getId():null,
             'fonction'          => $object->getFonction(),
             'lien'              => $object->getLien(),
@@ -41,9 +41,9 @@ class PosteHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $structure = $this->getStructureService()->getStructure($data['structure']);
+        $structure = $this->getStructureService()->getStructure($data['structure']['id']);
         $correspondance = $this->getRessourceRhService()->getCorrespondance($data['correspondance']);
-        $rattachement = $this->getAgentService()->getAgent($data['rattachement']);
+        $rattachement = $this->getAgentService()->getAgent($data['rattachement']['id']);
         $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
 
         $object->setNumeroPoste($data['numero_poste']);

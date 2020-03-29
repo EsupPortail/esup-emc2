@@ -28,7 +28,7 @@ return [
                         'rechercher-batiment',
                     ],
                     'privileges' => [
-                        PostePrivileges::AFFICHER,
+                        PostePrivileges::POSTE_AFFICHER,
                     ],
                 ],
                 [
@@ -37,7 +37,7 @@ return [
                         'ajouter',
                     ],
                     'privileges' => [
-                        PostePrivileges::AJOUTER,
+                        PostePrivileges::POSTE_AJOUTER,
                     ],
                 ],
                 [
@@ -46,7 +46,7 @@ return [
                         'modifier',
                     ],
                     'privileges' => [
-                        PostePrivileges::EDITER,
+                        PostePrivileges::POSTE_EDITER,
                     ],
                 ],
                 [
@@ -55,7 +55,27 @@ return [
                         'supprimer',
                     ],
                     'privileges' => [
-                        PostePrivileges::EFFACER,
+                        PostePrivileges::POSTE_EFFACER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            [
+                                'order' => 1200,
+                                'label' => 'Postes',
+                                'route' => 'poste',
+                                'resource' => PrivilegeController::getResourceId(PosteController::class, 'index') ,
+                                'dropdown-header' => true,
+                            ],
+                        ],
                     ],
                 ],
             ],
