@@ -39,6 +39,7 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
             <tr>
                 <th> Source Id </th>
                 <th> Dénomination </th>
+                <th> <span title="Lié à un utilisateur de l'application">Lié</span> </th>
                 <th class="action"> Action </th>
             </tr>
             </thead>
@@ -47,6 +48,13 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                 <tr>
                     <td> <span class="badge"><?php echo $agent->getSourceName(); ?> - <?php echo $agent->getSourceId(); ?></span></td>
                     <td> <?php echo $agent->getDenomination(); ?></td>
+                    <td>
+                        <?php if ($agent->getUtilisateur() !== null) : ?>
+                            <span class="icon ok" style="color:darkgreen;" title="<?php echo $agent->getUtilisateur()->getUsername(); ?>"></span>
+                        <?php else: ?>
+                            <span class="icon ko" style="color:darkred;"></span>
+                        <?php endif; ?>
+                    </td>
                     <td>
                         <?php if ($canAfficher) : ?>
                             <a
