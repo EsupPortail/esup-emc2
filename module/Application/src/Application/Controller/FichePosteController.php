@@ -804,4 +804,5 @@ class FichePosteController extends AbstractActionController {
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
     }
 
+    /** SPECIFICITE ??? */
 }

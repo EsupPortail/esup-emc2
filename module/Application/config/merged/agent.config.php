@@ -46,15 +46,6 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'rechercher-individu',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_AJOUTER,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
                         'modifier',
                     ],
                     'privileges' => [
@@ -224,16 +215,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',
-                            ],
-                        ],
-                    ],
-                    'rechercher-individu' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/rechercher-individu',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'rechercher-individu',
                             ],
                         ],
                     ],

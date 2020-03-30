@@ -15,10 +15,9 @@ use Zend\View\Model\ViewModel;
 
 class AgentController extends AbstractActionController
 {
-    /** Trait utilisés pour les services */
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
-    /** Trait de formulaire */
+
     use AgentFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
 
@@ -166,30 +165,6 @@ class AgentController extends AbstractActionController
             ]);
         }
         return $vm;
-    }
-
-    /**
-     * @return JsonModel
-     */
-    public function rechercherIndividuAction() {
-        if (($term = $this->params()->fromQuery('term'))) {
-            $individus = $this->getIndividuService()->getIndividusByTerm($term);
-            $result = [];
-            /** @var Individu[] $individus */
-            foreach ($individus as $individu) {
-                $result[] = array(
-                    'id'    => $individu->getCIndividuChaine(),
-                    'label' => $individu->getPrenom()." ".(($individu->getNomUsage())?$individu->getNomUsage():$individu->getNomFamille()),
-                    'extra' => $individu->getCSource()->__toString(),
-                );
-            }
-            usort($result, function($a, $b) {
-                return strcmp($a['label'], $b['label']);
-            });
-
-            return new JsonModel($result);
-        }
-        exit;
     }
 
     public function rechercherAction()

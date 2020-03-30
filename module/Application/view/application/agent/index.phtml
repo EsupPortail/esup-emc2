@@ -33,38 +33,36 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 
 <div class="main">
 
-
     <?php if (count($agents) > 0) : ?>
         <table id="agents" class="table table-condensed">
             <thead>
             <tr>
-<!--                <th> Id </th>-->
                 <th> Source Id </th>
                 <th> Dénomination </th>
-<!--                <th> BAP </th>-->
-<!--                <th> Grade </th>-->
                 <th class="action"> Action </th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($agents as $agent) : ?>
                 <tr>
-<!--                    <td> --><?php //echo $agent->getId(); ?><!-- </td>-->
                     <td> <span class="badge"><?php echo $agent->getSourceName(); ?> - <?php echo $agent->getSourceId(); ?></span></td>
                     <td> <?php echo $agent->getDenomination(); ?></td>
-<!--                    <td> --><?php //echo ($agent->getCorrespondance())?$agent->getCorrespondance():"---"; ?><!--</td>-->
-<!--                    <td> --><?php //echo ($agent->getGrade())?$agent->getGrade():"---"; ?><!--</td>-->
                     <td>
                         <?php if ($canAfficher) : ?>
-                            <a href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"
-                               class="ajax-modal"
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
+                                href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"
+                                class="ajax-modal"
                             >
                                 <span class="icon voir"  title="Afficher l'agent"></span></a>
                         <?php endif; ?>
+
                         <?php if ($canModifier) : ?>
-                            <a href="<?php echo $this->url('agent/modifier', ['agent' => $agent->getId()], [], true); ?>"
-                               class="ajax-modal"
-                               data-event="modification-noreload"
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::modifierAction() */?>
+                                href="<?php echo $this->url('agent/modifier', ['agent' => $agent->getId()], [], true); ?>"
+                                class="ajax-modal"
+                                data-event="modification-noreload"
                             >
                                 <span class="icon editer"  title="Modifier la fiche d'un agent "></span></a>
                         <?php endif; ?>
@@ -95,7 +93,6 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
     $(function() {
         $("body").on("modification-noreload", function (event) {
             event.div.modal('hide');
-            // window.location.reload();
         });
     });
 </script>
