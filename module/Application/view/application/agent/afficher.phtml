@@ -1,12 +1,259 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
+ * @see AgentController::afficherAction()
  * @var Agent $agent
  */
 
-$this->headTitle("Information sur l'agent");
+
+$canVoirFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canModifierFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canVoirEntretienPro = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canModifierEntretienPro = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+
+$this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 ?>
 
-<?php echo $this->agent($agent); ?>
+<h1 class="page-header">
+    Affichage de l'agent <br/>
+    <strong><?php echo $agent->getDenomination(); ?></strong>
+</h1>
+
+<div class="main">
+
+    <h2> Informations générales sur l'agent </h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Information générale "public" -->
+            <dl>
+                <dt> Prénom </dt>
+                <dd>
+                    <?php echo $agent->getPrenom(); ?>
+                </dd>
+                <dt> Nom </dt>
+                <dd>
+                    <?php echo $agent->getNomUsuel(); ?>
+                </dd>
+                <dt> Quotité travaillée </dt>
+                <dd>
+                    <?php if($agent->getQuotite()) : ?>
+                        <?php echo $agent->getQuotite(); ?>%
+                    <?php else: ?>
+                        <span class="probleme">
+                            <span class="icon attention"></span>
+                            <em> Aucune quotité de renseignée </em>
+                        </span>
+                    <?php endif; ?>
+                </dd>
+        </div>
+        <div class="col-md-4">
+            <!-- Information générale "application" -->
+            <dl>
+                <dt> Identifiant source </dt>
+                <dd>
+                    <?php if($agent->getSourceId()) : ?>
+                        <?php echo $agent->getSourceName(); ?>
+                    -
+                        <?php echo $agent->getSourceId(); ?>
+                    <?php else: ?>
+                        <span class="probleme">
+                            <span class="icon attention"></span>
+                            <em> Aucune source pour cet agent </em>
+                        </span>
+                    <?php endif; ?>
+                <dt> Compte associé </dt>
+                <dd>
+                    <?php if($agent->getUtilisateur()) : ?>
+                        <?php echo $agent->getUtilisateur()->getUsername(); ?>
+                    <?php else: ?>
+                        <span class="probleme">
+                            <span class="icon attention"></span>
+                            <em> Aucun compte lié à l'agent </em>
+                        </span>
+                    <?php endif; ?>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <h2> Statuts et grades </h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
+                <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="col-md-8">
+        <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+        </div>
+    </div>
+
+    <span class="TODO">
+        bouton pour voir les statuts et grades passées (modal ???).
+    </span>
+
+    <h2> Fiches de poste </h2>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Intitulé </th>
+                <th> Poste </th>
+                <th> Structure </th>
+                <th> Active </th>
+                <th> Dernière modification </th>
+                <th style="width:10rem"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($agent->getFiches() as $ficheposte) : ?>
+        <tr>
+            <td>
+                <?php echo $ficheposte->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle(); ?> <br/>
+                <?php echo $ficheposte->getLibelle(); ?>
+            </td>
+            <td> <?php echo $ficheposte->getPoste()->getNumeroPoste(); ?> </td>
+            <td>
+                <?php echo $ficheposte->getPoste()->getStructure()->getLibelleLong(); ?> <br/>
+                <?php echo $ficheposte->getPoste()->getStructure()->getType(); ?>
+            </td>
+            <td> <span class="TODO">???</span></td>
+            <td>
+                <?php echo $ficheposte->getHistoModification()->format('d/m/Y'); ?> <br/>
+                <?php echo $ficheposte->getHistoModificateur()->getDisplayName(); ?>
+            </td>
+            <td>
+                <?php if ($canVoirFichePoste) : ?>
+                    <a  <?php /** @see \Application\Controller\FichePosteController::afficherAction() */?>
+                        href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                        target="_blank"
+                    >
+                        <span class="icon voir" title="Afficher la fiche de poste"></span></a>
+                <?php endif; ?>
+                <?php if ($canModifierFichePoste) : ?>
+                    <a  <?php /** @see \Application\Controller\FichePosteController::afficherAction() */?>
+                        href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                        target="_blank"
+                    >
+                        <span class="icon editer" title="Modifier la fiche de poste"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+
+    </table>
+
+    <h2> Entretiens professionnels </h2>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Annee </th>
+                <th> Date </th>
+                <th> Responsable </th>
+                <th> État </th>
+                <th style="width:10rem"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($agent->getEntretiensProfessionnels() as $entretien) : ?>
+            <tr>
+                <td> <?php echo $entretien->getAnnee(); ?> </td>
+                <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
+                <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
+                <td> <span class="TODO">???</span> </td>
+                <td>
+                    <?php if ($canVoirEntretienPro) : ?>
+                        <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::afficherAction() */?>
+                            href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $ficheposte->getId()], [], true); ?>"
+                            target="_blank"
+                        >
+                            <span class="icon voir" title="Afficher l'entretien professionnel"></span></a>
+                    <?php endif; ?>
+
+                    <?php if ($canModifierEntretienPro) : ?>
+                        <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierAction() */?>
+                            href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $ficheposte->getId()], [], true); ?>"
+                            target="_blank"
+                        >
+                            <span class="icon editer" title="Modifier l'entretien professionnel"></span></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h2> Missions spécifiques </h2>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Missions </th>
+                <th> Structure </th>
+                <th> Début </th>
+                <th> Fin </th>
+                <th> Décharge </th>
+                <th style="width:10rem"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($agent->getMissionsSpecifiques() as $mission) : ?>
+                <tr>
+                    <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
+                    <td> <?php echo $mission->getStructure()->getLibelleLong(); ?> </td>
+                    <td> <?php echo $mission->getDateDebut()->format('d/m/Y'); ?> </td>
+                    <td> <?php echo ($mission->getDateFin())?$mission->getDateFin()->format('d/m/Y'):"---"; ?> </td>
+                    <td>
+                        <?php if ($mission->getDecharge() !== null) : ?>
+                            <?php echo $mission->getDecharge(); ?> h.
+                        <?php else : ?>
+                            Sans décharge
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <span class="icon voir"></span>
+                        <span class="icon editer"></span>
+                        <span class="icon historiser"></span>
+                        <span class="icon detruire"></span>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <h2> Applications, compétences et formations</h2>
+
+    <div class="row">
+        <div class="bloc">
+            <h3> <span class="icon application"></span> Applications </h3>
+            <span class="TODO">Manque fonction pour récupérer toutes les applications depuis l'agent</span>
+        </div>
+        <div class="bloc">
+            <h3> <span class="icon competence"></span> Compétences </h3>
+            <span class="TODO">Manque fonction pour récupérer toutes les competences depuis l'agent</span>
+        </div>
+        <div class="bloc">
+            <h3> <span class="icon formation"></span> Formations </h3>
+            <span class="TODO">Manque fonction pour récupérer toutes les formations depuis l'agent</span>
+        </div>
+    </div>
+</div>
+
+<style>
+    div.bloc {
+        border: solid lightblue 1px;
+        margin: 0.5rem;
+        padding: 0.5rem;
+        width: 32%;
+        float: left;
+    }
+</style>

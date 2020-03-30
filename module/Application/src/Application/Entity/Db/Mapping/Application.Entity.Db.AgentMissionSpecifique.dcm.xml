@@ -20,6 +20,7 @@
 
         <field name="dateDebut"         type="datetime"                 column="date_debut"     nullable="false"/>
         <field name="dateFin"           type="datetime"                 column="date_fin"       nullable="false"/>
+        <field name="decharge"          type="float"                    column="decharge"       nullable="false"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

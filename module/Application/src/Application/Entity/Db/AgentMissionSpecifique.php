@@ -20,6 +20,8 @@ class AgentMissionSpecifique {
     private $dateDebut;
     /** @var DateTime */
     private $dateFin;
+    /** @var float */
+    private $decharge;
 
     /**
      * @return int
@@ -116,6 +118,24 @@ class AgentMissionSpecifique {
     public function setDateFin($dateFin)
     {
         $this->dateFin = $dateFin;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDecharge()
+    {
+        return $this->decharge;
+    }
+
+    /**
+     * @param float $decharge
+     * @return AgentMissionSpecifique
+     */
+    public function setDecharge($decharge)
+    {
+        $this->decharge = $decharge;
         return $this;
     }
 }

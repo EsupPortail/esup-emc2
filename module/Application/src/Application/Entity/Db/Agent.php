@@ -5,11 +5,13 @@ namespace Application\Entity\Db;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 
 class Agent {
     use ImportableAwareTrait;
     use AgentServiceAwareTrait;
+    use DateTimeAwareTrait;
 
     /** @var string */
     private $id;
@@ -28,6 +30,8 @@ class Agent {
 
     /** @var ArrayCollection (FichePoste) */
     private $fiches;
+    /** @var ArrayCollection (EntretienProfessionnel) */
+    private $entretiens;
     /** @var ArrayCollection (AgentStatut)*/
     private $statuts;
     /** @var ArrayCollection (AgentMissionSpecifique) */
@@ -107,9 +111,35 @@ class Agent {
         return $this->statuts->toArray();
     }
 
+    /**
+     * @return AgentStatut[]
+     */
+    public function getStatutsActifs() {
+        $now = $this->getDateTime();
+        $statuts = [];
+        /** @var AgentStatut $statut */
+        foreach ($this->statuts as $statut) {
+            if ($statut->getFin() === null OR $statut->getFin() > $now) $statuts[] = $statut;
+        }
+        return $statuts;
+    }
+
     /** @return AgentGrade[] */
     public function getGrades() {
         return $this->grades->toArray();
+    }
+
+    /**
+     * @return AgentGrade[]
+     */
+    public function getGradesActifs() {
+        $now = $this->getDateTime();
+        $grades = [];
+        /** @var AgentGrade $grade */
+        foreach ($this->grades as $grade) {
+            if ($grade->getDateFin() === null OR $grade->getDateFin() > $now) $grades[] = $grade;
+        }
+        return $grades;
     }
 
     /** Éléments non importés *****************************************************************************************/
@@ -208,11 +238,6 @@ class Agent {
         return $fichiers;
     }
 
-    /** @return AgentMissionSpecifique[] */
-    public function getMissionsSpecifiques() {
-        return $this->missionsSpecifiques->toArray();
-    }
-
     /** @return AgentCompetence[] */
     public function getCompetences() {
         return $this->competences->toArray();
@@ -242,5 +267,34 @@ class Agent {
      */
     public function hasCompetence($competence) {
         return $this->competences->contains($competence);
+    }
+
+    /** ENTRETIEN PROFESSIONNEL ***************************************************************************************/
+
+    /**
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensProfessionnels() {
+        $entretiens = [];
+        /** @var EntretienProfessionnel $entretien */
+        foreach ($this->entretiens as $entretien) {
+            if ($entretien->estNonHistorise()) $entretiens[] = $entretien;
+        }
+        return $entretiens;
+    }
+
+    /**  MISSIONS SPECIFIQUES *****************************************************************************************/
+
+    /**
+     * @return MissionSpecifique[]
+     */
+    /** @return AgentMissionSpecifique[] */
+    public function getMissionsSpecifiques() {
+        $missions = [];
+        /** @var MissionSpecifique $mission */
+        foreach ($this->missionsSpecifiques as $mission) {
+            if ($mission->estNonHistorise()) $missions[] = $mission;
+        }
+        return $missions;
     }
 }

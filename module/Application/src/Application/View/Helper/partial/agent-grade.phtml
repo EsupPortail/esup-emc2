@@ -8,58 +8,78 @@
 
 use Application\Entity\Db\AgentGrade;
 
+$debug = false;
+
+$displayStructure   = (isset($options['structure']) AND $options['structure'] !== false);
+$displayPeriode     = (isset($options['periode']) AND $options['periode'] !== false);
+$displayIdentifiant = (isset($options['identifiant']) AND $options['identifiant'] !== false);
+$displayAgent       = (isset($options['agent']) AND $options['agent'] !== false);
+$displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== false);
 ?>
 
+<?php if($debug) : ?>
+    <div class="alert alert-warning">
+        <ul>
+            <li>Display Structure =  <?php echo $displayStructure; ?></li>
+            <li>Display Periode =  <?php echo $displayPeriode; ?></li>
+            <li>Display Identifiant =  <?php echo $displayIdentifiant; ?></li>
+            <li>Display Agent =  <?php echo $displayAgent; ?></li>
+            <li>Display Témoin =  <?php echo $displayTemoin; ?></li>
+        </ul>
+    </div>
+<?php endif; ?>
+
 <div class="agent-grade">
-    <?php if (!isset($options['id']) || $options['id'] !== false) : ?>
+    <?php if ($displayStructure) : ?>
+        <span class="badge structure" title="<?php echo $grade->getStructure()->getLibelleLong(); ?>">
+            <?php echo $grade->getStructure()->getLibelleCourt(); ?>
+        </span> <br/>
+    <?php endif; ?>
+
+    <?php if ($displayPeriode) : ?>
+        <?php
+        $debut  = ($grade->getDateDebut())?$grade->getDateDebut()->format('d/m/Y'):'---';
+        $fin    = ($grade->getDateFin() && $grade->getDateFin()->format('d/m/Y') !== '31/12/1999')?$grade->getDateFin()->format('d/m/Y'):'---';
+        ?>
+        <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
+    <?php endif; ?>
+
+
+    <?php if ($displayIdentifiant) : ?>
         <span class="badge">
             <?php echo $grade->getId(); ?>
         </span>
     <?php endif; ?>
 
-    <?php if (!isset($options['denomination']) || $options['denomination'] !== false) : ?>
+    <?php if ($displayAgent) : ?>
         <span class="badge">
             <?php echo $grade->getAgent()->getDenomination(); ?>
         </span>
     <?php endif; ?>
 
-    <?php if (!isset($options['structure']) || $options['structure'] !== false) : ?>
-        <span class="badge structure" title="<?php echo $grade->getStructure()->getLibelleLong(); ?>">
-            <?php echo $grade->getStructure()->getLibelleCourt(); ?>
-        </span>
-    <?php endif; ?>
-
-    <?php if (!isset($options['periode']) || $options['periode'] !== false) : ?>
-        <?php
-            $debut  = ($grade->getDateDebut())?$grade->getDateDebut()->format('d/m/Y'):'---';
-            $fin    = ($grade->getDateFin() && $grade->getDateFin()->format('d/m/Y') !== '31/12/1999')?$grade->getDateFin()->format('d/m/Y'):'---';
-        ?>
-        <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
-    <?php endif; ?>
-
-    <br/>
+    <?php if ($displayTemoin) : ?>
     <dl class="dl-horizontal">
-        <?php if ($grade->getCorps() AND (!isset($options['corps']) || $options['corps'] !== false)) : ?>
+
             <dt> Corps </dt>
             <dd>
                 <?php echo $grade->getCorps()->getLibelleLong(); ?>
             </dd>
-        <?php endif; ?>
-        <?php if ($grade->getGrade() AND (!isset($options['grade']) || $options['grade'] !== false)) : ?>
                 <dt> Grade </dt>
                 <dd>
                     <?php echo $grade->getGrade()->getLibelleLong(); ?>
                 </dd>
-        <?php endif; ?>
-        <?php if ($grade->getBap() AND (!isset($options['bap']) || $options['bap'] !== false)) : ?>
             <dt> Correspondance </dt>
             <dd>
-                BAP
-                <?php echo $grade->getBap()->getCategorie(); ?> -
-                <?php echo $grade->getBap()->getLibelleLong(); ?>
+                <?php if ($grade->getBap()) : ?>
+                    BAP
+                    <?php echo $grade->getBap()->getCategorie(); ?> -
+                    <?php echo $grade->getBap()->getLibelleLong(); ?>
+                <?php else : ?>
+                    Non renseignée
+                <?php endif; ?>
             </dd>
-        <?php endif; ?>
     </dl>
+    <?php endif; ?>
 </div>
 
 <style>
@@ -67,8 +87,6 @@ use Application\Entity\Db\AgentGrade;
         border: solid lightblue 1px;
         margin: 1rem;
         padding: 1rem;
-        min-width: 80rem;
-        width: 80%;
         /*border-radius: 5px;*/
     }
 </style>

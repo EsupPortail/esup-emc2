@@ -3,9 +3,9 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\AgentStatut;
-use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
+use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplatePathStack;
 
 

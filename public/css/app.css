@@ -607,3 +607,7 @@ div.validation-refuser {
     border: 1px darkred solid;
     background-color: lightcoral;
 }
+
+span.probleme {
+    color: darkred;
+}
