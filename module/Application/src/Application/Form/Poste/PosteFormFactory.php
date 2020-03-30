@@ -4,10 +4,12 @@ namespace Application\Form\Poste;
 
 use Application\Controller\StructureController;
 use Application\Service\Agent\AgentService;
+use Application\Service\Correspondance\CorrespondanceService;
+use Application\Service\Domaine\DomaineService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\Structure\StructureService;
-use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 
 class PosteFormFactory {
@@ -15,13 +17,15 @@ class PosteFormFactory {
     public function __invoke(ContainerInterface $container)
     {
         /**
-         * @var EntityManager $entityManager
          * @var AgentService $agentService
+         * @var CorrespondanceService $correspondanceService
+         * @var DomaineService $domaineService
          * @var StructureService $structureService
          * @var RessourceRhService $ressourceService
          */
-        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService  = $container->get(AgentService::class);
+        $correspondanceService = $container->get(CorrespondanceService::class);
+        $domaineService = $container->get(DomaineService::class);
         $structureService = $container->get(StructureService::class);
         $ressourceService  = $container->get(RessourceRhService::class);
 
@@ -31,7 +35,7 @@ class PosteFormFactory {
 
         /** @var HelperPluginManager $pluginManager */
         $pluginManager = $container->get('ViewHelperManager');
-        /** @var \Zend\View\Helper\Url $urlManager */
+        /** @var Url $urlManager */
         $urlManager = $pluginManager->get('Url');
         /** @see StructureController::rechercherAction() */
         $urlStructure =  $urlManager->__invoke('structure/rechercher', [], [], true);
@@ -40,8 +44,9 @@ class PosteFormFactory {
 
 
         $form = new PosteForm();
-        $form->setEntityManager($entityManager);
         $form->setAgentService($agentService);
+        $form->setCorrespondanceService($correspondanceService);
+        $form->setDomaineService($domaineService);
         $form->setStructureService($structureService);
         $form->setRessourceRhService($ressourceService);
         $form->setUrlStructure($urlStructure);

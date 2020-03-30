@@ -52,4 +52,14 @@ class CorrespondanceService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    public function getCorrespondancesAsOptions()
+    {
+        $correspondances = $this->getCorrespondances();
+        $options = [];
+        foreach($correspondances as $correspondance) {
+            $options[$correspondance->getId()] = $correspondance->getCategorie() . " - " . $correspondance->getLibelleLong();
+        }
+        return $options;
+    }
 }
