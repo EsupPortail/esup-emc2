@@ -3,7 +3,7 @@
 namespace Application\Entity\Db;
 
 use DateTime;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class AgentMissionSpecifique {
     use HistoriqueAwareTrait;

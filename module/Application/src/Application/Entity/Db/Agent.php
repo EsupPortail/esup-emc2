@@ -38,8 +38,12 @@ class Agent {
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
+    /** @var ArrayCollection (AgentApplication) */
+    private $applications;
     /** @var ArrayCollection (AgentCompetence) */
     private $competences;
+    /** @var ArrayCollection (AgentFormation) */
+    private $formations;
     /** @var ArrayCollection (AgentGrade) */
     private $grades;
 
@@ -238,37 +242,6 @@ class Agent {
         return $fichiers;
     }
 
-    /** @return AgentCompetence[] */
-    public function getCompetences() {
-        return $this->competences->toArray();
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return Agent
-     */
-    public function addCompetence($competence) {
-        $this->competences->add($competence);
-        return $this;
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return Agent
-     */
-    public function removeCompetence($competence) {
-        $this->competences->removeElement($competence);
-        return $this;
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return boolean
-     */
-    public function hasCompetence($competence) {
-        return $this->competences->contains($competence);
-    }
-
     /** ENTRETIEN PROFESSIONNEL ***************************************************************************************/
 
     /**
@@ -296,5 +269,37 @@ class Agent {
             if ($mission->estNonHistorise()) $missions[] = $mission;
         }
         return $missions;
+    }
+
+    /** APPLICATIONS, COMPETENCES ET FORMATIONS ***********************************************************************/
+
+    /** @return AgentApplication[] */
+    public function getApplications() {
+        $applications = [];
+        /** @var AgentApplication $application */
+        foreach ($this->applications as $application) {
+            if ($application->estNonHistorise()) $applications[] = $application;
+        }
+        return $applications;
+    }
+
+    /** @return AgentCompetence[] */
+    public function getCompetences() {
+        $competences = [];
+        /** @var AgentCompetence $competence */
+        foreach ($this->competences as $competence) {
+            if ($competence->estNonHistorise()) $competences[] = $competence;
+        }
+        return $competences;
+    }
+
+    /** @return AgentFormation[] */
+    public function getFormations() {
+        $formations = [];
+        /** @var AgentCompetence $formation */
+        foreach ($this->formations as $formation) {
+            if ($formation->estNonHistorise()) $formations[] = $formation;
+        }
+        return $formations;
     }
 }

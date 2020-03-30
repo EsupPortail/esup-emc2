@@ -14,6 +14,8 @@ $canModifierFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(Fi
 $canVoirEntretienPro = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 $canModifierEntretienPro = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 
+$canAjouterFormation = true;
+
 $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 ?>
 
@@ -242,7 +244,10 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
             <span class="TODO">Manque fonction pour récupérer toutes les competences depuis l'agent</span>
         </div>
         <div class="bloc">
-            <h3> <span class="icon formation"></span> Formations </h3>
+            <h3>
+                <span class="icon formation"></span>
+                Formations
+            </h3>
             <span class="TODO">Manque fonction pour récupérer toutes les formations depuis l'agent</span>
         </div>
     </div>
@@ -254,6 +259,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         margin: 0.5rem;
         padding: 0.5rem;
         width: 32%;
+        min-width: 200px;
         float: left;
     }
 </style>
