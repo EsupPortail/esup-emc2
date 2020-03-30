@@ -8,13 +8,16 @@ use Application\Provider\Privilege\FichePostePrivileges;
  * @var Agent $agent
  */
 
+$canAjouter = true;
+$canModifier = true;
+$canHistoriser = true;
+$canDetruire = true;
 
 $canVoirFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
 $canModifierFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 $canVoirEntretienPro = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 $canModifierEntretienPro = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 
-$canAjouterFormation = true;
 
 $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 ?>
@@ -234,24 +237,208 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
     <h2> Applications, compétences et formations</h2>
 
+    <p>
+        <strong>Affichage des applications, compétences et formations directement liées à l'agent.</strong>
+        Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
+    </p>
+
     <div class="row">
         <div class="bloc">
-            <h3> <span class="icon application"></span> Applications </h3>
-            <span class="TODO">Manque fonction pour récupérer toutes les applications depuis l'agent</span>
+            <h3>
+                <span class="icon application"></span>
+                Applications
+                <?php if ($canAjouter) : ?>
+                    <a
+                            <?php /** @see \Application\Controller\AgentController::ajouterAgentApplicationAction() */?>
+                            href="<?php echo $this->url('agent/ajouter-agent-application', ['agent' => $agent->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter" title="Ajouter une application maîtriser par l'agent"></span>
+                    </a>
+                <?php endif; ?>
+            </h3>
+            <ul>
+            <?php foreach ($agent->getApplications() as $application) : ?>
+                <li>
+                    <?php echo $application->getApplication()->getLibelle(); ?>
+                    <br/>
+                    <?php echo $application->getType(); ?>
+                    -
+                    <?php echo (false)?:"Aucune validation"; ?>
+                    <br/>
+                    <?php if ($canModifier) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\AgentController::modifierAgentApplicationAction() */?>
+                                href="<?php echo $this->url('agent/modifier-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
+                                class="ajax-modal"
+                                data-event="modification"
+                        >
+                            <span class="icon editer" title="Modifier une application maîtriser par l'agent"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser) : ?>
+                        <?php if ($application->estNonHistorise()) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::historiserAgentApplicationAction() */?>
+                                    href="<?php echo $this->url('agent/historiser-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
+                            >
+                                <span class="icon historiser" title="Historiser une application maîtriser par l'agent"></span></a>
+                        <?php else: ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::restaurerAgentApplicationAction() */?>
+                                    href="<?php echo $this->url('agent/restaurer-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
+                            >
+                                <span class="icon restaurer" title="Restaurer une application maîtriser par l'agent"></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruire) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\AgentController::detruireAgentApplicationAction() */?>
+                                href="<?php echo $this->url('agent/detruire-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
+                                class="ajax-modal"
+                                data-event="modification"
+                        >
+                            <span class="icon detruire" title="Supprimer définitivement une application maîtriser par l'agent"></span>
+                        </a>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
         </div>
         <div class="bloc">
-            <h3> <span class="icon competence"></span> Compétences </h3>
-            <span class="TODO">Manque fonction pour récupérer toutes les competences depuis l'agent</span>
+            <h3>
+                <span class="icon competence"></span>
+                Compétences
+                <?php if ($canAjouter) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\AgentController::ajouterAgentCompetenceAction() */?>
+                            href="<?php echo $this->url('agent/ajouter-agent-competence', ['agent' => $agent->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter" title="Ajouter une compétence liée à l'agent"></span>
+                    </a>
+                <?php endif; ?>
+            </h3>
+
+            <ul>
+                <?php foreach ($agent->getCompetences() as $competence) : ?>
+                    <li>
+                        <?php echo $competence->getCompetence()->getLibelle(); ?>
+                        <br/>
+                        <?php echo $competence->getNiveau(); ?>
+                        -
+                        <?php echo (false)?:"Aucune validation"; ?>
+                        <br/>
+                        <?php if ($canModifier) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::modifierAgentCompetenceAction() */?>
+                                    href="<?php echo $this->url('agent/modifier-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier une compétence liée à l'agent"></span></a>
+                        <?php endif; ?>
+                        <?php if ($canHistoriser) : ?>
+                            <?php if ($application->estNonHistorise()) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::historiserAgentCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/historiser-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
+                                >
+                                    <span class="icon historiser" title="Historiser une compétence liée à l'agent"></span></a>
+                            <?php else: ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::restaurerAgentCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/restaurer-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
+                                >
+                                    <span class="icon restaurer" title="Restaurer une compétence liée à l'agent"></span></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canDetruire) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::detruireAgentCompetenceAction() */?>
+                                    href="<?php echo $this->url('agent/detruire-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon detruire" title="Supprimer définitivement une compétence liée à l'agent"></span>
+                            </a>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         </div>
         <div class="bloc">
             <h3>
                 <span class="icon formation"></span>
                 Formations
+                <?php if ($canAjouter) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\AgentController::ajouterAgentFormationAction() */?>
+                            href="<?php echo $this->url('agent/ajouter-agent-formation', ['agent' => $agent->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter" title="Ajouter une formation liée à l'agent"></span>
+                    </a>
+                <?php endif; ?>
             </h3>
-            <span class="TODO">Manque fonction pour récupérer toutes les formations depuis l'agent</span>
+
+            <ul>
+                <?php foreach ($agent->getFormations() as $formation) : ?>
+                    <li>
+                        <?php echo $formation->getFormation()->getLibelle(); ?> <br/>
+                        <?php echo $formation->getDate()->format('d/m/Y'); ?>
+                        -
+                        <?php echo ($formation->getValidation())?:"Aucune validation"; ?>
+                        <br/>
+                        <?php if ($canModifier) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::modifierAgentFormationAction() */?>
+                                    href="<?php echo $this->url('agent/modifier-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier une formation liée à l'agent"></span></a>
+                        <?php endif; ?>
+                        <?php if ($canHistoriser) : ?>
+                            <?php if ($application->estNonHistorise()) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::historiserAgentFormationAction() */?>
+                                        href="<?php echo $this->url('agent/historiser-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
+                                >
+                                    <span class="icon historiser" title="Historiser une formation liée à l'agent"></span></a>
+                            <?php else: ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::restaurerAgentFormationAction() */?>
+                                        href="<?php echo $this->url('agent/restaurer-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
+                                >
+                                    <span class="icon restaurer" title="Restaurer une formation liée à l'agent"></span></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canDetruire) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::detruireAgentFormationAction() */?>
+                                    href="<?php echo $this->url('agent/detruire-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon detruire" title="Supprimer définitivement une formation liée à l'agent"></span>
+                            </a>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         </div>
     </div>
+
+    <h2> Porte-folio </h2>
+
+    <span class="TODO"> Revoir cette partie </span>
+
 </div>
+
+
 
 <style>
     div.bloc {
@@ -263,3 +450,12 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         float: left;
     }
 </style>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

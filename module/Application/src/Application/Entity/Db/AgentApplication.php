@@ -14,8 +14,8 @@ class AgentApplication {
     private $agent;
     /** @var Application */
     private $application;
-    /** @var DateTime */
-    private $date;
+    /** @var string */
+    private $type;
     /** @var integer */
     private $validation;
 
@@ -64,20 +64,20 @@ class AgentApplication {
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getDate()
+    public function getType()
     {
-        return $this->date;
+        return $this->type;
     }
 
     /**
-     * @param DateTime $date
+     * @param string $type
      * @return AgentApplication
      */
-    public function setDate($date)
+    public function setType($type)
     {
-        $this->date = $date;
+        $this->type = $type;
         return $this;
     }
 
@@ -98,6 +98,4 @@ class AgentApplication {
         $this->validation = $validation;
         return $this;
     }
-
-
 }

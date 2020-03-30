@@ -20,6 +20,7 @@
         <one-to-many target-entity="Application\Entity\Db\FichePoste" mapped-by="agent" field="fiches" />
 
         <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="agent" field="missionsSpecifiques"/>
+        <one-to-many target-entity="Application\Entity\Db\AgentApplication" mapped-by="agent" field="applications"/>
         <one-to-many target-entity="Application\Entity\Db\AgentCompetence" mapped-by="agent" field="competences"/>
         <one-to-many target-entity="Application\Entity\Db\AgentFormation" mapped-by="agent" field="formations"/>
         <one-to-many target-entity="Application\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>

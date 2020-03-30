@@ -4,10 +4,6 @@ namespace Application;
 
 use Application\Controller\CompetenceController;
 use Application\Controller\CompetenceControllerFactory;
-use Application\Form\AgentCompetence\AgentCompetenceForm;
-use Application\Form\AgentCompetence\AgentCompetenceFormFactory;
-use Application\Form\AgentCompetence\AgentCompetenceHydrator;
-use Application\Form\AgentCompetence\AgentCompetenceHydratorFactory;
 use Application\Form\Competence\CompetenceForm;
 use Application\Form\Competence\CompetenceFormFactory;
 use Application\Form\Competence\CompetenceHydrator;
@@ -372,8 +368,6 @@ return [
             CompetenceThemeForm::class => CompetenceThemeFormFactory::class,
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
             SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
-
-            AgentCompetenceForm::class => AgentCompetenceFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -385,7 +379,7 @@ return [
             CompetenceThemeHydrator::class => CompetenceThemeHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
 
-            AgentCompetenceHydrator::class => AgentCompetenceHydratorFactory::class,
+
         ],
     ],
     'view_helpers' => [

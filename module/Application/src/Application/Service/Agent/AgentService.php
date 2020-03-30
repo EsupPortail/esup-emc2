@@ -3,7 +3,10 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
+use Application\Entity\Db\AgentFormation;
+use Application\Entity\Db\Application;
 use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -11,6 +14,7 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -18,6 +22,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class AgentService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+    use DateTimeAwareTrait;
 
     /** GESTION DES ENTITÉS *******************************************************************************************/
 
@@ -277,6 +282,141 @@ class AgentService {
 
     }
 
+    /** AgentApplication **********************************************************************************************/
+
+    /**
+     * @param integer $id
+     * @return AgentApplication
+     */
+    public function getAgentApplication($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(AgentApplication::class)->createQueryBuilder('agentapplication')
+            ->andWhere('agentapplication.id = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Plusieurs AgentApplication partagent le même identifiant [". $id ."].", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return AgentApplication
+     */
+    public function getRequestedAgenApplication($controller, $paramName = 'agent-application')
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $result = $this->getAgentApplication($id);
+        return $result;
+    }
+
+    /**
+     * @param AgentApplication $agentApplication
+     * @return AgentApplication
+     */
+    public function createAgentApplication(AgentApplication $agentApplication)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $agentApplication->setHistoCreation($date);
+        $agentApplication->setHistoCreateur($user);
+        $agentApplication->setHistoModification($date);
+        $agentApplication->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->persist($agentApplication);
+            $this->getEntityManager()->flush($agentApplication);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentApplication;
+    }
+
+    /**
+     * @param AgentApplication $agentApplication
+     * @return AgentApplication
+     */
+    public function updateAgentApplication(AgentApplication $agentApplication)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $agentApplication->setHistoModification($date);
+        $agentApplication->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($agentApplication);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentApplication;
+    }
+
+    /**
+     * @param AgentApplication $agentApplication
+     * @return mixed
+     */
+    public function historiserAgentApplication(AgentApplication $agentApplication)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $agentApplication->setHistoDestruction($date);
+        $agentApplication->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($agentApplication);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentApplication;
+    }
+
+    /**
+     * @param AgentApplication $agentApplication
+     * @return AgentApplication
+     */
+    public function restoreAgentApplication(AgentApplication $agentApplication)
+    {
+        $agentApplication->setHistoDestruction(null);
+        $agentApplication->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($agentApplication);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentApplication;
+    }
+
+    /**
+     * @param AgentApplication $agentApplication
+     * @return AgentApplication
+     */
+    public function deleteAgentApplication(AgentApplication $agentApplication)
+    {
+
+        try {
+            $this->getEntityManager()->remove($agentApplication);
+            $this->getEntityManager()->flush($agentApplication);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentApplication;
+    }
+
+    /** AgentCompetence ***********************************************************************************************/
+
     /**
      * @param integer $id
      * @return AgentCompetence
@@ -408,5 +548,137 @@ class AgentService {
         return $competence;
     }
 
+    /** AgentFormation ************************************************************************************************/
+
+    /**
+     * @param integer $id
+     * @return AgentFormation
+     */
+    public function getAgentFormation($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('formation')
+            ->andWhere('formation.id = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Plusieurs AgentFormation partagent le même identifiant [". $id ."].", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return AgentFormation
+     */
+    public function getRequestedAgentFormation($controller, $paramName = 'agent-formation')
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $result = $this->getAgentFormation($id);
+        return $result;
+    }
+
+    /**
+     * @param AgentFormation $agentFormation
+     * @return AgentFormation
+     */
+    public function createAgentFormation(AgentFormation $agentFormation)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $agentFormation->setHistoCreation($date);
+        $agentFormation->setHistoCreateur($user);
+        $agentFormation->setHistoModification($date);
+        $agentFormation->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->persist($agentFormation);
+            $this->getEntityManager()->flush($agentFormation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentFormation;
+    }
+
+    /**
+     * @param AgentFormation $agentFormation
+     * @return AgentFormation
+     */
+    public function updateAgentFormation(AgentFormation $agentFormation)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $agentFormation->setHistoModification($date);
+        $agentFormation->setHistoModificateur($user);
+
+        try {
+            $this->getEntityManager()->flush($agentFormation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentFormation;
+    }
+
+    /**
+     * @param AgentFormation $agentFormation
+     * @return AgentFormation
+     */
+    public function historiserAgentFormation(AgentFormation $agentFormation)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $agentFormation->setHistoDestruction($date);
+        $agentFormation->setHistoDestructeur($user);
+
+        try {
+            $this->getEntityManager()->flush($agentFormation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentFormation;
+    }
+
+    /**
+     * @param AgentFormation $agentFormation
+     * @return AgentFormation
+     */
+    public function restoreAgentFormation(AgentFormation $agentFormation)
+    {
+        $agentFormation->setHistoDestruction(null);
+        $agentFormation->setHistoDestructeur(null);
+
+        try {
+            $this->getEntityManager()->flush($agentFormation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentFormation;
+    }
+
+    /**
+     * @param AgentFormation $agentFormation
+     * @return AgentFormation
+     */
+    public function deleteAgentFormation(AgentFormation $agentFormation)
+    {
+
+        try {
+            $this->getEntityManager()->remove($agentFormation);
+            $this->getEntityManager()->flush($agentFormation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+
+        return $agentFormation;
+    }
 
 }

@@ -206,7 +206,7 @@ class FormationService {
      * @param Formation[] $formationsAlreadyUsed
      * @return Formation[]
      */
-    public function getFormationsDisponiblesAsOptions($formationsAlreadyUsed)
+    public function getFormationsDisponiblesAsOptions($formationsAlreadyUsed = [])
     {
         $formations = $this->getFormations('libelle', 'ASC');
 
