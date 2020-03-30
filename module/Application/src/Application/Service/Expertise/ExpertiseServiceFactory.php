@@ -1,28 +1,25 @@
 <?php
 
-namespace Application\Service\Formation;
+namespace Application\Service\Expertise;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationServiceFactory {
+class ExpertiseServiceFactory {
 
     public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
-         * @var FormationThemeService $formationThemeService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $formationThemeService = $container->get(FormationThemeService::class);
         $userService = $container->get(UserService::class);
 
-        /** @var FormationService $service */
-        $service = new FormationService();
+        /** @var ExpertiseService $service */
+        $service = new ExpertiseService();
         $service->setEntityManager($entityManager);
-        $service->setFormationThemeService($formationThemeService);
         $service->setUserService($userService);
         return $service;
     }

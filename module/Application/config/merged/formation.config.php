@@ -18,6 +18,8 @@ use Application\Form\SelectionFormation\SelectionFormationHydrator;
 use Application\Provider\Privilege\FormationPrivileges;
 use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
+use Application\Service\Formation\FormationThemeService;
+use Application\Service\Formation\FormationThemeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -241,6 +243,7 @@ return [
     'service_manager' => [
         'factories' => [
             FormationService::class => FormationServiceFactory::class,
+            FormationThemeService::class => FormationThemeServiceFactory::class,
         ],
     ],
     'controllers'     => [

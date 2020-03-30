@@ -6,6 +6,7 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
+use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\FichePosteCreation\FichePosteCreationForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Activite\ActiviteService;
@@ -13,6 +14,7 @@ use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetir
 use Application\Service\Agent\AgentService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
+use Application\Service\Expertise\ExpertiseService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
@@ -33,6 +35,7 @@ class FichePosteControllerFactory {
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
          * @var FormationsRetireesService $formationsConserseesService
+         * @var ExpertiseService $expertiseService
          */
         $agentService = $container->get(AgentService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -43,6 +46,7 @@ class FichePosteControllerFactory {
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
         $formationsConserseesService = $container->get(FormationsRetireesService::class);
+        $expertiseService = $container->get(ExpertiseService::class);
 
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
@@ -51,6 +55,7 @@ class FichePosteControllerFactory {
          * @var AssocierTitreForm $associerTitreForm
          * @var FichePosteCreationForm $fichePosteCreation
          * @var SpecificitePosteForm $specificiftePosteForm
+         * @var ExpertiseForm $expertiseForm
          */
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
         $associerAgentForm = $container->get('FormElementManager')->get(AssocierAgentForm::class);
@@ -58,6 +63,7 @@ class FichePosteControllerFactory {
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
         $fichePosteCreation = $container->get('FormElementManager')->get(FichePosteCreationForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
+        $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
 
         /* @var PhpRenderer $renderer  */
         $renderer = $container->get('ViewRenderer');
@@ -75,6 +81,7 @@ class FichePosteControllerFactory {
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
         $controller->setFormationsRetireesService($formationsConserseesService);
+        $controller->setExpertiseService($expertiseService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierAgentForm($associerAgentForm);
@@ -82,6 +89,8 @@ class FichePosteControllerFactory {
         $controller->setAssocierTitreForm($associerTitreForm);
         $controller->setFichePosteCreationForm($fichePosteCreation);
         $controller->setSpecificitePosteForm($specificiftePosteForm);
+        $controller->setExpertiseForm($expertiseForm);
+
         return $controller;
     }
 }

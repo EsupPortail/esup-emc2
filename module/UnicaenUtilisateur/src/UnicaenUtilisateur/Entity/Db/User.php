@@ -4,7 +4,7 @@ namespace UnicaenUtilisateur\Entity\Db;
 
 use UnicaenUtilisateur\Service\RechercheIndividu\RechercheIndividuResultatInterface;
 
-class User extends AbstractUser
+class User extends AbstractUser implements UserInterface
 {
     private $lastRole;
 

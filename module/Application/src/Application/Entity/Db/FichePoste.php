@@ -2,13 +2,16 @@
 
 namespace Application\Entity\Db;
 
+use DateTime;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class FichePoste
 {
     use HistoriqueAwareTrait;
+    use DateTimeAwareTrait;
 
     /** @var int */
     private $id;
@@ -19,6 +22,9 @@ class FichePoste
 
     /** @var SpecificitePoste */
     private $specificite;
+    /** @var ArrayCollection (Expertise) */
+    private $expertises;
+
     /** @var Poste */
     private $poste;
 
@@ -308,6 +314,34 @@ class FichePoste
             ];
         }
         return $result;
+    }
+
+    /** EXPERTISE *****************************************************************************************************/
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getExpertises()
+    {
+        return $this->expertises;
+    }
+
+    /**
+     * @param DateTime $date
+     * @return Expertise[]
+     */
+    public function getCurrentExpertises($date = null)
+    {
+        if ($date === null) $date = $this->getDateTime();
+
+        $expertises = [];
+        /** @var Expertise $expertise */
+        foreach ($this->expertises as $expertise) {
+            if ($expertise->estNonHistorise($date)) {
+                $expertises[] = $expertise;
+            }
+        }
+        return $expertises;
     }
 
 }

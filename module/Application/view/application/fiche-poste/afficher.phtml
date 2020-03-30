@@ -10,6 +10,8 @@ use Application\Entity\Db\FicheTypeExterne;
 $canAssocierAgent = true;
 $canAssocierMetierType = true;
 
+$date = new DateTime();
+
 ?>
 
 <div class="panel panel-info">
@@ -100,9 +102,80 @@ $canAssocierMetierType = true;
     <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'affichage']);  ?>
 <?php endforeach; ?>
 
+<!-- EXPERTISES LIEES A LA FICHE DE POSTE ----------------------------------------------------------------------------->
+<?php $expertises = $fiche->getCurrentExpertises($date); ?>
+
+<?php if ($mode === 'edition' OR !empty($expertises)) : ?>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2> Expertises associées au poste </h2>
+                </div>
+                <div class="col-md-6">
+<!--                    --><?php //if($mode === 'edition' AND $canEditerExpertise) : ?>
+<!--                        <a --><?php ///** @see \Application\Controller\FichePosteController::ajouterExpertiseAction() */?>
+<!--                                href="--><?php //echo $this->url('fiche-poste/ajouter-expertise',['fiche-poste' => $ficheposte->getId()], [], true); ?><!--"-->
+<!--                                class="btn btn-primary action ajax-modal pull-right"-->
+<!--                                data-event="modification"-->
+<!--                        >-->
+<!--                            <span class="icon editer"></span>-->
+<!--                            Ajouter une expertise-->
+<!--                        </a>-->
+<!--                    --><?php //endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <?php foreach ($expertises as $expertise) : ?>
+                    <li>
+                        <strong><?php echo $expertise->getLibelle(); ?></strong>
+<!--                        --><?php //if($mode === 'edition' AND $canEditerExpertise) : ?>
+<!--                            <a --><?php ///** @see \Application\Controller\FichePosteController::modifierExpertiseAction() */?>
+<!--                                    href="--><?php //echo $this->url('fiche-poste/modifier-expertise',['expertise' => $expertise->getId()], [], true); ?><!--"-->
+<!--                                    class="ajax-modal"-->
+<!--                                    data-event="modification"-->
+<!--                                    title="Modifier l'expertise"-->
+<!--                            >-->
+<!--                                <span class="icon editer"></span></a>-->
+<!--                        --><?php //endif; ?>
+<!--                        --><?php //if ($expertise->estNonHistorise()) : ?>
+<!--                            --><?php //if($mode === 'edition' AND $canEditerExpertise) : ?>
+<!--                                <a --><?php ///** @see \Application\Controller\FichePosteController::historiserExpertiseAction() */?>
+<!--                                        href="--><?php //echo $this->url('fiche-poste/historiser-expertise',['expertise' => $expertise->getId()], [], true); ?><!--"-->
+<!--                                        title="Historiser l'expertise"-->
+<!--                                >-->
+<!--                                    <span class="icon historiser"></span></a>-->
+<!--                            --><?php //endif; ?>
+<!--                        --><?php //else : ?>
+<!--                            --><?php //if($mode === 'edition' AND $canEditerExpertise) : ?>
+<!--                                <a --><?php ///** @see \Application\Controller\FichePosteController::restaurerExpertiseAction() */?>
+<!--                                        href="--><?php //echo $this->url('fiche-poste/restaurer-expertise',['expertise' => $expertise->getId()], [], true); ?><!--"-->
+<!--                                        title="Restaurer l'expertise"-->
+<!--                                >-->
+<!--                                    <span class="icon restaurer"></span></a>-->
+<!--                            --><?php //endif; ?>
+<!--                        --><?php //endif; ?>
+<!--                        --><?php //if($mode === 'edition' AND $canEditerExpertise) : ?>
+<!--                            <a --><?php ///** @see \Application\Controller\FichePosteController::supprimerExpertiseAction() */?>
+<!--                                    href="--><?php //echo $this->url('fiche-poste/supprimer-expertise',['expertise' => $expertise->getId()], [], true); ?><!--"-->
+<!--                                    title="Supprimer l'expertise"-->
+<!--                            >-->
+<!--                                <span class="icon detruire"></span></a>-->
+<!--                        --><?php //endif; ?>
+                        <br/>
+                        <div>
+                            <?php echo $expertise->getDescription(); ?>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+<?php endif; ?>
 
 <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
-
 <?php if (isset($options['mode']) AND $options['mode'] === 'affichage' AND $fiche->getSpecificite() !== NULL) : ?>
     <div class="panel panel-info">
         <div class="panel-heading">

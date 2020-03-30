@@ -40,7 +40,7 @@ return [
                         'detruire-agent-competence',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AFFICHER,
+                        AgentPrivileges::AGENT_AFFICHER,
                     ],
                 ],
                 [
@@ -49,7 +49,7 @@ return [
                         'rechercher-individu',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AJOUTER,
+                        AgentPrivileges::AGENT_AJOUTER,
                     ],
                 ],
                 [
@@ -58,7 +58,7 @@ return [
                         'modifier',
                     ],
                     'privileges' => [
-                        AgentPrivileges::EDITER,
+                        AgentPrivileges::AGENT_EDITER,
                     ],
                 ],
                 [
@@ -68,7 +68,7 @@ return [
                         'upload'
                     ],
                     'privileges' => [
-                        AgentPrivileges::AFFICHER,
+                        AgentPrivileges::AGENT_AFFICHER,
                     ],
                 ],
                 [
@@ -77,7 +77,7 @@ return [
                         'index-agent',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AFFICHER,
+                        AgentPrivileges::AGENT_AFFICHER,
                     ],
                 ],
             ],
@@ -251,7 +251,7 @@ return [
                             'agent' => [
                                 'label'    => 'Agents',
                                 'route'    => 'agent',
-                                'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AFFICHER),
+                                'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER),
                                 'order'    => 100,
                             ],
                         ],

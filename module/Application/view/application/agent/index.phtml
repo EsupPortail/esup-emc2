@@ -8,24 +8,27 @@ use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 
 
-$canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AFFICHER));
-$canAjouter  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AJOUTER));
-$canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::EDITER));
+$canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+$canAjouter  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AJOUTER));
+$canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 ?>
 
 <div class="row">
-<div class="col-md-6">
-<h1 class="page-header">
-    Agents
-    <span class="badge">
-           <?php echo count($agents); ?>
-       </span>
-</h1>
-</div>
-<div class="pull-right col-md-5 alert alert-info">
-        <span class="icon synchoniser"></span>
-        Les agents sont synchronisés depuis Octopus.
-</div>
+    <div class="col-md-6">
+    <h1 class="page-header">
+        Agents
+        <span class="badge">
+               <?php echo count($agents); ?>
+           </span>
+    </h1>
+    </div>
+    <div class="pull-right col-md-5">
+        <br/>
+        <div class=" alert alert-info">
+            <span class="icon synchoniser"></span>
+            Les agents sont synchronisés depuis Octopus.
+        </div>
+    </div>
 </div>
 
 <div class="main">

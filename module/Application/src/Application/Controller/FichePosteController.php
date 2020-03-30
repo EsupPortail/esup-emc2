@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\Expertise;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
@@ -20,6 +21,7 @@ use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
 use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
+use Application\Form\Expertise\ExpertiseFormAwareTrait;
 use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
@@ -28,6 +30,7 @@ use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetir
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
+use Application\Service\Expertise\ExpertiseServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -51,6 +54,7 @@ class FichePosteController extends AbstractActionController {
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
     use FormationsRetireesServiceAwareTrait;
+    use ExpertiseServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -59,6 +63,7 @@ class FichePosteController extends AbstractActionController {
     use AssocierTitreFormAwareTrait;
     use FichePosteCreationFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
+    use ExpertiseFormAwareTrait;
 
     private $renderer;
 
@@ -719,4 +724,84 @@ class FichePosteController extends AbstractActionController {
             'retirees' => $retirees,
         ]);
     }
+
+    /** EXPERTISE *****************************************************************************************************/
+
+    public function ajouterExpertiseAction()
+    {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
+        $expertise = new Expertise();
+        $expertise->setFicheposte($ficheposte);
+
+        $form = $this->getExpertiseForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/ajouter-expertise', ['fiche-poste' => $ficheposte->getId()], [], true));
+        $form->bind($expertise);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getExpertiseService()->create($expertise);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une expertise",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierExpertiseAction()
+    {
+        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
+
+        $form = $this->getExpertiseForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/modifier-expertise', ['expertise' => $expertise->getId()], [], true));
+        $form->bind($expertise);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getExpertiseService()->update($expertise);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une expertise",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserExpertiseAction()
+    {
+        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
+        $this->getExpertiseService()->historise($expertise);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
+    }
+
+    public function restaurerExpertiseAction()
+    {
+        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
+        $this->getExpertiseService()->restore($expertise);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
+    }
+
+    public function supprimerExpertiseAction()
+    {
+        $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
+        $this->getExpertiseService()->delete($expertise);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
+    }
+
 }

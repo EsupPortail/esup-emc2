@@ -13,9 +13,9 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class AgentPrivileges extends Privileges
 {
-    const AFFICHER          = 'agent-afficher-agent';
-    const AJOUTER           = 'agent-ajouter-agent';
-    const EDITER            = 'agent-editer-agent';
-    const EFFACER           = 'agent-effacer-agent';
+    const AGENT_AFFICHER          = 'agent-agent_afficher';
+    const AGENT_AJOUTER           = 'agent-agent_ajouter';
+    const AGENT_EDITER            = 'agent-agent_editer';
+    const AGENT_EFFACER           = 'agent-agent_effacer';
 
 }

@@ -6,23 +6,20 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationServiceFactory {
+class FormationThemeServiceFactory {
 
     public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
-         * @var FormationThemeService $formationThemeService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $formationThemeService = $container->get(FormationThemeService::class);
         $userService = $container->get(UserService::class);
 
-        /** @var FormationService $service */
-        $service = new FormationService();
+        /** @var FormationThemeService $service */
+        $service = new FormationThemeService();
         $service->setEntityManager($entityManager);
-        $service->setFormationThemeService($formationThemeService);
         $service->setUserService($userService);
         return $service;
     }

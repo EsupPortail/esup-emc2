@@ -166,4 +166,33 @@ class Formation {
         $this->missions->removeElement($mission);
         return $this;
     }
+
+    /**
+     * @param Formation[] $formations
+     * @return array
+     */
+    public static function generateOptions($formations)
+    {
+        $themes = [];
+        foreach ($formations as $formation) $themes[($formation->getTheme())?$formation->getTheme()->getLibelle():"Sans thème"][] = $formation;
+
+        $options = [];
+        foreach ($themes as $libelle => $liste) {
+            $optionsoptions = [];
+            usort($liste, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+            foreach ($liste as $formation) {
+                $optionsoptions[] = [
+                    'value' =>  $formation->getId(),
+                    'label' => $formation->getLibelle(),
+                ];
+            }
+            $array = [
+                'label' => $libelle,
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+        return $options;
+    }
+
 }

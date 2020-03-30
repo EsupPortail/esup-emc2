@@ -21,10 +21,10 @@ use Application\Provider\Privilege\AgentPrivileges;
 
 $this->headTitle("Affectations de missions spécifiques");
 
-$canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AJOUTER));
-$canEditer      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::EDITER));
-$canhistoriser  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::EDITER));
-$canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::EFFACER));
+$canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AJOUTER));
+$canEditer      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+$canhistoriser  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+$canDetruire    = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
 
 ?>
 

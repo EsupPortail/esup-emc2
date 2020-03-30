@@ -27,7 +27,7 @@ return [
                         'afficher',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AFFICHER,
+                        AgentPrivileges::AGENT_AFFICHER,
                     ],
                 ],
                 [
@@ -40,7 +40,7 @@ return [
                         'detruire',
                     ],
                     'privileges' => [
-                        AgentPrivileges::EDITER,
+                        AgentPrivileges::AGENT_EDITER,
                     ],
                 ],
             ],

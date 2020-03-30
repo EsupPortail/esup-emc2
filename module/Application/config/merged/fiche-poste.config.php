@@ -20,6 +20,10 @@ use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormFactory;
 use Application\Form\AssocierTitre\AssocierTitreHydrator;
 use Application\Form\AssocierTitre\AssocierTitreHydratorFactory;
+use Application\Form\Expertise\ExpertiseForm;
+use Application\Form\Expertise\ExpertiseFormFactory;
+use Application\Form\Expertise\ExpertiseHydrator;
+use Application\Form\Expertise\ExpertiseHydratorFactory;
 use Application\Form\FichePosteCreation\FichePosteCreationForm;
 use Application\Form\FichePosteCreation\FichePosteCreationFormFactory;
 use Application\Form\FichePosteCreation\FichePosteCreationHydrator;
@@ -27,7 +31,6 @@ use Application\Form\FichePosteCreation\FichePosteCreationHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
-use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceFactory;
@@ -35,6 +38,8 @@ use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceFactory;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceFactory;
+use Application\Service\Expertise\ExpertiseService;
+use Application\Service\Expertise\ExpertiseServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
@@ -73,6 +78,13 @@ return [
                         'selectionner-formations-retirees',
                         'selectionner-descriptions-retirees',
                         'test-affichage-application-bloc',
+
+                        'ajouter-expertise',
+                        'modifier-expertise',
+                        'historiser-expertise',
+                        'restaurer-expertise',
+                        'supprimer-expertise',
+
                     ],
                     'roles' => [
                     ],
@@ -335,6 +347,61 @@ return [
                             ],
                         ],
                     ],
+                    'ajouter-expertise' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/ajouter-expertise/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'ajouter-expertise',
+                            ],
+                        ],
+                    ],
+                    'modifier-expertise' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/modifier-expertise/:expertise',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'modifier-expertise',
+                            ],
+                        ],
+                    ],
+                    'historiser-expertise' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/historiser-expertise/:expertise',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'historiser-expertise',
+                            ],
+                        ],
+                    ],
+                    'restaurer-expertise' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/restaurer-expertise/:expertise',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'restaurer-expertise',
+                            ],
+                        ],
+                    ],
+                    'supprimer-expertise' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/supprimer-expertise/:expertise',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'supprimer-expertise',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -342,10 +409,11 @@ return [
 
     'service_manager' => [
         'factories' => [
-            FichePosteService::class => FichePosteServiceFactory::class,
             ActivitesDescriptionsRetireesService::class => ActivitesDescriptionsRetireesServiceFactory::class,
             ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
+            ExpertiseService::class => ExpertiseServiceFactory::class,
+            FichePosteService::class => FichePosteServiceFactory::class,
             FormationsRetireesService::class => FormationsRetireesServiceFactory::class,
         ],
     ],
@@ -360,6 +428,7 @@ return [
             AssocierAgentForm::class => AssocierAgentFormFactory::class,
             AssocierPosteForm::class => AssocierPosteFormFactory::class,
             AssocierTitreForm::class => AssocierTitreFormFactory::class,
+            ExpertiseForm::class => ExpertiseFormFactory::class,
             FichePosteCreationForm::class => FichePosteCreationFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
         ],
@@ -373,6 +442,7 @@ return [
             AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
+            ExpertiseHydrator::class => ExpertiseHydratorFactory::class,
             FichePosteCreationHydrator::class => FichePosteCreationHydratorFactory::class,
         ],
     ],
