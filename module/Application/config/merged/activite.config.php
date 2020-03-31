@@ -44,6 +44,7 @@ return [
                 [
                     'controller' => ActiviteController::class,
                     'action' => [
+                        'editer',
                         'modifier',
                         'convert',
                         'historiser',

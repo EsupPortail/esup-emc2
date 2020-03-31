@@ -86,11 +86,11 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         <!-- MODIFICATION DE L'ACTIVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <?php if ($mode == 'edition-fiche-metier') : ?>
         <div class="col-md-1" style="border:1px lightgray solid; padding: 5px; text-align: center;">
-            <?php /** @see ActiviteController::editerAction() */ ?>
-            <a href="<?php echo $this->url('activite/editer', ['activite' => $activite->getId()], [], true); ?>"
-               class="btn btn-default ajax-modal"
-               data-event="modification"
+            <?php /** @see ActiviteController::modifierAction() */ ?>
+            <a href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
+               class="btn btn-default"
                style="width:5rem; margin: 5px;"
+               target="_blank"
             >
                 <span class="icon editer"></span><br/>
             </a>
@@ -170,7 +170,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         </div>
 
         <!-- CARTOUCHE LATERAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <?php if ($nbObject !== 0) : ?>
+        <?php if ($mode === 'modifier-activite' OR $nbObject !== 0) : ?>
             <div class="col-md-4" style="border:1px lightblue solid">
                 <small>
                 <?php if ($mode === 'modifier-activite' OR $nbCompetence > 0) : ?>
