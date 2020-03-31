@@ -24,6 +24,12 @@ $formations      = $activite->getFormations();
 <!--    </dl>-->
 <!--</div>-->
 
+<?php if ($mode === 'modifier-activite') : ?>
+    <h1 class="page-header">
+        Modification de l'activité
+    </h1>
+<?php endif; ?>
+
 <?php echo $this->activite($activite, $mode); ?>
 
 <script>

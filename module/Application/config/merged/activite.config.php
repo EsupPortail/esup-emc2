@@ -87,6 +87,14 @@ return [
                                 'route'    => 'activite',
                                 'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::AFFICHER),
                                 'order'    => 1000,
+                                'pages' => [
+                                    'modifier' => [
+                                        'label'    => 'Modifier une activité',
+                                        'route'    => 'activite/modifier',
+                                        'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::EDITER),
+                                        'order'    => 1000,
+                                    ]
+                                ]
                             ],
                         ],
                     ],

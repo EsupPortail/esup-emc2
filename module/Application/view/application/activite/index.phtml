@@ -74,15 +74,8 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                         <?php endif; ?>
                         <?php if ($canEditer) : ?>
                             <a href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
-                               class="ajax-modal"
-                               data-event="modification"
                             >
                                 <span class="icon editer" title="Modifier l'activité"></span></a>
-                            <a href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
-                               class="ajax-modal"
-                               data-event="modification"
-                            >
-                                <span class="icon ajouter" title="Modifier l'activite "></span></a>
                             <a href="<?php echo $this->url('activite/convert', ['activite' => $activite->getId()], [], true); ?>"
                                class="ajax-modal"
                                data-event="modification"
