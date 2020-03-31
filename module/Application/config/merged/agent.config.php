@@ -42,8 +42,16 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'afficher-statuts-grades',
                         'rechercher',
                         'rechercher-responsable',
+
+                        'ajouter-agent-mission-specifique',
+                        'afficher-agent-mission-specifique',
+                        'modifier-agent-mission-specifique',
+                        'historiser-agent-mission-specifique',
+                        'restaurer-agent-mission-specifique',
+                        'detruire-agent-mission-specifique',
 
                         'ajouter-agent-application',
                         'afficher-agent-application',
@@ -133,6 +141,69 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'rechercher-responsable',
+                            ],
+                        ],
+                    ],
+
+                    /** Route des AgentMissionSpecifique ********************************************************************/
+
+                    'ajouter-agent-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-agent-mission-specifique/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'ajouter-agent-mission-specifique',
+                            ],
+                        ],
+                    ],
+                    'afficher-agent-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-agent-mission-specifique/:agent-mission-specifique',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'afficher-agent-mission-specifique',
+                            ],
+                        ],
+                    ],
+                    'modifier-agent-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-agent-mission-specifique/:agent-mission-specifique',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'modifier-agent-mission-specifique',
+                            ],
+                        ],
+                    ],
+                    'historiser-agent-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-agent-mission-specifique/:agent-mission-specifique',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'historiser-agent-mission-specifique',
+                            ],
+                        ],
+                    ],
+                    'restaurer-agent-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-agent-mission-specifique/:agent-mission-specifique',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'restaurer-agent-mission-specifique',
+                            ],
+                        ],
+                    ],
+                    'detruire-agent-mission-specifique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire-agent-mission-specifique/:agent-mission-specifique',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'detruire-agent-mission-specifique',
                             ],
                         ],
                     ],
@@ -375,6 +446,16 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'afficher-statuts-grades' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-statuts-grades/:id',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'afficher-statuts-grades',
                             ],
                         ],
                     ],

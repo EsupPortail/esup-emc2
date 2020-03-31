@@ -6,13 +6,16 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
-use Application\Entity\Db\Application;
+use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\AgentStatut;
 use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
-use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
@@ -31,7 +34,8 @@ class AgentController extends AbstractActionController
     use AgentApplicationFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
-    use SelectionApplicationFormAwareTrait;
+    use AgentMissionSpecifiqueFormAwareTrait;
+
 
     public function indexAction() {
         $agents = $this->getAgentService()->getAgents();
@@ -47,6 +51,22 @@ class AgentController extends AbstractActionController
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
+        ]);
+    }
+
+    public function afficherStatutsGradesAction() {
+        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
+
+        $grades = $agent->getGrades();
+        usort($grades, function(AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        $statuts = $agent->getStatuts();
+        usort($statuts, function(AgentStatut $a, AgentStatut $b) { return $a->getDebut() > $b->getDebut();});
+
+        return new ViewModel([
+            'title' => 'Listing de tous les status et grades de ' . $agent->getDenomination(),
+            'agent' => $agent,
+            'statuts' => $statuts,
+            'grades' => $grades,
         ]);
     }
 
@@ -73,6 +93,112 @@ class AgentController extends AbstractActionController
             'title' => 'Modifier l\'agent',
             'form' => $form,
         ]);
+        return $vm;
+    }
+
+    /** Gestion des missions spécifiques ******************************************************************************/
+
+    public function ajouterAgentMissionSpecifiqueAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $agentMissionSpecifique = new AgentMissionSpecifique();
+
+        /** @var AgentMissionSpecifiqueForm $form */
+        $form = $this->getAgentMissionSpecifiqueForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-mission-specifique', [ 'agent' => $agent->getId() ], [], true));
+        $form->bind($agentMissionSpecifique);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $agentMissionSpecifique->setAgent($agent);
+                $this->getAgentService()->createAgentMissionSpecifique($agentMissionSpecifique);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une mission spécifique de l'agent",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function afficherAgentMissionSpecifiqueAction()
+    {
+        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
+        return new ViewModel([
+            'title' => "Affichage d'une mission spécifique de l'agent",
+            'agentMissionSpecifique' => $agentMissionSpecifique,
+        ]);
+    }
+
+    public function modifierAgentMissionSpecifiqueAction()
+    {
+        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
+        $form = $this->getAgentMissionSpecifiqueForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-mission-specifique', ['agent-mission-specifique' => $agentMissionSpecifique->getId()]));
+        $form->bind($agentMissionSpecifique);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentService()->updateAgentMissionSpecifique($agentMissionSpecifique);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une mission spécifique de l'agent",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserAgentMissionSpecifiqueAction()
+    {
+        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
+        $this->getAgentService()->historiserAgentMissionSpecifique($agentMissionSpecifique);
+        return $this->redirect()->toRoute('agent/afficher', ['id' => $agentMissionSpecifique->getAgent()->getId()], [], true);
+    }
+
+    public function restaurerAgentMissionSpecifiqueAction()
+    {
+        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
+        $this->getAgentService()->restoreAgentMissionSpecifique($agentMissionSpecifique);
+        return $this->redirect()->toRoute('agent/afficher', ['id' => $agentMissionSpecifique->getAgent()->getId()], [], true);
+    }
+
+    public function detruireAgentMissionSpecifiqueAction()
+    {
+        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentService()->deleteAgentMissionSpecifique($agentMissionSpecifique);
+            //return $this->redirect()->toRoute('home');
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($agentMissionSpecifique !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la mission spécifique  de " . $agentMissionSpecifique->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/detruire-agent-mission-specifique', ["agent-mission-specifique" => $agentMissionSpecifique->getId()], [], true),
+            ]);
+        }
         return $vm;
     }
 

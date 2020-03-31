@@ -264,10 +264,18 @@ class Agent {
     /** @return AgentMissionSpecifique[] */
     public function getMissionsSpecifiques() {
         $missions = [];
-        /** @var MissionSpecifique $mission */
+        /** @var AgentMissionSpecifique $mission */
         foreach ($this->missionsSpecifiques as $mission) {
             if ($mission->estNonHistorise()) $missions[] = $mission;
         }
+        usort($missions, function(AgentMissionSpecifique $a, AgentMissionSpecifique $b) {
+            $aDebut = $a->getDateDebut()->format('Y-m-d');
+            $aFin = $a->getDateFin()->format('Y-m-d');
+            $bDebut = $b->getDateDebut()->format('Y-m-d');
+            $bFin = $b->getDateFin()->format('Y-m-d');
+            if ($aDebut !== $bDebut) return $aDebut > $bDebut;
+            return $aFin > $bFin;
+        });
         return $missions;
     }
 

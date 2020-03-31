@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @see \Application\Controller\AgentController::afficherAgentMissionSpecifiqueAction()
+ * @var AgentMissionSpecifique $agentMissionSpecifique
+ */
+
+use Application\Entity\Db\AgentMissionSpecifique;
+
+?>
+
+<h2> Agent  </h2>
+
+<dl>
+    <dt> Dénomination <dt>
+    <dd>
+        <?php $agentMissionSpecifique->getAgent()->getDenomination(); ?>
+    </dd>
+</dl>
+
+<h2> Mission Specifique </h2>
+
+<dl>
+    <dt> Mission </dt>
+    <dd>
+        <?php echo $agentMissionSpecifique->getMission()->getLibelle(); ?>
+    </dd>
+    <dt> Type de mission</dt>
+    <dd>
+        <?php echo $agentMissionSpecifique->getMission()->getType()->getLibelle(); ?>
+    </dd>
+    <?php if ($agentMissionSpecifique->getDecharge() !== null) : ?>
+        <dt> Décharge associée </dt>
+        <dd>
+            <?php echo $agentMissionSpecifique->getDecharge(); ?> heures
+        </dd>
+    <?php endif; ?>
+</dl>
+
+<?php if ($agentMissionSpecifique->getStructure()) : ?>
+    <h2> Structure </h2>
+
+    <dl>
+        <dt> Libellé de la structure </dt>
+        <dd>
+            <?php echo $agentMissionSpecifique->getStructure()->getLibelleLong(); ?>
+        </dd>
+        <dt> Type de la structure </dt>
+        <dd>
+            <?php echo $agentMissionSpecifique->getStructure()->getType(); ?>
+        </dd>
+    </dl>
+<?php endif; ?>
+
+<h2> Validations </h2>
+
+<span class="TODO"> Après réimport de UnicaenValidation</span>
+

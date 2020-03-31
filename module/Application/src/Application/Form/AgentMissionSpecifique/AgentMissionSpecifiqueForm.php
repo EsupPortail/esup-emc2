@@ -8,6 +8,7 @@ use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\Date;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -20,20 +21,20 @@ class AgentMissionSpecifiqueForm extends Form {
     public function init()
     {
         //Agent
-        $this->add([
-            'type' => Select::class,
-            'name' => 'agent',
-            'options' => [
-                'label' => "Agent* :",
-                'empty_option' => 'Sélectionner l\'agent à affecter ...',
-                'value_options' => $this->getAgentService()->getAgentsAsOption(),
-            ],
-            'attributes' => [
-                'id' => 'agent',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
+//        $this->add([
+//            'type' => Select::class,
+//            'name' => 'agent',
+//            'options' => [
+//                'label' => "Agent* :",
+//                'empty_option' => 'Sélectionner l\'agent à affecter ...',
+//                'value_options' => $this->getAgentService()->getAgentsAsOption(),
+//            ],
+//            'attributes' => [
+//                'id' => 'agent',
+//                'class'             => 'bootstrap-selectpicker show-tick',
+//                'data-live-search'  => 'true',
+//            ],
+//        ]);
 
         //Mission
         $this->add([
@@ -90,6 +91,17 @@ class AgentMissionSpecifiqueForm extends Form {
                 'id' => 'fin',
             ],
         ]);
+        //Decharge
+        $this->add([
+            'type' => Number::class,
+            'name' => 'decharge',
+            'options' => [
+                'label' => "Décharge associée à la mission* :",
+            ],
+            'attributes' => [
+                'id' => 'decharge',
+            ],
+        ]);
 
         //Submit
         // button
@@ -109,11 +121,12 @@ class AgentMissionSpecifiqueForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'agent'             => [ 'required' => true,  ],
+//            'agent'             => [ 'required' => true,  ],
             'mission'           => [ 'required' => true,  ],
             'structure'         => [ 'required' => false, ],
             'debut'             => [ 'required' => true,  ],
             'fin'               => [ 'required' => false, ],
+            'decharge'               => [ 'required' => false, ],
         ]));
     }
 

@@ -3,10 +3,12 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class AgentMissionSpecifique {
     use HistoriqueAwareTrait;
+    use DateTimeAwareTrait;
 
     /** @var integer */
     private $id;
@@ -137,5 +139,19 @@ class AgentMissionSpecifique {
     {
         $this->decharge = $decharge;
         return $this;
+    }
+
+    /**
+     * @param DateTime $date
+     * @return boolean
+     */
+    public function estEnCours(DateTime $date = null) {
+
+        if ($this->estHistorise()) return false;
+
+        if ($date === null) $date = $this->getDateTime();
+        if ($this->getDateDebut() > $date) return false;
+        if ($this->getDateFin() !== null AND $this->getDateFin() < $date) return false;
+        return true;
     }
 }
