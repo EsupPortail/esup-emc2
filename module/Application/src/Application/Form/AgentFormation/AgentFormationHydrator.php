@@ -2,7 +2,6 @@
 
 namespace Application\Form\AgentFormation;
 
-use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use DateTime;

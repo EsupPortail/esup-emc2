@@ -43,7 +43,17 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                 <dd>
                     <?php echo $agent->getNomUsuel(); ?>
                 </dd>
-                <dt> Quotité travaillée </dt>
+                <dt> Quotité travaillée
+                    <?php if ($canModifier): ?>
+                        <a
+                            <?php /** @see \Application\Controller\AgentController::modifierAction() */?>
+                            href="<?php echo $this->url('agent/modifier', ['agent' => $agent->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                        >
+                            <span class="icon editer" title="Modifier la quotité travaillée"></span></a>
+                    <?php endif; ?>
+                </dt>
                 <dd>
                     <?php if($agent->getQuotite()) : ?>
                         <?php echo $agent->getQuotite(); ?>%
@@ -237,12 +247,12 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
     <h2> Applications, compétences et formations</h2>
 
-    <p>
-        <strong>Affichage des applications, compétences et formations directement liées à l'agent.</strong>
+    <div class="alert alert-info">
+        <strong><span class="icon attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong> <br/>
         Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
-    </p>
+    </div>
 
-    <div class="row">
+    <div class="blocs">
         <div class="bloc">
             <h3>
                 <span class="icon application"></span>
@@ -448,6 +458,12 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         width: 32%;
         min-width: 200px;
         float: left;
+    }
+
+    .blocs {
+        display: flex;
+        flex-wrap: wrap;
+        /*margin-left: 11px;*/
     }
 </style>
 

@@ -7,10 +7,8 @@
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 
-
 $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canAjouter  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AJOUTER));
-$canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+
 ?>
 
 <div class="row">
@@ -60,19 +58,8 @@ $canModifier  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                             <a
                                 <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                                 href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"
-                                class="ajax-modal"
                             >
                                 <span class="icon voir"  title="Afficher l'agent"></span></a>
-                        <?php endif; ?>
-
-                        <?php if ($canModifier) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\AgentController::modifierAction() */?>
-                                href="<?php echo $this->url('agent/modifier', ['agent' => $agent->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification-noreload"
-                            >
-                                <span class="icon editer"  title="Modifier la fiche d'un agent "></span></a>
                         <?php endif; ?>
                     </td>
                 </tr>
