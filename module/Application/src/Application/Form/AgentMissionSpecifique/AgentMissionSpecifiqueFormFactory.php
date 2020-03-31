@@ -7,6 +7,8 @@ use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use Zend\Form\FormElementManager;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
 
 class AgentMissionSpecifiqueFormFactory {
 
@@ -15,21 +17,26 @@ class AgentMissionSpecifiqueFormFactory {
         /**
          * @var AgentService        $agentService
          * @var RessourceRhService  $ressourceService
-         * @var StructureService    $structureService
          */
         $agentService = $container->get(AgentService::class);
         $ressourceService = $container->get(RessourceRhService::class);
-        $structureService = $container->get(StructureService::class);
 
         /** @var AgentMissionSpecifiqueHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(AgentMissionSpecifiqueHydrator::class);
+
+        /** @var HelperPluginManager $pluginManager */
+        $pluginManager = $container->get('ViewHelperManager');
+        /** @var Url $urlManager */
+        $urlManager = $pluginManager->get('Url');
+        /** @see StructureController::rechercherAction() */
+        $urlStructure =  $urlManager->__invoke('structure/rechercher', [], [], true);
 
         /** @var AgentMissionSpecifiqueForm $form */
         $form = new AgentMissionSpecifiqueForm();
         $form->setHydrator($hydrator);
         $form->setAgentService($agentService);
         $form->setRessourceRhService($ressourceService);
-        $form->setStructureService($structureService);
+        $form->setUrlStructure($urlStructure);
         //$form->init();
         return $form;
     }

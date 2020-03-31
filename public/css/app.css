@@ -611,3 +611,7 @@ div.validation-refuser {
 span.probleme {
     color: darkred;
 }
+
+tr.historise {
+    color:gray;
+}

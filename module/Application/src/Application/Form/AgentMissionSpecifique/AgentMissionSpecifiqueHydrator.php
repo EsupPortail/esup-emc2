@@ -23,7 +23,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
         $data = [
 //            'agent'     => ($object->getAgent()?$object->getAgent()->getId():null),
             'mission'   => ($object->getMission()?$object->getMission()->getId():null),
-            'structure' => ($object->getStructure()?$object->getStructure()->getId():null),
+            'structure' => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
             'debut'     => ($object->getDateDebut()?$object->getDateDebut()->format('d/m/Y'):null),
             'fin'       => ($object->getDateFin()?$object->getDateFin()->format('d/m/Y'):null),
             'decharge'  => ($object->getDecharge()?$object->getDecharge():null)
@@ -40,7 +40,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
     {
 //        $agent = $this->getAgentService()->getAgent($data['agent']);
         $mission = $this->getRessourceRhService()->getMissionSpecifique($data['mission']);
-        $structure = $this->getStructureService()->getStructure($data['structure']);
+        $structure = $this->getStructureService()->getStructure($data['structure']['id']);
         $debut = ($data['debut']?DateTime::createFromFormat('d/m/Y', $data['debut']):null);
         $fin   = ($data['fin']?DateTime::createFromFormat('d/m/Y', $data['fin']):null);
         $decharge   = isset($data['decharge'])?$data['decharge']:null;

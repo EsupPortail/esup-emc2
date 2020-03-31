@@ -193,7 +193,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                 <td>
                     <?php if ($canVoirEntretienPro) : ?>
                         <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::afficherAction() */?>
-                            href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $ficheposte->getId()], [], true); ?>"
+                            href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true); ?>"
                             target="_blank"
                         >
                             <span class="icon voir" title="Afficher l'entretien professionnel"></span></a>
@@ -201,7 +201,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
                     <?php if ($canModifierEntretienPro) : ?>
                         <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierAction() */?>
-                            href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $ficheposte->getId()], [], true); ?>"
+                            href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
                             target="_blank"
                         >
                             <span class="icon editer" title="Modifier l'entretien professionnel"></span></a>

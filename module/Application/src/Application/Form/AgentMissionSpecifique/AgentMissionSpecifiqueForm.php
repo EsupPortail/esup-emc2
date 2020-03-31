@@ -7,6 +7,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\Date;
+use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
@@ -17,6 +18,19 @@ class AgentMissionSpecifiqueForm extends Form {
     use AgentServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
     use StructureServiceAwareTrait;
+
+    /** @var string */
+    private $urlStructure;
+
+    /**
+     * @param string $url
+     * @return AgentMissionSpecifiqueForm
+     */
+    public function setUrlStructure($url)
+    {
+        $this->urlStructure = $url;
+        return $this;
+    }
 
     public function init()
     {
@@ -52,21 +66,16 @@ class AgentMissionSpecifiqueForm extends Form {
             ],
         ]);
 
-        //Structure
-        $this->add([
-            'type' => Select::class,
-            'name' => 'structure',
-            'options' => [
-                'label' => "Structure :",
-                'empty_option' => 'Sélectionner la structure à affecter ...',
-                'value_options' => $this->getStructureService()->getStructuresAsGroupOptions(),
-            ],
-            'attributes' => [
+        // structure
+        $structure = new SearchAndSelect('structure', ['label' => "Service/composante/direction d'affectation * :"]);
+        $structure
+            ->setAutocompleteSource($this->urlStructure)
+            ->setSelectionRequired(true)
+            ->setAttributes([
                 'id' => 'structure',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
+                'placeholder' => "Nom de la structure...",
+            ]);
+        $this->add($structure);
 
         //Debut
         $this->add([
