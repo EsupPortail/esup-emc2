@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @var \UnicaenValidation\Entity\Db\ValidationType $type
+ * @var Object $entity
+ * @var array $options
+ */
+
+$displayType    =  (isset($options["display-type"]) AND $options["display-type"] === true);
+$displayObject  =  (isset($options["display-object"]) AND $options["display-object"] === true);
+$entityclass    = ($entity)? get_class($entity):"none";
+$entityid       = ($entity)? $entity->getId():0;
+$retour         = isset($options["retour"])?$options["retour"]:$this->url(null,[],[], true);
+
+
+?>
+
+<div class="validation validation-validation">
+
+    <?php if($displayType OR $displayObject) : ?>
+        <dl class="dl-horizontal">
+        <?php if ($displayType === true): ?>
+            <dt> Validation :</dt>
+            <dd> <?php echo $type->getLibelle(); ?> </dd>
+        <?php endif; ?>
+        <?php if ($displayObject === true): ?>
+            <dt> Objet associé :</dt>
+            <dd> <?php echo get_class($entity); ?> - <?php echo $entity->getId(); ?> </dd>
+        <?php endif; ?>
+        </dl>
+    <?php endif; ?>
+
+        <a
+            <?php /** @see \UnicaenValidation\Controller\ValidationInstanceController::validerAction() */ ?>
+            href="<?php echo $this->url('validation/instance/valider', ['type' => $type->getId(), 'entityclass' => $entityclass, 'entityid' => $entityid], ["query" => ["retour" => $retour]]); ?>"
+            class="btn btn-success action"
+        >
+            <span class="icon ok"></span> Valider
+        </a>
+        <?php if ($type->isRefusable()) : ?>
+            <a
+                <?php /** @see \UnicaenValidation\Controller\ValidationInstanceController::refuserAction() */ ?>
+                href="<?php echo $this->url('validation/instance/refuser', ['type' => $type->getId(), 'entityclass' => $entityclass, 'entityid' => $entityid], ["query" => ["retour" => $retour]]); ?>"
+                class="btn btn-danger action"
+            >
+                <span class="icon ko"></span> Refuser
+            </a>
+        <?php endif; ?>
+</div>

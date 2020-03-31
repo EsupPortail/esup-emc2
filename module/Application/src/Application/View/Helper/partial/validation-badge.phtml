@@ -51,7 +51,7 @@ use UnicaenApp\Exception\RuntimeException;
             break;
     }
 ?>
-<a href="<?php echo $this->url('validation/afficher', ["validation" => $validation->getId()], [], true); ?>" class="ajax-modal">
+<a href="<?php echo $this->url('validation-fiche/afficher', ["validation" => $validation->getId()], [], true); ?>" class="ajax-modal">
     <span class="badge <?php echo $vclass; ?>" title="<?php echo $texte; ?>">
         <?php echo $etiquette; ?>
     </span>

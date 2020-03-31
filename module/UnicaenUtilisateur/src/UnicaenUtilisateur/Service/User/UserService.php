@@ -13,6 +13,7 @@ use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenUtilisateur\Exception\RuntimeException;
 use UnicaenUtilisateur\Service\RechercheIndividu\RechercheIndividuResultatInterface;
 use UnicaenUtilisateur\Service\RechercheIndividu\RechercheIndividuServiceInterface;
+use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use Zend\Authentication\AuthenticationService;
 use Zend\Crypt\Password\Bcrypt;
 
@@ -20,6 +21,7 @@ class UserService implements RechercheIndividuServiceInterface
 {
     use EntityManagerAwareTrait;
     use UserContextServiceAwareTrait;
+    use RoleServiceAwareTrait;
 
     /** @var AuthenticationService **/
     private $authenticationService;
@@ -310,6 +312,17 @@ class UserService implements RechercheIndividuServiceInterface
             case 'e' : return 'ETUDIANT';
         }
         return 'INCONNU';
+    }
+
+    public function getUtilisateursByRoleIdAsOptions($string)
+    {
+        $role = $this->getRoleService()->getRoleByCode($string);
+        $users = $this->getUtilisateursByRole($role);
+        $array = [];
+        foreach ($users as $user) {
+            $array[$user->getId()] = $user->getDisplayName();
+        }
+        return $array;
     }
 }
 

@@ -57,11 +57,11 @@ return [
 
     'router'          => [
         'routes' => [
-            'validation' => [
+            'validation-fiche' => [
                 'type'  => Literal::class,
                 'may_terminate' => true,
                 'options' => [
-                    'route'    => '/validation',
+                    'route'    => '/validation-fiche',
                     'defaults' => [
                         'controller' => ValidationController::class,
                         'action'     => 'index',
@@ -194,23 +194,22 @@ return [
         ],
     ],
 
-//    'navigation'      => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'validations' => [
-//                                'label'    => 'Validations',
-//                                'route'    => 'validation',
-//                                'resource' => ValidationPrivileges::getResourceId(ValidationPrivileges::AFFICHER),
-//                                'order'    => 1111,
-//                                'icon' => 'fas fa-certificate',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'validations-fiche' => [
+                                'label'    => 'Validations de fiches',
+                                'route'    => 'validation-fiche',
+                                'resource' => ValidationPrivileges::getResourceId(ValidationPrivileges::AFFICHER),
+                                'order'    => 1111,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];

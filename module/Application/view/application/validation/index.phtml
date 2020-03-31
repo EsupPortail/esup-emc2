@@ -47,7 +47,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
     <div class="row">
         <?php if ($canCreerDemande) : ?>
             <?php /**  @see \Application\Controller\ValidationController::creerDemandesFicheMetierDomaineAction() */ ?>
-            <a href="<?php echo $this->url('validation/creer-demandes-fiche-metier-domaine', [], []); ?>"
+            <a href="<?php echo $this->url('validation-fiche/creer-demandes-fiche-metier-domaine', [], []); ?>"
                class="btn btn-primary action ajax-modal"
                data-event="modification"
             >
@@ -56,7 +56,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
             </a>
 
             <?php /**  @see \Application\Controller\ValidationController::creerDemandeFicheMetierAction() */ ?>
-            <a href="<?php echo $this->url('validation/creer-demande-fiche-metier', [], []); ?>"
+            <a href="<?php echo $this->url('validation-fiche/creer-demande-fiche-metier', [], []); ?>"
                class="btn btn-primary action ajax-modal"
                data-event="modification"
             >
@@ -87,7 +87,10 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
         <?php foreach ($enAttentes as $demande) : ?>
             <tr>
                 <td> <?php echo $demande->getId(); ?> </td>
-                <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
+                <td>
+                    <span class="TODO"> Coorigé problème récupération nom de la fiche</span>
+                    <?php //echo $demande->getObject($em)->getMetier()->getLibelle(); ?>
+                </td>
                 <td>
                     <small>
                         <?php echo $demande->getHistoCreation()->format("d/m/Y à H:i:s"); ?> <br/>
@@ -109,7 +112,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
 
                     <?php if($canModifierDemande) : ?>
                         <?php /** @see \Application\Controller\ValidationController::modifierDemandeAction() */ ?>
-                        <a href="<?php echo $this->url('validation/modifier-demande', ['demande' => $demande->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('validation-fiche/modifier-demande', ['demande' => $demande->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification">
                             <span class="icon editer" title="Modifier la demande de validation"></span></a>
                     <?php else : ?>
@@ -118,7 +121,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
 
                     <?php if($canDetruireDemande) : ?>
                         <?php /** @see \Application\Controller\ValidationController::detruireDemandeAction() */ ?>
-                        <a href="<?php echo $this->url('validation/detruire-demande', ['demande' => $demande->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('validation-fiche/detruire-demande', ['demande' => $demande->getId()], [], true); ?>">
                         <span class="icon detruire" title="Détruire la demande de validation"></span></a>
                     <?php else: ?>
                         <span class="icon detruire" style="color:lightgrey;"></span>
@@ -181,7 +184,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
 
                     <?php if ($canVoirValidation) : ?>
                         <?php /** @see \Application\Controller\ValidationController::afficherAction() */ ?>
-                        <a href="<?php echo $this->url('validation/afficher', ['validation' => $demande->getValidation()->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('validation-fiche/afficher', ['validation' => $demande->getValidation()->getId()], [], true); ?>"
                            class="ajax-modal">
                             <span class="icon verification" title="Voir la validation"></span></a>
                     <?php else : ?>

@@ -31,7 +31,7 @@ $modules = [
     'UnicaenUtilisateurLdapAdapter',
     'Mailing',
     'UnicaenUtilisateur',
-//    'UnicaenValidation',
+    'UnicaenValidation',
     'Autoform',
     'Fichier',
     'Indicateur',
