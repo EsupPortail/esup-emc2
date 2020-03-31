@@ -125,9 +125,17 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon ajouter"></span></a>
+                        <span class="icon ajouter" title="Ajouter une description"></span></a>
 
 <!--                    <span class="icon ajouter-plusieurs"></span>-->
+                <?php endif; ?>
+                <?php if ($canModifier AND $mode === "modifier-activite") : ?>
+                    <a  <?php /** @see ActiviteController::ajouterDescriptionsAction() */?>
+                            href="<?php echo $this->url('activite/ajouter-descriptions', ['activite' => $activite->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter-plusieurs" title="Ajouter plusieurs descriptions en une seule fois"></span></a>
                 <?php endif; ?>
             </h4>
             <?php $descriptions = $activite->getDescriptions(); ?>
@@ -154,11 +162,11 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                                         class="ajax-modal"
                                         data-event="modification"
                                 >
-                                    <span class="icon editer"></span></a>
+                                    <span class="icon editer" title="Modifier la description"></span></a>
                             <a  <?php /** @see ActiviteController::supprimerDescriptionAction() */?>
                                     href="<?php echo $this->url('activite/supprimer-description', ['description' => $description->getId()], [], true); ?>"
                             >
-                                <span class="icon historiser"></span></a>
+                                <span class="icon historiser" title="Historiser la description"></span></a>
                             <?php endif; ?>
                         </li>
                         <?php endif; ?>

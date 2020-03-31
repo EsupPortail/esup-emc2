@@ -6,6 +6,7 @@ use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
+use Application\Form\ModifierDescription\ModifierDescriptionFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
@@ -22,6 +23,7 @@ class ActiviteController  extends AbstractActionController {
     use ActiviteDescriptionServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
+    use ModifierDescriptionFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -168,6 +170,41 @@ class ActiviteController  extends AbstractActionController {
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'une description",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function ajouterDescriptionsAction()
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+        $form = $this->getModifierDescriptionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('activite/ajouter-descriptions', ['activite' => $activite->getId()], [], true));
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $descriptions = explode("<li>", $data['description']);
+            $descriptions = array_map(function($string) {return strip_tags($string);}, $descriptions);
+            $descriptions = array_map(function($string) {return str_replace("\r","",$string);}, $descriptions);
+            $descriptions = array_map(function($string) {return str_replace("\n","",$string);}, $descriptions);
+            $descriptions = array_map(function($string) {return html_entity_decode($string);}, $descriptions);
+            $descriptions = array_filter($descriptions, function($string) {return trim($string) != '';});
+
+            foreach ($descriptions as $description) {
+                $activiteDescription = new ActiviteDescription();
+                $activiteDescription->setActivite($activite);
+                $activiteDescription->setDescription($description);
+                $this->getActiviteDescriptionService()->create($activiteDescription);
+            }
+
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajout de plusieurs descriptions',
             'form' => $form,
         ]);
         return $vm;

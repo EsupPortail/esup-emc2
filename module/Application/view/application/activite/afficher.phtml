@@ -30,6 +30,7 @@ $formations      = $activite->getFormations();
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
+            tinyMCE.editors=[];
             window.location.reload();
         });
     });

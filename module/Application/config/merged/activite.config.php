@@ -55,6 +55,7 @@ return [
                         'modifier-formation',
 
                         'ajouter-description',
+                        'ajouter-descriptions',
                         'modifier-description',
                         'supprimer-description',
                     ],
@@ -234,6 +235,16 @@ return [
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'ajouter-description',
+                            ],
+                        ],
+                    ],
+                    'ajouter-descriptions' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-descriptions/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'ajouter-descriptions',
                             ],
                         ],
                     ],
