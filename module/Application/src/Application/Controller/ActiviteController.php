@@ -54,9 +54,10 @@ class ActiviteController  extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-
             if ($form->isValid()) {
+                $activite->setLibelle(null);
                 $this->getActiviteService()->create($activite);
+                $this->getActiviteService()->updateLibelle($activite, $data);
             }
         }
 
@@ -328,6 +329,7 @@ class ActiviteController  extends AbstractActionController {
     public function convertAction()
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+
         $descriptions = $activite->getDescription();
 
         /** retirer le <ul></ul> */
@@ -350,6 +352,12 @@ class ActiviteController  extends AbstractActionController {
             $data = $request->getPost();
 
             if($data['reponse'] === 'oui') {
+                if ($activite->getLibelleField() !== null) {
+                    $data = ['libelle' => $activite->getLibelleField()];
+                    $this->getActiviteService()->updateLibelle($activite, $data);
+                    $activite->setLibelle(null);
+                }
+
                 $descriptions = $activite->getDescriptions();
                 foreach ($descriptions as $description) $this->getActiviteDescriptionService()->delete($description);
                 $activite->clearDescriptions();
@@ -358,8 +366,8 @@ class ActiviteController  extends AbstractActionController {
                 foreach ($new as $item) {
                     $item->setActivite($activite);
                     $this->getActiviteDescriptionService()->create($item);
-                    $activite->addDescription($item);
                 }
+                $activite->setDescription(null);
                 $this->getActiviteService()->update($activite);
             }
             exit();

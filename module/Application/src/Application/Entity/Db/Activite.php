@@ -45,6 +45,11 @@ class Activite
 
     /** LIBELLE *******************************************************************************************************/
 
+    public function getLibelleField()
+    {
+        return $this->libelle;
+    }
+
     /**
      * @return ActiviteLibelle
      */
@@ -85,6 +90,13 @@ class Activite
         return $this;
     }
 
+    /** DESCRIPTION ***************************************************************************************************/
+
+    public function getDescriptionField()
+    {
+        return $this->description;
+    }
+
     /**
      * @return string
      */
@@ -112,6 +124,16 @@ class Activite
     public function clearDescriptions()
     {
         $this->descriptions->clear();
+        return $this;
+    }
+
+    /**
+     * @param string description
+     * @return Activite
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
         return $this;
     }
 
