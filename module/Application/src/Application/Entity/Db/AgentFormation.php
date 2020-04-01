@@ -4,9 +4,12 @@ namespace Application\Entity\Db;
 
 use DateTime;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenValidation\Entity\ValidableAwareTrait;
+use UnicaenValidation\Entity\ValidableInterface;
 
-class AgentFormation {
+class AgentFormation implements ValidableInterface {
     use HistoriqueAwareTrait;
+    use ValidableAwareTrait;
 
     /** @var integer */
     private $id;
@@ -16,8 +19,6 @@ class AgentFormation {
     private $formation;
     /** @var DateTime */
     private $date;
-    /** @var integer */
-    private $validation;
 
     /**
      * @return int
@@ -80,24 +81,5 @@ class AgentFormation {
         $this->date = $date;
         return $this;
     }
-
-    /**
-     * @return int
-     */
-    public function getValidation()
-    {
-        return $this->validation;
-    }
-
-    /**
-     * @param int $validation
-     * @return AgentFormation
-     */
-    public function setValidation($validation)
-    {
-        $this->validation = $validation;
-        return $this;
-    }
-
 
 }

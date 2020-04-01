@@ -5,9 +5,12 @@ namespace Application\Entity\Db;
 use DateTime;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenValidation\Entity\ValidableAwareTrait;
+use UnicaenValidation\Entity\ValidableInterface;
 
-class AgentCompetence {
+class AgentCompetence implements ValidableInterface {
     use HistoriqueAwareTrait;
+    use ValidableAwareTrait;
 
     /** @var integer */
     private $id;
@@ -17,10 +20,6 @@ class AgentCompetence {
     private $competence;
     /** @var string */
     private $niveau;
-    /** @var User */
-    private $validateur;
-    /** @var DateTime */
-    private $dateValidation;
 
     /**
      * @return int
@@ -93,44 +92,5 @@ class AgentCompetence {
         $this->niveau = $niveau;
         return $this;
     }
-
-    /**
-     * @return User
-     */
-    public function getValidateur()
-    {
-        return $this->validateur;
-    }
-
-    /**
-     * @param User $validateur
-     * @return AgentCompetence
-     */
-    public function setValidateur($validateur)
-    {
-        $this->validateur = $validateur;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDate()
-    {
-        return $this->dateValidation;
-    }
-
-    /**
-     * @param DateTime $date
-     * @return AgentCompetence
-     */
-    public function setDate($date)
-    {
-        $this->dateValidation = $date;
-        return $this;
-    }
-
-
-
 
 }

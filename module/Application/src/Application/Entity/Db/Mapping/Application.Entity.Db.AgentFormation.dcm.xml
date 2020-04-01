@@ -13,7 +13,10 @@
             <join-column name="formation_id" referenced-column-name="id"/>
         </many-to-one>
         <field name="date"                    column="date"             type="datetime" />
-        <field name="validation"              column="validation_id"    type="integer" nullable="true" />
+
+        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validation">
+            <join-column name="validation_id" referenced-column-name="id" />
+        </one-to-one>
 
         <!-- HISTORISATION  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

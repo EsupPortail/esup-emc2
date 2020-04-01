@@ -531,24 +531,74 @@ class AgentController extends AbstractActionController
     {
         $type = $this->params()->fromRoute('type');
         $entityId = $this->params()->fromRoute('id');
+
         $entity = null;
         $validationType = null;
+        $elementText = null;
         switch ($type) {
             case 'AgentApplication' :
                 $entity = $this->getAgentService()->getAgentApplication($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_APPLICATION");
+                $elementText = "l'application [".$entity->getApplication()->getLibelle()."]";
+                break;
+            case 'AgentCompetence' :
+                $entity = $this->getAgentService()->getAgentCompetence($entityId);
+                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_COMPETENCE");
+                $elementText = "la compétence [".$entity->getCompetence()->getLibelle()."]";
+                break;
+            case 'AgentFormation' :
+                $entity = $this->getAgentService()->getAgentFormation($entityId);
+                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_FORMATION");
+                $elementText = "la formation [".$entity->getFormation()->getLibelle()."]";
                 break;
         }
 
-        $validation = new ValidationInstance();
-        $validation->setType($validationType);
-        $validation->setEntity($entity);
-        $this->getValidationInstanceService()->create($validation);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $validation = null;
+            if ($data["reponse"] === "oui") {
+                $validation = new ValidationInstance();
+                $validation->setType($validationType);
+                $validation->setEntity($entity);
+                $this->getValidationInstanceService()->create($validation);
+            }
+            if ($data["reponse"] === "non") {
+                $validation = new ValidationInstance();
+                $validation->setType($validationType);
+                $validation->setEntity($entity);
+                $validation->setValeur("Refus");
+                $this->getValidationInstanceService()->create($validation);
+            }
 
-        $entity->setValidation($validation);
-        $this->getAgentService()->updateAgentApplication($entity);
+            if ($validation !== null AND $entity !== null) {
+                $entity->setValidation($validation);
+                switch ($type) {
+                    case 'AgentApplication' :
+                        $this->getAgentService()->updateAgentApplication($entity);
+                        break;
+                    case 'AgentCompetence' :
+                        $this->getAgentService()->updateAgentCompetence($entity);
+                        break;
+                    case 'AgentFormation' :
+                        $this->getAgentService()->updateAgentFormation($entity);
+                        break;
+                }
+            }
+            exit();
+        }
 
-        return $this->redirect()->toRoute('agent/afficher', ['id' => $entity->getAgent()->getId()], [], true);
+        $vm = new ViewModel();
+        if ($entity !== null) {
+            $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
+            $vm->setVariables([
+                'title' => "Validation de ".$elementText,
+                'text' => "Validation de ".$elementText,
+                'action' => $this->url()->fromRoute('agent/valider-element', ["type" => $type, "id" => $entityId], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function revoquerElementAction()
