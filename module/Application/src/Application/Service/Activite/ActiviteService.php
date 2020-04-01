@@ -122,6 +122,11 @@ class ActiviteService {
             ->addSelect('createur')->join('activite.histoCreateur', 'createur')
             ->addSelect('modificateur')->join('activite.histoModificateur', 'modificateur')
             ->addSelect('destructeur')->leftJoin('activite.histoDestructeur', 'destructeur')
+            ->addSelect('libelle')->leftJoin('activite.libelles', 'libelle')
+            ->addSelect('description')->leftJoin('activite.descriptions', 'description')
+            ->addSelect('application')->leftJoin('activite.applications', 'application')
+            ->addSelect('competence')->leftJoin('activite.competences', 'competence')
+            ->addSelect('formation')->leftJoin('activite.formations', 'formation')
         ;
         return $qb;
     }

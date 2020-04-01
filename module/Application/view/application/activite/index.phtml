@@ -38,6 +38,7 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
         <thead>
             <tr>
                 <th> Mission </th>
+                <th> Description </th>
                 <th> Modification </th>
                 <th style="width:10rem;"> Action </th>
             </tr>
@@ -48,15 +49,10 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                     <td>
                         <?php echo $activite->getLibelle(); ?> <br/>
                     </td>
-<!--                    <td>-->
-<!--                        <small>-->
-<!--                            <ul>-->
-<!--                            --><?php //foreach ($activite->getApplications() as $application) : ?>
-<!--                                <li> --><?php //echo $application->getLibelle(); ?><!--</li>-->
-<!--                            --><?php //endforeach; ?>
-<!--                            </ul>-->
-<!--                        </small>-->
-<!--                    </td>-->
+                    <td>
+                        #Desc: <?php echo count($activite->getDescriptions()); ?> <br/>
+                       <?php echo count($activite->getApplications()); ?>/<?php echo count($activite->getCompetences()); ?>/<?php echo count($activite->getFormations()); ?>
+                    </td>
                     <td>
                         <small>
                             <?php echo $activite->getHistoModification()->format('d/m/Y'); ?> <br/>
