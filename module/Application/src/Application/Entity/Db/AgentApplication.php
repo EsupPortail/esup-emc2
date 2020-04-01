@@ -2,11 +2,13 @@
 
 namespace Application\Entity\Db;
 
-use DateTime;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenValidation\Entity\ValidableAwareTrait;
+use UnicaenValidation\Entity\ValidableInterface;
 
-class AgentApplication {
+class AgentApplication implements ValidableInterface {
     use HistoriqueAwareTrait;
+    use ValidableAwareTrait;
 
     /** @var integer */
     private $id;
@@ -16,8 +18,6 @@ class AgentApplication {
     private $application;
     /** @var string */
     private $type;
-    /** @var integer */
-    private $validation;
 
     /**
      * @return int
@@ -78,24 +78,6 @@ class AgentApplication {
     public function setType($type)
     {
         $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValidation()
-    {
-        return $this->validation;
-    }
-
-    /**
-     * @param int $validation
-     * @return AgentApplication
-     */
-    public function setValidation($validation)
-    {
-        $this->validation = $validation;
         return $this;
     }
 }

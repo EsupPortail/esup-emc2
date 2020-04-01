@@ -10,6 +10,7 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Entity\ValidableInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ValidationInstanceService {
@@ -204,6 +205,19 @@ class ValidationInstanceService {
         }
 
         return $result;
+    }
+
+    /**
+     * @param ValidationInstance $validation
+     * @return mixed
+     */
+    public function getEntity(ValidationInstance $validation)
+    {
+        if ($validation->getEntityId() !== null AND $validation->getEntityClass() !== null) {
+            $entity = $this->getEntityManager()->getRepository($validation->getEntityClass())->find($validation->getEntityId());
+            return $entity;
+        }
+        return null;
     }
 
 }

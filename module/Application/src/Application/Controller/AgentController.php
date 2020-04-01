@@ -19,6 +19,11 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Doctrine\ORM\ORMException;
+use UnicaenApp\Exception\RuntimeException;
+use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
+use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -29,6 +34,8 @@ class AgentController extends AbstractActionController
     use AgentServiceAwareTrait;
     use ApplicationServiceAwareTrait;
     use RessourceRhServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
+    use ValidationTypeServiceAwareTrait;
 
     use AgentFormAwareTrait;
     use AgentApplicationFormAwareTrait;
@@ -518,6 +525,49 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
+    /** Validation élement associée à l'agent *************************************************************************/
+
+    public function validerElementAction()
+    {
+        $type = $this->params()->fromRoute('type');
+        $entityId = $this->params()->fromRoute('id');
+        $entity = null;
+        $validationType = null;
+        switch ($type) {
+            case 'AgentApplication' :
+                $entity = $this->getAgentService()->getAgentApplication($entityId);
+                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_APPLICATION");
+                break;
+        }
+
+        $validation = new ValidationInstance();
+        $validation->setType($validationType);
+        $validation->setEntity($entity);
+        $this->getValidationInstanceService()->create($validation);
+
+        $entity->setValidation($validation);
+        $this->getAgentService()->updateAgentApplication($entity);
+
+        return $this->redirect()->toRoute('agent/afficher', ['id' => $entity->getAgent()->getId()], [], true);
+    }
+
+    public function revoquerElementAction()
+    {
+        $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
+        $this->getValidationInstanceService()->historise($validation);
+
+        /** TODO c'est vraiment crado (faire mieux ...) */
+        /** @var AgentApplication $entity */
+        $entity = $this->getValidationInstanceService()->getEntity($validation);
+        $entity->setValidation(null);
+        try {
+            $this->getValidationInstanceService()->getEntityManager()->flush($entity);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
+        }
+
+        return $this->redirect()->toRoute('agent/afficher', ['id' => $entity->getAgent()->getId()], [], true);
+    }
     /** Recherche d'agent  ********************************************************************************************/
 
     public function rechercherAction()

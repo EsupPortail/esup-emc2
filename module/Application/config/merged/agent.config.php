@@ -74,6 +74,9 @@ return [
                         'restaurer-agent-formation',
                         'detruire-agent-formation',
 
+                        'valider-element',
+                        'revoquer-element',
+
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
@@ -396,6 +399,30 @@ return [
                             ],
                         ],
                     ],
+
+                    /** VALIDATION D'ELEMENT **************************************************************************/
+
+                    'valider-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/valider-element/:type/:id',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'valider-element',
+                            ],
+                        ],
+                    ],
+                    'revoquer-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/revoquer-element/:validation',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'revoquer-element',
+                            ],
+                        ],
+                    ],
+
 
                     /** AUTRE  ****************************************************************************************/
 

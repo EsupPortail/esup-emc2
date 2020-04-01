@@ -126,8 +126,8 @@ class ValidationTypeService {
      */
     public function createQueryBuilder()
     {
-        $qb = $this->getEntityManager()->getRepository(ValidationType::class)->createQueryBuilder('type')
-            ->addSelect('modificateur')->join('type.histoModificateur', 'modificateur')
+        $qb = $this->getEntityManager()->getRepository(ValidationType::class)->createQueryBuilder('vtype')
+            ->addSelect('modificateur')->join('vtype.histoModificateur', 'modificateur')
             ;
 
         return $qb;
@@ -141,7 +141,7 @@ class ValidationTypeService {
     public function getValidationsTypes($champ = "libelle", $ordre = "ASC")
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('type.' . $champ, $ordre)
+            ->orderBy('vtype.' . $champ, $ordre)
         ;
 
         $result = $qb->getQuery()->getResult();
@@ -168,7 +168,7 @@ class ValidationTypeService {
     public function getValidationType($id)
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('type.id = :id')
+            ->andWhere('vtype.id = :id')
             ->setParameter('id', $id)
         ;
 
@@ -200,7 +200,7 @@ class ValidationTypeService {
     public function getValidationTypeByCode($code)
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('type.code = :code')
+            ->andWhere('vtype.code = :code')
             ->setParameter('code', $code)
         ;
 

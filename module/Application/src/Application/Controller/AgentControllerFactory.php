@@ -10,6 +10,8 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
+use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
 class AgentControllerFactory {
 
@@ -18,9 +20,13 @@ class AgentControllerFactory {
         /**
          * @var AgentService $agentService
          * @var RessourceRhService $ressourceService
+         * @var ValidationInstanceService $validationInstanceService
+         * @var ValidationTypeService $validationTypeService
          */
         $agentService = $container->get(AgentService::class);
         $ressourceService = $container->get(RessourceRhService::class);
+        $validationInstanceService = $container->get(ValidationInstanceService::class);
+        $validationTypeService = $container->get(ValidationTypeService::class);
 
         /**
          * @var AgentForm $agentForm
@@ -40,6 +46,8 @@ class AgentControllerFactory {
 
         $controller->setAgentService($agentService);
         $controller->setRessourceRhService($ressourceService);
+        $controller->setValidationInstanceService($validationInstanceService);
+        $controller->setValidationTypeService($validationTypeService);
 
         $controller->setAgentForm($agentForm);
         $controller->setAgentApplicationForm($agentApplicationForm);

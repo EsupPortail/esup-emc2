@@ -64,6 +64,16 @@ class ValidationInstance {
     }
 
     /**
+     * @param Object $entity
+     * @return ValidationInstance
+     */
+    public function setEntity($entity) {
+        $this->entityClass = get_class($entity);
+        $this->entityId = $entity->getId();
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getEntityClass()

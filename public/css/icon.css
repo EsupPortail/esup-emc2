@@ -115,3 +115,11 @@ span.icon.rejouer:before {
 span.icon.question:before {
     content: "\f059 ";
 }
+
+span.icon.validation-do:before {
+    content: "\f058 ";
+}
+
+span.icon.validation-undo:before {
+    content: "\f057 ";
+}
