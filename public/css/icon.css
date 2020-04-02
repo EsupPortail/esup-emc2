@@ -123,3 +123,11 @@ span.icon.validation-do:before {
 span.icon.validation-undo:before {
     content: "\f057 ";
 }
+
+span.icon.telecharger:before {
+    content: "\f019";
+}
+
+span.icon.televerser:before {
+    content: "\f093";
+}

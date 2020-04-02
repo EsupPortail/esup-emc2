@@ -20,10 +20,15 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Doctrine\ORM\ORMException;
+use Fichier\Entity\Db\Fichier;
+use Fichier\Form\Upload\UploadFormAwareTrait;
+use Fichier\Service\Fichier\FichierServiceAwareTrait;
+use Fichier\Service\Nature\NatureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
+use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -36,12 +41,15 @@ class AgentController extends AbstractActionController
     use RessourceRhServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
+    use NatureServiceAwareTrait;
+    use FichierServiceAwareTrait;
 
     use AgentFormAwareTrait;
     use AgentApplicationFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
     use AgentMissionSpecifiqueFormAwareTrait;
+    use UploadFormAwareTrait;
 
 
     public function indexAction() {
@@ -618,6 +626,45 @@ class AgentController extends AbstractActionController
 
         return $this->redirect()->toRoute('agent/afficher', ['id' => $entity->getAgent()->getId()], [], true);
     }
+    
+    /** Fichier associé à l'agent *************************************************************************************/
+
+    public function uploadFichierAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $fichier = new Fichier();
+        $form = $this->getUploadForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fichier',['agent' => $agent->getId()] , [], true));
+        $form->bind($fichier);
+
+        /** !TODO! lorsque l'on est dans une modal on perd le tableau files ... */
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $file = current($request->getFiles());
+
+            if ($file['name'] != '') {
+
+                $nature = $this->getNatureService()->getNature($data['nature']);
+                $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                $agent->addFichier($fichier);
+                $this->getAgentService()->update($agent);
+            }
+            return $this->redirect()->toRoute('agent/afficher', ['id' => $agent->getId()]);
+        }
+
+        $vm =  new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Téléverserment d\'un fichier',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
     /** Recherche d'agent  ********************************************************************************************/
 
     public function rechercherAction()
@@ -641,6 +688,8 @@ class AgentController extends AbstractActionController
         }
         exit;
     }
+
+
 
 
 }

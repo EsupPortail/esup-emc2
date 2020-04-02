@@ -181,14 +181,6 @@ span.icon.selectionner:before {
     content: "\f65e";
 }
 
-span.icon.telecharger:before {
-    content: "\f019";
-}
-
-span.icon.televerser:before {
-    content: "\f093";
-}
-
 span.icon.entretiens:before {
     content: "\f51c";
 }

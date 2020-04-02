@@ -611,9 +611,42 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         </div>
     </div>
 
-    <h2> Porte-folio </h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h2> Porte-folio</h2>
+        </div>
+        <div class="col-md-3 pull-right">
+            <br/>
+            <a
+                <?php /** @see  \Fichier\Controller\FichierController::uploadAction()*/ ?>
+                href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], [], true); ?>"
+                class="btn btn-primary"
+            >
+                <span class="icon televerser"></span>
+                Téléverser un fichier
+            </a>
+        </div>
+    </div>
 
-    <span class="TODO"> Revoir cette partie </span>
+    <ul>
+    <?php foreach ($agent->getFichiers() as $fichier) : ?>
+        <li>
+            <?php echo $fichier->getNature()->getLibelle(); ?> -
+            <a
+                <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
+                href="<?php echo $this->url('download-fichier', ['fichier' => $fichier->getId()], [], true); ?>">
+                <?php echo $fichier->getNomOriginal(); ?>
+            </a>
+            (téléverser le <?php echo $fichier->getHistoModification()->format('d/m/Y à H:i:s '); ?>)
+
+            <a
+                <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
+                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], [], true)]], true); ?>"
+            >
+                <span class="icon historiser" title="supprimer le fichier"></span></a>
+        </li>
+    <?php endforeach; ?>
+    </ul>
 
 </div>
 

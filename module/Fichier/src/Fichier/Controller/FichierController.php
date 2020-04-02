@@ -85,6 +85,6 @@ class FichierController extends AbstractActionController {
         if ($retour) {
             return $this->redirect()->toUrl($retour);
         }
-
+        exit();
     }
 }

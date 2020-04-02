@@ -5,23 +5,23 @@ namespace Fichier\Controller;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
-use Zend\Mvc\Controller\ControllerManager;
+use Interop\Container\ContainerInterface;
 
 class FichierControllerFactory {
 
-    public function __invoke(ControllerManager $manager)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var NatureService $natureService
          * @var FichierService $fichierService
          */
-        $natureService = $manager->getServiceLocator()->get(NatureService::class);
-        $fichierService = $manager->getServiceLocator()->get(FichierService::class);
+        $natureService = $container->get(NatureService::class);
+        $fichierService = $container->get(FichierService::class);
 
         /**
          * @var UploadForm $uploadForm
          */
-        $uploadForm = $manager->getServiceLocator()->get('FormElementManager')->get(UploadForm::class);
+        $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
         /** @var FichierController $controller */
         $controller = new FichierController();

@@ -218,6 +218,7 @@ class FichierService {
      */
     public function fetchContenuFichier(Fichier $fichier)
     {
+        //TODO c'est caca
         $filePath = '/var/www/html/upload/' . $fichier->getNomStockage();
 
         if (! is_readable($filePath)) {
@@ -232,7 +233,8 @@ class FichierService {
 
     public function removeFichier(Fichier $fichier)
     {
-        $path = '/app/upload/' . $fichier->getNomStockage();
+        //TODO c'est caca
+        $path = '/var/www/html/upload/' . $fichier->getNomStockage();
         $res = unlink($path);
         if ($res === false) {
             throw new RuntimeException("Un problème est survenue lors de l'effacement du fichier");

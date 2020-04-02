@@ -4,8 +4,6 @@ namespace Application;
 
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
-use Application\Controller\AgentFichierController;
-use Application\Controller\AgentFichierControllerFactory;
 use Application\Controller\EntretienProfessionnelController;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
@@ -77,6 +75,7 @@ return [
                         'valider-element',
                         'revoquer-element',
 
+                        'upload-fichier',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
@@ -89,16 +88,6 @@ return [
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_EDITER,
-                    ],
-                ],
-                [
-                    'controller' => AgentFichierController::class,
-                    'action' => [
-                        'index',
-                        'upload'
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
                     ],
                 ],
                 [
@@ -436,16 +425,6 @@ return [
                             ],
                         ],
                     ],
-                    'fichiers' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/fichiers[/:agent]',
-                            'defaults' => [
-                                'controller' => AgentFichierController::class,
-                                'action'     => 'index',
-                            ],
-                        ],
-                    ],
                     'entretien-professionnel' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -459,10 +438,10 @@ return [
                     'upload-fichier' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/upload-fichier/:agent/:nature',
+                            'route'    => '/upload-fichier/:agent',
                             'defaults' => [
-                                'controller' => AgentFichierController::class,
-                                'action'     => 'upload',
+                                'controller' => AgentController::class,
+                                'action'     => 'upload-fichier',
                             ],
                         ],
                     ],
@@ -520,7 +499,6 @@ return [
     'controllers'     => [
         'factories' => [
             AgentController::class => AgentControllerFactory::class,
-            AgentFichierController::class => AgentFichierControllerFactory::class,
         ],
     ],
     'form_elements' => [
