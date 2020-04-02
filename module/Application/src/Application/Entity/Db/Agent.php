@@ -160,7 +160,7 @@ class Agent {
      * @param User $utilisateur
      * @return Agent
      */
-    public function setUtilisateur($utilisateur)
+    public function setUtilisateur(User $utilisateur)
     {
         $this->utilisateur = $utilisateur;
         return $this;

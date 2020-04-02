@@ -5,19 +5,10 @@
  */
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Entity\Db\AgentStatut;
 
 $now = new DateTime();
 ?>
-
-<!--<div class="alert alert-warning">-->
-<!--    <strong><span class="icon information"></span> Informations affichés :</strong>-->
-<!--    <ul>-->
-<!--        <li> Seuls les statuts et les grades actifs sont affichés par choix voir avec le groupe GPEEC pour ce que l'on affiche. </li>-->
-<!--    </ul>-->
-<!--</div>-->
 
 <h2> Présentation de l'agent </h2>
 
@@ -30,61 +21,29 @@ $now = new DateTime();
     <dt> Nom </dt>
     <dd> <?php echo $agent->getNomUsuel(); ?> </dd>
     <dt> Quotité travaillée </dt>
-    <dd> <?php echo $agent->getQuotite(); ?> </dd>
+    <dd>
+        <?php if ($agent->getQuotite() !== null) : ?>
+            <?php echo $agent->getQuotite(); ?>%
+        <?php else : ?>
+            <span style="color:darkred; font-style: italic;">Quotité travaillée non renseignée</span>
+        <?php endif; ?>
+    </dd>
 </dl>
 
-<?php
-    $statutAll = $agent->getStatuts();
-    usort($statutAll, function (AgentStatut $a, AgentStatut $b) { return $a->getDebut() < $b->getDebut();});
-    $statuts = [];
-foreach($statutAll as $statut) {
-//        if ($statut->getFin() === null or $statut->getFin() > $now) {
-          if (!$statut->isEtudiant()) {
-            $statuts[] = $statut;
-        }
-    }
-    $nbStatus = count($statuts);
-?>
-
-
-<?php if ($nbStatus !== 0) : ?>
-    <h2>
-        Statuts actifs
-        <span class="badge">
-        <?php echo $nbStatus; ?>
-        </span>
-    </h2>
-
-    <?php foreach ($statuts as $statut) : ?>
-        <?php echo $this->agentStatut($statut, ['denomination' => false, 'id' => false]); ?>
-    <?php endforeach; ?>
-<?php endif; ?>
-
-<?php
-    $gradeAll = $agent->getGrades();
-    usort($gradeAll, function (AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut();});
-    $grades = [];
-    foreach($gradeAll as $grade) {
-//        if ($grade->getDateFin() === null or $grade->getDateFin() > $now) {
-            $grades[] = $grade;
-//        }
-    }
-    $nbGrades = count($grades);
-?>
-
-<?php if ($nbGrades !== 0) : ?>
-    <h2>
-        Grades actifs
-        <span class="badge">
-        <?php echo $nbGrades; ?>
-        </span>
-    </h2>
-
-    <?php foreach ($grades as $grade) : ?>
-        <?php echo $this->agentGrade($grade, ['id' => false, 'denomination' => false]); ?>
-    <?php endforeach; ?>
-<?php endif; ?>
-
+<div class="row">
+    <div class="col-md-4">
+        <h3> Statuts actifs</h3>
+        <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+    <div class="col-md-8">
+        <h3> Grades actifs</h3>
+        <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+</div>
 
 <?php if (!empty($agent->getMissionsSpecifiques())) : ?>
     <h2> Missions spécifiques </h2>

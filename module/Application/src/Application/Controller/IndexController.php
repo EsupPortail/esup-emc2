@@ -26,7 +26,7 @@ class IndexController extends AbstractActionController
     use AgentServiceAwareTrait;
     use RoleServiceAwareTrait;
     use UserServiceAwareTrait;
-//    use UserContextServiceAwareTrait;
+    use UserContextServiceAwareTrait;
 
     use ValidationDemandeServiceAwareTrait;
 
@@ -35,13 +35,34 @@ class IndexController extends AbstractActionController
         $identity = null;
         $agent = null;
 
+
+        if ($this->getUserService()->getServiceUserContext()->getLdapUser()) {
+            $identity = $this->getUserService()->getConnectedUser();
+            $role = $this->getUserService()->getConnectedRole();
+            $supannId = ((int) $this->getServiceUserContext()->getLdapUser()->getSupannEmpId());
+            $agent = $this->getAgentService()->getAgentBySupannId($supannId);
+
+            if ($identity !== null && $agent !== null && $agent->getUtilisateur() === null) {
+                $agent->setUtilisateur($identity);
+                $this->getAgentService()->update($agent);
+                $personnel = $this->getRoleService()->getRoleByCode(RoleConstant::PERSONNEL);
+                $hasAgent = $identity->hasRole($personnel);
+                if (! $hasAgent) $this->getUserService()->addRole($identity, $personnel);
+                return $this->redirect()->toRoute('agent/afficher', ['id' => $agent->getId()], [], true);
+            }
+        }
+
         /** @var Role $connectedRole */
         $connectedRole = $this->getUserService()->getConnectedRole();
+        $connectedUser = $this->getUserService()->getConnectedUser();
+
 
         if ($connectedRole) {
             switch ($connectedRole->getRoleId()) {
                 case RoleConstant::PERSONNEL :
-                    return $this->redirect()->toRoute('index-personnel', [], [], true);
+//                    $supannId = ((int) $this->getServiceUserContext()->getLdapUser()->getSupannEmpId());
+                    $agent = $this->getAgentService()->getAgentByUser($connectedUser);
+                    return $this->redirect()->toRoute('agent/afficher', ['id' => $agent->getId()], [], true);
                     break;
                 case RoleConstant::VALIDATEUR :
                     return $this->redirect()->toRoute('index-validateur', [], [], true);
@@ -51,21 +72,6 @@ class IndexController extends AbstractActionController
                     break;
             }
         }
-
-//        if ($this->getUserService()->getServiceUserContext()->getLdapUser()) {
-//            $supannId = ((int)$this->getUserService()->getServiceUserContext()->getLdapUser()->getSupannEmpId());
-//            $identity = $this->getUserService()->getConnectedUser();
-//
-//            // !TODO bouger cela pour faire plus propre ...
-//            $agent = $this->getAgentService()->getAgentBySupannId($supannId);
-//            if ($identity !== null && $agent !== null && $agent->getUtilisateur() === null) {
-//                $agent->setUtilisateur($identity);
-//                $this->getAgentService()->update($agent);
-//                $personnel = $this->getRoleService()->getRoleByCode(Role::PERSONNEL);
-//                $this->getUserService()->addRole($identity, $personnel);
-//                return $this->redirect()->toRoute('home', [], [], true);
-//            }
-//        }
 
         return new ViewModel([
             'user' => $identity,

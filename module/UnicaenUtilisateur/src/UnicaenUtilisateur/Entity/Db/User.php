@@ -40,10 +40,11 @@ class User extends AbstractUser implements UserInterface
         return $this->displayName;
     }
 
-    function hasRole($roleId) {
+    function hasRole($roleSearch) {
+        $roleArray = $this->getRoles()->toArray();
         /** @var Role $role */
         foreach ($this->getRoles() as $role) {
-            if ($role->getRoleId() === $roleId) return true;
+            if ($role === $roleSearch) return true;
         }
         return false;
     }

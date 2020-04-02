@@ -3,8 +3,8 @@
 namespace UnicaenUtilisateur\Service\User;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use UnicaenApp\Entity\Ldap\People;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
@@ -96,7 +96,7 @@ class UserService implements RechercheIndividuServiceInterface
      * @param string $texte
      * @return User[]
      */
-    public function findByTerm(string $texte)
+    public function findByTerm($texte)
     {
         if (strlen($texte) < 2) return [];
         $texte = strtolower($texte);
@@ -110,7 +110,7 @@ class UserService implements RechercheIndividuServiceInterface
     }
 
     /**
-     * @param RechercheIndividuResultatInterface $people
+     * @param RechercheIndividuResultatInterface $individu
      * @param string $source
      * @return User
      */
@@ -141,10 +141,10 @@ class UserService implements RechercheIndividuServiceInterface
     }
 
     /**
-     * @param User user
+     * @param User $user
      * @return User
      */
-    public function createLocalUser($user) {
+    public function createLocalUser(User $user) {
         $user->setState(1);
         $bcrypt = new Bcrypt();
         $password = $bcrypt->create($user->getPassword());
@@ -157,7 +157,7 @@ class UserService implements RechercheIndividuServiceInterface
      * @param User $utilisateur
      * @return User
      */
-    public function update($utilisateur)
+    public function update(User $utilisateur)
     {
         try {
             $this->getEntityManager()->flush($utilisateur);
@@ -171,7 +171,7 @@ class UserService implements RechercheIndividuServiceInterface
      * @param string $username
      * @return User
      */
-    public function exist($username)
+    public function exist(string $username)
     {
         $qb = $this->getEntityManager()->getRepository($this->userEntityClass)->createQueryBuilder("utilisateur")
             ->andWhere("utilisateur.username = :username")
@@ -189,7 +189,7 @@ class UserService implements RechercheIndividuServiceInterface
      * @param User $utilisateur
      * @return User
      */
-    public function changerStatus($utilisateur)
+    public function changerStatus(User $utilisateur)
     {
         if ($utilisateur) {
             $status = $utilisateur->getState();
@@ -201,7 +201,7 @@ class UserService implements RechercheIndividuServiceInterface
             }
             try {
                 $this->getEntityManager()->flush($utilisateur);
-            } catch (OptimisticLockException $e) {
+            } catch (ORMException $e) {
                 throw new RuntimeException("Un erreur est survenue lors du changement de status de l'utilisateur [".$utilisateur->getId()."]");
             }
         }
@@ -218,7 +218,7 @@ class UserService implements RechercheIndividuServiceInterface
         $utilisateur->addRole($role);
         try {
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de l'ajout du rôle [".$role->getId()."] à l'utilisateur [".$utilisateur->getId()."]");
         }
         return $utilisateur;
@@ -229,12 +229,12 @@ class UserService implements RechercheIndividuServiceInterface
      * @param Role $role
      * @return User
      */
-    public function removeRole($utilisateur, $role)
+    public function removeRole(User $utilisateur, Role $role)
     {
         $utilisateur->removeRole($role);
         try {
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors du retrait du rôle [".$role->getId()."] à l'utilisateur [".$utilisateur->getId()."]");
         }
         return $utilisateur;
@@ -243,12 +243,12 @@ class UserService implements RechercheIndividuServiceInterface
     /**
      * @param User $utilisateur
      */
-    public function supprimer($utilisateur)
+    public function supprimer(User $utilisateur)
     {
-        $this->getEntityManager()->remove($utilisateur);
         try {
+            $this->getEntityManager()->remove($utilisateur);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la suppression de l'utilisateur [".$utilisateur->getId()."]");
         }
     }
@@ -257,7 +257,7 @@ class UserService implements RechercheIndividuServiceInterface
      * @param Role $role
      * @return User[]
      */
-    public function getUtilisateursByRole($role)
+    public function getUtilisateursByRole(Role $role)
     {
         $qb = $this->getEntityManager()->getRepository($this->userEntityClass)->createQueryBuilder('user')
             ->addSelect('role')->join('user.roles', 'role')
@@ -278,12 +278,14 @@ class UserService implements RechercheIndividuServiceInterface
         if ($identity) {
             $username = null;
             if (isset($identity['ldap'])) {
+                /** @var People $userIdentity */
                 $userIdentity = $identity['ldap'];
                 $username = $userIdentity->getSupannAliasLogin();
                 $user = $this->getUtilisateurByUsername($username);
                 return $user;
             }
             if (isset($identity['shib'])) {
+                /** @var People $userIdentity */
                 $userIdentity = $identity['shib'];
                 $username = $userIdentity->getUsername();
                 $user = $this->getUtilisateurByUsername($username);
@@ -304,8 +306,10 @@ class UserService implements RechercheIndividuServiceInterface
     }
 
     public function getType() {
+        /** @var People $userIdentity */
         $identity = $this->authenticationService->getIdentity();
-        $uid = $identity['ldap']->getUid();
+        $userIdentity = $identity['ldap'];
+        $uid = $userIdentity->getUid();
 
         switch($uid[0]) {
             case 'p' : return 'PERSONNEL';

@@ -73,6 +73,7 @@ $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::
 <script>
     $(document).ready(function() {
         $('#agents').DataTable( {
+            "sorting":   false,
             language: {
                 url: '/localisation/fr_FR.json'
             }

@@ -116,12 +116,14 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
 
 <script>
     $(document).ready(function() {
-        $('#datatable').DataTable( {
+        let table = $('#datatable').DataTable( {
             "paging":   false,
             language: {
                 url: '/localisation/fr_FR.json'
             }
         });
+        // $("input[type=search]").val("AAA");
+        // table.search("AAA").draw();
     } );
 
     $(function() {
