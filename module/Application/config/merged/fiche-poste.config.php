@@ -44,6 +44,7 @@ use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
 use Application\Service\FormationsRetirees\FormationsRetireesServiceFactory;
+use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -449,6 +450,7 @@ return [
     'view_helpers' => [
         'invokables' => [
             'fichesPostesAsArray' => FichesPostesAsArrayViewHelper::class,
+            'fichePosteGraph' => FichePosteGraphViewHelper::class,
         ],
     ],
 

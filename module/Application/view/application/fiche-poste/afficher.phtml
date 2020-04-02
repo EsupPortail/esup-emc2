@@ -102,6 +102,17 @@ $date = new DateTime();
     <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'affichage']);  ?>
 <?php endforeach; ?>
 
+<!-- GRAPH ------------------------------------------------------------------------------------------------------------>
+
+<div class="row">
+    <div class="col-md-6">
+        <?php echo $this->fichePosteGraph($fiche, 'radar', $date); ?>
+    </div>
+    <div class="col-md-6">
+        <?php echo $this->fichePosteGraph($fiche, 'bar', $date); ?>
+    </div>
+</div>
+
 <!-- EXPERTISES LIEES A LA FICHE DE POSTE ----------------------------------------------------------------------------->
 <?php $expertises = $fiche->getCurrentExpertises($date); ?>
 

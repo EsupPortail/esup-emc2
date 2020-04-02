@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @var FichePoste $ficheposte
+ * @var string $mode
+ * @var array $data
+ * @var array $options
+ */
+
+use Application\Entity\Db\FichePoste;
+
+$id = uniqid();
+$headers = [];
+$values  = [];
+foreach ($data as $header => $value) {
+    $headers[] = $header;
+    $values[] = $value;
+}
+
+$headers = "['". implode("', '", $headers) . "']";
+$values  = "[". implode(", ", $values) . "]";
+?>
+
+<script type="text/javascript" src="/vendor/chart-2.9.3/Chart.bundle.js"></script>
+<canvas id="myChart<?php echo $id; ?>" width="50px" height="50px" ></canvas>
+
+<script>
+    var ctx = document.getElementById('myChart<?php echo $id; ?>');
+    var myChart = new Chart(ctx, {
+        type: '<?php echo $mode; ?>',
+        data: {
+
+            labels: <?php echo $headers; ?>,
+            datasets: [{
+                label: "Couverture de la fiche metier 'Assistant de trucs et autres'",
+                data: <?php echo $values; ?>,
+                borderWidth:3,
+                borderColor: "rgba(0,255,0,0.8)",
+                fill: true,
+                backgroundColor: "rgba(0,255,0,0.2)",
+            }],
+
+        },
+        options: {
+            <?php if ($mode !== 'radar') : ?>
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        min : 0,
+                        max : 100,
+                    }
+                }]
+            },
+            <?php else : ?>
+            scale: {
+                ticks: {
+                    min : 0,
+                    max : 100,
+                }
+            },
+            <?php endif; ?>
+        }
+    });
+</script>
+

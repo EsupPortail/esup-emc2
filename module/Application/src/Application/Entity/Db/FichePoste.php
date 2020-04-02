@@ -344,4 +344,205 @@ class FichePoste
         return $expertises;
     }
 
+    /** Fonctions pour simplifier  */
+
+    /**
+     * //TODO update avec le retour historisation complete
+     * @param DateTime $date
+     * @return Application[]
+     */
+    public function getApplications(DateTime $date)
+    {
+        $dictionnaire = [];
+        /** @var  FicheTypeExterne $fichesMetier */
+        foreach ($this->getFichesMetiers() as $fichesMetier) {
+            $activitesArray = explode(";", $fichesMetier->getActivites());
+            foreach($fichesMetier->getFicheType()->getApplications() as $application) {
+                $dictionnaire[$application->getId()] = $application;
+            }
+            foreach ($fichesMetier->getFicheType()->getActivites() as $activite) {
+                if (array_search($activite->getId(), $activitesArray) !== false) {
+                    foreach ($activite->getActivite()->getApplications() as $application) {
+                        $dictionnaire[$application->getId()] = $application;
+                    }
+                }
+            }
+        }
+        return $dictionnaire;
+    }
+
+    public function getApplicationsConservees(DateTime $date)
+    {
+        $applications = $this->getApplications($date);
+        $retirees = $this->getApplicationsRetirees()->toArray();
+        $conservees = [];
+        foreach ($applications as $application) {
+            $found = false;
+            /** @var FicheposteApplicationRetiree $retiree */
+            foreach ($retirees as $retiree) {
+                if ($retiree->estNonHistorise() AND $retiree->getApplication() === $application) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) $conservees[] = $application;
+        }
+        return $conservees;
+    }
+
+    /**
+     * //TODO update avec le retour historisation complete
+     * @param DateTime $date
+     * @return Formation[]
+     */
+    public function getCompetences(DateTime $date)
+    {
+        $dictionnaire = [];
+        /** @var  FicheTypeExterne $fichesMetier */
+        foreach ($this->getFichesMetiers() as $fichesMetier) {
+            $activitesArray = explode(";", $fichesMetier->getActivites());
+            foreach($fichesMetier->getFicheType()->getCompetences() as $competence) {
+                $dictionnaire[$competence->getId()] = $competence;
+            }
+            foreach ($fichesMetier->getFicheType()->getActivites() as $activite) {
+                if (array_search($activite->getId(), $activitesArray) !== false) {
+                    foreach ($activite->getActivite()->getCompetences() as $competence) {
+                        $dictionnaire[$competence->getId()] = $competence;
+                    }
+                }
+            }
+        }
+        return $dictionnaire;
+    }
+
+    public function getCompetencesConservees(DateTime $date)
+    {
+        $competences = $this->getCompetences($date);
+        $retirees = $this->getCompetencesRetirees()->toArray();
+        $conservees = [];
+        foreach ($competences as $competence) {
+            $found = false;
+            /** @var FicheposteCompetenceRetiree $retiree */
+            foreach ($retirees as $retiree) {
+                if ($retiree->estNonHistorise() AND $retiree->getCompetence() === $competence) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) $conservees[] = $competence;
+        }
+        return $conservees;
+    }
+
+    /**
+     * //TODO update avec le retour historisation complete
+     * @param DateTime $date
+     * @return Formation[]
+     */
+    public function getFormations(DateTime $date)
+    {
+        $dictionnaire = [];
+        /** @var  FicheTypeExterne $fichesMetier */
+        foreach ($this->getFichesMetiers() as $fichesMetier) {
+            $activitesArray = explode(";", $fichesMetier->getActivites());
+            foreach($fichesMetier->getFicheType()->getFormations() as $formation) {
+                $dictionnaire[$formation->getId()] = $formation;
+            }
+            foreach ($fichesMetier->getFicheType()->getActivites() as $activite) {
+                if (array_search($activite->getId(), $activitesArray) !== false) {
+                    foreach ($activite->getActivite()->getFormations() as $formation) {
+                        $dictionnaire[$formation->getId()] = $formation;
+                    }
+                }
+            }
+        }
+        return $dictionnaire;
+    }
+
+    public function getFormationsConservees(DateTime $date)
+    {
+        $formations = $this->getFormations($date);
+        $retirees = $this->getFormationsRetirees()->toArray();
+        $conservees = [];
+        foreach ($formations as $formation) {
+            $found = false;
+            /** @var FicheposteFormationRetiree $retiree */
+            foreach ($retirees as $retiree) {
+                if ($retiree->estNonHistorise() AND $retiree->getFormation() === $formation) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) $conservees[] = $formation;
+        }
+        return $conservees;
+    }
+
+    /**
+     * //TODO update avec le retour historisation complete
+     * @param DateTime $date
+     * @return Formation[]
+     */
+    public function getActivites(DateTime $date)
+    {
+        $dictionnaire = [];
+        /** @var  FicheTypeExterne $fichesMetier */
+        foreach ($this->getFichesMetiers() as $fichesMetier) {
+            foreach($fichesMetier->getFicheType()->getActivites() as $activite) {
+                $dictionnaire[$activite->getId()] = $activite;
+            }
+        }
+        return $dictionnaire;
+    }
+
+    public function getActivitesConservees(DateTime $date)
+    {
+        $dictionnaire = [];
+        /** @var  FicheTypeExterne $fichesMetier */
+        foreach ($this->getFichesMetiers() as $fichesMetier) {
+            $activitesArray = explode(";", $fichesMetier->getActivites());
+            foreach ($fichesMetier->getFicheType()->getActivites() as $activite) {
+                if (array_search($activite->getId(), $activitesArray) !== false) {
+                    $dictionnaire[$activite->getId()] = $activite;
+                }
+            }
+        }
+        return $dictionnaire;
+    }
+
+    /**
+     * @param FicheMetierTypeActivite $activite
+     * @param DateTime $date
+     * @return ActiviteDescription[]
+     */
+    public function getDescriptions(FicheMetierTypeActivite $activite, DateTime $date)
+    {
+        $dictionnaire = $activite->getActivite()->getDescriptions($date);
+        return $dictionnaire;
+    }
+
+    /**
+     * @param FicheMetierTypeActivite $FTActivite
+     * @param DateTime $date
+     * @return ActiviteDescription[]
+     */
+    public function getDescriptionsConservees(FicheMetierTypeActivite $FTActivite, DateTime $date)
+    {
+        /** @var ActiviteDescription[] $descriptions */
+        $descriptions = $FTActivite->getActivite()->getDescriptions($date);
+        $dictionnaire = [];
+        foreach ($descriptions as $description) {
+            $found = false;
+            /** @var FicheposteActiviteDescriptionRetiree $retiree */
+            foreach($this->getDescriptionsRetirees() as $retiree) {
+                if ($retiree->estNonHistorise() AND $retiree->getDescription() === $description) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) $dictionnaire[$description->getId()] = $description;
+        }
+        return $dictionnaire;
+    }
+
 }
