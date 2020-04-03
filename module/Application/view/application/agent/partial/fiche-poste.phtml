@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @var FichePoste[] $fichespostes
+ */
+
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
+
+$canVoirFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canModifierFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canHistoriserFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
+$canDetruireFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::DETRUIRE));
+?>
+<h2> Fiches de poste </h2>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th> Intitulé </th>
+        <th> Poste </th>
+        <th> Structure </th>
+        <th> Active </th>
+        <th> Dernière modification </th>
+        <th style="width:10rem"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($fichespostes as $ficheposte) : ?>
+        <tr>
+            <td>
+                <?php echo $ficheposte->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle(); ?> <br/>
+                <?php echo $ficheposte->getLibelle(); ?>
+            </td>
+            <td> <?php echo $ficheposte->getPoste()->getNumeroPoste(); ?> </td>
+            <td>
+                <?php echo $ficheposte->getPoste()->getStructure()->getLibelleLong(); ?> <br/>
+                <?php echo $ficheposte->getPoste()->getStructure()->getType(); ?>
+            </td>
+            <td> <span class="TODO">???</span></td>
+            <td>
+                <?php echo $ficheposte->getHistoModification()->format('d/m/Y'); ?> <br/>
+                <?php echo $ficheposte->getHistoModificateur()->getDisplayName(); ?>
+            </td>
+            <td>
+                <?php if ($canVoirFichePoste) : ?>
+                    <a  <?php /** @see \Application\Controller\FichePosteController::afficherAction() */?>
+                        href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                        target="_blank"
+                    >
+                        <span class="icon voir" title="Afficher la fiche de poste"></span></a>
+                <?php endif; ?>
+                <?php if ($canModifierFichePoste) : ?>
+                    <a  <?php /** @see \Application\Controller\FichePosteController::editerAction() */?>
+                        href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                        target="_blank"
+                    >
+                        <span class="icon editer" title="Modifier la fiche de poste"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriserFichePoste) : ?>
+                    <?php if ($ficheposte->estNonHistorise()) : ?>
+                        <a  <?php /** @see \Application\Controller\FichePosteController::historiserAction() */?>
+                            href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser la fiche de poste"></span></a>
+                    <?php else : ?>
+                        <a  <?php /** @see \Application\Controller\FichePosteController::historiserAction() */?>
+                            href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer la fiche de poste"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruireFichePoste) : ?>
+                    <a  <?php /** @see \Application\Controller\FichePosteController::detruireAction() */?>
+                        href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                    >
+                        <span class="icon detruire" title="Supprimer définitivement la fiche de poste"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+
+</table>

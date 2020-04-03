@@ -2,41 +2,41 @@
 
 namespace Application\Form\EntretienProfessionnel;
 
-use Application\Service\Agent\AgentServiceAwareTrait;
-use UnicaenUtilisateur\Entity\Db\Role;
-use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use DateTime;
 use UnicaenApp\Form\Element\Date;
+use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class EntretienProfessionnelForm extends Form {
-    use RoleServiceAwareTrait;
-    use AgentServiceAwareTrait;
-    use UserServiceAwareTrait;
+
+    private $urlAgent;
+    private $urlResponsable;
+
+    /**
+     * @param mixed $urlAgent
+     * @return EntretienProfessionnelForm
+     */
+    public function setUrlAgent($urlAgent)
+    {
+        $this->urlAgent = $urlAgent;
+        return $this;
+    }
+
+    /**
+     * @param mixed $urlResponsable
+     * @return EntretienProfessionnelForm
+     */
+    public function setUrlResponsable($urlResponsable)
+    {
+        $this->urlResponsable = $urlResponsable;
+        return $this;
+    }
 
     public function init()
     {
-        /** Récupération des gestionnaires **/
-        $roleGestionnaire = $this->getRoleService()->getRoleByCode(Role::GESTIONNAIRE);
-        $gestionnaires    = $this->getUserService()->getUtilisateursByRole($roleGestionnaire);
-        $gestionnairesOpt = [];
-        $gestionnairesOpt[ null ] = 'Sélectionnaire un gestionnaire de structure ... ';
-        foreach ($gestionnaires as $gestionnaire) {
-            $gestionnairesOpt[$gestionnaire->getId()] = $gestionnaire->getDisplayName();
-        }
-
-        /** Récupétation des personnels **/
-        $agents = $this->getAgentService()->getAgents();
-        $personnelsOpt = [];
-        $personnelsOpt[ null ] = 'Sélectionnaire un personnel ... ';
-        foreach ($agents as $agent) {
-            $personnelsOpt[$agent->getId()] = $agent->getDenomination();
-        }
-
         /** Année Scolaire **/
         $date = new DateTime('now');
         $annee = ((int) $date->format('Y'));
@@ -47,33 +47,25 @@ class EntretienProfessionnelForm extends Form {
         }
 
         //Responsable (connected user)
-        $this->add([
-            'type' => Select::class,
-            'name' => 'responsable',
-            'options' => [
-                'label' => "Responsable de l'entretien* :",
-                'value_options' => $gestionnairesOpt,
-            ],
-            'attributes' => [
+        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel * :"]);
+        $responsable
+            ->setAutocompleteSource($this->urlResponsable)
+            ->setSelectionRequired(true)
+            ->setAttributes([
                 'id' => 'responsable',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
+                'placeholder' => "Nom du responsable de l'entretien professionnel ...",
+            ]);
+        $this->add($responsable);
         //Agent       (selection parmi liste des agents [du service])
-        $this->add([
-            'type' => Select::class,
-            'name' => 'agent',
-            'options' => [
-                'label' => "Agent passant l'entretien* :",
-                'value_options' => $personnelsOpt,
-            ],
-            'attributes' => [
+        $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);
+        $agent
+            ->setAutocompleteSource($this->urlAgent)
+            ->setSelectionRequired(true)
+            ->setAttributes([
                 'id' => 'agent',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
+                'placeholder' => "Nom de l'agent ...",
+            ]);
+        $this->add($agent);
         //Annee       (initialisée à l'annee scolaire en cours)
         $this->add([
             'type' => Select::class,

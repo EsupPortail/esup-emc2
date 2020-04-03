@@ -4,19 +4,21 @@ namespace Application\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Exception;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Controller\AbstractConsoleController;
 
 class EntretienProfessionnelService {
+    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+
+    /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
      * @return EntretienProfessionnel
@@ -24,11 +26,7 @@ class EntretienProfessionnelService {
      */
     public function create($entretien)
     {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $entretien->setHistoCreation($date);
@@ -39,7 +37,7 @@ class EntretienProfessionnelService {
         try {
             $this->getEntityManager()->persist($entretien);
             $this->getEntityManager()->flush($entretien);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
         }
         return $entretien;
@@ -51,11 +49,7 @@ class EntretienProfessionnelService {
      */
     public function update($entretien)
     {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $entretien->setHistoModification($date);
@@ -63,7 +57,7 @@ class EntretienProfessionnelService {
 
         try {
             $this->getEntityManager()->flush($entretien);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
         }
         return $entretien;
@@ -75,11 +69,7 @@ class EntretienProfessionnelService {
      */
     public function historise($entretien)
     {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $entretien->setHistoDestruction($date);
@@ -87,7 +77,7 @@ class EntretienProfessionnelService {
 
         try {
             $this->getEntityManager()->flush($entretien);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
         }
         return $entretien;
@@ -99,11 +89,7 @@ class EntretienProfessionnelService {
      */
     public function restore($entretien)
     {
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $entretien->setHistoModification($date);
@@ -113,7 +99,7 @@ class EntretienProfessionnelService {
 
         try {
             $this->getEntityManager()->flush($entretien);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
         }
         return $entretien;
@@ -128,10 +114,29 @@ class EntretienProfessionnelService {
         try {
             $this->getEntityManager()->remove($entretien);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'effacement d'une EntretienProfessionnel", $e);
         }
         return $entretien;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->addSelect('agent')->join('entretien.agent', 'agent')
+            ->addSelect('responsable')->join('entretien.responsable', 'responsable')
+            ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
+            ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
+            ->addSelect('formulaire')->join('formulaireInstance.formulaire', 'formulaire')
+            ->addSelect('categorie')->join('formulaire.categories', 'categorie')
+            ->addSelect('champ')->join('categorie.champs', 'champ')
+        ;
+        return $qb;
     }
 
     /**
@@ -151,7 +156,7 @@ class EntretienProfessionnelService {
      */
     public function getEntretienProfessionnel($id)
     {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+        $qb = $this->createQueryBuilder()
             ->andWhere('entretien.id = :id')
             ->setParameter('id', $id);
         try {
@@ -180,7 +185,7 @@ class EntretienProfessionnelService {
      */
     public function getEntretiensProfessionnelsParAgent($agent)
     {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+        $qb = $this->createQueryBuilder()
             ->andWhere('entretien.agent = :agent')
             ->setParameter('agent', $agent)
             ->orderBy('entretien.annee, entretien.id', 'ASC')
@@ -190,4 +195,24 @@ class EntretienProfessionnelService {
         return $result;
     }
 
+    /**
+     * @param EntretienProfessionnel $entretien
+     * @return EntretienProfessionnel
+     */
+    public function getPreviousEntretienProfessionnel(EntretienProfessionnel $entretien)
+    {
+        $agent = $entretien->getAgent();
+        $date = $entretien->getDateEntretien();
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('entretien.agent = :agent')
+            ->andWhere('entretien.dateEntretien < :date')
+            ->setParameter('agent', $agent)
+            ->setParameter('date', $date)
+            ->orderBy('entretien.dateEntretien', 'DESC');
+        $result = $qb->getQuery()->getResult();
+
+        if ($result === null) return null;
+        return $result[0];
+    }
 }

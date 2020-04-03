@@ -9,6 +9,7 @@ use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydrator;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydratorFactory;
 use Application\Provider\Privilege\ApplicationPrivileges;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -29,9 +30,30 @@ return [
                         'restaurer',
                         'detruire',
                         'afficher',
+                        'valider-element',
+                        'revoquer-validation',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'fiche' => [
+                        'pages' => [
+                            'entretienpro' => [
+                                'label' => 'Entretiens professionnels',
+                                'route' => 'entretien-professionnel',
+                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER) ,
+                                'order'    => 500,
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -114,6 +136,28 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                    ],
+                    'valider-element' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/valider-element/:entretien/:type',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'valider-element',
+                            ],
+                        ],
+                    ],
+                    'revoquer-validation' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/revoquer-validation/:validation',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'revoquer-validation',
                             ],
                         ],
                     ],

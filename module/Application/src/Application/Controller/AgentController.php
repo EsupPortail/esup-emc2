@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
@@ -25,10 +26,11 @@ use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -43,6 +45,7 @@ class AgentController extends AbstractActionController
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
     use FichierServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     use AgentFormAwareTrait;
     use AgentApplicationFormAwareTrait;
@@ -62,10 +65,14 @@ class AgentController extends AbstractActionController
     public function afficherAction() {
 
         $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
+        $user = $this->getUserService()->getConnectedUser();
+        $role = $this->getUserService()->getConnectedRole();
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
+            'role'  => $role,
+            'user'  => $user,
         ]);
     }
 
@@ -678,6 +685,28 @@ class AgentController extends AbstractActionController
                     'id'    => $agent->getId(),
                     'label' => $agent->getDenomination(),
                     'extra' => "<span class='badge' style='background-color: slategray;'>".$agent->getSourceName()."</span>",
+                );
+            }
+            usort($result, function($a, $b) {
+                return strcmp($a['label'], $b['label']);
+            });
+
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherResponsableAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $responsables = $this->getUserService()->findByTermAndRole($term, RoleConstant::RESPONSABLE_EPRO);
+            $result = [];
+            /** @var User[] $responsables */
+            foreach ($responsables as $responsable) {
+                $result[] = array(
+                    'id'    => $responsable->getId(),
+                    'label' => $responsable->getDisplayName(),
+                    'extra' => "<span class='badge' style='background-color: slategray;'>".$responsable->getEmail()."</span>",
                 );
             }
             usort($result, function($a, $b) {

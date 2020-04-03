@@ -128,4 +128,19 @@ class FormulaireInstance {
         $this->validations->removeElement($validation);
         return $this;
     }
+
+    /**
+     * @param integer $to
+     * @return Champ
+     */
+    public function getChamp($to)
+    {
+        foreach ($this->getFormulaire()->getCategories() as $categorie) {
+            foreach ($categorie->getChamps() as $champ) {
+                if ($champ->getId() === $to) return $champ;
+            }
+        }
+        return null;
+    }
+
 }

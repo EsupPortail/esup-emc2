@@ -6,6 +6,7 @@ use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenValidation\Entity\Db\ValidationInstance;
 
 class EntretienProfessionnel {
     use HistoriqueAwareTrait;
@@ -22,6 +23,11 @@ class EntretienProfessionnel {
     private $dateEntretien;
     /** @var FormulaireInstance */
     private $formulaireInstance;
+
+    /** @var ValidationInstance */
+    private $validationAgent;
+    /** @var ValidationInstance */
+    private $validationResponsable;
 
     /**
      * @return int
@@ -121,5 +127,39 @@ class EntretienProfessionnel {
         return $this;
     }
 
+    /**
+     * @return ValidationInstance
+     */
+    public function getValidationAgent()
+    {
+        return $this->validationAgent;
+    }
 
+    /**
+     * @param ValidationInstance $validationAgent
+     * @return EntretienProfessionnel
+     */
+    public function setValidationAgent($validationAgent)
+    {
+        $this->validationAgent = $validationAgent;
+        return $this;
+    }
+
+    /**
+     * @return ValidationInstance
+     */
+    public function getValidationResponsable()
+    {
+        return $this->validationResponsable;
+    }
+
+    /**
+     * @param ValidationInstance $validationResponsable
+     * @return EntretienProfessionnel
+     */
+    public function setValidationResponsable($validationResponsable)
+    {
+        $this->validationResponsable = $validationResponsable;
+        return $this;
+    }
 }

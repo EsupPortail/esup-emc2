@@ -13,6 +13,7 @@ use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
 use Interop\Container\ContainerInterface;
+use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
@@ -27,6 +28,7 @@ class AgentControllerFactory {
          * @var ValidationTypeService $validationTypeService
          * @var NatureService $natureService
          * @var FichierService $fichierService
+         * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
         $ressourceService = $container->get(RessourceRhService::class);
@@ -34,6 +36,7 @@ class AgentControllerFactory {
         $validationTypeService = $container->get(ValidationTypeService::class);
         $natureService = $container->get(NatureService::class);
         $fichierService = $container->get(FichierService::class);
+        $userService = $container->get(UserService::class);
 
         /**
          * @var AgentForm $agentForm
@@ -59,6 +62,7 @@ class AgentControllerFactory {
         $controller->setValidationTypeService($validationTypeService);
         $controller->setNatureService($natureService);
         $controller->setFichierService($fichierService);
+        $controller->setUserService($userService);
 
         $controller->setAgentForm($agentForm);
         $controller->setAgentApplicationForm($agentApplicationForm);

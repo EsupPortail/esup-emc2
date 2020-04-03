@@ -18,4 +18,9 @@ class AgentPrivileges extends Privileges
     const AGENT_EDITER            = 'agent-agent_editer';
     const AGENT_EFFACER           = 'agent-agent_effacer';
 
+    const AGENT_ENTRETIENPRO_VOIR           = 'agent-agent_entretienpro_voir';
+    const AGENT_ENTRETIENPRO_AJOUTER        = 'agent-agent_entretienpro_ajouter';
+    const AGENT_ENTRETIENPRO_MODIFIER       = 'agent-agent_entretienpro_modifier';
+    const AGENT_ENTRETIENPRO_HISTORISER     = 'agent-agent_entretienpro_historiser';
+    const AGENT_ENTRETIENPRO_DETRUIRE       = 'agent-agent_entretienpro_detruire';
 }

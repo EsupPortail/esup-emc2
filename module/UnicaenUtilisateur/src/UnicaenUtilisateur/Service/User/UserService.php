@@ -2,6 +2,7 @@
 
 namespace UnicaenUtilisateur\Service\User;
 
+use Application\Constant\RoleConstant;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Entity\Ldap\People;
@@ -102,7 +103,28 @@ class UserService implements RechercheIndividuServiceInterface
         $texte = strtolower($texte);
         $qb = $this->getEntityManager()->getRepository($this->userEntityClass)->createQueryBuilder("utilisateur")
             ->andWhere("LOWER(utilisateur.displayName) LIKE :critere")
-            ->setParameter("critere", '%'.$texte.'%')
+            ->setParameter("critere", '%'.strtolower($texte).'%')
+            ->orderBy("utilisateur.displayName")
+        ;
+        $utilisateurs = $qb->getQuery()->getResult();
+        return $utilisateurs;
+    }
+
+    /**
+     * @param string $texte
+     * @param RoleConstant $roleId
+     * @return User[]
+     */
+    public function findByTermAndRole(string $texte, string $roleId)
+    {
+        if (strlen($texte) < 2) return [];
+        $texte = strtolower($texte);
+        $qb = $this->getEntityManager()->getRepository($this->userEntityClass)->createQueryBuilder("utilisateur")
+            ->andWhere("LOWER(utilisateur.displayName) LIKE :critere")
+            ->setParameter("critere", '%'.strtolower($texte).'%')
+            ->addSelect('role')->join('utilisateur.roles', 'role')
+            ->andWhere('role.roleId = :role')
+            ->setParameter("role", $roleId)
             ->orderBy("utilisateur.displayName")
         ;
         $utilisateurs = $qb->getQuery()->getResult();

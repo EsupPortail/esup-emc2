@@ -135,7 +135,7 @@ class AgentService {
      * @param User $user
      * @return Agent
      */
-    public function getAgentByUser($user)
+    public function getAgentByUser(User $user)
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.utilisateur = :user')

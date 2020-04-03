@@ -2,81 +2,23 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Autoform\Entity\Db\Formulaire;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireInstanceService {
+    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
     use FormulaireReponseServiceAwareTrait;
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $label
-     * @return FormulaireInstance
-     */
-    public function getRequestedFormulaireInstance($controller, $label)
-    {
-        $id = $controller->params()->fromRoute($label);
-        $instance = $this->getFormulaireInstance($id);
-        return $instance;
-    }
-
-    /**
-     * @return FormulaireInstance[]
-     */
-    public function getFormulairesInstances()
-    {
-        $qb = $this->getEntityManager()->getRepository(FormulaireInstance::class)->createQueryBuilder('formulaire_instance')
-            ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Formulaire $formulaire
-     * @return FormulaireInstance[]
-     */
-    public function getFormulairesInstancesByFormulaire($formulaire)
-    {
-        $qb = $this->getEntityManager()->getRepository(FormulaireInstance::class)->createQueryBuilder('formulaire_instance')
-            ->andWhere('formulaire_instance.formulaire = :formulaire')
-            ->setParameter('formulaire', $formulaire)
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return FormulaireInstance
-     */
-    public function getFormulaireInstance($id)
-    {
-        if ($id === null) return null;
-
-        $qb = $this->getEntityManager()->getRepository(FormulaireInstance::class)->createQueryBuilder('formulaire_instance')
-            ->andWhere('formulaire_instance.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $sql = $qb->getQuery();
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormulaireInstance partagent le même identifiant [".$id."]", $e);
-        }
-        return $result;
-    }
+    /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
      * @param FormulaireInstance $instance
@@ -84,11 +26,7 @@ class FormulaireInstanceService {
      */
     public function create($instance)
     {
-        try {
-            $date = new \DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème de récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $instance->setHistoCreateur($user);
@@ -112,11 +50,7 @@ class FormulaireInstanceService {
      */
     public function update($instance)
     {
-        try {
-            $date = new \DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème de récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $instance->setHistoModificateur($user);
@@ -137,11 +71,7 @@ class FormulaireInstanceService {
      */
     public function historise($instance)
     {
-        try {
-            $date = new \DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème de récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $instance->setHistoDestructeur($user);
@@ -191,6 +121,45 @@ class FormulaireInstanceService {
         return $instance;
     }
 
+    /** REQUETAGES ****************************************************************************************************/
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $label
+     * @return FormulaireInstance
+     */
+    public function getRequestedFormulaireInstance($controller, $label)
+    {
+        $id = $controller->params()->fromRoute($label);
+        $instance = $this->getFormulaireInstance($id);
+        return $instance;
+    }
+
+    /**
+     * @param integer $id
+     * @return FormulaireInstance
+     */
+    public function getFormulaireInstance($id)
+    {
+        if ($id === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(FormulaireInstance::class)->createQueryBuilder('formulaire_instance')
+            ->andWhere('formulaire_instance.id = :id')
+            ->addSelect('formulaire')->join('formulaire_instance.formulaire', 'formulaire')
+            ->addSelect('categorie')->join('formulaire.categories', 'categorie')
+            ->addSelect('champ')->join('categorie.champs', 'champ')
+            ->addSelect('reponse')->leftJoin('formulaire_instance.reponses', 'reponse')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FormulaireInstance partagent le même identifiant [".$id."]", $e);
+        }
+        return $result;
+    }
+
     /**
      * @param FormulaireInstance $reference
      * @param FormulaireInstance $instance
@@ -208,5 +177,21 @@ class FormulaireInstanceService {
         $this->update($instance);
     }
 
+    public function recopie(FormulaireInstance $instance1, FormulaireInstance $instance2, $champId1, $champId2) {
+        $reponses = $instance1->getReponses();
+        foreach ($reponses as $reponse) {
+            if ($reponse->getChamp()->getId() == $champId1) {
+                $champ = $instance2->getChamp(intval($champId2));
+                if ($champ !== null) {
+                    $value = $reponse->getReponse();
+                    $new = new FormulaireReponse();
+                    $new->setFormulaireInstance($instance2);
+                    $new->setChamp($champ);
+                    $new->setReponse($value);
+                    $this->getFormulaireReponseService()->create($new);
+                }
+            }
+        }
+    }
 
 }

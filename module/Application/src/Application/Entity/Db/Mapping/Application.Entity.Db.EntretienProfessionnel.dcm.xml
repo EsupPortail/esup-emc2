@@ -22,10 +22,17 @@
 
         <field name="dateEntretien"     type="datetime"                 column="date_entretien"     nullable="false"/>
 
+        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationAgent">
+            <join-column name="validation_agent_id" referenced-column-name="id" />
+        </one-to-one>
+        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationResponsable">
+            <join-column name="validation_responsable_id" referenced-column-name="id" />
+        </one-to-one>
+
+        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
-
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
             <join-column name="histo_createur_id" referenced-column-name="id"/>
         </many-to-one>

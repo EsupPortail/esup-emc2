@@ -1,0 +1,60 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+use Fichier\Entity\Db\Fichier;
+
+/**
+ * @var Fichier[] $fichiers
+ * @var Agent $agent
+ */
+
+$canVoirFichier         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+$canAjouterFichier      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+$canDetruireFichier     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2> Porte-folio</h2>
+    </div>
+    <div class="col-md-3 pull-right">
+        <br/>
+        <?php if ($canAjouterFichier) : ?>
+            <a
+                <?php /** @see  \Fichier\Controller\FichierController::uploadAction()*/ ?>
+                href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], [], true); ?>"
+                class="btn btn-primary"
+            >
+                <span class="icon televerser"></span>
+                Téléverser un fichier
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<ul>
+    <?php foreach ($fichiers as $fichier) : ?>
+        <li>
+            <?php echo $fichier->getNature()->getLibelle(); ?> -
+            <?php if ($canVoirFichier) : ?>
+                <a
+                    <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
+                    href="<?php echo $this->url('download-fichier', ['fichier' => $fichier->getId()], [], true); ?>">
+            <?php endif; ?>
+                <?php echo $fichier->getNomOriginal(); ?>
+            <?php if ($canVoirFichier) : ?>
+                </a>
+            <?php endif; ?>
+            (téléverser le <?php echo $fichier->getHistoModification()->format('d/m/Y à H:i:s '); ?>)
+            <?php if ($canDetruireFichier) : ?>
+            <a
+                <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
+                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], [], true)]], true); ?>"
+            >
+                <span class="icon historiser" title="supprimer le fichier"></span></a>
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+</ul>
