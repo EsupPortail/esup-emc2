@@ -125,7 +125,24 @@ class EntretienProfessionnelController extends AbstractActionController {
     public function detruireAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $this->getEntretienProfessionnelService()->delete($entretien);
-        return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelService()->delete($entretien);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($entretien !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'entretien professionnel de " . (($entretien->getAgent())?$entretien->getAgent()->getDenomination():"[Aucun Agent]"),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/detruire', ["entretien" => $entretien->getId()], ["query" => []], true),
+            ]);
+        }
+        return $vm;
     }
 }
