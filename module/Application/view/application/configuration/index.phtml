@@ -1,15 +1,21 @@
 <?php
 
 /**
+ * @see \Application\Controller\ConfigurationController::indexAction()
  * @var ConfigurationFicheMetier[] $applications
  * @var ConfigurationFicheMetier[] $competences
  * @var ConfigurationFicheMetier[] $formations
+ * @var ConfigurationEntretienProfessionnel[] $recopies
+ * @var Champ[] $champs
  */
 
+use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Provider\Privilege\ConfigurationPrivileges;
+use Autoform\Entity\Db\Champ;
 
 $canAjouter     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
+$canModifier     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
 $canDetruire    = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_DETRUIRE));
 $canReappliquer = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_REAPPLIQUER));
 
@@ -23,23 +29,172 @@ $this->headTitle("Configuration de l'application");
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 <div class="main">
-    <h2> Configuration des fiches métiers</h2>
 
-    <?php if ($canReappliquer) : ?>
-        <?php /** @see \Application\Controller\ConfigurationController::reappliquerConfigurationFicheMetierAction() */ ?>
-        <a href="<?php echo $this->url('configuration/reappliquer-configuration-fiche-metier', [], [], true); ?>" class="btn btn-primary action">
-            <span class="icon synchoniser"></span>
-            Ré-appliquer sur toutes les fiches
-        </a>
-    <?php endif; ?>
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="fiche-metier">
+                <a href="#fiche-metier" aria-controls="fiche-metier" role="tab" data-toggle="tabz" >
+                    Fiche métier
+                </a>
+            </li>
+            <li role="entretien-pro">
+                <a href="#entretien-pro" aria-controls="entretien-pro" role="tab" data-toggle="tabz">
+                    Entretien pro.
+                </a>
+            </li>
+        </ul>
 
-    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Applications', 'type' => 'application', 'configurations' => $applications, 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
-    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Compétences',  'type' => 'competence',  'configurations' => $competences , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
-    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Formations',   'type' => 'formation',   'configurations' => $formations  , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
+        <div class="main-with-tab">
+
+            <div class="tab-content">
+                <!-- ONGLET FICHE METIER ------------------------------------------------------------------------------>
+                <div id="fiche-metier" class="tab-pane " role="tabpanel">
+                    <h2> Configuration des fiches métiers</h2>
+
+                    <?php if ($canReappliquer) : ?>
+                        <?php /** @see \Application\Controller\ConfigurationController::reappliquerConfigurationFicheMetierAction() */ ?>
+                        <a href="<?php echo $this->url('configuration/reappliquer-configuration-fiche-metier', [], [], true); ?>" class="btn btn-primary action">
+                            <span class="icon synchoniser"></span>
+                            Ré-appliquer sur toutes les fiches
+                        </a>
+                    <?php endif; ?>
+
+                    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Applications', 'type' => 'application', 'configurations' => $applications, 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
+                    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Compétences',  'type' => 'competence',  'configurations' => $competences , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
+                    <?php echo $this->partial('partial/configuration-fiche-metier', ['display' => 'Formations',   'type' => 'formation',   'configurations' => $formations  , 'canAjouter' => $canAjouter, 'canDetruire' => $canDetruire]); ?>
+                </div>
+
+                <!-- ONGLET ENTRETIEN PROFESSIONNEL ------------------------------------------------------------------->
+                <div id="entretien-pro" class="tab-pane " role="tabpanel">
+                    <h2> Configuration des entretiens professionnels.</h2>
+
+                    <div class="alert alert-info">
+                        Les éléments paramètrables de l'entretien professionnel sont :
+                        <ul>
+                            <li> la période durant laquelle l'agent peut modifier son entretien <span class="todo">TODO</span>; </li>
+                            <li> les champs qui sont repris d'une année à l'autre; </li>
+                            <li> les conditions pour la reprise de données;</li>
+                            <li> integerface de configuration<span class="todo">TODO</span>.</li>
+                        </ul>
+                    </div>
+
+                    <h3> Période durant laquel un agent peut modifier peut modifier un entretien </h3>
+
+                    <ul>
+                        <li>Un agent peut modifier un de ses entretiens professionnels de <em>sa date de création jusqu'à la date de l'entretien</em>.</li>
+                        <li>Le <em>responsable de l'entretien peut empécher toute modification</em> via une option de l'entretien professionnel<span class="todo">TODO</span>.</li>
+                    </ul>
+
+                    <h3> Règle de reprise des données </h3>
+
+                    <ul>
+                        <li>Les données du plus récent entretien (par rapport à l'entretien courant) seront reprises.</li>
+                    </ul>
+
+                    <p>
+                        <u>NB:</u> On peut imaginer plus de chose comme seulement entretien de l'an passé, verifier qu'il n'y a pas eu de changement de poste, ... <span class="todo">TODO</span>
+                    </p>
+
+                    <h3> Champs transferables d'un entretien professionnel à un autre </h3>
+
+                    <p>
+                        Possibilité lors de la création d'un entretien profesionnel de reprendre des données d'un champ A et de les insérer dans un champ B.
+                    </p>
+
+                    <?php if ($canAjouter): ?>
+                        <a
+                            <?php /** @see \Application\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
+                                href="<?php echo $this->url("configuration/ajouter-recopie", [], [], true); ?>"
+                                class="btn btn-primary ajax-modal"
+                                data-event="modification"
+                        >
+                            <span class="icon ajouter"></span> Ajouter une recopie
+                        </a>
+                    <?php endif; ?>
+
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th> Précédent entretien </th>
+                            <th> Entretien courant </th>
+                            <th> Action </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($recopies as $recopie) : ?>
+                            <?php
+                            $previousId = explode(";",$recopie->getValeur())[0];
+                            $previous = null;
+                            if (isset($champs[$previousId])) $previous = $champs[$previousId];
+                            $currentId  = explode(";",$recopie->getValeur())[1];
+                            $current = null;
+                            if (isset($champs[$currentId])) $current = $champs[$currentId];
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php if ($previous !== null) : ?>
+                                        <?php echo $previous->getLibelle() ; ?>
+                                    <?php else : ?>
+                                        Id: <?php echo $previousId; ?> non connu;
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($current !== null) : ?>
+                                        <?php echo $current->getLibelle() ; ?>
+                                    <?php else : ?>
+                                        Id: <?php echo $currentId; ?> non connu;
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($canModifier): ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\ConfigurationController::modifierRecopieAction() */ ?>
+                                                href="<?php echo $this->url("configuration/modifier-recopie", ['recopie' => $recopie->getId()], [], true); ?>"
+                                                title="Modifier la recopie"
+                                                class="ajax-modal" data-event="modification"
+                                        >
+                                            <span class="icon editer"></span></a>
+                                    <?php endif; ?>
+                                    <?php if ($canDetruire): ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\ConfigurationController::supprimerRecopieAction() */ ?>
+                                                href="<?php echo $this->url("configuration/supprimer-recopie", ['recopie' => $recopie->getId()], [], true); ?>"
+                                                title="Supprimer la recopie"
+                                        >
+                                            <span class="icon detruire"></span></a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "fiche-metier";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
