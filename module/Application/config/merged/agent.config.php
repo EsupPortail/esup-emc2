@@ -44,6 +44,7 @@ return [
                         'rechercher',
                         'rechercher-with-structure-mere',
                         'rechercher-responsable',
+                        'rechercher-gestionnaire',
 
                         'ajouter-agent-mission-specifique',
                         'afficher-agent-mission-specifique',
@@ -145,6 +146,16 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'rechercher-responsable',
+                            ],
+                        ],
+                    ],
+                    'rechercher-gestionnaire' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher-gestionnaire',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'rechercher-gestionnaire',
                             ],
                         ],
                     ],

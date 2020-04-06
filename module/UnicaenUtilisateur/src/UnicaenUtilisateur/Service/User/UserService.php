@@ -350,5 +350,26 @@ class UserService implements RechercheIndividuServiceInterface
         }
         return $array;
     }
+
+    /**
+     * @param User[] $users
+     * @return array
+     */
+    public function formatUserJSON($users)
+    {
+        $result = [];
+        /** @var User[] $responsables */
+        foreach ($responsables as $responsable) {
+            $result[] = array(
+                'id'    => $responsable->getId(),
+                'label' => $responsable->getDisplayName(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>".$responsable->getEmail()."</span>",
+            );
+        }
+        usort($result, function($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 }
 

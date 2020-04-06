@@ -96,32 +96,12 @@ class StructureController extends AbstractActionController {
     public function retirerGestionnaireAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $gestionnaire = $this->getUserService()->getUtilisateur($this->params()->fromRoute('gestionnaire'));
 
-        if ($structure) {
-            /** @var Request $request */
-            $request = $this->getRequest();
-            if ($request->isPost()) {
-                $data = $request->getPost();
-                $gestionnaire = $this->getUserService()->getUtilisateur($data['gestionnaire']);
-                if ($gestionnaire) {
-                    $this->getStructureService()->removeGestionnaire($structure, $gestionnaire);
-                }
-            } else {
-                /** @var User[] $gestionnaires */
-                $gestionnaires = $structure->getGestionnaires();
-                usort($gestionnaires, function(User $a, User $b) {return $a->getDisplayName()>$b->getDisplayName();});
-                return new ViewModel([
-                    'title' => 'Retrait d \'un gestionnaire', // pour ['.$composante->getLibelle().']',
-                    'structure' => $structure,
-                    'gestionnaires' => $gestionnaires,
-                ]);
-            }
+        $this->getStructureService()->removeGestionnaire($structure, $gestionnaire);
+        $this->getStructureService()->update($structure);
 
-        } else {
-            throw new RuntimeException("Aucune composante de remontée !");
-        }
-
-        exit;
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
 
     public function editerDescriptionAction()

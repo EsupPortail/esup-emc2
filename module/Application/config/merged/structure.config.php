@@ -157,7 +157,7 @@ return [
                     'retirer-gestionnaire' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/retirer-gestionnaire/:structure',
+                            'route'    => '/retirer-gestionnaire/:structure/:gestionnaire',
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'retirer-gestionnaire',

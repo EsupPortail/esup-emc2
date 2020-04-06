@@ -705,28 +705,6 @@ class AgentController extends AbstractActionController
         exit;
     }
 
-    public function rechercherResponsableAction()
-    {
-        if (($term = $this->params()->fromQuery('term'))) {
-            $responsables = $this->getUserService()->findByTermAndRole($term, RoleConstant::RESPONSABLE_EPRO);
-            $result = [];
-            /** @var User[] $responsables */
-            foreach ($responsables as $responsable) {
-                $result[] = array(
-                    'id'    => $responsable->getId(),
-                    'label' => $responsable->getDisplayName(),
-                    'extra' => "<span class='badge' style='background-color: slategray;'>".$responsable->getEmail()."</span>",
-                );
-            }
-            usort($result, function($a, $b) {
-                return strcmp($a['label'], $b['label']);
-            });
-
-            return new JsonModel($result);
-        }
-        exit;
-    }
-
     /**
      * @param Agent[] $agents
      * @return array
@@ -748,5 +726,24 @@ class AgentController extends AbstractActionController
         return $result;
     }
 
+    public function rechercherResponsableAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $responsables = $this->getUserService()->findByTermAndRole($term, RoleConstant::RESPONSABLE_EPRO);
+            $result = $result = $this->getUserService()->formatUserJSON($responsables);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherGestionnaireAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $gestionnaires = $this->getUserService()->findByTermAndRole($term, RoleConstant::GESTIONNAIRE);
+            $result = $this->getUserService()->formatUserJSON($gestionnaires);
+            return new JsonModel($result);
+        }
+        exit;
+    }
 
 }

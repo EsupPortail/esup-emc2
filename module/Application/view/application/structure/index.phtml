@@ -26,13 +26,13 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
             </span>
         </h1>
     </div>
+    <br/>
     <div class="pull-right col-md-5 alert alert-info">
         <span class="icon synchoniser"></span>
         Les structures sont synchronisées depuis Octopus.
     </div>
 </div>
 <div class="main">
-
     <div class="row">
         <a  href="<?php echo $this->url('structure/graphe', [], [], true); ?>"
             class="btn btn-warning"
@@ -85,30 +85,6 @@ $canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePri
                                     href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getId()], [], true); ?>"
                             >
                                 <span class="icon voir"   title="Afficher la structure"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canEditer) : ?>
-                            <a
-                                    href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon editer"   title="Modifier la description"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canGestionnaire) : ?>
-                            <?php /** @see \Application\Controller\StructureController::ajouterGestionnaireAction() */ ?>
-                            <a
-                                    href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon ajouter-user"   title="Ajouter un gestionnaire"></span></a>
-                            <?php /** @see \Application\Controller\StructureController::retirerGestionnaireAction() */ ?>
-                            <a
-                                    href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon retirer-user"   title="Retirer un gestionnaire"></span></a>
                         <?php endif; ?>
                     </td>
                 </tr>

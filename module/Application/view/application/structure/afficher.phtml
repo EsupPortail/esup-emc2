@@ -23,56 +23,7 @@ $canAfficheAffectation = true;
 
 <div class="main">
 
-    <h2>
-        Description
-    </h2>
-    <?php echo $structure->getDescription(); ?>
-
-   <div class="row">
-        <div class="col-md-6">
-            <h2> Structure mère </h2>
-            <?php if ($structure->getParent() !== null) :?>
-                <ul>
-                    <li>
-                        <a href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
-                            <?php echo $structure->getParent()->getLibelleCourt(); ?>
-                            -
-                            <?php echo $structure->getParent()->getLibelleLong(); ?>
-                        </a></li>
-                </ul>
-            <?php else : ?>
-                Aucune structure mère
-            <?php endif; ?>
-            <h2>
-                Structures filles
-                <span class="badge">
-                    <?php echo count($filles); ?>
-                </span>
-            </h2>
-            <ul>
-                <?php foreach ($filles as $enfant) : ?>
-                    <li>
-                        <a href="<?php echo $this->url('structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
-                            <?php echo $enfant->getLibelleCourt(); ?>
-                            -
-                            <?php echo $enfant->getLibelleLong(); ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-        <div class="col-md-6">
-            <h2>
-                Gestionnaires
-                <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
-            </h2>
-            <ul>
-                <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
-                    <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    </div>
+    <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles]); ?>
 
     <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
 

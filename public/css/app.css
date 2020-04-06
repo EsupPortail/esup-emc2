@@ -619,6 +619,11 @@ span.user {
     color: purple;
 }
 
+span.structure {
+    font-weight: bold;
+    color: darkblue;
+}
+
 span.date {
     font-weight: normal;
     color: navy;
