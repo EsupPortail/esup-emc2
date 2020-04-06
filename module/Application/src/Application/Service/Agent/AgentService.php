@@ -110,7 +110,7 @@ class AgentService {
                 ->andWhere('grade.dateFin IS NULL OR grade.dateFin >= :date')
                 ->setParameter('date', $date)
                 ->addSelect('structure')->join('grade.structure', 'structure')
-                ->andWhere('structure IN (:structures)', )
+                ->andWhere('structure IN (:structures)')
                 ->setParameter('structures', $structures)
             ;
         }
