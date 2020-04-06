@@ -79,7 +79,7 @@ class StructureService
         ;
 
         if ($structures !== null) {
-            $qb = $qb->andWhere('structure IN (:structures)', )
+            $qb = $qb->andWhere('structure IN (:structures)')
                 ->setParameter('structures', $structures)
             ;
         }
