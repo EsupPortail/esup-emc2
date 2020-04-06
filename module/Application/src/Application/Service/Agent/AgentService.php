@@ -46,18 +46,24 @@ class AgentService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-//            ->addSelect('aGrade')->leftJoin('agent.grades', 'aGrade')
-//            ->addSelect('structureG')->leftJoin('aGrade.structure', 'structureG')
-//            ->addSelect('corps')->leftJoin('aGrade.corps', 'corps')
-//            ->addSelect('grade')->leftJoin('aGrade.grade', 'grade')
-//            ->addSelect('bap')->leftJoin('aGrade.bap', 'bap')
-
 //            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-//            ->addSelect('structureS')->leftJoin('statut.structure', 'structureS')
+//            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+
+//            ->addSelect('fichePoste')->leftJoin('agent.fiches','fichePoste')
+//            ->addSelect('fpPoste')->leftJoin('fichePoste.poste', 'fpPoste')
+//            ->addSelect('structure')->leftJoin('fichePoste.structure', 'structure')
 //
             ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
             ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
             ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+
+            ->addSelect('entretien')->leftJoin('agent.entretiens', 'entretien')
+            ->addSelect('entretienValidationAgent')->leftJoin('entretien.validationAgent', 'entretienValidationAgent')
+//            ->addSelect('evaModificateur')->leftJoin('entretienValidationAgent.histoModificateur', 'evaModificateur')
+            ->addSelect('entretienValidationResponsable')->leftJoin('entretien.validationResponsable', 'entretienValidationResponsable')
+//            ->addSelect('evrModificateur')->leftJoin('entretienValidationResponsable.histoModificateur', 'evrModificateur')
+
+
 
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
         ;
@@ -106,7 +112,7 @@ class AgentService {
      */
     public function getAgent($id)
     {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+        $qb = $this->createQueryBuilder()
             ->andWhere('agent.id = :id')
             ->setParameter('id', $id)
         ;

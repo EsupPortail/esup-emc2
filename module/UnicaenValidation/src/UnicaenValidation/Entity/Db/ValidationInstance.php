@@ -108,4 +108,13 @@ class ValidationInstance {
         $this->entityId = $entityId;
         return $this;
     }
+
+    public function generateTooltipText()
+    {
+        $text = "";
+        $text .= "Validation effectuée<br/>";
+        $text .= "par <span class='user'>".$this->histoModificateur->getDisplayName()."</span><br/>";
+        $text .= "le <span class='date'>".$this->getHistoModification()->format('d/m/Y')."</span>";
+        return $text;
+    }
 }

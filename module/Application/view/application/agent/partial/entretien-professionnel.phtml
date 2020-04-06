@@ -48,7 +48,29 @@ $canDetruireEntretienPro    = $this->isAllowed(AgentPrivileges::getResourceId(Ag
             <td> <?php echo $entretien->getAnnee(); ?> </td>
             <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
             <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
-            <td> <span class="TODO">???</span> </td>
+            <td>
+                <?php if ($entretien->getValidationResponsable() !== null) : ?>
+                    <span
+                            data-toggle="tooltip"
+                            data-html="true"
+                            title="<?php echo $entretien->getValidationResponsable()->generateTooltipText(); ?>"
+                    >
+                        <span class="badge" style="background-color:darkgreen">Validé</span>
+                    </span>
+                <?php else : ?>
+                    <?php if ($entretien->getValidationAgent() !== null) : ?>
+                        <span
+                                data-toggle="tooltip"
+                                data-html="true"
+                                title="<?php echo $entretien->getValidationAgent()->generateTooltipText(); ?>"
+                        >
+                            <span class="badge" style="background-color:darkorange">En attente de validation responsable </span>
+                        </span>
+                    <?php else : ?>
+                        <span class="badge" style="background-color:orangered">En attente de validation agent </span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </td>
             <td>
                 <?php if ($canVoirEntretienPro AND ($isAgent OR $isResponsanble OR $isGestionnaire OR $isAdministrateur OR $isObservateur)) : ?>
                     <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::afficherAction() */?>

@@ -607,3 +607,18 @@ span.probleme {
 tr.historise {
     color:gray;
 }
+
+/** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- */
+
+.tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}
+
+
+span.user {
+    font-weight: bold;
+    color: purple;
+}
+
+span.date {
+    font-weight: normal;
+    color: navy;
+}
