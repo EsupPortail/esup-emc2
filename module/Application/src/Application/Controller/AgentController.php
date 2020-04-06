@@ -127,6 +127,7 @@ class AgentController extends AbstractActionController
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $agentMissionSpecifique = new AgentMissionSpecifique();
+        $agentMissionSpecifique->setAgent($agent);
 
         /** @var AgentMissionSpecifiqueForm $form */
         $form = $this->getAgentMissionSpecifiqueForm();
@@ -165,6 +166,7 @@ class AgentController extends AbstractActionController
     public function modifierAgentMissionSpecifiqueAction()
     {
         $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
+        $agent = $agentMissionSpecifique->getAgent();
         $form = $this->getAgentMissionSpecifiqueForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-mission-specifique', ['agent-mission-specifique' => $agentMissionSpecifique->getId()]));
         $form->bind($agentMissionSpecifique);
@@ -175,6 +177,7 @@ class AgentController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                $agentMissionSpecifique->setAgent($agent);
                 $this->getAgentService()->updateAgentMissionSpecifique($agentMissionSpecifique);
             }
         }

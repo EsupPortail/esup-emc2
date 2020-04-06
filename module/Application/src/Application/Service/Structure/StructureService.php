@@ -71,9 +71,6 @@ class StructureService
      */
     public function getStructuresByTerm($term, $structures = null)
     {
-        $structuresIds = [];
-        foreach ($structures as $structure) $structuresIds[] = $structure->getId();
-
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($term).'%')
