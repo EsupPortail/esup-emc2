@@ -2,14 +2,17 @@
 
 namespace Application\Controller;
 
+use Application\Constant\RoleConstant;
+use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Structure;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Fhaculty\Graph\Graph;
 use Graphp\GraphViz\GraphViz;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -23,7 +26,9 @@ class StructureController extends AbstractActionController {
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use MissionSpecifiqueServiceAwareTrait;
 
+    use AgentMissionSpecifiqueFormAwareTrait;
     use StructureFormAwareTrait;
 
     public function indexAction()
@@ -42,9 +47,17 @@ class StructureController extends AbstractActionController {
     public function afficherAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structuresFilles = $this->getStructureService()->getStructuresFilles($structure);
+
+        $structures = $structuresFilles;
+        $structures[] =  $structure;
+
+        $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructures($structures);
 
         return new ViewModel([
             'structure' => $structure,
+            'filles' =>  $structuresFilles,
+            'missions' => $missionsSpecifiques,
         ]);
     }
 
@@ -63,7 +76,7 @@ class StructureController extends AbstractActionController {
                 }
             } else {
                 /** @var User[] $gestionnaires */
-                $roleGestionnaire = $this->getRoleService()->getRoleByCode(Role::GESTIONNAIRE);
+                $roleGestionnaire = $this->getRoleService()->getRoleByCode(RoleConstant::GESTIONNAIRE);
                 $gestionnaires = array_diff($this->getUserService()->getUtilisateursByRole($roleGestionnaire),$structure->getGestionnaires());
                 usort($gestionnaires, function(User $a, User $b) {return $a->getDisplayName()>$b->getDisplayName();});
                 return new ViewModel([
@@ -138,28 +151,52 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
+    /** Fonctions de recherche ****************************************************************************************/
     public function rechercherAction()
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $structures = $this->getStructureService()->getStructuresByTerm($term);
-            $result = [];
-            /** @var Structure[] $structures */
-            foreach ($structures as $structure) {
-                $result[] = array(
-                    'id'    => $structure->getId(),
-                    'label' => $structure->getLibelleLong(),
-                    'extra' => "<span class='badge' style='background-color: slategray;'>".$structure->getLibelleCourt()."</span>",
-                );
-            }
-            usort($result, function($a, $b) {
-                return strcmp($a['label'], $b['label']);
-            });
-
+            $result = $result = $this->formatStructureJSON($structures);
             return new JsonModel($result);
         }
         exit;
     }
 
+    public function rechercherWithStructureMereAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
+
+        $term = $this->params()->fromQuery('term');
+        if ($term) {
+            $structures = $this->getStructureService()->getStructuresByTerm($term, $structures);
+            $result = $this->formatStructureJSON($structures);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @return array
+     */
+    private function formatStructureJSON($structures)
+    {
+        $result = [];
+        foreach ($structures as $structure) {
+            $result[] = array(
+                'id'    => $structure->getId(),
+                'label' => $structure->getLibelleLong(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>".$structure->getLibelleCourt()."</span>",
+            );
+        }
+        usort($result, function($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 
     public function grapheAction() {
         $graph = new Graph();
@@ -282,5 +319,114 @@ class StructureController extends AbstractActionController {
         return new ViewModel([
            'img' => $img,
         ]);
+    }
+
+    /** Actions associées aux affectations de missions spécifiques *****************************************************
+     * -> pas d'affichage car tout est dans le tableau ?
+    *******************************************************************************************************************/
+
+    public function ajouterAffectationAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $affectation = new AgentMissionSpecifique();
+        $form = $this->getAgentMissionSpecifiqueForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-affectation', ['structure' => $structure->getId()]));
+        /** @see AgentController::rechercherWithStructureMereAction() */
+        $form->get('agent')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+        /** @see StructureController::rechercherWithStructureMereAction() */
+        $form->get('structure')->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+        $form->bind($affectation);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMissionSpecifiqueService()->create($affectation);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une affectation de mission spécifique",
+            'form'  => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierAffectationAction()
+    {
+        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+
+        $form = $this->getAgentMissionSpecifiqueForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/modifier-affectation', ['affectation' => $affectation->getId()]));
+//        $form->reinitWithStructure($structure);
+        $form->bind($affectation);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMissionSpecifiqueService()->update($affectation);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une affectation de mission spécifique",
+            'form'  => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserAffectationAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+
+        $this->getMissionSpecifiqueService()->historise($affectation);
+
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+    }
+
+    public function restaurerAffectationAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+
+        $this->getMissionSpecifiqueService()->restore($affectation);
+
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+
+    }
+
+    public function detruireAffectationAction()
+    {
+        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueService()->delete($affectation);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($affectation !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'affectation de " . $affectation->getAgent()->getDenomination(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('structure/detruire-affectation', ["affectation" => $affectation->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 }

@@ -604,8 +604,9 @@ span.probleme {
     color: darkred;
 }
 
-tr.historise {
+tr.historise td {
     color:gray;
+    text-decoration: line-through;
 }
 
 /** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- */

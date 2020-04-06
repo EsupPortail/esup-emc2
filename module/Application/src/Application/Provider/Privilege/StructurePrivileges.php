@@ -14,4 +14,5 @@ class StructurePrivileges extends Privileges
     const GESTIONNAIRE          = 'structure-gerer-gestionnaire';
     const SYNCHRONISER          = 'structure-synchroniser-structure';
     const EDITER_DESCRIPTION    = 'structure-editer-description';
+    const STRUCTURE_DETRUIREAFFECTATION = 'structure-structure_detruireaffectation';
 }

@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @var Structure $structure
+ * @var AgentMissionSpecifique[] $missions
+ */
+
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\Structure;
+use Application\Provider\Privilege\StructurePrivileges;
+
+$canAjouterAffectation      = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER));
+$canModifierAffectation     = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER));
+$canHistoriserAffectation   = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::HISTORISER));
+$canDetruireAffectation     = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_DETRUIREAFFECTATION));
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Missions spécifiques
+            <span class="badge">
+                <?php echo count($missions); ?>
+            </span>
+        </h2>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canAjouterAffectation) : ?>
+            <br/>
+            <a
+                <?php /** @see \Application\Controller\StructureController::ajouterAffectationAction() */ ?>
+                href="<?php echo $this->url('structure/ajouter-affectation', ['structure' => $structure->getId()], [], true); ?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une mission spécifique
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th> Agent </th>
+            <th> Structure </th>
+            <th> Mission </th>
+            <th> Décharge </th>
+            <th> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($missions as $mission) : ?>
+            <tr <?php echo ($mission->estHistorise())?'class="historise"':''; ?>>
+                <td> <?php echo $mission->getAgent()->getDenomination(); ?> </td>
+                <td> <?php echo $mission->getStructure()->getLibelleLong(); ?> </td>
+                <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($mission->getDecharge() !== null): ?>
+                        <?php echo $mission->getDecharge(); ?> h.
+                    <?php else : ?>
+                        Aucune
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($canModifierAffectation) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\StructureController::modifierAffectationAction() */?>
+                            href="<?php echo $this->url('structure/modifier-affectation', ['affectation' => $mission->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                        >
+                            <span class="icon editer" data-toggle='tooltip'  data-html='true' title="Modifier l'affectation"></span>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriserAffectation) : ?>
+                        <?php if ($mission->estNonHistorise()) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\StructureController::historiserAffectationAction() */?>
+                                href="<?php echo $this->url('structure/historiser-affectation', ['structure' => $structure->getId(), 'affectation' => $mission->getId()], [], true); ?>"
+                            >
+                                <span class="icon historiser" data-toggle='tooltip'  data-html='true' title="Historiser l'affectation"></span>
+                            </a>
+                        <?php else : ?>
+                            <a
+                                <?php /** @see \Application\Controller\StructureController::restaurerAffectationAction() */?>
+                                href="<?php echo $this->url('structure/restaurer-affectation', ['structure' => $structure->getId(), 'affectation' => $mission->getId()], [], true); ?>"
+                            >
+                                <span class="icon restaurer" data-toggle='tooltip'  data-html='true' title="Restaurer l'affectation"></span>
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruireAffectation) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\StructureController::detruireAffectationAction() */?>
+                            href="<?php echo $this->url('structure/detruire-affectation', ['affectation' => $mission->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                        >
+                            <span class="icon detruire" data-toggle='tooltip'  data-html='true' title="Supprimer l'affectation"></span>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

@@ -27,10 +27,24 @@ return [
                         'index',
                         'afficher',
                         'rechercher',
+                        'rechercher-with-structure-mere',
                         'graphe',
                     ],
                     'privileges' => [
                         StructurePrivileges::AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
+                        'ajouter-affectation',
+                        'modifier-affectation',
+                        'historiser-affectation',
+                        'restaurer-affectation',
+                        'detruire-affectation',
+                    ],
+                    'privileges' => [
+                        StructurePrivileges::EDITER,
                     ],
                 ],
                 [
@@ -116,17 +130,6 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [],
                     ],
-                    'rechercher' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/rechercher',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'rechercher',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'graphe' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -170,6 +173,90 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'editer-description',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    /** Fonctions de recherche de structures **********************************************************/
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'rechercher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'rechercher-with-structure-mere' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/rechercher-with-structure-mere/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'rechercher-with-structure-mere',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    /** Routes associées aux affections de missions spécifiques ***************************************/
+                    'ajouter-affectation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-affectation/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'ajouter-affectation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'modifier-affectation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-affectation/:affectation',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'modifier-affectation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'historiser-affectation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-affectation/:structure/:affectation',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'historiser-affectation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'restaurer-affectation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-affectation/:structure/:affectation',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'restaurer-affectation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'detruire-affectation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire-affectation/:affectation',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'detruire-affectation',
                             ],
                         ],
                         'may_terminate' => true,

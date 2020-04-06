@@ -3,8 +3,11 @@
 /**
  * @see StructureController::afficherAction()
  * @var Structure $structure
+ * @var Structure[] $filles
+ * @var AgentMissionSpecifique[] $missions
  */
 
+use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Structure;
 
 $this->headTitle("Affichage de la structure : " . $structure->getLibelleLong());
@@ -14,54 +17,40 @@ $canAfficheAffectation = true;
 ?>
 
 <h1 class="page-header">
-    Affichage de la structure <br/>
-    <strong> <?php echo $structure->getLibelleLong(); ?> </strong>
+    <strong> <?php echo $structure->getLibelleLong(); ?> </strong> <br/>
+    <?php echo $structure->getType(); ?>
 </h1>
 
 <div class="main">
 
-    <div class="row">
-        <div class="col-md-8">
-            <h2>
-                Description
-            </h2>
-            <?php echo $structure->getDescription(); ?>
-        </div>
-        <div class="col-md-4">
-            <h2>
-                Gestionnaire
-                <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
-            </h2>
-            <ul>
-                <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
-                    <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    </div>
+    <h2>
+        Description
+    </h2>
+    <?php echo $structure->getDescription(); ?>
 
-    <div class="row">
+   <div class="row">
         <div class="col-md-6">
-            <h2>Structure parente</h2>
-            <?php if ($structure->getParent() !== null) : ?>
-                <a href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
-                    <?php echo $structure->getParent()->getLibelleCourt(); ?>
-                    -
-                    <?php echo $structure->getParent()->getLibelleLong(); ?>
-                </a>
-            <?php else: ?>
-                Aucune structure parente.
+            <h2> Structure mère </h2>
+            <?php if ($structure->getParent() !== null) :?>
+                <ul>
+                    <li>
+                        <a href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
+                            <?php echo $structure->getParent()->getLibelleCourt(); ?>
+                            -
+                            <?php echo $structure->getParent()->getLibelleLong(); ?>
+                        </a></li>
+                </ul>
+            <?php else : ?>
+                Aucune structure mère
             <?php endif; ?>
-        </div>
-        <div class="col-md-6">
             <h2>
                 Structures filles
                 <span class="badge">
-                    <?php echo count($structure->getEnfants()); ?>
+                    <?php echo count($filles); ?>
                 </span>
             </h2>
             <ul>
-                <?php foreach ($structure->getEnfants() as $enfant) : ?>
+                <?php foreach ($filles as $enfant) : ?>
                     <li>
                         <a href="<?php echo $this->url('structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
                             <?php echo $enfant->getLibelleCourt(); ?>
@@ -72,10 +61,20 @@ $canAfficheAffectation = true;
                 <?php endforeach; ?>
             </ul>
         </div>
+        <div class="col-md-6">
+            <h2>
+                Gestionnaires
+                <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
+            </h2>
+            <ul>
+                <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
+                    <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     </div>
 
-
-
+    <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
 
     <h2>
         Postes
@@ -112,40 +111,14 @@ $canAfficheAffectation = true;
         </tbody>
     </table>
 
-    <h2>
-        Missions spécifiques
-        <span class="badge"><?php echo count($structure->getMissions()); ?></span>
-    </h2>
 
-    <table class="table table-condensed">
-        <thead>
-        <tr>
-            <th> Agent </th>
-            <th> Mission </th>
-            <th> Action </th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($structure->getMissions() as $mission): ?>
-            <tr>
-                <td> <?php echo $mission->getAgent()->getDenomination(); ?> </td>
-                <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
-                <td>
-                    <?php if ($canAfficheAffectation) : ?>
-                        <a <?php /** @see MissionSpecifiqueController::afficherAction() */ ?>
-                            href="<?php echo $this->url('agent-mission-specifique/afficher', ['affectation' => $mission->getId()], [], true); ?>"
-                            class="ajax-modal"
-                        >
-                            <span class="icon voir" title="Voir l'affectation"></span>
-                        </a>
-                    <?php else : ?>
-                        <span class="icon voir" style="color:lightgray;"></span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
 
 </div>
+
+<script>
+    $("body").on("modification", function (event) {
+        event.div.modal('hide');
+        window.location.reload();
+    });
+</script>
 

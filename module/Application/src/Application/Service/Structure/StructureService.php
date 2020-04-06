@@ -3,6 +3,7 @@
 namespace Application\Service\Structure;
 
 use Application\Entity\Db\Structure;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
@@ -63,8 +64,16 @@ class StructureService
         return $structure;
     }
 
-    public function getStructuresByTerm($term)
+    /**
+     * @param string $term
+     * @param Structure[] $structures
+     * @return Structure[]
+     */
+    public function getStructuresByTerm($term, $structures = null)
     {
+        $structuresIds = [];
+        foreach ($structures as $structure) $structuresIds[] = $structure->getId();
+
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($term).'%')
@@ -72,6 +81,11 @@ class StructureService
             ->setParameter('nope', 'O')
         ;
 
+        if ($structures !== null) {
+            $qb = $qb->andWhere('structure IN (:structures)', )
+                ->setParameter('structures', $structures)
+            ;
+        }
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -208,5 +222,31 @@ class StructureService
         $result = $qb->getQuery()->getResult();
 
         return $result;
+    }
+
+    /**
+     * @param Structure $structure
+     * @return Structure[]
+     */
+    public function getStructuresFilles(Structure $structure) {
+        $filles = [];
+        $dejaTraitees = [];
+
+        $aTraitees = [];
+        $aTraitees[] = $structure;
+
+        while(! empty($aTraitees)) {
+            $current = array_shift($aTraitees);
+            $result = $this->getSousStructures($current);
+            foreach ($result as $item) {
+                if (! isset($dejaTraitees[$item->getId()])) {
+                    $filles[] = $item;
+                    $dejaTraitees[$item->getId()] = true;
+                    $aTraitees[] = $item;
+                }
+            }
+        }
+
+        return $filles;
     }
 }

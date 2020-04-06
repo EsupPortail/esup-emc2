@@ -20,6 +20,19 @@ class AgentMissionSpecifiqueForm extends Form {
     use StructureServiceAwareTrait;
 
     /** @var string */
+    private $urlAgent;
+
+    /**
+     * @param string $urlAgent
+     * @return AgentMissionSpecifiqueForm
+     */
+    public function setUrlAgent(string $urlAgent): AgentMissionSpecifiqueForm
+    {
+        $this->urlAgent = $urlAgent;
+        return $this;
+    }
+
+    /** @var string */
     private $urlStructure;
 
     /**
@@ -34,28 +47,12 @@ class AgentMissionSpecifiqueForm extends Form {
 
     public function init()
     {
-        //Agent
-//        $this->add([
-//            'type' => Select::class,
-//            'name' => 'agent',
-//            'options' => [
-//                'label' => "Agent* :",
-//                'empty_option' => 'Sélectionner l\'agent à affecter ...',
-//                'value_options' => $this->getAgentService()->getAgentsAsOption(),
-//            ],
-//            'attributes' => [
-//                'id' => 'agent',
-//                'class'             => 'bootstrap-selectpicker show-tick',
-//                'data-live-search'  => 'true',
-//            ],
-//        ]);
-
         //Mission
         $this->add([
             'type' => Select::class,
             'name' => 'mission',
             'options' => [
-                'label' => "Mission* :",
+                'label' => "Mission * :",
                 'empty_option' => 'Sélectionner la mission à affecter ...',
                 'value_options' => $this->getRessourceRhService()->getMisssionsSpecifiquesAsGroupOptions(),
             ],
@@ -66,6 +63,17 @@ class AgentMissionSpecifiqueForm extends Form {
             ],
         ]);
 
+        //Agent
+        $structure = new SearchAndSelect('agent', ['label' => "Agent * :"]);
+        $structure
+            ->setAutocompleteSource($this->urlAgent)
+            ->setSelectionRequired(true)
+            ->setAttributes([
+                'id' => 'agent',
+                'placeholder' => "Agent effectuant la mission ...",
+            ]);
+        $this->add($structure);
+
         // structure
         $structure = new SearchAndSelect('structure', ['label' => "Service/composante/direction d'affectation * :"]);
         $structure
@@ -73,7 +81,7 @@ class AgentMissionSpecifiqueForm extends Form {
             ->setSelectionRequired(true)
             ->setAttributes([
                 'id' => 'structure',
-                'placeholder' => "Nom de la structure...",
+                'placeholder' => "Nom de la structure ...",
             ]);
         $this->add($structure);
 
@@ -105,7 +113,7 @@ class AgentMissionSpecifiqueForm extends Form {
             'type' => Number::class,
             'name' => 'decharge',
             'options' => [
-                'label' => "Décharge associée à la mission* :",
+                'label' => "Décharge associée à la mission :",
             ],
             'attributes' => [
                 'id' => 'decharge',
@@ -130,7 +138,7 @@ class AgentMissionSpecifiqueForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-//            'agent'             => [ 'required' => true,  ],
+            'agent'             => [ 'required' => true,  ],
             'mission'           => [ 'required' => true,  ],
             'structure'         => [ 'required' => false, ],
             'debut'             => [ 'required' => true,  ],

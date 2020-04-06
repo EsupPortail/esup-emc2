@@ -92,15 +92,28 @@ class AgentService {
 
     /**
      * @param string $term
+     * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsByTerm($term)
+    public function getAgentsByTerm($term, $structures = null)
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere("LOWER(CONCAT(agent.prenom, agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, agent.prenom)) like :search")
+            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
             ->setParameter('search', '%'.strtolower($term).'%')
         ;
 
+        if ($structures !== null) {
+            $date = $this->getDateTime();
+            $qb = $qb
+                ->addSelect('grade')->join('agent.grades', 'grade')
+                ->andWhere('grade.dateDebut <= :date')
+                ->andWhere('grade.dateFin IS NULL OR grade.dateFin >= :date')
+                ->setParameter('date', $date)
+                ->addSelect('structure')->join('grade.structure', 'structure')
+                ->andWhere('structure IN (:structures)', )
+                ->setParameter('structures', $structures)
+            ;
+        }
         $result =  $qb->getQuery()->getResult();
         return $result;
     }

@@ -42,6 +42,7 @@ return [
                         'afficher',
                         'afficher-statuts-grades',
                         'rechercher',
+                        'rechercher-with-structure-mere',
                         'rechercher-responsable',
 
                         'ajouter-agent-mission-specifique',
@@ -116,6 +117,7 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    /** Fonctions de recherche ************************************************************************/
                     'rechercher' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -123,6 +125,16 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'rechercher',
+                            ],
+                        ],
+                    ],
+                    'rechercher-with-structure-mere' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/rechercher-with-structure-mere/:structure',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'rechercher-with-structure-mere',
                             ],
                         ],
                     ],

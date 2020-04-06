@@ -10,6 +10,7 @@ use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentStatut;
+use Application\Entity\Db\Structure;
 use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
@@ -20,6 +21,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
@@ -45,6 +47,7 @@ class AgentController extends AbstractActionController
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
     use FichierServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use AgentFormAwareTrait;
@@ -678,19 +681,22 @@ class AgentController extends AbstractActionController
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $agents = $this->getAgentService()->getAgentsByTerm($term);
-            $result = [];
-            /** @var Agent[] $agents */
-            foreach ($agents as $agent) {
-                $result[] = array(
-                    'id'    => $agent->getId(),
-                    'label' => $agent->getDenomination(),
-                    'extra' => "<span class='badge' style='background-color: slategray;'>".$agent->getSourceName()."</span>",
-                );
-            }
-            usort($result, function($a, $b) {
-                return strcmp($a['label'], $b['label']);
-            });
+            $result = $this->formatAgentJSON($agents);
+            return new JsonModel($result);
+        }
+        exit;
+    }
 
+    public function rechercherWithStructureMereAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
+
+        if (($term = $this->params()->fromQuery('term'))) {
+            $agents = $this->getAgentService()->getAgentsByTerm($term, $structures);
+            $result = $this->formatAgentJSON($agents);
             return new JsonModel($result);
         }
         exit;
@@ -718,7 +724,26 @@ class AgentController extends AbstractActionController
         exit;
     }
 
-
+    /**
+     * @param Agent[] $agents
+     * @return array
+     */
+    private function formatAgentJSON($agents)
+    {
+        $result = [];
+        /** @var Agent[] $agents */
+        foreach ($agents as $agent) {
+            $result[] = array(
+                'id'    => $agent->getId(),
+                'label' => $agent->getDenomination(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>".$agent->getSourceName()."</span>",
+            );
+        }
+        usort($result, function($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 
 
 }

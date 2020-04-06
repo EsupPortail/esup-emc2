@@ -2,6 +2,7 @@
 
 namespace Application\Service\Agent;
 
+use Application\Service\Structure\StructureService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;;
