@@ -70,7 +70,7 @@ class StructureController extends AbstractActionController {
 
         $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructures($structures);
 
-        $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructure($structure, true);
+        $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
         $fichesCompletes = []; $fichesIncompletes = [];
 
         foreach ($fichesPostes as $fichePoste) {

@@ -59,6 +59,7 @@ return [
                     'action' => [
                         'index',
                         'ajouter',
+                        'dupliquer',
                         'afficher',
                         'editer',
                         'historiser',
@@ -129,13 +130,24 @@ return [
                 ],
                 'child_routes' => [
                     'ajouter' => [
-                        'type'  => Literal::class,
+                        'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/ajouter',
+                            'route'    => '/ajouter[/:agent]',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                    ],
+                    'dupliquer' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/dupliquer/:structure/:agent',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'dupliquer',
                             ],
                         ],
                     ],

@@ -32,10 +32,10 @@ $canDetruireFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(Fi
                 <?php echo $ficheposte->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle(); ?> <br/>
                 <?php echo $ficheposte->getLibelle(); ?>
             </td>
-            <td> <?php echo $ficheposte->getPoste()->getNumeroPoste(); ?> </td>
+            <td> <?php echo ($ficheposte->getPoste())?$ficheposte->getPoste()->getNumeroPoste():"<span class='probleme'><span class='icon attention'></span>Poste manquent</span>"; ?> </td>
             <td>
-                <?php echo $ficheposte->getPoste()->getStructure()->getLibelleLong(); ?> <br/>
-                <?php echo $ficheposte->getPoste()->getStructure()->getType(); ?>
+                <?php echo ($ficheposte->getPoste())?$ficheposte->getPoste()->getStructure()->getLibelleLong():"<span class='probleme'><span class='icon attention'></span>Poste manquent</span>"; ?> <br/>
+                <?php echo ($ficheposte->getPoste())?$ficheposte->getPoste()->getStructure()->getType():null; ?>
             </td>
             <td> <span class="TODO">???</span></td>
             <td>

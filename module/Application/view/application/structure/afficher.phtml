@@ -23,6 +23,7 @@ use Application\Provider\Privilege\FichePostePrivileges;
 $this->headTitle("Affichage de la structure : " . $structure->getLibelleLong());
 
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
 $canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
 $canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
 $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::DETRUIRE));
@@ -305,8 +306,24 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                             </td>
                             <td>
                                 <?php if($fiche === null) : ?>
-                                    <span class="icon ajouter"></span>
-                                    <span class="icon cloner"></span>
+                                    <?php if ($canAjouterFichePoste) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+                                            href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+                                            target="_blank"
+                                        ><span class="icon ajouter"
+                                               data-toggle="tooltip" data-html="true"
+                                               title="Ajouter la fiche de poste"></span></a>
+                                    <?php endif; ?>
+                                    <?php if ($canAjouterFichePoste) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
+                                            href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
+                                            class="ajax-modal" data-event="duplication"
+                                        ><span class="icon cloner"
+                                               data-toggle="tooltip" data-html="true"
+                                               title="Dupliquer une fiche existante"></span></a>
+                                    <?php endif; ?>
                                 <?php else  :?>
                                     <?php if ($canVoirFichePoste) : ?>
                                         <a
@@ -387,11 +404,38 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 </div>
 
 <script>
+    $(function() {
+        $('select#structure-selecteur').change(function() {
+            let id = $('select#structure-selecteur option:selected').val();
+            if (id !== "" && id !== "<?php echo $structure->getId(); ?>") {
+                window.location.href = './' + id;
+            }
+        });
+    });
+
     $("body").on("modification", function (event) {
         event.div.modal('hide');
         window.location.reload();
     });
 
+    $(function() {
+        $("body").on("duplication", function (event) {
+            let content = event.div.html();
+            let match_regex = content.match(/#[0-9]*/g)[0];
+            let id = match_regex.split('#')[1];
+            event.div.modal('hide');
+            let win = window.open('../../fiche-poste/editer/' + id + '?structure=' + <?php echo ($structure)?$structure->getId():0; ?>, '_blank');
+            if (win) {
+                //Browser has allowed it to be opened
+                win.focus();
+            } else {
+                //Browser has blocked it
+                alert('Please allow popups for this website');
+            }
+            console.log("fiche-de-poste: " + id);
+            window.location.reload();
+        });
+    });
     // $('select').selectpicker();
 </script>
 

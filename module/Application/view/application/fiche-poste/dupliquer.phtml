@@ -14,7 +14,7 @@ use Application\Entity\Db\Structure;
 
 <form
     method="post"
-    action="<?php echo $this->url('mes-structures/dupliquer-fiche-poste', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
+    action="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
 >
     <select id="fiche" name="fiche">
         <?php foreach ($fiches as $fiche) : ?>

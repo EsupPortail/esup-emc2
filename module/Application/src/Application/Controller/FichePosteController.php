@@ -90,11 +90,15 @@ class FichePosteController extends AbstractActionController {
     }
 
 
+    //todo redirect vers l'edition sans libelle car useless
     public function ajouterAction()
     {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
         $fiche = new FichePoste();
         $form = $this->getFichePosteCreationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/ajouter', ['fiche-poste' => $fiche->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/ajouter', ['agent' => ($agent)?$agent->getId():null], [], true));
+        $fiche->setAgent($agent);
         $form->bind($fiche);
 
         /** @var Request $request */
@@ -114,6 +118,51 @@ class FichePosteController extends AbstractActionController {
             'form' => $form,
         ]);
         return $vm;
+    }
+
+    public function dupliquerAction()
+    {
+        $structures = [];
+        $structures[] = $this->getStructureService()->getRequestedStructure($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $fiches = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $ficheId = $data['fiche'];
+            $fiche = $this->getFichePosteService()->getFichePoste($ficheId);
+
+            $nouvelleFiche = new FichePoste();
+            $nouvelleFiche->setLibelle($fiche->getLibelle());
+            $nouvelleFiche->setAgent($agent);
+
+            //dupliquer specificite
+            if ($fiche->getSpecificite()) {
+                $specifite = $fiche->getSpecificite()->clone_it();
+                $this->getFichePosteService()->createSpecificitePoste($specifite);
+                $nouvelleFiche->setSpecificite($specifite);
+            }
+            $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
+
+            //dupliquer fiche metier externe
+            foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {
+                $nouvelleFicheMetier = $ficheMetierExterne->clone_it();
+                $nouvelleFicheMetier->setFichePoste($nouvelleFiche);
+                $nouvelleFicheMetier = $this->getFichePosteService()->createFicheTypeExterne($nouvelleFicheMetier);
+            }
+
+            /**  Commenter pour eviter perte de temps et clignotement de la modal */
+            return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+        }
+
+        return new ViewModel([
+            'title' => "Duplication d'une fiche de poste pour ".$agent->getDenomination()."",
+            'structure' => $structure,
+            'agent' => $agent,
+            'fiches' => $fiches,
+        ]);
     }
 
 
@@ -170,16 +219,19 @@ class FichePosteController extends AbstractActionController {
     public function detruireAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
         $structureId = $this->params()->fromQuery('structure');
-        $structure = $this->getStructureService()->getStructure($structureId);
         $params = [];
-        if ($structure !== null) $params["structure"] = $structure->getId();
+        if ($structureId !== null) $params["structure"] = $structureId;
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getFichePosteService()->delete($fiche);
+            if ($data["reponse"] === "oui") {
+                $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+                $this->getFichePosteService()->delete($fiche);
+            }
             exit();
         }
 
@@ -187,9 +239,9 @@ class FichePosteController extends AbstractActionController {
         if ($fiche !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la fiche de poste  de " . (($fiche->getAgent())?$fiche->getAgent()->getDenomination():"[Aucun Agent]"),
+                'title' => "Suppression de la fiche de poste  de ". (($fiche->getAgent())?$fiche->getAgent()->getDenomination():"[Aucun Agent]"),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('fiche-poste/detruire', ["affectation" => $fiche->getId()], ["query" => $params], true),
+                'action' => $this->url()->fromRoute('fiche-poste/detruire', ["fiche-poste" => $fiche->getId()], ["query" => $params], true),
             ]);
         }
         return $vm;

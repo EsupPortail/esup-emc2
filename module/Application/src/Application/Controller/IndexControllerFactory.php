@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\Structure\StructureService;
 use Application\Service\Validation\ValidationDemandeService;
 use Interop\Container\ContainerInterface;
 use UnicaenAuthentification\Service\UserContext;
@@ -17,6 +18,7 @@ class IndexControllerFactory {
         /**
          * @var AgentService $agentService
          * @var RoleService $roleService
+         * @var StructureService $structureService
          * @var ValidationDemandeService $validationDemandeService
          * @var UserService $userService
          * @var UserContext $userContext
@@ -26,6 +28,7 @@ class IndexControllerFactory {
         $validationDemandeService = $container->get(ValidationDemandeService::class);
         $userService = $container->get(UserService::class);
         $userContext = $container->get(UserContext::class);
+        $structureService = $container->get(StructureService::class);
 
         /** @var IndexController $controller */
         $controller = new IndexController();
@@ -34,6 +37,7 @@ class IndexControllerFactory {
         $controller->setRoleService($roleService);
         $controller->setValidationDemandeService($validationDemandeService);
         $controller->setServiceUserContext($userContext);
+        $controller->setStructureService($structureService);
         return $controller;
     }
 

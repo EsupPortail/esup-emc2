@@ -340,11 +340,11 @@ class FichePosteService {
     }
 
     /**
-     * @param Structure $structure
+     * @param Structure[] $structures
      * @param boolean $sousstructure
      * @return FichePoste[]
      */
-    public function getFichesPostesByStructure($structure, $sousstructure = false)
+    public function getFichesPostesByStructures($structures = [], $sousstructure = false)
     {
         try {
             $today = new DateTime();
@@ -369,16 +369,10 @@ class FichePosteService {
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
-        if ($structure !== null && $sousstructure === false) {
-            $qb = $qb
-                ->andWhere('statut.structure = :structure')
-                ->setParameter('structure', $structure);
-        }
-        if ($structure !== null && $sousstructure === true) {
-            $qb = $qb
-                ->andWhere('statut.structure = :structure OR structure.parent = :structure')
-                ->setParameter('structure', $structure);
-        }
+        $qb = $qb
+            ->andWhere('statut.structure IN (:structures)')
+            ->setParameter('structures', $structures);
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
