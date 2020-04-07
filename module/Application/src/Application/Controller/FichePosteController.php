@@ -22,7 +22,6 @@ use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\Expertise\ExpertiseFormAwareTrait;
-use Application\Form\FichePosteCreation\FichePosteCreationFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -61,7 +60,6 @@ class FichePosteController extends AbstractActionController {
     use AssocierAgentFormAwareTrait;
     use AssocierPosteFormAwareTrait;
     use AssocierTitreFormAwareTrait;
-    use FichePosteCreationFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
     use ExpertiseFormAwareTrait;
 
@@ -89,41 +87,21 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-
-    //todo redirect vers l'edition sans libelle car useless
     public function ajouterAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
-
         $fiche = new FichePoste();
-        $form = $this->getFichePosteCreationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/ajouter', ['agent' => ($agent)?$agent->getId():null], [], true));
         $fiche->setAgent($agent);
-        $form->bind($fiche);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFichePosteService()->create($fiche);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Libelle de la fiche de poste',
-            'form' => $form,
-        ]);
-        return $vm;
+        $this->getFichePosteService()->create($fiche);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
     }
 
     public function dupliquerAction()
     {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = [];
-        $structures[] = $this->getStructureService()->getRequestedStructure($this);
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $fiches = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
 
@@ -154,7 +132,8 @@ class FichePosteController extends AbstractActionController {
             }
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */
-            return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+            //return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+            exit();
         }
 
         return new ViewModel([

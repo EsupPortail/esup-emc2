@@ -24,10 +24,6 @@ use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\Expertise\ExpertiseFormFactory;
 use Application\Form\Expertise\ExpertiseHydrator;
 use Application\Form\Expertise\ExpertiseHydratorFactory;
-use Application\Form\FichePosteCreation\FichePosteCreationForm;
-use Application\Form\FichePosteCreation\FichePosteCreationFormFactory;
-use Application\Form\FichePosteCreation\FichePosteCreationHydrator;
-use Application\Form\FichePosteCreation\FichePosteCreationHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
@@ -442,7 +438,6 @@ return [
             AssocierPosteForm::class => AssocierPosteFormFactory::class,
             AssocierTitreForm::class => AssocierTitreFormFactory::class,
             ExpertiseForm::class => ExpertiseFormFactory::class,
-            FichePosteCreationForm::class => FichePosteCreationFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
         ],
     ],
@@ -456,7 +451,6 @@ return [
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
             ExpertiseHydrator::class => ExpertiseHydratorFactory::class,
-            FichePosteCreationHydrator::class => FichePosteCreationHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
