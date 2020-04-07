@@ -359,6 +359,7 @@ class FichePosteService {
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('structure')->join('grade.structure', 'structure')
+            ->addSelect('fichemetier')->leftJoin('fiche.fichesMetiers', 'fichemetier')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('statut.administratif = :true')

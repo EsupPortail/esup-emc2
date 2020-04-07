@@ -29,7 +29,11 @@ $canModifierGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(S
                     </span></a>
             <?php endif; ?>
         </h2>
-        <?php echo $structure->getDescription(); ?>
+        <?php if ($structure->getDescription()) : ?>
+            <?php echo $structure->getDescription(); ?>
+        <?php else : ?>
+            <span class="probleme"> <span class="icon attention"></span> Aucune description. </span>
+        <?php endif; ?>
     </div>
 
     <div class="col-md-6">

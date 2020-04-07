@@ -37,15 +37,15 @@ class AjouterGestionnaireForm extends Form {
     public function init()
     {
         //Agent
-        $structure = new SearchAndSelect('gestionnaire', ['label' => "Gestionnaire * :"]);
-        $structure
+        $gestionnaire = new SearchAndSelect('gestionnaire', ['label' => "Gestionnaire * :"]);
+        $gestionnaire
             ->setAutocompleteSource($this->urlGestionnaire)
             ->setSelectionRequired(true)
             ->setAttributes([
                 'id' => 'gestionnaire',
                 'placeholder' => "Gestionnaire à ajouter ...",
             ]);
-        $this->add($structure);
+        $this->add($gestionnaire);
 
         // structure
         $structure = new SearchAndSelect('structure', ['label' => "Service/composante/direction d'affectation * :"]);

@@ -9,6 +9,7 @@ use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\Structure;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -21,9 +22,11 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentService {
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
     use DateTimeAwareTrait;
+
+    use EntityManagerAwareTrait;
+    use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     /** GESTION DES ENTITÉS *******************************************************************************************/
 
@@ -269,31 +272,35 @@ class AgentService {
      */
     public function getAgentsByStructure(Structure $structure, $sousstructure = false)
     {
-        try {
-            $today = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la création des dates");
-        }
+        $today = $this->getDateTime();
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('structure')->join('grade.structure', 'structure')
+            ->addSelect('ggrade')->join('grade.grade', 'ggrade')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('statut.administratif = :true')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
 
+            ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
+            ->addSelect('poste')->leftJoin('ficheposte.poste', 'poste')
         ;
 
         if ($structure !== null AND $sousstructure === false) {
             $qb = $qb->andWhere('grade.structure = :structure')
                 ->setParameter('structure', $structure);
         }
+
         if ($structure !== null AND $sousstructure === true) {
-            $qb = $qb->andWhere('grade.structure = :structure OR structure.parent = :structure')
-                ->setParameter('structure', $structure);
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
+
+            $qb = $qb->andWhere('grade.structure IN (:structures)')
+                ->setParameter('structures', $structures);
         }
 
         $result = $qb->getQuery()->getResult();

@@ -16,14 +16,17 @@ class AgentServiceFactory {
     public function __invoke(ContainerInterface $container) {
         /**
          * @var EntityManager $entityManager
+         * @var StructureService $structureService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
         /** @var AgentService $service */
         $service = new AgentService();
         $service->setEntityManager($entityManager);
+        $service->setStructureService($structureService);
         $service->setUserService($userService);
 
         return $service;

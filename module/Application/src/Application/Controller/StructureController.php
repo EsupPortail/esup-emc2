@@ -2,13 +2,16 @@
 
 namespace Application\Controller;
 
+use Application\Constant\RoleConstant;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Structure;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Fhaculty\Graph\Graph;
 use Graphp\GraphViz\GraphViz;
@@ -20,11 +23,13 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class StructureController extends AbstractActionController {
+    use AgentServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
+    use MissionSpecifiqueServiceAwareTrait;
+    use PosteServiceAwareTrait;
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
-    use AgentServiceAwareTrait;
-    use MissionSpecifiqueServiceAwareTrait;
 
     use AgentMissionSpecifiqueFormAwareTrait;
     use AjouterGestionnaireFormAwareTrait;
@@ -45,6 +50,18 @@ class StructureController extends AbstractActionController {
 
     public function afficherAction()
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $selecteur = [];
+
+        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+            $user = $this->getUserService()->getConnectedUser();
+            $selecteur = $this->getStructureService()->getStructuresByGestionnaire($user);
+        }
+        if ($role->getRoleId() === RoleConstant::ADMIN_TECH OR $role->getRoleId() === RoleConstant::ADMIN_FONC OR $role->getRoleId() === RoleConstant::OBSERVATEUR) {
+            $unicaen = $this->getStructureService()->getStructure(477);
+            $selecteur = $this->getStructureService()->getSousStructures($unicaen, true);
+        }
+
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
         $structuresFilles = $this->getStructureService()->getStructuresFilles($structure);
 
@@ -53,10 +70,31 @@ class StructureController extends AbstractActionController {
 
         $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructures($structures);
 
+        $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructure($structure, true);
+        $fichesCompletes = []; $fichesIncompletes = [];
+
+        foreach ($fichesPostes as $fichePoste) {
+            if ($fichePoste->isComplete()) {
+                $fichesCompletes[] = $fichePoste;
+            } else {
+                $fichesIncompletes[] = $fichePoste;
+            }
+        }
+
+        $agents = $this->getAgentService()->getAgentsByStructure($structure, true);
+        $postes = $this->getPosteService()->getPostesByStructures($structures);
         return new ViewModel([
+            'selecteur' => $selecteur,
+
             'structure' => $structure,
             'filles' =>  $structuresFilles,
+
             'missions' => $missionsSpecifiques,
+            'fichesCompletes' => $fichesCompletes,
+            'fichesIncompletes' => $fichesIncompletes,
+            'agents' => $agents,
+            'postes' => $postes,
+
         ]);
     }
 
@@ -286,126 +324,126 @@ class StructureController extends AbstractActionController {
 
     /** AUTRE FONCTIONS */
 
-    public function grapheAction() {
-        $graph = new Graph();
-        $structureMere = $this->getStructureService()->getRequestedStructure($this);
-
-        $structures = [];
-        if ($structureMere === null) {
-            $structures = $this->getStructureService()->getStructures(true);
-        } else {
-            $file = [];
-            $file[] = $structureMere;
-            while (!empty($file)) {
-                /** @var Structure $structure */
-                $structure = array_shift($file);
-
-                $structures[] = $structure;
-                $enfants = $structure->getEnfants()->toArray();
-                /** @var Structure $enfant */
-                foreach ($enfants as $enfant) {
-                    if ($enfant->getHisto() === 'O' ) {
-                        $file[] = $enfant;
-                    }
-                }
-            }
-        }
-        $array = [];
-        foreach ($structures as $structure) {
-            $agentsTexte = "";
-            $agents = $this->getAgentService()->getAgentsByStructure($structure);
-            foreach ($agents as $agent) {
-                $agentsTexte .= "- " . $agent->getDenomination() . "\n";
-            }
-            $header = $structure->getId()." - ".$structure->getLibelleCourt();
-            $vertex = $graph->createVertex($header);
-            $vertex->setAttribute('graphviz.shape', 'plaintext');
-            $text  = "<table>";
-            $text .= "<tr><td>".$structure->getId()."</td><td>".$structure->getLibelleCourt()."</td></tr>";
-            $text .= "<tr><td colspan='2' style='text-align: left'>";
-            foreach ($agents as $agent) $text .= $agent->getDenomination() . "<br/>";
-            $text .= "</td></tr>";
-            $text .= "</table>";
-            $vertex->setAttribute('graphviz.label', GraphViz::raw("<".$text.">"));
-
-//            $raw = GraphViz::raw("<table><tr><td>Hello</td></tr></table>"); //"<table><tr><td>".$structure->getId()."</td><td>" . $structure->getLibelleCourt() . "</td></tr></table>"); // . $agentsTexte);
-//            $vertex->setAttribute("graphviz.label", $raw);
-            switch ($structure->getType()) {
-                case "Établissement" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-                    break;
-                case "Composante" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-//                    $vertex->setAttribute('graphviz.color', 'blue');
-//                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
-                    break;
-                case "Bibliothèque" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-//                    $vertex->setAttribute('graphviz.color', 'Hotpink');
-//                    $vertex->setAttribute('graphviz.fontcolor', 'Hotpink');
-                    break;
-                case "Antenne" :
-                case "Département" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-//                    $vertex->setAttribute('graphviz.color', 'blue');
-//                    $vertex->setAttribute('graphviz.style', 'dashed');
-//                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
-                    break;
-                case "Structure de recherche" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-//                    $vertex->setAttribute('graphviz.style', 'rounded');
-//                    $vertex->setAttribute('graphviz.color', 'green');
-//                    $vertex->setAttribute('graphviz.fontcolor', 'green');
-                    break;
-                case "Service central" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-//                    $vertex->setAttribute('graphviz.color', 'red');
-//                    $vertex->setAttribute('graphviz.fontcolor', 'red');
-                    break;
-                case "Service commun" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-//                    $vertex->setAttribute('graphviz.color', 'darkorange');
-//                    $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
-                    break;
-                case "Sous-structure administrative" :
-//                    $vertex->setAttribute('graphviz.shape', 'none');
-//                    $vertex->setAttribute('graphviz.style', 'dashed');
-                    $typeParent = null;
-                    $parent = $structure->getParent();
-                    while ($typeParent === null AND $parent !== null) {
-                        if ($parent->getType() !== "Sous-structure administrative") $typeParent = $parent->getType();
-                        $parent = $parent->getParent();
-                    }
-                    if ($typeParent === "Service central") {
-//                        $vertex->setAttribute('graphviz.color', 'red');
-//                        $vertex->setAttribute('graphviz.fontcolor', 'red');
-                    }
-                    if ($typeParent === "Service commun") {
-//                        $vertex->setAttribute('graphviz.color', 'darkorange');
-//                        $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
-                    }
-                    if ($typeParent === "Composante" OR $typeParent === "Antenne" OR $typeParent === "Département" ) {
-//                        $vertex->setAttribute('graphviz.color', 'blue');
-//                        $vertex->setAttribute('graphviz.fontcolor', 'blue');
-                    }
-                    break;
-            }
-            $array[$structure->getId()] = $vertex;
-
-        }
-        foreach ($structures as $structure) {
-            $son = $array[$structure->getId()];
-            $father = null;
-            if ($structure->getParent()) $father = $array[$structure->getParent()->getId()];
-
-            if ($father && $son) $father->createEdgeTo($son);
-        }
-
-        $viz = new GraphViz();
-//        $img = $viz->createImageData($graph);
-        $img = $viz->createImageHtml($graph);
-        return new ViewModel([
-            'img' => $img,
-        ]);
-    }
+//    public function grapheAction() {
+//        $graph = new Graph();
+//        $structureMere = $this->getStructureService()->getRequestedStructure($this);
+//
+//        $structures = [];
+//        if ($structureMere === null) {
+//            $structures = $this->getStructureService()->getStructures(true);
+//        } else {
+//            $file = [];
+//            $file[] = $structureMere;
+//            while (!empty($file)) {
+//                /** @var Structure $structure */
+//                $structure = array_shift($file);
+//
+//                $structures[] = $structure;
+//                $enfants = $structure->getEnfants()->toArray();
+//                /** @var Structure $enfant */
+//                foreach ($enfants as $enfant) {
+//                    if ($enfant->getHisto() === 'O' ) {
+//                        $file[] = $enfant;
+//                    }
+//                }
+//            }
+//        }
+//        $array = [];
+//        foreach ($structures as $structure) {
+//            $agentsTexte = "";
+//            $agents = $this->getAgentService()->getAgentsByStructure($structure);
+//            foreach ($agents as $agent) {
+//                $agentsTexte .= "- " . $agent->getDenomination() . "\n";
+//            }
+//            $header = $structure->getId()." - ".$structure->getLibelleCourt();
+//            $vertex = $graph->createVertex($header);
+//            $vertex->setAttribute('graphviz.shape', 'plaintext');
+//            $text  = "<table>";
+//            $text .= "<tr><td>".$structure->getId()."</td><td>".$structure->getLibelleCourt()."</td></tr>";
+//            $text .= "<tr><td colspan='2' style='text-align: left'>";
+//            foreach ($agents as $agent) $text .= $agent->getDenomination() . "<br/>";
+//            $text .= "</td></tr>";
+//            $text .= "</table>";
+//            $vertex->setAttribute('graphviz.label', GraphViz::raw("<".$text.">"));
+//
+////            $raw = GraphViz::raw("<table><tr><td>Hello</td></tr></table>"); //"<table><tr><td>".$structure->getId()."</td><td>" . $structure->getLibelleCourt() . "</td></tr></table>"); // . $agentsTexte);
+////            $vertex->setAttribute("graphviz.label", $raw);
+//            switch ($structure->getType()) {
+//                case "Établissement" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+//                    break;
+//                case "Composante" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+////                    $vertex->setAttribute('graphviz.color', 'blue');
+////                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
+//                    break;
+//                case "Bibliothèque" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+////                    $vertex->setAttribute('graphviz.color', 'Hotpink');
+////                    $vertex->setAttribute('graphviz.fontcolor', 'Hotpink');
+//                    break;
+//                case "Antenne" :
+//                case "Département" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+////                    $vertex->setAttribute('graphviz.color', 'blue');
+////                    $vertex->setAttribute('graphviz.style', 'dashed');
+////                    $vertex->setAttribute('graphviz.fontcolor', 'blue');
+//                    break;
+//                case "Structure de recherche" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+////                    $vertex->setAttribute('graphviz.style', 'rounded');
+////                    $vertex->setAttribute('graphviz.color', 'green');
+////                    $vertex->setAttribute('graphviz.fontcolor', 'green');
+//                    break;
+//                case "Service central" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+////                    $vertex->setAttribute('graphviz.color', 'red');
+////                    $vertex->setAttribute('graphviz.fontcolor', 'red');
+//                    break;
+//                case "Service commun" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+////                    $vertex->setAttribute('graphviz.color', 'darkorange');
+////                    $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
+//                    break;
+//                case "Sous-structure administrative" :
+////                    $vertex->setAttribute('graphviz.shape', 'none');
+////                    $vertex->setAttribute('graphviz.style', 'dashed');
+//                    $typeParent = null;
+//                    $parent = $structure->getParent();
+//                    while ($typeParent === null AND $parent !== null) {
+//                        if ($parent->getType() !== "Sous-structure administrative") $typeParent = $parent->getType();
+//                        $parent = $parent->getParent();
+//                    }
+//                    if ($typeParent === "Service central") {
+////                        $vertex->setAttribute('graphviz.color', 'red');
+////                        $vertex->setAttribute('graphviz.fontcolor', 'red');
+//                    }
+//                    if ($typeParent === "Service commun") {
+////                        $vertex->setAttribute('graphviz.color', 'darkorange');
+////                        $vertex->setAttribute('graphviz.fontcolor', 'darkorange');
+//                    }
+//                    if ($typeParent === "Composante" OR $typeParent === "Antenne" OR $typeParent === "Département" ) {
+////                        $vertex->setAttribute('graphviz.color', 'blue');
+////                        $vertex->setAttribute('graphviz.fontcolor', 'blue');
+//                    }
+//                    break;
+//            }
+//            $array[$structure->getId()] = $vertex;
+//
+//        }
+//        foreach ($structures as $structure) {
+//            $son = $array[$structure->getId()];
+//            $father = null;
+//            if ($structure->getParent()) $father = $array[$structure->getParent()->getId()];
+//
+//            if ($father && $son) $father->createEdgeTo($son);
+//        }
+//
+//        $viz = new GraphViz();
+////        $img = $viz->createImageData($graph);
+//        $img = $viz->createImageHtml($graph);
+//        return new ViewModel([
+//            'img' => $img,
+//        ]);
+//    }
 }

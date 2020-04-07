@@ -209,9 +209,9 @@ class StructureService
     public function getSousStructures($structure, $ouverte = true)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
-            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
-            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
+//            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+//            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
+//            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
             ->andWhere('structure.parent = :structure')
             ->setParameter('structure', $structure)
             ->orderBy('structure.code');

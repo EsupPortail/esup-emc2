@@ -131,9 +131,30 @@ class PosteService {
                 ->setParameter('structure', $structure);
         }
         if ($structure !== null AND $sousstructure === true) {
-            $qb = $qb->andWhere('poste.structure = :structure OR structure.parent = :structure')
-                ->setParameter('structure', $structure);
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
+
+            $qb = $qb->andWhere('grade.structure IN (:structures)')
+                ->setParameter('structures', $structures);
         }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @param bool $libre
+     * @return  Poste[]
+     */
+    public function getPostesByStructures($structures = [],  $libre = false)
+    {
+        /** @var QueryBuilder $qb */
+        $qb = $this->createQueryBuilder()
+                ->andWhere('poste.structure IN (:structures)')
+                ->setParameter('structures', $structures);
+
+        if ($libre === true) $qb = $qb->andWhere('fiche IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;

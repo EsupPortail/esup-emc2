@@ -545,4 +545,22 @@ class FichePoste
         return $dictionnaire;
     }
 
+    /**
+     * @return string
+     */
+    public function getLibelleMetierPrincipal()
+    {
+        if ($this->getFicheTypeExternePrincipale()) {
+            return $this->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+        }
+        return "Non défini";
+    }
+
+    public function isComplete()
+    {
+        if (! $this->getAgent()) return false;
+        if (! $this->getPoste()) return false;
+        if (! $this->getFicheTypeExternePrincipale()) return false;
+        return true;
+    }
 }

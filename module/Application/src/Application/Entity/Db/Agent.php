@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -309,5 +310,34 @@ class Agent {
             if ($formation->estNonHistorise()) $formations[] = $formation;
         }
         return $formations;
+    }
+
+    /** Postes en cours et Fiche de poste en cours ********************************************************************/
+
+    /**
+     * @return FichePoste
+     */
+    public function getFichePosteActif()
+    {
+        $now = $this->getDateTime();
+        $fiches = [];
+        /** @var FichePoste $fiche */
+        foreach ($this->fiches as $fiche) {
+            if ($fiche->getHistoCreation() <= $now AND $fiche->estNonHistorise($now)) {
+                $fiches[] = $fiche;
+            }
+        }
+        if (count($fiches) > 1 ) throw new RuntimeException("Un agent a plus d'une fiche de poste active", 0 , null);
+        if (empty($fiches)) return null;
+        return $fiches[0];
+    }
+
+    /**
+     * @return Poste
+     */
+    public function getPosteActif()
+    {
+        $fiche = $this->getFichePosteActif();
+        return ($fiche)?$fiche->getPoste():null;
     }
 }
