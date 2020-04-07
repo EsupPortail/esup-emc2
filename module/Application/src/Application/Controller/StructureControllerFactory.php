@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
+use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\Structure\StructureForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
@@ -31,9 +32,11 @@ class StructureControllerFactory {
 
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
+         * @var AjouterGestionnaireForm $ajouterGestionnaire
          * @var StructureForm $structureForm
          */
         $affectationForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
+        $ajouterGestionnaire = $container->get('FormElementManager')->get(AjouterGestionnaireForm::class);
         $structureForm = $container->get('FormElementManager')->get(StructureForm::class);
 
         /** @var StructureController $controller */
@@ -44,6 +47,7 @@ class StructureControllerFactory {
         $controller->setStructureService($structureService);
         $controller->setUserService($userService);
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
+        $controller->setAjouterGestionnaireForm($ajouterGestionnaire);
         $controller->setStructureForm($structureForm);
         return $controller;
     }

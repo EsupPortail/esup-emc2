@@ -6,6 +6,8 @@ use Application\Assertion\EditionStructureAssertion;
 use Application\Assertion\EditionStructureAssertionFactory;
 use Application\Controller\StructureController;
 use Application\Controller\StructureControllerFactory;
+use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
+use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormFactory;
 use Application\Form\Structure\StructureForm;
 use Application\Form\Structure\StructureFormFactory;
 use Application\Form\Structure\StructureHydrator;
@@ -281,6 +283,7 @@ return [
     'form_elements' => [
         'factories' => [
             StructureForm::class => StructureFormFactory::class,
+            AjouterGestionnaireForm::class => AjouterGestionnaireFormFactory::class,
         ],
     ],
     'hydrators' => [

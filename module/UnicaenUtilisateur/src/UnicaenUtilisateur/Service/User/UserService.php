@@ -359,11 +359,11 @@ class UserService implements RechercheIndividuServiceInterface
     {
         $result = [];
         /** @var User[] $responsables */
-        foreach ($responsables as $responsable) {
+        foreach ($users as $user) {
             $result[] = array(
-                'id'    => $responsable->getId(),
-                'label' => $responsable->getDisplayName(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>".$responsable->getEmail()."</span>",
+                'id'    => $user->getId(),
+                'label' => $user->getDisplayName(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>".$user->getEmail()."</span>",
             );
         }
         usort($result, function($a, $b) {

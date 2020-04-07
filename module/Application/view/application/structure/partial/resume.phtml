@@ -37,9 +37,11 @@ $canModifierGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(S
             Gestionnaires
             <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
             <?php if ($canModifierGestionnaire) : ?>
-                <?php /** @see \Application\Controller\StructureController::ajouterGestionnaireAction() */ ?>
                 <a
+                    <?php /** @see \Application\Controller\StructureController::ajouterGestionnaireAction() */ ?>
                     href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
+                    class="ajax-modal"
+                    data-event="modification"
                 >
                     <span class="icon editer" data-toggle="tooltip" data-html="true"
                           title="Ajouter un gestionnaire à la structure <span class='structure'><?php echo $structure->getLibelleLong(); ?></span>">
@@ -54,8 +56,6 @@ $canModifierGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(S
                         <a
                             <?php /** @see \Application\Controller\StructureController::retirerGestionnaireAction() */ ?>
                             href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>"
-                            class="ajax-modal"
-                            data-event="modification"
                         >
                             <span class="icon detruire"  data-toggle="tooltip" data-html="true"
                                   title="Supprimer la gestion de structure <span class='structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='user'><?php echo $gestionnaire->getDisplayName(); ?></span>">

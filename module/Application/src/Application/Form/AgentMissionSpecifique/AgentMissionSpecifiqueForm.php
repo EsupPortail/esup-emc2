@@ -121,7 +121,6 @@ class AgentMissionSpecifiqueForm extends Form {
         ]);
 
         //Submit
-        // button
         $this->add([
             'type' => Button::class,
             'name' => 'creer',
