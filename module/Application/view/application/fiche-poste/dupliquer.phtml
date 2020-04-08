@@ -19,7 +19,7 @@ use Application\Entity\Db\Structure;
 >
     <select id="fiche" name="fiche">
         <?php foreach ($fiches as $fiche) : ?>
-            <option value="<?php echo $fiche->getId(); ?>"> <?php echo $fiche->getLibelle(); ?> - <?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?> </option>
+            <option value="<?php echo $fiche->getId(); ?>"> <?php echo $fiche->getLibelleMetierPrincipal() ?> - <?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?> </option>
         <?php endforeach; ?>
     </select>
     <input type="submit" value="Utiliser cette fiche de poste">

@@ -22,6 +22,8 @@ $canEditerExpertise = true || $this->isAllowed(FichePostePrivileges::getResource
 
 $mode = 'edition';
 $date = new DateTime();
+
+$this->headTitle("Modification de la fiche de poste #".$fiche->getId());
 ?>
 
 <style>

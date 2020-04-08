@@ -292,7 +292,7 @@ class UserService implements RechercheIndividuServiceInterface
     }
 
     /**
-     * @return UserInterface
+     * @return User
      */
     public function getConnectedUser()
     {

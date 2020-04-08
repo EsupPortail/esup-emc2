@@ -246,4 +246,14 @@ class StructureService
 
         return $filles;
     }
+
+    /**
+     * @param Structure $structure
+     * @param User $user
+     * @return boolean
+     */
+    public function isGestionnaire(Structure $structure, User $user)
+    {
+        return (array_search($user, $structure->getGestionnaires()) !== false);
+    }
 }

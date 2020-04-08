@@ -17,9 +17,11 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
+use Application\Provider\Privilege\StructurePrivileges;
 
-$this->headTitle("Affichage de la structure : " . $structure->getLibelleLong());
+$this->headTitle($structure->getLibelleLong());
 
+$canAfficherStructure = $this->isAllowed($structure, StructurePrivileges::AFFICHER);
 ?>
 
 <div class="row">
@@ -46,24 +48,36 @@ $this->headTitle("Affichage de la structure : " . $structure->getLibelleLong());
     </div>
 </div>
 
-<div class="main">
+<?php if (! $canAfficherStructure) : ?>
 
-    <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles]); ?>
-
-    <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
-
-    <?php echo $this->partial('partial/fiches-postes', ['fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
-
-    <div class="row">
-        <div class="col-md-6">
-            <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
-        </div>
-        <div class="col-md-6">
-            <?php echo $this->partial('partial/postes', ['postes' => $postes]); ?>
-        </div>
+    <div class="alert alert-danger col-md-8">
+        <p class="lead">
+            <span class="icon attention"></span>
+            Vous n'êtes pas habilité&middot;e à visualiser cette structure.
+        </p>
     </div>
 
-</div>
+<?php else : ?>
+
+    <div class="main">
+
+        <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles]); ?>
+
+        <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
+
+        <?php echo $this->partial('partial/fiches-postes', ['fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
+
+        <div class="row">
+            <div class="col-md-6">
+                <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
+            </div>
+            <div class="col-md-6">
+                <?php echo $this->partial('partial/postes', ['postes' => $postes]); ?>
+            </div>
+        </div>
+
+    </div>
+<?php endif; ?>
 
 <script>
     $(function() {

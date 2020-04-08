@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Assertion\EditionStructureAssertion;
-use Application\Assertion\EditionStructureAssertionFactory;
+use Application\Assertion\StructureAssertion;
+use Application\Assertion\StructureAssertionFactory;
 use Application\Controller\StructureController;
 use Application\Controller\StructureControllerFactory;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
@@ -27,14 +27,19 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'index',
-                        'afficher',
                         'rechercher',
                         'rechercher-with-structure-mere',
                         'graphe',
                     ],
-                    'privileges' => [
-                        StructurePrivileges::AFFICHER,
+                    'privileges' => StructurePrivileges::AFFICHER,
+                ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
+                        'afficher',
                     ],
+                    'privileges' => StructurePrivileges::AFFICHER,
+                    'assertion'  => StructureAssertion::class,
                 ],
                 [
                     'controller' => StructureController::class,
@@ -64,23 +69,22 @@ return [
                     'action' => [
                         'editer-description'
                     ],
-                    //'assertion'  => EditionStructureAssertion::class,
                     'privileges' => StructurePrivileges::EDITER_DESCRIPTION,
                 ],
             ],
         ],
         'resource_providers' => [
             'BjyAuthorize\Provider\Resource\Config' => [
-                'structure' => [],
+                'Structure' => [],
             ],
         ],
         'rule_providers' => [
             PrivilegeRuleProvider::class => [
                 'allow' => [
                     [
-                        'privileges' => StructurePrivileges::EDITER,
-                        //'resources' => ['structure'],
-                        'assertion' => EditionStructureAssertion::class,
+                        'privileges' => StructurePrivileges::AFFICHER,
+                        'resources' => ['Structure'],
+                        'assertion' => StructureAssertion::class
                     ],
                 ],
             ],
@@ -271,7 +275,7 @@ return [
 
     'service_manager' => [
         'factories' => [
-            EditionStructureAssertion::class => EditionStructureAssertionFactory::class,
+            StructureAssertion::class => StructureAssertionFactory::class,
             StructureService::class => StructureServiceFactory::class,
         ],
     ],

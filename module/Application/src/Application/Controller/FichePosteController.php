@@ -135,7 +135,7 @@ class FichePosteController extends AbstractActionController {
             foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {
                 $nouvelleFicheMetier = $ficheMetierExterne->clone_it();
                 $nouvelleFicheMetier->setFichePoste($nouvelleFiche);
-                $nouvelleFicheMetier = $this->getFichePosteService()->createFicheTypeExterne($nouvelleFicheMetier);
+                $this->getFichePosteService()->createFicheTypeExterne($nouvelleFicheMetier);
             }
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */

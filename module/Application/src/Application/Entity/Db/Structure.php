@@ -11,7 +11,7 @@ class Structure implements ResourceInterface{
 
     public function getResourceId()
     {
-        return 'structure';
+        return 'Structure';
     }
 
     /** @var string */
