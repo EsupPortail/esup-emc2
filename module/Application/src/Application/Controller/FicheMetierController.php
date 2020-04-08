@@ -10,12 +10,6 @@ use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
 use Application\Form\FicheMetier\ApplicationsForm;
 use Application\Form\FicheMetier\ApplicationsFormAwareTrait;
-use Application\Form\FicheMetier\FormationBaseForm;
-use Application\Form\FicheMetier\FormationBaseFormAwareTrait;
-use Application\Form\FicheMetier\FormationComportementaleForm;
-use Application\Form\FicheMetier\FormationComportementaleFormAwareTrait;
-use Application\Form\FicheMetier\FormationOperationnelleForm;
-use Application\Form\FicheMetier\FormationOperationnelleFormAwareTrait;
 use Application\Form\FicheMetier\FormationsForm;
 use Application\Form\FicheMetier\FormationsFormAwareTrait;
 use Application\Form\FicheMetier\GererCompetenceFormAwareTrait;
@@ -46,11 +40,6 @@ class FicheMetierController extends  AbstractActionController{
     use GererCompetenceFormAwareTrait;
 
     use ConfigurationServiceAwareTrait;
-
-    use FormationBaseFormAwareTrait;
-    use FormationComportementaleFormAwareTrait;
-    use FormationOperationnelleFormAwareTrait;
-
 
     public function indexAction()
     {
