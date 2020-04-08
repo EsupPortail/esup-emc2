@@ -17,19 +17,9 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
-use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\FichePostePrivileges;
 
 $this->headTitle("Affichage de la structure : " . $structure->getLibelleLong());
 
-$canAfficheAffectation = true;
-
-$canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
-$canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
-$canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
-$canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
-$canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::DETRUIRE));
 ?>
 
 <div class="row">
@@ -64,178 +54,12 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
 
     <?php echo $this->partial('partial/fiches-postes', ['fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
 
-
-
     <div class="row">
         <div class="col-md-6">
-            <h2>
-                Agents
-                <span class="badge">
-                    <?php echo count($agents); ?>
-                </span>
-            </h2>
-
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Dénomination</th>
-                        <th>Grade</th>
-                        <th>Poste</th>
-                        <th>Fiche</th>
-                        <th class="cell-action"> Action </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($agents as $agent) :?>
-                        <tr>
-                            <td>
-                                <?php if ($canVoirAgent) : ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                        href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"
-                                        target="_blank"
-                                    >
-                                    <?php echo $agent->getDenomination(); ?></a>
-                                <?php else : ?>
-                                    <?php echo $agent->getDenomination(); ?>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                                    <?php echo $grade->getStructure()->getLibelleCourt(); ?> <br/>
-                                    <?php echo $grade->getGrade()->getLibelleCourt(); ?>
-                                <?php endforeach; ?>
-                            </td>
-                            <td>
-                                <?php $posteA = $agent->getPosteActif(); ?>
-                                <?php if ($posteA != null ) : ?>
-                                    <span
-                                        class="icon ok" style="color:darkgreen;"
-                                        data-toggle="tooltip" data-html="true"
-                                        title="<?php echo $posteA->getNumeroPoste(); ?>"
-                                    >
-
-                                    </span>
-                                <?php else : ?>
-                                    <span class="icon ko" style="color:darkred;"></span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php $fiche = $agent->getFichePosteActif(); ?>
-                                <?php if ($fiche !== null) : ?>
-                                    <?php if ($fiche->isComplete()) : ?>
-                                        <span
-                                            class="icon ok" style="color:darkgreen;"
-                                            data-toggle="tooltip" data-html="true"
-                                            title="<?php echo $fiche->getLibelleMetierPrincipal(); ?>"
-                                        >
-
-                                        </span>
-                                    <?php else: ?>
-                                <span
-                                    class="icon question" style="color:orangered;"
-                                    data-toggle="tooltip" data-html="true"
-                                    title="Fiche incomplète"
-                                >
-                                    <?php endif; ?>
-                                <?php else : ?>
-                                    <span class="icon ko" style="color:darkred;"></span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if($fiche === null) : ?>
-                                    <?php if ($canAjouterFichePoste) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                                            href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
-                                            target="_blank"
-                                        ><span class="icon ajouter"
-                                               data-toggle="tooltip" data-html="true"
-                                               title="Ajouter la fiche de poste"></span></a>
-                                    <?php endif; ?>
-                                    <?php if ($canAjouterFichePoste) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
-                                            href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
-                                            class="ajax-modal" data-event="duplication"
-                                        ><span class="icon cloner"
-                                               data-toggle="tooltip" data-html="true"
-                                               title="Dupliquer une fiche existante"></span></a>
-                                    <?php endif; ?>
-                                <?php else  :?>
-                                    <?php if ($canVoirFichePoste) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                                                href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                                                target="_blank"
-                                        ><span class="icon voir"
-                                               data-toggle="tooltip" data-html="true"
-                                               title="Afficher la fiche de poste"></span></a>
-                                    <?php endif; ?>
-
-                                    <?php if ($canModifierFichePoste) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
-                                                href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                                                target="_blank"
-                                        ><span class="icon editer"
-                                               data-toggle="tooltip" data-html="true"
-                                               title="Modifier la fiche de poste"></span></a>
-                                    <?php endif; ?>
-
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-
-            </table>
+            <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
         </div>
         <div class="col-md-6">
-            <h2>
-                Postes
-                <span class="badge">
-                    <?php echo count($postes); ?>
-                </span>
-            </h2>
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Numéro</th>
-                        <th>Structure</th>
-                        <th>Description</th>
-                        <th>Agent</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($postes as $poste) : ?>
-                        <tr>
-                            <td> <?php echo $poste->getNumeroPoste(); ?> </td>
-                            <td> <?php echo $poste->getStructure()->getLibelleCourt(); ?> </td>
-                            <td>
-                                    <?php echo $poste->getDomaine()->getLibelle(); ?> <br/>
-                                    <?php echo $poste->getFonction(); ?>
-                            </td>
-                            <td>
-                                <?php
-                                    $fiche = $poste->getFichePoste();
-                                    $agent = ($fiche)?$fiche->getAgent():null;
-                                ?>
-                                <?php if ($agent) : ?>
-                                    <span
-                                            class="icon ok" style="color: darkgreen;"
-                                            data-toggle="tooltip" data-html="true"
-                                            title="Occupé par <span class='user'><?php echo $agent->getDenomination(); ?></span>"
-                                    ></span>
-                                <?php else: ?>
-                                    <span class="icon ko" style="color: darkred;"></span>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-
+            <?php echo $this->partial('partial/postes', ['postes' => $postes]); ?>
         </div>
     </div>
 
