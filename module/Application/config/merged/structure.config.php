@@ -31,15 +31,33 @@ return [
                         'rechercher-with-structure-mere',
                         'graphe',
                     ],
-                    'privileges' => StructurePrivileges::AFFICHER,
+                    'privileges' => StructurePrivileges::STRUCTURE_AFFICHER,
                 ],
                 [
                     'controller' => StructureController::class,
                     'action' => [
                         'afficher',
                     ],
-                    'privileges' => StructurePrivileges::AFFICHER,
+                    'privileges' => StructurePrivileges::STRUCTURE_AFFICHER,
                     'assertion'  => StructureAssertion::class,
+                ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
+                        'editer-description'
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION,
+                    'assertion'  => StructureAssertion::class,
+                ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
+                        'ajouter-gestionnaire',
+                        'retirer-gestionnaire',
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
+                    'assertion'  => StructureAssertion::class,
+
                 ],
                 [
                     'controller' => StructureController::class,
@@ -51,25 +69,8 @@ return [
                         'detruire-affectation',
                     ],
                     'privileges' => [
-                        StructurePrivileges::EDITER,
+                        StructurePrivileges::STRUCTURE_GESTIONNAIRE,
                     ],
-                ],
-                [
-                    'controller' => StructureController::class,
-                    'action' => [
-                        'ajouter-gestionnaire',
-                        'retirer-gestionnaire',
-                    ],
-                    'privileges' => [
-                        StructurePrivileges::GESTIONNAIRE,
-                    ],
-                ],
-                [
-                    'controller' => StructureController::class,
-                    'action' => [
-                        'editer-description'
-                    ],
-                    'privileges' => StructurePrivileges::EDITER_DESCRIPTION,
                 ],
             ],
         ],
@@ -82,7 +83,11 @@ return [
             PrivilegeRuleProvider::class => [
                 'allow' => [
                     [
-                        'privileges' => StructurePrivileges::AFFICHER,
+                        'privileges' => [
+                            StructurePrivileges::STRUCTURE_AFFICHER,
+                            StructurePrivileges::STRUCTURE_DESCRIPTION,
+                            StructurePrivileges::STRUCTURE_GESTIONNAIRE,
+                        ],
                         'resources' => ['Structure'],
                         'assertion' => StructureAssertion::class
                     ],
@@ -100,7 +105,7 @@ return [
                             'structure' => [
                                 'label' => 'Structures',
                                 'route' => 'structure',
-                                'resource' =>  StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER) ,
+                                'resource' =>  StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AFFICHER) ,
                                 'order'    => 1500,
                             ],
                         ],

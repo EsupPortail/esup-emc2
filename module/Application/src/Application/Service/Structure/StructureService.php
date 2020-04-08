@@ -254,6 +254,8 @@ class StructureService
      */
     public function isGestionnaire(Structure $structure, User $user)
     {
-        return (array_search($user, $structure->getGestionnaires()) !== false);
+        if (array_search($user, $structure->getGestionnaires()) !== false) return true;
+        if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $user);
+        return false;
     }
 }

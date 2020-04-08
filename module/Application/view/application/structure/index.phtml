@@ -12,9 +12,8 @@ $this->headTitle("Index des structures");
  * @var Role $role
  */
 
-$canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER));
-$canGestionnaire    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::GESTIONNAIRE));
-$canEditer    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER));
+$canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AFFICHER));
+
 ?>
 
 <div class="row">

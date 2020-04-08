@@ -63,9 +63,10 @@ class StructureController extends AbstractActionController {
         }
 
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $structuresFilles = $this->getStructureService()->getStructuresFilles($structure);
+        $structuresDescendantes = $this->getStructureService()->getStructuresFilles($structure);
+        $structuresFilles = $this->getStructureService()->getSousStructures($structure);
 
-        $structures = $structuresFilles;
+        $structures = $structuresDescendantes;
         $structures[] =  $structure;
 
         $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructures($structures);

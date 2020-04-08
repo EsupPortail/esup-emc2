@@ -21,7 +21,8 @@ use Application\Provider\Privilege\StructurePrivileges;
 
 $this->headTitle($structure->getLibelleLong());
 
-$canAfficherStructure = $this->isAllowed($structure, StructurePrivileges::AFFICHER);
+$canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AFFICHER);
+
 ?>
 
 <div class="row">

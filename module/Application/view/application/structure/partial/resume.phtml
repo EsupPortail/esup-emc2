@@ -8,8 +8,8 @@
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
 
-$canModifierDescription = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER_DESCRIPTION));
-$canModifierGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::GESTIONNAIRE));
+$canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
+$canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 ?>
 
 <div class="row">
@@ -17,7 +17,7 @@ $canModifierGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(S
     <div class="col-md-6">
         <h2>
             Description
-            <?php if ($canModifierDescription) : ?>
+            <?php if ($canEditerDescription) : ?>
                 <a
                     <?php /** @see \Application\Controller\StructureController::editerDescriptionAction() */ ?>
                     href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
@@ -40,7 +40,7 @@ $canModifierGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(S
         <h2>
             Gestionnaires
             <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
-            <?php if ($canModifierGestionnaire) : ?>
+            <?php if ($canEditerGestionnaire) : ?>
                 <a
                     <?php /** @see \Application\Controller\StructureController::ajouterGestionnaireAction() */ ?>
                     href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
@@ -56,7 +56,7 @@ $canModifierGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(S
             <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
                 <li>
                     <?php echo $gestionnaire->getDisplayName(); ?>
-                    <?php if ($canModifierGestionnaire) : ?>
+                    <?php if ($canEditerGestionnaire) : ?>
                         <a
                             <?php /** @see \Application\Controller\StructureController::retirerGestionnaireAction() */ ?>
                             href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>"
