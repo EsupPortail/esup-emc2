@@ -210,36 +210,6 @@ $this->headTitle("Affichage de la fiche métier : ".$fichemetier->getId());
         <div class="panel-body">
             <div class="row">
                 <?php echo $this->competences($dictionnaireCompetence, ['type' => false, 'theme' => false]); ?>
-
-                    <h5>
-                        Connaissances
-                        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
-                        <?php /** @see FicheMetierController::modifierConnaissancesAction() */ ?>
-                        <a class="ajax-modal" data-event="modification"
-                           href="<?php echo $this->url('fiche-metier-type/modifier-connaissances', ['id' => $fichemetier->getId()], [], true); ?>">
-                            <span class="icon editer"></span></a>
-                        <?php endif; ?>
-                    </h5>
-
-                    <h5>
-                        Competénces opérationnelles
-                        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
-                            <?php /** @see FicheMetierController::modifierOperationnelleAction() */ ?>
-                        <a class="ajax-modal" data-event="modification"
-                           href="<?php echo $this->url('fiche-metier-type/modifier-operationnelle', ['id' => $fichemetier->getId()], [], true); ?>">
-                            <span class="icon editer"></span></a>
-                        <?php endif; ?>
-                    </h5>
-
-                    <h5>
-                        Competénces comportementales
-                        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
-                        <?php /** @see FicheMetierController::modifierComportementaleAction() */ ?>
-                        <a class="ajax-modal" data-event="modification"
-                           href="<?php echo $this->url('fiche-metier-type/modifier-comportementale', ['id' => $fichemetier->getId()], [], true); ?>">
-                            <span class="icon editer"></span></a>
-                        <?php endif; ?>
-                    </h5>
             </div>
         </div>
     </div>

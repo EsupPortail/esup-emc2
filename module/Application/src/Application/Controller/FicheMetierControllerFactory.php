@@ -5,9 +5,6 @@ namespace Application\Controller;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ApplicationsForm;
-use Application\Form\FicheMetier\FormationBaseForm;
-use Application\Form\FicheMetier\FormationComportementaleForm;
-use Application\Form\FicheMetier\FormationOperationnelleForm;
 use Application\Form\FicheMetier\FormationsForm;
 use Application\Form\FicheMetier\GererCompetenceForm;
 use Application\Form\FicheMetier\LibelleForm;
@@ -43,10 +40,6 @@ class FicheMetierControllerFactory {
          * @var ApplicationsForm $applicationsForm
          * @var FormationsForm $formationsForm
          * @var GererCompetenceForm $gererCompetenceForm
-         *
-         * @var FormationBaseForm $formationBaseForm
-         * @var FormationComportementaleForm $formationComportementalForm
-         * @var FormationOperationnelleForm $formationOperationnelleForm
          */
         $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
@@ -54,12 +47,6 @@ class FicheMetierControllerFactory {
         $applicationsForm = $container->get('FormElementManager')->get(ApplicationsForm::class);
         $formationsForm = $container->get('FormElementManager')->get(FormationsForm::class);
         $gererCompetenceForm = $container->get('FormElementManager')->get(GererCompetenceForm::class);
-
-        $formationBaseForm = $container->get('FormElementManager')->get(FormationBaseForm::class);
-        $formationComportementalForm = $container->get('FormElementManager')->get(FormationComportementaleForm::class);
-        $formationOperationnelleForm = $container->get('FormElementManager')->get(FormationOperationnelleForm::class);
-
-
 
         /** @var FicheMetierController $controller */
         $controller = new FicheMetierController();
@@ -76,12 +63,6 @@ class FicheMetierControllerFactory {
         $controller->setApplicationsForm($applicationsForm);
         $controller->setFormationsForm($formationsForm);
         $controller->setGererCompetenceForm($gererCompetenceForm);
-
-        $controller->setFormationBaseForm($formationBaseForm);
-        $controller->setFormationComportementaleForm($formationComportementalForm);
-        $controller->setFormationOperationnelleForm($formationOperationnelleForm);
-
-
 
         return $controller;
     }

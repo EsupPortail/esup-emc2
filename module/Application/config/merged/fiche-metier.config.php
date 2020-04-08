@@ -10,15 +10,6 @@ use Application\Form\FicheMetier\ApplicationsForm;
 use Application\Form\FicheMetier\ApplicationsFormFactory;
 use Application\Form\FicheMetier\ApplicationsHydrator;
 use Application\Form\FicheMetier\ApplicationsHydratorFactory;
-use Application\Form\FicheMetier\FormationBaseForm;
-use Application\Form\FicheMetier\FormationBaseFormFactory;
-use Application\Form\FicheMetier\FormationBaseHydrator;
-use Application\Form\FicheMetier\FormationComportementaleForm;
-use Application\Form\FicheMetier\FormationComportementaleFormFactory;
-use Application\Form\FicheMetier\FormationComportementaleHydrator;
-use Application\Form\FicheMetier\FormationOperationnelleForm;
-use Application\Form\FicheMetier\FormationOperationnelleFormFactory;
-use Application\Form\FicheMetier\FormationOperationnelleHydrator;
 use Application\Form\FicheMetier\FormationsForm;
 use Application\Form\FicheMetier\FormationsFormFactory;
 use Application\Form\FicheMetier\FormationsHydrator;
@@ -69,9 +60,6 @@ return [
                         'ajouter-nouvelle-activite',
                         'ajouter-activite-existante',
 
-                        'modifier-connaissances',
-                        'modifier-operationnelle',
-                        'modifier-comportementale',
                         'modifier-application',
                         'modifier-formation',
                         'gerer-competences',
@@ -250,39 +238,6 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'modifier-connaissances' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-connaissances/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'modifier-connaissances',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'modifier-operationnelle' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-operationnelle/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'modifier-operationnelle',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'modifier-comportementale' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-comportementale/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'modifier-comportementale',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'modifier-application' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -326,20 +281,12 @@ return [
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
-            FormationBaseForm::class => FormationBaseFormFactory::class,
-            FormationOperationnelleForm::class => FormationOperationnelleFormFactory::class,
-            FormationComportementaleForm::class => FormationComportementaleFormFactory::class,
             ApplicationsForm::class => ApplicationsFormFactory::class,
             FormationsForm::class => FormationsFormFactory::class,
             GererCompetenceForm::class => GererCompetenceFormFactory::class,
         ],
     ],
     'hydrators' => [
-        'invokables' => [
-            FormationBaseHydrator::class => FormationBaseHydrator::class,
-            FormationOperationnelleHydrator::class => FormationOperationnelleHydrator::class,
-            FormationComportementaleHydrator::class => FormationComportementaleHydrator::class,
-        ],
         'factories' => [
             LibelleHydrator::class => LibelleHydratorFactory::class,
             ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
