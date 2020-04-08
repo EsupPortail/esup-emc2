@@ -129,21 +129,4 @@ class DomaineService {
         return $domaine;
     }
 
-    /**
-     * @param integer $oldid
-     * @return Domaine
-     */
-    public function getDomaineByOldId($oldid)
-    {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('domaine.oldId = :oldid')
-            ->setParameter('oldid', $oldid)
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs Domaine portent le même oldid ['.$oldid.']', $e);
-        }
-        return $result;
-    }
 }

@@ -11,7 +11,7 @@ class FamilleProfessionnelle {
     /** @var string */
     private $libelle;
 
-    /** @var ArrayCollection */
+    /** @var ArrayCollection (Domaine)*/
     private $domaines;
 
     /**

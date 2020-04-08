@@ -29,6 +29,8 @@ class FichePosteService {
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+//            ->addSelect('fichemetier')->leftJoin('fiche.fichesMetiers', 'fichemetier')
+//            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
             ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
             ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
             ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')

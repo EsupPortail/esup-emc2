@@ -73,17 +73,24 @@ class FichePosteController extends AbstractActionController {
     public function indexAction()
     {
         $fiches             = $this->getFichePosteService()->getFichesPostes();
-        $fichesSansAgent    = $this->getFichePosteService()->getFichesPostesSansAgent();
-        $fichesSansPoste    = $this->getFichePosteService()->getFichesPostesSansPoste();
-        $fichesProblemes    = $this->getFichePosteService()->getFichesPostesSansAgentEtPoste();
-        $fichesOks          = $this->getFichePosteService()->getFichesPostesAvecAgentEtPoste();
+
+        $fichesCompletes = [];
+        $fichesIncompletes = [];
+        $ficheVides = [];
+        foreach ($fiches as $fiche) {
+            if ($fiche->isComplete()) $fichesCompletes[] = $fiche;
+            else {
+                if ($fiche->isVide()) $ficheVides[] = $fiche;
+                else $fichesIncompletes[] = $fiche;
+            }
+        }
+
 
         return new ViewModel([
             'fiches' => $fiches,
-            'fichesSansAgent' => $fichesSansAgent,
-            'fichesSansPoste' => $fichesSansPoste,
-            'fichesProblemes' => $fichesProblemes,
-            'fichesOks'       => $fichesOks,
+            'fichesIncompletes' => $fichesIncompletes,
+            'fichesVides' => $ficheVides,
+            'fichesCompletes'       => $fichesCompletes,
         ]);
     }
 
@@ -132,8 +139,8 @@ class FichePosteController extends AbstractActionController {
             }
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */
-            //return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
-            exit();
+            return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+            //exit();
         }
 
         return new ViewModel([
@@ -208,7 +215,6 @@ class FichePosteController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") {
-                $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
                 $this->getFichePosteService()->delete($fiche);
             }
             exit();
@@ -472,42 +478,6 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    /** SPECIFICITE ***************************************************************************************************/
-
-    public function editerSpecificiteAction()
-    {
-        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-
-        $specificite = $fiche->getSpecificite();
-        if ($specificite === null) {
-            $specificite = new SpecificitePoste();
-            $fiche->setSpecificite($specificite);
-            $this->getFichePosteService()->createSpecificitePoste($specificite);
-        }
-
-        /** @var SpecificitePosteForm $form */
-        $form = $form = $this->getSpecificitePosteForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/editer-specificite', ['fiche' => $fiche->getId()], [], true));
-        $form->bind($specificite);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $specificite->setFiche($fiche);
-                $this->getFichePosteService()->updateSpecificitePoste($specificite);
-                $this->getFichePosteService()->update($fiche);
-            }
-        }
-
-        return new ViewModel([
-            'title' => 'Modifier spécificité du poste',
-            'form' => $form,
-        ]);
-
-    }
 
     /**
      * @param FichePoste $fiche
@@ -835,5 +805,41 @@ class FichePosteController extends AbstractActionController {
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
     }
 
-    /** SPECIFICITE ??? */
+    /** SPECIFICITE ***************************************************************************************************/
+
+    public function editerSpecificiteAction()
+    {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
+        $specificite = $fiche->getSpecificite();
+        if ($specificite === null) {
+            $specificite = new SpecificitePoste();
+            $fiche->setSpecificite($specificite);
+            $this->getFichePosteService()->createSpecificitePoste($specificite);
+        }
+
+        /** @var SpecificitePosteForm $form */
+        $form = $form = $this->getSpecificitePosteForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/editer-specificite', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($specificite);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $specificite->setFiche($fiche);
+                $this->getFichePosteService()->updateSpecificitePoste($specificite);
+                $this->getFichePosteService()->update($fiche);
+            }
+        }
+
+        return new ViewModel([
+            'title' => 'Modifier spécificité du poste',
+            'form' => $form,
+        ]);
+
+    }
+
 }

@@ -8,9 +8,11 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ApplicationsRetireesService {
+    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -20,13 +22,11 @@ class ApplicationsRetireesService {
      * @param FicheposteApplicationRetiree $applicationConservee
      * @return FicheposteApplicationRetiree
      */
-    public function create(FicheposteApplicationRetiree $applicationConservee) {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération des informations d'historisation.", 0, $e);
-        }
+    public function create(FicheposteApplicationRetiree $applicationConservee)
+    {
+        $date = $this->getDateTime();
+        $user = $this->getUserService()->getConnectedUser();
+
         $applicationConservee->setHistoCreation($date);
         $applicationConservee->setHistoModification($date);
         $applicationConservee->setHistoCreateur($user);
@@ -46,13 +46,11 @@ class ApplicationsRetireesService {
      * @param FicheposteApplicationRetiree $applicationConservee
      * @return FicheposteApplicationRetiree
      */
-    public function update(FicheposteApplicationRetiree $applicationConservee) {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération des informations d'historisation.", 0, $e);
-        }
+    public function update(FicheposteApplicationRetiree $applicationConservee)
+    {
+        $date = $this->getDateTime();
+        $user = $this->getUserService()->getConnectedUser();
+
         $applicationConservee->setHistoModification($date);
         $applicationConservee->setHistoModificateur($user);
 
@@ -69,13 +67,11 @@ class ApplicationsRetireesService {
      * @param FicheposteApplicationRetiree $applicationConservee
      * @return FicheposteApplicationRetiree
      */
-    public function delete(FicheposteApplicationRetiree $applicationConservee) {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération des informations d'historisation.", 0, $e);
-        }
+    public function delete(FicheposteApplicationRetiree $applicationConservee)
+    {
+        $date = $this->getDateTime();
+        $user = $this->getUserService()->getConnectedUser();
+
         $applicationConservee->setHistoDestruction($date);
         $applicationConservee->setHistoDestructeur($user);
 

@@ -5,6 +5,7 @@ namespace Application\Service\Metier;
 use Application\Entity\Db\Metier;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -12,68 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class MetierService {
     use EntityManagerAwareTrait;
 
-    /**
-     * @return Metier[]
-     */
-    public function getMetiers()
-    {
-        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->addSelect('domaine')->leftJoin('metier.domaine','domaine')
-            ->addSelect('famille')->leftJoin('domaine.famille','famille')
-        ;
-        $qb = $qb->addOrderBy('metier.libelle');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMetiersAsOptions()
-    {
-        $metiers = $this->getMetiers();
-
-        $array = [];
-        foreach ($metiers as $metier) {
-            $array[$metier->getId()] = $metier->getLibelle();
-        }
-        return $array;
-    }
-
-    /**
-     * @param integer $id
-     * @return Metier
-     */
-    public function getMetier($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->addSelect('domaine')->leftJoin('metier.domaine','domaine')
-            ->addSelect('famille')->leftJoin('domaine.famille','famille')
-            ->andWhere('metier.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Metier partagent le même identifiant [".$id."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return Metier
-     */
-    public function getRequestedMetier($controller, $paramName = 'metier')
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $metier = $this->getMetier($id);
-
-        return $metier;
-    }
+    /** GESTIONS DES ENTITES ******************************************************************************************/
 
     /**
      * @param Metier $metier
@@ -119,21 +59,63 @@ class MetierService {
         return $metier;
     }
 
+    /** REQUETAGES ****************************************************************************************************/
+
     /**
-     * @param integer $oldid
-     * @return Metier
+     * @return QueryBuilder
      */
-    public function getMetierByOldId($oldid)
+    private function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->andWhere('metier.oldId = :oldid')
-            ->setParameter('oldid', $oldid);
+            ->addSelect('domaine')->leftJoin('metier.domaine','domaine')
+            ->addSelect('famille')->leftJoin('domaine.famille','famille')
+            ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @return Metier[]
+     */
+    public function getMetiers()
+    {
+        $qb = $this->createQueryBuilder()
+            ->addOrderBy('metier.libelle')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return Metier
+     */
+    public function getMetier($id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('metier.id = :id')
+            ->setParameter('id', $id)
+        ;
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs Metier portent le même oldid ['.$oldid.']', $e);
+            throw new RuntimeException("Plusieurs Metier partagent le même identifiant [".$id."]");
         }
         return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return Metier
+     */
+    public function getRequestedMetier($controller, $paramName = 'metier')
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        $metier = $this->getMetier($id);
+
+        return $metier;
     }
 }

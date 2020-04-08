@@ -609,6 +609,9 @@ tr.historise td {
     text-decoration: line-through;
 }
 
+th.cell-action {
+    width: 12rem;
+}
 /** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- */
 
 .tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}

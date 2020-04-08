@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @var FichePoste[] $fichesCompletes
+ * @var FichePoste[] $fichesIncompletes
+ */
+
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
+
+$canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
+$canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
+$canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::DETRUIRE));
+?>
+
+<h2>
+    Fiches de postes complètes
+    <span class="badge">
+            <?php echo count($fichesCompletes); ?>
+        </span>
+</h2>
+
+<?php echo $this->fichesPostesAsArray($fichesCompletes); ?>
+
+<h2>
+    Fiches de postes incomplètes
+    <span class="badge">
+            <?php echo count($fichesIncompletes); ?>
+        </span>
+</h2>
+
+<?php echo $this->fichesPostesAsArray($fichesIncompletes); ?>
+

@@ -5,11 +5,11 @@ use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
+ * @see FichePosteController::indexAction()
  * @var FichePoste[] $fiches
- * @var FichePoste[] $fichesSansAgent
- * @var FichePoste[] $fichesSansPoste
- * @var FichePoste[] $fichesProblemes
- * @var FichePoste[] $fichesOks
+ * @var FichePoste[] $fichesIncompletes
+ * @var FichePoste[] $fichesVides
+ * @var FichePoste[] $fichesCompletes
  */
 
 $this->headTitle('Index des fiches de postes');
@@ -29,57 +29,44 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </span>
 </h1>
 
-<?php if ($canAjouter) : ?>
-    <?php /** @see FichePosteController::ajouterAction() */ ?>
-    <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
-        <span class="icon ajouter"></span>
-        Ajouter une fiche de poste
-    </a>
-<?php endif; ?>
-
 <div class="main">
+    <?php if ($canAjouter) : ?>
+        <?php /** @see FichePosteController::ajouterAction() */ ?>
+        <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
+            <span class="icon ajouter"></span>
+            Ajouter une fiche de poste
+        </a>
+    <?php endif; ?>
+
     <h2>
-        Fiches sans agent
+        Fiches complètes
         <span class="badge">
-            <?php echo count($fichesSansAgent); ?>
+        <?php echo count($fichesCompletes); ?>
+    </span>
+    </h2>
+
+    <?php echo $this->fichesPostesAsArray($fichesCompletes); ?>
+
+    <h2>
+        Fiches incomplètes
+        <span class="badge">
+            <?php echo count($fichesIncompletes); ?>
         </span>
     </h2>
 
-    <?php echo $this->fichesPostesAsArray($fichesSansAgent); ?>
-</div>
+    <?php echo $this->fichesPostesAsArray($fichesIncompletes); ?>
 
-<div class="main">
     <h2>
-        Fiches sans poste
+        Fiches vides
         <span class="badge">
-            <?php echo count($fichesSansPoste); ?>
+            <?php echo count($fichesVides); ?>
         </span>
     </h2>
 
-    <?php echo $this->fichesPostesAsArray($fichesSansPoste); ?>
+    <?php echo $this->fichesPostesAsArray($fichesVides); ?>
 </div>
 
-<div class="main">
-    <h2>
-        Fiches problèmatiques
-        <span class="badge">
-            <?php echo count($fichesProblemes); ?>
-        </span>
-    </h2>
 
-    <?php echo $this->fichesPostesAsArray($fichesProblemes); ?>
-</div>
-
-<div class="main">
-    <h2>
-        Fiches avec agent et postes
-        <span class="badge">
-            <?php echo count($fichesOks); ?>
-        </span>
-    </h2>
-
-    <?php echo $this->fichesPostesAsArray($fichesOks); ?>
-</div>
 
 
 

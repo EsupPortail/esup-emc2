@@ -3,11 +3,13 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\Poste;
-use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
+use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplatePathStack;
+
+//TODO parametrer DIPLSAYS
+//TODO parametrer ALLOWED
 
 class FichesPostesAsArrayViewHelper extends AbstractHelper
 {
@@ -22,6 +24,15 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('fiches-postes-as-table', ['fiches' => $fiches, 'options' => $options]);
+
+        $displays = [
+            'agent' => true,
+            'poste' => true,
+            'fiche-principale' => true,
+            'modification' => false,
+            'action' => true,
+        ];
+
+        return $view->partial('fiches-postes-as-table', ['fiches' => $fiches, 'displays' => $displays, 'options' => $options]);
     }
 }

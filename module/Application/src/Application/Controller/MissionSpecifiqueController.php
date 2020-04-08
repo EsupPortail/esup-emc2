@@ -87,7 +87,7 @@ class MissionSpecifiqueController extends AbstractActionController
 
         $vm = new ViewModel();
         $vm->setVariables([
-            'title' => 'Affichage de l\'affection',
+            'title' => "Affichage de l'affectation",
             'affectation' => $affectation,
         ]);
         return $vm;

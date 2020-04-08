@@ -7,10 +7,12 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteDescriptionService {
+    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -21,8 +23,13 @@ class ActiviteDescriptionService {
      */
     public function create(ActiviteDescription $description)
     {
-        $description->updateCreation($this->getUserService());
-        $description->updateModification($this->getUserService());
+        $date = $this->getDateTime();
+        $user = $this->getUserService()->getConnectedUser();
+
+        $description->setHistoCreation($date);
+        $description->setHistoCreateur($user);
+        $description->setHistoModification($date);
+        $description->setHistoModificateur($user);
 
         try {
             $this->getEntityManager()->persist($description);
@@ -39,7 +46,11 @@ class ActiviteDescriptionService {
      */
     public function update(ActiviteDescription $description)
     {
-        $description->updateModification($this->getUserService());
+        $date = $this->getDateTime();
+        $user = $this->getUserService()->getConnectedUser();
+
+        $description->setHistoModification($date);
+        $description->setHistoModificateur($user);
 
         try {
             $this->getEntityManager()->flush($description);
@@ -55,7 +66,11 @@ class ActiviteDescriptionService {
      */
     public function historise(ActiviteDescription $description)
     {
-        $description->updateDestructeur($this->getUserService());
+        $date = $this->getDateTime();
+        $user = $this->getUserService()->getConnectedUser();
+
+        $description->setHistoDestruction($date);
+        $description->setHistoDestructeur($user);
 
         try {
             $this->getEntityManager()->flush($description);
@@ -71,7 +86,8 @@ class ActiviteDescriptionService {
      */
     public function restore(ActiviteDescription $description)
     {
-        $description->updateModification($this->getUserService());
+        $description->setHistoDestruction(null);
+        $description->setHistoDestructeur(null);
 
         try {
             $this->getEntityManager()->flush($description);
@@ -87,8 +103,6 @@ class ActiviteDescriptionService {
      */
     public function delete(ActiviteDescription $description)
     {
-        $description->updateDestructeur($this->getUserService());
-
         try {
             $this->getEntityManager()->remove($description);
             $this->getEntityManager()->flush($description);

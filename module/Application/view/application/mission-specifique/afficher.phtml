@@ -10,11 +10,8 @@ use Application\Entity\Db\AgentMissionSpecifique;
 
 ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2> Affection </h2>
-    </div>
-    <div class="panel-body">
+<div class="row">
+    <div class="col-md-6">
         <dl>
             <dt> Agent </dt>
             <dd> <?php echo $affectation->getAgent()->getDenomination(); ?> </dd>
@@ -33,5 +30,24 @@ use Application\Entity\Db\AgentMissionSpecifique;
                 <?php echo ($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"---"); ?>
             </dd>
         </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt>Dernière modification </dt>
+            <dd>
+                <?php echo $affectation->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
+                <?php echo $affectation->getHistoModificateur()->getDisplayName(); ?>
+            </dd>
+        </dl>
+
+        <?php if ($affectation->estHistorise()) : ?>
+            <dl>
+                <dt>Historisée  </dt>
+                <dd>
+                    <?php echo $affectation->getHistoDestruction()->format('d/m/Y à H:i:s'); ?> <br/>
+                    <?php echo $affectation->getHistoDestructeur()->getDisplayName(); ?>
+                </dd>
+            </dl>
+        <?php endif; ?>
     </div>
 </div>

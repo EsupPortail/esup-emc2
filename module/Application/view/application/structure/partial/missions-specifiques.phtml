@@ -7,12 +7,15 @@
 
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Structure;
-use Application\Provider\Privilege\StructurePrivileges;
+use Application\Provider\Privilege\MissionspecifiquePrivileges;
 
-$canAjouterAffectation      = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::AFFICHER));
-$canModifierAffectation     = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::EDITER));
-$canHistoriserAffectation   = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::HISTORISER));
-$canDetruireAffectation     = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_DETRUIREAFFECTATION));
+//TODO et les assertions qui vont bien : gestionnaire de la bonne structure pour les modifications
+
+$canVoirAffectation         = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
+$canAjouterAffectation      = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AJOUTER));
+$canModifierAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_MODIFIER));
+$canHistoriserAffectation   = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_HISTORISER));
+$canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_DETRUIRE));
 ?>
 
 <div class="row">
@@ -47,7 +50,7 @@ $canDetruireAffectation     = $this->isAllowed(StructurePrivileges::getResourceI
             <th> Structure </th>
             <th> Mission </th>
             <th> Décharge </th>
-            <th> Action </th>
+            <th class="cell-action"> Action </th>
         </tr>
     </thead>
     <tbody>
@@ -64,6 +67,14 @@ $canDetruireAffectation     = $this->isAllowed(StructurePrivileges::getResourceI
                     <?php endif; ?>
                 </td>
                 <td>
+                    <?php if ($canVoirAffectation) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\MissionSpecifiqueController::afficherAction() */?>
+                            href="<?php echo $this->url('agent-mission-specifique/afficher', ['affectation' => $mission->getId()], [], true); ?>"
+                            class="ajax-modal"
+                        >
+                            <span class="icon voir" data-toggle='tooltip'  data-html='true' title="Afficher l'affectation"></span></a>
+                    <?php endif; ?>
                     <?php if ($canModifierAffectation) : ?>
                         <a
                             <?php /** @see \Application\Controller\StructureController::modifierAffectationAction() */?>
@@ -71,8 +82,7 @@ $canDetruireAffectation     = $this->isAllowed(StructurePrivileges::getResourceI
                             class="ajax-modal"
                             data-event="modification"
                         >
-                            <span class="icon editer" data-toggle='tooltip'  data-html='true' title="Modifier l'affectation"></span>
-                        </a>
+                            <span class="icon editer" data-toggle='tooltip'  data-html='true' title="Modifier l'affectation"></span></a>
                     <?php endif; ?>
                     <?php if ($canHistoriserAffectation) : ?>
                         <?php if ($mission->estNonHistorise()) : ?>
@@ -80,15 +90,13 @@ $canDetruireAffectation     = $this->isAllowed(StructurePrivileges::getResourceI
                                 <?php /** @see \Application\Controller\StructureController::historiserAffectationAction() */?>
                                 href="<?php echo $this->url('structure/historiser-affectation', ['structure' => $structure->getId(), 'affectation' => $mission->getId()], [], true); ?>"
                             >
-                                <span class="icon historiser" data-toggle='tooltip'  data-html='true' title="Historiser l'affectation"></span>
-                            </a>
+                                <span class="icon historiser" data-toggle='tooltip'  data-html='true' title="Historiser l'affectation"></span></a>
                         <?php else : ?>
                             <a
                                 <?php /** @see \Application\Controller\StructureController::restaurerAffectationAction() */?>
                                 href="<?php echo $this->url('structure/restaurer-affectation', ['structure' => $structure->getId(), 'affectation' => $mission->getId()], [], true); ?>"
                             >
-                                <span class="icon restaurer" data-toggle='tooltip'  data-html='true' title="Restaurer l'affectation"></span>
-                            </a>
+                                <span class="icon restaurer" data-toggle='tooltip'  data-html='true' title="Restaurer l'affectation"></span></a>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($canDetruireAffectation) : ?>
@@ -98,8 +106,7 @@ $canDetruireAffectation     = $this->isAllowed(StructurePrivileges::getResourceI
                             class="ajax-modal"
                             data-event="modification"
                         >
-                            <span class="icon detruire" data-toggle='tooltip'  data-html='true' title="Supprimer l'affectation"></span>
-                        </a>
+                            <span class="icon detruire" data-toggle='tooltip'  data-html='true' title="Supprimer l'affectation"></span></a>
                     <?php endif; ?>
                 </td>
             </tr>
