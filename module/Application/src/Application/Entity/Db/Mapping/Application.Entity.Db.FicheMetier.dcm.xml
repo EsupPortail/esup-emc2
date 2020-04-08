@@ -12,7 +12,7 @@
         </many-to-one>
 
         <many-to-many field="applications" target-entity="Application\Entity\Db\Application">
-            <join-table name="fiche_metier_type_application">
+            <join-table name="fichemetier_application">
                 <join-columns>
                     <join-column name="fiche" referenced-column-name="id" />
                 </join-columns>
@@ -34,7 +34,7 @@
         </many-to-many>
 
         <many-to-many field="formations" target-entity="Application\Entity\Db\Formation">
-            <join-table name="fiche_metier_formation">
+            <join-table name="fichemetier_formation">
                 <join-columns>
                     <join-column name="fiche_metier_id" referenced-column-name="id" />
                 </join-columns>
