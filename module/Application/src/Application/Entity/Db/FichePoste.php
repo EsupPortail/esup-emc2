@@ -28,7 +28,7 @@ class FichePoste
     /** @var Poste */
     private $poste;
 
-    /** @var ArrayCollection */
+    /** @var ArrayCollection (FicheTypeExterne)*/
     private $fichesMetiers;
     /** @var ArrayCollection (FicheposteActiviteDescriptionRetiree) */
     private $descriptionsRetirees;
@@ -561,6 +561,14 @@ class FichePoste
         if (! $this->getAgent()) return false;
         if (! $this->getPoste()) return false;
         if (! $this->getFicheTypeExternePrincipale()) return false;
+        return true;
+    }
+
+    public function isVide()
+    {
+        if ( $this->getAgent()) return false;
+        if ( $this->getPoste()) return false;
+        if ( $this->getFicheTypeExternePrincipale()) return false;
         return true;
     }
 }

@@ -13,13 +13,6 @@ class FicheMetier {
     /** @var Metier */
     private $metier;
 
-    /** @var string */
-    private $connaissances;
-    /** @var string */
-    private $competencesOperationnelles;
-    /** @var string */
-    private $competencesComportementales;
-
     /** @var ArrayCollection */
     private $activites;
     /** @var ArrayCollection */
@@ -80,60 +73,6 @@ class FicheMetier {
         }
         $texte .= '</ul>';
         return $texte;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConnaissances()
-    {
-        return $this->connaissances;
-    }
-
-    /**
-     * @param string $connaissances
-     * @return FicheMetier
-     */
-    public function setConnaissances($connaissances)
-    {
-        $this->connaissances = $connaissances;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompetencesOperationnelles()
-    {
-        return $this->competencesOperationnelles;
-    }
-
-    /**
-     * @param string $competencesOperationnelles
-     * @return FicheMetier
-     */
-    public function setCompetencesOperationnelles($competencesOperationnelles)
-    {
-        $this->competencesOperationnelles = $competencesOperationnelles;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompetencesComportementales()
-    {
-        return $this->competencesComportementales;
-    }
-
-    /**
-     * @param string $competencesComportementales
-     * @return FicheMetier
-     */
-    public function setCompetencesComportementales($competencesComportementales)
-    {
-        $this->competencesComportementales = $competencesComportementales;
-        return $this;
     }
 
     /** ACTIVITE ******************************************************************************************************/

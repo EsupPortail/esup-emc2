@@ -11,10 +11,6 @@
             <join-column name="metier" referenced-column-name="id" />
         </many-to-one>
 
-        <field name="connaissances"                          type="string" length="1024"     column="connaissances"                         nullable="true"/>
-        <field name="competencesOperationnelles"             type="string" length="1024"     column="competences_operationnelles"                         nullable="true"/>
-        <field name="competencesComportementales"            type="string" length="1024"     column="competences_comportementales"                         nullable="true"/>
-
         <many-to-many field="applications" target-entity="Application\Entity\Db\Application">
             <join-table name="fiche_metier_type_application">
                 <join-columns>
