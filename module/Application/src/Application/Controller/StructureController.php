@@ -10,11 +10,9 @@ use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Fhaculty\Graph\Graph;
-use Graphp\GraphViz\GraphViz;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
@@ -25,7 +23,7 @@ use Zend\View\Model\ViewModel;
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use FichePosteServiceAwareTrait;
-    use MissionSpecifiqueServiceAwareTrait;
+    use MissionSpecifiqueAffectationServiceAwareTrait;
     use PosteServiceAwareTrait;
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -69,7 +67,7 @@ class StructureController extends AbstractActionController {
         $structures = $structuresDescendantes;
         $structures[] =  $structure;
 
-        $missionsSpecifiques = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesByStructures($structures);
+        $missionsSpecifiques = $this->getMissionSpecifiqueAffectationService()->getMissionsSpecifiquesByStructures($structures);
 
         $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
         $fichesCompletes = []; $fichesIncompletes = [];
@@ -238,7 +236,7 @@ class StructureController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getMissionSpecifiqueService()->create($affectation);
+                $this->getMissionSpecifiqueAffectationService()->create($affectation);
             }
         }
 
@@ -253,7 +251,7 @@ class StructureController extends AbstractActionController {
 
     public function modifierAffectationAction()
     {
-        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
 
         $form = $this->getAgentMissionSpecifiqueForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/modifier-affectation', ['affectation' => $affectation->getId()]));
@@ -265,7 +263,7 @@ class StructureController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getMissionSpecifiqueService()->update($affectation);
+                $this->getMissionSpecifiqueAffectationService()->update($affectation);
             }
         }
 
@@ -281,9 +279,9 @@ class StructureController extends AbstractActionController {
     public function historiserAffectationAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
 
-        $this->getMissionSpecifiqueService()->historise($affectation);
+        $this->getMissionSpecifiqueAffectationService()->historise($affectation);
 
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
@@ -291,9 +289,9 @@ class StructureController extends AbstractActionController {
     public function restaurerAffectationAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
 
-        $this->getMissionSpecifiqueService()->restore($affectation);
+        $this->getMissionSpecifiqueAffectationService()->restore($affectation);
 
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
 
@@ -301,13 +299,13 @@ class StructureController extends AbstractActionController {
 
     public function detruireAffectationAction()
     {
-        $affectation = $this->getMissionSpecifiqueService()->getRequestedAffectation($this);
+        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueService()->delete($affectation);
+            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueAffectationService()->delete($affectation);
             exit();
         }
 

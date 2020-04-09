@@ -7,13 +7,12 @@ use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\Structure\StructureForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
-use Application\Service\MissionSpecifique\MissionSpecifiqueService;
+use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\Poste\PosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\Role\RoleService;
-use UnicaenUtilisateur\Service\User\UserService;;
-use Zend\Mvc\Controller\ControllerManager;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureControllerFactory {
 
@@ -22,7 +21,7 @@ class StructureControllerFactory {
         /**
          * @var AgentService $agentService
          * @var FichePosteService $fichePosteService
-         * @var MissionSpecifiqueService $missionSpecifiqueService
+         * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var PosteService $posteService
          * @var RoleService $roleService
          * @var StructureService $structureService
@@ -30,7 +29,7 @@ class StructureControllerFactory {
          */
         $agentService = $container->get(AgentService::class);
         $fichePosteService = $container->get(FichePosteService::class);
-        $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
+        $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $posteService = $container->get(PosteService::class);
         $roleService = $container->get(RoleService::class);
         $structureService = $container->get(StructureService::class);
@@ -50,7 +49,7 @@ class StructureControllerFactory {
 
         $controller->setAgentService($agentService);
         $controller->setFichePosteService($fichePosteService);
-        $controller->setMissionSpecifiqueService($missionSpecifiqueService);
+        $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setPosteService($posteService);
         $controller->setRoleService($roleService);
         $controller->setStructureService($structureService);

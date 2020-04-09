@@ -69,8 +69,8 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                 <td>
                     <?php if ($canVoirAffectation) : ?>
                         <a
-                            <?php /** @see \Application\Controller\MissionSpecifiqueController::afficherAction() */?>
-                            href="<?php echo $this->url('agent-mission-specifique/afficher', ['affectation' => $mission->getId()], [], true); ?>"
+                            <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::afficherAction() */?>
+                            href="<?php echo $this->url('mission-specifique/affectation/afficher', ['affectation' => $mission->getId()], [], true); ?>"
                             class="ajax-modal"
                         >
                             <span class="icon voir" data-toggle='tooltip'  data-html='true' title="Afficher l'affectation"></span></a>

@@ -225,7 +225,7 @@ class StructureService
      * @param Structure $structure
      * @return Structure[]
      */
-    public function getStructuresFilles(Structure $structure) {
+    public function getStructuresFilles($structure) {
         $filles = [];
         $dejaTraitees = [];
 

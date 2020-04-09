@@ -159,13 +159,17 @@ class MissionSpecifiqueAffectationService {
      */
     public function getAffectations($agent, $mission, $structure)
     {
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] = $structure;
+        $structures =[];
+        if ($structure !== null) {
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
+        }
 
         $qb = $this->getEntityManager()->getRepository(AgentMissionSpecifique::class)->createQueryBuilder('affectation')
             ->addSelect('agent')->leftJoin('affectation.agent', 'agent')
             ->addSelect('mission')->leftJoin('affectation.mission', 'mission')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+            ->orderBy('agent.nomUsuel, agent.prenom, mission.libelle, structure.libelleLong', 'ASC')
         ;
 
         if ($agent !== null) {
@@ -178,7 +182,7 @@ class MissionSpecifiqueAffectationService {
                 ->setParameter('missionId', $mission->getId())
             ;
         }
-        if ($structures !== null) {
+        if (!empty($structures)) {
             $qb = $qb->andWhere('affectation.structure in (:structures)')
                 ->setParameter('structures', $structures)
             ;
