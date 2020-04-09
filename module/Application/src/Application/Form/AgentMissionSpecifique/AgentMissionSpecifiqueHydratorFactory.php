@@ -3,7 +3,7 @@
 namespace Application\Form\AgentMissionSpecifique;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\RessourceRh\RessourceRhService;
+use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 
@@ -15,17 +15,17 @@ class AgentMissionSpecifiqueHydratorFactory
 
         /**
          * @var AgentService $agentService
-         * @var RessourceRhService $ressourceService
+         * @var MissionSpecifiqueService $missionSpecifiqueService
          * @var StructureService $structureService
          */
         $agentService     = $container->get(AgentService::class);
-        $ressourceService = $container->get(RessourceRhService::class);
+        $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
         $structureService = $container->get(StructureService::class);
 
         /** @var AgentMissionSpecifiqueHydrator $hydrator */
         $hydrator = new AgentMissionSpecifiqueHydrator();
         $hydrator->setAgentService($agentService);
-        $hydrator->setRessourceRhService($ressourceService);
+        $hydrator->setMissionSpecifiqueService($missionSpecifiqueService);
         $hydrator->setStructureService($structureService);
         return $hydrator;
     }

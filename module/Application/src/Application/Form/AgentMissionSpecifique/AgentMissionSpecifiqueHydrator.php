@@ -4,14 +4,14 @@ namespace Application\Form\AgentMissionSpecifique;
 
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Zend\Hydrator\HydratorInterface;
 
 class AgentMissionSpecifiqueHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
-    use RessourceRhServiceAwareTrait;
+    use MissionSpecifiqueServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     /**
@@ -38,7 +38,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $mission = $this->getRessourceRhService()->getMissionSpecifique($data['mission']);
+        $mission = $this->getMissionSpecifiqueService()->getMissionSpecifique($data['mission']);
         $agent = $this->getAgentService()->getAgent($data['agent']['id']);
         $structure = $this->getStructureService()->getStructure($data['structure']['id']);
         $debut = ($data['debut']?DateTime::createFromFormat('d/m/Y', $data['debut']):null);

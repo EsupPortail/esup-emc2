@@ -1,0 +1,142 @@
+<?php
+/**
+ * @var array $structures
+ * @var array $agents
+ * @var array $missions
+ *
+ * @var Structure $structure
+ * @var Agent $agent
+ * @var MissionSpecifique $mission
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\MissionSpecifique;
+use Application\Entity\Db\Structure;
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+?>
+
+<?php
+//    if ($structure !== null) echo $structure->getLibelleLong();
+//    if ($agent !== null) echo $agent->getDenomination();
+//    if ($mission !== null) echo $mission->getLibelle();
+?>
+
+<form method="get" id="filtre" action="<?php echo $this->url(); ?>">
+    <div class="row">
+        <div class="col-md-4">
+            <?php
+            $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
+            $structureF
+                ->setAutocompleteSource($this->url('structure/rechercher'))
+                ->setSelectionRequired(true)
+                ->setAttributes([
+                    'id' => 'structure-filtre',
+                    'placeholder' => "Nom de la structure ...",
+                ]);
+            ?>
+            <?php echo $this->formControlGroup($structureF); ?>
+        </div>
+
+        <div class="col-md-4">
+            <?php
+            $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
+            $agentF
+                ->setAutocompleteSource($this->url('agent/rechercher'))
+                ->setSelectionRequired(true)
+                ->setAttributes([
+                    'id' => 'agent-filtre',
+                    'placeholder' => "Nom de l'agent ...",
+                ]);
+            ?>
+            <?php echo $this->formControlGroup($agentF); ?>
+        </div>
+
+        <div class="col-md-3">
+            <label for="mission">Mission :</label>
+            <select id="mission" name="mission" class="selectpicker show-tick" data-live-search="true">
+                <option value="0"> Toutes les missions </option>
+                <?php foreach($missions as $clef => $label) : ?>
+                    <option value="<?php echo $clef; ?>"
+                        <?php if ($mission && $mission->getId() == $clef) echo " selected" ?>
+                    > <?php echo $label; ?> </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="col-md-1">
+            <br/>
+            <button class="btn btn-primary" id="clear">
+                <span class="icon effacer"></span>
+            </button>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" id="filter">
+        Filtrer
+    </button>
+</form>
+
+<br/>
+<br/>
+
+<style>
+    div.filter {
+        background-color: white;
+        padding: 0.5rem;
+        margin: 0.5rem;
+        border-radius: 5px;
+    }
+
+    div.filter label {
+        margin-left: .25em;
+    }
+</style>
+
+<script>
+    $("form#filtre").submit(function(e){
+        e.preventDefault();
+    });
+
+    $('button#clear').click(function() {
+        window.location.href = 'affectation';
+
+        // $('input[name="agent[label]').val(null);
+        // $('input[name="agent[id]').val(null);
+        // $('input[name="structure[label]').val(null);
+        // $('input[name="structure[id]').val(null);
+        // $('select#mission option:selected').removeAttr('selected');
+    });
+
+    $('button#filter').click(function() {
+        let structureId = $('input[name="structure-filtre[id]').val();
+        let agentId = $('input[name="agent-filtre[id]').val();
+        let missionId = $('select#mission option:selected').val();
+        console.log("structure=" + structureId + " | " + "agent=" +agentId + " | " + "mission=" + missionId);
+
+        let query = "";
+        // if (structureId !== "")
+            query += "structure=" + structureId;
+        // if (agentId !== "")
+            query += "&agent=" + agentId;
+        // if (missionId !== "")
+            query += "&mission=" + missionId;
+        window.location.href = 'affectation?'+ query;
+    });
+
+
+    <?php if ($structure !== null) :?>
+        $('input[name="structure-filtre[label]').val(" <?php echo $structure->getLibelleLong(); ?> ");
+        $('input[name="structure-filtre[id]').val(<?php echo $structure->getId(); ?>);
+    <?php endif; ?>
+
+    <?php if ($agent !== null) :?>
+        $('input[name="agent-filtre[label]').val(" <?php echo $agent->getDenomination(); ?> ");
+        $('input[name="agent-filtre[id]').val(<?php echo $agent->getId(); ?>);
+    <?php endif; ?>
+
+    <?php if($mission !== null) : ?>
+        console.log("mais");
+        $("select#mission").val("<?php echo $mission->getId(); ?>");
+    <?php endif; ?>
+</script>

@@ -222,6 +222,18 @@ class MissionSpecifiqueService {
         return $options;
     }
 
+    /**
+     * @return array
+     */
+    public function getMisssionsSpecifiquesAsOptions()
+    {
+        $missions = $this->getMissionsSpecifiques();
+        $array = [];
+        foreach ($missions as $mission) {
+            $array[$mission->getId()] = $mission->getLibelle();
+        }
+        return $array;
+    }
 
 
     /**
@@ -578,5 +590,4 @@ class MissionSpecifiqueService {
         $result = $this->getMissionSpecifiqueTheme($id);
         return $result;
     }
-
 }

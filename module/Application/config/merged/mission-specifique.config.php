@@ -2,14 +2,21 @@
 
 namespace Application;
 
+use Application\Controller\MissionSpecifiqueAffectationController;
+use Application\Controller\MissionSpecifiqueAffectationControllerFactory;
 use Application\Controller\MissionSpecifiqueController;
 use Application\Controller\MissionSpecifiqueControllerFactory;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormFactory;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydrator;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactory;
 use Application\Form\RessourceRh\MissionSpecifiqueForm;
 use Application\Form\RessourceRh\MissionSpecifiqueFormFactory;
 use Application\Form\RessourceRh\MissionSpecifiqueHydrator;
 use Application\Form\RessourceRh\MissionSpecifiqueHydratorFactory;
-use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\MissionspecifiquePrivileges;
+use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
+use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceFactory;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -80,30 +87,54 @@ return [
                     ],
                 ],
 
-
                 [
-                    'controller' => MissionSpecifiqueController::class,
+                    'controller' => MissionSpecifiqueAffectationController::class,
                     'action' => [
-                        'affectation',
+                        'index',
                         'afficher',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER,
                     ],
                 ],
                 [
-                    'controller' => MissionSpecifiqueController::class,
+                    'controller' => MissionSpecifiqueAffectationController::class,
                     'action' => [
                         'ajouter',
-                        'editer',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => MissionSpecifiqueAffectationController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => MissionSpecifiqueAffectationController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => MissionSpecifiqueAffectationController::class,
+                    'action' => [
                         'detruire',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AGENT_EDITER,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_DETRUIRE,
                     ],
                 ],
+
             ],
         ],
     ],
@@ -118,6 +149,16 @@ return [
                                 'label' => 'Missions spécifiques',
                                 'route' => 'mission-specifique',
                                 'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER),
+                                'order'    => 1100,
+                            ],
+                        ],
+                    ],
+                    'fiche' => [
+                        'pages' => [
+                            'affectation' => [
+                                'label' => 'Affectations des missions spécifiques',
+                                'route' => 'mission-specifique/affectation',
+                                'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER),
                                 'order'    => 1100,
                             ],
                         ],
@@ -347,112 +388,105 @@ return [
                             ],
                         ],
                     ],
+                    'affectation' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/affectation',
+                            'defaults' => [
+                                'controller' => MissionSpecifiqueAffectationController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'afficher' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher/:affectation',
+                                    'defaults' => [
+                                        'controller' => MissionSpecifiqueAffectationController::class,
+                                        'action'     => 'afficher',
+                                    ],
+                                ],
+                            ],
+                            'ajouter' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => MissionSpecifiqueAffectationController::class,
+                                        'action'     => 'ajouter',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:affectation',
+                                    'defaults' => [
+                                        'controller' => MissionSpecifiqueAffectationController::class,
+                                        'action'     => 'modifier',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:affectation',
+                                    'defaults' => [
+                                        'controller' => MissionSpecifiqueAffectationController::class,
+                                        'action'     => 'historiser',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:affectation',
+                                    'defaults' => [
+                                        'controller' => MissionSpecifiqueAffectationController::class,
+                                        'action'     => 'restaurer',
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/detruire/:affectation',
+                                    'defaults' => [
+                                        'controller' => MissionSpecifiqueAffectationController::class,
+                                        'action'     => 'detruire',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
-//            'agent-mission-specifique' => [
-//                'type'  => Literal::class,
-//                'options' => [
-//                    'route'    => '/agent-mission-specifique',
-//                    'defaults' => [
-//                        'controller' => MissionSpecifiqueController::class,
-//                        'action'     => 'affectation',
-//                    ],
-//                ],
-//                'may_terminate' => true,
-//                'child_routes' => [
-//                    'ajouter' => [
-//                        'type'  => Literal::class,
-//                        'options' => [
-//                            'route'    => '/ajouter',
-//                            'defaults' => [
-//                                'controller' => MissionSpecifiqueController::class,
-//                                'action'     => 'ajouter',
-//                            ],
-//                        ],
-//                        'may_terminate' => true,
-//                    ],
-//                    'afficher' => [
-//                        'type'  => Segment::class,
-//                        'options' => [
-//                            'route'    => '/afficher/:affectation',
-//                            'defaults' => [
-//                                'controller' => MissionSpecifiqueController::class,
-//                                'action'     => 'afficher',
-//                            ],
-//                        ],
-//                        'may_terminate' => true,
-//                    ],
-//                    'editer' => [
-//                        'type'  => Segment::class,
-//                        'options' => [
-//                            'route'    => '/editer/:affectation',
-//                            'defaults' => [
-//                                'controller' => MissionSpecifiqueController::class,
-//                                'action'     => 'editer',
-//                            ],
-//                        ],
-//                        'may_terminate' => true,
-//                    ],
-//                    'historiser' => [
-//                        'type'  => Segment::class,
-//                        'options' => [
-//                            'route'    => '/historiser/:affectation',
-//                            'defaults' => [
-//                                'controller' => MissionSpecifiqueController::class,
-//                                'action'     => 'historiser',
-//                            ],
-//                        ],
-//                        'may_terminate' => true,
-//                    ],
-//                    'restaurer' => [
-//                        'type'  => Segment::class,
-//                        'options' => [
-//                            'route'    => '/restaurer/:affectation',
-//                            'defaults' => [
-//                                'controller' => MissionSpecifiqueController::class,
-//                                'action'     => 'restaurer',
-//                            ],
-//                        ],
-//                        'may_terminate' => true,
-//                    ],
-//                    'detruire' => [
-//                        'type'  => Segment::class,
-//                        'options' => [
-//                            'route'    => '/detruire/:affectation',
-//                            'defaults' => [
-//                                'controller' => MissionSpecifiqueController::class,
-//                                'action'     => 'detruire',
-//                            ],
-//                        ],
-//                        'may_terminate' => true,
-//                    ],
-//                ],
-//            ],
         ],
     ],
 
     'service_manager' => [
         'factories' => [
             MissionSpecifiqueService::class => MissionSpecifiqueServiceFactory::class,
-//            MissionSpecifiqueAffectationService::class => MissionSpecifiqueAffectationServiceFactory::class,
+            MissionSpecifiqueAffectationService::class => MissionSpecifiqueAffectationServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
             MissionSpecifiqueController::class => MissionSpecifiqueControllerFactory::class,
+            MissionSpecifiqueAffectationController::class => MissionSpecifiqueAffectationControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-//            AgentMissionSpecifiqueForm::class => AgentMissionSpecifiqueFormFactory::class,
-
+            AgentMissionSpecifiqueForm::class => AgentMissionSpecifiqueFormFactory::class,
             MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-//            AgentMissionSpecifiqueHydrator::class => AgentMissionSpecifiqueHydratorFactory::class,
-
+            AgentMissionSpecifiqueHydrator::class => AgentMissionSpecifiqueHydratorFactory::class,
             MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
         ],
     ]

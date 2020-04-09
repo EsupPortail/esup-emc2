@@ -1,11 +1,10 @@
 <?php
 
 /**
- * @see MissionSpecifiqueController::afficherAction()
+ * @see MissionSpecifiqueAffectationController::afficherAction()
  * @var AgentMissionSpecifique $affectation
  */
 
-use Application\Controller\MissionSpecifiqueController;
 use Application\Entity\Db\AgentMissionSpecifique;
 
 ?>
@@ -28,6 +27,15 @@ use Application\Entity\Db\AgentMissionSpecifique;
                 <?php echo ($affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):"---"); ?>
                 au
                 <?php echo ($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"---"); ?>
+            </dd>
+
+            <dt> Décharge </dt>
+            <dd>
+                <?php if ($affectation->getDecharge()) : ?>
+                    <?php echo $affectation->getDecharge(); ?> h.
+                <?php else: ?>
+                    Aucune
+                <?php endif; ?>
             </dd>
         </dl>
     </div>

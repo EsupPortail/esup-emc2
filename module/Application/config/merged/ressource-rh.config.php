@@ -383,5 +383,4 @@ return [
             FonctionHydrator::class => FonctionHydratorFactory::class,
         ],
     ]
-
 ];

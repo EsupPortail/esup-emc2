@@ -2,10 +2,7 @@
 
 namespace Application\Form\AgentMissionSpecifique;
 
-use Application\Entity\Db\Structure;
-use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
+use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use UnicaenApp\Form\Element\Date;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
@@ -15,9 +12,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class AgentMissionSpecifiqueForm extends Form {
-    use AgentServiceAwareTrait;
-    use RessourceRhServiceAwareTrait;
-    use StructureServiceAwareTrait;
+    use MissionSpecifiqueServiceAwareTrait;
 
     /** @var string */
     private $urlAgent;
@@ -54,7 +49,7 @@ class AgentMissionSpecifiqueForm extends Form {
             'options' => [
                 'label' => "Mission * :",
                 'empty_option' => 'Sélectionner la mission à affecter ...',
-                'value_options' => $this->getRessourceRhService()->getMisssionsSpecifiquesAsGroupOptions(),
+                'value_options' => $this->getMissionSpecifiqueService()->getMisssionsSpecifiquesAsGroupOptions(),
             ],
             'attributes' => [
                 'id' => 'mission',
@@ -64,15 +59,15 @@ class AgentMissionSpecifiqueForm extends Form {
         ]);
 
         //Agent
-        $structure = new SearchAndSelect('agent', ['label' => "Agent * :"]);
-        $structure
+        $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);
+        $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)
             ->setAttributes([
                 'id' => 'agent',
                 'placeholder' => "Agent effectuant la mission ...",
             ]);
-        $this->add($structure);
+        $this->add($agent);
 
         // structure
         $structure = new SearchAndSelect('structure', ['label' => "Service/composante/direction d'affectation * :"]);
@@ -144,38 +139,5 @@ class AgentMissionSpecifiqueForm extends Form {
             'fin'               => [ 'required' => false, ],
             'decharge'               => [ 'required' => false, ],
         ]));
-    }
-
-    /**
-     * @param Structure $structure
-     * @param bool $sousstructure
-     * @return  AgentMissionSpecifiqueForm
-     */
-    public function reinitWithStructure($structure, $sousstructure = false)
-    {
-        //agent
-        $agents = $this->getAgentService()->getAgentsByStructure($structure, $sousstructure);
-        $agentOptions = [];
-        foreach ($agents as $agent) {
-            $agentOptions[$agent->getId()] = $agent->getDenomination();
-        }
-        /** @var Select $this->get('agent') */
-        $this->get('agent')->setValueOptions($agentOptions);
-
-        //structure
-        $structureOptions = [];
-        $structureOptions[$structure->getId()] = $structure->getLibelleCourt();
-
-        if ($sousstructure === true) {
-            $sousstructures = $this->getStructureService()->getSousStructures($structure);
-            foreach ($sousstructures as $sous) {
-                $structureOptions[$sous->getId()] = $sous->getLibelleCourt();
-            }
-        }
-        $this->get('structure')->setValueOptions($structureOptions);
-        $this->get('structure')->setEmptyOption(null);
-
-
-        return $this;
     }
 }
