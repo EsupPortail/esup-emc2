@@ -3,6 +3,7 @@
 use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\MissionSpecifiqueTheme;
 use Application\Entity\Db\MissionSpecifiqueType;
+use Application\Provider\Privilege\MissionspecifiquePrivileges;
 
 /**
  * @see \Application\Controller\MissionSpecifiqueController::indexAction()
@@ -11,11 +12,11 @@ use Application\Entity\Db\MissionSpecifiqueType;
  * @var MissionSpecifiqueTheme[] $themes
  */
 
-$canVoir = true;
-$canAjouter = true;
-$canModifier = true;
-$canHistoriser = true;
-$canDetruire = true;
+$canVoir            = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER);
+$canAjouter         = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AJOUTER);
+$canModifier        = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_MODIFIER);
+$canHistoriser      = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_HISTORISER);
+$canDetruire        = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_DETRUIRE);
 
 $this->headTitle("Missions spécifiques");
 ?>
@@ -341,7 +342,7 @@ $this->headTitle("Missions spécifiques");
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "metier";
+        if (name === undefined || name === "") name = "mission";
 
         $('a[aria-controls=' + name + ']').tab('show');
 

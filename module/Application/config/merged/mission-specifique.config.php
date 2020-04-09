@@ -9,7 +9,7 @@ use Application\Form\RessourceRh\MissionSpecifiqueFormFactory;
 use Application\Form\RessourceRh\MissionSpecifiqueHydrator;
 use Application\Form\RessourceRh\MissionSpecifiqueHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\MissionspecifiquePrivileges;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -29,7 +29,7 @@ return [
                         'afficher-mission',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::AFFICHER,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER,
                     ],
                 ],
                 [
@@ -40,7 +40,7 @@ return [
                         'ajouter-mission',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::AJOUTER,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AJOUTER,
                     ],
                 ],
                 [
@@ -51,7 +51,7 @@ return [
                         'modifier-mission',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::MODIFIER,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_MODIFIER,
                     ],
                 ],
                 [
@@ -65,7 +65,7 @@ return [
                         'restaurer-mission',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::MODIFIER,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_HISTORISER,
                     ],
                 ],
                 [
@@ -76,7 +76,7 @@ return [
                         'detruire-mission',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::EFFACER,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_DETRUIRE,
                     ],
                 ],
 
@@ -117,7 +117,7 @@ return [
                             'mission-specifique' => [
                                 'label' => 'Missions spécifiques',
                                 'route' => 'mission-specifique',
-                                'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                                'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER),
                                 'order'    => 1100,
                             ],
                         ],

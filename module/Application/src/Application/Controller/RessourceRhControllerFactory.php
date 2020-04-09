@@ -39,13 +39,7 @@ class RessourceRhControllerFactory {
          * @var FamilleProfessionnelleForm $familleForm
          * @var FonctionForm $fonctionForm
          * @var MetierForm $metierForm
-         * @var MissionSpecifiqueForm $missionSpecifiqueForm
-         * @var MissionSpecifiqueTypeForm $missionSpecifiqueTypeForm
          */
-        $missionSpecifiqueForm      = $container->get('FormElementManager')->get(MissionSpecifiqueForm::class);
-        $missionSpecifiqueTypeForm  = $container->get('FormElementManager')->get(MissionSpecifiqueTypeForm::class);
-        $missionSpecifiqueThemeForm = $container->get('FormElementManager')->get(MissionSpecifiqueThemeForm::class);
-
         $familleForm                = $container->get('FormElementManager')->get(FamilleProfessionnelleForm::class);
         $fonctionForm               = $container->get('FormElementManager')->get(FonctionForm::class);
         $domaineForm                = $container->get('FormElementManager')->get(DomaineForm::class);
@@ -61,9 +55,6 @@ class RessourceRhControllerFactory {
         $controller->setFonctionService($fonctionService);
         $controller->setMetierService($metierService);
 
-        $controller->setMissionSpecifiqueForm($missionSpecifiqueForm);
-        $controller->setMissionSpecifiqueTypeForm($missionSpecifiqueTypeForm);
-        $controller->setMissionSpecifiqueThemeForm($missionSpecifiqueThemeForm);
         $controller->setFamilleProfessionnelleForm($familleForm);
         $controller->setFonctionForm($fonctionForm);
         $controller->setDomaineForm($domaineForm);

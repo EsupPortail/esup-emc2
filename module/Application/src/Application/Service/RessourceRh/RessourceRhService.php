@@ -6,19 +6,10 @@ use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Grade;
 use Application\Entity\Db\Metier;
-use Application\Entity\Db\MissionSpecifique;
-use Application\Entity\Db\MissionSpecifiqueTheme;
-use Application\Entity\Db\MissionSpecifiqueType;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenAuth\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
 
 class RessourceRhService {
     use EntityManagerAwareTrait;
