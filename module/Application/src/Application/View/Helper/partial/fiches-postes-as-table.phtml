@@ -39,7 +39,7 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </thead>
     <tbody>
     <?php foreach ($fiches as $fiche) : ?>
-        <tr>
+        <tr <?php if ($fiche->estHistorise()) echo 'class="historise"'; ?>>
             <?php if ($displays['agent']) : ?>
                 <td>
                     <?php if ($fiche->getAgent() !== null) : ?>
