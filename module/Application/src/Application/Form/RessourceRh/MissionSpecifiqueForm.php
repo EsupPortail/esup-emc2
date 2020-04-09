@@ -2,6 +2,7 @@
 
 namespace Application\Form\RessourceRh;
 
+use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -11,7 +12,7 @@ use Zend\InputFilter\Factory;
 
 class MissionSpecifiqueForm extends Form
 {
-    use RessourceRhServiceAwareTrait;
+    use MissionSpecifiqueServiceAwareTrait;
 
     public function init()
     {
@@ -33,7 +34,7 @@ class MissionSpecifiqueForm extends Form
             'options' => [
                 'label' => "Type de la mission :",
                 'empty_option' => "Sélectionner le type de la mission ...",
-                'value_options' => $this->getRessourceRhService()->getMissionsSpecifiquesTypesAsOptions(),
+                'value_options' => $this->getMissionSpecifiqueService()->getMissionsSpecifiquesTypesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'type',
@@ -48,7 +49,7 @@ class MissionSpecifiqueForm extends Form
             'options' => [
                 'label' => "Theme de la mission :",
                 'empty_option' => "Sélectionner le thème de la mission ...",
-                'value_options' => $this->getRessourceRhService()->getMissionsSpecifiquesThemesAsOptions(),
+                'value_options' => $this->getMissionSpecifiqueService()->getMissionsSpecifiquesThemesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'theme',

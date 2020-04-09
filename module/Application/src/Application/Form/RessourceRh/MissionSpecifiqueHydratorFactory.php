@@ -2,19 +2,19 @@
 
 namespace Application\Form\RessourceRh;
 
-use Application\Service\RessourceRh\RessourceRhService;
+use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Interop\Container\ContainerInterface;
 
 class MissionSpecifiqueHydratorFactory {
 
     public function __invoke(ContainerInterface $container)
     {
-        /** @var RessourceRhService $ressourceService  */
-        $ressourceService = $container->get(RessourceRhService::class);
+        /** @var MissionSpecifiqueService $missionSpecifiqueService  */
+        $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
 
         /** @var MissionSpecifiqueHydrator $hydrator */
         $hydrator = new MissionSpecifiqueHydrator();
-        $hydrator->setRessourceRhService($ressourceService);
+        $hydrator->setMissionSpecifiqueService($missionSpecifiqueService);
         return $hydrator;
     }
 }

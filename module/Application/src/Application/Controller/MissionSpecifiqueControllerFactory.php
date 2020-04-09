@@ -3,6 +3,8 @@
 namespace Application\Controller;
 
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
+use Application\Form\ModifierLibelle\ModifierLibelleForm;
+use Application\Form\RessourceRh\MissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\RessourceRh\RessourceRhService;
@@ -25,9 +27,14 @@ class MissionSpecifiqueControllerFactory {
         $structureServuce = $container->get(StructureService::class);
 
         /**
+         * @var MissionSpecifiqueForm $missionSpecifiqueForm
+         * @var ModifierLibelleForm $modifierLibelleForm
          * @var AgentMissionSpecifiqueForm $agentMissionSpecifiqueForm
          */
-        $agentMissionSpecifiqueForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
+        $missionSpecifiqueForm = $container->get('FormElementManager')->get(MissionSpecifiqueForm::class);
+        $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
+
+//        $agentMissionSpecifiqueForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
 
         /** @var MissionSpecifiqueController $controller */
         $controller = new MissionSpecifiqueController();
@@ -35,7 +42,10 @@ class MissionSpecifiqueControllerFactory {
         $controller->setRessourceRhService($ressourceService);
         $controller->setStructureService($structureServuce);
         $controller->setMissionSpecifiqueService($missionService);
-        $controller->setAgentMissionSpecifiqueForm($agentMissionSpecifiqueForm);
+
+        $controller->setMissionSpecifiqueForm($missionSpecifiqueForm);
+        $controller->setModifierLibelleForm($modifierLibelleForm);
+//        $controller->setAgentMissionSpecifiqueForm($agentMissionSpecifiqueForm);
         return $controller;
     }
 }

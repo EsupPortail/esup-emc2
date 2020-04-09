@@ -4,12 +4,13 @@ namespace Application\Service\MissionSpecifique;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;
+use UnicaenUtilisateur\Service\User\UserService;;
 
-class MissionSpecifiqueServiceFactory {
+class MissionSpecifiqueAffectationServiceFactory {
+
     /**
      * @param ContainerInterface $container
-     * @return MissionSpecifiqueService
+     * @return MissionSpecifiqueAffectationService
      */
     public function __invoke(ContainerInterface $container)
     {
@@ -21,8 +22,8 @@ class MissionSpecifiqueServiceFactory {
         $userService = $container->get(UserService::class);
 
 
-        /** @var MissionSpecifiqueService $service */
-        $service = new MissionSpecifiqueService();
+        /** @var MissionSpecifiqueAffectationService $service */
+        $service = new MissionSpecifiqueAffectationService();
         $service->setEntityManager($entityManager);
         $service->setUserService($userService);
         return $service;

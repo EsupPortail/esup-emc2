@@ -32,7 +32,9 @@ class ModifierLibelleHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        // never used
+        $libelle = isset($data['libelle'])?$data['libelle']:null;
+        $object->setLibelle($libelle);
+        return $object;
     }
 
 
