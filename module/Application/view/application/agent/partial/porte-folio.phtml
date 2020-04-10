@@ -9,9 +9,10 @@ use Fichier\Entity\Db\Fichier;
  * @var Agent $agent
  */
 
-$canVoirFichier         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canAjouterFichier      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
-$canDetruireFichier     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
+$canVoirFichier         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_AFFICHER));
+$canAjouterFichier      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_AJOUTER));
+$canHistoriserFichier   = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_HISTORISER));
+$canDetruireFichier     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_DETRUIRE));
 
 ?>
 
@@ -48,12 +49,31 @@ $canDetruireFichier     = $this->isAllowed(AgentPrivileges::getResourceId(AgentP
                 </a>
             <?php endif; ?>
             (téléverser le <?php echo $fichier->getHistoModification()->format('d/m/Y à H:i:s '); ?>)
+
+            <?php if ($canHistoriserFichier) : ?>
+                <?php if ($fichier->estNonHistorise()) : ?>
+                    <a
+                        <?php /** @see \Fichier\Controller\FichierController::historiserAction() */?>
+                        href="<?php echo $this->url('historiser-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]] ,true); ?>"
+                        data-event="modification"
+                        >
+                        <span class="icon historiser" title="Historiser le fichier"></span></a>
+                <?php else : ?>
+                    <a
+                        <?php /** @see \Fichier\Controller\FichierController::restaurerAction() */?>
+                        href="<?php echo $this->url('restaurer-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]] ,true); ?>"
+                        data-event="modification"
+                    >
+                        <span class="icon restaurer" title="Restaurer le fichier"></span></a>
+                <?php endif; ?>
+            <?php endif; ?>
+
             <?php if ($canDetruireFichier) : ?>
             <a
                 <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
-                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], [], true)]], true); ?>"
+                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
             >
-                <span class="icon historiser" title="supprimer le fichier"></span></a>
+                <span class="icon detruire" title="supprimer le fichier"></span></a>
             <?php endif; ?>
         </li>
     <?php endforeach; ?>

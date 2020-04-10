@@ -21,6 +21,26 @@ use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'Structure' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            StructurePrivileges::STRUCTURE_AFFICHER,
+                            StructurePrivileges::STRUCTURE_DESCRIPTION,
+                            StructurePrivileges::STRUCTURE_GESTIONNAIRE,
+                        ],
+                        'resources' => ['Structure'],
+                        'assertion' => StructureAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -70,26 +90,6 @@ return [
                     ],
                     'privileges' => [
                         StructurePrivileges::STRUCTURE_GESTIONNAIRE,
-                    ],
-                ],
-            ],
-        ],
-        'resource_providers' => [
-            'BjyAuthorize\Provider\Resource\Config' => [
-                'Structure' => [],
-            ],
-        ],
-        'rule_providers' => [
-            PrivilegeRuleProvider::class => [
-                'allow' => [
-                    [
-                        'privileges' => [
-                            StructurePrivileges::STRUCTURE_AFFICHER,
-                            StructurePrivileges::STRUCTURE_DESCRIPTION,
-                            StructurePrivileges::STRUCTURE_GESTIONNAIRE,
-                        ],
-                        'resources' => ['Structure'],
-                        'assertion' => StructureAssertion::class
                     ],
                 ],
             ],

@@ -87,4 +87,22 @@ class FichierController extends AbstractActionController {
         }
         exit();
     }
+
+    public function historiserAction() {
+        $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+        $this->getFichierService()->historise($fichier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        exit();
+    }
+
+    public function restaurerAction() {
+        $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
+        $this->getFichierService()->restore($fichier);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        exit();
+    }
 }

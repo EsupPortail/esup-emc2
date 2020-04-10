@@ -192,6 +192,10 @@ class FichePosteController extends AbstractActionController {
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $this->getFichePosteService()->historise($fiche);
+
+        $retour  = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+
         return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
@@ -199,6 +203,10 @@ class FichePosteController extends AbstractActionController {
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $this->getFichePosteService()->restore($fiche);
+
+        $retour  = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+
         return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 

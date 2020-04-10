@@ -6,9 +6,9 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class FichePostePrivileges extends Privileges
 {
-    const AFFICHER      = 'ficheposte-fp-afficher';
-    const HISTORISER    = 'ficheposte-fp-historiser';
-    const DETRUIRE      = 'ficheposte-fp-detruire';
-    const EDITER        = 'ficheposte-fp-editer-fiche';
-    const AJOUTER       = 'ficheposte-fp-ajouter-fiche';
+    const FICHEPOSTE_AFFICHER   = 'ficheposte-ficheposte_afficher';
+    const FICHEPOSTE_AJOUTER    = 'ficheposte-ficheposte_ajouter';
+    const FICHEPOSTE_MODIFIER   = 'ficheposte-ficheposte_modifier';
+    const FICHEPOSTE_HISTORISER = 'ficheposte-ficheposte_historiser';
+    const FICHEPOSTE_DETRUIRE   = 'ficheposte-ficheposte_detruire';
 }

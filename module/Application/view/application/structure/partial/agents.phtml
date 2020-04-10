@@ -11,11 +11,11 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
-$canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
-$canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
-$canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
-$canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::DETRUIRE));
+$canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
+$canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
+$canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+$canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
+$canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
 
 ?>
 

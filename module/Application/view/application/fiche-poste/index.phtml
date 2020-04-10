@@ -14,11 +14,11 @@ use Application\Provider\Privilege\FichePostePrivileges;
 
 $this->headTitle('Index des fiches de postes');
 
-$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
-$canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
-$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
-$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
-$canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
+$canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
+$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
+$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+$canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
 
 ?>
 

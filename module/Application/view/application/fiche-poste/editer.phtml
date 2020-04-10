@@ -16,9 +16,9 @@ use Application\Provider\Privilege\FichePostePrivileges;
 $canAssocierAgent = true;
 $canAssocierMetierType = true;
 
-$canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
-$canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
-$canEditerExpertise = true || $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+$canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+$canEditerExpertise = true || $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 
 $mode = 'edition';
 $date = new DateTime();

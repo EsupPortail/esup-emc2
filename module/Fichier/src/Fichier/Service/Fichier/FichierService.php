@@ -4,17 +4,18 @@ namespace Fichier\Service\Fichier;
 
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Entity\Db\Nature;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichierService {
+    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -24,23 +25,18 @@ class FichierService {
      */
     public function create($fichier)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
+
         $fichier->setHistoCreateur($user);
         $fichier->setHistoCreation($date);
         $fichier->setHistoModificateur($user);
         $fichier->setHistoModification($date);
 
-        $this->getEntityManager()->persist($fichier);
         try {
+            $this->getEntityManager()->persist($fichier);
             $this->getEntityManager()->flush($fichier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la création d'un Fichier.", $e);
         }
         return $fichier;
@@ -52,20 +48,15 @@ class FichierService {
      */
     public function update($fichier)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
+
         $fichier->setHistoModificateur($user);
         $fichier->setHistoModification($date);
 
         try {
             $this->getEntityManager()->flush($fichier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Fichier.", $e);
         }
         return $fichier;
@@ -77,20 +68,15 @@ class FichierService {
      */
     public function historise($fichier)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
+
         $fichier->setHistoDestructeur($user);
         $fichier->setHistoDestruction($date);
 
         try {
             $this->getEntityManager()->flush($fichier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Fichier.", $e);
         }
         return $fichier;
@@ -100,14 +86,14 @@ class FichierService {
      * @param Fichier $fichier
      * @return Fichier
      */
-    public function restaure($fichier)
+    public function restore($fichier)
     {
         $fichier->setHistoDestructeur(null);
         $fichier->setHistoDestruction(null);
 
         try {
             $this->getEntityManager()->flush($fichier);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Fichier.", $e);
         }
         return $fichier;
@@ -119,10 +105,11 @@ class FichierService {
      */
     public function delete($fichier)
     {
-        $this->getEntityManager()->remove($fichier);
+
         try {
+            $this->getEntityManager()->remove($fichier);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Fichier.", $e);
         }
         return $fichier;

@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\FichePosteAssertion;
+use Application\Assertion\FichePosteAssertionFactory;
 use Application\Controller\FichePosteController;
 use Application\Controller\FichePosteControllerFactory;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
@@ -43,24 +45,80 @@ use Application\Service\FormationsRetirees\FormationsRetireesServiceFactory;
 use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'FichePoste' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            FichePostePrivileges::FICHEPOSTE_AFFICHER,
+                            FichePostePrivileges::FICHEPOSTE_MODIFIER,
+                            FichePostePrivileges::FICHEPOSTE_HISTORISER,
+                            FichePostePrivileges::FICHEPOSTE_DETRUIRE,
+                        ],
+                        'resources' => ['FichePoste'],
+                        'assertion' => FichePosteAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
                     'controller' => FichePosteController::class,
                     'action' => [
-                        'index',
+                        'afficher',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_AFFICHER,
+                    'assertion'  => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
                         'ajouter',
                         'dupliquer',
-                        'afficher',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_AJOUTER,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
                         'editer',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER,
+                    'assertion'  => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_HISTORISER,
+                    'assertion'  => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
                         'detruire',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_DETRUIRE,
+                    'assertion'  => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
+                        'index',
                         'associer-agent',
                         'associer-poste',
                         'associer-titre',
@@ -102,7 +160,7 @@ return [
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
                                 'route' => 'fiche-poste',
-                                'resource' =>  FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER) ,
+                                'resource' =>  FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER) ,
                                 'order'    => 1000,
                             ],
                         ],
@@ -418,6 +476,8 @@ return [
 
     'service_manager' => [
         'factories' => [
+            FichePosteAssertion::class => FichePosteAssertionFactory::class,
+
             ActivitesDescriptionsRetireesService::class => ActivitesDescriptionsRetireesServiceFactory::class,
             ApplicationsRetireesService::class => ApplicationsRetireesServiceFactory::class,
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,

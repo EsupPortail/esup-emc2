@@ -8,6 +8,7 @@ use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Entity\Db\Structure;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -15,11 +16,13 @@ use Doctrine\ORM\QueryBuilder;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
     use EntityManagerAwareTrait;
+    use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -512,5 +515,20 @@ class FichePosteService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function isGererPar(FichePoste $fiche, User $user)
+    {
+        if ($fiche->getPoste()) {
+            $structure = $fiche->getPoste()->getStructure();
+            if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
+        }
+        if ($fiche->getAgent()) {
+            foreach ($fiche->getAgent()->getGradesActifs() as $grade) {
+                $structure = $grade->getStructure();
+                if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
+            }
+        }
+        return false;
     }
 }

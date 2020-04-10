@@ -8,12 +8,15 @@ use Application\Provider\Privilege\FichePostePrivileges;
  * @var boolean[] $displays
  */
 
-$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AJOUTER));
-$canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::AFFICHER));
+$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
+
 $canExport      = false;
-$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::HISTORISER));
-$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
-$canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::EDITER));
+$canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+
+$retour = null;
+if (isset($options['retour'])) $retour = $options['retour'];
+
+if ($retour)    $query['retour'] = $retour;
 
 ?>
 
@@ -39,6 +42,12 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </thead>
     <tbody>
     <?php foreach ($fiches as $fiche) : ?>
+        <?php
+            /**  Privilege avec assertion **/
+            $canVoir        = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
+            $canHistoriser  = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_HISTORISER);
+            $canEditer      = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+        ?>
         <tr <?php if ($fiche->estHistorise()) echo 'class="historise"'; ?>>
             <?php if ($displays['agent']) : ?>
                 <td>
@@ -120,14 +129,14 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
                         <?php if ($fiche->estNonHistorise()) : ?>
                             <a
                                 <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
-                                    href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                                    href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $fiche->getId()], ["query" => $query], true); ?>"
                             ><span class="icon historiser"
                                    data-toggle="tooltip" data-html="true"
                                    title="Historiser la fiche de poste"></span></a>
                         <?php else: ?>
                             <a
                                 <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
-                                    href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                                    href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' => $fiche->getId()], ["query" => $query], true); ?>"
                             ><span class="icon restaurer"
                                    data-toggle="tooltip" data-html="true"
                                    title="Restaurer la fiche de poste"></span></a>

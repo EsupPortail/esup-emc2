@@ -7,11 +7,16 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FichePoste
-{
+class FichePoste implements ResourceInterface {
     use HistoriqueAwareTrait;
-    use DateTimeAwareTrait;
+    use DateTimeAwareTrait
+        ;
+    public function getResourceId()
+    {
+        return 'FichePoste';
+    }
 
     /** @var int */
     private $id;

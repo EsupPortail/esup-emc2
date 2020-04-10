@@ -26,9 +26,11 @@ return [
                         'upload',
                         'download',
                         'delete',
+                        'historiser',
+                        'restaurer',
+                        'delete',
                     ],
                     'roles' => [
-                        'Administrateur technique'
                     ],
                 ],
             ],
@@ -78,6 +80,28 @@ return [
                     'defaults' => [
                         'controller' => FichierController::class,
                         'action'     => 'download',
+                    ],
+                ],
+            ],
+            'historiser-fichier' => [
+                'type'          => Segment::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route'    => '/historiser-fichier/:fichier',
+                    'defaults' => [
+                        'controller' => FichierController::class,
+                        'action'     => 'historiser',
+                    ],
+                ],
+            ],
+            'restaurer-fichier' => [
+                'type'          => Segment::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route'    => '/restaurer-fichier/:fichier',
+                    'defaults' => [
+                        'controller' => FichierController::class,
+                        'action'     => 'restaurer',
                     ],
                 ],
             ],
