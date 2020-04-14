@@ -107,8 +107,12 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                     <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($canDetruire) : ?>
-                        <a href="<?php echo $this->url('fiche-metier-type/detruire', ['id' => $fiche->getId()], [], true); ?>"
-                           title="Détruire la fiche metier">
+                        <a
+                            <?php /** @see \Application\Controller\FicheMetierController::detruireAction() */?>
+                            href="<?php echo $this->url('fiche-metier-type/detruire', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                            title="Détruire la fiche metier"
+                            class="ajax-modal" data-event="destruction"
+                        >
                             <span class="icon detruire"></span></a>
                     <?php endif; ?>
                 </td>
@@ -128,6 +132,13 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
             }
         } );
     } );
+
+    $(function() {
+        $("body").on("destruction", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
 
     $(function() {
         $("body").on("modification", function (event) {

@@ -99,10 +99,28 @@ class FicheMetierController extends  AbstractActionController{
 
     public function detruireAction()
     {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-        $this->getFicheMetierService()->delete($fiche);
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $this->getFicheMetierService()->delete($fiche);
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($fiche !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la fiche de poste  de ". (($fiche AND $fiche->getMetier())?$fiche->getMetier()->getLibelle():"[Aucun métier]"),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier-type/detruire', ["fiche-metier" => $fiche->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function ajouterAction()

@@ -176,7 +176,7 @@ return [
                     'detruire' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/detruire/:id',
+                            'route'    => '/detruire/:fiche-metier',
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'detruire',
