@@ -6,10 +6,11 @@ use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FichePoste implements ResourceInterface {
+class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
     use DateTimeAwareTrait
         ;

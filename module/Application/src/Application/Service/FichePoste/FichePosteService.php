@@ -8,22 +8,75 @@ use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Entity\Db\Structure;
-use Application\Service\Structure\StructureServiceAwareTrait;
+use Application\Service\GestionEntiteHistorisationTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
-    use EntityManagerAwareTrait;
-    use StructureServiceAwareTrait;
-    use UserServiceAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use StructureServiceAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
+
+    /** GESTION DES ENTITES *******************************************************************************************/
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function create($fiche)
+    {
+        $this->createFromTrait($fiche);
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function update($fiche)
+    {
+        $this->updateFromTrait($fiche);
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function historise($fiche)
+    {
+        $this->historiserFromTrait($fiche);
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function restore($fiche)
+    {
+        $this->restoreFromTrait($fiche);
+        return $fiche;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function delete($fiche)
+    {
+        $this->deleteFromTrait($fiche);
+        return $fiche;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @return QueryBuilder
@@ -90,110 +143,6 @@ class FichePosteService {
         if($notNull && !$fiche) throw new RuntimeException("Aucune fiche de trouvée avec l'identifiant [".$id."]");
         return $fiche;
 
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function create($fiche)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $fiche->setHistoCreation($date);
-        $fiche->setHistoCreateur($user);
-        $fiche->setHistoModification($date);
-        $fiche->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($fiche);
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function update($fiche)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $fiche->setHistoModification($date);
-        $fiche->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function historise($fiche)
-    {
-        try {
-            $date = new DateTime();
-            $user = $this->getUserService()->getConnectedUser();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la récupération des informations d'historisation", $e);
-        }
-        $fiche->setHistoDestruction($date);
-        $fiche->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de l\'historisation en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function restore($fiche)
-    {
-        $fiche->setHistoDestruction(null);
-        $fiche->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la restauration en BD', $e);
-        }
-        return $fiche;
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return FichePoste
-     */
-    public function delete($fiche)
-    {
-        try {
-            $this->getEntityManager()->remove($fiche);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la restauration en BD', $e);
-        }
-        return $fiche;
     }
 
     /** SPECIFICITE POSTE  ********************************************************************************************/

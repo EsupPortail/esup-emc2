@@ -5,18 +5,16 @@ namespace Application\Service\FicheMetier;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractController;
 
 class FicheMetierService {
-    use DateTimeAwareTrait;
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
+//    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -26,21 +24,7 @@ class FicheMetierService {
      */
     public function create($fiche)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $fiche->setHistoCreation($date);
-        $fiche->setHistoCreateur($user);
-        $fiche->setHistoModification($date);
-        $fiche->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($fiche);
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de la création de la fiche.");
-        }
-
+        $this->createFromTrait($fiche);
         return $fiche;
     }
 
@@ -50,71 +34,38 @@ class FicheMetierService {
      */
     public function update($fiche)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $fiche->setHistoModification($date);
-        $fiche->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de la mise à jour de la fiche.");
-        }
-
+        $this->updateFromTrait($fiche);
         return $fiche;
     }
 
     /**
-     * @param FicheMetier $ficheMetier
+     * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function historise($ficheMetier)
+    public function historise($fiche)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $ficheMetier->setHistoDestruction($date);
-        $ficheMetier->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($ficheMetier);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de l'historisation de la fiche métier.", $e);
-        }
-        return $ficheMetier;
+        $this->historiserFromTrait($fiche);
+        return $fiche;
     }
 
     /**
-     * @param FicheMetier $ficheMetier
+     * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function restore($ficheMetier)
+    public function restore($fiche)
     {
-        $ficheMetier->setHistoDestruction(null);
-        $ficheMetier->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($ficheMetier);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de la restauration de la fiche métier.", $e);
-        }
-        return $ficheMetier;
+        $this->restoreFromTrait($fiche);
+        return $fiche;
     }
 
     /**
-     * @param FicheMetier $ficheMetier
+     * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function delete($ficheMetier)
+    public function delete($fiche)
     {
-        try {
-            $this->getEntityManager()->remove($ficheMetier);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la fiche métier.", $e);
-        }
-        return $ficheMetier;
+        $this->deleteFromTrait($fiche);
+        return $fiche;
     }
 
     /** REQUETAGE *****************************************************************************************************/
