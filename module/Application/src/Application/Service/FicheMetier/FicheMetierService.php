@@ -2,10 +2,14 @@
 
 namespace Application\Service\FicheMetier;
 
+use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\Formation;
 use Application\Service\GestionEntiteHistorisationTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractController;
@@ -181,6 +185,36 @@ class FicheMetierService {
             $array[$fiche->getId()] = $fiche->getMetier()->getLibelle();
         }
         return $array;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param Application $application
+     * @param DateTime $date
+     */
+    public function addApplication(FicheMetier $fiche, Application $application, DateTime $date)
+    {
+        $fiche->addApplication($application);
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param Competence $competence
+     * @param DateTime $date
+     */
+    public function addCompetence(FicheMetier $fiche, Competence $competence, DateTime $date)
+    {
+        $fiche->addCompetence($competence);
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param Formation $formation
+     * @param DateTime $date
+     */
+    public function addFormation(FicheMetier $fiche, Formation $formation, DateTime $date)
+    {
+        $fiche->addFormation($formation);
     }
 
 }

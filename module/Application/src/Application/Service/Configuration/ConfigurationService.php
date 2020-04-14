@@ -135,7 +135,7 @@ class ConfigurationService {
             if ($ajout->getEntityType() === Formation::class   AND !$fiche->hasFormation($ajout->getEntity()))
                 $this->getFicheMetierService()->addFormation($fiche, $ajout->getEntity(), $fiche->getHistoCreation());
         }
-
+        $this->getFicheMetierService()->update($fiche);
         return $fiche;
     }
 
