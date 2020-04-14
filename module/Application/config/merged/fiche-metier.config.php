@@ -78,8 +78,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'fiche' => [
-                        'label' => 'Fiches',
+                    'gestion' => [
                         'pages' => [
                             'fiche-metier' => [
                                 'label' => 'Fiches métiers',

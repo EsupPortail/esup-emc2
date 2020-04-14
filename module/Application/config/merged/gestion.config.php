@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Application\Controller\AdministrationController;
-use Application\Controller\AdministrationControllerFactory;
+use Application\Controller\GestionController;
+use Application\Controller\GestionControllerFactory;
 use Application\Provider\Privilege\AdministrationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -13,7 +13,7 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => AdministrationController::class,
+                    'controller' => GestionController::class,
                     'action' => [
                         'index',
                     ],
@@ -29,12 +29,12 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'administration' => [
-                        'order' => 1000,
-                        'label' => 'Administration',
-                        'title' => "Administration",
-                        'route' => 'administration',
-                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
+                    'gestion' => [
+                        'order' => 500,
+                        'label' => 'Gestion',
+                        'title' => "Gestion des fiches, entretiens et des affectations",
+                        'route' => 'gestion',
+                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER)
                     ],
                 ],
             ],
@@ -43,12 +43,12 @@ return [
 
     'router'          => [
         'routes' => [
-            'administration' => [
+            'gestion' => [
                 'type'  => Literal::class,
                 'options' => [
-                    'route'    => '/administration',
+                    'route'    => '/gestion',
                     'defaults' => [
-                        'controller' => AdministrationController::class,
+                        'controller' => GestionController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -63,7 +63,7 @@ return [
     ],
     'controllers'     => [
         'factories' => [
-            AdministrationController::class => AdministrationControllerFactory::class,
+            GestionController::class => GestionControllerFactory::class,
         ],
     ],
     'form_elements' => [

@@ -52,7 +52,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'fiche' => [
+                    'gestion' => [
                         'pages' => [
                             'entretienpro' => [
                                 'label' => 'Entretiens professionnels',

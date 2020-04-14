@@ -89,6 +89,7 @@ return [
                     'controller' => FichePosteController::class,
                     'action' => [
                         'afficher',
+                        'export',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_AFFICHER,
                     'assertion'  => FichePosteAssertion::class,
@@ -105,6 +106,26 @@ return [
                     'controller' => FichePosteController::class,
                     'action' => [
                         'editer',
+
+                        'associer-agent',
+                        'associer-poste',
+                        'associer-titre',
+                        'editer-specificite',
+                        'ajouter-fiche-metier',
+                        'retirer-fiche-metier',
+                        'modifier-fiche-metier',
+                        'selectionner-activite',
+
+                        'selectionner-applications-retirees',
+                        'selectionner-competences-retirees',
+                        'selectionner-formations-retirees',
+                        'selectionner-descriptions-retirees',
+
+                        'ajouter-expertise',
+                        'modifier-expertise',
+                        'historiser-expertise',
+                        'restaurer-expertise',
+                        'supprimer-expertise',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER,
                     'assertion'  => FichePosteAssertion::class,
@@ -126,35 +147,6 @@ return [
                     'privileges' => FichePostePrivileges::FICHEPOSTE_DETRUIRE,
                     'assertion'  => FichePosteAssertion::class,
                 ],
-                [
-                    'controller' => FichePosteController::class,
-                    'action' => [
-                        'associer-agent',
-                        'associer-poste',
-                        'associer-titre',
-                        'editer-specificite',
-                        'ajouter-fiche-metier',
-                        'retirer-fiche-metier',
-                        'modifier-fiche-metier',
-                        'selectionner-activite',
-                        'export',
-
-                        'selectionner-applications-retirees',
-                        'selectionner-competences-retirees',
-                        'selectionner-formations-retirees',
-                        'selectionner-descriptions-retirees',
-                        'test-affichage-application-bloc',
-
-                        'ajouter-expertise',
-                        'modifier-expertise',
-                        'historiser-expertise',
-                        'restaurer-expertise',
-                        'supprimer-expertise',
-
-                    ],
-                    'roles' => [
-                    ],
-                ],
             ],
         ],
     ],
@@ -163,9 +155,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'fiche' => [
-                        'label' => 'Fiches',
-                        'route' => 'fiche-poste',
+                    'gestion' => [
                         'pages' => [
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
@@ -377,17 +367,6 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'selectionner-applications-retirees',
-                            ],
-                        ],
-                    ],
-                    'test-affichage-application-bloc' => [
-                        'type'  => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/test-affichage-application-bloc/:fiche-poste/:fiche-metier',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action'     => 'test-affichage-application-bloc',
                             ],
                         ],
                     ],

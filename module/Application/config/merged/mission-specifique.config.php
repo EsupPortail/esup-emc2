@@ -153,7 +153,7 @@ return [
                             ],
                         ],
                     ],
-                    'fiche' => [
+                    'gestion' => [
                         'pages' => [
                             'affectation' => [
                                 'label' => 'Affectations des missions spécifiques',

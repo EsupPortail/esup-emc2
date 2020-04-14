@@ -577,18 +577,6 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    public function testAffichageApplicationBlocAction() {
-        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-
-        $applications = $this->getFichePosteService()->getApplicationsAssocieesFicheMetier($ficheposte, $fichemetier);
-        return new ViewModel([
-            'ficheposte' => $ficheposte,
-            'fichemetier' => $fichemetier,
-            'applications' => $applications,
-        ]);
-    }
-
     /** Compétences conservées ****************************************************************************************/
 
     public function selectionnerCompetencesRetireesAction() {
