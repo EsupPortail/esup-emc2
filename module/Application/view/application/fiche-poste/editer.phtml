@@ -23,290 +23,309 @@ $canEditerExpertise = true || $this->isAllowed(FichePostePrivileges::getResource
 $mode = 'edition';
 $date = new DateTime();
 
+$canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+
 $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
 ?>
 
-<style>
-    a.action {width: 18em;}
-</style>
+<h1 class="page-header">
+    Modification de la fiche de poste #<?php echo $fiche->getId(); ?>
+</h1>
 
-<div class="row">
-    <div class="col-md-8">
-        <h1 class="page-header">
-            Fiche de poste #<?php echo $fiche->getId(); ?><br/>
-            <strong>
-                <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
-                <?php if($fiche->getLibelle() !== null) : ?>
-                    (<?php echo $fiche->getLibelle(); ?>)
-                <?php endif; ?>
-            </strong>
-        </h1>
+<?php if (! $canModifier ) : ?>
+
+    <div class="alert alert-danger col-md-8">
+        <p class="lead">
+            <span class="icon attention"></span>
+            Vous n'êtes pas habilité&middot;e à modifier cette fiche de poste.
+        </p>
     </div>
-    <div class="pull-right">
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <a href="<?php echo $this->url('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-           class="btn btn-primary action ajax-modal"
-           data-event="modification"
-        >
-            <span class="icon editer"></span>
-            Modifier le titre
-        </a>
-    </div>
-</div>
 
 
-<?php echo $this->partial("partial/retour-structure.phtml"); ?>
+<?php else : ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="row">
-            <div class="col-md-6">
-                <h2> Agent occupant le poste </h2>
-            </div>
-            <div class="col-md-6">
-                <?php if($canAssocierAgent) : ?>
-                    <?php /** @see \Application\Controller\FichePosteController::associerAgentAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
-                       class="btn btn-primary action ajax-modal pull-right"
-                       data-event="modification"
-                    >
-                        <span class="icon selectionner"></span>
-                        Associer un agent
-                    </a>
-                <?php endif; ?>
-            </div>
+    <style>
+        a.action {width: 18em;}
+    </style>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="page-header">
+                Fiche de poste #<?php echo $fiche->getId(); ?><br/>
+                <strong>
+                    <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
+                    <?php if($fiche->getLibelle() !== null) : ?>
+                        (<?php echo $fiche->getLibelle(); ?>)
+                    <?php endif; ?>
+                </strong>
+            </h1>
+        </div>
+        <div class="pull-right">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <a href="<?php echo $this->url('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+               class="btn btn-primary action ajax-modal"
+               data-event="modification"
+            >
+                <span class="icon editer"></span>
+                Modifier le titre
+            </a>
         </div>
     </div>
 
-    <div class="panel-body">
 
+    <?php echo $this->partial("partial/retour-structure.phtml"); ?>
 
-        <?php $agent = $fiche->getAgent(); ?>
-
-        <?php if($agent === null) : ?>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                Aucun agent d'associé à ce poste
-            </div>
-        <?php else : ?>
-            <?php echo $this->agent($agent); ?>
-        <?php endif; ?>
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="row">
-            <div class="col-md-6">
-                <h2> Environnement du poste de travail </h2>
-            </div>
-            <div class="col-md-6">
-                <?php if($canAssocierAgent) : ?>
-                    <?php /** @see \Application\Controller\FichePosteController::associerPosteAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
-                       class="btn btn-primary action ajax-modal pull-right"
-                       data-event="modification"
-                    >
-                        <span class="icon selectionner"></span>
-                        Associer un poste
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-    <div class="panel-body">
-            <h3> Affectation du poste </h3>
-            <?php if ($fiche->getPoste() !== null && $fiche->getPoste()->getStructure() !== null) : ?>
-                <?php if ($fiche->getPoste()->getStructure()->getDescription() !== null) :?>
-                    <?php echo $fiche->getPoste()->getStructure()->getDescription(); ?>
-                <?php else: ?>
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Aucune description de fournie pour l'affectation <em><?php echo $fiche->getPoste()->getStructure()->getLibelleCourt(); ?></em>.
-                    </div>
-                <?php endif; ?>
-            <?php else : ?>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Aucune affectation de renseignée.
-                </div>
-            <?php endif; ?>
-
-            <h3> Positionnement dans l'établissement</h3>
-            <?php if ($fiche->getPoste() === null) : ?>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Aucun poste n'est attaché à ce poste
-                </div>
-            <?php else: ?>
-                <?php echo $this->poste($fiche->getPoste()); ?>
-            <?php endif; ?>
-    </div>
-</div>
-
-<!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
-
-<?php
-$principal = $fiche->getFicheTypeExternePrincipale();
-
-$fichesMetiers = $fiche->getFichesMetiers();
-$fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
-usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
-?>
-
-
-<?php /** @var \Application\Entity\Db\FicheTypeExterne $ficheType **/ ?>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <div class="row">
-            <div class="col-md-8">
-            <h2>Fiche de poste composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) métier(s).</h2>
-            <ul>
-                <?php if ($principal) : ?>
-                    <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
-                <?php endif; ?>
-                <?php foreach ($fichesMetiers as $ficheType) : ?>
-                    <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
-                <?php endforeach; ?>
-            </ul>
-            </div>
-            <div class="col-md-4">
-                <?php /**  @see \Application\Controller\FichePosteController::ajouterFicheMetierAction() */ ?>
-                <a href="<?php echo $this->url('fiche-poste/ajouter-fiche-metier', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                   class="btn btn-primary action ajax-modal pull-right"
-                   data-event="modification"
-                >
-                    <span class="icon ajouter"></span>
-                    Ajouter une fiche métier
-                    </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php if ($principal) echo $this->ficheMetierExterne($principal, ['mode' => 'edition-fiche-poste']);  ?>
-<?php foreach ($fichesMetiers as $ficheType) : ?>
-    <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'edition-fiche-poste']);  ?>
-<?php endforeach; ?>
-
-<!-- GRAPH ------------------------------------------------------------------------------------------------------------>
-
-<div class="row">
-    <div class="col-md-6">
-        <?php echo $this->fichePosteGraph($fiche, 'radar', $date); ?>
-    </div>
-    <div class="col-md-6">
-        <?php echo $this->fichePosteGraph($fiche, 'bar', $date); ?>
-    </div>
-</div>
-
-<!-- EXPERTISES LIEES A LA FICHE DE POSTE ----------------------------------------------------------------------------->
-<?php $expertises = $fiche->getCurrentExpertises($date); ?>
-
-<?php if ($mode === 'edition' OR !empty($expertises)) : ?>
     <div class="panel panel-info">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-6">
-                    <h2> Expertises associées au poste </h2>
+                    <h2> Agent occupant le poste </h2>
                 </div>
                 <div class="col-md-6">
-                    <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
-                        <a <?php /** @see \Application\Controller\FichePosteController::ajouterExpertiseAction() */?>
-                                href="<?php echo $this->url('fiche-poste/ajouter-expertise',['fiche-poste' => $fiche->getId()], [], true); ?>"
-                                class="btn btn-primary action ajax-modal pull-right"
-                                data-event="modification"
+                    <?php if($canAssocierAgent) : ?>
+                        <?php /** @see \Application\Controller\FichePosteController::associerAgentAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-poste/associer-agent',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
+                           class="btn btn-primary action ajax-modal pull-right"
+                           data-event="modification"
                         >
-                            <span class="icon editer"></span>
-                            Ajouter une expertise
+                            <span class="icon selectionner"></span>
+                            Associer un agent
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+
+
+            <?php $agent = $fiche->getAgent(); ?>
+
+            <?php if($agent === null) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucun agent d'associé à ce poste
+                </div>
+            <?php else : ?>
+                <?php echo $this->agent($agent); ?>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2> Environnement du poste de travail </h2>
+                </div>
+                <div class="col-md-6">
+                    <?php if($canAssocierAgent) : ?>
+                        <?php /** @see \Application\Controller\FichePosteController::associerPosteAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
+                           class="btn btn-primary action ajax-modal pull-right"
+                           data-event="modification"
+                        >
+                            <span class="icon selectionner"></span>
+                            Associer un poste
                         </a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
         <div class="panel-body">
-            <ul>
-                <?php foreach ($expertises as $expertise) : ?>
-                    <li>
-                        <strong><?php echo $expertise->getLibelle(); ?></strong>
-                        <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
-                            <a <?php /** @see \Application\Controller\FichePosteController::modifierExpertiseAction() */?>
-                                    href="<?php echo $this->url('fiche-poste/modifier-expertise',['expertise' => $expertise->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                                    title="Modifier l'expertise"
-                            >
-                                <span class="icon editer"></span></a>
-                        <?php endif; ?>
-                        <?php if ($expertise->estNonHistorise()) : ?>
-                            <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
-                                <a <?php /** @see \Application\Controller\FichePosteController::historiserExpertiseAction() */?>
-                                        href="<?php echo $this->url('fiche-poste/historiser-expertise',['expertise' => $expertise->getId()], [], true); ?>"
-                                        title="Historiser l'expertise"
-                                >
-                                    <span class="icon historiser"></span></a>
-                            <?php endif; ?>
-                        <?php else : ?>
-                            <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
-                                <a <?php /** @see \Application\Controller\FichePosteController::restaurerExpertiseAction() */?>
-                                        href="<?php echo $this->url('fiche-poste/restaurer-expertise',['expertise' => $expertise->getId()], [], true); ?>"
-                                        title="Restaurer l'expertise"
-                                >
-                                    <span class="icon restaurer"></span></a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
-                            <a <?php /** @see \Application\Controller\FichePosteController::supprimerExpertiseAction() */?>
-                                    href="<?php echo $this->url('fiche-poste/supprimer-expertise',['expertise' => $expertise->getId()], [], true); ?>"
-                                    title="Supprimer l'expertise"
-                            >
-                                <span class="icon detruire"></span></a>
-                        <?php endif; ?>
-                        <br/>
-                        <div>
-                            <?php echo $expertise->getDescription(); ?>
+                <h3> Affectation du poste </h3>
+                <?php if ($fiche->getPoste() !== null && $fiche->getPoste()->getStructure() !== null) : ?>
+                    <?php if ($fiche->getPoste()->getStructure()->getDescription() !== null) :?>
+                        <?php echo $fiche->getPoste()->getStructure()->getDescription(); ?>
+                    <?php else: ?>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Aucune description de fournie pour l'affectation <em><?php echo $fiche->getPoste()->getStructure()->getLibelleCourt(); ?></em>.
                         </div>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Aucune affectation de renseignée.
+                    </div>
+                <?php endif; ?>
+
+                <h3> Positionnement dans l'établissement</h3>
+                <?php if ($fiche->getPoste() === null) : ?>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Aucun poste n'est attaché à ce poste
+                    </div>
+                <?php else: ?>
+                    <?php echo $this->poste($fiche->getPoste()); ?>
+                <?php endif; ?>
         </div>
     </div>
-<?php endif; ?>
 
-<!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="row">
-            <div class="col-md-6">
-                <h2> Spécificité du poste </h2>
-            </div>
-            <div class="col-md-6">
-                <?php if($canEditerSpecificte) : ?>
-                    <a href="<?php echo $this->url('fiche-poste/editer-specificite',['fiche-poste' => $fiche->getId()], [], true); ?>"
+    <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
+
+    <?php
+    $principal = $fiche->getFicheTypeExternePrincipale();
+
+    $fichesMetiers = $fiche->getFichesMetiers();
+    $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
+    usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
+    ?>
+
+
+    <?php /** @var \Application\Entity\Db\FicheTypeExterne $ficheType **/ ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-8">
+                <h2>Fiche de poste composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) métier(s).</h2>
+                <ul>
+                    <?php if ($principal) : ?>
+                        <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
+                    <?php endif; ?>
+                    <?php foreach ($fichesMetiers as $ficheType) : ?>
+                        <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
+                    <?php endforeach; ?>
+                </ul>
+                </div>
+                <div class="col-md-4">
+                    <?php /**  @see \Application\Controller\FichePosteController::ajouterFicheMetierAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/ajouter-fiche-metier', ['fiche-poste' => $fiche->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal pull-right"
                        data-event="modification"
                     >
-                        <span class="icon editer"></span>
-                        Renseigner les spécificités
-                    </a>
-                <?php endif; ?>
+                        <span class="icon ajouter"></span>
+                        Ajouter une fiche métier
+                        </a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="panel-body">
-        <?php if ($fiche->getSpecificite() === null) : ?>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                Aucune spécificité attachée à ce poste.
-            </div>
-        <?php else: ?>
-            <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
-        <?php endif; ?>
+
+    <?php if ($principal) echo $this->ficheMetierExterne($principal, ['mode' => 'edition-fiche-poste']);  ?>
+    <?php foreach ($fichesMetiers as $ficheType) : ?>
+        <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'edition-fiche-poste']);  ?>
+    <?php endforeach; ?>
+
+    <!-- GRAPH ------------------------------------------------------------------------------------------------------------>
+
+    <div class="row">
+        <div class="col-md-6">
+            <?php echo $this->fichePosteGraph($fiche, 'radar', $date); ?>
+        </div>
+        <div class="col-md-6">
+            <?php echo $this->fichePosteGraph($fiche, 'bar', $date); ?>
+        </div>
     </div>
-</div>
+
+    <!-- EXPERTISES LIEES A LA FICHE DE POSTE ----------------------------------------------------------------------------->
+    <?php $expertises = $fiche->getCurrentExpertises($date); ?>
+
+    <?php if ($mode === 'edition' OR !empty($expertises)) : ?>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2> Expertises associées au poste </h2>
+                    </div>
+                    <div class="col-md-6">
+                        <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
+                            <a <?php /** @see \Application\Controller\FichePosteController::ajouterExpertiseAction() */?>
+                                    href="<?php echo $this->url('fiche-poste/ajouter-expertise',['fiche-poste' => $fiche->getId()], [], true); ?>"
+                                    class="btn btn-primary action ajax-modal pull-right"
+                                    data-event="modification"
+                            >
+                                <span class="icon editer"></span>
+                                Ajouter une expertise
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <?php foreach ($expertises as $expertise) : ?>
+                        <li>
+                            <strong><?php echo $expertise->getLibelle(); ?></strong>
+                            <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
+                                <a <?php /** @see \Application\Controller\FichePosteController::modifierExpertiseAction() */?>
+                                        href="<?php echo $this->url('fiche-poste/modifier-expertise',['expertise' => $expertise->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                        title="Modifier l'expertise"
+                                >
+                                    <span class="icon editer"></span></a>
+                            <?php endif; ?>
+                            <?php if ($expertise->estNonHistorise()) : ?>
+                                <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
+                                    <a <?php /** @see \Application\Controller\FichePosteController::historiserExpertiseAction() */?>
+                                            href="<?php echo $this->url('fiche-poste/historiser-expertise',['expertise' => $expertise->getId()], [], true); ?>"
+                                            title="Historiser l'expertise"
+                                    >
+                                        <span class="icon historiser"></span></a>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
+                                    <a <?php /** @see \Application\Controller\FichePosteController::restaurerExpertiseAction() */?>
+                                            href="<?php echo $this->url('fiche-poste/restaurer-expertise',['expertise' => $expertise->getId()], [], true); ?>"
+                                            title="Restaurer l'expertise"
+                                    >
+                                        <span class="icon restaurer"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php if($mode === 'edition' AND $canEditerExpertise) : ?>
+                                <a <?php /** @see \Application\Controller\FichePosteController::supprimerExpertiseAction() */?>
+                                        href="<?php echo $this->url('fiche-poste/supprimer-expertise',['expertise' => $expertise->getId()], [], true); ?>"
+                                        title="Supprimer l'expertise"
+                                >
+                                    <span class="icon detruire"></span></a>
+                            <?php endif; ?>
+                            <br/>
+                            <div>
+                                <?php echo $expertise->getDescription(); ?>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2> Spécificité du poste </h2>
+                </div>
+                <div class="col-md-6">
+                    <?php if($canEditerSpecificte) : ?>
+                        <a href="<?php echo $this->url('fiche-poste/editer-specificite',['fiche-poste' => $fiche->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal pull-right"
+                           data-event="modification"
+                        >
+                            <span class="icon editer"></span>
+                            Renseigner les spécificités
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <?php if ($fiche->getSpecificite() === null) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucune spécificité attachée à ce poste.
+                </div>
+            <?php else: ?>
+                <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
 
 <?php echo $this->partial("partial/retour-structure.phtml"); ?>
 
