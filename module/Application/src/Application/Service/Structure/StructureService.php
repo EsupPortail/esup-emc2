@@ -3,7 +3,6 @@
 namespace Application\Service\Structure;
 
 use Application\Entity\Db\Structure;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
@@ -16,6 +15,24 @@ class StructureService
 {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+
+    /** GESTION DES ENTITES *******************************************************************************************/
+
+    /**
+     * @param Structure
+     * @return Structure
+     */
+    public function update($structure)
+    {
+        try {
+            $this->getEntityManager()->flush($structure);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
+        }
+        return $structure;
+    }
+
+    /** REQUETAGES ****************************************************************************************************/
 
     /**
      * @param bool $ouverte
@@ -161,20 +178,6 @@ class StructureService
     public function removeGestionnaire($structure, $gestionnaire)
     {
         $structure->removeGestionnaire($gestionnaire);
-        try {
-            $this->getEntityManager()->flush($structure);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
-        }
-        return $structure;
-    }
-
-    /**
-     * @param Structure
-     * @return Structure
-     */
-    public function update($structure)
-    {
         try {
             $this->getEntityManager()->flush($structure);
         } catch (ORMException $e) {

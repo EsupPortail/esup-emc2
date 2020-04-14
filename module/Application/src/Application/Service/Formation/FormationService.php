@@ -3,6 +3,7 @@
 namespace Application\Service\Formation;
 
 use Application\Entity\Db\Formation;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -13,10 +14,11 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationService {
-    use EntityManagerAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+//    use DateTimeAwareTrait;
+    use GestionEntiteHistorisationTrait;
     use FormationThemeServiceAwareTrait;
-    use UserServiceAwareTrait;
-    use DateTimeAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -26,20 +28,7 @@ class FormationService {
      */
     public function create(Formation $formation)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $formation->setHistoCreation($date);
-        $formation->setHistoCreateur($user);
-        $formation->setHistoModification($date);
-        $formation->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($formation);
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
+        $this->createFromTrait($formation);
         return $formation;
     }
 
@@ -49,17 +38,7 @@ class FormationService {
      */
     public function update(Formation $formation)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $formation->setHistoModification($date);
-        $formation->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
+        $this->updateFromTrait($formation);
         return $formation;
     }
 
@@ -69,17 +48,7 @@ class FormationService {
      */
     public function historise(Formation $formation)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $formation->setHistoDestruction($date);
-        $formation->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
+        $this->historiserFromTrait($formation);
         return $formation;
     }
 
@@ -89,14 +58,7 @@ class FormationService {
      */
     public function restore(Formation $formation)
     {
-        $formation->setHistoDestruction(null);
-        $formation->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
+        $this->restoreFromTrait($formation);
         return $formation;
     }
 
@@ -106,12 +68,7 @@ class FormationService {
      */
     public function delete(Formation $formation)
     {
-        try {
-            $this->getEntityManager()->remove($formation);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
-        }
+        $this->deleteFromTrait($formation);
         return $formation;
     }
 

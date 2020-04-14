@@ -3,9 +3,10 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FormationTheme {
+class FormationTheme implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */

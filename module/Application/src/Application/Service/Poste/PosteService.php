@@ -4,14 +4,57 @@ namespace Application\Service\Poste;
 
 use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class PosteService {
     use EntityManagerAwareTrait;
+    use StructureServiceAwareTrait;
+
+    /** GESTION DES ENTITES *******************************************************************************************/
+
+    /**
+     * @param Poste $poste
+     * @return Poste
+     */
+    public function create($poste) {
+        try {
+            $this->getEntityManager()->persist($poste);
+            $this->getEntityManager()->flush($poste);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Problème lors de la création en base du Poste.",$e);
+        }
+        return $poste;
+    }
+
+    /**
+     * @param Poste $poste
+     * @return Poste
+     */
+    public function update($poste) {
+        try {
+            $this->getEntityManager()->flush($poste);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Problème lors de la mise à jour en base du Poste.",$e);
+        }
+        return $poste;
+    }
+
+    public function delete($poste) {
+        try {
+            $this->getEntityManager()->remove($poste);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Problème lors de la suppression en base du Poste.",$e);
+        }
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      *
@@ -74,42 +117,6 @@ class PosteService {
             throw new RuntimeException("Plusieurs postes partagent le même identifiant [".$id."].",$e);
         }
         return $result;
-    }
-
-    /**
-     * @param Poste $poste
-     * @return Poste
-     */
-    public function create($poste) {
-        $this->getEntityManager()->persist($poste);
-        try {
-            $this->getEntityManager()->flush($poste);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Problème lors de la création en base du Poste.",$e);
-        }
-        return $poste;
-    }
-
-    /**
-     * @param Poste $poste
-     * @return Poste
-     */
-    public function update($poste) {
-        try {
-            $this->getEntityManager()->flush($poste);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Problème lors de la mise à jour en base du Poste.",$e);
-        }
-        return $poste;
-    }
-
-    public function delete($poste) {
-        $this->getEntityManager()->remove($poste);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Problème lors de la suppression en base du Poste.",$e);
-        }
     }
 
     /**

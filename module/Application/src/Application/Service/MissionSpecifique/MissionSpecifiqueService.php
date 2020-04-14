@@ -5,21 +5,18 @@ namespace Application\Service\MissionSpecifique;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\MissionSpecifiqueTheme;
 use Application\Entity\Db\MissionSpecifiqueType;
-use DateTime;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class MissionSpecifiqueService {
-    use DateTimeAwareTrait;
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
+//    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** MISSION SPECIFIQUE ********************************************************************************************/
 
@@ -31,21 +28,7 @@ class MissionSpecifiqueService {
      */
     public function create($mission)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $mission->setHistoCreation($date);
-        $mission->setHistoCreateur($user);
-        $mission->setHistoModification($date);
-        $mission->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($mission);
-            $this->getEntityManager()->flush($mission);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
-        }
-
+        $this->createFromTrait($mission);
         return $mission;
     }
 
@@ -55,18 +38,7 @@ class MissionSpecifiqueService {
      */
     public function update($mission)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $mission->setHistoModification($date);
-        $mission->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($mission);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
-        }
-
+        $this->updateFromTrait($mission);
         return $mission;
     }
 
@@ -76,18 +48,7 @@ class MissionSpecifiqueService {
      */
     public function historise($mission)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $mission->setHistoDestruction($date);
-        $mission->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($mission);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
-        }
-
+        $this->historiserFromTrait($mission);
         return $mission;
     }
 
@@ -97,15 +58,7 @@ class MissionSpecifiqueService {
      */
     public function restore($mission)
     {
-        $mission->setHistoDestruction(null);
-        $mission->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($mission);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
-        }
-
+        $this->restoreFromTrait($mission);
         return $mission;
     }
 
@@ -115,17 +68,11 @@ class MissionSpecifiqueService {
      */
     public function delete($mission)
     {
-        try {
-            $this->getEntityManager()->remove($mission);
-            $this->getEntityManager()->flush($mission);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la sauvegarde en BD", $e);
-        }
-
+        $this->deleteFromTrait($mission);
         return $mission;
     }
 
-    /** REQUETAGE **/
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @return QueryBuilder
@@ -235,7 +182,6 @@ class MissionSpecifiqueService {
         return $array;
     }
 
-
     /**
      * @return MissionSpecifique[]
      */
@@ -260,20 +206,7 @@ class MissionSpecifiqueService {
      */
     public function createType($type)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $type->setHistoCreateur($user);
-        $type->setHistoCreation($date);
-        $type->setHistoModificateur($user);
-        $type->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->persist($type);
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->createFromTrait($type);
         return $type;
     }
 
@@ -283,17 +216,7 @@ class MissionSpecifiqueService {
      */
     public function updateType($type)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $type->setHistoModificateur($user);
-        $type->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->updateFromTrait($type);
         return $type;
     }
 
@@ -303,17 +226,7 @@ class MissionSpecifiqueService {
      */
     public function historiseType($type)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $type->setHistoDestructeur($user);
-        $type->setHistoDestruction($date);
-
-        try {
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->historiserFromTrait($type);
         return $type;
     }
 
@@ -323,14 +236,7 @@ class MissionSpecifiqueService {
      */
     public function restoreType($type)
     {
-        $type->setHistoDestructeur(null);
-        $type->setHistoDestruction(null);
-
-        try {
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->restoreFromTrait($type);
         return $type;
     }
 
@@ -340,16 +246,11 @@ class MissionSpecifiqueService {
      */
     public function deleteType($type)
     {
-        try {
-            $this->getEntityManager()->remove($type);
-            $this->getEntityManager()->flush($type);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->deleteFromTrait($type);
         return $type;
     }
 
-    /** REQUETAGE */
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @param bool $historiser
@@ -420,8 +321,6 @@ class MissionSpecifiqueService {
         return $result;
     }
 
-
-
     /** MISSION SPECIFIQUE THEME **************************************************************************************/
 
     /** GESTION ENTITES */
@@ -432,20 +331,7 @@ class MissionSpecifiqueService {
      */
     public function createTheme($theme)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $theme->setHistoCreateur($user);
-        $theme->setHistoCreation($date);
-        $theme->setHistoModificateur($user);
-        $theme->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->persist($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->createFromTrait($theme);
         return $theme;
     }
 
@@ -455,17 +341,7 @@ class MissionSpecifiqueService {
      */
     public function updateTheme($theme)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $theme->setHistoModificateur($user);
-        $theme->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->updateFromTrait($theme);
         return $theme;
     }
 
@@ -475,17 +351,7 @@ class MissionSpecifiqueService {
      */
     public function historiseTheme($theme)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $theme->setHistoDestructeur($user);
-        $theme->setHistoDestruction($date);
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->historiserFromTrait($theme);
         return $theme;
     }
 
@@ -495,14 +361,7 @@ class MissionSpecifiqueService {
      */
     public function restoreTheme($theme)
     {
-        $theme->setHistoDestructeur(null);
-        $theme->setHistoDestruction(null);
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->restoreFromTrait($theme);
         return $theme;
     }
 
@@ -512,12 +371,7 @@ class MissionSpecifiqueService {
      */
     public function deleteTheme($theme)
     {
-        try {
-            $this->getEntityManager()->remove($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un erreur s'est produite lors de l'enregistrement en BD.", $e);
-        }
+        $this->deleteFromTrait($theme);
         return $theme;
     }
 

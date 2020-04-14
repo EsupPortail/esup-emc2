@@ -6,21 +6,19 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\Structure;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class MissionSpecifiqueAffectationService {
-    use DateTimeAwareTrait;
+//    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
     use StructureServiceAwareTrait;
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
 
     /** ENTITY MANAGEMENT *********************************************************************************************/
 
@@ -30,20 +28,7 @@ class MissionSpecifiqueAffectationService {
      */
     public function create($affectation)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $affectation->setHistoCreation($date);
-        $affectation->setHistoCreateur($user);
-        $affectation->setHistoModification($date);
-        $affectation->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($affectation);
-            $this->getEntityManager()->flush($affectation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
-        }
+        $this->createFromTrait($affectation);
         return $affectation;
     }
 
@@ -53,17 +38,7 @@ class MissionSpecifiqueAffectationService {
      */
     public function update($affectation)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $affectation->setHistoModification($date);
-        $affectation->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($affectation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
-        }
+        $this->updateFromTrait($affectation);
         return $affectation;
     }
 
@@ -73,17 +48,7 @@ class MissionSpecifiqueAffectationService {
      */
     public function historise($affectation)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $affectation->setHistoDestruction($date);
-        $affectation->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($affectation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
-        }
+        $this->historiserFromTrait($affectation);
         return $affectation;
     }
 
@@ -93,14 +58,7 @@ class MissionSpecifiqueAffectationService {
      */
     public function restore($affectation)
     {
-        $affectation->setHistoDestruction(null);
-        $affectation->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($affectation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
-        }
+        $this->restoreFromTrait($affectation);
         return $affectation;
     }
 
@@ -110,12 +68,7 @@ class MissionSpecifiqueAffectationService {
      */
     public function delete($affectation)
     {
-        try {
-            $this->getEntityManager()->remove($affectation);
-            $this->getEntityManager()->flush($affectation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'un AgentMissionSpecifique", $e);
-        }
+        $this->deleteFromTrait($affectation);
         return $affectation;
     }
 

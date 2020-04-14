@@ -3,6 +3,7 @@
 namespace Application\Service\Formation;
 
 use Application\Entity\Db\FormationTheme;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
@@ -12,9 +13,10 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationThemeService {
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
-    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+//    use DateTimeAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -24,20 +26,7 @@ class FormationThemeService {
      */
     public function create(FormationTheme $theme)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $theme->setHistoCreation($date);
-        $theme->setHistoCreateur($user);
-        $theme->setHistoModification($date);
-        $theme->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
-        }
+        $this->createFromTrait($theme);
         return $theme;
     }
 
@@ -47,17 +36,7 @@ class FormationThemeService {
      */
     public function update(FormationTheme $theme)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $theme->setHistoModification($date);
-        $theme->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
-        }
+        $this->updateFromTrait($theme);
         return $theme;
     }
 
@@ -67,17 +46,7 @@ class FormationThemeService {
      */
     public function historise(FormationTheme$theme)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $theme->setHistoDestruction($date);
-        $theme->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
-        }
+        $this->historiserFromTrait($theme);
         return $theme;
     }
 
@@ -87,14 +56,7 @@ class FormationThemeService {
      */
     public function restore(FormationTheme $theme)
     {
-        $theme->setHistoDestruction(null);
-        $theme->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
-        }
+        $this->restoreFromTrait($theme);
         return $theme;
     }
 
@@ -104,12 +66,7 @@ class FormationThemeService {
      */
     public function delete(FormationTheme $theme)
     {
-        try {
-            $this->getEntityManager()->remove($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
-        }
+        $this->deleteFromTrait($theme);
         return $theme;
     }
 
@@ -179,21 +136,5 @@ class FormationThemeService {
         $theme = $this->getFormationTheme($id);
         return $theme;
     }
-    /**
-     * @param $oldid
-     * @return FormationTheme
-     */
-    function getFormationThemeByOldId($oldid) {
-        $qb = $this->getEntityManager()->getRepository(FormationTheme::class)->createQueryBuilder('formationtheme')
-            ->andWhere('formationtheme.oldId = :oldId')
-            ->setParameter('oldId', $oldid)
-        ;
 
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs FormationTheme partagent le même oldid ['.$oldid.']');
-        }
-        return $result;
-    }
 }
