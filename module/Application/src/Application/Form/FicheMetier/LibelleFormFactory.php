@@ -2,6 +2,7 @@
 
 namespace Application\Form\FicheMetier;
 
+use Application\Service\Metier\MetierService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
 
@@ -12,11 +13,13 @@ class LibelleFormFactory {
         /** @var LibelleHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(LibelleHydrator::class);
 
-        /** @var RessourceRhService $ressourceRhService */
-        $ressourceRhService = $container->get(RessourceRhService::class);
+        /**
+         * @var MetierService $metierService
+         */
+        $metierService = $container->get(MetierService::class);
 
         $form = new LibelleForm();
-        $form->setRessourceRhService($ressourceRhService);
+        $form->setMetierService($metierService);
         $form->init();
         $form->setHydrator($hydrator);
 

@@ -118,4 +118,39 @@ class MetierService {
 
         return $metier;
     }
+
+    public function getMetiersTypesAsMultiOptions()
+    {
+        /** @var Metier[] $metiers */
+        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
+            ->orderBy('metier.libelle', 'ASC');
+        $metiers = $qb->getQuery()->getResult();
+
+        $vide = [];
+        $result = [];
+        foreach ($metiers as $metier) {
+            if ($metier->getDomaine()) {
+                $result[$metier->getDomaine()->getLibelle()][] = $metier;
+            } else {
+                $vide[] = $metier;
+            }
+        }
+        ksort($result);
+        $multi = [];
+        foreach ($result as $key => $metiers) {
+            //['label'=>'A', 'options' => ["A" => "A", "a"=> "a"]],
+            $options = [];
+            foreach ($metiers as $metier) {
+                $options[$metier->getId()] = $metier->getLibelle();
+            }
+            $multi[] = ['label' => $key, 'options' => $options];
+        }
+        $options = [];
+        foreach ($vide as $metier) {
+            $options[$metier->getId()] = $metier->getLibelle();
+        }
+        $multi[] = ['label' => 'Sans domaine rattaché', 'options' => $options];
+        return $multi;
+
+    }
 }

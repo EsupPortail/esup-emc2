@@ -2,13 +2,13 @@
 
 namespace Application\Form\FicheMetier;
 
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Application\Service\Metier\MetierServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
 class LibelleForm extends Form {
-    use RessourceRhServiceAwareTrait;
+    use MetierServiceAwareTrait;
 
     public function init()
     {
@@ -21,7 +21,7 @@ class LibelleForm extends Form {
                 'empty_option' => "Sélectionner un metier ...",
                 'value_options' =>
                     //$this->getOptions(),
-                    $this->getRessourceRhService()->getMetiersTypesAsMultiOptions(),
+                    $this->getMetierService()->getMetiersTypesAsMultiOptions(),
             ],
             'attributes' => [
                 'id' => 'metier',

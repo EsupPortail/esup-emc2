@@ -4,7 +4,7 @@ namespace  Application\Service\RessourceRh;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class RessourceRhServiceFactory {
 
@@ -19,12 +19,10 @@ class RessourceRhServiceFactory {
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
 
         /** @var RessourceRhService $service */
         $service = new RessourceRhService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
 
         return $service;
     }
