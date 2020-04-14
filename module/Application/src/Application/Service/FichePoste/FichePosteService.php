@@ -9,6 +9,7 @@ use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -20,7 +21,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
 //    use EntityManagerAwareTrait;
-//    use StructureServiceAwareTrait;
+    use StructureServiceAwareTrait;
 //    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
