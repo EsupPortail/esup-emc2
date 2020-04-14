@@ -7,26 +7,22 @@ use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Entity\Db\Application;
 use Application\Entity\Db\Structure;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentService {
-    use DateTimeAwareTrait;
-
-    use EntityManagerAwareTrait;
+//    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
     use StructureServiceAwareTrait;
-    use UserServiceAwareTrait;
+
 
     /** GESTION DES ENTITÉS *******************************************************************************************/
 
@@ -193,17 +189,12 @@ class AgentService {
     }
 
     /**
-     * @param bool $active
      * @return array
      */
-    public function getAgentsAsOption($active = true)
+    public function getAgentsAsOption()
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->orderBy('agent.nomUsuel, agent.prenom');
-
-        if ($active === true) {
-            //TODO
-        }
 
         /** @var Agent[] $result */
         $result = $qb->getQuery()->getResult();
@@ -222,12 +213,7 @@ class AgentService {
      */
     public function getAgentsSansFichePosteByStructure($structure = null, $sousstructure = false)
     {
-        try {
-            $today = new DateTime();
-            $noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la création des dates");
-        }
+        $today = $this->getDateTime();
 
         /** !!TODO!! faire le lien entre agent et fiche de poste */
         $qb1 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
@@ -347,21 +333,7 @@ class AgentService {
      */
     public function createAgentApplication(AgentApplication $agentApplication)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentApplication->setHistoCreation($date);
-        $agentApplication->setHistoCreateur($user);
-        $agentApplication->setHistoModification($date);
-        $agentApplication->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($agentApplication);
-            $this->getEntityManager()->flush($agentApplication);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->createFromTrait($agentApplication);
         return $agentApplication;
     }
 
@@ -371,18 +343,7 @@ class AgentService {
      */
     public function updateAgentApplication(AgentApplication $agentApplication)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentApplication->setHistoModification($date);
-        $agentApplication->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($agentApplication);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->updateFromTrait($agentApplication);
         return $agentApplication;
     }
 
@@ -392,18 +353,7 @@ class AgentService {
      */
     public function historiserAgentApplication(AgentApplication $agentApplication)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentApplication->setHistoDestruction($date);
-        $agentApplication->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($agentApplication);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->historiserFromTrait($agentApplication);
         return $agentApplication;
     }
 
@@ -413,15 +363,7 @@ class AgentService {
      */
     public function restoreAgentApplication(AgentApplication $agentApplication)
     {
-        $agentApplication->setHistoDestruction(null);
-        $agentApplication->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($agentApplication);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->restoreFromTrait($agentApplication);
         return $agentApplication;
     }
 
@@ -431,14 +373,7 @@ class AgentService {
      */
     public function deleteAgentApplication(AgentApplication $agentApplication)
     {
-
-        try {
-            $this->getEntityManager()->remove($agentApplication);
-            $this->getEntityManager()->flush($agentApplication);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->deleteFromTrait($agentApplication);
         return $agentApplication;
     }
 
@@ -480,21 +415,7 @@ class AgentService {
      */
     public function createAgentCompetence($competence)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $competence->setHistoCreation($date);
-        $competence->setHistoCreateur($user);
-        $competence->setHistoModification($date);
-        $competence->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($competence);
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->createFromTrait($competence);
         return $competence;
     }
 
@@ -504,18 +425,7 @@ class AgentService {
      */
     public function updateAgentCompetence($competence)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $competence->setHistoModification($date);
-        $competence->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->updateFromTrait($competence);
         return $competence;
     }
 
@@ -525,18 +435,7 @@ class AgentService {
      */
     public function historiserAgentCompetence(AgentCompetence $competence)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $competence->setHistoDestruction($date);
-        $competence->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->historiserFromTrait($competence);
         return $competence;
     }
 
@@ -546,15 +445,7 @@ class AgentService {
      */
     public function restoreAgentCompetence(AgentCompetence $competence)
     {
-        $competence->setHistoDestruction(null);
-        $competence->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->restoreFromTrait($competence);
         return $competence;
     }
 
@@ -564,13 +455,7 @@ class AgentService {
      */
     public function deleteAgentCompetence(AgentCompetence $competence)
     {
-        try {
-            $this->getEntityManager()->remove($competence);
-            $this->getEntityManager()->flush($competence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->deleteFromTrait($competence);
         return $competence;
     }
 
@@ -612,21 +497,7 @@ class AgentService {
      */
     public function createAgentFormation(AgentFormation $agentFormation)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentFormation->setHistoCreation($date);
-        $agentFormation->setHistoCreateur($user);
-        $agentFormation->setHistoModification($date);
-        $agentFormation->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($agentFormation);
-            $this->getEntityManager()->flush($agentFormation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->createFromTrait($agentFormation);
         return $agentFormation;
     }
 
@@ -636,18 +507,7 @@ class AgentService {
      */
     public function updateAgentFormation(AgentFormation $agentFormation)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentFormation->setHistoModification($date);
-        $agentFormation->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($agentFormation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->updateFromTrait($agentFormation);
         return $agentFormation;
     }
 
@@ -657,18 +517,7 @@ class AgentService {
      */
     public function historiserAgentFormation(AgentFormation $agentFormation)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentFormation->setHistoDestruction($date);
-        $agentFormation->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($agentFormation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+       $this->historiserFromTrait($agentFormation);
         return $agentFormation;
     }
 
@@ -678,15 +527,7 @@ class AgentService {
      */
     public function restoreAgentFormation(AgentFormation $agentFormation)
     {
-        $agentFormation->setHistoDestruction(null);
-        $agentFormation->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($agentFormation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+       $this->restoreFromTrait($agentFormation);
         return $agentFormation;
     }
 
@@ -696,13 +537,7 @@ class AgentService {
      */
     public function deleteAgentFormation(AgentFormation $agentFormation)
     {
-        try {
-            $this->getEntityManager()->remove($agentFormation);
-            $this->getEntityManager()->flush($agentFormation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->deleteFromTrait($agentFormation);
         return $agentFormation;
     }
 
@@ -744,21 +579,7 @@ class AgentService {
      */
     public function createAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentMissionSpecifique->setHistoCreation($date);
-        $agentMissionSpecifique->setHistoCreateur($user);
-        $agentMissionSpecifique->setHistoModification($date);
-        $agentMissionSpecifique->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($agentMissionSpecifique);
-            $this->getEntityManager()->flush($agentMissionSpecifique);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->createFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
     }
 
@@ -768,18 +589,7 @@ class AgentService {
      */
     public function updateAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentMissionSpecifique->setHistoModification($date);
-        $agentMissionSpecifique->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($agentMissionSpecifique);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->updateFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
     }
 
@@ -789,18 +599,7 @@ class AgentService {
      */
     public function historiserAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $agentMissionSpecifique->setHistoDestruction($date);
-        $agentMissionSpecifique->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($agentMissionSpecifique);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->historiserFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
     }
 
@@ -810,15 +609,7 @@ class AgentService {
      */
     public function restoreAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
     {
-        $agentMissionSpecifique->setHistoDestruction(null);
-        $agentMissionSpecifique->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($agentMissionSpecifique);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->restoreFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
     }
 
@@ -828,13 +619,7 @@ class AgentService {
      */
     public function deleteAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
     {
-        try {
-            $this->getEntityManager()->remove($agentMissionSpecifique);
-            $this->getEntityManager()->flush($agentMissionSpecifique);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
-
+        $this->deleteFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
     }
 }

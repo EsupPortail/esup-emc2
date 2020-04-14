@@ -4,9 +4,10 @@ namespace Application\Entity\Db;
 
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class AgentMissionSpecifique {
+class AgentMissionSpecifique implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
     use DateTimeAwareTrait;
 

@@ -2,11 +2,12 @@
 
 namespace Application\Entity\Db;
 
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 
-class AgentApplication implements ValidableInterface {
+class AgentApplication implements ValidableInterface, HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
     use ValidableAwareTrait;
 
