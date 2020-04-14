@@ -4,19 +4,17 @@ namespace Application\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelService {
-    use DateTimeAwareTrait;
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
+//    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -26,20 +24,7 @@ class EntretienProfessionnelService {
      */
     public function create($entretien)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $entretien->setHistoCreation($date);
-        $entretien->setHistoCreateur($user);
-        $entretien->setHistoModification($date);
-        $entretien->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($entretien);
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
-        }
+        $this->createFromTrait($entretien);
         return $entretien;
     }
 
@@ -49,17 +34,7 @@ class EntretienProfessionnelService {
      */
     public function update($entretien)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $entretien->setHistoModification($date);
-        $entretien->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
-        }
+        $this->updateFromTrait($entretien);
         return $entretien;
     }
 
@@ -69,17 +44,7 @@ class EntretienProfessionnelService {
      */
     public function historise($entretien)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $entretien->setHistoDestruction($date);
-        $entretien->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
-        }
+        $this->historiserFromTrait($entretien);
         return $entretien;
     }
 
@@ -89,19 +54,7 @@ class EntretienProfessionnelService {
      */
     public function restore($entretien)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $entretien->setHistoModification($date);
-        $entretien->setHistoModificateur($user);
-        $entretien->setHistoDestruction(null);
-        $entretien->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement d'une EntretienProfessionnel", $e);
-        }
+        $this->restoreFromTrait($entretien);
         return $entretien;
     }
 
@@ -111,12 +64,7 @@ class EntretienProfessionnelService {
      */
     public function delete($entretien)
     {
-        try {
-            $this->getEntityManager()->remove($entretien);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'effacement d'une EntretienProfessionnel", $e);
-        }
+        $this->deleteFromTrait($entretien);
         return $entretien;
     }
 

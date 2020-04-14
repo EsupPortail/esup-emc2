@@ -5,10 +5,11 @@ namespace Application\Entity\Db;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 
-class EntretienProfessionnel {
+class EntretienProfessionnel implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */
