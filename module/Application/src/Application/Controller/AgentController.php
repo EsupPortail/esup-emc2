@@ -67,7 +67,7 @@ class AgentController extends AbstractActionController
 
     public function afficherAction() {
 
-        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
+        $agent = $this->getAgentService()->getRequestedAgent($this);
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
@@ -80,7 +80,7 @@ class AgentController extends AbstractActionController
     }
 
     public function afficherStatutsGradesAction() {
-        $agent = $this->getAgentService()->getRequestedAgent($this, 'id');
+        $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $grades = $agent->getGrades();
         usort($grades, function(AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() > $b->getDateDebut();});
@@ -97,7 +97,7 @@ class AgentController extends AbstractActionController
 
     public function modifierAction()
     {
-        $agent   = $this->getAgentService()->getRequestedAgent($this, 'agent');
+        $agent   = $this->getAgentService()->getRequestedAgent($this);
         $form = $this->getAgentForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/modifier', ['agent' => $agent->getId()], [], true));
         $form->bind($agent);
@@ -195,14 +195,14 @@ class AgentController extends AbstractActionController
     {
         $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
         $this->getAgentService()->historiserAgentMissionSpecifique($agentMissionSpecifique);
-        return $this->redirect()->toRoute('agent/afficher', ['id' => $agentMissionSpecifique->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMissionSpecifique->getAgent()->getId()], [], true);
     }
 
     public function restaurerAgentMissionSpecifiqueAction()
     {
         $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
         $this->getAgentService()->restoreAgentMissionSpecifique($agentMissionSpecifique);
-        return $this->redirect()->toRoute('agent/afficher', ['id' => $agentMissionSpecifique->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMissionSpecifique->getAgent()->getId()], [], true);
     }
 
     public function detruireAgentMissionSpecifiqueAction()
@@ -301,14 +301,14 @@ class AgentController extends AbstractActionController
     {
         $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
         $this->getAgentService()->historiserAgentApplication($applicationAgent);
-        return $this->redirect()->toRoute('agent/afficher', ['id' => $applicationAgent->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $applicationAgent->getAgent()->getId()], [], true);
     }
 
     public function restaurerAgentApplicationAction()
     {
         $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
         $this->getAgentService()->restoreAgentApplication($applicationAgent);
-        return $this->redirect()->toRoute('agent/afficher', ['id' => $applicationAgent->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $applicationAgent->getAgent()->getId()], [], true);
     }
 
     public function detruireAgentApplicationAction()
@@ -637,7 +637,7 @@ class AgentController extends AbstractActionController
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
-        return $this->redirect()->toRoute('agent/afficher', ['id' => $entity->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $entity->getAgent()->getId()], [], true);
     }
     
     /** Fichier associé à l'agent *************************************************************************************/
@@ -666,7 +666,7 @@ class AgentController extends AbstractActionController
                 $agent->addFichier($fichier);
                 $this->getAgentService()->update($agent);
             }
-            return $this->redirect()->toRoute('agent/afficher', ['id' => $agent->getId()]);
+            return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()]);
         }
 
         $vm =  new ViewModel();

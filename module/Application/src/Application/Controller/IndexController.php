@@ -43,7 +43,7 @@ class IndexController extends AbstractActionController
                 $personnel = $this->getRoleService()->getRoleByCode(RoleConstant::PERSONNEL);
                 $hasAgent = $connectedUser->hasRole($personnel);
                 if (! $hasAgent) $this->getUserService()->addRole($connectedUser, $personnel);
-                return $this->redirect()->toRoute('agent/afficher', ['id' => $agent->getId()], [], true);
+                return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
             }
         }
 
@@ -54,7 +54,7 @@ class IndexController extends AbstractActionController
             switch ($connectedRole->getRoleId()) {
                 case RoleConstant::PERSONNEL :
                     $agent = $this->getAgentService()->getAgentByUser($connectedUser);
-                    return $this->redirect()->toRoute('agent/afficher', ['id' => $agent->getId()], [], true);
+                    return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
                     break;
                 case RoleConstant::GESTIONNAIRE :
                     $structures = $this->getStructureService()->getStructuresByGestionnaire($connectedUser);

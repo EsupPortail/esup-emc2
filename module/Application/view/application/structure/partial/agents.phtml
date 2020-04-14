@@ -43,7 +43,7 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
                 <?php if ($canVoirAgent) : ?>
                     <a
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                        href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"
+                        href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                         target="_blank"
                     >
                         <?php echo $agent->getDenomination(); ?></a>

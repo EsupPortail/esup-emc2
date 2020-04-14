@@ -2,9 +2,10 @@
 
 namespace Application\Entity\Db;
 
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class ConfigurationFicheMetier {
+class ConfigurationFicheMetier implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */

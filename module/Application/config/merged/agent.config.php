@@ -473,7 +473,7 @@ return [
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/afficher/:id',
+                            'route'    => '/afficher/:agent',
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',

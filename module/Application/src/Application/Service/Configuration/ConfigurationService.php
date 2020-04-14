@@ -9,19 +9,18 @@ use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Formation;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ConfigurationService {
-    use DateTimeAwareTrait;
-    use EntityManagerAwareTrait;
+//    use DateTimeAwareTrait;
+//    use UserServiceAwareTrait;
+//    use EntityManagerAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
+
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -31,20 +30,7 @@ class ConfigurationService {
      */
     public function create($configuration)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $configuration->setHistoCreation($date);
-        $configuration->setHistoCreateur($user);
-        $configuration->setHistoModification($date);
-        $configuration->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($configuration);
-            $this->getEntityManager()->flush($configuration);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
+        $this->createFromTrait($configuration);
         return $configuration;
     }
 
@@ -54,17 +40,7 @@ class ConfigurationService {
      */
     public function update($configuration)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $configuration->setHistoModification($date);
-        $configuration->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($configuration);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
+        $this->updateFromTrait($configuration);
         return $configuration;
     }
 
@@ -74,12 +50,7 @@ class ConfigurationService {
      */
     public function delete($configuration)
     {
-        try {
-            $this->getEntityManager()->remove($configuration);
-            $this->getEntityManager()->flush($configuration);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
+        $this->deleteFromTrait($configuration);
         return $configuration;
     }
 

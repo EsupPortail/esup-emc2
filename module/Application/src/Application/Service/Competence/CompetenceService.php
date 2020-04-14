@@ -164,12 +164,11 @@ class CompetenceService {
     }
 
     /**
-     * @param bool $historiser
      * @param string $champ
      * @param string $order
      * @return array
      */
-    public function getCompetencesAsGroupOptions($historiser = false, $champ = 'libelle', $order = 'ASC')
+    public function getCompetencesAsGroupOptions($champ = 'libelle', $order = 'ASC')
     {
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
         $sanstheme = $this->getCompetencesSansTheme($champ, $order);

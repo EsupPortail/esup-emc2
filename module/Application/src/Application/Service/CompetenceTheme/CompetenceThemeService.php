@@ -3,15 +3,15 @@
 namespace Application\Service\CompetenceTheme;
 
 use Application\Entity\Db\CompetenceTheme;
-use Doctrine\ORM\ORMException;
+use Application\Service\GestionEntiteHistorisationTrait;
+use Doctrine\ORM\NonUniqueResultException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceThemeService {
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
 
@@ -21,15 +21,7 @@ class CompetenceThemeService {
      */
     public function create($theme)
     {
-        $theme->updateCreation($this->getUserService());
-        $theme->updateModification($this->getUserService());
-
-        try {
-            $this->getEntityManager()->persist($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->createFromTrait($theme);
         return $theme;
     }
 
@@ -39,13 +31,7 @@ class CompetenceThemeService {
      */
     public function update($theme)
     {
-        $theme->updateModification($this->getUserService());
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->updateFromTrait($theme);
         return $theme;
     }
 
@@ -55,13 +41,7 @@ class CompetenceThemeService {
      */
     public function historise($theme)
     {
-        $theme->updateDestructeur($this->getUserService());
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->historiserFromTrait($theme);
         return $theme;
     }
 
@@ -71,14 +51,7 @@ class CompetenceThemeService {
      */
     public function restore($theme)
     {
-        $theme->setHistoDestruction(null);
-        $theme->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($theme);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->restoreFromTrait($theme);
         return $theme;
     }
 
@@ -88,12 +61,7 @@ class CompetenceThemeService {
      */
     public function delete($theme)
     {
-        try {
-            $this->getEntityManager()->remove($theme);
-            $this->getEntityManager()->flush($theme);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->deleteFromTrait($theme);
         return $theme;
     }
 
@@ -141,7 +109,7 @@ class CompetenceThemeService {
         ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
-        } catch(ORMException $e) {
+        } catch(NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs CompetenceTheme partagent le même id [".$id."]", $e);
         }
         return $result;

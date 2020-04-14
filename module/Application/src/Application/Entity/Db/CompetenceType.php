@@ -3,9 +3,10 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class CompetenceType {
+class CompetenceType implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     const CODE_CONNAISSANCE    = 3;
