@@ -6,5 +6,5 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class AdministrationPrivileges extends Privileges
 {
-    const AFFICHER          = 'administration-administration-afficher';
+    const ADMINISTRATION_AFFICHER = 'administration-administration_afficher';
 }

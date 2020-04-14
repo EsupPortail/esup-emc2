@@ -18,7 +18,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        AdministrationPrivileges::AFFICHER,
+                        AdministrationPrivileges::ADMINISTRATION_AFFICHER,
                     ],
                 ],
             ],
@@ -34,7 +34,7 @@ return [
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',
-                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER) ,
+                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::ADMINISTRATION_AFFICHER) ,
                     ],
                 ],
             ],

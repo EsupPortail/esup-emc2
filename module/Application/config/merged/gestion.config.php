@@ -18,7 +18,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        AdministrationPrivileges::AFFICHER,
+                        AdministrationPrivileges::ADMINISTRATION_AFFICHER,
                     ],
                 ],
             ],
@@ -34,7 +34,7 @@ return [
                         'label' => 'Gestion',
                         'title' => "Gestion des fiches, entretiens et des affectations",
                         'route' => 'gestion',
-                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::AFFICHER)
+                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::ADMINISTRATION_AFFICHER)
                     ],
                 ],
             ],

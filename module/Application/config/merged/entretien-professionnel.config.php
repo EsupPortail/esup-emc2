@@ -31,17 +31,49 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
-                        'creer',
-                        'modifier',
-                        'historiser',
-                        'restaurer',
-                        'detruire',
                         'afficher',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'creer',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'modifier',
                         'valider-element',
                         'revoquer-validation',
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'detruire',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_DETRUIRE,
                     ],
                 ],
             ],
