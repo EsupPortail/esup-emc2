@@ -9,6 +9,9 @@ use Application\Provider\Privilege\FichePostePrivileges;
  */
 
 $canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
+$canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
+$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
+$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 
 $canExport      = false;
 $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
@@ -42,12 +45,6 @@ if ($retour)    $query['retour'] = $retour;
     </thead>
     <tbody>
     <?php foreach ($fiches as $fiche) : ?>
-        <?php
-            /**  Privilege avec assertion **/
-            $canVoir        = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
-            $canHistoriser  = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_HISTORISER);
-            $canEditer      = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
-        ?>
         <tr <?php if ($fiche->estHistorise()) echo 'class="historise"'; ?>>
             <?php if ($displays['agent']) : ?>
                 <td>

@@ -158,7 +158,7 @@ return [
                             'affectation' => [
                                 'label' => 'Affectations des missions spécifiques',
                                 'route' => 'mission-specifique/affectation',
-                                'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER),
+                                'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_INDEX),
                                 'order'    => 1100,
                             ],
                         ],

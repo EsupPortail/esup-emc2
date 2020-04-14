@@ -8,8 +8,7 @@ use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydrator;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydratorFactory;
-use Application\Provider\Privilege\ApplicationPrivileges;
-use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\EntretienproPrivileges;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -24,6 +23,14 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'creer',
                         'modifier',
                         'historiser',
@@ -34,7 +41,7 @@ return [
                         'revoquer-validation',
                     ],
                     'privileges' => [
-                        ApplicationPrivileges::APPLICATION_AFFICHER,
+                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
                     ],
                 ],
             ],
@@ -50,7 +57,7 @@ return [
                             'entretienpro' => [
                                 'label' => 'Entretiens professionnels',
                                 'route' => 'entretien-professionnel',
-                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER) ,
+                                'resource' =>  EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_INDEX) ,
                                 'order'    => 500,
                             ],
                         ],

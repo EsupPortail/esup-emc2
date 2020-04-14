@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\AgentAssertion;
+use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
 use Application\Controller\EntretienProfessionnelController;
@@ -513,9 +515,8 @@ return [
     ],
 
     'service_manager' => [
-        'invokables' => [
-        ],
         'factories' => [
+            AgentAssertion::class => AgentAssertionFactory::class,
             AgentService::class => AgentServiceFactory::class,
         ],
     ],

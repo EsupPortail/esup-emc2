@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Application\Assertion;
-
 
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;

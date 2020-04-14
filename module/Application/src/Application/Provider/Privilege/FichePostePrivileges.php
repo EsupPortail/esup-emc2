@@ -6,6 +6,7 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class FichePostePrivileges extends Privileges
 {
+    const FICHEPOSTE_INDEX      = 'ficheposte-ficheposte_index';
     const FICHEPOSTE_AFFICHER   = 'ficheposte-ficheposte_afficher';
     const FICHEPOSTE_AJOUTER    = 'ficheposte-ficheposte_ajouter';
     const FICHEPOSTE_MODIFIER   = 'ficheposte-ficheposte_modifier';

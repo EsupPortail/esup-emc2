@@ -21,13 +21,11 @@ class FichePosteAssertionFactory
          * @var UserService $userService
          */
         $fichePosteService = $container->get(FichePosteService::class);
-        $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
         /** @var FichePosteAssertion $assertion */
         $assertion = new FichePosteAssertion();
         $assertion->setFichePosteService($fichePosteService);
-//        $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
         return $assertion;
     }

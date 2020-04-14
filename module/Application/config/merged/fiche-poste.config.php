@@ -61,6 +61,7 @@ return [
                 'allow' => [
                     [
                         'privileges' => [
+                            FichePostePrivileges::FICHEPOSTE_INDEX,
                             FichePostePrivileges::FICHEPOSTE_AFFICHER,
                             FichePostePrivileges::FICHEPOSTE_MODIFIER,
                             FichePostePrivileges::FICHEPOSTE_HISTORISER,
@@ -74,6 +75,14 @@ return [
         ],
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_INDEX,
+                    'assertion'  => FichePosteAssertion::class,
+                ],
                 [
                     'controller' => FichePosteController::class,
                     'action' => [
@@ -118,7 +127,6 @@ return [
                 [
                     'controller' => FichePosteController::class,
                     'action' => [
-                        'index',
                         'associer-agent',
                         'associer-poste',
                         'associer-titre',
@@ -160,7 +168,7 @@ return [
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
                                 'route' => 'fiche-poste',
-                                'resource' =>  FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER) ,
+                                'resource' =>  FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_INDEX) ,
                                 'order'    => 1000,
                             ],
                         ],

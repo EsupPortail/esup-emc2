@@ -11,6 +11,7 @@ class MissionspecifiquePrivileges extends Privileges
     const MISSIONSPECIFIQUE_GESTION_MODIFIER        = 'missionspecifique-missionspecifique_gestion_modifier';
     const MISSIONSPECIFIQUE_GESTION_HISTORISER      = 'missionspecifique-missionspecifique_gestion_historiser';
     const MISSIONSPECIFIQUE_GESTION_DETRUIRE        = 'missionspecifique-missionspecifique_gestion_detruire';
+    const MISSIONSPECIFIQUE_AFFECTATION_INDEX       = 'missionspecifique-missionspecifique_affectation_index';
     const MISSIONSPECIFIQUE_AFFECTATION_AFFICHER    = 'missionspecifique-missionspecifique_affectation_afficher';
     const MISSIONSPECIFIQUE_AFFECTATION_AJOUTER     = 'missionspecifique-missionspecifique_affectation_ajouter';
     const MISSIONSPECIFIQUE_AFFECTATION_MODIFIER    = 'missionspecifique-missionspecifique_affectation_modifier';

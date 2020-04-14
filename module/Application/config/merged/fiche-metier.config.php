@@ -42,7 +42,8 @@ return [
                     'action' => [
                         'index',
                     ],
-                    'roles' => [
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_INDEX,
                     ],
                 ],
                 [
@@ -83,7 +84,7 @@ return [
                             'fiche-metier' => [
                                 'label' => 'Fiches métiers',
                                 'route' => 'fiche-metier-type',
-                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER) ,
+                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
                                 'order'    => 500,
                             ],
                         ],

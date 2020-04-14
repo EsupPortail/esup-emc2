@@ -4,11 +4,8 @@ namespace Application\Assertion;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
-use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
