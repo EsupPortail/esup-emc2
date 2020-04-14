@@ -514,12 +514,9 @@ class FichePosteController extends AbstractActionController {
         }
     }
 
-    /** Document pour la signature en présidence */
     public function exportAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-
-
 
         $exporter = new FichePostePdfExporter($this->renderer, 'A4');
         $exporter->setVars([

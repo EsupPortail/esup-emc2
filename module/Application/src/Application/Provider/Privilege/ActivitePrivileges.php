@@ -6,8 +6,9 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class ActivitePrivileges extends Privileges
 {
-    const AFFICHER          = 'activite-afficher-activite';
-    const AJOUTER           = 'activite-ajouter-activite';
-    const EDITER            = 'activite-editer-activite';
-    const EFFACER           = 'activite-effacer-activite';
+    const ACTIVITE_AFFICHER = 'activite-activite_afficher';
+    const ACTIVITE_AJOUTER = 'activite-activite_ajouter';
+    const ACTIVITE_MODIFIER = 'activite-activite_modifier';
+    const ACTIVITE_HISTORISER = 'activite-activite_historiser';
+    const ACTIVITE_DETRUIRE = 'activite-activite_detruire';
 }

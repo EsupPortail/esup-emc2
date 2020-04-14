@@ -16,7 +16,7 @@ use UnicaenUtilisateur\Entity\Db\User;
 
 $this->headTitle('Index de vos validations');
 
-$canVoir = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
+$canVoir = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canValider = $this->isAllowed(ValidationPrivileges::getResourceId(ValidationPrivileges::MODIFIER));
 
 $enAttentes = [];

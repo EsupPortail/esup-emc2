@@ -50,10 +50,24 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
                         'editer',
-                        'detruire',
-                        'historiser',
-                        'restaurer',
 
                         'editer-libelle',
                         'retirer-activite',
@@ -64,10 +78,28 @@ return [
                         'modifier-application',
                         'modifier-formation',
                         'gerer-competences',
-                        'ajouter',
                     ],
                     'privileges' => [
-                        FicheMetierPrivileges::AFFICHER,
+                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
+                    ],
+                    [
+                        'controller' => FicheMetierController::class,
+                        'action' => [
+                            'historiser',
+                            'restaurer',
+                        ],
+                        'privileges' => [
+                            FicheMetierPrivileges::FICHEMETIER_HISTORISER,
+                        ],
+                    ],
+                    [
+                        'controller' => FicheMetierController::class,
+                        'action' => [
+                            'detruire',
+                        ],
+                        'privileges' => [
+                            FicheMetierPrivileges::FICHEMETIER_DETRUIRE,
+                        ],
                     ],
                 ],
             ],

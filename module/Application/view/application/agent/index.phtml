@@ -57,7 +57,7 @@ $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::
                         <?php if ($canAfficher) : ?>
                             <a
                                 <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                href="<?php echo $this->url('agent/afficher', ['id' => $agent->getId()], [], true); ?>"
+                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                             >
                                 <span class="icon voir"  title="Afficher l'agent"></span></a>
                         <?php endif; ?>

@@ -29,7 +29,7 @@ return [
                         'afficher',
                     ],
                     'privileges' => [
-                        ActivitePrivileges::AFFICHER,
+                        ActivitePrivileges::ACTIVITE_AFFICHER,
                     ],
                 ],
                 [
@@ -38,7 +38,7 @@ return [
                         'creer',
                     ],
                     'privileges' => [
-                        ActivitePrivileges::AJOUTER,
+                        ActivitePrivileges::ACTIVITE_AJOUTER,
                     ],
                 ],
                 [
@@ -47,8 +47,7 @@ return [
                         'editer',
                         'modifier',
                         'convert',
-                        'historiser',
-                        'restaurer',
+
                         'modifier-libelle',
                         'modifier-application',
                         'modifier-competence',
@@ -60,7 +59,17 @@ return [
                         'supprimer-description',
                     ],
                     'privileges' => [
-                        ActivitePrivileges::EDITER,
+                        ActivitePrivileges::ACTIVITE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => ActiviteController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        ActivitePrivileges::ACTIVITE_HISTORISER,
                     ],
                 ],
                 [
@@ -69,7 +78,7 @@ return [
                         'detruire',
                     ],
                     'privileges' => [
-                        ActivitePrivileges::EFFACER,
+                        ActivitePrivileges::ACTIVITE_DETRUIRE,
                     ],
                 ],
             ],
@@ -85,13 +94,13 @@ return [
                             'mission-pincipale' => [
                                 'label'    => 'Missions principales',
                                 'route'    => 'activite',
-                                'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::AFFICHER),
+                                'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_AFFICHER),
                                 'order'    => 1000,
                                 'pages' => [
                                     'modifier' => [
                                         'label'    => 'Modifier une activité',
                                         'route'    => 'activite/modifier',
-                                        'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::EDITER),
+                                        'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_MODIFIER),
                                         'order'    => 1000,
                                     ]
                                 ]

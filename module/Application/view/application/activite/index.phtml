@@ -9,11 +9,11 @@ use Application\Provider\Privilege\ActivitePrivileges;
 
 $this->headTitle('Missions principales');
 
-$canVisualiser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::AFFICHER));
-$canAjouter     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::AJOUTER));
-$canEditer      = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::EDITER));
-$canHistoriser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::EDITER));
-$canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::EFFACER));
+$canVisualiser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_AFFICHER));
+$canAjouter     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_AJOUTER));
+$canEditer      = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_MODIFIER));
+$canHistoriser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_HISTORISER));
+$canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_DETRUIRE));
 ?>
 
 <h1 class="page-header">

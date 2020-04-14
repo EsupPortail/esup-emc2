@@ -483,7 +483,7 @@ return [
                     'afficher-statuts-grades' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/afficher-statuts-grades/:id',
+                            'route'    => '/afficher-statuts-grades/:agent',
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher-statuts-grades',

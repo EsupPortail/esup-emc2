@@ -13,7 +13,7 @@ use Application\Provider\Privilege\ValidationPrivileges;
 
 $this->headTitle("Index des demandes");
 
-$canVoirFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::AFFICHER));
+$canVoirFicheMetier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canVoirValidation  = $this->isAllowed(ValidationPrivileges::getResourceId(ValidationPrivileges::AFFICHER));
 $canCreerDemande    = $this->isAllowed(ValidationPrivileges::getResourceId(ValidationPrivileges::CREER_DEMANDE));
 $canModifierDemande = $this->isAllowed(ValidationPrivileges::getResourceId(ValidationPrivileges::MODIFIER_DEMANDE));
