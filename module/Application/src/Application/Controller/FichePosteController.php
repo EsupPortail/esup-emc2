@@ -34,6 +34,7 @@ use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FormationsRetirees\FormationsRetireesServiceAwareTrait;
+use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -54,6 +55,7 @@ class FichePosteController extends AbstractActionController {
     use CompetencesRetireesServiceAwareTrait;
     use FormationsRetireesServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
+    use SpecificitePosteServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -106,7 +108,7 @@ class FichePosteController extends AbstractActionController {
     public function dupliquerAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $structures = [];
+
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] = $structure;
         $agent = $this->getAgentService()->getRequestedAgent($this);
@@ -126,7 +128,7 @@ class FichePosteController extends AbstractActionController {
             //dupliquer specificite
             if ($fiche->getSpecificite()) {
                 $specifite = $fiche->getSpecificite()->clone_it();
-                $this->getFichePosteService()->createSpecificitePoste($specifite);
+                $this->getSpecificitePosteService()->create($specifite);
                 $nouvelleFiche->setSpecificite($specifite);
             }
             $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
@@ -823,7 +825,7 @@ class FichePosteController extends AbstractActionController {
         if ($specificite === null) {
             $specificite = new SpecificitePoste();
             $fiche->setSpecificite($specificite);
-            $this->getFichePosteService()->createSpecificitePoste($specificite);
+            $this->getSpecificitePosteService()->create($specificite);
         }
 
         /** @var SpecificitePosteForm $form */
@@ -838,7 +840,7 @@ class FichePosteController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $specificite->setFiche($fiche);
-                $this->getFichePosteService()->updateSpecificitePoste($specificite);
+                $this->getSpecificitePosteService()->update($specificite);
                 $this->getFichePosteService()->update($fiche);
             }
         }

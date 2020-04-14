@@ -42,6 +42,8 @@ use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
 use Application\Service\FormationsRetirees\FormationsRetireesServiceFactory;
+use Application\Service\SpecificitePoste\SpecificitePosteService;
+use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -492,6 +494,7 @@ return [
             ExpertiseService::class => ExpertiseServiceFactory::class,
             FichePosteService::class => FichePosteServiceFactory::class,
             FormationsRetireesService::class => FormationsRetireesServiceFactory::class,
+            SpecificitePosteService::class => SpecificitePosteServiceFactory::class,
         ],
     ],
     'controllers'     => [
