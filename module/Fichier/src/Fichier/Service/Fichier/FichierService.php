@@ -19,6 +19,18 @@ class FichierService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
+    private $path;
+
+    /**
+     * @param string $path
+     * @return FichierService
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+
     /**
      * @param Fichier $fichier
      * @return Fichier
@@ -185,7 +197,7 @@ class FichierService {
             ;
             $fichier->setNomStockage($date->format('Ymd-His')."-".$uid."-".$nature->getCode()."-".$nomFichier);
 
-            $newPath = '/var/www/html/upload/' . $fichier->getNomStockage();
+            $newPath = $this->path . $fichier->getNomStockage();
             $res = move_uploaded_file($path, $newPath);
 
             if ($res === false) {
@@ -205,8 +217,7 @@ class FichierService {
      */
     public function fetchContenuFichier(Fichier $fichier)
     {
-        //TODO c'est caca
-        $filePath = '/var/www/html/upload/' . $fichier->getNomStockage();
+        $filePath = $this->path . $fichier->getNomStockage();
 
         if (! is_readable($filePath)) {
             throw new RuntimeException(
@@ -220,8 +231,7 @@ class FichierService {
 
     public function removeFichier(Fichier $fichier)
     {
-        //TODO c'est caca
-        $path = '/var/www/html/upload/' . $fichier->getNomStockage();
+        $path = $this->path . $fichier->getNomStockage();
         $res = unlink($path);
         if ($res === false) {
             throw new RuntimeException("Un problème est survenue lors de l'effacement du fichier");

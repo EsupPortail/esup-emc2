@@ -10,7 +10,6 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
-use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenUtilisateur\Exception\RuntimeException;
 use UnicaenUtilisateur\Service\RechercheIndividu\RechercheIndividuResultatInterface;
 use UnicaenUtilisateur\Service\RechercheIndividu\RechercheIndividuServiceInterface;
@@ -97,7 +96,7 @@ class UserService implements RechercheIndividuServiceInterface
      * @param string $texte
      * @return User[]
      */
-    public function findByTerm($texte)
+    public function findByTerm(string $texte)
     {
         if (strlen($texte) < 2) return [];
         $texte = strtolower($texte);

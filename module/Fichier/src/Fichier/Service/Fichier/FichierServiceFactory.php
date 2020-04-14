@@ -11,6 +11,8 @@ class FichierServiceFactory {
 
     public function __invoke(ContainerInterface $container)
     {
+        $path = $container->get('Config')['unicaen-fichier']['upload-path'];
+
         /**
          * @var EntityManager $entityManager
          * @var UserService $userService
@@ -22,6 +24,7 @@ class FichierServiceFactory {
         $service = new FichierService();
         $service->setEntityManager($entityManager);
         $service->setUserService($userService);
+        $service->setPath($path);
         return $service;
     }
 }
