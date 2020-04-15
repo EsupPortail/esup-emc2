@@ -2,19 +2,19 @@
 
 namespace Application\Form\Formation;
 
-use Application\Service\Formation\FormationService;
+use Application\Service\Formation\FormationThemeService;
 use Interop\Container\ContainerInterface;
 
 class FormationHydratorFactory {
 
     public function __invoke(ContainerInterface $container)
     {
-        /** @var FormationService $formationService */
-        $formationService = $container->get(FormationService::class);
+        /** @var FormationThemeService $formationThemeService */
+        $formationThemeService = $container->get(FormationThemeService::class);
 
         /** @var FormationHydrator $hydrator */
         $hydrator = new FormationHydrator();
-        $hydrator->setFormationService($formationService);
+        $hydrator->setFormationThemeService($formationThemeService);
         return $hydrator;
     }
 }

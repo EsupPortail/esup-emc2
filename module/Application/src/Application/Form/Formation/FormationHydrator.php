@@ -3,11 +3,11 @@
 namespace Application\Form\Formation;
 
 use Application\Entity\Db\Formation;
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Application\Service\Formation\FormationThemeServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class FormationHydrator implements HydratorInterface {
-    use FormationServiceAwareTrait;
+    use FormationThemeServiceAwareTrait;
 
     /**
      * @var Formation $object
@@ -33,7 +33,7 @@ class FormationHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $theme = null;
-        if (isset($data['theme'])) $theme = $this->getFormationService()->getFormationTheme($data['theme']);
+        if (isset($data['theme']) && $data['theme'] !== "" ) $theme = $this->getFormationThemeService()->getFormationTheme($data['theme']);
         $object->setLibelle($data['libelle']);
         $object->setDescription($data['description']);
         $object->setLien($data['lien']);

@@ -2,7 +2,7 @@
 
 namespace Application\Form\Formation;
 
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Application\Service\Formation\FormationThemeServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
@@ -10,7 +10,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class FormationForm extends Form {
-    use FormationServiceAwareTrait;
+    use FormationThemeServiceAwareTrait;
 
     public function init() {
 
@@ -35,7 +35,7 @@ class FormationForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => 'Sélectionner un thème ...',
-                'value_options' => $this->getFormationService()->getFormationsThemesAsOptions(),
+                'value_options' => $this->getFormationThemeService()->getFormationsThemesAsOptions(),
             ],
             'attributes' => [
                 'class' => 'description form-control',

@@ -7,6 +7,7 @@ use Application\Entity\Db\FormationTheme;
 use Application\Form\Formation\FormationFormAwareTrait;
 use Application\Form\FormationTheme\FormationThemeFormAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
+use Application\Service\Formation\FormationThemeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -14,13 +15,14 @@ use Zend\View\Model\ViewModel;
 class FormationController extends AbstractActionController
 {
     use FormationServiceAwareTrait;
+    use FormationThemeServiceAwareTrait;
     use FormationFormAwareTrait;
     use FormationThemeFormAwareTrait;
 
     public function indexAction()
     {
         $formations = $this->getFormationService()->getFormations('libelle');
-        $themes = $this->getFormationService()->getFormationsThemes();
+        $themes = $this->getFormationThemeService()->getFormationsThemes();
         return new ViewModel([
             'formations' => $formations,
             'themes' => $themes,
