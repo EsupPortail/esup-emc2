@@ -97,15 +97,51 @@ class MetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function effacerFamilleAction()
+    public function historiserFamilleAction()
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
         if ($famille !== null) {
-            $this->getFamilleProfessionnelleService()->delete($famille);
+            $this->getFamilleProfessionnelleService()->historise($famille);
         }
 
         return $this->redirect()->toRoute('metier', [], ['fragment'=>'famille'], true);
+    }
+
+    public function restaurerFamilleAction()
+    {
+        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
+
+        if ($famille !== null) {
+            $this->getFamilleProfessionnelleService()->restore($famille);
+        }
+
+        return $this->redirect()->toRoute('metier', [], ['fragment'=>'famille'], true);
+    }
+
+    public function effacerFamilleAction()
+    {
+        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFamilleProfessionnelleService()->delete($famille);
+            //return $this->redirect()->toRoute('home');
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($famille !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la famille professionnelle" . $famille->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('metier/effacer-famille', ["famille" => $famille->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     /** DOMAINE *******************************************************************************************************/
@@ -167,15 +203,47 @@ class MetierController extends AbstractActionController {
         return $vm;
     }
 
+    public function historiserDomaineAction()
+    {
+        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
+        if ($domaine !== null) {
+            $this->getDomaineService()->historise($domaine);
+        }
+        return $this->redirect()->toRoute('metier', [], ['fragment'=>'domaine'], true);
+    }
+
+    public function restaurerDomaineAction()
+    {
+        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
+        if ($domaine !== null) {
+            $this->getDomaineService()->restore($domaine);
+        }
+        return $this->redirect()->toRoute('metier', [], ['fragment'=>'domaine'], true);
+    }
+
     public function effacerDomaineAction()
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
 
-        if ($domaine !== null) {
-            $this->getDomaineService()->delete($domaine);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getDomaineService()->delete($domaine);
+            //return $this->redirect()->toRoute('home');
+            exit();
         }
 
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'domaine'], true);
+        $vm = new ViewModel();
+        if ($domaine !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du domaine" . $domaine->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('metier/effacer-domaine', ["domaine" => $domaine->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     /** METIER ********************************************************************************************************/
@@ -236,16 +304,51 @@ class MetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function effacerMetierAction()
+    public function historiserMetierAction()
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
 
         if ($metier !== null) {
-            $this->getMetierService()->delete($metier);
+            $this->getMetierService()->historise($metier);
         }
 
         return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
     }
 
+    public function restaurerMetierAction()
+    {
+        $metier = $this->getMetierService()->getRequestedMetier($this);
+
+        if ($metier !== null) {
+            $this->getMetierService()->restore($metier);
+        }
+
+        return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
+    }
+
+    public function effacerMetierAction()
+    {
+        $metier = $this->getMetierService()->getRequestedMetier($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getMetierService()->delete($metier);
+            //return $this->redirect()->toRoute('home');
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($metier !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du metier " . $metier->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('metier/effacer-metier', ["metier" => $metier->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
 
 }

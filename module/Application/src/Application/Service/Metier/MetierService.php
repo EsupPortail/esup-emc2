@@ -3,15 +3,19 @@
 namespace Application\Service\Metier;
 
 use Application\Entity\Db\Metier;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class MetierService {
-    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+//    use EntityManagerAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTIONS DES ENTITES ******************************************************************************************/
 
@@ -19,14 +23,9 @@ class MetierService {
      * @param Metier $metier
      * @return Metier
      */
-    public function create($metier)
+    public function create(Metier $metier)
     {
-        try {
-            $this->getEntityManager()->persist($metier);
-            $this->getEntityManager()->flush($metier);
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un Metier", $e);
-        }
+        $this->createFromTrait($metier);
         return $metier;
     }
 
@@ -34,13 +33,9 @@ class MetierService {
      * @param Metier $metier
      * @return Metier
      */
-    public function update($metier)
+    public function update(Metier $metier)
     {
-        try {
-            $this->getEntityManager()->flush($metier);
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Metier.", $e);
-        }
+        $this->updateFromTrait($metier);
         return $metier;
     }
 
@@ -48,14 +43,29 @@ class MetierService {
      * @param Metier $metier
      * @return Metier
      */
-    public function delete($metier)
+    public function historise(Metier $metier)
     {
-        try {
-            $this->getEntityManager()->remove($metier);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Metier", $e);
-        }
+        $this->historiserFromTrait($metier);
+        return $metier;
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Metier
+     */
+    public function restore(Metier $metier)
+    {
+        $this->restoreFromTrait($metier);
+        return $metier;
+    }
+
+    /**
+     * @param Metier $metier
+     * @return Metier
+     */
+    public function delete(Metier $metier)
+    {
+        $this->deleteFromTrait($metier);
         return $metier;
     }
 
@@ -119,7 +129,7 @@ class MetierService {
         return $metier;
     }
 
-    public function getMetiersTypesAsMultiOptions()
+    public function getMetiersTypesAsMultiOptions(bool $historiser = false)
     {
         /** @var Metier[] $metiers */
         $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
@@ -129,11 +139,12 @@ class MetierService {
         $vide = [];
         $result = [];
         foreach ($metiers as $metier) {
-            if ($metier->getDomaine()) {
-                $result[$metier->getDomaine()->getLibelle()][] = $metier;
-            } else {
-                $vide[] = $metier;
-            }
+            if ($historiser OR $metier->estNonHistorise())
+                if ($metier->getDomaine()) {
+                    $result[$metier->getDomaine()->getLibelle()][] = $metier;
+                } else {
+                    $vide[] = $metier;
+                }
         }
         ksort($result);
         $multi = [];
@@ -141,7 +152,7 @@ class MetierService {
             //['label'=>'A', 'options' => ["A" => "A", "a"=> "a"]],
             $options = [];
             foreach ($metiers as $metier) {
-                $options[$metier->getId()] = $metier->getLibelle();
+                    $options[$metier->getId()] = $metier->getLibelle();
             }
             $multi[] = ['label' => $key, 'options' => $options];
         }

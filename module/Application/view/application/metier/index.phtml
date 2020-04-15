@@ -11,13 +11,14 @@
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\Metier;
-use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\MetierPrivileges;
 
 $this->headTitle('Métiers, familles professionnelles et domaines');
 
-$canAjouterRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AJOUTER));
-$canEditerRessource     = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::MODIFIER));
-$canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::EFFACER));
+$canAjouter        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AJOUTER));
+$canEditer         = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER));
+$canHistoriser     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER));
+$canEffacer        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_DETRUIRE));
 
 ?>
 
@@ -71,7 +72,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                     </div>
                     <div class="pull-right">
                         <br/>
-                        <?php if ($canAjouterRessource) : ?>
+                        <?php if ($canAjouter) : ?>
                             <a
                                 <?php /** @see \Application\Controller\MetierController::ajouterFamilleAction() */?>
                                 href="<?php echo $this->url('metier/ajouter-famille', [], [], true);?>"
@@ -96,13 +97,13 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                     </thead>
                     <tbody>
                     <?php foreach($familles as $famille): ?>
-                        <tr>
+                        <tr <?php if ($famille->estHistorise()) echo ' class="historise" '; ?>>
                             <td> <?php echo $famille->getLibelle(); ?> </td>
                             <td>
                                 <?php echo count($famille->getDomaines()); ?>
                             </td>
                             <td>
-                                <?php if ($canEditerRessource) : ?>
+                                <?php if ($canEditer) : ?>
                                     <a
                                         <?php /** @see \Application\Controller\MetierController::modifierFamilleAction() */?>
                                         href="<?php echo $this->url('metier/modifier-famille', ['famille' => $famille->getId()], [], true); ?>"
@@ -110,17 +111,27 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                                         data-event="modification"
                                     >
                                         <span class="icon editer" title="Modifier la famille professionnelle"></span></a>
-                                <?php else : ?>
-                                    <span class="icon editer" style="color: lightgrey;"></span>
                                 <?php endif; ?>
-                                <?php if ($canEffacerRessource) : ?>
+                                <?php if ($canHistoriser) : ?>
+                                    <?php if ($famille->estNonHistorise()) : ?>
+                                        <a  <?php /** @see \Application\Controller\MetierController::historiserFamilleAction() */ ?>
+                                                href="<?php echo $this->url('metier/historiser-famille', ['famille' => $famille->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon historiser" title="Historiser la famille professionnelle"></span></a>
+                                    <?php else : ?>
+                                        <a  <?php /** @see \Application\Controller\MetierController::restaurerFamilleAction() */ ?>
+                                                href="<?php echo $this->url('metier/restaurer-famille', ['famille' => $famille->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon restaurer" title="Restaurer la famille professionnelle"></span></a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($canEffacer) : ?>
                                     <a
                                         <?php /** @see \Application\Controller\MetierController::effacerFamilleAction() */?>
                                         href="<?php echo $this->url('metier/effacer-famille', ['famille' => $famille->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification"
                                     >
                                         <span class="icon detruire"  title="Supprimer la famille professionnelle"></span></a>
-                                <?php else : ?>
-                                    <span class="icon detruire" style="color: lightgrey;"></span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -138,7 +149,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                         </h2>
                     </div>
                     <div class="pull-right"><br/>
-                        <?php if ($canAjouterRessource) : ?>
+                        <?php if ($canAjouter) : ?>
                             <a
                                 <?php /** @see \Application\Controller\MetierController::ajouterDomaineAction() */ ?>
                                 href="<?php echo $this->url('metier/ajouter-domaine', [], [], true);?>"
@@ -163,29 +174,40 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                     </thead>
                     <tbody>
                     <?php foreach($domaines as $domaine): ?>
-                        <tr>
+                        <tr <?php if ($domaine->estHistorise()) echo ' class="historise" '; ?>>
                             <td> <?php echo $domaine->getLibelle(); ?> </td>
                             <td> <?php echo $domaine->getFamille(); ?> </td>
                             <td>
                                 <?php echo count($domaine->getMetiers()); ?>
                             </td>
                             <td>
-                                <?php if ($canEditerRessource) : ?>
+                                <?php if ($canEditer) : ?>
                                     <a  <?php /** @see \Application\Controller\MetierController::modifierDomaineAction() */ ?>
                                         href="<?php echo $this->url('metier/modifier-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
                                         class="ajax-modal"
                                         data-event="modification"
                                     >
                                         <span class="icon editer" title="Modifier le domaine"></span></a>
-                                <?php else : ?>
-                                    <span class="icon editer" style="color: lightgrey;"></span>
                                 <?php endif; ?>
-                                <?php if ($canEffacerRessource) : ?>
+                                <?php if ($canHistoriser) : ?>
+                                    <?php if ($domaine->estNonHistorise()) : ?>
+                                        <a  <?php /** @see \Application\Controller\MetierController::historiserDomaineAction() */ ?>
+                                                href="<?php echo $this->url('metier/historiser-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon historiser" title="Historiser le domaine"></span></a>
+                                    <?php else : ?>
+                                        <a  <?php /** @see \Application\Controller\MetierController::restaurerDomaineAction() */ ?>
+                                                href="<?php echo $this->url('metier/restaurer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon restaurer" title="Restaurer le domaine"></span></a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($canEffacer) : ?>
                                     <a  <?php /** @see \Application\Controller\MetierController::effacerDomaineAction() */ ?>
-                                        href="<?php echo $this->url('metier/effacer-domaine', ['domaine' => $domaine->getId()], [], true); ?>">
+                                        href="<?php echo $this->url('metier/effacer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification"
+                                    >
                                         <span class="icon detruire"  title="Supprimer le domaine"></span></a>
-                                <?php else : ?>
-                                    <span class="icon detruire" style="color: lightgrey;"></span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -204,7 +226,7 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                     </div>
                     <div class="pull-right">
                         <br/>
-                        <?php if ($canAjouterRessource) : ?>
+                        <?php if ($canAjouter) : ?>
                             <a  <?php /** @see \Application\Controller\MetierController::ajouterMetierAction() */ ?>
                                 href="<?php echo $this->url('metier/ajouter-metier', [], [], true);?>"
                                 class="btn btn-primary action ajax-modal"
@@ -228,12 +250,12 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                     </thead>
                     <tbody>
                     <?php foreach($metiers as $metier): ?>
-                        <tr>
+                        <tr <?php if ($metier->estHistorise()) echo ' class="historise" '; ?>>
                             <td> <?php echo $metier->getLibelle(); ?> </td>
                             <td> <?php echo $metier->getDomaine(); ?> </td>
                             <td> <?php echo $metier->getFonction(); ?> </td>
                             <td>
-                                <?php if ($canEditerRessource) : ?>
+                                <?php if ($canEditer) : ?>
                                     <a
                                         <?php /** @see \Application\Controller\MetierController::modifierMetierAction() */ ?>
                                         href="<?php echo $this->url('metier/modifier-metier', ['metier' => $metier->getId()], [], true); ?>"
@@ -241,16 +263,26 @@ $canEffacerRessource    = $this->isAllowed(RessourceRhPrivileges::getResourceId(
                                         data-event="modification"
                                     >
                                         <span class="icon editer" title="Modifier le métier"></span></a>
-                                <?php else : ?>
-                                    <span class="icon editer" style="color: lightgrey;"></span>
                                 <?php endif; ?>
-                                <?php if ($canEffacerRessource) : ?>
+                                <?php if ($canHistoriser) : ?>
+                                    <?php if ($metier->estNonHistorise()) : ?>
+                                        <a  <?php /** @see \Application\Controller\MetierController::historiserMetierAction() */ ?>
+                                                href="<?php echo $this->url('metier/historiser-metier', ['metier' => $metier->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon historiser" title="Historiser le métier"></span></a>
+                                    <?php else : ?>
+                                        <a  <?php /** @see \Application\Controller\MetierController::restaurerMetierAction() */ ?>
+                                                href="<?php echo $this->url('metier/restaurer-metier', ['metier' => $metier->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon restaurer" title="Restaurer le métier"></span></a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($canEffacer) : ?>
                                     <a  <?php /** @see \Application\Controller\MetierController::effacerMetierAction() */ ?>
                                         href="<?php echo $this->url('metier/effacer-metier', ['metier' => $metier->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification"
                                     >
                                         <span class="icon detruire"  title="Supprimer l'application"></span></a>
-                                <?php else : ?>
-                                    <span class="icon detruire" style="color: lightgrey;"></span>
                                 <?php endif; ?>
                             </td>
                         </tr>

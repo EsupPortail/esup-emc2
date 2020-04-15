@@ -3,15 +3,19 @@
 namespace Application\Service\Domaine;
 
 use Application\Entity\Db\Domaine;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DomaineService {
-    use EntityManagerAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -19,14 +23,9 @@ class DomaineService {
      * @param Domaine $domaine
      * @return Domaine
      */
-    public function create($domaine)
+    public function create(Domaine $domaine)
     {
-        try {
-            $this->getEntityManager()->persist($domaine);
-            $this->getEntityManager()->flush($domaine);
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'un Domaine", $e);
-        }
+        $this->createFromTrait($domaine);
         return $domaine;
     }
 
@@ -34,27 +33,40 @@ class DomaineService {
      * @param Domaine $domaine
      * @return Domaine
      */
-    public function update($domaine)
+    public function historise(Domaine $domaine)
     {
-        try {
-            $this->getEntityManager()->flush($domaine);
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Domaine.", $e);
-        }
+        $this->historiserFromTrait($domaine);
         return $domaine;
     }
 
     /**
      * @param Domaine $domaine
+     * @return Domaine
      */
-    public function delete($domaine)
+    public function restore(Domaine $domaine)
     {
-        try {
-            $this->getEntityManager()->remove($domaine);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'un Domaine", $e);
-        }
+        $this->restoreFromTrait($domaine);
+        return $domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Domaine
+     */
+    public function update(Domaine $domaine)
+    {
+        $this->updateFromTrait($domaine);
+        return $domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Domaine
+     */
+    public function delete(Domaine $domaine)
+    {
+        $this->deleteFromTrait($domaine);
+        return $domaine;
     }
 
     /** REQUETAGE *****************************************************************************************************/
@@ -86,14 +98,16 @@ class DomaineService {
     }
 
     /**
+     * @param bool $historiser
      * @return array
      */
-    public function getDomainesAsOptions()
+    public function getDomainesAsOptions(bool $historiser = false)
     {
         $domaines = $this->getDomaines();
         $options = [];
         foreach ($domaines as $domaine) {
-            $options[$domaine->getId()] = $domaine->getLibelle();
+            if ($historiser OR $domaine->estNonHistorise())
+                $options[$domaine->getId()] = $domaine->getLibelle();
         }
         return $options;
     }

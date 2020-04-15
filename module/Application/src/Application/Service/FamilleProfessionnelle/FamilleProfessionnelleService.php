@@ -3,15 +3,19 @@
 namespace Application\Service\FamilleProfessionnelle;
 
 use Application\Entity\Db\FamilleProfessionnelle;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FamilleProfessionnelleService {
-    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+//    use EntityManagerAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -19,14 +23,9 @@ class FamilleProfessionnelleService {
      * @param FamilleProfessionnelle $famille
      * @return FamilleProfessionnelle
      */
-    public function create($famille)
+    public function create(FamilleProfessionnelle $famille)
     {
-        try {
-            $this->getEntityManager()->persist($famille);
-            $this->getEntityManager()->flush($famille);
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la création d'une FamilleProfessionnelle", $e);
-        }
+        $this->createFromTrait($famille);
         return $famille;
     }
 
@@ -34,27 +33,40 @@ class FamilleProfessionnelleService {
      * @param FamilleProfessionnelle $famille
      * @return FamilleProfessionnelle
      */
-    public function update($famille)
+    public function update(FamilleProfessionnelle $famille)
     {
-        try {
-            $this->getEntityManager()->flush($famille);
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la mise à jour d'une FamilleProfessionnelle.", $e);
-        }
+        $this->updateFromTrait($famille);
         return $famille;
     }
 
     /**
      * @param FamilleProfessionnelle $famille
+     * @return FamilleProfessionnelle
      */
-    public function delete($famille)
+    public function historise(FamilleProfessionnelle $famille)
     {
-        try {
-            $this->getEntityManager()->remove($famille);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw  new RuntimeException("Un problème s'est produit lors de la suppression d'une FamilleProfessionnelle", $e);
-        }
+        $this->historiserFromTrait($famille);
+        return $famille;
+    }
+
+    /**
+     * @param FamilleProfessionnelle $famille
+     * @return FamilleProfessionnelle
+     */
+    public function restore(FamilleProfessionnelle $famille)
+    {
+        $this->restoreFromTrait($famille);
+        return $famille;
+    }
+
+    /**
+     * @param FamilleProfessionnelle $famille
+     * @return FamilleProfessionnelle
+     */
+    public function delete(FamilleProfessionnelle $famille)
+    {
+        $this->deleteFromTrait($famille);
+        return $famille;
     }
 
     /** REQUETAGE *****************************************************************************************************/
@@ -83,12 +95,17 @@ class FamilleProfessionnelleService {
         return $result;
     }
 
-    public function getFamillesProfessionnellesAsOptions()
+    /**
+     * @param bool $historiser
+     * @return array
+     */
+    public function getFamillesProfessionnellesAsOptions(bool $historiser = false)
     {
         $familles = $this->getFamillesProfessionnelles();
         $options = [];
         foreach ($familles as $famille) {
-            $options[$famille->getId()] = $famille->getLibelle();
+            if ($historiser OR $famille->estNonHistorise())
+                $options[$famille->getId()] = $famille->getLibelle();
         }
         return $options;
     }

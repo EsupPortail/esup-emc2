@@ -15,7 +15,7 @@ use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
 use Application\Form\RessourceRh\MetierHydratorFactory;
-use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\MetierPrivileges;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\Domaine\DomaineServiceFactory;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
@@ -36,21 +36,43 @@ return [
                         'index'
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::AFFICHER,
+                        MetierPrivileges::METIER_AFFICHER,
                     ],
                 ],
                 [
                     'controller' => MetierController::class,
                     'action' => [
                         'ajouter-domaine',
-                        'modifier-domaine',
                         'ajouter-famille',
-                        'modifier-famille',
                         'ajouter-metier',
+                    ],
+                    'privileges' => [
+                        MetierPrivileges::METIER_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => MetierController::class,
+                    'action' => [
+                        'modifier-domaine',
+                        'modifier-famille',
                         'modifier-metier',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::MODIFIER,
+                        MetierPrivileges::METIER_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => MetierController::class,
+                    'action' => [
+                        'historiser-domaine',
+                        'historiser-famille',
+                        'historiser-metier',
+                        'restaurer-domaine',
+                        'restaurer-famille',
+                        'restaurer-metier',
+                    ],
+                    'privileges' => [
+                        MetierPrivileges::METIER_HISTORISER,
                     ],
                 ],
                 [
@@ -61,7 +83,7 @@ return [
                         'effacer-metier',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::EFFACER,
+                        MetierPrivileges::METIER_DETRUIRE,
                     ],
                 ],
             ],
@@ -124,6 +146,26 @@ return [
                             ],
                         ],
                     ],
+                    'historiser-famille' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-famille/:famille',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'historiser-famille',
+                            ],
+                        ],
+                    ],
+                    'restaurer-famille' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-famille/:famille',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'restaurer-famille',
+                            ],
+                        ],
+                    ],
                     'effacer-famille' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -157,6 +199,26 @@ return [
                             ],
                         ],
                     ],
+                    'historiser-domaine' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-domaine/:domaine',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'historiser-domaine',
+                            ],
+                        ],
+                    ],
+                    'restaurer-domaine' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-domaine/:domaine',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'restaurer-domaine',
+                            ],
+                        ],
+                    ],
                     'effacer-domaine' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -187,6 +249,26 @@ return [
                             'defaults' => [
                                 'controller' => MetierController::class,
                                 'action'     => 'modifier-metier',
+                            ],
+                        ],
+                    ],
+                    'historiser-metier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-metier/:metier',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'historiser-metier',
+                            ],
+                        ],
+                    ],
+                    'restaurer-metier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-metier/:metier',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'restaurer-metier',
                             ],
                         ],
                     ],

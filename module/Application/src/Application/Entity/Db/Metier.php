@@ -3,8 +3,11 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Metier {
+class Metier implements HistoriqueAwareInterface {
+    use HistoriqueAwareTrait;
 
     /** @var integer */
     private $id;
