@@ -44,17 +44,32 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'ajouter',
+                        'ajouter-theme',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => FormationController::class,
+                    'action' => [
                         'editer',
+                        'editer-theme',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_EDITER,
+                    ],
+                ],
+                [
+                    'controller' => FormationController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
-
-                        'ajouter-theme',
-                        'editer-theme',
                         'historiser-theme',
                         'restaurer-theme',
                     ],
                     'privileges' => [
-                        FormationPrivileges::FORMATION_EDITER,
+                        FormationPrivileges::FORMATION_HISTORISER,
                     ],
                 ],
                 [

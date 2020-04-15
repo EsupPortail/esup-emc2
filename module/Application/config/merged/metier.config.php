@@ -20,8 +20,6 @@ use Application\Service\Domaine\DomaineService;
 use Application\Service\Domaine\DomaineServiceFactory;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
-use Application\Service\Fonction\FonctionService;
-use Application\Service\Fonction\FonctionServiceFactory;
 use Application\Service\Metier\MetierService;
 use Application\Service\Metier\MetierServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
