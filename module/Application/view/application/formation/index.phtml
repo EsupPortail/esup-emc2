@@ -61,9 +61,11 @@ $this->headTitle("Index des formations");
                     <div class="col-md-4">
                         <?php if ($canAjouter) : ?>
                             <br/>
-                            <a href="<?php echo $this->url('formation-theme/ajouter', [], [], true); ?>"
-                               class="btn btn-primary action ajax-modal"
-                               data-event="modification">
+                            <a
+                                <?php /** @see FormationController::ajouterAction() */ ?>
+                                href="<?php echo $this->url('formation-theme/ajouter', [], [], true); ?>"
+                                class="btn btn-primary action ajax-modal"
+                                data-event="modification">
                                 <span class="icon ajouter"></span>
                                 Ajouter un thème
                             </a>
@@ -96,18 +98,19 @@ $this->headTitle("Index des formations");
                             </td>
                             <td>
                                 <?php if ($canAfficher) : ?>
-                                    <?php /** @see FormationController::afficherThemeAction() */ ?>
-                                    <a href="<?php  echo $this->url('formation-theme/afficher', ['formation-theme' => $theme->getId()], [], true); ?>"
+                                    <a  <?php /** @see FormationController::afficherThemeAction() */ ?>
+                                        href="<?php  echo $this->url('formation-theme/afficher', ['formation-theme' => $theme->getId()], [], true); ?>"
                                        class="ajax-modal">
                                         <span class="icon voir" title="Afficher le thème"></span></a>
                                 <?php else : ?>
                                     <span class="icon voir" style="color:lightgrey;"></span>
                                 <?php endif; ?>
                                 <?php if ($canEditer) : ?>
-                                    <?php /** @see FormationController::editerThemeAction() */ ?>
-                                    <a href="<?php  echo $this->url('formation-theme/editer', ['formation-theme' => $theme->getId()], [], true); ?>"
-                                       class="ajax-modal"
-                                       data-event="modification"
+                                    <a
+                                        <?php /** @see FormationController::editerThemeAction() */ ?>
+                                        href="<?php  echo $this->url('formation-theme/editer', ['formation-theme' => $theme->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
                                     >
                                         <span class="icon editer" title="Modifier le thème"></span></a>
                                 <?php else : ?>
@@ -115,13 +118,16 @@ $this->headTitle("Index des formations");
                                 <?php endif; ?>
                                 <?php if ($canHistoriser) : ?>
                                     <?php if ($theme->estNonHistorise()) : ?>
-                                        <?php /** @see FormationController::historiserThemeAction() */ ?>
-                                        <a href="<?php  echo $this->url('formation-theme/historiser', ['formation-theme' => $theme->getId()], [], true); ?>"
+                                        <a
+                                            <?php /** @see FormationController::historiserThemeAction() */ ?>
+                                            href="<?php  echo $this->url('formation-theme/historiser', ['formation-theme' => $theme->getId()], [], true); ?>"
                                         >
                                             <span class="icon historiser" title="Historiser le thème"></span></a>
                                     <?php else : ?>
-                                        <?php /** @see FormationController::restaurerThemeAction() */ ?>
-                                        <a href="<?php  echo $this->url('formation-theme/restaurer', ['formation-theme' => $theme->getId()], [], true); ?>"
+
+                                        <a
+                                            <?php /** @see FormationController::restaurerThemeAction() */ ?>
+                                            href="<?php  echo $this->url('formation-theme/restaurer', ['formation-theme' => $theme->getId()], [], true); ?>"
                                         >
                                             <span class="icon restaurer" title="Restaurer le thème"></span></a>
                                     <?php endif; ?>
@@ -133,8 +139,9 @@ $this->headTitle("Index des formations");
                                     <?php endif; ?>
                                 <?php endif; ?>
                                 <?php if ($canDetruire) : ?>
-                                    <?php /** @see FormationController::detruireThemeAction() */ ?>
-                                    <a href="<?php echo $this->url('formation-theme/detruire', ['formation-theme' => $theme->getId()], [], true); ?>"
+                                    <a
+                                        <?php /** @see FormationController::detruireThemeAction() */ ?>
+                                        href="<?php echo $this->url('formation-theme/detruire', ['formation-theme' => $theme->getId()], [], true); ?>"
                                     >
                                         <span class="icon detruire" title="Afficher le thème"></span></a>
                                 <?php else : ?>
@@ -159,8 +166,10 @@ $this->headTitle("Index des formations");
                         <?php if ($canAjouter) : ?>
                             <br/>
 
-                            <?php /** @see FormationController::ajouterThemeAction() */ ?>
-                            <a href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
+
+                            <a
+                                <?php /** @see FormationController::ajouterThemeAction() */ ?>
+                                href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
                                class="btn btn-primary action ajax-modal"
                                data-event="modification">
                                 <span class="icon ajouter"></span>
@@ -203,14 +212,18 @@ $this->headTitle("Index des formations");
                             </td>
                             <td>
                                 <?php if ($canAfficher) : ?>
-                                    <a href="<?php echo $this->url('formation/afficher', ['formation' => $formation->getId()], [], true); ?>"
-                                       class="ajax-modal">
+                                    <a
+                                        <?php /** @see FormationController::afficherAction() */ ?>
+                                        href="<?php echo $this->url('formation/afficher', ['formation' => $formation->getId()], [], true); ?>"
+                                        class="ajax-modal">
                                         <span class="icon voir" title="Afficher la formation"></span></a>
                                 <?php else : ?>
                                     <span class="icon voir" style="color:lightgrey;"></span>
                                 <?php endif; ?>
                                 <?php if ($canEditer) : ?>
-                                    <a href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
+                                    <a
+                                        <?php /** @see FormationController::editerAction() */ ?>
+                                        href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
                                        class="ajax-modal"
                                        data-event="modification"
                                     >
@@ -220,11 +233,15 @@ $this->headTitle("Index des formations");
                                 <?php endif; ?>
                                 <?php if ($canHistoriser) : ?>
                                     <?php if ($formation->estNonHistorise()) : ?>
-                                        <a href="<?php echo $this->url('formation/historiser', ['formation' => $formation->getId()], [], true); ?>"
+                                        <a
+                                            <?php /** @see FormationController::historiserAction() */ ?>
+                                            href="<?php echo $this->url('formation/historiser', ['formation' => $formation->getId()], [], true); ?>"
                                         >
                                             <span class="icon historiser" title="Historiser la formation"></span></a>
                                     <?php else : ?>
-                                        <a href="<?php echo $this->url('formation/restaurer', ['formation' => $formation->getId()], [], true); ?>"
+                                        <a
+                                            <?php /** @see FormationController::restaurerAction() */ ?>
+                                            href="<?php echo $this->url('formation/restaurer', ['formation' => $formation->getId()], [], true); ?>"
                                         >
                                             <span class="icon restaurer" title="Restaurer la formation"></span></a>
                                     <?php endif; ?>
@@ -236,7 +253,9 @@ $this->headTitle("Index des formations");
                                     <?php endif; ?>
                                 <?php endif; ?>
                                 <?php if ($canDetruire) : ?>
-                                    <a href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
+                                    <a
+                                        <?php /** @see FormationController::detruireAction() */ ?>
+                                        href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
                                     >
                                         <span class="icon detruire" title="Afficher la formation"></span></a>
                                 <?php else : ?>

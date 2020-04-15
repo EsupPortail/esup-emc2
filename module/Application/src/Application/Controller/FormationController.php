@@ -68,7 +68,6 @@ class FormationController extends AbstractActionController
     public function editerAction()
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
-//        if ($formation === null) $formation = $this->getFormationService()->getLastFormation();
 
         $form = $this->getFormationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/editer', ['formation' => $formation->getId()], [], true));
@@ -128,7 +127,7 @@ class FormationController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getFormationService()->createTheme($theme);
+                $this->getFormationThemeService()->create($theme);
                 //return $this->redirect()->toRoute('formation', [], [], true);
             }
         }
@@ -144,7 +143,7 @@ class FormationController extends AbstractActionController
 
     public function afficherThemeAction()
     {
-        $theme = $this->getFormationService()->getRequestedFormationTheme($this);
+        $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
 
         return new ViewModel([
            'title' => 'Affichage du thème',
@@ -154,7 +153,7 @@ class FormationController extends AbstractActionController
 
     public function editerThemeAction()
     {
-        $theme = $this->getFormationService()->getRequestedFormationTheme($this);
+        $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
         $form = $this->getFormationThemeForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation-theme/editer', ['formation-theme' => $theme->getId()], [], true));
         $form->bind($theme);
@@ -165,7 +164,7 @@ class FormationController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getFormationService()->updateTheme($theme);
+                $this->getFormationThemeService()->update($theme);
                 //return $this->redirect()->toRoute('formation', [], [], true);
             }
         }
@@ -181,22 +180,22 @@ class FormationController extends AbstractActionController
 
     public function historiserThemeAction()
     {
-        $theme = $this->getFormationService()->getRequestedFormationTheme($this);
-        $this->getFormationService()->historizeTheme($theme);
+        $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
+        $this->getFormationThemeService()->historise($theme);
         return $this->redirect()->toRoute('formation', [], [], true);
     }
 
     public function restaurerThemeAction()
     {
-        $theme = $this->getFormationService()->getRequestedFormationTheme($this);
-        $this->getFormationService()->restoreTheme($theme);
+        $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
+        $this->getFormationThemeService()->restore($theme);
         return $this->redirect()->toRoute('formation', [], [], true);
     }
 
     public function detruireThemeAction()
     {
-        $theme = $this->getFormationService()->getRequestedFormationTheme($this);
-        $this->getFormationService()->deleteTheme($theme);
+        $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
+        $this->getFormationThemeService()->delete($theme);
         return $this->redirect()->toRoute('formation', [], [], true);
     }
 }

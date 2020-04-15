@@ -15,6 +15,7 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -84,7 +85,9 @@ class ConfigurationController extends AbstractActionController  {
         $form->bind($configuration);
         $form->get('operation')->setValue('ajout');
         $form->get('type')->setValue($type);
-        $form->get('select')->setValueOptions($select);
+        /** @var Select $selectElement */
+        $selectElement = $form->get('select');
+        $selectElement->setValueOptions($select);
 
         /** @var Request $request */
         $request = $this->getRequest();

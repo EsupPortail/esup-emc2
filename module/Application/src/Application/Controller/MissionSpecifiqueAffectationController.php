@@ -8,6 +8,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -29,7 +30,6 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $missionId    = $this->params()->fromQuery('mission');
         $mission      = $this->getMissionSpecifiqueService()->getMissionSpecifique($missionId);
 
-
         $affectations = $this->getMissionSpecifiqueAffectationService()->getAffectations($agent, $mission, $structure);
 
         $structures  = $this->getStructureService()->getStructuresAsOptions();
@@ -48,9 +48,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         ]);
     }
 
-
     /** AFFECTATION ***************************************************************************************************/
-
 
     public function ajouterAction() {
 
@@ -64,8 +62,14 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/ajouter', [], [], true));
         } else {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
-            $form->get('agent')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
-            $form->get('structure')->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+            /** @var SearchAndSelect $agentSS */
+            $agentSS = $form->get('agent');
+            /** @see AgentController::rechercherWithStructureMereAction() */
+            $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+            /** @var SearchAndSelect $structureSS */
+            $structureSS = $form->get('structure');
+            /** @see StructureController::rechercherWithStructureMereAction() */
+            $structureSS->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
         }
         $form->bind($affectation);
 
@@ -110,8 +114,14 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/modifier', [], [], true));
         } else {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/modifier', [], ["query" =>["structure" => $structure->getId()]], true));
-            $form->get('agent')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
-            $form->get('structure')->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+            /** @var SearchAndSelect $agentSS */
+            $agentSS = $form->get('agent');
+            /** @see AgentController::rechercherWithStructureMereAction() */
+            $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+            /** @var SearchAndSelect $structureSS */
+            $structureSS = $form->get('structure');
+            /** @see StructureController::rechercherWithStructureMereAction() */
+            $structureSS->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
         }
         $form->bind($affectation);
 

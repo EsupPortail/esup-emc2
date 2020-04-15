@@ -24,7 +24,7 @@ class ApplicationController  extends AbstractActionController {
         return new ViewModel([
             'applications' => $applications,
         ]);
-    }
+}
 
     public function creerAction()
     {

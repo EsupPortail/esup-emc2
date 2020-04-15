@@ -492,7 +492,7 @@ class FichePosteController extends AbstractActionController {
     /**
      * @param FichePoste $fiche
      * @param array $data
-     * @return ViewModel
+     * @return ViewModel|void
      */
     private function checkValidite($fiche, $data)
     {

@@ -185,7 +185,6 @@ class EntretienProfessionnelController extends AbstractActionController {
                 $validation->setValeur("Refus");
                 $this->getValidationInstanceService()->create($validation);
             }
-            $a = 1;
             if ($validation !== null AND $entretien !== null) {
                 switch ($type) {
                     case 'Agent' :

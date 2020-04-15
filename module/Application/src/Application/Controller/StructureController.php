@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
-use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Structure;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
@@ -13,6 +12,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
@@ -131,8 +131,10 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
         $form = $this->getAjouterGestionnaireForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
+        /** @var SearchAndSelect $element */
+        $element = $form->get('structure');
         /** @see StructureController::rechercherWithStructureMereAction() */
-        $form->get('structure')->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+        $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
 
         /** @var Request $request */
         $request = $this->getRequest();

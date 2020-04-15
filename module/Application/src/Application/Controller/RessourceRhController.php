@@ -2,15 +2,7 @@
 
 namespace Application\Controller;
 
-use Application\Form\RessourceRh\DomaineFormAwareTrait;
-use Application\Form\RessourceRh\FamilleProfessionnelleFormAwareTrait;
-use Application\Form\RessourceRh\FonctionFormAwareTrait;
-use Application\Form\RessourceRh\MetierFormAwareTrait;
-use Application\Service\Domaine\DomaineServiceAwareTrait;
-use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Application\Service\Fonction\FonctionServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use DateTime;
 use UnicaenApp\View\Model\CsvModel;
 use Zend\Mvc\Controller\AbstractActionController;

@@ -25,6 +25,4 @@ class CorpsController extends AbstractActionController {
             "grades" => $grades,
         ]);
     }
-
-
 }

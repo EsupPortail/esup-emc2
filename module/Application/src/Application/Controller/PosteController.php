@@ -83,7 +83,7 @@ class PosteController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getPosteService()->create($poste);
+                $this->getPosteService()->update($poste);
             }
         }
 
