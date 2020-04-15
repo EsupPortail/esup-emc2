@@ -410,9 +410,9 @@ return [
                                 ],
                             ],
                             'ajouter' => [
-                                'type'  => Literal::class,
+                                'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/ajouter',
+                                    'route'    => '/ajouter[/:structure]',
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'ajouter',

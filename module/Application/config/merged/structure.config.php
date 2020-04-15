@@ -79,19 +79,6 @@ return [
                     'assertion'  => StructureAssertion::class,
 
                 ],
-                [
-                    'controller' => StructureController::class,
-                    'action' => [
-                        'ajouter-affectation',
-                        'modifier-affectation',
-                        'historiser-affectation',
-                        'restaurer-affectation',
-                        'detruire-affectation',
-                    ],
-                    'privileges' => [
-                        StructurePrivileges::STRUCTURE_GESTIONNAIRE,
-                    ],
-                ],
             ],
         ],
     ],
@@ -211,67 +198,6 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                    ],
-                    /** Routes associées aux affections de missions spécifiques ***************************************/
-                    'ajouter-affectation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-affectation/:structure',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'ajouter-affectation',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'modifier-affectation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-affectation/:affectation',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'modifier-affectation',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'historiser-affectation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-affectation/:structure/:affectation',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'historiser-affectation',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'restaurer-affectation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-affectation/:structure/:affectation',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'restaurer-affectation',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'detruire-affectation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/detruire-affectation/:affectation',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'detruire-affectation',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
                     ],
                 ],
             ],

@@ -31,8 +31,8 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
         <?php if ($canAjouterAffectation) : ?>
             <br/>
             <a
-                <?php /** @see \Application\Controller\StructureController::ajouterAffectationAction() */ ?>
-                href="<?php echo $this->url('structure/ajouter-affectation', ['structure' => $structure->getId()], [], true); ?>"
+                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */ ?>
+                href="<?php echo $this->url('mission-specifique/affectation/ajouter', [], ["query" => ['structure' => $structure->getId()]], true); ?>"
                 class="btn btn-primary action ajax-modal"
                 data-event="modification"
             >
@@ -77,8 +77,8 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                     <?php endif; ?>
                     <?php if ($canModifierAffectation) : ?>
                         <a
-                            <?php /** @see \Application\Controller\StructureController::modifierAffectationAction() */?>
-                            href="<?php echo $this->url('structure/modifier-affectation', ['affectation' => $mission->getId()], [], true); ?>"
+                            <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::modifierAction() */?>
+                            href="<?php echo $this->url('mission-specifique/affectation/modifier', ['affectation' => $mission->getId()], ["query" => ['structure' => $structure->getId()]], true); ?>"
                             class="ajax-modal"
                             data-event="modification"
                         >
@@ -87,22 +87,22 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                     <?php if ($canHistoriserAffectation) : ?>
                         <?php if ($mission->estNonHistorise()) : ?>
                             <a
-                                <?php /** @see \Application\Controller\StructureController::historiserAffectationAction() */?>
-                                href="<?php echo $this->url('structure/historiser-affectation', ['structure' => $structure->getId(), 'affectation' => $mission->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::historiserAction() */?>
+                                    href="<?php echo $this->url('mission-specifique/affectation/historiser', ['affectation' => $mission->getId()], ["query" => ["retour" => $this->url('structure/afficher', ['structure' => $structure->getId()], [], true)]], true); ?>"
                             >
                                 <span class="icon historiser" data-toggle='tooltip'  data-html='true' title="Historiser l'affectation"></span></a>
                         <?php else : ?>
                             <a
-                                <?php /** @see \Application\Controller\StructureController::restaurerAffectationAction() */?>
-                                href="<?php echo $this->url('structure/restaurer-affectation', ['structure' => $structure->getId(), 'affectation' => $mission->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::restaurerAction() */?>
+                                href="<?php echo $this->url('mission-specifique/affectation/restaurer', ['affectation' => $mission->getId()], ["query" => ["retour" => $this->url('structure/afficher', ['structure' => $structure->getId()], [], true)]], true); ?>"
                             >
                                 <span class="icon restaurer" data-toggle='tooltip'  data-html='true' title="Restaurer l'affectation"></span></a>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($canDetruireAffectation) : ?>
                         <a
-                            <?php /** @see \Application\Controller\StructureController::detruireAffectationAction() */?>
-                            href="<?php echo $this->url('structure/detruire-affectation', ['affectation' => $mission->getId()], [], true); ?>"
+                            <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::detruireAction() */?>
+                            href="<?php echo $this->url('mission-specifique/affectation/detruire', ['affectation' => $mission->getId()], [], true); ?>"
                             class="ajax-modal"
                             data-event="modification"
                         >
