@@ -16,23 +16,40 @@ $this->headTitle('Synchronisations');
     Synchronisation
 </h1>
 
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 <div class="main">
 
     <h2> Listes des synchros </h2>
 
     <?php foreach ($jobs as $job): ?>
-        <?php echo $job->getKey(); ?> - <?php echo $job->getEntityClass(); ?> - <?php echo $job->getUrl(); ?> <br/>
-        <p>
-            <?php echo $job->getDescription(); ?>
-        </p>
+        <div class="row">
+            <div class="col-md-7">
+
+                <?php echo $job->getKey(); ?> - <?php echo $job->getEntityClass(); ?> - <?php echo $job->getUrl(); ?> <br/>
+                <p>
+                    <?php echo $job->getDescription(); ?>
+                </p>
+
+                <?php $log = $job->getDernierLog(); ?>
+                <div class="alert alert-info">
+                    <?php if ($log !== null) : ?>
+                        <?php echo $log; ?>
+                    <?php else : ?>
+                        Aucune synchronisation de faite !
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <a
+                    <?php /** @see \Application\Controller\SynchroController::synchroniserAction() */?>
+                    href="<?php echo $this->url('synchro/synchroniser', ['key' => $job->getKey()], [], true); ?>"
+                    class="btn btn-primary action"
+                >
+                    <span class="icon synchoniser"></span> Synchroniser </a>
+            </div>
+    </div>
     <?php endforeach; ?>
-
-    <h2> Test </h2>
-
-    <?php echo $synchro->getKey(); ?> - <?php echo $synchro->getEntityClass(); ?> - <?php echo $synchro->getUrl(); ?> <br/>
-    <p>
-        <?php echo $synchro->getDescription(); ?>
-    </p>
 
 
 </div>

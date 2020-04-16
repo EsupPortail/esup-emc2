@@ -117,4 +117,17 @@ class SynchroJob {
     {
         return $this->logs->toArray();
     }
+
+    /**
+     * @return SynchroLog
+     */
+    public function getDernierLog()
+    {
+        $last = null;
+        /** @var SynchroLog $log */
+        foreach ($this->logs as $log) {
+            if ($last === null OR $last->getDate() < $log->getDate()) $last = $log;
+        }
+        return $log;
+    }
 }

@@ -19,6 +19,7 @@ return [
                     'controller' => SynchroController::class,
                     'action' => [
                         'index',
+                        'synchroniser',
                     ],
                     'privileges' => [
                         SynchroPrivileges::SYNCHRO_AFFICHER,
@@ -59,7 +60,18 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes' => [],
+                'child_routes' => [
+                    'synchroniser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/synchroniser/:key',
+                            'defaults' => [
+                                'controller' => SynchroController::class,
+                                'action'     => 'synchroniser',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

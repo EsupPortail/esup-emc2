@@ -2,12 +2,13 @@
 
 namespace Application\Service\Synchro;
 
-use Application\Entity\Db\StructureType;
 use Application\Entity\Db\SynchroJob;
+use Application\Entity\Db\SynchroLog;
 use Application\Entity\SynchroAwareInterface;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -23,7 +24,6 @@ class SynchroService {
         $qb = $this->getEntityManager()->getRepository(SynchroJob::class)->createQueryBuilder('synchro')
             ->addSelect('log')->leftJoin('synchro.logs', 'log')
         ;
-
         return $qb;
     }
 
@@ -61,7 +61,11 @@ class SynchroService {
 
     /** PARTIE FONCTIONNELLE ******************************************************************************************/
 
-    function getResponde($url){
+    /**
+     * @param string $url
+     * @return bool|string
+     */
+    function getResponse($url){
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -86,10 +90,10 @@ class SynchroService {
     {
         $connection = $this->entityManager->getConnection();
 
-        $_debut = microtime(true);
+//        $_debut = microtime(true);
         try {
             $connection->commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             try {
                 $connection->rollBack();
             } catch (ConnectionException $e) {
@@ -99,13 +103,17 @@ class SynchroService {
         }
     }
 
+    /**
+     * @param SynchroJob $job
+     * @return SynchroLog
+     */
     public function synchronize(SynchroJob $job)
     {
-        $url            = $job->getUrl(); //'https://octopus.unicaen.fr/api/structure-type';
+        $url            = $job->getUrl();
         $entityClass    = $job->getEntityClass();
         $key            = $job->getKey();
 
-        $json = json_decode($this->getResponde($url));
+        $json = json_decode($this->getResponse($url));
         $entities = $this->getEntityManager()->getRepository($entityClass)->findAll();
         $date = $this->getDateTime();
 
@@ -153,8 +161,10 @@ class SynchroService {
 
         foreach ($array as $item) {
             if ($item->getSourceId() AND array_search($item->getSourceId(), $trouver) === false) {
-                $item->setHisto($date);
-                $historized[] = $item;
+                if ($item->getHisto() === null) {
+                    $item->setHisto($date);
+                    $historized[] = $item;
+                }
             }
         }
 
@@ -174,7 +184,19 @@ class SynchroService {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", 0, $e);
         }
 
-        $a=1;
+        $log = new SynchroLog();
+        $log->setDate($date);
+        $log->setJob($job);
+        $log->setRapport("Ajout: " . count($created) . " élément(s)<br/>Mise à jour: " . count($updated) . " élément(s)<br/>Historisation: " . count($historized) ." élément(s)");
+
+        try {
+            $this->getEntityManager()->persist($log);
+            $this->getEntityManager()->flush($log);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", 0, $e);
+        }
+
+        return $log;
 
     }
 }
