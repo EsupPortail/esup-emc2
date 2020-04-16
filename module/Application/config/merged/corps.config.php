@@ -4,8 +4,7 @@ namespace Application;
 
 use Application\Controller\CorpsController;
 use Application\Controller\CorpsControllerFactory;
-use Application\Controller\MetierController;
-use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\CorpsPrivileges;
 use Application\Service\Corps\CorpsService;
 use Application\Service\Corps\CorpsServiceFactory;
 use Application\Service\Correspondance\CorrespondanceService;
@@ -25,7 +24,7 @@ return [
                         'index'
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::AFFICHER,
+                        CorpsPrivileges::CORPS_AFFICHER,
                     ],
                 ],
             ],

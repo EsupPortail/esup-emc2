@@ -92,7 +92,7 @@ $canEffacer        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                     <tr>
                         <th> Libelle </th>
                         <th> #domaines </th>
-                        <th class="action"> Action </th>
+                        <th class="cell-action"> Action </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -169,7 +169,7 @@ $canEffacer        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                         <th> Libelle </th>
                         <th> Famille professionnelle </th>
                         <th> #metier </th>
-                        <th class="action"> Action </th>
+                        <th class="cell-action"> Action </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -245,7 +245,7 @@ $canEffacer        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                         <th> Libelle </th>
                         <th> Domaine </th>
                         <th> Fonction </th>
-                        <th class="action"> Action </th>
+                        <th class="cell-action"> Action </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -302,6 +302,8 @@ $canEffacer        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
 <script>
     $(document).ready(function() {
         $('.datatable').DataTable( {
+            sorting: false,
+            // paging: false,
             language: {
                 url: '/localisation/fr_FR.json'
             }
