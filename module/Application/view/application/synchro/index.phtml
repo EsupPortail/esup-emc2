@@ -2,6 +2,8 @@
 
 /**
  * @see \Application\Controller\SynchroController::indexAction()
+ * @var string $reponse;
+// * @var SimpleXMLElement $xml;
  */
 
 $this->headTitle('Synchronisations');
@@ -13,5 +15,21 @@ $this->headTitle('Synchronisations');
 </h1>
 
 <div class="main">
-    TODO ...
+    <div class="alert alert-default">
+    <?php //echo $reponse; ?>
+    </div>
+
+
+    <?php foreach ($json->{'_embedded'}->{'structure-type'} as $structureType) :  ?>
+        <div class="alert alert-info">
+            <dl class="dl-horizontal">
+                <dt>id</dt>             <dd> <?php echo $structureType->{'id'}; ?> </dd>
+                <dt>code</dt>           <dd> <?php echo $structureType->{'code'}; ?> </dd>
+                <dt>Libellé</dt>        <dd> <?php echo $structureType->{'libelle'}; ?> </dd>
+<!--                <dt> Object </dt>       <dd> --><?php //var_dump($structureType); ?><!-- </dd>-->
+            </dl>
+
+        </div>
+    <?php endforeach; ?>
+
 </div>
