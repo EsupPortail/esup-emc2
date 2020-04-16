@@ -12,9 +12,15 @@ class SynchroController extends AbstractActionController {
 
     public function indexAction()
     {
-        $this->getSynchroService()->synchrStructureType();
-        return new ViewModel([
+        $jobs = $this->getSynchroService()->getSynchroJobs();
 
+        $synchro = $this->getSynchroService()->getSynchroJob('structure-type');
+        $this->getSynchroService()->synchronize($synchro);
+
+//        $this->getSynchroService()->synchrStructureType();
+        return new ViewModel([
+            'jobs' => $jobs,
+            'synchro' => $synchro,
         ]);
     }
 }

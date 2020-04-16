@@ -11,6 +11,6 @@
         <field name="key"         type="string" length="1024"      column="key"                    nullable="false"/>
         <field name="description" type="string" length="4096"      column="description"            nullable="true"/>
 
-        <one-to-many target-entity="Application\Entity\Db\SynchroLog" mapped-by="synchroJob" field="logs"/>
+        <one-to-many target-entity="Application\Entity\Db\SynchroLog" mapped-by="job" field="logs"/>
     </entity>
 </doctrine-mapping>

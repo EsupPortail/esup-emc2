@@ -10,8 +10,6 @@ class StructureType implements SynchroAwareInterface {
 
     /** @var integer */
     private $id;
-    /** @var integer */
-    private $source_id;
     /** @var string */
     private $code;
     /** @var string */
@@ -32,24 +30,6 @@ class StructureType implements SynchroAwareInterface {
     public function setId(int $id)
     {
         $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSourceId()
-    {
-        return $this->source_id;
-    }
-
-    /**
-     * @param int $source_id
-     * @return StructureType
-     */
-    public function setSourceId(int $source_id)
-    {
-        $this->source_id = $source_id;
         return $this;
     }
 

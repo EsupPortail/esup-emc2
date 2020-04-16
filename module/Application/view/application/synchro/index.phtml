@@ -2,9 +2,11 @@
 
 /**
  * @see \Application\Controller\SynchroController::indexAction()
- * @var string $reponse;
-// * @var SimpleXMLElement $xml;
+ * @var SynchroJob[] $jobs
+ * @var SynchroJob $synchro
  */
+
+use Application\Entity\Db\SynchroJob;
 
 $this->headTitle('Synchronisations');
 
@@ -15,21 +17,22 @@ $this->headTitle('Synchronisations');
 </h1>
 
 <div class="main">
-    <div class="alert alert-default">
-    <?php //echo $reponse; ?>
-    </div>
 
+    <h2> Listes des synchros </h2>
 
-    <?php foreach ($json->{'_embedded'}->{'structure-type'} as $structureType) :  ?>
-        <div class="alert alert-info">
-            <dl class="dl-horizontal">
-                <dt>id</dt>             <dd> <?php echo $structureType->{'id'}; ?> </dd>
-                <dt>code</dt>           <dd> <?php echo $structureType->{'code'}; ?> </dd>
-                <dt>Libellé</dt>        <dd> <?php echo $structureType->{'libelle'}; ?> </dd>
-<!--                <dt> Object </dt>       <dd> --><?php //var_dump($structureType); ?><!-- </dd>-->
-            </dl>
-
-        </div>
+    <?php foreach ($jobs as $job): ?>
+        <?php echo $job->getKey(); ?> - <?php echo $job->getEntityClass(); ?> - <?php echo $job->getUrl(); ?> <br/>
+        <p>
+            <?php echo $job->getDescription(); ?>
+        </p>
     <?php endforeach; ?>
+
+    <h2> Test </h2>
+
+    <?php echo $synchro->getKey(); ?> - <?php echo $synchro->getEntityClass(); ?> - <?php echo $synchro->getUrl(); ?> <br/>
+    <p>
+        <?php echo $synchro->getDescription(); ?>
+    </p>
+
 
 </div>

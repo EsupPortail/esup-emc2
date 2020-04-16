@@ -6,10 +6,30 @@ use DateTime;
 
 trait SynchroAwareTrait {
 
+    /** @var integer */
+    private $source_id;
     /** @var DateTime */
     private $synchro;
     /** @var DateTime */
     private $histo;
+
+    /**
+     * @return int
+     */
+    public function getSourceId()
+    {
+        return $this->source_id;
+    }
+
+    /**
+     * @param integer $id
+     * @return self
+     */
+    public function setSourceId($id)
+    {
+        $this->source_id = $id;
+        return $this;
+    }
 
     /**
      * @return DateTime

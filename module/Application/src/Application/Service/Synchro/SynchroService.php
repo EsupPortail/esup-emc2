@@ -3,7 +3,10 @@
 namespace Application\Service\Synchro;
 
 use Application\Entity\Db\StructureType;
+use Application\Entity\Db\SynchroJob;
+use Application\Entity\SynchroAwareInterface;
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -12,6 +15,51 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 class SynchroService {
     use EntityManagerAwareTrait;
     use DateTimeAwareTrait;
+
+    /** REQUETAGE DES ENTITES *****************************************************************************************/
+
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(SynchroJob::class)->createQueryBuilder('synchro')
+            ->addSelect('log')->leftJoin('synchro.logs', 'log')
+        ;
+
+        return $qb;
+    }
+
+    /**
+     * @return SynchroJob[]
+     */
+    public function getSynchroJobs()
+    {
+        $qb = $this->createQueryBuilder()
+            ->orderBy('synchro.key')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param string $key
+     * @return SynchroJob
+     */
+    public function getSynchroJob(string $key)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('synchro.key = :key')
+            ->setParameter('key', $key)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs SynchroJob partagent la même clef [".$key."]", 0, $e);
+        }
+        return $result;
+    }
+
+    /** PARTIE FONCTIONNELLE ******************************************************************************************/
 
     function getResponde($url){
         $ch = curl_init();
@@ -51,19 +99,20 @@ class SynchroService {
         }
     }
 
-    public function synchrStructureType()
+    public function synchronize(SynchroJob $job)
     {
-        $url = 'https://octopus.unicaen.fr/api/structure-type';
-        $entityClass= 'Application\Entity\Db\StructureType';
-        $key = 'structure-type';
+        $url            = $job->getUrl(); //'https://octopus.unicaen.fr/api/structure-type';
+        $entityClass    = $job->getEntityClass();
+        $key            = $job->getKey();
 
         $json = json_decode($this->getResponde($url));
         $entities = $this->getEntityManager()->getRepository($entityClass)->findAll();
         $date = $this->getDateTime();
 
+        /** @var SynchroAwareInterface $entity */
+
         $array = [];
         foreach ($entities as $entity) {
-            //TODO source id dnas le trait interface
             $array[$entity->getSourceId()] = $entity;
         }
 

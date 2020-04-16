@@ -23,4 +23,13 @@ interface SynchroAwareInterface {
      * @return self
      */
     public function setHisto($date);
+
+    /**
+     * @param integer $sourceId
+     * @return self
+     */
+    public function setSourceId($sourceId);
+
+    /** @return integer */
+    public function getSourceId();
 }
