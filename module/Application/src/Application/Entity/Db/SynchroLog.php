@@ -112,7 +112,8 @@ class SynchroLog {
      */
     public function __toString()
     {
-        $text  = "<strong>Rapport de synchronisation [".$this->getJob()->getKey()." à ".$this->getDate()->format('d/m/Y à H:i:s')."] </strong><br>";
+        $text  = "<strong>Rapport de synchronisation</strong><br/>";
+        $text .= "<strong>[".$this->getDate()->format('d/m/Y à H:i:s')."] </strong><br><br>";
         $text .= "<p>" . $this->getRapport() . "</p>";
         return $text;
     }
