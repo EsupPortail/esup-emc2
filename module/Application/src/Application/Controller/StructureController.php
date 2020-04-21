@@ -79,7 +79,7 @@ class StructureController extends AbstractActionController {
             }
         }
         /** Récupération des agents et postes liés aux structures */
-        $agents = $this->getAgentService()->getAgentsByStructure($structure, true);
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
         return new ViewModel([
