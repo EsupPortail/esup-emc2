@@ -55,9 +55,13 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
             <?php foreach ($structures as $structure) : ?>
                 <tr>
                     <td>
-                        <?php echo $structure->getLibelleCourt(); ?>
-                        <?php if ($structure->getLibelleLong()): ?>
-                            <sup><span class="icon information" title="<?php echo $structure->getLibelleLong(); ?>"></span></sup>
+                        <abbr title="<?php echo $structure->getLibelleLong(); ?>">
+                            <?php echo $structure->getLibelleCourt(); ?>
+                        </abbr>
+                        <?php if ($structure->getFermeture() !== null) : ?>
+                            <span class="ferme" title="<?php echo $structure->getFermeture()->format('d/m/Y'); ?>">
+                                Fermée
+                            </span>
                         <?php endif; ?>
                     </td>
                     <td> <?php echo $structure->getType(); ?> </td>

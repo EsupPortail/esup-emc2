@@ -612,6 +612,13 @@ tr.historise td {
 th.cell-action {
     width: 12rem;
 }
+
+span.ferme {
+    color:darkred;
+    font-variant-caps: small-caps;
+    font-variant-position: super;
+    font-weight: bold;
+}
 /** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- */
 
 .tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}
