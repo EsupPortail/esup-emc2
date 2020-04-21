@@ -25,11 +25,15 @@ interface SynchroAwareInterface {
     public function setHisto($date);
 
     /**
-     * @param integer $sourceId
-     * @return self
+     * @param string $name
+     * @return mixed
      */
-    public function setSourceId($sourceId);
+    public function get($name);
 
-    /** @return integer */
-    public function getSourceId();
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return mixed
+     */
+    public function set($name, $value);
 }

@@ -11,11 +11,17 @@ class SynchroJob {
     /** @var string */
     private $url;
     /** @var string */
-    private $entityClass;
-    /** @var string */
     private $key;
     /** @var string */
+    private $entityClass;
+    /** @var string */
+    private $table;
+    /** @var string */
     private $description;
+    /** @var string */
+    private $wsAttributes;
+    /** @var string */
+    private $dbAttributes;
 
     /** @var ArrayCollection (SynchroLog) */
     private $logs;
@@ -59,6 +65,24 @@ class SynchroJob {
     /**
      * @return string
      */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param string $key
+     * @return SynchroJob
+     */
+    public function setKey(string $key)
+    {
+        $this->key = $key;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getEntityClass()
     {
         return $this->entityClass;
@@ -77,18 +101,18 @@ class SynchroJob {
     /**
      * @return string
      */
-    public function getKey()
+    public function getTable()
     {
-        return $this->key;
+        return $this->table;
     }
 
     /**
-     * @param string $key
+     * @param string $table
      * @return SynchroJob
      */
-    public function setKey(string $key)
+    public function setTable(string $table)
     {
-        $this->key = $key;
+        $this->table = $table;
         return $this;
     }
 
@@ -130,4 +154,41 @@ class SynchroJob {
         }
         return $log;
     }
+
+    /**
+     * @return string
+     */
+    public function getWsAttributes()
+    {
+        return $this->wsAttributes;
+    }
+
+    /**
+     * @param string $wsAttributes
+     * @return SynchroJob
+     */
+    public function setWsAttributes(string $wsAttributes)
+    {
+        $this->wsAttributes = $wsAttributes;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbAttributes()
+    {
+        return $this->dbAttributes;
+    }
+
+    /**
+     * @param string $dbAttributes
+     * @return SynchroJob
+     */
+    public function setDbAttributes(string $dbAttributes)
+    {
+        $this->dbAttributes = $dbAttributes;
+        return $this;
+    }
+
 }

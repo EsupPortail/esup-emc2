@@ -2,12 +2,16 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\SynchroAwareInterface;
+use Application\Entity\SynchroAwareTrait;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Structure implements ResourceInterface{
+class Structure implements ResourceInterface, SynchroAwareInterface {
     use ImportableAwareTrait;
+    use SynchroAwareTrait;
 
     public function getResourceId()
     {
@@ -16,6 +20,8 @@ class Structure implements ResourceInterface{
 
     /** @var string */
     private $id;
+    /** @var integer */
+    private $source_id;
     /** @var string */
     private $code;
     /** @var string */
@@ -24,8 +30,10 @@ class Structure implements ResourceInterface{
     private $libelleLong;
     /** @var string */
     private $type;
-    /** @var string */
-    private $histo;
+    /** @var DateTime */
+    private $ouverture;
+    /** @var DateTime */
+    private $fermeture;
     /** @var Structure */
     private $parent;
     /** @var ArrayCollection (Structure) */
@@ -64,31 +72,11 @@ class Structure implements ResourceInterface{
     }
 
     /**
-     * @param string $code
-     * @return Structure
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getLibelleCourt()
     {
         return $this->libelleCourt;
-    }
-
-    /**
-     * @param string $libelleCourt
-     * @return Structure
-     */
-    public function setLibelleCourt($libelleCourt)
-    {
-        $this->libelleCourt = $libelleCourt;
-        return $this;
     }
 
     /**
@@ -100,16 +88,6 @@ class Structure implements ResourceInterface{
     }
 
     /**
-     * @param string $libelleLong
-     * @return Structure
-     */
-    public function setLibelleLong($libelleLong)
-    {
-        $this->libelleLong = $libelleLong;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getType()
@@ -118,13 +96,19 @@ class Structure implements ResourceInterface{
     }
 
     /**
-     * @param string $type
-     * @return Structure
+     * @return DateTime
      */
-    public function setType($type)
+    public function getOuverture()
     {
-        $this->type = $type;
-        return $this;
+        return $this->ouverture;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getFermeture()
+    {
+        return $this->fermeture;
     }
 
     /**
@@ -150,6 +134,7 @@ class Structure implements ResourceInterface{
      */
     public function getGestionnaires()
     {
+        if ($this->gestionnaires === null) return [];
         return $this->gestionnaires->toArray();
     }
 
@@ -244,24 +229,6 @@ class Structure implements ResourceInterface{
     public function hasMission($mission)
     {
         return $this->missions->contains($mission);
-    }
-
-    /**
-     * @return string
-     */
-    public function getHisto()
-    {
-        return $this->histo;
-    }
-
-    /**
-     * @param string $histo
-     * @return Structure
-     */
-    public function setHisto($histo)
-    {
-        $this->histo = $histo;
-        return $this;
     }
 
     /**

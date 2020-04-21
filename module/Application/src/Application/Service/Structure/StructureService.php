@@ -45,7 +45,7 @@ class StructureService
             ->addSelect('poste')->leftJoin('structure.postes', 'poste')
             ->addSelect('mission')->leftJoin('structure.missions', 'mission')
             ->orderBy('structure.code');
-        if ($ouverte) $qb = $qb->andWhere("structure.histo = 'O'");
+        if ($ouverte) $qb = $qb->andWhere("structure.histo IS NULL");
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -57,6 +57,7 @@ class StructureService
      */
     public function getStructure($id)
     {
+        if ($id === "" OR $id === null) return null;
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->andWhere('structure.id = :id')
@@ -91,8 +92,7 @@ class StructureService
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($term).'%')
-            ->andWhere('structure.histo = :nope')
-            ->setParameter('nope', 'O')
+            ->andWhere('structure.histo IS NULL')
         ;
 
         if ($structures !== null) {
@@ -113,7 +113,7 @@ class StructureService
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->orderBy('structure.libelleLong')
         ;
-        if ($ouverte) $qb = $qb->andWhere("structure.histo = 'O'");
+        if ($ouverte) $qb = $qb->andWhere("structure.histo IS NULL");
 
         $result = $qb->getQuery()->getResult();
 
@@ -218,7 +218,7 @@ class StructureService
             ->andWhere('structure.parent = :structure')
             ->setParameter('structure', $structure)
             ->orderBy('structure.code');
-        if ($ouverte) $qb = $qb->andWhere("structure.histo = 'O'");
+        if ($ouverte) $qb = $qb->andWhere("structure.histo IS NULL");
         $result = $qb->getQuery()->getResult();
 
         return $result;

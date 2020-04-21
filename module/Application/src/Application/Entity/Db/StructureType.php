@@ -11,6 +11,8 @@ class StructureType implements SynchroAwareInterface {
     /** @var integer */
     private $id;
     /** @var string */
+    private $source_id;
+    /** @var string */
     private $code;
     /** @var string */
     private $libelle;

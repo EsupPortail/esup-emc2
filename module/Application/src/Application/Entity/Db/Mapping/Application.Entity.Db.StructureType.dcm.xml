@@ -10,7 +10,7 @@
         <field name="code"              type="string" length="64"       column="code"                   nullable="false"/>
         <field name="libelle"           type="string" length="256"      column="libelle"                nullable="false"/>
 
-        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- WEB SERVICE SYNCHRO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="synchro"     type="datetime"               column="synchro"/>
         <field name="histo"     type="datetime"                 column="histo"/>
 

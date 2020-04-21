@@ -34,6 +34,17 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
         <?php else : ?>
             <span class="probleme"> <span class="icon attention"></span> Aucune description. </span>
         <?php endif; ?>
+
+        <dl class="dl-horizontal">
+            <?php if ($structure->getOuverture() !== null) : ?>
+                <dt> Date d'ouverture </dt>
+                <dd> <?php echo $structure->getOuverture()->format('d/m/Y'); ?></dd>
+            <?php endif; ?>
+            <?php if ($structure->getFermeture() !== null) : ?>
+                <dt> Date de fermeture </dt>
+                <dd> <?php echo $structure->getFermeture()->format('d/m/Y'); ?></dd>
+            <?php endif; ?>
+        </dl>
     </div>
 
     <div class="col-md-6">
@@ -90,13 +101,15 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
         </h2>
         <ul>
             <?php foreach ($filles as $enfant) : ?>
-                <li>
-                    <a href="<?php echo $this->url('structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
-                        <?php echo $enfant->getLibelleCourt(); ?>
-                        -
-                        <?php echo $enfant->getLibelleLong(); ?>
-                    </a>
-                </li>
+                <?php if ($enfant->getFermeture() === null) : ?>
+                    <li>
+                        <a href="<?php echo $this->url('structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
+                            <?php echo $enfant->getLibelleCourt(); ?>
+                            -
+                            <?php echo $enfant->getLibelleLong(); ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
             <?php endforeach; ?>
         </ul>
     </div>

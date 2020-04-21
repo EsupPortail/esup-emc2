@@ -2,10 +2,13 @@
 
 namespace Application\Service\Synchro;
 
+use Application\Entity\Db\Structure;
 use Application\Entity\Db\SynchroJob;
 use Application\Entity\Db\SynchroLog;
 use Application\Entity\SynchroAwareInterface;
+use DateTime;
 use Doctrine\DBAL\ConnectionException;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -112,16 +115,29 @@ class SynchroService {
         $url            = $job->getUrl();
         $entityClass    = $job->getEntityClass();
         $key            = $job->getKey();
+        $table          = $job->getTable();
 
         $json = json_decode($this->getResponse($url));
         $entities = $this->getEntityManager()->getRepository($entityClass)->findAll();
-        $date = $this->getDateTime();
 
-        /** @var SynchroAwareInterface $entity */
+        //todo grade fou enfin garde moi ...
+//        $tmp = [];
+//        /** @var Structure $entity */
+//        foreach ($entities as $entity) {
+//            if ($entity->getType() === "Structure de recherche" OR $entity->getType() === "3" ) $tmp[] = $entity;
+//        }
+//        $entities = $tmp;
+
+        $date = $this->getDateTime();
+        $wsAttributes = explode(",",$job->getWsAttributes());
+        $dbAttributes = explode(",",$job->getDbAttributes());
+        $nbElement = count($wsAttributes);
+
+        /** @var SynchroAwareInterface $entityDb */
 
         $array = [];
-        foreach ($entities as $entity) {
-            $array[$entity->getSourceId()] = $entity;
+        foreach ($entities as $entityWs) {
+            $array[$entityWs->get($dbAttributes[0])] = $entityWs;
         }
 
         $trouver = [];
@@ -129,65 +145,85 @@ class SynchroService {
         $updated = [];
         $historized = [];
 
-        foreach ($json->{'_embedded'}->{$key} as $structureType) {
-            $source_id = $structureType->{'id'};
-            $code = $structureType->{'code'};
-            $libelle = $structureType->{'libelle'};
-            $trouver[] = $source_id;
+        $str_date = $date->format('Y-m-d H:i:s') . ".000000";
 
-            if ($array[$source_id]) {
+        foreach ($json->{'_embedded'}->{$key} as $entityWs) {
+            $reference = $entityWs->{$wsAttributes[0]};
+            $trouver[] = $reference;
+
+            //Recuperation de l'entite et de donnée
+            $entityDb = new $entityClass;
+            $wsValues = [];
+            for($position = 0 ; $position < $nbElement ; $position++) {
+                $valeurDepuisWS = $entityWs->{$wsAttributes[$position]};
+                if (is_array($valeurDepuisWS)) {
+                    $valeurDepuisWS = $valeurDepuisWS[0];
+                }
+                $wsValues[$dbAttributes[$position]] = $valeurDepuisWS;
+            }
+            $wsValues['synchro'] = $str_date;
+
+            if ($array[$reference]) {
                 // update
-                if ($array[$source_id]->getCode() !== $code OR $array[$source_id]->getLibelle() !== $libelle) {
-                    $array[$source_id]->setCode($code);
-                    $array[$source_id]->setLibelle($libelle);
-                    $array[$source_id]->setSynchro($date);
-                    $updated[] = $array[$source_id];
-                }
-                if ($array[$source_id]->getHisto()) {
-                    $array[$source_id]->setSynchro($date);
-                    $array[$source_id]->setHisto(null);
-                    $updated[] = $array[$source_id];
-                }
+                //todo check pour changement
+                $updated[] = $wsValues;
             } else {
                 // create
-                $entity = new $entityClass;
-                $entity->setSourceId($source_id);
-                $entity->setCode($code);
-                $entity->setLibelle($libelle);
-                $entity->setSynchro($date);
-                $created[] = $entity;
+                $created[] = $wsValues;
             }
         }
 
         foreach ($array as $item) {
-            if ($item->getSourceId() AND array_search($item->getSourceId(), $trouver) === false) {
+            if ($item->get($dbAttributes[0]) AND array_search($item->get($dbAttributes[0]), $trouver) === false) {
                 if ($item->getHisto() === null) {
+                    //histo
                     $item->setHisto($date);
-                    $historized[] = $item;
+                    $value = $item->get($dbAttributes[0]);
+                    $data  = [
+                        $dbAttributes[0] => $value,
+                    ];
+                    $historized[] =  $data;
                 }
             }
         }
 
-        //todo transaction
+        $fullSQL = "";
+        $connection = $this->entityManager->getConnection();
+        $connection->beginTransaction();
         try {
-            foreach ($created as $item) {
-                $this->getEntityManager()->persist($item);
-                $this->getEntityManager()->flush($item);
+            foreach ($created as $values) {
+                $attributes = array_keys($values);
+                $sql = $this->generateCreateSQL($table, $attributes, $values);
+                $fullSQL .= $sql . "<br/>";
+                //$connection->executeQuery($sql);
             }
-            foreach ($updated as $item) {
-                $this->getEntityManager()->flush($item);
+            foreach ($updated as $values) {
+                $attributes = array_keys($values);
+                $sql = $this->generateUpdateSQL($table, $attributes, $values);
+                $fullSQL .= $sql . "<br/>";
+                $connection->executeQuery($sql);
             }
-            foreach ($historized as $item) {
-                $this->getEntityManager()->flush($item);
+            foreach ($historized as $values) {
+                $attributes = array_keys($values);
+                $sql = $this->generateHistoriseSQL($table, $attributes, $values, $str_date);
+                $fullSQL .= $sql . "<br/>";
+                $connection->executeQuery($sql);
             }
-        } catch(ORMException $e) {
+            $connection->commit();
+        } catch(DBALException $e) {
+            try {
+                $connection->rollBack();
+            } catch (ConnectionException $e) {
+                throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD et le rollback a échoué.", 0, $e);
+            }
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", 0, $e);
         }
+
 
         $log = new SynchroLog();
         $log->setDate($date);
         $log->setJob($job);
-        $log->setRapport("Ajout: " . count($created) . " élément(s)<br/>Mise à jour: " . count($updated) . " élément(s)<br/>Historisation: " . count($historized) ." élément(s)");
+        $log->setRapport("Ajout: " . count($created) . " élément(s)<br/>Mise à jour: " . count($updated) . " élément(s)<br/>Historisation: " . count($historized) ." élément(s). <br/>" . $fullSQL);
 
         try {
             $this->getEntityManager()->persist($log);
@@ -197,6 +233,52 @@ class SynchroService {
         }
 
         return $log;
+    }
 
+    public function generateCreateSQL($table, $attributes, $values)
+    {
+        var_dump($values);
+        $str_attributes = implode(',', $attributes);
+        $values         = array_map( function($v) { return $this->protect($v);/*"'".$v."'");*/} , $values);
+        $str_values     = implode(',', $values);
+
+        $sql = "INSERT INTO " . $table . "(" . $str_attributes . ") VALUES (" . $str_values . ")";
+//        var_dump($sql);
+        return $sql;
+    }
+
+    public function generateUpdateSQL($table, $attributes, $values)
+    {
+
+        $attributes[] = "histo";
+        $values[] = null;
+
+
+        $sql = "UPDATE " . $table . " SET ";
+        $first = true;
+        for ($position = 1; $position < count($attributes) ; $position++) {
+            if (!$first) $sql .= ", ";
+            $sql .= $attributes[$position] . "=" . $this->protect($values[$attributes[$position]]) ." ";
+            $first = false;
+        }
+        $sql .= "WHERE ".$attributes[0] . "=" . $this->protect($values[$attributes[0]]);
+//        var_dump($sql);
+        return $sql;
+    }
+
+    public function generateHistoriseSQL($table, $attributes, $values, $date) {
+        $sql = "UPDATE " . $table . " SET ";
+        $sql .=  "histo='" . $date."' ";
+        $sql .= "WHERE ".$attributes[0] . "=" . $this->protect($values[$attributes[0]]);
+//        var_dump($sql);
+        return $sql;
+    }
+
+    public function protect($value) {
+        if ($value === null) return "null";
+        if (is_string($value)) return "'" . str_replace("'", "''",$value) ."'";
+        if ($value instanceof DateTime) return $value->format('Y-m-d H:i:s') . ".000000";
+        if ($value instanceof \stdClass AND $value->date) return "'" .$value->date ."'";
+        return $value;
     }
 }
