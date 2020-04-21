@@ -12,6 +12,7 @@
 
         <field name="date"        type="datetime"                  column="date"                   nullable="true"/>
         <field name="rapport"     type="string" length="4096"      column="rapport"                nullable="true"/>
+        <field name="sql"         type="string" length="4096"      column="sql"                nullable="true"/>
 
     </entity>
 </doctrine-mapping>

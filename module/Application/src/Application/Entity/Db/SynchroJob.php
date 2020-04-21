@@ -22,6 +22,8 @@ class SynchroJob {
     private $wsAttributes;
     /** @var string */
     private $dbAttributes;
+    /** @var string */
+    private $enAttributes;
 
     /** @var ArrayCollection (SynchroLog) */
     private $logs;
@@ -150,9 +152,16 @@ class SynchroJob {
         $last = null;
         /** @var SynchroLog $log */
         foreach ($this->logs as $log) {
-            if ($last === null OR $last->getDate() < $log->getDate()) $last = $log;
+            if ($last === null)
+                $last = $log;
+            else {
+                $last_date = $last->getDate()->format('Y/m/d H:i:s');
+                $log_date  = $log->getDate()->format('Y/m/d H:i:s');
+                if($last_date < $log_date)
+                    $last = $log;
+            }
         }
-        return $log;
+        return $last;
     }
 
     /**
@@ -188,6 +197,24 @@ class SynchroJob {
     public function setDbAttributes(string $dbAttributes)
     {
         $this->dbAttributes = $dbAttributes;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnAttributes()
+    {
+        return $this->enAttributes;
+    }
+
+    /**
+     * @param string $enAttributes
+     * @return SynchroJob
+     */
+    public function setEnAttributes(string $enAttributes)
+    {
+        $this->enAttributes = $enAttributes;
         return $this;
     }
 

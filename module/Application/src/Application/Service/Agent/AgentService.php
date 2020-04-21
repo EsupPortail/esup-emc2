@@ -252,11 +252,10 @@ class AgentService {
     }
 
     /**
-     * @param Structure $structure
-     * @param boolean $sousstructure
+     * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsByStructure(Structure $structure, $sousstructure = false)
+    public function getAgentsByStructures($structures)
     {
         $today = $this->getDateTime();
 
@@ -276,15 +275,7 @@ class AgentService {
             ->addSelect('poste')->leftJoin('ficheposte.poste', 'poste')
         ;
 
-        if ($structure !== null AND $sousstructure === false) {
-            $qb = $qb->andWhere('grade.structure = :structure')
-                ->setParameter('structure', $structure);
-        }
-
-        if ($structure !== null AND $sousstructure === true) {
-            $structures = $this->getStructureService()->getStructuresFilles($structure);
-            $structures[] = $structure;
-
+        if ($structures !== null) {
             $qb = $qb->andWhere('grade.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
