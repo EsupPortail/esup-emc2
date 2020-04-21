@@ -28,7 +28,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     private $libelleCourt;
     /** @var string */
     private $libelleLong;
-    /** @var string */
+    /** @var StructureType */
     private $type;
     /** @var DateTime */
     private $ouverture;
@@ -88,7 +88,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     }
 
     /**
-     * @return string
+     * @return StructureType
      */
     public function getType()
     {

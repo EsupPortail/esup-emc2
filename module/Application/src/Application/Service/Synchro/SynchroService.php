@@ -119,25 +119,16 @@ class SynchroService {
 
         $json = json_decode($this->getResponse($url));
         $entities = $this->getEntityManager()->getRepository($entityClass)->findAll();
-
-        //todo grade fou enfin garde moi ...
-//        $tmp = [];
-//        /** @var Structure $entity */
-//        foreach ($entities as $entity) {
-//            if ($entity->getType() === "Structure de recherche" OR $entity->getType() === "3" ) $tmp[] = $entity;
-//        }
-//        $entities = $tmp;
-
         $date = $this->getDateTime();
         $wsAttributes = explode(",",$job->getWsAttributes());
         $dbAttributes = explode(",",$job->getDbAttributes());
+        $enAttributes = explode(",",$job->getEnAttributes());
         $nbElement = count($wsAttributes);
 
         /** @var SynchroAwareInterface $entityDb */
-
         $array = [];
-        foreach ($entities as $entityWs) {
-            $array[$entityWs->get($dbAttributes[0])] = $entityWs;
+        foreach ($entities as $entityDb) {
+            $array[$entityDb->get($enAttributes[0])] = $entityDb;
         }
 
         $trouver = [];
@@ -146,6 +137,7 @@ class SynchroService {
         $historized = [];
 
         $str_date = $date->format('Y-m-d H:i:s') . ".000000";
+
 
         foreach ($json->{'_embedded'}->{$key} as $entityWs) {
             $reference = $entityWs->{$wsAttributes[0]};
@@ -165,8 +157,24 @@ class SynchroService {
 
             if ($array[$reference]) {
                 // update
-                //todo check pour changement
-                $updated[] = $wsValues;
+                $change = false;
+                for($position = 0 ; $position < $nbElement ; $position++) {
+                    $valeurDepuisWS = $entityWs->{$wsAttributes[$position]};
+                    if (is_array($valeurDepuisWS)) {
+                        $valeurDepuisWS = $valeurDepuisWS[0];
+                    }
+                    $wsValues[$dbAttributes[$position]] = $valeurDepuisWS;
+                    $valeurDepuisEN = $array[$reference]->get($enAttributes[$position]);
+                    if ($valeurDepuisEN instanceof DateTime) {
+                        $valeurDepuisEN = $this->protect($valeurDepuisEN);
+                        $valeurDepuisWS = $valeurDepuisWS->date;
+                    }
+                    if ($valeurDepuisEN !== $valeurDepuisWS) {
+                        $change = true;
+                        break;
+                    }
+                }
+                if ($change) $updated[] = $wsValues;
             } else {
                 // create
                 $created[] = $wsValues;
@@ -174,11 +182,11 @@ class SynchroService {
         }
 
         foreach ($array as $item) {
-            if ($item->get($dbAttributes[0]) AND array_search($item->get($dbAttributes[0]), $trouver) === false) {
+            if ($item->get($enAttributes[0]) AND array_search($item->get($enAttributes[0]), $trouver) === false) {
                 if ($item->getHisto() === null) {
                     //histo
                     $item->setHisto($date);
-                    $value = $item->get($dbAttributes[0]);
+                    $value = $item->get($enAttributes[0]);
                     $data  = [
                         $dbAttributes[0] => $value,
                     ];
@@ -195,7 +203,7 @@ class SynchroService {
                 $attributes = array_keys($values);
                 $sql = $this->generateCreateSQL($table, $attributes, $values);
                 $fullSQL .= $sql . "<br/>";
-                //$connection->executeQuery($sql);
+                $connection->executeQuery($sql);
             }
             foreach ($updated as $values) {
                 $attributes = array_keys($values);
@@ -223,7 +231,8 @@ class SynchroService {
         $log = new SynchroLog();
         $log->setDate($date);
         $log->setJob($job);
-        $log->setRapport("Ajout: " . count($created) . " élément(s)<br/>Mise à jour: " . count($updated) . " élément(s)<br/>Historisation: " . count($historized) ." élément(s). <br/>" . $fullSQL);
+        $log->setRapport("Ajout: " . count($created) . " élément(s)<br/>Mise à jour: " . count($updated) . " élément(s)<br/>Historisation: " . count($historized) ." élément(s).");
+        $log->setSql($fullSQL);
 
         try {
             $this->getEntityManager()->persist($log);
@@ -237,7 +246,7 @@ class SynchroService {
 
     public function generateCreateSQL($table, $attributes, $values)
     {
-        var_dump($values);
+//        var_dump($values);
         $str_attributes = implode(',', $attributes);
         $values         = array_map( function($v) { return $this->protect($v);/*"'".$v."'");*/} , $values);
         $str_values     = implode(',', $values);

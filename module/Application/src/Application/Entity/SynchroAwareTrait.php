@@ -52,7 +52,17 @@ trait SynchroAwareTrait {
      * @return mixed
      */
     public function get($name) {
-        return $this->$name;
+        $splits = explode("::", $name);
+        if (count($splits) === 1) return $this->$name;
+        if (count($splits) === 2) {
+            $accesseur1 = $splits[0];
+            $valeur_ = $this->$accesseur1;
+            if ($valeur_ === null) return null;
+            $accesseur2 = $splits[1];
+            $valeur = $valeur_->get($accesseur2);
+            return $valeur;
+        }
+        return null;
     }
 
     /**

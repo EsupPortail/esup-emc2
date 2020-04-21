@@ -14,6 +14,8 @@ class SynchroLog {
     private $date;
     /** @var string*/
     private $rapport;
+    /** @var string */
+    private $sql;
 
     /**
      * @return int
@@ -84,6 +86,24 @@ class SynchroLog {
     public function setRapport(string $rapport)
     {
         $this->rapport = $rapport;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSql()
+    {
+        return $this->sql;
+    }
+
+    /**
+     * @param string $sql
+     * @return SynchroLog
+     */
+    public function setSql(string $sql)
+    {
+        $this->sql = $sql;
         return $this;
     }
 

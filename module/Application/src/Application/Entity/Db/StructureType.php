@@ -11,8 +11,6 @@ class StructureType implements SynchroAwareInterface {
     /** @var integer */
     private $id;
     /** @var string */
-    private $source_id;
-    /** @var string */
     private $code;
     /** @var string */
     private $libelle;
@@ -69,6 +67,14 @@ class StructureType implements SynchroAwareInterface {
     {
         $this->libelle = $libelle;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getLibelle();
     }
 
 }
