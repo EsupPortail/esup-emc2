@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\Structure" table="structure">
 
-        <id    name="id"                        column="id"                 type="string" length="40" >
+        <id    name="id"                        column="source_id"                 type="integer" >
         </id>
 
         <field name="code"                      column="code"               type="string" length="40" />
@@ -11,16 +11,16 @@
         <field name="libelleLong"               column="libelle_long"       type="string" length="1024"/>
         <field name="type"                      column="type"               type="string" length="128"/>
         <field name="description"               column="description"        type="string" length="10240"/>
-        <field name="histo"                     column="histo"              type="string" length="10"  />
+        <field name="ouverture"                 column="ouverture"          type="datetime"  />
+        <field name="fermeture"                 column="fermeture"          type="datetime"  />
+<!--        <field name="source_id"                 column="source_id"          type="integer"  />-->
+<!--        <field name="parent"                    column="parent_id"          type="integer"  />-->
 
-        <field name="importationCreation"       column="created_on"         type="datetime"  />
-        <field name="importationModification"   column="updated_on"         type="datetime"  />
-        <field name="importationHistorisation"  column="deleted_on"         type="datetime"  />
 
         <many-to-many field="gestionnaires" target-entity="UnicaenUtilisateur\Entity\Db\User" inversed-by="gestionnaire" fetch="LAZY">
             <join-table name="structure_gestionnaire">
                 <join-columns>
-                    <join-column name="structure_id" referenced-column-name="id"/>
+                    <join-column name="structure_id" referenced-column-name="source_id"/>
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="utilisateur_id" referenced-column-name="id"/>
@@ -32,9 +32,13 @@
         <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="structure" field="missions"/>
 
         <many-to-one target-entity="Application\Entity\Db\Structure" field="parent">
-            <join-column name="parent_id" referenced-column-name="id" />
+            <join-column name="parent_id" referenced-column-name="source_id" />
         </many-to-one>
 
         <one-to-many target-entity="Application\Entity\Db\Structure" mapped-by="parent" field="enfants"/>
+
+        <!-- WEB SERVICE SYNCHRO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="synchro"     type="datetime"               column="synchro"/>
+        <field name="histo"     type="datetime"                 column="histo"/>
     </entity>
 </doctrine-mapping>

@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @see \Application\Controller\SynchroController::indexAction()
+ * @var SynchroJob[] $jobs
+ * @var SynchroJob $synchro
+ */
+
+use Application\Entity\Db\StructureType;
+use Application\Entity\Db\SynchroJob;
+
+$this->headTitle('Synchronisations');
+
+?>
+
+<h1 class="page-header">
+    Synchronisation
+</h1>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<div class="main">
+    <?php
+        $test = new StructureType();
+        $test->setCode("TEST");
+        echo $test->get('code');
+        $test->set('code','AAAAH');
+        echo $test->get('code');
+    ?>
+
+    <h2> Listes des synchros </h2>
+
+    <?php foreach ($jobs as $job): ?>
+        <div class="row">
+            <div class="col-md-7">
+
+                <?php echo $job->getKey(); ?> - <?php echo $job->getEntityClass(); ?> - <?php echo $job->getUrl(); ?> <br/>
+                <?php
+                    $wsa = explode(",",$job->getWsAttributes());
+                    $dba = explode(",",$job->getDbAttributes());
+                    $nbCopy = count($wsa);
+                ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th> WebService </th>
+                            <th> Base de données </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php for ($position = 0 ; $position < $nbCopy; $position++) : ?>
+                        <tr>
+                            <td>
+                                <?php echo $wsa[$position]; ?>
+                            </td><td>
+                                <?php echo $dba[$position]; ?>
+                            </td>
+                        </tr>
+                    <?php endfor; ?>
+                    </tbody>
+                </table>
+                <p>
+                    <?php echo $job->getDescription(); ?>
+
+                </p>
+
+                <?php $log = $job->getDernierLog(); ?>
+                <div class="alert alert-info">
+                    <?php if ($log !== null) : ?>
+                        <?php echo $log; ?>
+                    <?php else : ?>
+                        Aucune synchronisation de faite !
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <a
+                    <?php /** @see \Application\Controller\SynchroController::synchroniserAction() */?>
+                    href="<?php echo $this->url('synchro/synchroniser', ['key' => $job->getKey()], [], true); ?>"
+                    class="btn btn-primary action"
+                >
+                    <span class="icon synchoniser"></span> Synchroniser </a>
+            </div>
+    </div>
+    <?php endforeach; ?>
+
+
+</div>
