@@ -4,6 +4,9 @@
  * @var array $results
  */
 
+use Application\Provider\Privilege\MetierPrivileges;
+
+$canCarto = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_CARTOGRAPHIE));
 $this->headTitle('Cartographie des métiers');
 ?>
 
@@ -14,11 +17,13 @@ $this->headTitle('Cartographie des métiers');
     <div class="row">
 
         <div class="col-md-5" >
-        <a class="btn btn-primary action "
-           href="<?php echo $this->url('ressource-rh/cartographie/export', [], [], true); ?>"
-        >
-            Export de la cartographie
-        </a>
+            <?php if ($canCarto) : ?>
+                <a class="btn btn-primary action "
+                   href="<?php echo $this->url('ressource-rh/cartographie/export', [], [], true); ?>"
+                >
+                    Export de la cartographie
+                </a>
+            <?php endif ; ?>
         </div>
 
         <div class="col-md-5 pull-right">

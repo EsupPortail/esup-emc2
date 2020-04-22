@@ -102,6 +102,11 @@ return [
                                 'route' => 'metier',
                                 'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
                                 'dropdown-header' => true,
+                                'pages' => [
+                                    [
+                                        'route' => 'ressource-rh/cartographie',
+                                    ],
+                                 ],
                             ],
                         ],
                     ],

@@ -17,6 +17,7 @@ use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
 use Application\Form\RessourceRh\MetierHydratorFactory;
+use Application\Provider\Privilege\MetierPrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\Domaine\DomaineServiceFactory;
@@ -41,15 +42,24 @@ return [
                     'action' => [
                         'index',
                         'get-grades-json',
-                        'cartographie',
-                        'export-cartographie',
                     ],
                     'privileges' => [
                         RessourceRhPrivileges::AFFICHER,
                     ],
                 ],
+                [
+                    'controller' => RessourceRhController::class,
+                    'action' => [
+                        'cartographie',
+                        'export-cartographie',
+                    ],
+                    'privileges' => [
+                        MetierPrivileges::METIER_CARTOGRAPHIE,
+                    ],
+                ],
             ],
         ],
+
     ],
 
     'navigation' => [

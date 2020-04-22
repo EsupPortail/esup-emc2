@@ -19,12 +19,26 @@ $canAjouter        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
 $canEditer         = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER));
 $canHistoriser     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER));
 $canEffacer        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_DETRUIRE));
+$canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_CARTOGRAPHIE));
 
 ?>
 
 <h1 class="page-header">
     Métiers, familles professionnelles et domaines
 </h1>
+
+<?php if ($canCarto) : ?>
+    <a
+            <?php /** @see \Application\Controller\RessourceRhController::cartographieAction() */?>
+            href="<?php echo $this->url('ressource-rh/cartographie', [], [], true); ?>"
+            class="btn btn-primary action"
+        >
+            Aller vers la cartographie
+    </a>
+<?php endif; ?>
+
+<br/>
+<br/>
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">

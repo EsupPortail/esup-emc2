@@ -11,4 +11,5 @@ class MetierPrivileges extends Privileges
     const METIER_AFFICHER = 'metier-metier_afficher';
     const METIER_MODIFIER = 'metier-metier_modifier';
     const METIER_DETRUIRE = 'metier-metier_detruire';
+    const METIER_CARTOGRAPHIE = 'metier-metier_cartographie';
 }
