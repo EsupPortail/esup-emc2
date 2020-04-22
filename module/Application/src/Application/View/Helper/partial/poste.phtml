@@ -29,10 +29,10 @@ use Application\Entity\Db\Poste;
         BAP <?php echo $poste->getCorrespondance()->getCategorie(); ?> -
         <?php echo $poste->getCorrespondance()->getLibelleLong(); ?>
     </dd>
-    <dt> Domaine UNICAEN </dt>
+    <dt> Domaine professionnel </dt>
     <dd class="gpeec"> <?php echo $domaine; ?></dd>
-    <dt> Fonction </dt>
-    <dd class="gpeec"> <?php echo $fonction; ?></dd>
+<!--    <dt> Fonction </dt>-->
+<!--    <dd class="gpeec"> --><?php //echo $fonction; ?><!--</dd>-->
 
     <?php if ($poste->getLien()) : ?>
         <dt> Lien externe </dt>

@@ -34,13 +34,13 @@ $now = new DateTime();
     <div class="col-md-4">
         <h3> Statuts actifs</h3>
         <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
-            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-8">
         <h3> Grades actifs</h3>
         <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
 </div>

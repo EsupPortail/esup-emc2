@@ -206,7 +206,7 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
     <?php if (isset($options['mode']) AND $options['mode'] === 'affichage' AND $fiche->getSpecificite() !== NULL) : ?>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2> Spécificité du poste </h2>
+                <h2> Spécificités du poste </h2>
             </div>
             <div class="panel-body">
                 <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
@@ -217,7 +217,7 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
     <?php if (isset($options['mode']) AND $options['mode'] !== 'affichage') :?>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2> Spécificité du poste </h2>
+                <h2> Spécificités du poste </h2>
             </div>
             <div class="panel-body">
                 <?php if ($fiche->getSpecificite() === null) : ?>
