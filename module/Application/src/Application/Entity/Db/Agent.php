@@ -267,7 +267,8 @@ class Agent {
         $missions = [];
         /** @var AgentMissionSpecifique $mission */
         foreach ($this->missionsSpecifiques as $mission) {
-            if ($mission->estNonHistorise()) $missions[] = $mission;
+//            if ($mission->estNonHistorise())
+                $missions[] = $mission;
         }
         usort($missions, function(AgentMissionSpecifique $a, AgentMissionSpecifique $b) {
             $aDebut = $a->getDateDebut()->format('Y-m-d');

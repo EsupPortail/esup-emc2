@@ -193,6 +193,9 @@ class AgentController extends AbstractActionController
     {
         $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
         $this->getAgentService()->historiserAgentMissionSpecifique($agentMissionSpecifique);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMissionSpecifique->getAgent()->getId()], [], true);
     }
 
@@ -200,6 +203,9 @@ class AgentController extends AbstractActionController
     {
         $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
         $this->getAgentService()->restoreAgentMissionSpecifique($agentMissionSpecifique);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMissionSpecifique->getAgent()->getId()], [], true);
     }
 

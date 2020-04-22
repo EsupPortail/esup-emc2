@@ -1,0 +1,49 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
+
+/**
+ * @var FichePoste $fiche
+ * @var string mode
+ */
+
+$canEditerSpecificte = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+$date = new DateTime();
+
+?>
+
+<?php if ($fiche->getSpecificite() !== NULL OR  $mode === 'edition') : ?>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2> Spécificités du poste </h2>
+                </div>
+                <div class="col-md-6">
+                    <?php if($canEditerSpecificte AND  $mode === 'edition') : ?>
+                        <a
+                            <?php /** @see \Application\Controller\FichePosteController::editerSpecificiteAction(); */ ?>
+                            href="<?php echo $this->url('fiche-poste/editer-specificite',['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            class="btn btn-primary action ajax-modal pull-right"
+                            data-event="modification"
+                        >
+                            <span class="icon editer"></span>
+                            Renseigner les spécificités
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <?php if ($fiche->getSpecificite() === null) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucune spécificité attachée à ce poste.
+                </div>
+            <?php else: ?>
+                <?php echo $this->specificitePoste($fiche->getSpecificite()); ?>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
