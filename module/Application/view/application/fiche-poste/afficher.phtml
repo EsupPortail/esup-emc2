@@ -45,7 +45,7 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
                     Aucun agent d'associé à ce poste
                 </div>
             <?php else : ?>
-                <?php echo $this->agent($agent); ?>
+                <?php echo $this->agent($agent, 'affichage'); ?>
             <?php endif; ?>
         </div>
     </div>

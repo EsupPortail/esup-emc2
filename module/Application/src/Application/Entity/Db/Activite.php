@@ -26,6 +26,8 @@ class Activite
     private $competences;
     /** @var ArrayCollection */
     private $formations;
+    /** @var ArrayCollection (FicheMetier) */
+    private $fiches;
 
     public function __construct()
     {
@@ -34,6 +36,7 @@ class Activite
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
         $this->formations = new ArrayCollection();
+        $this->fiches = new ArrayCollection();
     }
     /**
      * @return int
@@ -243,6 +246,16 @@ class Activite
             if ($activiteFormation->estNonHistorise() AND $activiteFormation->getFormation() === $formation) return true;
         }
         return false;
+    }
+
+    /** APPLICATIONS **************************************************************************************************/
+
+    /**
+     * @return ArrayCollection (FicheMetier)
+     */
+    public function getFichesMetiers()
+    {
+        return $this->fiches;
     }
 
 }

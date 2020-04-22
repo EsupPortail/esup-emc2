@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\FicheMetierTypeActivite;
 
 /**
  * @see \Application\Controller\ActiviteController::afficherAction()
@@ -31,6 +32,24 @@ $formations      = $activite->getFormations();
 <?php endif; ?>
 
 <?php echo $this->activite($activite, $mode); ?>
+
+<?php
+    /** @var FicheMetierTypeActivite[] $ficheMetiers */
+    $ficheMetiers = $activite->getFichesMetiers()->toArray();
+?>
+<h2>
+    Fiches métiers associées
+    <span class="badge">
+        <?php echo  count($ficheMetiers); ?>
+    </span>
+</h2>
+
+<ul>
+    <?php foreach ($ficheMetiers as $ficheMetier) : ?>
+        <li> <?php echo $ficheMetier->getFiche()->getMetier()->getLibelle(); ?> </li>
+    <?php endforeach; ?>
+</ul>
+
 
 <script>
     $(function() {

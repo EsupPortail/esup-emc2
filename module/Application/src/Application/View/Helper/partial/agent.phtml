@@ -2,10 +2,18 @@
 
 /**
  * @var Agent $agent
+ * @var string $mode
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Provider\Privilege\AgentPrivileges;
+
+$canVoirMission         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+$canAjouterMission      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+$canModifierMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+$canHistoriserMission   = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
+$canDetruireMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
 
 $now = new DateTime();
 ?>
@@ -45,20 +53,110 @@ $now = new DateTime();
     </div>
 </div>
 
+<!-- todo si edition afficher tout de même -->
 <?php if (!empty($agent->getMissionsSpecifiques())) : ?>
-    <h2> Missions spécifiques </h2>
+    <div class="row">
+        <div class="col-md-7">
+            <h2>
+                Missions spécifiques
+            </h2>
+        </div>
+        <div class="col-md-4">
+        <?php if ($mode === 'edition') : ?>
+            <?php if ($canAjouterMission) : ?>
+                <a
+                    <?php /** @see \Application\Controller\AgentController::ajouterAgentMissionSpecifiqueAction() */?>
+                        href="<?php echo $this->url('agent/ajouter-agent-mission-specifique', ['agent' => $agent->getId()], [], true); ?>"
+                        class="ajax-modal btn btn-primary action pull-right"
+                        data-event="modification"
+                >
+                    <span class="icon ajouter"></span>Ajouter une mission spécifique</a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+    </div>
 
-    <ul>
-        <?php /** @var AgentMissionSpecifique $mission */ ?>
-        <?php foreach ($agent->getMissionsSpecifiques() as $mission) : ?>
-            <li>
-                <?php echo $mission->getMission()->getLibelle(); ?>
-                <?php if ($mission->getStructure()) echo  " pour ".$mission->getStructure()->getLibelleCourt(); ?>
-                 du
-                <?php echo ($mission->getDateDebut()?$mission->getDateDebut()->format('d/m/Y'):"---"); ?>
-                au
-                <?php echo ($mission->getDateFin()?$mission->getDateFin()->format('d/m/Y'):"---"); ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+    <table class="table table-condensed">
+    <thead>
+    <tr>
+        <th> Mission </th>
+        <th> Structure </th>
+        <th> Début </th>
+        <th> Fin </th>
+        <th> Décharge </th>
+        <?php if ($mode === 'edition') : ?>
+            <th class="cell-action"> Action </th>
+        <?php endif; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php $cumulDecharge = 0; ?>
+    <?php foreach ($agent->getMissionsSpecifiques() as $mission) : ?>
+    <tr
+        <?php if (!$mission->estEnCours()) : ?>
+            class="historise"
+        <?php endif; ?>
+    >
+        <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
+        <td> <?php echo $mission->getStructure()->getLibelleLong(); ?> </td>
+        <td> <?php echo $mission->getDateDebut()->format('d/m/Y'); ?> </td>
+        <td> <?php echo ($mission->getDateFin())?$mission->getDateFin()->format('d/m/Y'):"---"; ?> </td>
+        <td>
+            <?php if ($mission->getDecharge() !== null) : ?>
+                <?php echo $mission->getDecharge(); ?> h.
+                <?php if ($mission->estEnCours()) $cumulDecharge += $mission->getDecharge(); ?>
+            <?php else : ?>
+                Sans décharge
+            <?php endif; ?>
+        </td>
+        <?php if ($mode === 'edition') : ?>
+            <td>
+                <?php if ($canVoirMission) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\AgentController::afficherAgentMissionSpecifiqueAction() */?>
+                            href="<?php echo $this->url('agent/afficher-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                            class="ajax-modal"
+                    >
+                        <span class="icon voir"></span></a>
+                <?php endif; ?>
+                <?php if ($canModifierMission) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\AgentController::modifierAgentMissionSpecifiqueAction() */?>
+                            href="<?php echo $this->url('agent/modifier-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon editer"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriserMission) : ?>
+                    <?php if ($mission->estNonHistorise()) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\AgentController::historiserAgentMissionSpecifiqueAction() */?>
+                                href="<?php echo $this->url('agent/historiser-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser"></span></a>
+                    <?php else : ?>
+                        <a
+                            <?php /** @see \Application\Controller\AgentController::restaurerAgentMissionSpecifiqueAction() */?>
+                                href="<?php echo $this->url('agent/restaurer-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruireMission) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\AgentController::detruireAgentMissionSpecifiqueAction() */?>
+                            href="<?php echo $this->url('agent/detruire-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon detruire"></span></a>
+                <?php endif; ?>
+            </td>
+        <?php endif;?>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+    </table>
+
 <?php endif; ?>

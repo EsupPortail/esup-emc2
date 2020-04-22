@@ -15,6 +15,8 @@
         <one-to-many field="competences"  target-entity="Application\Entity\Db\ActiviteCompetence"  mapped-by="activite"/>
         <one-to-many field="formations"   target-entity="Application\Entity\Db\ActiviteFormation"   mapped-by="activite"/>
 
+        <one-to-many target-entity="Application\Entity\Db\FicheMetierTypeActivite" mapped-by="activite" field="fiches"/>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
