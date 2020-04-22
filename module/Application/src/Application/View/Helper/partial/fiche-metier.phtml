@@ -43,6 +43,13 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
                 Fiche métier #<?php echo $fichemetier->getId(); ?> <br/>
                 <em><?php echo $fichemetier->getMetier()->getLibelle(); ?></em>
             </h1>
+
+            <?php if ($fichemetier->getMetier() AND $fichemetier->getMetier()->getLien()) : ?>
+                <dl class="dl-horizontal">
+                    <dt> Lien REFERENS </dt>
+                    <dd> <a href="<?php echo $fichemetier->getMetier()->getLien(); ?>"><?php echo $fichemetier->getMetier()->getLien(); ?></a></dd>
+                </dl>
+            <?php endif; ?>
         </div>
         <div class="col-md-4">
             <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
@@ -63,8 +70,14 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
     </div>
 <?php endif; ?>
 
-<!-- MISSIONS PRINCIPALE ------------------------------------------------------------------------------------------>
 <div class="main">
+
+<!-- LIENS REFERENCE -------------------------------------------------------------------------------------------------->
+
+
+
+<!-- MISSIONS PRINCIPALE ---------------------------------------------------------------------------------------------->
+
     <h2> Missions principales</h2>
 
     <ul>
