@@ -7,6 +7,7 @@ use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
 class MetierForm extends Form {
     use DomaineServiceAwareTrait;
@@ -36,7 +37,7 @@ class MetierForm extends Form {
             'type' => Select::class,
             'name' => 'domaine',
             'options' => [
-                'label' => "Domaine UniCaen* :",
+                'label' => "Domaine professionnel* :",
                 'empty_option' => "Sélectionner un domaine ...",
                 'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
             ],
@@ -57,6 +58,17 @@ class MetierForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
+        // lien
+        $this->add([
+            'type' => Text::class,
+            'name' => 'lien',
+            'options' => [
+                'label' => "Lien vers Referens :",
+            ],
+            'attributes' => [
+                'id' => 'lien',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -72,5 +84,13 @@ class MetierForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        //inputFIlter
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'fonction'          => [ 'required' => true,  ],
+            'domaine'           => [ 'required' => true,  ],
+            'libelle'           => [ 'required' => true,  ],
+            'lien'              => [ 'required' => false, ],
+        ]));
     }
 }

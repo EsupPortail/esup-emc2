@@ -8,7 +8,6 @@
 
         <field name="numeroPoste"       type="string" length="128"      column="numero_poste"             nullable="true"/>
         <field name="fonction"          type="string" length="128"      column="fonction"                 nullable="true"/>
-        <field name="lien"              type="string" length="256"      column="lien"                     nullable="true"/>
 
         <one-to-one target-entity="Application\Entity\Db\FichePoste" mapped-by="poste" field="fichePoste"/>
 

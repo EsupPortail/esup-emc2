@@ -17,8 +17,6 @@ class Poste {
     /** @var Domaine */
     private $domaine;
     /** @var string */
-    private $lien;
-    /** @var string */
     private $fonction;
 
     /** @var FichePoste */
@@ -119,24 +117,6 @@ class Poste {
     public function setDomaine($domaine)
     {
         $this->domaine = $domaine;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLien()
-    {
-        return $this->lien;
-    }
-
-    /**
-     * @param string $lien
-     * @return Poste
-     */
-    public function setLien($lien)
-    {
-        $this->lien = $lien;
         return $this;
     }
 

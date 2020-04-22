@@ -134,20 +134,6 @@ class PosteForm extends Form  {
             ],
         ]);
 
-        // liens exterieur vers fiche de poste
-        $this->add([
-            'type' => Text::class,
-            'name' => 'lien',
-            'options' => [
-                'label' => "Lien externe ver la fiche de poste :",
-            ],
-            'attributes' => [
-                'id' => 'lien',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
-
         // button
         $this->add([
             'type' => Button::class,
@@ -173,7 +159,6 @@ class PosteForm extends Form  {
             'rattachement'      => [ 'required' => true,  ],
             'domaine'           => [ 'required' => true,  ],
             'fonction'          => [ 'required' => true,  ],
-            'lien'              => [ 'required' => false, ],
         ]));
     }
 }

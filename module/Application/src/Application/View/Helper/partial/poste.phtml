@@ -34,12 +34,4 @@ use Application\Entity\Db\Poste;
 <!--    <dt> Fonction </dt>-->
 <!--    <dd class="gpeec"> --><?php //echo $fonction; ?><!--</dd>-->
 
-    <?php if ($poste->getLien()) : ?>
-        <dt> Lien externe </dt>
-        <dd class="gpeec">
-            <a href="<?php echo $poste->getLien(); ?>">
-                <?php echo $poste->getLien(); ?>
-            </a>
-        </dd>
-    <?php endif; ?>
 </dl>

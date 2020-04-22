@@ -18,6 +18,8 @@ class Metier implements HistoriqueAwareInterface {
     private $domaine;
     /** @var string */
     private $fonction;
+    /** @var string */
+    private $lien;
 
 
     /** @var ArrayCollection (FicheMetierType) */
@@ -85,6 +87,24 @@ class Metier implements HistoriqueAwareInterface {
     public function setDomaine($domaine)
     {
         $this->domaine = $domaine;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLien()
+    {
+        return $this->lien;
+    }
+
+    /**
+     * @param string $lien
+     * @return Metier
+     */
+    public function setLien($lien)
+    {
+        $this->lien = $lien;
         return $this;
     }
 
