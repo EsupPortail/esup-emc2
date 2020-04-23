@@ -12,8 +12,6 @@ class FicheposteFormationRetiree implements HistoriqueAwareInterface {
     private $id;
     /** @var FichePoste */
     private $fichePoste;
-    /** @var FicheMetier */
-    private $ficheMetier;
     /** @var Formation */
     private $formation;
 
@@ -40,24 +38,6 @@ class FicheposteFormationRetiree implements HistoriqueAwareInterface {
     public function setFichePoste($fichePoste)
     {
         $this->fichePoste = $fichePoste;
-        return $this;
-    }
-
-    /**
-     * @return FicheMetier
-     */
-    public function getFicheMetier()
-    {
-        return $this->ficheMetier;
-    }
-
-    /**
-     * @param FicheMetier $ficheMetier
-     * @return FicheposteFormationRetiree
-     */
-    public function setFicheMetier($ficheMetier)
-    {
-        $this->ficheMetier = $ficheMetier;
         return $this;
     }
 

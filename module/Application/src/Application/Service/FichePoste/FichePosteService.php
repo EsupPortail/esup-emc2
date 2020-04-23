@@ -2,6 +2,7 @@
 
 namespace Application\Service\FichePoste;
 
+use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
@@ -405,5 +406,149 @@ class FichePosteService {
             }
         }
         return false;
+    }
+
+    public function getApplicationsDictionnaires(FichePoste $fiche, DateTime $date)
+    {
+        $dictionnaire = [];
+
+        /**
+         * @var FicheMetier[] $ficheMetier
+         * @var Activite[] $activites
+         */
+        $fichesMetiers = [];
+        $activites = [];
+
+        /** Recuperation des fiches metiers */
+        foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $fichesMetiers[] = $ficheMetier;
+            $activitesId = explode(';',$ficheTypeExterne->getActivites());
+            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getActivite()->getId();
+                if (array_search($id, $activitesId) !== false) {
+                    $activites[] = $metierTypeActivite->getActivite();
+                }
+            }
+        }
+
+        foreach ($fichesMetiers as $ficheMetier) {
+            foreach ($ficheMetier->getApplications() as $application) {
+                $dictionnaire[$application->getId()]["object"] = $application;
+                $dictionnaire[$application->getId()]["raison"][] = $ficheMetier;
+                $dictionnaire[$application->getId()]["conserve"] = true;
+            }
+        }
+
+        foreach ($activites as $activite) {
+            foreach ($activite->getApplications() as $application) {
+                $dictionnaire[$application->getId()]["object"] = $application;
+                $dictionnaire[$application->getId()]["raison"][] = $activite;
+                $dictionnaire[$application->getId()]["conserve"] = true;
+            }
+        }
+
+        $retirees = $fiche->getApplicationsRetirees();
+        foreach ($retirees as $retiree) {
+            $dictionnaire[$retiree->getApplication()->getId()]["conserve"] = false;
+        }
+
+        return $dictionnaire;
+    }
+
+    public function getFormationsDictionnaires(FichePoste $fiche, DateTime $date)
+    {
+        $dictionnaire = [];
+
+        /**
+         * @var FicheMetier[] $ficheMetier
+         * @var Activite[] $activites
+         */
+        $fichesMetiers = [];
+        $activites = [];
+
+        /** Recuperation des fiches metiers */
+        foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $fichesMetiers[] = $ficheMetier;
+            $activitesId = explode(';',$ficheTypeExterne->getActivites());
+            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getActivite()->getId();
+                if (array_search($id, $activitesId) !== false) {
+                    $activites[] = $metierTypeActivite->getActivite();
+                }
+            }
+        }
+
+        foreach ($fichesMetiers as $ficheMetier) {
+            foreach ($ficheMetier->getFormations() as $formation) {
+                $dictionnaire[$formation->getId()]["object"] = $formation;
+                $dictionnaire[$formation->getId()]["raison"][] = $ficheMetier;
+                $dictionnaire[$formation->getId()]["conserve"] = true;
+            }
+        }
+
+        foreach ($activites as $activite) {
+            foreach ($activite->getFormations() as $formation) {
+                $dictionnaire[$formation->getId()]["object"] = $formation;
+                $dictionnaire[$formation->getId()]["raison"][] = $activite;
+                $dictionnaire[$formation->getId()]["conserve"] = true;
+            }
+        }
+
+        $retirees = $fiche->getFormationsRetirees();
+        foreach ($retirees as $retiree) {
+            $dictionnaire[$retiree->getFormation()->getId()]["conserve"] = false;
+        }
+
+        return $dictionnaire;
+    }
+
+    public function getCompetencesDictionnaires(FichePoste $fiche, DateTime $date)
+    {
+        $dictionnaire = [];
+
+        /**
+         * @var FicheMetier[] $ficheMetier
+         * @var Activite[] $activites
+         */
+        $fichesMetiers = [];
+        $activites = [];
+
+        /** Recuperation des fiches metiers */
+        foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $fichesMetiers[] = $ficheMetier;
+            $activitesId = explode(';',$ficheTypeExterne->getActivites());
+            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getActivite()->getId();
+                if (array_search($id, $activitesId) !== false) {
+                    $activites[] = $metierTypeActivite->getActivite();
+                }
+            }
+        }
+
+        foreach ($fichesMetiers as $ficheMetier) {
+            foreach ($ficheMetier->getCompetences() as $competence) {
+                $dictionnaire[$competence->getId()]["object"] = $competence;
+                $dictionnaire[$competence->getId()]["raison"][] = $ficheMetier;
+                $dictionnaire[$competence->getId()]["conserve"] = true;
+            }
+        }
+
+        foreach ($activites as $activite) {
+            foreach ($activite->getCompetences() as $competence) {
+                $dictionnaire[$competence->getId()]["object"] = $competence;
+                $dictionnaire[$competence->getId()]["raison"][] = $activite;
+                $dictionnaire[$competence->getId()]["conserve"] = true;
+            }
+        }
+
+        $retirees = $fiche->getCompetencesRetirees();
+        foreach ($retirees as $retiree) {
+            $dictionnaire[$retiree->getCompetence()->getId()]["conserve"] = false;
+        }
+
+        return $dictionnaire;
     }
 }

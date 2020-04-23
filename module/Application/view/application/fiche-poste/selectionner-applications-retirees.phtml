@@ -4,44 +4,29 @@
  * @see \Application\Controller\FichePosteController::selectionnerApplicationsRetireesAction()
  *
  * @var FichePoste $ficheposte
- * @var FicheMetier $fichemetier
- * @var Application[] $applications
- * @var FicheposteApplicationRetiree[] $retirees
+ * @var array $applications
  */
 
-use Application\Entity\Db\Application;
-use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteApplicationRetiree;
 
-/**
- * @param FicheposteApplicationRetiree[] $retirees
- * @param Application $application
- * @return boolean
- */
-function isIn($retirees, $application) {
-    foreach ($retirees as $retiree) {
-        if ($retiree->getHistoDestruction() === null AND $retiree->getApplication() === $application) return true;
-    }
-    return false;
-}
 ?>
 
+
 <form
-    action="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
+    action="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
     method="post"
 >
 
-<?php foreach ($applications as $application) : ?>
+<?php foreach ($applications as $item) : ?>
     <div class="checkbox">
         <label>
             <input
                     type="checkbox"
-                    id="<?php echo $application->getId(); ?>"
-                    name="<?php echo $application->getId(); ?>"
-                    <?php if (! isIn($retirees, $application)) echo "checked"; ?>
+                    id="<?php echo $item['object']->getId(); ?>"
+                    name="<?php echo $item['object']->getId(); ?>"
+                    <?php if ($item['conserve']) echo "checked"; ?>
             />
-            <?php echo $application->getLibelle(); ?>
+            <?php echo $item['object']->getLibelle(); ?>
         </label>
     </div>
 <?php endforeach; ?>

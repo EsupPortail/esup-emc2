@@ -141,270 +141,242 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
 
 <!-- AUTRE INFO --------------------------------------------------------------------------------------------------->
 
-<div class="main">
-    <h2>
-        Parcours de formation pour la prise de poste
-    </h2>
+<?php if ($ficheposte === null) : ?>
+    <div class="main">
+        <h2>
+            Parcours de formation pour la prise de poste
+        </h2>
 
-    <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
+        <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
 
-    <?php /** @var Competence $competence */ ?>
-    <?php
-    $dictionnaireCompetence = [];
-    foreach($fichemetier->getCompetences() as $competence) {
-        if ($ficheposte === null) {
-            $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
-            $dictionnaireCompetence[$competence->getId()]['source'][]  = 'fiche|'. $fichemetier->getMetier()->getLibelle();
-        }
-        else {
-            $conservees = $ficheposte->getCompetencesRetirees();
-            $found = null;
-            /** @var FicheposteCompetenceRetiree $conservee */
-            foreach ($conservees as $conservee) {
-                if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) {
-                    $found = $conservee;
-                    break;
+        <?php /** @var Competence $competence */ ?>
+        <?php
+        $dictionnaireCompetence = [];
+        foreach($fichemetier->getCompetences() as $competence) {
+            if ($ficheposte === null) {
+                $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
+                $dictionnaireCompetence[$competence->getId()]['source'][]  = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+            }
+            else {
+                $conservees = $ficheposte->getCompetencesRetirees();
+                $found = null;
+                /** @var FicheposteCompetenceRetiree $conservee */
+                foreach ($conservees as $conservee) {
+                    if ($conservee->getHistoDestruction() === null AND $conservee->getCompetence() === $competence) {
+                        $found = $conservee;
+                        break;
+                    }
+                }
+                if ($found === null) {
+                    $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
+                    $dictionnaireCompetence[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
                 }
             }
-            if ($found === null) {
-                $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
-                $dictionnaireCompetence[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+        }
+        foreach($fichemetier->getActivites() as $element) {
+            if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+                foreach ($element->getActivite()->getCompetences() as $competence) {
+                    $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
+                    $dictionnaireCompetence[$competence->getId()]['source'][] = 'activite|' . $element->getActivite()->getLibelle();
+                }
             }
         }
-    }
-    foreach($fichemetier->getActivites() as $element) {
-        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
-            foreach ($element->getActivite()->getCompetences() as $competence) {
-                $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
-                $dictionnaireCompetence[$competence->getId()]['source'][] = 'activite|' . $element->getActivite()->getLibelle();
-            }
-        }
-    }
-    ?>
+        ?>
 
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-8">
-                    <h2>
-                        <span class="icon competence"></span>
-                        Compétences
-                        <span class="badge">
-                            <?php echo count($dictionnaireCompetence); ?>
-                        </span>
-                    </h2>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>
+                            <span class="icon competence"></span>
+                            Compétences
+                            <span class="badge">
+                                <?php echo count($dictionnaireCompetence); ?>
+                            </span>
+                        </h2>
+                    </div>
+                    <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+                        <div class="pull-right" style="margin-right:1rem;">
+                            <?php /** @see FicheMetierController::gererCompetencesAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier-type/gerer-competences', ['fiche' => $fichemetier->getId()], [], true); ?>"
+                               class="btn btn-primary action ajax-modal"
+                               data-event="modification"
+                            >
+                                <span class="icon ajouter"></span>
+                                Gérer les compétences
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <?php echo $this->competences($dictionnaireCompetence, ['type' => false, 'theme' => false]); ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- APPLICATION -------------------------------------------------------------------------------------------------->
+
+        <?php /** @var Application $application */ ?>
+        <?php
+        $dictionnaireApplication = [];
+        foreach($fichemetier->getApplications() as $application) {
+            if ($ficheposte === null) $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+            else {
+                $conservees = $ficheposte->getApplicationsRetirees();
+                $found = null;
+                /** @var FicheposteApplicationRetiree $conservee */
+                foreach ($conservees as $conservee) {
+                    if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) {
+                        $found = $conservee;
+                        break;
+                    }
+                }
+                if ($found === null) {
+                    $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+                }
+            }
+        }
+        foreach($fichemetier->getActivites() as $element) {
+            if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+                foreach ($element->getActivite()->getApplications() as $application) {
+                    $dictionnaireApplication[$application->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+                }
+            }
+        }
+        ?>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>
+                            <span class="icon application"></span>
+                            Applications
+                            <span class="badge">
+                                <?php echo count($dictionnaireApplication); ?>
+                            </span>
+                        </h2>
+                    </div>
+                    <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
                     <div class="pull-right" style="margin-right:1rem;">
-                        <?php /** @see FicheMetierController::gererCompetencesAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-metier-type/gerer-competences', ['fiche' => $fichemetier->getId()], [], true); ?>"
+                        <?php /** @see FicheMetierController::modifierApplicationAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fichemetier->getId()], [], true); ?>"
                            class="btn btn-primary action ajax-modal"
                            data-event="modification"
                         >
                             <span class="icon ajouter"></span>
-                            Gérer les compétences
+                            Gérer les applications
                         </a>
                     </div>
-                <?php endif; ?>
-
-                <?php if ((isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste')) : ?>
-                    <div class="pull-right" style="margin-right:1rem;">
-                        <a
-                                href="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon listing" title="Sélectionner des compétences"></span></a>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <?php ksort($dictionnaireApplication); ?>
+                    <?php foreach($dictionnaireApplication as $application => $source) : ?>
+                        <li>
+                            <?php echo $application; ?>
+                            <sup>
+                                <?php foreach($source as $item) : ?>
+                                    <?php $split = explode('|', $item); ?>
+                                    <?php if($split[0] === 'fiche') : ?>
+                                        <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
+                                    <?php endif; ?>
+                                    <?php if($split[0] === 'activite') : ?>
+                                        <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </sup>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         </div>
-        <div class="panel-body">
-            <div class="row">
-                <?php echo $this->competences($dictionnaireCompetence, ['type' => false, 'theme' => false]); ?>
-            </div>
-        </div>
-    </div>
 
-    <!-- APPLICATION -------------------------------------------------------------------------------------------------->
+        <!-- FORMATION ---------------------------------------------------------------------------------------------------->
 
-    <?php /** @var Application $application */ ?>
-    <?php
-    $dictionnaireApplication = [];
-    foreach($fichemetier->getApplications() as $application) {
-        if ($ficheposte === null) $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
-        else {
-            $conservees = $ficheposte->getApplicationsRetirees();
-            $found = null;
-            /** @var FicheposteApplicationRetiree $conservee */
-            foreach ($conservees as $conservee) {
-                if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) {
-                    $found = $conservee;
-                    break;
+        <?php /** @var Formation $formation */ ?>
+        <?php
+        $dictionnaireFormation = [];
+        foreach($fichemetier->getFormations() as $formation) {
+            if ($ficheposte === null) $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+            else {
+                $conservees = $ficheposte->getFormationsRetirees();
+                $found = null;
+                /** @var FicheposteFormationRetiree $conservee */
+                foreach ($conservees as $conservee) {
+                    if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) {
+                        $found = $conservee;
+                        break;
+                    }
+                }
+                if ($found === null) {
+                    $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
                 }
             }
-            if ($found === null) {
-                $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
-            }
         }
-    }
-    foreach($fichemetier->getActivites() as $element) {
-        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
-            foreach ($element->getActivite()->getApplications() as $application) {
-                $dictionnaireApplication[$application->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
-            }
-        }
-    }
-    ?>
-
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-8">
-                    <h2>
-                        <span class="icon application"></span>
-                        Applications
-                        <span class="badge">
-                            <?php echo count($dictionnaireApplication); ?>
-                        </span>
-                    </h2>
-                </div>
-                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
-                <div class="pull-right" style="margin-right:1rem;">
-                    <?php /** @see FicheMetierController::modifierApplicationAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fichemetier->getId()], [], true); ?>"
-                       class="btn btn-primary action ajax-modal"
-                       data-event="modification"
-                    >
-                        <span class="icon ajouter"></span>
-                        Gérer les applications
-                    </a>
-                </div>
-                <?php endif; ?>
-
-                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
-                <div class="pull-right" style="margin-right:1rem;">
-                    <a
-                            href="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon listing" title="Sélectionner des applications"></span></a>
-                </div>
-                <?php endif; ?>
-            </div>
-        </div>
-        <div class="panel-body">
-            <ul>
-                <?php ksort($dictionnaireApplication); ?>
-                <?php foreach($dictionnaireApplication as $application => $source) : ?>
-                    <li>
-                        <?php echo $application; ?>
-                        <sup>
-                            <?php foreach($source as $item) : ?>
-                                <?php $split = explode('|', $item); ?>
-                                <?php if($split[0] === 'fiche') : ?>
-                                    <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
-                                <?php endif; ?>
-                                <?php if($split[0] === 'activite') : ?>
-                                    <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </sup>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    </div>
-
-    <!-- FORMATION ---------------------------------------------------------------------------------------------------->
-
-    <?php /** @var Formation $formation */ ?>
-    <?php
-    $dictionnaireFormation = [];
-    foreach($fichemetier->getFormations() as $formation) {
-        if ($ficheposte === null) $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
-        else {
-            $conservees = $ficheposte->getFormationsRetirees();
-            $found = null;
-            /** @var FicheposteFormationRetiree $conservee */
-            foreach ($conservees as $conservee) {
-                if ($conservee->getHistoDestruction() === null AND $conservee->getFormation() === $formation) {
-                    $found = $conservee;
-                    break;
+        foreach($fichemetier->getActivites() as $element) {
+            if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+                foreach ($element->getActivite()->getFormations() as $formation) {
+                    $dictionnaireFormation[$formation->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
                 }
             }
-            if ($found === null) {
-                $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
-            }
         }
-    }
-    foreach($fichemetier->getActivites() as $element) {
-        if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
-            foreach ($element->getActivite()->getFormations() as $formation) {
-                $dictionnaireFormation[$formation->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
-            }
-        }
-    }
-    ?>
+        ?>
 
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-8">
-                    <h2>
-                        <span class="icon formation"></span>
-                        Formations
-                        <span class="badge">
-                            <?php echo count($dictionnaireFormation); ?>
-                        </span>
-                    </h2>
-                </div>
-                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
-                <div class="pull-right" style="margin-right:1rem;">
-                    <?php /** @see FicheMetierController::modifierFormationAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-metier-type/modifier-formation', ['id' => $fichemetier->getId()], [], true); ?>"
-                       class="btn btn-primary action ajax-modal"
-                       data-event="modification"
-                    >
-                        <span class="icon ajouter"></span>
-                        Gérer les formations
-                    </a>
-                </div>
-                <?php endif; ?>
-
-                <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
-                    <div class="pull-right" style="margin-right:1rem;">
-                        <a
-                            href="<?php echo $this->url('fiche-poste/selectionner-formations-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon listing" title="Sélectionner des formations"></span></a>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>
+                            <span class="icon formation"></span>
+                            Formations
+                            <span class="badge">
+                                <?php echo count($dictionnaireFormation); ?>
+                            </span>
+                        </h2>
                     </div>
-                <?php endif; ?>
+                    <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+                    <div class="pull-right" style="margin-right:1rem;">
+                        <?php /** @see FicheMetierController::modifierFormationAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/modifier-formation', ['id' => $fichemetier->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal"
+                           data-event="modification"
+                        >
+                            <span class="icon ajouter"></span>
+                            Gérer les formations
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <?php ksort($dictionnaireFormation); ?>
+                    <?php foreach($dictionnaireFormation as $formation => $source) : ?>
+                        <li>
+                            <?php echo $formation; ?>
+                            <sup>
+                                <?php foreach($source as $item) : ?>
+                                    <?php $split = explode('|', $item); ?>
+                                    <?php if($split[0] === 'fiche') : ?>
+                                        <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
+                                    <?php endif; ?>
+                                    <?php if($split[0] === 'activite') : ?>
+                                        <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </sup>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         </div>
-        <div class="panel-body">
-            <ul>
-                <?php ksort($dictionnaireFormation); ?>
-                <?php foreach($dictionnaireFormation as $formation => $source) : ?>
-                    <li>
-                        <?php echo $formation; ?>
-                        <sup>
-                            <?php foreach($source as $item) : ?>
-                                <?php $split = explode('|', $item); ?>
-                                <?php if($split[0] === 'fiche') : ?>
-                                    <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
-                                <?php endif; ?>
-                                <?php if($split[0] === 'activite') : ?>
-                                    <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </sup>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
     </div>
-</div>
+<?php endif; ?>
 
 <script>
     $(function() {

@@ -1,0 +1,63 @@
+<?php
+
+use Application\Entity\Db\Activite;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
+
+/**
+* @var FichePoste $fiche
+* @var array $formations
+* @var string $mode
+*/
+
+/** @var  array $cFormations */
+$cFormations = [];
+foreach ($formations as $item) {
+    if ($item["conserve"] === true) $cFormations[] = $item;
+}
+
+?>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-11">
+                <h2>
+                    Formations
+                    <span class="badge">
+                        <?php echo count($cFormations); ?>
+                    </span>
+                </h2>
+            </div>
+            <div class="col-md-1">
+                <?php if ($mode === 'edition') : ?>
+                    <a <?php /** @see \Application\Controller\FichePosteController::selectionnerFormationsRetireesAction() */ ?>
+                            href="<?php echo $this->url('fiche-poste/selectionner-formations-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification">
+                        <span class="icon listing" title="Sélection des formations liées à la fiche de poste"></span></a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <ul>
+            <?php foreach ($cFormations as $item) : ?>
+                <li>
+                    <?php echo $item["object"]->getLibelle(); ?>
+                    <?php foreach ($item["raison"] as $raison) : ?>
+                        <?php if ($raison instanceof  FicheMetier) : ?>
+                            <span class="fiche-metier" title="<?php echo $raison->getMetier()->getLibelle(); ?>">
+                                F
+                            </span>
+                        <?php endif; ?>
+                        <?php if ($raison instanceof  Activite) : ?>
+                            <span class="activite" title="<?php echo $raison->getLibelle(); ?>">
+                                A
+                            </span>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

@@ -11,8 +11,6 @@ class FicheposteApplicationRetiree {
     private $id;
     /** @var FichePoste */
     private $fichePoste;
-    /** @var FicheMetier */
-    private $ficheMetier;
     /** @var Application */
     private $application;
 
@@ -42,23 +40,6 @@ class FicheposteApplicationRetiree {
         return $this;
     }
 
-    /**
-     * @return FicheMetier
-     */
-    public function getFicheMetier()
-    {
-        return $this->ficheMetier;
-    }
-
-    /**
-     * @param FicheMetier $ficheMetier
-     * @return FicheposteApplicationRetiree
-     */
-    public function setFicheMetier($ficheMetier)
-    {
-        $this->ficheMetier = $ficheMetier;
-        return $this;
-    }
 
     /**
      * @return Application

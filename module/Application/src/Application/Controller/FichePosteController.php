@@ -36,6 +36,8 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FormationsRetirees\FormationsRetireesServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use DateTime;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -44,6 +46,9 @@ use Zend\View\Model\ViewModel;
 /** @method FlashMessenger flashMessenger() */
 
 class FichePosteController extends AbstractActionController {
+    /** Trait utilitaire */
+    use DateTimeAwareTrait;
+
     /** Service **/
     use AgentServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
@@ -181,12 +186,22 @@ class FichePosteController extends AbstractActionController {
         $structure = $this->getStructureService()->getStructure($structureId);
 
 
+        /** @var DateTime $date */
+        $date = $this->getDateTime();
+        /** @var FichePoste $fiche */
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
+
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $date);
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $date);
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
 
         return new ViewModel([
             'fiche' => $fiche,
             'structure' => $structure,
+            'applications' => $applications,
+            'competences' => $competences,
+            'formations' => $formations,
         ]);
     }
 
@@ -530,47 +545,32 @@ class FichePosteController extends AbstractActionController {
 
     public function selectionnerApplicationsRetireesAction() {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        /**
-         * @var Application[] $applications
-         * @var FicheposteApplicationRetiree[] $retirees
-         */
-        $applications = $fichemetier->getApplications()->toArray();
-        $retirees = $ficheposte->getApplicationsRetirees()->toArray();
+        /** @var array $applications*/
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte, $this->getDateTime());
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
 
-            foreach ($applications as $application) {
-                $found = null;
-                foreach ($retirees as $retiree) {
-                    if ($retiree->getHistoDestruction() === null AND $retiree->getApplication() === $application) {
-                        $found = $retiree;
-                    }
-                }
+            foreach ($applications as $item) {
+                $application = $item['object'];
                 $checked = (isset($data[$application->getId()]) AND $data[$application->getId()] === "on");
 
-                if ($found !== null AND $checked) $this->getApplicationsRetireesService()->delete($found);
-                if ($found === null AND !$checked) {
-                    $item = new FicheposteApplicationRetiree();
-                    $item->setFichePoste($ficheposte);
-                    $item->setFicheMetier($fichemetier);
-                    $item->setApplication($application);
-                    $this->getApplicationsRetireesService()->create($item);
+                if ($checked === false AND $item['conserve'] === true) {
+                    $this->getApplicationsRetireesService()->add($ficheposte, $application);
+                }
+                if ($checked === true AND $item['conserve'] === false) {
+                    $this->getApplicationsRetireesService()->remove($ficheposte, $application);
                 }
             }
-//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
         }
 
         return new ViewModel([
-            'title' => "Sélection d'application pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'title' => "Sélection des applications pour la fiche de poste",
             'ficheposte' => $ficheposte,
-            'fichemetier' => $fichemetier,
             'applications' => $applications,
-            'retirees' => $retirees,
         ]);
     }
 
@@ -578,47 +578,32 @@ class FichePosteController extends AbstractActionController {
 
     public function selectionnerCompetencesRetireesAction() {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        /**
-         * @var Competence[] $competences
-         * @var FicheposteCompetenceRetiree[] $retirees
-         */
-        $competences = $fichemetier->getCompetences()->toArray();
-        $retirees = $ficheposte->getCompetencesRetirees()->toArray();
+        /** @var array $competences*/
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte, $this->getDateTime());
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
 
-            foreach ($competences as $competence) {
-                $found = null;
-                foreach ($retirees as $retiree) {
-                    if ($retiree->getHistoDestruction() === null AND $retiree->getCompetence() === $competence) {
-                        $found = $retiree;
-                    }
-                }
+            foreach ($competences as $item) {
+                $competence = $item['object'];
                 $checked = (isset($data[$competence->getId()]) AND $data[$competence->getId()] === "on");
 
-                if ($found !== null AND $checked) $this->getCompetencesRetireesService()->delete($found);
-                if ($found === null AND !$checked) {
-                    $item = new FicheposteCompetenceRetiree();
-                    $item->setFichePoste($ficheposte);
-                    $item->setFicheMetier($fichemetier);
-                    $item->setCompetence($competence);
-                    $this->getCompetencesRetireesService()->create($item);
+                if ($checked === false AND $item['conserve'] === true) {
+                    $this->getCompetencesRetireesService()->add($ficheposte, $competence);
+                }
+                if ($checked === true AND $item['conserve'] === false) {
+                    $this->getCompetencesRetireesService()->remove($ficheposte, $competence);
                 }
             }
-//            return $this->redirect()->toRoute('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
         }
 
         return new ViewModel([
-            'title' => "Sélection de compétence pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'title' => "Sélection des formations pour la fiche de poste",
             'ficheposte' => $ficheposte,
-            'fichemetier' => $fichemetier,
             'competences' => $competences,
-            'retirees' => $retirees,
         ]);
     }
 
@@ -626,47 +611,32 @@ class FichePosteController extends AbstractActionController {
 
     public function selectionnerFormationsRetireesAction() {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        /**
-         * @var Formation[] $formations
-         * @var FicheposteFormationRetiree[] $retirees
-         */
-        $formations = $fichemetier->getFormations();
-        $retirees = $ficheposte->getFormationsRetirees()->toArray();
+        /** @var array $formations*/
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($ficheposte, $this->getDateTime());
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
 
-            foreach ($formations as $formation) {
-                $found = null;
-                foreach ($retirees as $retiree) {
-                    if ($retiree->getHistoDestruction() === null AND $retiree->getFormation() === $formation) {
-                        $found = $retiree;
-                    }
-                }
+            foreach ($formations as $item) {
+                $formation = $item['object'];
                 $checked = (isset($data[$formation->getId()]) AND $data[$formation->getId()] === "on");
 
-                if ($found !== null AND $checked) $this->getFormationsRetireesService()->delete($found);
-                if ($found === null AND !$checked) {
-                    $item = new FicheposteFormationRetiree();
-                    $item->setFichePoste($ficheposte);
-                    $item->setFicheMetier($fichemetier);
-                    $item->setFormation($formation);
-                    $this->getFormationsRetireesService()->create($item);
+                if ($checked === false AND $item['conserve'] === true) {
+                    $this->getFormationsRetireesService()->add($ficheposte, $formation);
+                }
+                if ($checked === true AND $item['conserve'] === false) {
+                    $this->getFormationsRetireesService()->remove($ficheposte, $formation);
                 }
             }
-//            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
         }
 
         return new ViewModel([
-            'title' => "Sélection de formation pour la fiche méfier [" .$fichemetier->getMetier()->getLibelle() ."]",
+            'title' => "Sélection des formations pour la fiche de poste",
             'ficheposte' => $ficheposte,
-            'fichemetier' => $fichemetier,
             'formations' => $formations,
-            'retirees' => $retirees,
         ]);
     }
 

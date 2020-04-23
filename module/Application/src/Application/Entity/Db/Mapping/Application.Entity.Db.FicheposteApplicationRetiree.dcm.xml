@@ -9,9 +9,6 @@
         <many-to-one target-entity="Application\Entity\Db\FichePoste"  field="fichePoste">
             <join-column name="ficheposte_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\FicheMetier"  field="ficheMetier">
-            <join-column name="fichemetier_id" referenced-column-name="id"/>
-        </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Application"  field="application">
             <join-column name="application_id" referenced-column-name="id"/>
         </many-to-one>

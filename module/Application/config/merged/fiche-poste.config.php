@@ -363,7 +363,7 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-applications-retirees/:fiche-poste/:fiche-metier',
+                            'route'    => '/selectionner-applications-retirees/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'selectionner-applications-retirees',
@@ -374,7 +374,7 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-competences-retirees/:fiche-poste/:fiche-metier',
+                            'route'    => '/selectionner-competences-retirees/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'selectionner-competences-retirees',
@@ -385,7 +385,7 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-formations-retirees/:fiche-poste/:fiche-metier',
+                            'route'    => '/selectionner-formations-retirees/:fiche-poste',
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'selectionner-formations-retirees',
