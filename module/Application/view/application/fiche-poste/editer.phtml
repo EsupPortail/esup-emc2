@@ -186,10 +186,10 @@ $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
 
     <div class="row">
         <div class="col-md-6">
-            <?php echo $this->fichePosteGraph($fiche, 'radar', $date); ?>
+            <?php echo $this->fichePosteGraph($fiche, ["applications" => $applications, "competences" => $competences, "formations" => $formations], 'radar', $date); ?>
         </div>
         <div class="col-md-6">
-            <?php echo $this->fichePosteGraph($fiche, 'bar', $date); ?>
+            <?php echo $this->fichePosteGraph($fiche, ["applications" => $applications, "competences" => $competences, "formations" => $formations], 'bar', $date); ?>
         </div>
     </div>
 
