@@ -32,6 +32,7 @@ class RessourceRhController extends AbstractActionController {
                 'fonction' => ($fonction)?$fonction:"---",
                 'domaine'  => ($domaine)?$domaine->__toString():"---",
                 'metier'   => ($metier)?$metier->__toString():"---",
+                'emploi-type'   => ($metier->getEmploiType())?$metier->getEmploiType():"---",
                 'nbFiche'   => count($metier->getFichesMetiers()),
             ];
             $results[] = $entry;
@@ -62,6 +63,7 @@ class RessourceRhController extends AbstractActionController {
                 'domaine'  => ($domaine)?$domaine->__toString():"---",
                 'fonction' => ($fonction)?:"---",
                 'metier'   => ($metier)?$metier->__toString():"---",
+                'emploi-type'   => ($metier->getEmploiType())?$metier->getEmploiType():"---",
                 'nbFiche'   => count($metier->getFichesMetiers()),
             ];
             $results[] = $entry;
@@ -74,7 +76,7 @@ class RessourceRhController extends AbstractActionController {
             return $a['metier'] < $b['metier'];
         });
 
-        $headers = ['Famille', 'Domaine', 'Fonction', 'Metier', '#Fiche'];
+        $headers = ['Famille', 'Domaine', 'Fonction', 'Metier', 'Emploi-type', '#Fiche'];
 
         $today = new DateTime();
 

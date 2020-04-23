@@ -9,6 +9,8 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 class Metier implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+    const Prefix_REFERENS = "https://data.enseignementsup-recherche.gouv.fr/pages/fiche_emploi_type_referens_iii_itrf/?refine.referens_id=";
+
     /** @var integer */
     private $id;
     /** @var string */
@@ -18,6 +20,8 @@ class Metier implements HistoriqueAwareInterface {
     private $domaine;
     /** @var string */
     private $fonction;
+    /** @var string */
+    private $emploiType;
     /** @var string */
     private $lien;
 
@@ -87,6 +91,24 @@ class Metier implements HistoriqueAwareInterface {
     public function setDomaine($domaine)
     {
         $this->domaine = $domaine;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmploiType()
+    {
+        return $this->emploiType;
+    }
+
+    /**
+     * @param string $emploiType
+     * @return Metier
+     */
+    public function setEmploiType(string $emploiType)
+    {
+        $this->emploiType = $emploiType;
         return $this;
     }
 

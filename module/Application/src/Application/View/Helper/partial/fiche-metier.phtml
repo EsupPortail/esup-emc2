@@ -11,6 +11,7 @@ use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\Formation;
+use Application\Entity\Db\Metier;
 
 /**
  * @var FicheMetier $fichemetier
@@ -18,6 +19,7 @@ use Application\Entity\Db\Formation;
  */
 
 
+$metier = $fichemetier->getMetier();
 /**
  * @var FicheMetierTypeActivite[] $activites
  */
@@ -41,13 +43,19 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         <div class="col-md-8">
             <h1 class="page-header">
                 Fiche métier #<?php echo $fichemetier->getId(); ?> <br/>
-                <em><?php echo $fichemetier->getMetier()->getLibelle(); ?></em>
+                <em><?php echo $metier->getLibelle(); ?></em>
             </h1>
 
-            <?php if ($fichemetier->getMetier() AND $fichemetier->getMetier()->getLien()) : ?>
+            <?php if ($metier AND ($metier->getEmploiType() !== null OR $metier->getLien())) : ?>
                 <dl class="dl-horizontal">
                     <dt> Lien REFERENS </dt>
-                    <dd> <a href="<?php echo $fichemetier->getMetier()->getLien(); ?>"><?php echo $fichemetier->getMetier()->getLien(); ?></a></dd>
+                    <dd>
+                        <?php if ($metier->getEmploiType()): ?>
+                            <a href="<?php echo Metier::Prefix_REFERENS . $metier->getEmploiType() ?>"> Emploi-type <?php echo $metier->getEmploiType(); ?></a>
+                        <?php else: ?>
+                            <a href="<?php echo $metier->getLien(); ?>"><?php echo $metier->getLien(); ?></a>
+                        <?php endif; ?>
+                    </dd>
                 </dl>
             <?php endif; ?>
         </div>
@@ -155,7 +163,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         foreach($fichemetier->getCompetences() as $competence) {
             if ($ficheposte === null) {
                 $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
-                $dictionnaireCompetence[$competence->getId()]['source'][]  = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+                $dictionnaireCompetence[$competence->getId()]['source'][]  = 'fiche|'. $metier->getLibelle();
             }
             else {
                 $conservees = $ficheposte->getCompetencesRetirees();
@@ -169,7 +177,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
                 }
                 if ($found === null) {
                     $dictionnaireCompetence[$competence->getId()]['competence'] = $competence;
-                    $dictionnaireCompetence[$competence->getId()]['source'][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+                    $dictionnaireCompetence[$competence->getId()]['source'][] = 'fiche|'. $metier->getLibelle();
                 }
             }
         }
@@ -222,7 +230,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         <?php
         $dictionnaireApplication = [];
         foreach($fichemetier->getApplications() as $application) {
-            if ($ficheposte === null) $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+            if ($ficheposte === null) $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $metier->getLibelle();
             else {
                 $conservees = $ficheposte->getApplicationsRetirees();
                 $found = null;
@@ -234,7 +242,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
                     }
                 }
                 if ($found === null) {
-                    $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+                    $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $metier->getLibelle();
                 }
             }
         }
@@ -302,7 +310,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         <?php
         $dictionnaireFormation = [];
         foreach($fichemetier->getFormations() as $formation) {
-            if ($ficheposte === null) $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+            if ($ficheposte === null) $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $metier->getLibelle();
             else {
                 $conservees = $ficheposte->getFormationsRetirees();
                 $found = null;
@@ -314,7 +322,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
                     }
                 }
                 if ($found === null) {
-                    $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $fichemetier->getMetier()->getLibelle();
+                    $dictionnaireFormation[$formation->getLibelle()][] = 'fiche|'. $metier->getLibelle();
                 }
             }
         }

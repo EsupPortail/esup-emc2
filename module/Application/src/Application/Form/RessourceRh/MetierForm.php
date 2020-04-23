@@ -61,6 +61,17 @@ class MetierForm extends Form {
         // lien
         $this->add([
             'type' => Text::class,
+            'name' => 'emploi-type',
+            'options' => [
+                'label' => "Emploi-Type Referens :",
+            ],
+            'attributes' => [
+                'id' => 'emploi-type',
+            ],
+        ]);
+        // lien
+        $this->add([
+            'type' => Text::class,
             'name' => 'lien',
             'options' => [
                 'label' => "Lien vers Referens :",
@@ -90,6 +101,7 @@ class MetierForm extends Form {
             'fonction'          => [ 'required' => true,  ],
             'domaine'           => [ 'required' => true,  ],
             'libelle'           => [ 'required' => true,  ],
+            'emploi-type'       => [ 'required' => false, ],
             'lien'              => [ 'required' => false, ],
         ]));
     }
