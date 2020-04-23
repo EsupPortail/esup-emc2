@@ -121,10 +121,13 @@ class FichePosteService {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
             ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+            ->addSelect('agentmission')->leftJoin('agent.missionsSpecifiques', 'agentmission')
+            ->addSelect('mission')->leftJoin('agentmission.mission', 'mission')
 
             ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
             ->addSelect('poste_domaine')        ->leftJoin('poste.domaine', 'poste_domaine')
             ->addSelect('poste_structure')      ->leftJoin('poste.structure', 'poste_structure')
+            ->addSelect('poste_structure_t')    ->leftJoin('poste_structure.type', 'poste_structure_t')
             ->addSelect('poste_correspondance') ->leftJoin('poste.correspondance', 'poste_correspondance')
             ->addSelect('poste_responsable')    ->leftJoin('poste.rattachementHierarchique', 'poste_responsable')
 
@@ -139,10 +142,14 @@ class FichePosteService {
             //activite
             ->addSelect('ftActivite')->leftJoin('fichemetier.activites', 'ftActivite')
             ->addSelect('activite')->leftJoin('ftActivite.activite', 'activite')
+            ->addSelect('aLibelle')->leftJoin('activite.libelles', 'aLibelle')
             ->addSelect('aApplication')->leftJoin('activite.applications', 'aApplication')
             ->addSelect('aCompetence')->leftJoin('activite.competences', 'aCompetence')
             ->addSelect('aFormation')->leftJoin('activite.formations', 'aFormation')
             ->addSelect('aDescription')->leftJoin('activite.descriptions', 'aDescription')
+
+            ->addSelect('expertise')->leftJoin('fiche.expertises', 'expertise')
+            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
             ->andWhere('fiche.id = :id')
             ->setParameter('id', $id)
         ;

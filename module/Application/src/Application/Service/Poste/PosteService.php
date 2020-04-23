@@ -65,6 +65,7 @@ class PosteService {
     public function createQueryBuilder($champ = 'id', $ordre = 'ASC') {
         $qb = $this->getEntityManager()->getRepository(Poste::class)->createQueryBuilder('poste')
             ->addSelect('structure')->join('poste.structure', 'structure')
+            ->addSelect('structure_t')    ->leftJoin('structure.type', 'structure_t')
             ->addSelect('correspondance')->join('poste.correspondance', 'correspondance')
             ->addSelect('responsable')->join('poste.rattachementHierarchique', 'responsable')
             ->addSelect('domaine')->join('poste.domaine', 'domaine')

@@ -97,7 +97,10 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
             </thead>
             <tbody>
             <?php $cumulDecharge = 0; ?>
-            <?php foreach ($agent->getMissionsSpecifiques() as $mission) : ?>
+            <?php
+                /** @var AgentMissionSpecifique $mission */
+            foreach ($agent->getMissionsSpecifiques() as $mission) :
+            ?>
             <tr
                 <?php if (!$mission->estEnCours()) : ?>
                     class="historise"
