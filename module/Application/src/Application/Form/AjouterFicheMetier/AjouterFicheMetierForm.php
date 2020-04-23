@@ -111,15 +111,22 @@ class AjouterFicheMetierForm extends Form {
     private function generateFicheTypeOptions()
     {
         $options = [];
-        $domaines = $this->getDomaineService()->getDomaines();
-        foreach ($domaines as $domaine) {
-            $fiches = $this->getFicheMetierService()->getFicheByDomaine($domaine);
+        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
+
+        $dictionnaire = [];
+        foreach ($fichesMetiers as $ficheMetier) {
+            $domaine = $ficheMetier->getMetier()->getDomaine();
+            $dictionnaire[($domaine)?$domaine->getLibelle():"Sans domaine"][] = $ficheMetier;
+        }
+
+        ksort($dictionnaire);
+        foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
-            foreach ($fiches as $fiche) {
+            foreach ($listing as $fiche) {
                 $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle();
             }
             $array = [
-                'label' => $domaine->getLibelle(),
+                'label' => $clef,
                 'options' => $optionsoptions,
             ];
             $options[] = $array;

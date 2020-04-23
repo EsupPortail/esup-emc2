@@ -119,6 +119,30 @@ class FichePosteService {
     public function getFichePoste($id)
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+
+            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+            ->addSelect('poste_domaine')        ->leftJoin('poste.domaine', 'poste_domaine')
+            ->addSelect('poste_structure')      ->leftJoin('poste.structure', 'poste_structure')
+            ->addSelect('poste_correspondance') ->leftJoin('poste.correspondance', 'poste_correspondance')
+            ->addSelect('poste_responsable')    ->leftJoin('poste.rattachementHierarchique', 'poste_responsable')
+
+
+            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+            ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
+            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
+            ->addSelect('domaine')->leftJoin('metier.domaine', 'domaine')
+//            ->addSelect('fmApplication')->join('fichemetier.applications', 'fmApplication')
+//            ->addSelect('fmCompetence')->join('fichemetier.competences', 'fmCompetence')
+//            ->addSelect('fmFormation')->join('fichemetier.formations', 'fmFormation')
+            //activite
+            ->addSelect('ftActivite')->leftJoin('fichemetier.activites', 'ftActivite')
+            ->addSelect('activite')->leftJoin('ftActivite.activite', 'activite')
+            ->addSelect('aApplication')->leftJoin('activite.applications', 'aApplication')
+            ->addSelect('aCompetence')->leftJoin('activite.competences', 'aCompetence')
+            ->addSelect('aFormation')->leftJoin('activite.formations', 'aFormation')
+            ->addSelect('aDescription')->leftJoin('activite.descriptions', 'aDescription')
             ->andWhere('fiche.id = :id')
             ->setParameter('id', $id)
         ;

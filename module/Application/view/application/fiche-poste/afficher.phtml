@@ -117,10 +117,10 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
         </div>
     </div>
 
-    <!-- EXPERTISES LIEES A LA FICHE DE POSTE ----------------------------------------------------------------------------->
+    <!-- EXPERTISES LIEES A LA FICHE DE POSTE ------------------------------------------------------------------------->
     <?php echo $this->partial('partial/expertise', ['fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
 
-    <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
+    <!-- SPECIFICITE DU POSTE ----------------------------------------------------------------------------------------->
     <?php echo $this->partial('partial/specificite', ['fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
 
 <?php endif; ?>

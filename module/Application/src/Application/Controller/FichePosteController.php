@@ -3,17 +3,11 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\ActiviteDescription;
-use Application\Entity\Db\Application;
-use Application\Entity\Db\Competence;
 use Application\Entity\Db\Expertise;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
-use Application\Entity\Db\FicheposteApplicationRetiree;
-use Application\Entity\Db\FicheposteCompetenceRetiree;
-use Application\Entity\Db\FicheposteFormationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
-use Application\Entity\Db\Formation;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierAgent\AssocierAgentForm;
@@ -183,7 +177,7 @@ class FichePosteController extends AbstractActionController {
 
         return new ViewModel([
             'title' => $titre,
-           'fiche' => $fiche,
+            'fiche' => $fiche,
             'applications' => $applications,
             'competences' => $competences,
             'formations' => $formations,
@@ -375,7 +369,6 @@ class FichePosteController extends AbstractActionController {
             'form' => $form,
         ]);
         return $vm;
-
     }
 
     /** FICHE METIER **************************************************************************************************/
