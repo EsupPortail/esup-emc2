@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @see \Application\Controller\FichePosteController::afficherAction()
  * @var FichePoste $fiche
  */
 
@@ -89,6 +90,17 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
         <?php echo $this->ficheMetierExterne($ficheType, ['mode' => 'affichage']);  ?>
     <?php endforeach; ?>
 
+    <!-- REGROUPE DES COMPETENCES, APPLICATIONS ET DES FORMATIONS ----------------------------------------------------->
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>Parcours de formation pour la prise de poste</h2>
+        </div>
+        <div class="panel-body">
+            <?php echo $this->partial('partial/competences',  ['fiche' => $fiche, 'competences' => $competences,   'mode' => 'affichage'], [], true); ?>
+            <?php echo $this->partial('partial/applications', ['fiche' => $fiche, 'applications' => $applications, 'mode' => 'affichage'], [], true); ?>
+            <?php echo $this->partial('partial/formations',   ['fiche' => $fiche, 'formations' => $formations,     'mode' => 'affichage'], [], true); ?>
+        </div>
+    </div>
     <!-- GRAPH ------------------------------------------------------------------------------------------------------------>
 
     <div class="row">

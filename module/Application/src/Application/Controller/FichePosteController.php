@@ -174,9 +174,18 @@ class FichePosteController extends AbstractActionController {
         }
         $titre .= '</strong>';
 
+        /** @var DateTime $date */
+        $date = $this->getDateTime();
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $date);
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $date);
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
+
         return new ViewModel([
             'title' => $titre,
            'fiche' => $fiche,
+            'applications' => $applications,
+            'competences' => $competences,
+            'formations' => $formations,
         ]);
     }
 
