@@ -9,6 +9,14 @@
 
 use Application\Entity\Db\FichePoste;
 
+$listings = [];
+$listings["Connaissances"] = [];
+$listings["Opérationnelles"] = [];
+$listings["Comportementales"] = [];
+
+foreach ($competences as $item) {
+    $listings[$item['object']->getType()->getLibelle()][] = $item;
+}
 ?>
 
 
@@ -17,19 +25,23 @@ use Application\Entity\Db\FichePoste;
         method="post"
 >
 
-    <?php foreach ($competences as $item) : ?>
-        <div class="checkbox">
-            <label>
-                <input
-                        type="checkbox"
-                        id="<?php echo $item['object']->getId(); ?>"
-                        name="<?php echo $item['object']->getId(); ?>"
-                    <?php if ($item['conserve']) echo "checked"; ?>
-                />
-                <?php echo $item['object']->getLibelle(); ?>
-            </label>
-        </div>
+    <?php foreach ($listings as $key => $items) : ?>
+        <h3> <?php echo $key; ?> </h3>
+        <?php foreach ($items as $item) : ?>
+            <div class="checkbox">
+                <label>
+                    <input
+                            type="checkbox"
+                            id="<?php echo $item['object']->getId(); ?>"
+                            name="<?php echo $item['object']->getId(); ?>"
+                        <?php if ($item['conserve']) echo "checked"; ?>
+                    />
+                    <?php echo $item['object']->getLibelle(); ?>
+                </label>
+            </div>
+        <?php endforeach; ?>
     <?php endforeach; ?>
+
 
     <input type="submit" class="btn btn-primary action" value="Enregistrer"/>
 </form>

@@ -16,6 +16,14 @@ foreach ($competences as $item) {
     if ($item["conserve"] === true) $cCompetences[] = $item;
 }
 
+$listings = [];
+$listings["Connaissances"] = [];
+$listings["Opérationnelles"] = [];
+$listings["Comportementales"] = [];
+
+foreach ($cCompetences as $item) {
+    $listings[$item['object']->getType()->getLibelle()][] = $item;
+}
 ?>
 
 <div class="panel panel-info">
@@ -23,7 +31,7 @@ foreach ($competences as $item) {
         <div class="row">
             <div class="col-md-11">
                 <h2>
-                    Competences
+                    Compétences
                     <span class="badge">
                         <?php echo count($cCompetences); ?>
                     </span>
@@ -40,24 +48,27 @@ foreach ($competences as $item) {
         </div>
     </div>
     <div class="panel-body">
-        <ul>
-            <?php foreach ($cCompetences as $item) : ?>
-                <li>
-                    <?php echo $item["object"]->getLibelle(); ?>
-                    <?php foreach ($item["raison"] as $raison) : ?>
-                        <?php if ($raison instanceof  FicheMetier) : ?>
-                            <span class="fiche-metier" title="<?php echo $raison->getMetier()->getLibelle(); ?>">
-                                F
-                            </span>
-                        <?php endif; ?>
-                        <?php if ($raison instanceof  Activite) : ?>
-                            <span class="activite" title="<?php echo $raison->getLibelle(); ?>">
-                                A
-                            </span>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <?php foreach ($listings as $key => $items) : ?>
+            <h3> <?php echo $key; ?> </h3>
+            <ul>
+                <?php foreach ($items as $item) : ?>
+                    <li>
+                        <?php echo $item["object"]->getLibelle(); ?>
+                        <?php foreach ($item["raison"] as $raison) : ?>
+                            <?php if ($raison instanceof  FicheMetier) : ?>
+                                <span class="fiche-metier" title="<?php echo $raison->getMetier()->getLibelle(); ?>">
+                                    F
+                                </span>
+                            <?php endif; ?>
+                            <?php if ($raison instanceof  Activite) : ?>
+                                <span class="activite" title="<?php echo $raison->getLibelle(); ?>">
+                                    A
+                                </span>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endforeach; ?>
     </div>
 </div>
