@@ -121,8 +121,14 @@ class FichePosteService {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
             ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+            ->addSelect('agentgrade')->leftJoin('agent.grades', 'agentgrade')
+            ->addSelect('grade')->leftJoin('agentgrade.grade', 'grade')
+            ->addSelect('corps')->leftJoin('agentgrade.corps', 'corps')
+            ->addSelect('correspondance')->leftJoin('agentgrade.bap', 'correspondance')
+
             ->addSelect('agentmission')->leftJoin('agent.missionsSpecifiques', 'agentmission')
             ->addSelect('mission')->leftJoin('agentmission.mission', 'mission')
+            ->addSelect('m_structure')->leftJoin('agentmission.structure', 'm_structure')
 
             ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
             ->addSelect('poste_domaine')        ->leftJoin('poste.domaine', 'poste_domaine')

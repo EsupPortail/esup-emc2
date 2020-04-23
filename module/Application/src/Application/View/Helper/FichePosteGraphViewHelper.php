@@ -41,23 +41,23 @@ class FichePosteGraphViewHelper extends AbstractHelper {
         $nbApplicationsConservees = 0;
         $nbApplications = count($dictionnaires["applications"]);
         foreach ($dictionnaires["applications"] as $item) if ($item["conserve"] === true) $nbApplicationsConservees++;
-        $data['Applications'] = $nbApplicationsConservees / $nbApplications * 100;
+        $data['Applications'] = ($nbApplications !== 0) ? $nbApplicationsConservees / $nbApplications * 100 : 0;
 
         $nbCompetencesConservees = 0;
         $nbCompetences = count($dictionnaires["competences"]);
         foreach ($dictionnaires["competences"] as $item) if ($item["conserve"] === true) $nbCompetencesConservees++;
-        $data['Compétences'] = $nbCompetencesConservees / $nbCompetences * 100;
+        $data['Compétences'] = ($nbCompetences !== 0) ? $nbCompetencesConservees / $nbCompetences * 100 : 0;
 
         $nbFormationsConservees = 0;
         $nbFormations = count($dictionnaires["formations"]);
         foreach ($dictionnaires["formations"] as $item) if ($item["conserve"] === true) $nbFormationsConservees++;
-        $data['Formations'] = $nbFormationsConservees / $nbFormations * 100;
+        $data['Formations'] = ($nbFormations !== 0) ? $nbFormationsConservees / $nbFormations * 100 : 0;
 
         /** Activites *************************************************************************************************/
         $nbActivitesConservees = 0;
         $nbActivites = count($dictionnaires["activites"]);
         foreach ($dictionnaires["activites"] as $item) if ($item["conserve"] === true) $nbActivitesConservees++;
-        $data['Activités'] = $nbActivitesConservees / $nbActivites * 100;
+        $data['Activités'] = ($nbActivites !== 0) ?$nbActivitesConservees / $nbActivites * 100 : 0;
 
         foreach ($dictionnaires["activites"] as $item) {
             if ($item["conserve"] === true) {
