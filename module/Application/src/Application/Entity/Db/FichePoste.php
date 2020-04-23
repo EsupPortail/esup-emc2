@@ -353,38 +353,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
     /** Fonctions pour simplifier  */
 
     /**
-     * //TODO update avec le retour historisation complete
-     * @param DateTime $date
-     * @return Formation[]
-     */
-    public function getActivites(DateTime $date)
-    {
-        $dictionnaire = [];
-        /** @var  FicheTypeExterne $fichesMetier */
-        foreach ($this->getFichesMetiers() as $fichesMetier) {
-            foreach($fichesMetier->getFicheType()->getActivites() as $activite) {
-                $dictionnaire[$activite->getId()] = $activite;
-            }
-        }
-        return $dictionnaire;
-    }
-
-    public function getActivitesConservees(DateTime $date)
-    {
-        $dictionnaire = [];
-        /** @var  FicheTypeExterne $fichesMetier */
-        foreach ($this->getFichesMetiers() as $fichesMetier) {
-            $activitesArray = explode(";", $fichesMetier->getActivites());
-            foreach ($fichesMetier->getFicheType()->getActivites() as $activite) {
-                if (array_search($activite->getId(), $activitesArray) !== false) {
-                    $dictionnaire[$activite->getId()] = $activite;
-                }
-            }
-        }
-        return $dictionnaire;
-    }
-
-    /**
      * @param FicheMetierTypeActivite $activite
      * @param DateTime $date
      * @return ActiviteDescription[]

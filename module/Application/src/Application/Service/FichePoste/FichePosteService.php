@@ -408,6 +408,37 @@ class FichePosteService {
         return false;
     }
 
+    /** Dictionnaires associés aux fiches de poste ********************************************************************/
+
+    /**
+     * @param FichePoste $fiche
+     * @param DateTime $date
+     * @return array
+     */
+    public function getActivitesDictionnaires(FichePoste $fiche, DateTime $date) {
+
+        $dictionnaire = [];
+
+        /** Recuperation des fiches metiers */
+        foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $fichesMetiers[] = $ficheMetier;
+            $activitesId = explode(';',$ficheTypeExterne->getActivites());
+            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getActivite()->getId();
+                $dictionnaire[$id]["object"] = $metierTypeActivite; //TODO voir si pertinent
+                $dictionnaire[$id]["conserve"] = (array_search($id, $activitesId) !== false);
+            }
+        }
+
+        return $dictionnaire;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @param DateTime $date
+     * @return array
+     */
     public function getApplicationsDictionnaires(FichePoste $fiche, DateTime $date)
     {
         $dictionnaire = [];
@@ -456,6 +487,11 @@ class FichePosteService {
         return $dictionnaire;
     }
 
+    /**
+     * @param FichePoste $fiche
+     * @param DateTime $date
+     * @return array
+     */
     public function getFormationsDictionnaires(FichePoste $fiche, DateTime $date)
     {
         $dictionnaire = [];
@@ -504,6 +540,11 @@ class FichePosteService {
         return $dictionnaire;
     }
 
+    /**
+     * @param FichePoste $fiche
+     * @param DateTime $date
+     * @return array
+     */
     public function getCompetencesDictionnaires(FichePoste $fiche, DateTime $date)
     {
         $dictionnaire = [];

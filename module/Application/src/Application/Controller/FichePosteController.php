@@ -179,6 +179,7 @@ class FichePosteController extends AbstractActionController {
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $date);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $date);
         $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
+        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche, $date);
 
         return new ViewModel([
             'title' => $titre,
@@ -186,6 +187,7 @@ class FichePosteController extends AbstractActionController {
             'applications' => $applications,
             'competences' => $competences,
             'formations' => $formations,
+            'activites' => $activites,
         ]);
     }
 
@@ -204,6 +206,7 @@ class FichePosteController extends AbstractActionController {
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $date);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $date);
         $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
+        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche, $date);
 
         return new ViewModel([
             'fiche' => $fiche,
@@ -211,6 +214,7 @@ class FichePosteController extends AbstractActionController {
             'applications' => $applications,
             'competences' => $competences,
             'formations' => $formations,
+            'activites' => $activites,
         ]);
     }
 

@@ -101,14 +101,19 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
             <?php echo $this->partial('partial/formations',   ['fiche' => $fiche, 'formations' => $formations,     'mode' => 'affichage'], [], true); ?>
         </div>
     </div>
-    <!-- GRAPH ------------------------------------------------------------------------------------------------------------>
+
+    <!-- GRAPH -------------------------------------------------------------------------------------------------------->
 
     <div class="row">
         <div class="col-md-6">
-            <?php echo $this->fichePosteGraph($fiche, 'radar', $date); ?>
+            <?php echo $this->fichePosteGraph($fiche,
+                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
+                'radar', $date); ?>
         </div>
         <div class="col-md-6">
-            <?php echo $this->fichePosteGraph($fiche, 'bar', $date); ?>
+            <?php echo $this->fichePosteGraph($fiche,
+                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
+                'bar', $date); ?>
         </div>
     </div>
 
