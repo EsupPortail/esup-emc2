@@ -42,12 +42,12 @@ class FicheMetierControllerFactory {
          * @var FormationsForm $formationsForm
          * @var GererCompetenceForm $gererCompetenceForm
          */
-        $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
+        $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class); //2 ?
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
-        $activiteExistanteForm = $container->get('FormElementManager')->get(ActiviteExistanteForm::class);
-        $applicationsForm = $container->get('FormElementManager')->get(ApplicationsForm::class);
+        $activiteExistanteForm = $container->get('FormElementManager')->get(ActiviteExistanteForm::class); //2 ?
+        $applicationsForm = $container->get('FormElementManager')->get(ApplicationsForm::class); //2 ?
         $formationsForm = $container->get('FormElementManager')->get(FormationsForm::class);
-        $gererCompetenceForm = $container->get('FormElementManager')->get(GererCompetenceForm::class);
+        $gererCompetenceForm = $container->get('FormElementManager')->get(GererCompetenceForm::class); //2?
 
         /* @var PhpRenderer $renderer  */
         $renderer = $container->get('ViewRenderer');

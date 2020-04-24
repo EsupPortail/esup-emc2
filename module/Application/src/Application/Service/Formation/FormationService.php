@@ -5,12 +5,8 @@ namespace Application\Service\Formation;
 use Application\Entity\Db\Formation;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationService {
@@ -80,9 +76,11 @@ class FormationService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
-            ->addSelect('modificateur')->leftJoin('formation.histoModificateur', 'modificateur')
+            ->addSelect('createur')->join('formation.histoCreateur', 'createur')
+            ->addSelect('modificateur')->join('formation.histoModificateur', 'modificateur')
+            ->addSelect('destructeur')->leftjoin('formation.histoDestructeur', 'destructeur')
             ->addSelect('theme')->leftJoin('formation.theme', 'theme')
-            ->andWhere('formation.histoDestruction IS NULL');
+        ;
         return $qb;
     }
 
@@ -101,26 +99,12 @@ class FormationService {
     }
 
     /**
-     * @param string $champ
-     * @param string $order
-     * @return Formation[]
-     */
-    private function getFormationsSansThemes($champ = 'libelle', $order = 'ASC')
-    {
-        $qb = $this->createQueryBuilder()
-            ->orderBy('formation.'.$champ, $order)
-            ->andWhere('formation.theme IS NULL')
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
      * @param int $id
      * @return Formation
      */
     public function getFormation($id)
     {
+        if ($id === null) return null;
         $qb = $this->createQueryBuilder()
             ->andWhere('formation.id = :id')
             ->setParameter('id', $id)
@@ -191,36 +175,28 @@ class FormationService {
      */
     public function getFormationsThemesAsGroupOptions()
     {
-        $themes = $this->getFormationThemeService()->getFormationsThemes();
-        $sanstheme = $this->getFormationsSansThemes();
+        $formations = $this->getFormations();
+        $dictionnaire = [];
+        foreach ($formations as $formation) {
+            $libelle = ($formation->getTheme()) ? $formation->getTheme()->getLibelle() : "Sans Thèmes";
+            $dictionnaire[$libelle][] = $formation;
+        }
+        ksort($dictionnaire);
+
         $options = [];
-
-        foreach ($themes as $theme) {
+        foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
-            foreach ($theme->getFormations() as $formation) {
+            usort($listing, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+
+            foreach ($listing as $formation) {
                 $optionsoptions[$formation->getId()] = $formation->getLibelle();
             }
-            asort($optionsoptions);
-            $array = [
-                'label' => $theme->getLibelle(),
+
+            $options[] = [
+                'label' => $clef,
                 'options' => $optionsoptions,
             ];
-            $options[] = $array;
         }
-
-        if (!empty($sanstheme)) {
-            $optionsoptions = [];
-            foreach ($sanstheme as $formation) {
-                $optionsoptions[$formation->getId()] = $formation->getLibelle();
-            }
-            asort($optionsoptions);
-            $array = [
-                'label' => "Sans thème",
-                'options' => $optionsoptions,
-            ];
-            $options[] = $array;
-        }
-
         return $options;
     }
 }

@@ -132,9 +132,7 @@ class MetierService {
     public function getMetiersTypesAsMultiOptions(bool $historiser = false)
     {
         /** @var Metier[] $metiers */
-        $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->orderBy('metier.libelle', 'ASC');
-        $metiers = $qb->getQuery()->getResult();
+        $metiers = $this->getMetiers();
 
         $vide = [];
         $result = [];

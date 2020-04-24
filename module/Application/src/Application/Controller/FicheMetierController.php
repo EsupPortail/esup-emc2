@@ -21,6 +21,8 @@ use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use Mpdf\MpdfException;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
@@ -93,7 +95,11 @@ class FicheMetierController extends  AbstractActionController{
 
         $metier = $fiche->getMetier();
         $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_". str_replace(" ","_",$metier->getLibelle()).'.pdf';
-        $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $metier->getEmploiType());
+        try {
+            $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $metier->getEmploiType());
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0 , $e);
+        }
         $exporter->export($filemane);
         exit;
     }

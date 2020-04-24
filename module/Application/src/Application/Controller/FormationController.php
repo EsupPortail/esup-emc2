@@ -16,6 +16,7 @@ class FormationController extends AbstractActionController
 {
     use FormationServiceAwareTrait;
     use FormationThemeServiceAwareTrait;
+
     use FormationFormAwareTrait;
     use FormationThemeFormAwareTrait;
 

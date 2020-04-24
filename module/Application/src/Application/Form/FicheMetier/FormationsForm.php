@@ -20,7 +20,6 @@ class FormationsForm extends Form {
             'options' => [
                 'label' => "Formations associées :",
                 'empty_option' => "Sélectionner la ou les formations ...",
-//                'value_options' => $this->getFormationService()->getFormationsAsOptions(),
                 'value_options' => $this->getFormationService()->getFormationsThemesAsGroupOptions(),
             ],
             'attributes' => [

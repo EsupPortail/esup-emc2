@@ -28,6 +28,8 @@ class CompetenceController extends AbstractActionController {
         $competencesByType = [];
         $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
+        $competences = $this->getCompetenceService()->getCompetences();
+
 
         foreach ($types as $type) {
             $competences = $this->getCompetenceService()->getCompetencesByType($type);

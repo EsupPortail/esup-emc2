@@ -101,21 +101,6 @@ class CompetenceService {
     }
 
     /**
-     * @param string $champ
-     * @param string $order
-     * @return Competence[]
-     */
-    public function getCompetencesSansTheme($champ = 'libelle', $order = 'ASC')
-    {
-        $qb = $this->createQueryBuilderForCompetence()
-            ->andWhere('competence.theme IS NULL')
-            ->orderBy('competence.'.$champ, $order)
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
      * @param CompetenceType $type
      * @param string $champ
      * @param string $order
@@ -149,60 +134,6 @@ class CompetenceService {
 
 
     /**
-     * @param Competence $competence
-     * @return array
-     */
-    private function competenceOptionify(Competence $competence) {
-        $this_option = [
-            'value' =>  $competence->getId(),
-            'attributes' => [
-                'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle():"",
-            ],
-            'label' => $competence->getLibelle(),
-        ];
-        return $this_option;
-    }
-
-    /**
-     * @param string $champ
-     * @param string $order
-     * @return array
-     */
-    public function getCompetencesAsGroupOptions($champ = 'libelle', $order = 'ASC')
-    {
-        $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
-        $sanstheme = $this->getCompetencesSansTheme($champ, $order);
-        $options = [];
-
-        foreach ($themes as $theme) {
-            $optionsoptions = [];
-            $competences = $theme->getCompetences();
-            usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
-            foreach ($competences as $competence) {
-                $optionsoptions[] = $this->competenceOptionify($competence);
-            }
-            $array = [
-                'label' => $theme->getLibelle(),
-                'options' => $optionsoptions,
-            ];
-            $options[] = $array;
-        }
-
-        if (!empty($sanstheme)) {
-            $optionsoptions = [];
-            foreach ($sanstheme as $competence) {
-                $optionsoptions[] = $this->competenceOptionify($competence);
-            }
-            $array = [
-                'label' => "Sans thème",
-                'options' => $optionsoptions,
-            ];
-            $options[] = $array;
-        }
-        return $options;
-    }
-
-    /**
      * @param integer $id
      * @return Competence
      */
@@ -232,4 +163,48 @@ class CompetenceService {
         return $competence;
     }
 
+    /**
+     * @return array
+     */
+    public function getCompetencesAsGroupOptions()
+    {
+        $competences = $this->getCompetences();
+        $dictionnaire = [];
+        foreach ($competences as $competence) {
+            $libelle = ($competence->getTheme()) ? $competence->getTheme()->getLibelle() : "Sans Thèmes";
+            $dictionnaire[$libelle][] = $competence;
+        }
+        ksort($dictionnaire);
+
+        $options = [];
+        foreach ($dictionnaire as $clef => $listing) {
+            $optionsoptions = [];
+            usort($listing, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
+
+            foreach ($listing as $competence) {
+                $optionsoptions[$competence->getId()] = $this->competenceOptionify($competence);
+            }
+
+            $options[] = [
+                'label' => $clef,
+                'options' => $optionsoptions,
+            ];
+        }
+        return $options;
+    }
+
+    /**
+     * @param Competence $competence
+     * @return array
+     */
+    private function competenceOptionify(Competence $competence) {
+        $this_option = [
+            'value' =>  $competence->getId(),
+            'attributes' => [
+                'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle():"",
+            ],
+            'label' => $competence->getLibelle(),
+        ];
+        return $this_option;
+    }
 }
