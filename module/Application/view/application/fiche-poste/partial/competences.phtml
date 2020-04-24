@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 
@@ -12,18 +13,28 @@ use Application\Entity\Db\FichePoste;
 
 /** @var  array $cCompetences */
 $cCompetences = [];
-foreach ($competences as $item) {
-    if ($item["conserve"] === true) $cCompetences[] = $item;
+$cCompetences = array_filter($competences, function ($a) { return $a["conserve"];});
+
+$types = [];
+foreach ($cCompetences as $item) {
+    $competence = $item["object"];
+    $type = $competence->getType();
+    $types[$type->getLibelle()] = $type;
 }
 
-$listings = [];
-$listings["Connaissances"] = [];
-$listings["Opérationnelles"] = [];
-$listings["Comportementales"] = [];
+usort($types, function (CompetenceType $a, CompetenceType $b) { return $a->getOrdre() > $b->getOrdre();});
+
+$dictionnaires = [];
+foreach ($types as $type) {
+    $dictionnaires[$type->getLibelle()] = [];
+}
 
 foreach ($cCompetences as $item) {
-    $listings[$item['object']->getType()->getLibelle()][] = $item;
+    $competence = $item["object"];
+    $type = $competence->getType()->getLibelle();
+    $dictionnaires[$type][] = $item;
 }
+
 ?>
 
 <div class="panel panel-info">
@@ -48,7 +59,7 @@ foreach ($cCompetences as $item) {
         </div>
     </div>
     <div class="panel-body">
-        <?php foreach ($listings as $key => $items) : ?>
+        <?php foreach ($dictionnaires as $key => $items) : ?>
             <h3> <?php echo $key; ?> </h3>
             <ul>
                 <?php foreach ($items as $item) : ?>

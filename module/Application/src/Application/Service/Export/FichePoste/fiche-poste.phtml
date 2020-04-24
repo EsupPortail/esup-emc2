@@ -335,11 +335,11 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
                 $dictionnaires[$type->getLibelle()] = [];
             }
 
-        foreach ($cCompetences as $item) {
-            $competence = $item["object"];
-            $type = $competence->getType()->getLibelle();
-            $dictionnaires[$type][] = $competence;
-        }
+            foreach ($cCompetences as $item) {
+                $competence = $item["object"];
+                $type = $competence->getType()->getLibelle();
+                $dictionnaires[$type][] = $competence;
+            }
 
         ?>
 
