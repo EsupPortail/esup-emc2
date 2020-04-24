@@ -538,10 +538,16 @@ class FichePosteController extends AbstractActionController {
     public function exportAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $this->getDateTime());
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $this->getDateTime());
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $this->getDateTime());
 
         $exporter = new FichePostePdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'fiche' => $fiche,
+            'applications' => $applications,
+            'competences' => $competences,
+            'formations' => $formations,
         ]);
         $exporter->export('export.pdf');
         exit;
