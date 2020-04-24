@@ -19,32 +19,19 @@ class CompetenceController extends AbstractActionController {
     use CompetenceServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
+
     use CompetenceFormAwareTrait;
     use CompetenceThemeFormAwareTrait;
     use CompetenceTypeFormAwareTrait;
 
     public function indexAction()
     {
-        $competencesByType = [];
         $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
-        $competences = $this->getCompetenceService()->getCompetences();
-
-
-        foreach ($types as $type) {
-            $competences = $this->getCompetenceService()->getCompetencesByType($type);
-            $competencesByType[] = [
-                'type' => $type,
-                'competences' => $competences,
-            ];
-        }
-        $competencesByType[] = [
-            'type' => null,
-            'competences' => $this->getCompetenceService()->getCompetencesSansType(),
-        ];
+        $array = $this->getCompetenceService()->getCompetencesByTypes();
 
         return new ViewModel([
-            'competencesByType' => $competencesByType,
+            'competencesByType' => $array,
             'themes' => $themes,
             'types' => $types,
         ]);

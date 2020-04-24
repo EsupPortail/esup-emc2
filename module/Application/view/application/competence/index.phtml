@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @see CompetenceController::indexAction()
  * @var CompetenceType[]    $types
  * @var CompetenceTheme[]   $themes
  * @var Competence[]        $competences
@@ -19,14 +20,8 @@ $canModifier    = $this->isAllowed(CompetencePrivileges::getResourceId(Competenc
 $canHistoriser  = $canModifier;
 $canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EFFACER));
 
+$this->headTitle("Index des compétences");
 
-$competencesSansType = [];
-foreach ($competencesByType as $item) {
-    if ($item['type'] === null) {
-        $competencesSansType = $item['competences'];
-        break;
-    }
-}
 ?>
 
 <h1 class="page-header">
@@ -35,11 +30,10 @@ foreach ($competencesByType as $item) {
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <?php foreach ($types as $type) : ?>
+        <?php foreach ($competencesByType as $type => $competences) : ?>
             <?php
-            $libelle = $type->getLibelle();
-            $competences = $type->getCompetences();
-            $clibelle = str_replace("é","e",$type->getLibelle())
+            $libelle = str_replace("é","e",$type);
+            $clibelle = str_replace("é","e",$type);
             ?>
             <li role="<?php echo $libelle; ?>" >
                 <a href="#<?php echo $clibelle; ?>" aria-controls="<?php echo $clibelle; ?>" role="tab" data-toggle="tabz" >
@@ -50,14 +44,6 @@ foreach ($competencesByType as $item) {
                 </a>
             </li>
         <?php endforeach; ?>
-        <li role="sans-type">
-            <a href="#sans-type" aria-controls="sans-type" role="tab" data-toggle="tabz" >
-                Sans type &nbsp;
-                <span class="badge">
-                        <?php echo count($competencesSansType); ?>
-                    </span>
-            </a>
-        </li>
         <li role="type">
             <a href="#type" aria-controls="type" role="tab" data-toggle="tabz">
                 Types &nbsp;

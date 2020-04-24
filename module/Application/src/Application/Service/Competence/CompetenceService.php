@@ -3,7 +3,6 @@
 namespace Application\Service\Competence;
 
 use Application\Entity\Db\Competence;
-use Application\Entity\Db\CompetenceType;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\ORMException;
@@ -101,37 +100,19 @@ class CompetenceService {
     }
 
     /**
-     * @param CompetenceType $type
-     * @param string $champ
-     * @param string $order
-     * @return Competence[]
+     * @return array
      */
-    public function getCompetencesByType($type, $champ = 'libelle', $order = 'ASC')
+    public function getCompetencesByTypes()
     {
-        $qb = $this->createQueryBuilderForCompetence()
-            ->andWhere('type.id = :typeId')
-            ->setParameter('typeId', $type->getId())
-            ->orderBy('competence.'.$champ, $order)
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
+        $competences = $this->getCompetences();
 
-    /**
-     * @param string $champ
-     * @param string $order
-     * @return Competence[]
-     */
-    public function getCompetencesSansType($champ = 'libelle', $order = 'ASC')
-    {
-        $qb = $this->createQueryBuilderForCompetence()
-            ->andWhere('competence.type IS NULL')
-            ->orderBy('competence.'.$champ, $order)
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
+        $array = [];
+        foreach ($competences as $competence) {
+            $libelle = $competence->getType() ? $competence->getType()->getLibelle() : "Sans type";
+            $array[$libelle][] = $competence;
+        }
+        return $array;
     }
-
 
     /**
      * @param integer $id
