@@ -6,18 +6,6 @@ use Application\Controller\FicheMetierController;
 use Application\Controller\FicheMetierControllerFactory;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormFactory;
-use Application\Form\FicheMetier\ApplicationsForm;
-use Application\Form\FicheMetier\ApplicationsFormFactory;
-use Application\Form\FicheMetier\ApplicationsHydrator;
-use Application\Form\FicheMetier\ApplicationsHydratorFactory;
-use Application\Form\FicheMetier\FormationsForm;
-use Application\Form\FicheMetier\FormationsFormFactory;
-use Application\Form\FicheMetier\FormationsHydrator;
-use Application\Form\FicheMetier\FormationsHydratorFactory;
-use Application\Form\FicheMetier\GererCompetenceForm;
-use Application\Form\FicheMetier\GererCompetenceFormFactory;
-use Application\Form\FicheMetier\GererCompetenceHydrator;
-use Application\Form\FicheMetier\GererCompetenceHydratorFactory;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
@@ -337,17 +325,11 @@ return [
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
-            ApplicationsForm::class => ApplicationsFormFactory::class,
-            FormationsForm::class => FormationsFormFactory::class,
-            GererCompetenceForm::class => GererCompetenceFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             LibelleHydrator::class => LibelleHydratorFactory::class,
-            ApplicationsHydrator::class => ApplicationsHydratorFactory::class,
-            FormationsHydrator::class => FormationsHydratorFactory::class,
-            GererCompetenceHydrator::class => GererCompetenceHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

@@ -109,11 +109,11 @@ class FicheMetier implements HistoriqueAwareInterface {
     /** APPLICATION ***************************************************************************************************/
 
     /**
-     * @return ArrayCollection
+     * @return Application[]
      */
     public function getApplications()
     {
-        return $this->applications;
+        return $this->applications->toArray();
     }
 
     /**
@@ -156,11 +156,11 @@ class FicheMetier implements HistoriqueAwareInterface {
     /** COMPETENCE ****************************************************************************************************/
 
     /**
-     * @return ArrayCollection
+     * @return Competence[]
      */
     public function getCompetences()
     {
-        return $this->competences;
+        return $this->competences->toArray();
     }
 
     /**

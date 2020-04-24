@@ -8,13 +8,14 @@ use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
-use Application\Form\FicheMetier\ApplicationsForm;
-use Application\Form\FicheMetier\ApplicationsFormAwareTrait;
-use Application\Form\FicheMetier\FormationsForm;
-use Application\Form\FicheMetier\FormationsFormAwareTrait;
-use Application\Form\FicheMetier\GererCompetenceFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
+use Application\Form\SelectionApplication\SelectionApplicationForm;
+use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
+use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Form\SelectionFormation\SelectionFormationForm;
+use Application\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
@@ -40,10 +41,10 @@ class FicheMetierController extends  AbstractActionController{
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;
-    use ApplicationsFormAwareTrait;
-    use FormationsFormAwareTrait;
     use LibelleFormAwareTrait;
-    use GererCompetenceFormAwareTrait;
+    use SelectionApplicationFormAwareTrait;
+    use SelectionCompetenceFormAwareTrait;
+    use SelectionFormationFormAwareTrait;
 
     use ConfigurationServiceAwareTrait;
 
@@ -325,8 +326,8 @@ class FicheMetierController extends  AbstractActionController{
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
 
-        /** @var ApplicationsForm $form */
-        $form = $this->getApplicationsForm();
+        /** @var SelectionApplicationForm $form */
+        $form = $this->getSelectionApplicationForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -334,12 +335,7 @@ class FicheMetierController extends  AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            //Pourquoi on ne passe pas dans l'hydration quand $data['applications'] est null (bizarrerie du multiple et du bootstrapselet ???);
-            if($data['applications'] === null) $data['applications'] = [];
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-            }
+            $this->getFicheMetierService()->updateApplications($fiche, $data);
         }
 
         $vm = new ViewModel();
@@ -355,8 +351,8 @@ class FicheMetierController extends  AbstractActionController{
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
 
-        /** @var FormationsForm $form */
-        $form = $this->getFormationsForm();
+        /** @var SelectionFormationForm $form */
+        $form = $this->getSelectionFormationForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-formation', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -364,12 +360,7 @@ class FicheMetierController extends  AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            //Pourquoi on ne passe pas dans l'hydration quand $data['applications'] est null (bizarrerie du multiple et du bootstrapselet ???);
-            if($data['formations'] === null) $data['formations'] = [];
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-            }
+            $this->getFicheMetierService()->updateFormations($fiche, $data);
         }
 
         $vm = new ViewModel();
@@ -384,7 +375,9 @@ class FicheMetierController extends  AbstractActionController{
     public function gererCompetencesAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
-        $form = $this->getGererCompetenceForm();
+
+        /** @var SelectionCompetenceForm $form */
+        $form = $this->getSelectionCompetenceForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/gerer-competences',['fiche' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -392,12 +385,7 @@ class FicheMetierController extends  AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            //Pourquoi on ne passe pas dans l'hydration quand $data['applications'] est null (bizarrerie du multiple et du bootstrapselet ???);
-            if($data['competences'] === null) $data['competences'] = [];
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-            }
+            $this->getFicheMetierService()->updateCompetences($fiche, $data);
         }
 
         $vm = new ViewModel();

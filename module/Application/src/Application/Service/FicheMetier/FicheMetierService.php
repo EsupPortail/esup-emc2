@@ -8,9 +8,13 @@ use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Formation;
+use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractController;
 
@@ -18,6 +22,9 @@ class FicheMetierService {
 //    use DateTimeAwareTrait;
 //    use EntityManagerAwareTrait;
 //    use UserServiceAwareTrait;
+    use ApplicationServiceAwareTrait;
+    use CompetenceServiceAwareTrait;
+    use FormationServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -215,6 +222,111 @@ class FicheMetierService {
     public function addFormation(FicheMetier $fiche, Formation $formation, DateTime $date)
     {
         $fiche->addFormation($formation);
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param array $data
+     * @return FicheMetier
+     */
+    public function updateApplications(FicheMetier $fiche, $data)
+    {
+
+        $applicationIds = [];
+        if (isset($data['applications'])) $applicationIds = $data['applications'];
+
+        foreach ($applicationIds as $applicationId) {
+            $application = $this->getApplicationService()->getApplication($applicationId);
+            if (!$fiche->hadApplication($application)) {
+                $fiche->addApplication($application);
+            }
+        }
+
+        $applications = $fiche->getApplications();
+        /** @var Application $application */
+        foreach ($applications as $application) {
+            if (array_search($application->getId(), $applicationIds) === false) {
+                $fiche->removeApplication($application);
+            }
+        }
+
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
+        }
+
+        return $fiche;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param array $data
+     * @return FicheMetier
+     */
+    public function updateFormations(FicheMetier $fiche, $data)
+    {
+
+        $formationIds = [];
+        if (isset($data['formations'])) $formationIds = $data['formations'];
+
+        foreach ($formationIds as $formationId) {
+            $formation = $this->getFormationService()->getFormation($formationId);
+            if (!$fiche->hasFormation($formation)) {
+                $fiche->addFormation($formation);
+            }
+        }
+
+        $formations = $fiche->getFormations();
+        /** @var Formation $formation */
+        foreach ($formations as $formation) {
+            if (array_search($formation->getId(), $formationIds) === false) {
+                $fiche->removeFormation($formation);
+            }
+        }
+
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
+        }
+
+        return $fiche;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param array $data
+     * @return FicheMetier
+     */
+    public function updateCompetences(FicheMetier $fiche, $data)
+    {
+
+        $competenceIds = [];
+        if (isset($data['competences'])) $competenceIds = $data['competences'];
+
+        foreach ($competenceIds as $competenceId) {
+            $competence = $this->getCompetenceService()->getCompetence($competenceId);
+            if (!$fiche->hasCompetence($competence)) {
+                $fiche->addCompetence($competence);
+            }
+        }
+
+        $competences = $fiche->getCompetences();
+        /** @var Competence $competence */
+        foreach ($competences as $competence) {
+            if (array_search($competence->getId(), $competenceIds) === false) {
+                $fiche->removeCompetence($competence);
+            }
+        }
+
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
+        }
+
+        return $fiche;
     }
 
 }

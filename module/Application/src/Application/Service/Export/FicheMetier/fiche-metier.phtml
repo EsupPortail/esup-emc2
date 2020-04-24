@@ -82,7 +82,7 @@ use Application\Entity\Db\Formation;
 
 
 <?php
-$competences = $fiche->getCompetences()->toArray();
+$competences = $fiche->getCompetences();
 usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
 
 $types = [];
@@ -118,7 +118,7 @@ foreach ($competences as $competence) {
 <?php endif; ?>
 
 <?php
-$applications = $fiche->getApplications()->toArray();
+$applications = $fiche->getApplications();
 usort($applications, function (Application $a, Application $b) { return $a->getLibelle() > $b->getLibelle();});
 ?>
 
