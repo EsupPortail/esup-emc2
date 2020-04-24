@@ -53,11 +53,15 @@ class StructureController extends AbstractActionController {
         $selecteur = [];
         if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
             $user = $this->getUserService()->getConnectedUser();
-            $selecteur = $this->getStructureService()->getStructuresByGestionnaire($user);
+            $structures = $this->getStructureService()->getStructuresByGestionnaire($user);
+            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
+            $selecteur = $structures;
         }
         if ($role->getRoleId() === RoleConstant::ADMIN_TECH OR $role->getRoleId() === RoleConstant::ADMIN_FONC OR $role->getRoleId() === RoleConstant::OBSERVATEUR) {
             $unicaen = $this->getStructureService()->getStructure(1);
-            $selecteur = $this->getStructureService()->getSousStructures($unicaen, true);
+            $structures = $this->getStructureService()->getSousStructures($unicaen, true);
+            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
+            $selecteur = array_filter($structures, function (Structure $s) {return ($s->getHisto() === null);});
         }
 
         /** Récupération des structures */
