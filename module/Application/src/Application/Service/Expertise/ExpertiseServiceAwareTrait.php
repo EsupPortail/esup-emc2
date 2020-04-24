@@ -2,8 +2,6 @@
 
 namespace Application\Service\Expertise;
 
-use Application\Entity\Db\Expertise;
-
 trait ExpertiseServiceAwareTrait {
 
     /** @var ExpertiseService */

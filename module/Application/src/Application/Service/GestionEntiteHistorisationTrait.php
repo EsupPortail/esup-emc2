@@ -2,7 +2,6 @@
 
 namespace Application\Service;
 
-use Application\Entity\Db\AgentApplication;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;

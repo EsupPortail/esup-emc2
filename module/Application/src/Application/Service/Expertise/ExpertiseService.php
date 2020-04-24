@@ -74,7 +74,12 @@ class ExpertiseService {
      */
     public function createQueryBuilder()
     {
-        $qb = $this->getEntityManager()->getRepository(Expertise::class)->createQueryBuilder('expertise');
+        $qb = $this->getEntityManager()->getRepository(Expertise::class)->createQueryBuilder('expertise')
+            ->addSelect('createur')->join('expertise.histoCreateur', 'createur')
+            ->addSelect('modificateur')->join('expertise.histoModificateur', 'modificateur')
+            ->addSelect('destructeur')->leftJoin('expertise.histoDestructeur', 'destructeur')
+            ->addSelect('ficheposte')->leftJoin('expertise.$ficheposte', 'ficheposte')
+        ;
         return $qb;
     }
 

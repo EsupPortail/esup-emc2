@@ -8,6 +8,10 @@ use UnicaenUtilisateur\Service\User\UserService;
 
 class ExpertiseServiceFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return ExpertiseService
+     */
     public function __invoke(ContainerInterface $container)
     {
         /**
