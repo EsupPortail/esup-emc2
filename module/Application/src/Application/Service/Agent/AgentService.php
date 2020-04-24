@@ -124,6 +124,7 @@ class AgentService {
      */
     public function getAgent($id)
     {
+        if ($id === null) return null;
         $qb = $this->createQueryBuilder()
             ->andWhere('agent.id = :id')
             ->setParameter('id', $id)
@@ -185,25 +186,6 @@ class AgentService {
             throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$supannId."]");
         }
         return $result;
-
-    }
-
-    /**
-     * @return array
-     */
-    public function getAgentsAsOption()
-    {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->orderBy('agent.nomUsuel, agent.prenom');
-
-        /** @var Agent[] $result */
-        $result = $qb->getQuery()->getResult();
-
-        $agents = [];
-        foreach ($result as $item) {
-            $agents[$item->getId()] = $item->getDenomination();
-        }
-        return $agents;
     }
 
     /**

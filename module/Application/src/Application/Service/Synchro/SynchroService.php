@@ -2,7 +2,6 @@
 
 namespace Application\Service\Synchro;
 
-use Application\Entity\Db\Structure;
 use Application\Entity\Db\SynchroJob;
 use Application\Entity\Db\SynchroLog;
 use Application\Entity\SynchroAwareInterface;
@@ -12,6 +11,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Exception;
+use stdClass;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -144,7 +144,6 @@ class SynchroService {
             $trouver[] = $reference;
 
             //Recuperation de l'entite et de donnée
-            $entityDb = new $entityClass;
             $wsValues = [];
             for($position = 0 ; $position < $nbElement ; $position++) {
                 $valeurDepuisWS = $entityWs->{$wsAttributes[$position]};
@@ -287,7 +286,7 @@ class SynchroService {
         if ($value === null) return "null";
         if (is_string($value)) return "'" . str_replace("'", "''",$value) ."'";
         if ($value instanceof DateTime) return $value->format('Y-m-d H:i:s') . ".000000";
-        if ($value instanceof \stdClass AND $value->date) return "'" .$value->date ."'";
+        if ($value instanceof stdClass AND $value->date) return "'" .$value->date ."'";
         return $value;
     }
 }

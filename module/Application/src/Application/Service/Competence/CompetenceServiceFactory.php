@@ -9,6 +9,10 @@ use UnicaenUtilisateur\Service\User\UserService;;
 
 class CompetenceServiceFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return CompetenceService
+     */
     public function __invoke(ContainerInterface $container)
     {
         /**

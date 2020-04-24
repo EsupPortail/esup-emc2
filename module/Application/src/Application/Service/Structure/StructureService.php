@@ -105,56 +105,6 @@ class StructureService
     }
 
     /**
-     * @param bool $ouverte
-     * @return array
-     */
-    public function getStructuresAsOptions($ouverte = true)
-    {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->orderBy('structure.libelleLong')
-        ;
-        if ($ouverte) $qb = $qb->andWhere("structure.histo IS NULL");
-
-        $result = $qb->getQuery()->getResult();
-
-        $options = [];
-        /** @var Structure $item */
-        foreach ($result as $item) {
-            if ($item->getId() !== null) $options[$item->getId()] = $item->getLibelleLong();
-        }
-        return $options;
-    }
-
-    /**
-     * @param bool $ouverte
-     * @return array
-     */
-    public function getStructuresAsGroupOptions($ouverte = true)
-    {
-        $structures = $this->getStructures($ouverte);
-
-        $dictionnary = [];
-        foreach ($structures as $structure) {
-            $dictionnary[$structure->getType()][] = $structure;
-        }
-
-        $options = [];
-        foreach ($dictionnary as $type => $structuresStored) {
-            $optionsoptions = [];
-            foreach ($structuresStored as $structure) {
-                $optionsoptions[$structure->getId()] = $structure->getLibelleCourt();
-            }
-            asort($optionsoptions);
-            $array = [
-                'label' => $type,
-                'options' => $optionsoptions,
-            ];
-            $options[] = $array;
-        }
-        return $options;
-    }
-
-    /**
      * @param Structure $structure
      * @param User $gestionnaire
      * @return Structure

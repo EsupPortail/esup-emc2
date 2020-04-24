@@ -3,9 +3,7 @@
 /**
  * @see MissionSpecifiqueAffectationController::indexAction()
  *
- * @var array $structures
  * @var array $missions
- * @var array $agents
  *
  * @var Agent $agent
  * @var MissionSpecifique $mission
@@ -37,7 +35,7 @@ $query = ['retour' => $this->url(null,[],
 </h1>
 
 <div class="filter">
-    <?php echo $this->partial('partial/filtre', ['structures' => $structures, 'agents' => $agents, 'missions' => $missions, 'structure' => $structure, 'agent' => $agent, 'mission' => $mission], [], true); ?>
+    <?php echo $this->partial('partial/filtre', ['missions' => $missions, 'structure' => $structure, 'agent' => $agent, 'mission' => $mission], [], true); ?>
 </div>
 
 <div class="main">

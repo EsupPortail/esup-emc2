@@ -56,7 +56,7 @@ class StructureController extends AbstractActionController {
             $selecteur = $this->getStructureService()->getStructuresByGestionnaire($user);
         }
         if ($role->getRoleId() === RoleConstant::ADMIN_TECH OR $role->getRoleId() === RoleConstant::ADMIN_FONC OR $role->getRoleId() === RoleConstant::OBSERVATEUR) {
-            $unicaen = $this->getStructureService()->getStructure(477);
+            $unicaen = $this->getStructureService()->getStructure(1);
             $selecteur = $this->getStructureService()->getSousStructures($unicaen, true);
         }
 

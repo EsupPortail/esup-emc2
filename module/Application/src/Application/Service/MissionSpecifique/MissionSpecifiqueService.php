@@ -104,6 +104,8 @@ class MissionSpecifiqueService {
      * @return MissionSpecifique
      */
     public function getMissionSpecifique($id) {
+
+        if ($id === null) return null;
         $qb = $this->createQueryBuilder()
             ->andWhere('mission.id = :id')
             ->setParameter('id', $id);
