@@ -4,9 +4,10 @@ namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Activite
+class Activite implements HistoriqueAwareInterface
 {
     use HistoriqueAwareTrait;
 

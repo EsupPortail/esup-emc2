@@ -12,19 +12,18 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteService {
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
-    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+//    use DateTimeAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     use ApplicationServiceAwareTrait;
     use CompetenceServiceAwareTrait;
@@ -36,17 +35,9 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function create($activite)
+    public function create(Activite $activite)
     {
-        $activite->updateCreation($this->getUserService());
-        $activite->updateModification($this->getUserService());
-
-        try {
-            $this->getEntityManager()->persist($activite);
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la création en BD', $e);
-        }
+        $this->createFromTrait($activite);
         return $activite;
     }
 
@@ -54,15 +45,9 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function update($activite)
+    public function update(Activite $activite)
     {
-        $activite->updateModification($this->getUserService());
-
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
+        $this->updateFromTrait($activite);
         return $activite;
     }
 
@@ -70,15 +55,9 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function historise($activite)
+    public function historise(Activite $activite)
     {
-        $activite->updateDestructeur($this->getUserService());
-
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
+        $this->historiserFromTrait($activite);
         return $activite;
     }
 
@@ -86,30 +65,20 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function restore($activite)
+    public function restore(Activite $activite)
     {
-        $activite->setHistoDestruction(null);
-        $activite->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
-        }
+        $this->restoreFromTrait($activite);
         return $activite;
     }
 
     /**
      * @param Activite $activite
+     * @return Activite
      */
-    public function delete($activite)
+    public function delete(Activite $activite)
     {
-        try {
-            $this->getEntityManager()->remove($activite);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
-        }
+        $this->deleteFromTrait($activite);
+        return $activite;
     }
 
     /** REQUETES ******************************************************************************************************/
