@@ -78,18 +78,22 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                 <td> <?php echo $fiche->getMetier()->getDomaine(); ?> </td>
                 <td>
                     <?php if ($canVoir) : ?>
-                        <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
+                        <a
+                            <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */?>
+                            href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
                            title="Afficher la fiche métier"
                            class="ajax-modal"
                         >
                             <span class="icon voir"></span></a>
                     <?php endif; ?>
-<!--                    --><?php //if ($canVoir) : ?>
-<!--                        <a href="--><?php //echo $this->url('fiche-metier-type/export', ['id' => $fiche->getId()], [], true); ?><!--"-->
-<!--                           title="Exporter en PDF la fiche métier"-->
-<!--                        >-->
-<!--                            <span class="icon pdf"></span></a>-->
-<!--                    --><?php //endif; ?>
+                    <?php if ($canVoir) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\FicheMetierController::exporterAction() */?>
+                            href="<?php echo $this->url('fiche-metier-type/exporter', ['id' => $fiche->getId()], [], true); ?>"
+                           title="Exporter en PDF la fiche métier"
+                        >
+                            <span class="icon pdf"></span></a>
+                    <?php endif; ?>
                     <?php if ($canEditer) : ?>
                         <a href="<?php echo $this->url('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true); ?>"
                            title="Modifier la fiche metier">
@@ -121,6 +125,15 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     </tbody>
 </table>
 
+    <?php if ($canVoir) : ?>
+        <a class="btn btn-primary action"
+            <?php /** @see \Application\Controller\FicheMetierController::exporterToutesAction() */?>
+                href="<?php echo $this->url('fiche-metier-type/exporter-toutes', ['id' => $fiche->getId()], [], true); ?>"
+                title="Exporter en PDF toutes les fiches métiers"
+        >
+            <span class="icon pdf"></span> Exporter toutes les fiches
+        </a>
+    <?php endif; ?>
 </div>
 
 

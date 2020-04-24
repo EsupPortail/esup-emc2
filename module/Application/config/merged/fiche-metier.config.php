@@ -50,6 +50,8 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                        'exporter',
+                        'exporter-toutes',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AFFICHER,
@@ -156,6 +158,28 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'exporter' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/exporter/:id',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'exporter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'exporter-toutes' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/exporter-toutes',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'exporter-toutes',
                             ],
                         ],
                         'may_terminate' => true,

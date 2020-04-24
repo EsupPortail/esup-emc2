@@ -14,6 +14,7 @@ use Application\Service\Domaine\DomaineService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
+use Zend\View\Renderer\PhpRenderer;
 
 class FicheMetierControllerFactory {
 
@@ -48,8 +49,12 @@ class FicheMetierControllerFactory {
         $formationsForm = $container->get('FormElementManager')->get(FormationsForm::class);
         $gererCompetenceForm = $container->get('FormElementManager')->get(GererCompetenceForm::class);
 
+        /* @var PhpRenderer $renderer  */
+        $renderer = $container->get('ViewRenderer');
+
         /** @var FicheMetierController $controller */
         $controller = new FicheMetierController();
+        $controller->setRenderer($renderer);
 
         $controller->setActiviteService($activiteService);
         $controller->setDomaineService($domaineService);

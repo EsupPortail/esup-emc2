@@ -18,14 +18,18 @@ use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
+use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class FicheMetierController extends  AbstractActionController{
+    use DateTimeAwareTrait;
+
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
     use DomaineServiceAwareTrait;
@@ -40,6 +44,13 @@ class FicheMetierController extends  AbstractActionController{
     use GererCompetenceFormAwareTrait;
 
     use ConfigurationServiceAwareTrait;
+
+    private $renderer;
+
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function indexAction()
     {
@@ -69,6 +80,33 @@ class FicheMetierController extends  AbstractActionController{
             'title' => 'Visualisation d\'une fiche métier',
             'fiche' => $fiche,
         ]);
+    }
+
+    public function exporterAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
+
+        $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
+        $exporter->setVars([
+            'fiche' => $fiche,
+        ]);
+
+        $metier = $fiche->getMetier();
+        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_". str_replace(" ","_",$metier->getLibelle()).'.pdf';
+        $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $metier->getEmploiType());
+        $exporter->export($filemane);
+        exit;
+    }
+
+    public function exporterToutesAction()
+    {
+        $fiches = $this->getFicheMetierService()->getFichesMetiers();
+
+        $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
+        $exporter->setVars([]);
+        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_fiches_metiers.pdf";
+        $exporter->exportAll($fiches, $filemane);
+        exit;
     }
 
     public function editerAction()

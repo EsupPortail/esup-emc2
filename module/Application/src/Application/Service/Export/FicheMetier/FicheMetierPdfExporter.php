@@ -2,6 +2,7 @@
 
 namespace Application\Service\Export\FicheMetier;
 
+use Application\Entity\Db\FicheMetier;
 use UnicaenApp\Exporter\Pdf as PdfExporter;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplatePathStack;
@@ -33,4 +34,25 @@ class FicheMetierPdfExporter extends PdfExporter
         $this->addBodyScript('fiche-metier.phtml', false, $this->vars);
         return PdfExporter::export($filename, $destination, $memoryLimit);
     }
+
+    /**
+     * @param FicheMetier[] $fiches
+     * @param null $filename
+     * @param string $destination
+     * @param null $memoryLimit
+     * @return string
+     */
+    public function exportAll($fiches, $filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null)
+    {
+        $first = true;
+        $this->setHeaderScript('empty.phtml');
+        $this->setFooterScript('empty.phtml');
+        foreach ($fiches as $fiche) {
+            $this->vars["fiche"] = $fiche;
+            $this->addBodyScript('fiche-metier.phtml', !$first, $this->vars);
+            $first = false;
+        }
+        return PdfExporter::export($filename, $destination, $memoryLimit);
+    }
+
 }
