@@ -2,7 +2,6 @@
 
 namespace Application;
 
-use Application\Controller\GestionController;
 use Application\Controller\IndexController;
 use Application\Form\ModifierDescription\ModifierDescriptionForm;
 use Application\Form\ModifierDescription\ModifierDescriptionFormFactory;
@@ -10,14 +9,36 @@ use Application\Form\ModifierDescription\ModifierDescriptionHydrator;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
+use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AdministrationPrivileges;
-use Application\Provider\Privilege\RessourceRhPrivileges;
+use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\ApplicationPrivileges;
+use Application\Provider\Privilege\CompetencePrivileges;
+use Application\Provider\Privilege\ConfigurationPrivileges;
+use Application\Provider\Privilege\CorpsPrivileges;
+use Application\Provider\Privilege\EntretienproPrivileges;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\Provider\Privilege\FichePostePrivileges;
+use Application\Provider\Privilege\FormationPrivileges;
+use Application\Provider\Privilege\MetierPrivileges;
+use Application\Provider\Privilege\MissionspecifiquePrivileges;
+use Application\Provider\Privilege\PostePrivileges;
+use Application\Provider\Privilege\StructurePrivileges;
+use Application\Provider\Privilege\SynchroPrivileges;
+use Application\Provider\Privilege\ValidationPrivileges;
 use Application\View\Helper\ActionIconViewHelper;
+use Autoform\Provider\Privilege\FormulairePrivileges;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Mailing\Provider\Privilege\MailingPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
+use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
+use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenUtilisateur\Service\Role\RoleServiceFactory;
+use UnicaenValidation\Provider\Privilege\ValidationinstancePrivileges;
+use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
 use Zend\Router\Http\Literal;
 
 return [
@@ -27,21 +48,49 @@ return [
                 [
                     'controller' => IndexController::class,
                     'action' => [
-
+                        'index-administration',
+                    ],
+                    'privileges' => [
+                        MailingPrivileges::MAILING_AFFICHER,
+                        FormulairePrivileges::AFFICHER,
+                        SynchroPrivileges::SYNCHRO_AFFICHER,
+                        UtilisateurPrivileges::UTILISATEUR_AFFICHER,
+                        RolePrivileges::ROLE_AFFICHER,
+                        ValidationPrivileges::AFFICHER,
+                        ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER,
+                        PrivilegePrivileges::PRIVILEGE_VOIR,
+                        ConfigurationPrivileges::CONFIGURATION_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
                         'index-ressources',
                     ],
                     'privileges' => [
-                        RessourceRhPrivileges::AFFICHER,
+                        AgentPrivileges::AGENT_INDEX,
+                        ApplicationPrivileges::APPLICATION_INDEX,
+                        CompetencePrivileges::COMPETENCE_INDEX,
+                        CorpsPrivileges::CORPS_INDEX,
+                        MetierPrivileges::METIER_INDEX,
+                        FormationPrivileges::FORMATION_INDEX,
+                        ActivitePrivileges::ACTIVITE_AFFICHER,
+                        ActivitePrivileges::ACTIVITE_INDEX,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_INDEX,
+                        PostePrivileges::POSTE_INDEX,
+                        StructurePrivileges::STRUCTURE_INDEX,
                     ],
                 ],
                 [
                     'controller' => IndexController::class,
                     'action' => [
                         'index-gestion',
-                        'index-administration',
                     ],
                     'privileges' => [
-                        AdministrationPrivileges::ADMINISTRATION_AFFICHER,
+                        EntretienproPrivileges::ENTRETIENPRO_INDEX,
+                        FicheMetierPrivileges::FICHEMETIER_INDEX,
+                        FichePostePrivileges::FICHEPOSTE_INDEX,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_INDEX,
                     ],
                 ],
             ],
@@ -75,26 +124,26 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
-                        'order' => 500,
-                        'label' => 'Ressources',
-                        'title' => "Ressources",
-                        'route' => 'ressource-rh',
-                        'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
-                    ],
                     'gestion' => [
                         'order' => 400,
                         'label' => 'Gestion',
                         'title' => "Gestion des fiches, entretiens et des affectations",
                         'route' => 'gestion',
-                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::ADMINISTRATION_AFFICHER)
+                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-gestion'),
+                    ],
+                    'ressource' => [
+                        'order' => 500,
+                        'label' => 'Ressources',
+                        'title' => "Ressources",
+                        'route' => 'ressource-rh',
+                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-ressources') ,
                     ],
                     'administration' => [
                         'order' => 1000,
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',
-                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::ADMINISTRATION_AFFICHER) ,
+                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-administration') ,
                     ],
                 ],
             ],

@@ -131,7 +131,7 @@ class ConfigurationController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('unicaen-privilege/default/default-form');
         $vm->setVariables([
-            'title' => "Ajout d'unnouveau privilège",
+            'title' => "Ajout d'un nouveau privilège",
             'form' => $form,
         ]);
         return $vm;

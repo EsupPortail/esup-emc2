@@ -6,6 +6,7 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class MissionspecifiquePrivileges extends Privileges
 {
+    const MISSIONSPECIFIQUE_GESTION_INDEX           = 'missionspecifique-missionspecifique_gestion_index';
     const MISSIONSPECIFIQUE_GESTION_AJOUTER         = 'missionspecifique-missionspecifique_gestion_ajouter';
     const MISSIONSPECIFIQUE_GESTION_AFFICHER        = 'missionspecifique-missionspecifique_gestion_afficher';
     const MISSIONSPECIFIQUE_GESTION_MODIFIER        = 'missionspecifique-missionspecifique_gestion_modifier';

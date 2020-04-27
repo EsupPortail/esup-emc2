@@ -6,6 +6,7 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class FormationPrivileges extends Privileges
 {
+    const FORMATION_INDEX = 'formation-formation_index';
     const FORMATION_AFFICHER = 'formation-formation_afficher';
     const FORMATION_DETRUIRE = 'formation-formation_detruire';
     const FORMATION_EDITER = 'formation-formation_editer';

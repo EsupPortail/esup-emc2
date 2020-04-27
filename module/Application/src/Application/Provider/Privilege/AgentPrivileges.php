@@ -13,6 +13,7 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class AgentPrivileges extends Privileges
 {
+    const AGENT_INDEX             = 'agent-agent_index';
     const AGENT_AFFICHER          = 'agent-agent_afficher';
     const AGENT_AJOUTER           = 'agent-agent_ajouter';
     const AGENT_EDITER            = 'agent-agent_editer';
