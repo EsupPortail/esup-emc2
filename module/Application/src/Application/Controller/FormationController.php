@@ -115,8 +115,25 @@ class FormationController extends AbstractActionController
     public function detruireAction()
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
-        $this->getFormationService()->delete($formation);
-        return $this->redirect()->toRoute('formation', [], [], true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFormationService()->delete($formation);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($formation !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la formation [" . $formation->getLibelle() . "]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('formation/detruire', ["formation" => $formation->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     /** FORMATION THEME ***********************************************************************************************/
@@ -200,7 +217,24 @@ class FormationController extends AbstractActionController
     public function detruireThemeAction()
     {
         $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
-        $this->getFormationThemeService()->delete($theme);
-        return $this->redirect()->toRoute('formation', [], [], true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFormationThemeService()->delete($theme);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($theme !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du thème de formation [" . $theme->getLibelle() . "]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('formation-theme/detruire', ["formation-theme" => $theme->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 }

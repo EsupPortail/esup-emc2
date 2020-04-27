@@ -142,6 +142,7 @@ $this->headTitle("Index des formations");
                                     <a
                                         <?php /** @see FormationController::detruireThemeAction() */ ?>
                                         href="<?php echo $this->url('formation-theme/detruire', ['formation-theme' => $theme->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification"
                                     >
                                         <span class="icon detruire" title="Afficher le thème"></span></a>
                                 <?php else : ?>
@@ -256,6 +257,7 @@ $this->headTitle("Index des formations");
                                     <a
                                         <?php /** @see FormationController::detruireAction() */ ?>
                                         href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification"
                                     >
                                         <span class="icon detruire" title="Afficher la formation"></span></a>
                                 <?php else : ?>
