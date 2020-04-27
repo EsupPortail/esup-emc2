@@ -3,9 +3,7 @@
 namespace Application\Form\RessourceRh;
 
 use Application\Entity\Db\MissionSpecifique;
-use Application\Entity\Db\MissionSpecifiqueTheme;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class MissionSpecifiqueHydrator implements HydratorInterface

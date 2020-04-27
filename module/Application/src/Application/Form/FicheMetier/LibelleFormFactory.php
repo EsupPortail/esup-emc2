@@ -3,7 +3,6 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Service\Metier\MetierService;
-use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
 
 class LibelleFormFactory {

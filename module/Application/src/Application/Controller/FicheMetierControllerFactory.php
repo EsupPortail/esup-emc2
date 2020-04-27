@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
-use Application\Form\FicheMetier\GererCompetenceForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -13,7 +12,6 @@ use Application\Service\Activite\ActiviteService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\FicheMetier\FicheMetierService;
-use Application\Service\RessourceRh\RessourceRhService;
 use Interop\Container\ContainerInterface;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -25,13 +23,11 @@ class FicheMetierControllerFactory {
          * @var ActiviteService $activiteService
          * @var DomaineService $domaineService
          * @var FicheMetierService $ficheMetierService
-         * @var RessourceRhService $ressourceRhService
          * @var ConfigurationService $configurationService
          */
         $activiteService = $container->get(ActiviteService::class);
         $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $ressourceRhService = $container->get(RessourceRhService::class);
         $configurationService = $container->get(ConfigurationService::class);
 
 
@@ -39,7 +35,6 @@ class FicheMetierControllerFactory {
          * @var LibelleForm $libelleForm
          * @var ActiviteForm $activiteForm
          * @var ActiviteExistanteForm $activiteExistanteForm
-         * @var GererCompetenceForm $gererCompetenceForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetenceForm
          * @var SelectionFormationForm $selectionFormationForm
@@ -61,7 +56,6 @@ class FicheMetierControllerFactory {
         $controller->setActiviteService($activiteService);
         $controller->setDomaineService($domaineService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setRessourceRhService($ressourceRhService);
         $controller->setConfigurationService($configurationService);
 
         $controller->setLibelleForm($libelleForm);

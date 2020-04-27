@@ -3,7 +3,9 @@
 namespace Application\Service\Correspondance;
 
 use Application\Entity\Db\Correspondance;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class CorrespondanceService {
@@ -61,5 +63,20 @@ class CorrespondanceService {
             $options[$correspondance->getId()] = $correspondance->getCategorie() . " - " . $correspondance->getLibelleLong();
         }
         return $options;
+    }
+
+    public function getCorrespondance($id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('correspondance.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Correcpondance partagent le même id [".$id."]",0,$e);
+        }
+        return $result;
     }
 }

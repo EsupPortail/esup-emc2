@@ -2,7 +2,6 @@
 
 namespace Application\Form\Agent;
 
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;

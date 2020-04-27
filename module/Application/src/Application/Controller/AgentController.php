@@ -19,7 +19,6 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
@@ -40,7 +39,6 @@ class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use ApplicationServiceAwareTrait;
-    use RessourceRhServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;

@@ -2,12 +2,16 @@
 
 namespace Application;
 
+use Application\Controller\GestionController;
+use Application\Controller\IndexController;
 use Application\Form\ModifierDescription\ModifierDescriptionForm;
 use Application\Form\ModifierDescription\ModifierDescriptionFormFactory;
 use Application\Form\ModifierDescription\ModifierDescriptionHydrator;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
+use Application\Provider\Privilege\AdministrationPrivileges;
+use Application\Provider\Privilege\RessourceRhPrivileges;
 use Application\View\Helper\ActionIconViewHelper;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
@@ -19,7 +23,28 @@ use Zend\Router\Http\Literal;
 return [
     'bjyauthorize' => [
         'guards' => [
-            PrivilegeController::class => [],
+            PrivilegeController::class => [
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+
+                        'index-ressources',
+                    ],
+                    'privileges' => [
+                        RessourceRhPrivileges::AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'index-gestion',
+                        'index-administration',
+                    ],
+                    'privileges' => [
+                        AdministrationPrivileges::ADMINISTRATION_AFFICHER,
+                    ],
+                ],
+            ],
         ],
     ],
 
@@ -42,6 +67,36 @@ return [
         'cache' => [
             'apc' => [
                 'namespace' => 'PREECOG__' . __NAMESPACE__,
+            ],
+        ],
+    ],
+
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'order' => 500,
+                        'label' => 'Ressources',
+                        'title' => "Ressources",
+                        'route' => 'ressource-rh',
+                        'resource' =>  RessourceRhPrivileges::getResourceId(RessourceRhPrivileges::AFFICHER) ,
+                    ],
+                    'gestion' => [
+                        'order' => 400,
+                        'label' => 'Gestion',
+                        'title' => "Gestion des fiches, entretiens et des affectations",
+                        'route' => 'gestion',
+                        'resource' => AdministrationPrivileges::getResourceId(AdministrationPrivileges::ADMINISTRATION_AFFICHER)
+                    ],
+                    'administration' => [
+                        'order' => 1000,
+                        'label' => 'Administration',
+                        'title' => "Administration",
+                        'route' => 'administration',
+                        'resource' =>  AdministrationPrivileges::getResourceId(AdministrationPrivileges::ADMINISTRATION_AFFICHER) ,
+                    ],
+                ],
             ],
         ],
     ],
@@ -81,13 +136,35 @@ return [
                     ],
                 ],
             ],
+            'gestion'        => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/gestion',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action'     => 'index-gestion',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
+            'ressource-rh'        => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/ressource-rh',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action'     => 'index-ressources',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
             'administration'        => [
                 'type'    => Literal::class,
                 'options' => [
                     'route'    => '/administration',
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
-                        'action'     => 'administration',
+                        'action'     => 'index-administration',
                     ],
                 ],
                 'may_terminate' => true,

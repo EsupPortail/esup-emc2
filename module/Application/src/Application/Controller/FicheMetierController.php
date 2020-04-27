@@ -21,7 +21,6 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -37,7 +36,6 @@ class FicheMetierController extends  AbstractActionController{
     use ActiviteServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use RessourceRhServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;

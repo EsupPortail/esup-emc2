@@ -5,7 +5,6 @@ namespace Application\Form\Poste;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
-use Application\Service\RessourceRh\RessourceRhServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
@@ -19,7 +18,6 @@ class PosteForm extends Form  {
     use CorrespondanceServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use RessourceRhServiceAwareTrait;
 
     /** @var string */
     private $urlStructure;

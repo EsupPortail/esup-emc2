@@ -85,4 +85,19 @@ class IndexController extends AbstractActionController
         ]);
     }
 
+    public function indexRessourcesAction()
+    {
+        return new ViewModel();
+    }
+
+    public function indexGestionAction()
+    {
+        return new ViewModel();
+    }
+
+    public function indexAdministrationAction()
+    {
+        return new ViewModel();
+    }
+
 }

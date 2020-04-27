@@ -6,7 +6,6 @@ use Application\Controller\StructureController;
 use Application\Service\Agent\AgentService;
 use Application\Service\Correspondance\CorrespondanceService;
 use Application\Service\Domaine\DomaineService;
-use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use Zend\View\Helper\Url;
@@ -21,13 +20,11 @@ class PosteFormFactory {
          * @var CorrespondanceService $correspondanceService
          * @var DomaineService $domaineService
          * @var StructureService $structureService
-         * @var RessourceRhService $ressourceService
          */
         $agentService  = $container->get(AgentService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $domaineService = $container->get(DomaineService::class);
         $structureService = $container->get(StructureService::class);
-        $ressourceService  = $container->get(RessourceRhService::class);
 
         /** @var PosteHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(PosteHydrator::class);
@@ -48,7 +45,6 @@ class PosteFormFactory {
         $form->setCorrespondanceService($correspondanceService);
         $form->setDomaineService($domaineService);
         $form->setStructureService($structureService);
-        $form->setRessourceRhService($ressourceService);
         $form->setUrlStructure($urlStructure);
         $form->setUrlRattachement($urlAgent);
         $form->init();
