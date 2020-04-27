@@ -57,7 +57,6 @@ class ActiviteController  extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $activite->setLibelle(null);
                 $this->getActiviteService()->create($activite);
                 $this->getActiviteService()->updateLibelle($activite, $data);
             }

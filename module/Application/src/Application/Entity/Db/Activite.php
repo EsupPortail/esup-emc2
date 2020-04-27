@@ -3,7 +3,6 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -13,12 +12,8 @@ class Activite implements HistoriqueAwareInterface
 
     /** @var int */
     private $id;
-    /** @var string */
-    private $libelle;
     /** @var ArrayCollection */
     private $libelles;
-    /** @var string */
-    private $description;
     /** @var ArrayCollection */
     private $descriptions;
     /** @var ArrayCollection */
@@ -49,11 +44,6 @@ class Activite implements HistoriqueAwareInterface
 
     /** LIBELLE *******************************************************************************************************/
 
-    public function getLibelleField()
-    {
-        return $this->libelle;
-    }
-
     /**
      * @return ActiviteLibelle
      */
@@ -80,33 +70,22 @@ class Activite implements HistoriqueAwareInterface
                 else return "<span class='probleme'><strong>PLUSIEURS LIBELLÉS ACTIFS !</strong></span>";
             }
         }
-        if ($this->libelle !== null) return "<span class='probleme'>".$this->libelle."</span>";
         return  "<span class='probleme'><strong>AUCUN LIBELLÉ !</strong></span>";
     }
 
-    /**
-     * @param string $libelle
-     * @return Activite
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-        return $this;
-    }
-
     /** DESCRIPTION ***************************************************************************************************/
-
-    public function getDescriptionField()
-    {
-        return $this->description;
-    }
 
     /**
      * @return string
      */
     public function getDescription()
     {
-        return $this->description;
+        $desctiptions = $this->getDescriptions();
+        $desctiption = '';
+        $desctiption .= '<ul>';
+        foreach ($desctiptions as $item) $desctiption .= '<li>' . $item->getLibelle() .'</li>';
+        $desctiption .= '</ul>';
+        return $desctiption;
     }
 
     /**
@@ -128,16 +107,6 @@ class Activite implements HistoriqueAwareInterface
     public function clearDescriptions()
     {
         $this->descriptions->clear();
-        return $this;
-    }
-
-    /**
-     * @param string description
-     * @return Activite
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
         return $this;
     }
 

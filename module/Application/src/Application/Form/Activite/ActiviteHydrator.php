@@ -35,8 +35,6 @@ class ActiviteHydrator implements HydratorInterface {
 //        }
 
         $data = [
-            'libelle' => ($object->getId() !== null)?$object->getLibelle():"",
-//            'description' => $object->getDescription(),
 //            'applications' => $applicationIds,
 //            'competences' => $competenceIds,
 //            'formations' => $formationIds,
@@ -51,9 +49,6 @@ class ActiviteHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $object->setLibelle($data['libelle']);
-//        $object->setDescription($data['description']);
-//
 //        $object->clearApplications();
 //        if (isset($data['applications'])) {
 //            foreach ($data['applications'] as $id) {

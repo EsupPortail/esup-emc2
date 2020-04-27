@@ -6,9 +6,6 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"           type="string" length="255"      column="libelle"                nullable="false"/>
-        <field name="description"       type="string" length="2047"     column="description"            nullable="false"/>
-
         <one-to-many field="libelles" target-entity="Application\Entity\Db\ActiviteLibelle" mapped-by="activite"/>
         <one-to-many field="descriptions" target-entity="Application\Entity\Db\ActiviteDescription" mapped-by="activite"/>
         <one-to-many field="applications" target-entity="Application\Entity\Db\ActiviteApplication" mapped-by="activite"/>
