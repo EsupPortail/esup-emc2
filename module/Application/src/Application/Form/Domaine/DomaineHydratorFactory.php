@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\Domaine;
 
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Interop\Container\ContainerInterface;
 
-class DomaineFormFactory {
+class DomaineHydratorFactory {
 
     public function __invoke(ContainerInterface $container)
     {
@@ -15,13 +15,8 @@ class DomaineFormFactory {
         $familleService = $container->get(FamilleProfessionnelleService::class);
 
         /** @var DomaineHydrator $hydrator */
-        $hydrator = $container->get('HydratorManager')->get(DomaineHydrator::class);
-
-        $form = new DomaineForm();
-        $form->setFamilleProfessionnelleService($familleService);
-        $form->init();
-        $form->setHydrator($hydrator);
-
-        return $form;
+        $hydrator = new DomaineHydrator();
+        $hydrator->setFamilleProfessionnelleService($familleService);
+        return $hydrator;
     }
 }

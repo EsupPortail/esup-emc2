@@ -6,7 +6,7 @@ use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\MissionSpecifiqueTheme;
 use Application\Entity\Db\MissionSpecifiqueType;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
-use Application\Form\RessourceRh\MissionSpecifiqueFormAwareTrait;
+use Application\Form\MissionSpecifique\MissionSpecifiqueFormAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;

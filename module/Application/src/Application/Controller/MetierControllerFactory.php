@@ -3,8 +3,8 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Form\RessourceRh\DomaineForm;
-use Application\Form\RessourceRh\MetierForm;
+use Application\Form\Domaine\DomaineForm;
+use Application\Form\Metier\MetierForm;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Application\Service\Metier\MetierService;

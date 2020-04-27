@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\Domaine;
 
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Zend\Form\Element\Button;

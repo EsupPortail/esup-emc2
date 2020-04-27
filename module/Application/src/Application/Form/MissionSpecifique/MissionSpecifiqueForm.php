@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\MissionSpecifique;
 
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Zend\Form\Element\Button;

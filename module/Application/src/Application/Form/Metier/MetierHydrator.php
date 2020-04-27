@@ -1,37 +1,44 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\Metier;
 
-use Application\Entity\Db\Fonction;
+use Application\Entity\Db\Metier;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
-class FonctionHydrator implements HydratorInterface {
+class MetierHydrator implements HydratorInterface {
     use DomaineServiceAwareTrait;
 
     /**
-     * @param Fonction $object
+     * @param Metier $object
      * @return array
      */
     public function extract($object)
     {
         $data = [
             'domaine' => ($object->getDomaine())?$object->getDomaine()->getId():null,
+            'fonction' => $object->getFonction(),
+            'libelle' => $object->getLibelle(),
+            'emploi-type' => $object->getEmploiType(),
+            'lien' => $object->getLien(),
         ];
         return $data;
     }
 
     /**
      * @param array $data
-     * @param Fonction $object
-     * @return Fonction
+     * @param Metier $object
+     * @return Metier
      */
     public function hydrate(array $data, $object)
     {
         $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
 
+        $object->setLibelle($data['libelle']);
+        $object->setFonction($data['fonction']);
         $object->setDomaine($domaine);
-
+        $object->setEmploiType($data['emploi-type']);
+        $object->setLien($data['lien']);
         return $object;
     }
 

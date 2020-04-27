@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\Metier;
 
 use Application\Service\Domaine\DomaineService;
 use Interop\Container\ContainerInterface;

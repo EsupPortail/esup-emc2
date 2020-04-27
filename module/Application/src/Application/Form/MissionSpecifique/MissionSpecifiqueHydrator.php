@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\MissionSpecifique;
 
 use Application\Entity\Db\MissionSpecifique;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;

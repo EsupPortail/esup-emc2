@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Form\RessourceRh;
+namespace Application\Form\MissionSpecifique;
 
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Interop\Container\ContainerInterface;
 
-class MissionSpecifiqueHydratorFactory {
+class MissionSpecifiqueFormFactory {
 
     public function __invoke(ContainerInterface $container)
     {
@@ -13,8 +13,12 @@ class MissionSpecifiqueHydratorFactory {
         $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
 
         /** @var MissionSpecifiqueHydrator $hydrator */
-        $hydrator = new MissionSpecifiqueHydrator();
-        $hydrator->setMissionSpecifiqueService($missionSpecifiqueService);
-        return $hydrator;
+        $hydrator = $container->get('HydratorManager')->get(MissionSpecifiqueHydrator::class);
+
+        /** @var MissionSpecifiqueForm $form */
+        $form = new MissionSpecifiqueForm();
+        $form->setMissionSpecifiqueService($missionSpecifiqueService);
+        $form->setHydrator($hydrator);
+        return $form;
     }
 }

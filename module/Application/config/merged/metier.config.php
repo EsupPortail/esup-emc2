@@ -4,14 +4,14 @@ namespace Application;
 
 use Application\Controller\MetierController;
 use Application\Controller\MetierControllerFactory;
-use Application\Form\RessourceRh\DomaineForm;
-use Application\Form\RessourceRh\DomaineFormFactory;
-use Application\Form\RessourceRh\DomaineHydrator;
-use Application\Form\RessourceRh\DomaineHydratorFactory;
-use Application\Form\RessourceRh\MetierForm;
-use Application\Form\RessourceRh\MetierFormFactory;
-use Application\Form\RessourceRh\MetierHydrator;
-use Application\Form\RessourceRh\MetierHydratorFactory;
+use Application\Form\Domaine\DomaineForm;
+use Application\Form\Domaine\DomaineFormFactory;
+use Application\Form\Domaine\DomaineHydrator;
+use Application\Form\Domaine\DomaineHydratorFactory;
+use Application\Form\Metier\MetierForm;
+use Application\Form\Metier\MetierFormFactory;
+use Application\Form\Metier\MetierHydrator;
+use Application\Form\Metier\MetierHydratorFactory;
 use Application\Provider\Privilege\MetierPrivileges;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\Domaine\DomaineServiceFactory;
@@ -341,14 +341,12 @@ return [
     'form_elements' => [
         'factories' => [
             DomaineForm::class => DomaineFormFactory::class,
-//            FonctionForm::class => FonctionFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             DomaineHydrator::class => DomaineHydratorFactory::class,
-//            FonctionHydrator::class => FonctionHydratorFactory::class,
             MetierHydrator::class => MetierHydratorFactory::class,
         ],
     ]

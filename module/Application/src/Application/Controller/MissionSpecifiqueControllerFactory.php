@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Form\RessourceRh\MissionSpecifiqueForm;
+use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Interop\Container\ContainerInterface;
 
