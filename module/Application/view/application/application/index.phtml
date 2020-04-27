@@ -81,7 +81,9 @@ $this->headTitle("Index des applications");
                         <?php if ($canEffacer) : ?>
                             <a
                                 <?php /** @see \Application\Controller\ApplicationController::effacerAction() */?>
-                                href="<?php echo $this->url('application/effacer', ['id' => $application->getId()], [], true); ?>">
+                                href="<?php echo $this->url('application/effacer', ['id' => $application->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                            >
                                 <span class="icon detruire"  title="Supprimer l'application"></span></a>
                         <?php endif; ?>
                     </td>

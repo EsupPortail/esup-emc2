@@ -91,8 +91,25 @@ class ApplicationController  extends AbstractActionController {
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
-        $this->getApplicationService()->delete($application);
-        return $this->redirect()->toRoute('application');
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getApplicationService()->delete($application);
+            //return $this->redirect()->toRoute('home');
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($application !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'application [" . $application->getLibelle(). "]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('application/effacer', ["id" => $application->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function changerStatusAction()
