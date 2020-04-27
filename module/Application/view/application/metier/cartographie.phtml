@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @see \Application\Controller\RessourceRhController::cartographieAction()
+ * @see \Application\Controller\MetierController::cartographieAction()
  * @var array $results
  */
 
@@ -19,8 +19,10 @@ $this->headTitle('Cartographie des métiers');
 
         <div class="col-md-5" >
             <?php if ($canCarto) : ?>
-                <a class="btn btn-primary action "
-                   href="<?php echo $this->url('ressource-rh/cartographie/export', [], [], true); ?>"
+                <a
+                    <?php /** @see \Application\Controller\MetierController::exportCartographieAction() */ ?>
+                    class="btn btn-primary action "
+                   href="<?php echo $this->url('metier/cartographie/export', [], [], true); ?>"
                 >
                     Export de la cartographie
                 </a>

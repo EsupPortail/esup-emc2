@@ -29,8 +29,8 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
 
 <?php if ($canCarto) : ?>
     <a
-            <?php /** @see \Application\Controller\RessourceRhController::cartographieAction() */?>
-            href="<?php echo $this->url('ressource-rh/cartographie', [], [], true); ?>"
+            <?php /** @see \Application\Controller\MetierController::cartographieAction() */?>
+            href="<?php echo $this->url('metier/cartographie', [], [], true); ?>"
             class="btn btn-primary action"
         >
             Aller vers la cartographie

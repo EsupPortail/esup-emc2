@@ -83,6 +83,16 @@ return [
                         MetierPrivileges::METIER_DETRUIRE,
                     ],
                 ],
+                [
+                    'controller' => MetierController::class,
+                    'action' => [
+                        'cartographie',
+                        'export-cartographie',
+                    ],
+                    'privileges' => [
+                        MetierPrivileges::METIER_CARTOGRAPHIE,
+                    ],
+                ],
             ],
         ],
     ],
@@ -285,6 +295,32 @@ return [
                         ],
                     ],
 
+                    /** CARTOGRAPHIE **********************************************************************************/
+
+                    'cartographie' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/cartographie',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'cartographie',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'export' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route'    => '/export',
+                                    'defaults' => [
+                                        'controller' => MetierController::class,
+                                        'action'     => 'export-cartographie',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
