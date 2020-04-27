@@ -101,10 +101,23 @@ class PosteController extends AbstractActionController {
         $posteId = $this->params()->fromRoute('poste');
         $poste = $this->getPosteService()->getPoste($posteId);
 
-        if ($poste) {
-            $this->getPosteService()->delete($poste);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getPosteService()->delete($poste);
+            exit();
         }
 
-        return $this->redirect()->toRoute('poste', [], [], true);
+        $vm = new ViewModel();
+        if ($poste !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du poste [" . $poste->getNumeroPoste() ."]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('poste/supprimer', ["poste" => $poste->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 }

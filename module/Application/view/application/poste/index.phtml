@@ -81,7 +81,9 @@ $this->headTitle("Index des postes")
                     <?php endif; ?>
                     <?php if($canSupprimerPoste) : ?>
                         <a  <?php /** @see \Application\Controller\PosteController::supprimerAction() */ ?>
-                            href="<?php echo $this->url('poste/supprimer', ['poste' => $poste->getId()], [], true); ?>">
+                            href="<?php echo $this->url('poste/supprimer', ['poste' => $poste->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                        >
                             <span class="icon detruire" title="Supprimer le poste"></span>
                         </a>
                     <?php endif; ?>
