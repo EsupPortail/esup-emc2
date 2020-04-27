@@ -2,8 +2,8 @@
 
 namespace Application\Controller;
 
+use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\RessourceRh\DomaineForm;
-use Application\Form\RessourceRh\FamilleProfessionnelleForm;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
@@ -29,12 +29,12 @@ class MetierControllerFactory {
 
         /**
          * @var DomaineForm $domaineForm
-         * @var FamilleProfessionnelleForm $familleForm
          * @var MetierForm $metierForm
+         * @var ModifierLibelleForm $modifierLibelleForm
          */
         $domaineForm = $container->get('FormElementManager')->get(DomaineForm::class);
-        $familleForm = $container->get('FormElementManager')->get(FamilleProfessionnelleForm::class);
         $metierForm = $container->get('FormElementManager')->get(MetierForm::class);
+        $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
 
         /** @var MetierController $controller */
         $controller = new MetierController();
@@ -44,8 +44,8 @@ class MetierControllerFactory {
         $controller->setMetierService($metierService);
 
         $controller->setDomaineForm($domaineForm);
-        $controller->setFamilleProfessionnelleForm($familleForm);
         $controller->setMetierForm($metierForm);
+        $controller->setModifierLibelleForm($modifierLibelleForm);
 
         return $controller;
     }

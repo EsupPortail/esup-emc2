@@ -8,9 +8,6 @@ use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormFactory;
 use Application\Form\RessourceRh\DomaineHydrator;
 use Application\Form\RessourceRh\DomaineHydratorFactory;
-use Application\Form\RessourceRh\FamilleProfessionnelleForm;
-use Application\Form\RessourceRh\FamilleProfessionnelleFormFactory;
-use Application\Form\RessourceRh\FamilleProfessionnelleHydrator;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormFactory;
 use Application\Form\RessourceRh\MetierHydrator;
@@ -308,15 +305,11 @@ return [
     'form_elements' => [
         'factories' => [
             DomaineForm::class => DomaineFormFactory::class,
-            FamilleProfessionnelleForm::class => FamilleProfessionnelleFormFactory::class,
 //            FonctionForm::class => FonctionFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
         ],
     ],
     'hydrators' => [
-        'invokables' => [
-            FamilleProfessionnelleHydrator::class => FamilleProfessionnelleHydrator::class,
-        ],
         'factories' => [
             DomaineHydrator::class => DomaineHydratorFactory::class,
 //            FonctionHydrator::class => FonctionHydratorFactory::class,

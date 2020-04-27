@@ -5,10 +5,10 @@ namespace Application\Controller;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\Metier;
+use Application\Form\ModifierLibelle\ModifierLibelleForm;
+use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\RessourceRh\DomaineForm;
 use Application\Form\RessourceRh\DomaineFormAwareTrait;
-use Application\Form\RessourceRh\FamilleProfessionnelleForm;
-use Application\Form\RessourceRh\FamilleProfessionnelleFormAwareTrait;
 use Application\Form\RessourceRh\MetierForm;
 use Application\Form\RessourceRh\MetierFormAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
@@ -24,8 +24,8 @@ class MetierController extends AbstractActionController {
     use MetierServiceAwareTrait;
 
     use DomaineFormAwareTrait;
-    use FamilleProfessionnelleFormAwareTrait;
     use MetierFormAwareTrait;
+    use ModifierLibelleFormAwareTrait;
 
     public function indexAction() {
         $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
@@ -45,8 +45,8 @@ class MetierController extends AbstractActionController {
     {
         $famille = new FamilleProfessionnelle();
 
-        /** @var FamilleProfessionnelleForm $form */
-        $form = $this->getFamilleProfessionnelleForm();
+        /** @var ModifierLibelleForm $form */
+        $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('metier/ajouter-famille', [], [], true));
         $form->bind($famille);
 
@@ -73,8 +73,8 @@ class MetierController extends AbstractActionController {
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
-        /** @var FamilleProfessionnelleForm $form */
-        $form = $this->getFamilleProfessionnelleForm();
+        /** @var ModifierLibelleForm $form */
+        $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-famille', ['famille' => $famille->getId()], [], true));
         $form->bind($famille);
 

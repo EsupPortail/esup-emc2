@@ -4,34 +4,12 @@ namespace Application;
 
 use Application\Controller\RessourceRhController;
 use Application\Controller\RessourceRhControllerFactory;
-use Application\Form\RessourceRh\DomaineForm;
-use Application\Form\RessourceRh\DomaineFormFactory;
-use Application\Form\RessourceRh\DomaineHydrator;
-use Application\Form\RessourceRh\DomaineHydratorFactory;
-use Application\Form\RessourceRh\FamilleProfessionnelleForm;
-use Application\Form\RessourceRh\FamilleProfessionnelleFormFactory;
-use Application\Form\RessourceRh\FamilleProfessionnelleHydrator;
-use Application\Form\RessourceRh\FonctionHydrator;
-use Application\Form\RessourceRh\FonctionHydratorFactory;
-use Application\Form\RessourceRh\MetierForm;
-use Application\Form\RessourceRh\MetierFormFactory;
-use Application\Form\RessourceRh\MetierHydrator;
-use Application\Form\RessourceRh\MetierHydratorFactory;
 use Application\Provider\Privilege\MetierPrivileges;
 use Application\Provider\Privilege\RessourceRhPrivileges;
-use Application\Service\Domaine\DomaineService;
-use Application\Service\Domaine\DomaineServiceFactory;
-use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
-use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
-use Application\Service\Fonction\FonctionService;
-use Application\Service\Fonction\FonctionServiceFactory;
-use Application\Service\Metier\MetierService;
-use Application\Service\Metier\MetierServiceFactory;
 use Application\Service\RessourceRh\RessourceRhService;
 use Application\Service\RessourceRh\RessourceRhServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
