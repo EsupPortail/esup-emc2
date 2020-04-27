@@ -46,7 +46,6 @@ return [
                     'action' => [
                         'editer',
                         'modifier',
-                        'convert',
 
                         'modifier-libelle',
                         'modifier-application',
@@ -182,16 +181,6 @@ return [
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'detruire',
-                            ],
-                        ],
-                    ],
-                    'convert' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/convert/:activite',
-                            'defaults' => [
-                                'controller' => ActiviteController::class,
-                                'action'     => 'convert',
                             ],
                         ],
                     ],

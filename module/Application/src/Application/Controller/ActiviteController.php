@@ -29,6 +29,8 @@ class ActiviteController  extends AbstractActionController {
     use SelectionCompetenceFormAwareTrait;
     use SelectionFormationFormAwareTrait;
 
+    /** ACTION SIMPLE *************************************************************************************************/
+
     public function indexAction()
     {
         /** @var Activite[] $activites */
@@ -136,9 +138,10 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
+    /** GESTION DES CONSTITUANTS **************************************************************************************/
 
-
-    public function modifierLibelleAction() {
+    public function modifierLibelleAction()
+    {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
 
         $form = $this->getModifierLibelleForm();
@@ -339,61 +342,4 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    /**
-     * Action convertissant les anciennes description d'activité en nouvelles versions
-     */
-    public function convertAction()
-    {
-        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
-
-        $descriptions = $activite->getDescription();
-
-        /** retirer le <ul></ul> */
-        $descriptions = str_replace(["\n","\r"],["",""], $descriptions);
-        $descriptions = preg_replace("/^<ul><li>/", "", $descriptions);
-        $descriptions = preg_replace("/<\/li><\/ul>$/", "", $descriptions);
-        $elements = explode("</li><li>", $descriptions);
-
-        $new = [];
-        foreach ($elements as $element) {
-            $description = new ActiviteDescription();
-            $description->setActivite($activite);
-            $description->setDescription($element);
-            $new[] = $description;
-        }
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-
-            if($data['reponse'] === 'oui') {
-                if ($activite->getLibelleField() !== null) {
-                    $data = ['libelle' => $activite->getLibelleField()];
-                    $this->getActiviteService()->updateLibelle($activite, $data);
-                    $activite->setLibelle(null);
-                }
-
-                $descriptions = $activite->getDescriptions();
-                foreach ($descriptions as $description) $this->getActiviteDescriptionService()->delete($description);
-                $activite->clearDescriptions();
-                $this->getActiviteService()->update($activite);
-
-                foreach ($new as $item) {
-                    $item->setActivite($activite);
-                    $this->getActiviteDescriptionService()->create($item);
-                }
-                $activite->setDescription(null);
-                $this->getActiviteService()->update($activite);
-            }
-            exit();
-        }
-
-        return new ViewModel([
-            'title' => "Convertion de l'activite [".$activite->getLibelle()."].",
-            'activite' => $activite,
-            'new' => $new,
-            'action' => $this->url()->fromRoute('activite/convert', ['activite' => $activite->getId()], [], true),
-        ]);
-    }
 }

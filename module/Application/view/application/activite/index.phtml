@@ -79,17 +79,6 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                         <?php else : ?>
                             <span class="icon editer" style="color:lightgrey;"></span>
                         <?php endif; ?>
-                        <?php if ($canEditer AND ($activite->getLibelleField() !== null OR $activite->getDescriptionField() !== null)) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\ActiviteController::convertAction() */?>
-                                href="<?php echo $this->url('activite/convert', ['activite' => $activite->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
-                            >
-                                <span class="icon information" title="Convertir les sous-activités"></span></a>
-<!--                        --><?php //else : ?>
-<!--                            <span class="icon information" style="color:lightgrey;"></span>-->
-                        <?php endif; ?>
                         <?php if($canHistoriser) :?>
                             <?php if($activite->estNonHistorise()): ?>
                                 <a
