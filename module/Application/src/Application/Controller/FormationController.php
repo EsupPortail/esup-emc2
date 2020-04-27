@@ -5,7 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationTheme;
 use Application\Form\Formation\FormationFormAwareTrait;
-use Application\Form\FormationTheme\FormationThemeFormAwareTrait;
+use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\Formation\FormationThemeServiceAwareTrait;
 use Zend\Http\Request;
@@ -18,7 +18,9 @@ class FormationController extends AbstractActionController
     use FormationThemeServiceAwareTrait;
 
     use FormationFormAwareTrait;
-    use FormationThemeFormAwareTrait;
+    use ModifierLibelleFormAwareTrait;
+
+    /** INDEX *********************************************************************************************************/
 
     public function indexAction()
     {
@@ -29,6 +31,8 @@ class FormationController extends AbstractActionController
             'themes' => $themes,
         ]);
     }
+
+    /** FOMRATION *****************************************************************************************************/
 
     public function afficherAction()
     {
@@ -115,10 +119,22 @@ class FormationController extends AbstractActionController
         return $this->redirect()->toRoute('formation', [], [], true);
     }
 
+    /** FORMATION THEME ***********************************************************************************************/
+
+    public function afficherThemeAction()
+    {
+        $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
+
+        return new ViewModel([
+            'title' => 'Affichage du thème',
+            'theme' => $theme,
+        ]);
+    }
+
     public function ajouterThemeAction()
     {
         $theme = new FormationTheme();
-        $form = $this->getFormationThemeForm();
+        $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation-theme/ajouter', [], [], true));
         $form->bind($theme);
 
@@ -129,7 +145,6 @@ class FormationController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFormationThemeService()->create($theme);
-                //return $this->redirect()->toRoute('formation', [], [], true);
             }
         }
 
@@ -142,20 +157,10 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    public function afficherThemeAction()
-    {
-        $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
-
-        return new ViewModel([
-           'title' => 'Affichage du thème',
-           'theme' => $theme,
-        ]);
-    }
-
     public function editerThemeAction()
     {
         $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
-        $form = $this->getFormationThemeForm();
+        $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation-theme/editer', ['formation-theme' => $theme->getId()], [], true));
         $form->bind($theme);
 
@@ -166,7 +171,6 @@ class FormationController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFormationThemeService()->update($theme);
-                //return $this->redirect()->toRoute('formation', [], [], true);
             }
         }
 

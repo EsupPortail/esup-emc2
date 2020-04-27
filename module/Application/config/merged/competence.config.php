@@ -8,10 +8,6 @@ use Application\Form\Competence\CompetenceForm;
 use Application\Form\Competence\CompetenceFormFactory;
 use Application\Form\Competence\CompetenceHydrator;
 use Application\Form\Competence\CompetenceHydratorFactory;
-use Application\Form\CompetenceTheme\CompetenceThemeForm;
-use Application\Form\CompetenceTheme\CompetenceThemeFormFactory;
-use Application\Form\CompetenceTheme\CompetenceThemeHydrator;
-use Application\Form\CompetenceTheme\CompetenceThemeHydratorFactory;
 use Application\Form\CompetenceType\CompetenceTypeForm;
 use Application\Form\CompetenceType\CompetenceTypeFormFactory;
 use Application\Form\CompetenceType\CompetenceTypeHydrator;
@@ -365,7 +361,6 @@ return [
     'form_elements' => [
         'factories' => [
             CompetenceForm::class => CompetenceFormFactory::class,
-            CompetenceThemeForm::class => CompetenceThemeFormFactory::class,
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
             SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
         ],
@@ -376,10 +371,7 @@ return [
         ],
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
-            CompetenceThemeHydrator::class => CompetenceThemeHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
-
-
         ],
     ],
     'view_helpers' => [

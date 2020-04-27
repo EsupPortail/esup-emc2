@@ -6,8 +6,8 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceTheme;
 use Application\Entity\Db\CompetenceType;
 use Application\Form\Competence\CompetenceFormAwareTrait;
-use Application\Form\CompetenceTheme\CompetenceThemeFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
+use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
@@ -21,8 +21,10 @@ class CompetenceController extends AbstractActionController {
     use CompetenceTypeServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
-    use CompetenceThemeFormAwareTrait;
     use CompetenceTypeFormAwareTrait;
+    use ModifierLibelleFormAwareTrait;
+
+    /** INDEX *********************************************************************************************************/
 
     public function indexAction()
     {
@@ -143,10 +145,19 @@ class CompetenceController extends AbstractActionController {
 
     /** COMPETENCE THEME **********************************************************************************************/
 
+    public function afficherCompetenceThemeAction()
+    {
+        $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
+        return new ViewModel([
+            'title' => "Affiche d'un thème de compétence",
+            'theme' => $theme,
+        ]);
+    }
+
     public function ajouterCompetenceThemeAction()
     {
         $theme = new CompetenceTheme();
-        $form = $this->getCompetenceThemeForm();
+        $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('competence-theme/ajouter', [], [], true));
         $form->bind($theme);
 
@@ -172,7 +183,7 @@ class CompetenceController extends AbstractActionController {
     public function modifierCompetenceThemeAction()
     {
         $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
-        $form = $this->getCompetenceThemeForm();
+        $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('competence-theme/modifier', ['competence-theme' => $theme->getId()], [], true));
         $form->bind($theme);
 
@@ -193,15 +204,6 @@ class CompetenceController extends AbstractActionController {
             'form' => $form,
         ]);
         return $vm;
-    }
-
-    public function afficherCompetenceThemeAction()
-    {
-        $theme = $this->getCompetenceThemeService()->getRequestedCompetenceTheme($this);
-        return new ViewModel([
-            'title' => "Affiche d'un thème de compétence",
-            'theme' => $theme,
-        ]);
     }
 
     public function historiserCompetenceThemeAction()

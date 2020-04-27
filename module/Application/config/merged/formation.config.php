@@ -8,10 +8,6 @@ use Application\Form\Formation\FormationForm;
 use Application\Form\Formation\FormationFormFactory;
 use Application\Form\Formation\FormationHydrator;
 use Application\Form\Formation\FormationHydratorFactory;
-use Application\Form\FormationTheme\FormationThemeForm;
-use Application\Form\FormationTheme\FormationThemeFormFactory;
-use Application\Form\FormationTheme\FormationThemeHydrator;
-use Application\Form\FormationTheme\FormationThemeHydratorFactory;
 use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Form\SelectionFormation\SelectionFormationFormFactory;
 use Application\Form\SelectionFormation\SelectionFormationHydrator;
@@ -269,7 +265,6 @@ return [
     'form_elements' => [
         'factories' => [
             FormationForm::class => FormationFormFactory::class,
-            FormationThemeForm::class => FormationThemeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
     ],
@@ -279,7 +274,6 @@ return [
         ],
         'factories' => [
             FormationHydrator::class => FormationHydratorFactory::class,
-            FormationThemeHydrator::class => FormationThemeHydratorFactory::class,
         ],
     ]
 
