@@ -134,7 +134,7 @@ class MissionSpecifiqueController extends AbstractActionController
         return $vm;
     }
 
-    /** Types */
+    /** Types *********************************************************************************************************/
 
     public function afficherTypeAction() {
         $type = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueType($this);
@@ -234,7 +234,7 @@ class MissionSpecifiqueController extends AbstractActionController
         return $vm;
     }
 
-    /** Thèmes */
+    /** Thèmes ********************************************************************************************************/
 
     public function afficherThemeAction() {
         $theme = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueTheme($this);

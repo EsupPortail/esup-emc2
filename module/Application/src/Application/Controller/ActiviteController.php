@@ -116,8 +116,24 @@ class ActiviteController  extends AbstractActionController {
         /** @var Activite $activite */
         $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
 
-        $this->getActiviteService()->delete($activite);
-        return $this->redirect()->toRoute('activite');
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getActiviteService()->delete($activite);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($activite !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la mission principale [" . $activite->getLibelle() . "]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('activite/detruire', ["activite" => $activite->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
 

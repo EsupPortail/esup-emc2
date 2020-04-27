@@ -61,7 +61,9 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                     </td>
                     <td>
                         <?php if ($canVisualiser) : ?>
-                            <a href="<?php echo $this->url('activite/afficher', ['activite' => $activite->getId()], [], true); ?>"
+                            <a
+                                <?php /** @see \Application\Controller\ActiviteController::afficherAction() */?>
+                                href="<?php echo $this->url('activite/afficher', ['activite' => $activite->getId()], [], true); ?>"
                                class="ajax-modal"
                             >
                                 <span class="icon voir" title="Voir l'activité"></span></a>
@@ -69,16 +71,20 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                                 <span class="icon voir" style="color:lightgrey;"></span>
                         <?php endif; ?>
                         <?php if ($canEditer) : ?>
-                            <a href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
+                            <a
+                                <?php /** @see \Application\Controller\ActiviteController::modifierAction() */?>
+                                href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
                             >
                                 <span class="icon editer" title="Modifier l'activité"></span></a>
                         <?php else : ?>
                             <span class="icon editer" style="color:lightgrey;"></span>
                         <?php endif; ?>
                         <?php if ($canEditer AND ($activite->getLibelleField() !== null OR $activite->getDescriptionField() !== null)) : ?>
-                            <a href="<?php echo $this->url('activite/convert', ['activite' => $activite->getId()], [], true); ?>"
-                               class="ajax-modal"
-                               data-event="modification"
+                            <a
+                                <?php /** @see \Application\Controller\ActiviteController::convertAction() */?>
+                                href="<?php echo $this->url('activite/convert', ['activite' => $activite->getId()], [], true); ?>"
+                                class="ajax-modal"
+                                data-event="modification"
                             >
                                 <span class="icon information" title="Convertir les sous-activités"></span></a>
 <!--                        --><?php //else : ?>
@@ -86,11 +92,15 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                         <?php endif; ?>
                         <?php if($canHistoriser) :?>
                             <?php if($activite->estNonHistorise()): ?>
-                                <a href="<?php echo $this->url('activite/historiser', ['activite' => $activite->getId()], [], true); ?>"
+                                <a
+                                    <?php /** @see \Application\Controller\ActiviteController::historiserAction() */?>
+                                    href="<?php echo $this->url('activite/historiser', ['activite' => $activite->getId()], [], true); ?>"
                                 >
                                     <span class="icon historiser" title="Historiser l'activité"></span></a>
                             <?php else : ?>
-                                <a href="<?php echo $this->url('activite/restaurer', ['activite' => $activite->getId()], [], true); ?>"
+                                <a
+                                    <?php /** @see \Application\Controller\ActiviteController::restaurerAction() */?>
+                                    href="<?php echo $this->url('activite/restaurer', ['activite' => $activite->getId()], [], true); ?>"
                                 >
                                     <span class="icon restaurer" title="Restaurer l'activité"></span></a>
                             <?php endif; ?>
@@ -102,7 +112,11 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if ($canEffacer) : ?>
-                            <a href="<?php echo $this->url('activite/detruire', ['activite' => $activite->getId()], [], true); ?>">
+                            <a
+                                <?php /** @see \Application\Controller\ActiviteController::detruireAction() */?>
+                                href="<?php echo $this->url('activite/detruire', ['activite' => $activite->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                            >
                                 <span class="icon detruire"  title="Supprimer l'activité"></span></a>
                         <?php else : ?>
                             <span class="icon detruire" style="color:lightgrey;"></span>
