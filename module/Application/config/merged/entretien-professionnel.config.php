@@ -32,6 +32,7 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'afficher',
+                        'exporter',
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
@@ -131,6 +132,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'exporter' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/exporter/:entretien',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'exporter',
                             ],
                         ],
                     ],

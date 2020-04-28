@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
+use Zend\View\Renderer\PhpRenderer;
 
 class EntretienProfessionnelControllerFactory {
 
@@ -39,8 +40,12 @@ class EntretienProfessionnelControllerFactory {
         /** @var EntretienProfessionnelForm $entretienProfessionnelForm */
         $entretienProfessionnelForm = $container->get('FormElementManager')->get(EntretienProfessionnelForm::class);
 
+        /* @var PhpRenderer $renderer  */
+        $renderer = $container->get('ViewRenderer');
+
         /** @var EntretienProfessionnelController $controller */
         $controller = new EntretienProfessionnelController();
+        $controller->setRenderer($renderer);
         $controller->setAgentService($agentService);
         $controller->setUserService($userService);
         $controller->setConfigurationService($configurationService);

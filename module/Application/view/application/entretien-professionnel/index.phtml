@@ -65,6 +65,14 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
                             <span class="icon voir" title="Voir le compte-rendu de l'entretien professionnel"></a>
                     <?php endif; ?>
 
+                    <?php if ($canVoir) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\EntretienProfessionnelController::exporterAction() */?>
+                                href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true) ?>"
+                        >
+                            <span class="icon pdf" title="Exporter l'entretien professionnel"></a>
+                    <?php endif; ?>
+
                     <?php if ($canModifier) : ?>
                         <a
                             <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierAction() */?>

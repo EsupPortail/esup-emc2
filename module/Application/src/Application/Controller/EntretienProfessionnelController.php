@@ -7,10 +7,12 @@ use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Application\Service\Export\EntretienProfessionnel\EntretienProfessionnelPdfExporter;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Doctrine\ORM\ORMException;
+use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -33,6 +35,13 @@ class EntretienProfessionnelController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;
     use FormulaireServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
+
+    private $renderer;
+
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function indexAction()
     {
@@ -230,5 +239,26 @@ class EntretienProfessionnelController extends AbstractActionController {
         }
 
         return $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entity->getId()], [], true);
+    }
+
+    public function exporterAction()
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+
+        $exporter = new EntretienProfessionnelPdfExporter($this->renderer, 'A4');
+        $exporter->setVars([
+            'entretien' => $entretien,
+        ]);
+
+        $agent = $entretien->getAgent()->getDenomination();
+        $date = $entretien->getDateEntretien()->format('Ymd');
+        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_". str_replace(" ","_",$agent).'_'.$date.'.pdf';
+        try {
+            $exporter->getMpdf()->SetTitle("Entretien professionnel de " . $agent . " du " . $entretien->getDateEntretien()->format("d/m/Y"));
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0 , $e);
+        }
+        $exporter->export($filemane);
+        exit;
     }
 }
