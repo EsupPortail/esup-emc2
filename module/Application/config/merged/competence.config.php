@@ -36,6 +36,14 @@ return [
                     'controller' => CompetenceController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceController::class,
+                    'action' => [
                         'afficher',
                         'afficher-competence-type',
                         'afficher-competence-theme',

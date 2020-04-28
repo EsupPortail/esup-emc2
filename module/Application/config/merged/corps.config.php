@@ -24,7 +24,7 @@ return [
                         'index'
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_AFFICHER,
+                        CorpsPrivileges::CORPS_INDEX,
                     ],
                 ],
             ],

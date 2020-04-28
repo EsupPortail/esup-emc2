@@ -26,6 +26,14 @@ return [
                     'controller' => ActiviteController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        ActivitePrivileges::ACTIVITE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => ActiviteController::class,
+                    'action' => [
                         'afficher',
                     ],
                     'privileges' => [

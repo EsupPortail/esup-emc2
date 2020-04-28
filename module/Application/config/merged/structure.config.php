@@ -47,6 +47,12 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_INDEX,
+                ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
                         'rechercher',
                         'rechercher-with-structure-mere',
                         'graphe',

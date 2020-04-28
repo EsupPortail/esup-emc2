@@ -33,7 +33,7 @@ return [
                         'index'
                     ],
                     'privileges' => [
-                        MetierPrivileges::METIER_AFFICHER,
+                        MetierPrivileges::METIER_INDEX,
                     ],
                 ],
                 [

@@ -24,6 +24,14 @@ return [
                     'controller' => PosteController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        PostePrivileges::POSTE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => PosteController::class,
+                    'action' => [
                         'afficher',
                         'rechercher-batiment',
                     ],

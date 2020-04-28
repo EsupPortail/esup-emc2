@@ -26,6 +26,14 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::APPLICATION_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationController::class,
+                    'action' => [
                         'afficher',
                     ],
                     'privileges' => [

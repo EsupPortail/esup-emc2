@@ -28,6 +28,14 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => FormationController::class,
+                    'action' => [
                         'afficher',
 
                         'afficher-theme',

@@ -31,6 +31,14 @@ return [
                     'controller' => MissionSpecifiqueController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => MissionSpecifiqueController::class,
+                    'action' => [
                         'afficher-type',
                         'afficher-theme',
                         'afficher-mission',

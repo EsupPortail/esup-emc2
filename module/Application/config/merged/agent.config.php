@@ -6,7 +6,6 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
-use Application\Controller\EntretienProfessionnelController;
 use Application\Form\Agent\AgentForm;
 use Application\Form\Agent\AgentFormFactory;
 use Application\Form\Agent\AgentHydrator;
@@ -41,45 +40,25 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'index',
-                        'afficher',
-                        'afficher-statuts-grades',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
                         'rechercher',
                         'rechercher-with-structure-mere',
                         'rechercher-responsable',
                         'rechercher-gestionnaire',
 
-                        'ajouter-agent-mission-specifique',
+                        'afficher',
+                        'afficher-statuts-grades',
                         'afficher-agent-mission-specifique',
-                        'modifier-agent-mission-specifique',
-                        'historiser-agent-mission-specifique',
-                        'restaurer-agent-mission-specifique',
-                        'detruire-agent-mission-specifique',
-
-                        'ajouter-agent-application',
                         'afficher-agent-application',
-                        'modifier-agent-application',
-                        'historiser-agent-application',
-                        'restaurer-agent-application',
-                        'detruire-agent-application',
-
-                        'ajouter-agent-competence',
                         'afficher-agent-competence',
-                        'modifier-agent-competence',
-                        'historiser-agent-competence',
-                        'restaurer-agent-competence',
-                        'detruire-agent-competence',
-
-                        'ajouter-agent-formation',
                         'afficher-agent-formation',
-                        'modifier-agent-formation',
-                        'historiser-agent-formation',
-                        'restaurer-agent-formation',
-                        'detruire-agent-formation',
-
-                        'valider-element',
-                        'revoquer-element',
-
-                        'upload-fichier',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
@@ -89,18 +68,41 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'modifier',
+                        'ajouter-agent-mission-specifique',
+                        'modifier-agent-mission-specifique',
+                        'ajouter-agent-application',
+                        'modifier-agent-application',
+                        'ajouter-agent-competence',
+                        'modifier-agent-competence',
+                        'ajouter-agent-formation',
+                        'modifier-agent-formation',
+                        'upload-fichier',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_EDITER,
                     ],
                 ],
                 [
-                    'controller' => EntretienProfessionnelController::class,
+                    'controller' => AgentController::class,
                     'action' => [
-                        'index-agent',
+                        'historiser-agent-mission-specifique',
+                        'restaurer-agent-mission-specifique',
+                        'historiser-agent-application',
+                        'restaurer-agent-application',
+                        'historiser-agent-competence',
+                        'restaurer-agent-competence',
+                        'historiser-agent-formation',
+                        'restaurer-agent-formation',
+                        'detruire-agent-formation',
+                        'detruire-agent-competence',
+                        'detruire-agent-application',
+                        'detruire-agent-mission-specifique',
+
+                        'valider-element',
+                        'revoquer-element',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
+                        AgentPrivileges::AGENT_EFFACER,
                     ],
                 ],
             ],
@@ -447,16 +449,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'modifier',
-                            ],
-                        ],
-                    ],
-                    'entretien-professionnel' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/entretien-professionnel[/:agent]',
-                            'defaults' => [
-                                'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'index-agent',
                             ],
                         ],
                     ],

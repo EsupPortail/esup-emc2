@@ -5,12 +5,6 @@
  */
 
 use Application\Entity\Db\FichePoste;
-use Application\Provider\Privilege\FichePostePrivileges;
-
-$canVoirFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
-$canModifierFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
-$canHistoriserFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
-$canDetruireFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
 
 $retour = $this->url(null, [], [], true);
 ?>
