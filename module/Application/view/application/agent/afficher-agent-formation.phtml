@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @see AgentController::afficherAgentFormationAction()
+ * @var AgentFormation $agentFormation
+ */
+
+use Application\Entity\Db\AgentFormation;
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl>
+            <dt> Agent </dt>
+            <dd> <?php echo $agentFormation->getAgent()->getDenomination(); ?></dd>
+            <dt> Application </dt>
+            <dd> <?php echo $agentFormation->getFormation()->getLibelle(); ?></dd>
+            <dt> Date de la formation </dt>
+            <dd> <?php echo $agentFormation->getDate()->format('d/m/Y à H:i:s'); ?></dd>
+            <dt> Validation </dt>
+            <dd>
+                <?php if ($agentFormation->getValidation() === null) : ?>
+                    Aucune validation
+                <?php else: ?>
+                    <?php $validation = $agentFormation->getValidation(); ?>
+                    <?php if ($validation->getValeur() === null) : ?>
+                        <span
+                            style="color:darkgreen;"
+                            title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                                    <span class="icon ok"></span>
+                                    Validée
+                                </span>
+                    <?php else: ?>
+                    <span
+                        style="color:darkred;"
+                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                                    <span class="icon ko"></span>
+                                Refusée
+                    <?php endif; ?>
+                <?php endif; ?>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt> Dernière modification </dt>
+            <dd>
+                <?php echo $agentFormation->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+                <br/>
+                <?php echo $agentFormation->getHistoModificateur()->getDisplayName(); ?>
+            </dd>
+        </dl>
+
+        <?php if ($agentFormation->estHistorise()) : ?>
+            <dl>
+                <dt> Historisée </dt>
+                <dd>
+                    <?php echo $agentFormation->getHistoDestruction()->format('d/m/Y à H:i:s'); ?>
+                    <br/>
+                    <?php echo $agentFormation->getHistoDestructeur()->getDisplayName(); ?>
+                </dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>

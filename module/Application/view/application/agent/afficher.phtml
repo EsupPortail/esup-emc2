@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -11,12 +12,12 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var Role    $role
  */
 
-$canVoir = true;
-$canAjouter = true;
-$canModifier = true;
-$canHistoriser = true;
-$canDetruire = true;
-$canValider = true;
+$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
+$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
 
 $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 ?>
@@ -175,6 +176,14 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                         Aucune validation
                     <?php endif; ?>
                     <br/>
+                    <?php if ($canVoir) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\AgentController::afficherAgentApplicationAction() */?>
+                                href="<?php echo $this->url('agent/afficher-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
+                                class="ajax-modal"
+                                    >
+                            <span class="icon voir" title="Afficher une application maîtriser par l'agent"></span></a>
+                    <?php endif; ?>
                     <?php if ($canModifier) : ?>
                         <a
                             <?php /** @see \Application\Controller\AgentController::modifierAgentApplicationAction() */?>
@@ -273,6 +282,14 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                                 Aucune validation
                             <?php endif; ?>
                     <br/>
+                        <?php if ($canVoir) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::afficherAgentCompetenceAction() */?>
+                                    href="<?php echo $this->url('agent/afficher-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    >
+                                <span class="icon voir" title="Afficher une compétence liée à l'agent"></span></a>
+                        <?php endif; ?>
                         <?php if ($canModifier) : ?>
                             <a
                                 <?php /** @see \Application\Controller\AgentController::modifierAgentCompetenceAction() */?>
@@ -370,6 +387,14 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                                 Aucune validation
                             <?php endif; ?>
                     <br/>
+                        <?php if ($canVoir) : ?>
+                            <a
+                            <?php /** @see \Application\Controller\AgentController::afficherAgentFormationAction() */?>
+                                href="<?php echo $this->url('agent/afficher-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
+                                class="ajax-modal"
+                            >
+                            <span class="icon voir" title="Afficher une formation liée à l'agent"></span></a>
+                        <?php endif; ?>
                         <?php if ($canModifier) : ?>
                             <a
                                 <?php /** @see \Application\Controller\AgentController::modifierAgentFormationAction() */?>

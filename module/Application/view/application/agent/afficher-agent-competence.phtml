@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @see AgentController::afficherAgentCompetenceAction()
+ * @var AgentCompetence $agentCompetence
+ */
+use Application\Entity\Db\AgentCompetence;
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl>
+            <dt> Agent </dt>
+            <dd> <?php echo $agentCompetence->getAgent()->getDenomination(); ?></dd>
+            <dt> Application </dt>
+            <dd> <?php echo $agentCompetence->getCompetence()->getLibelle(); ?></dd>
+            <dt> Niveau de formation </dt>
+            <dd> <?php echo $agentCompetence->getNiveau(); ?></dd>
+            <dt> Validation </dt>
+            <dd>
+                <?php if ($agentCompetence->getValidation() === null) : ?>
+                    Aucune validation
+                <?php else: ?>
+                    <?php $validation = $agentCompetence->getValidation(); ?>
+                    <?php if ($validation->getValeur() === null) : ?>
+                        <span
+                            style="color:darkgreen;"
+                            title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                                    <span class="icon ok"></span>
+                                    Validée
+                                </span>
+                    <?php else: ?>
+                    <span
+                        style="color:darkred;"
+                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                                    <span class="icon ko"></span>
+                                Refusée
+                    <?php endif; ?>
+                <?php endif; ?>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt> Dernière modification </dt>
+            <dd>
+                <?php echo $agentCompetence->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+                <br/>
+                <?php echo $agentCompetence->getHistoModificateur()->getDisplayName(); ?>
+            </dd>
+        </dl>
+
+        <?php if ($agentCompetence->estHistorise()) : ?>
+            <dl>
+                <dt> Historisée </dt>
+                <dd>
+                    <?php echo $agentCompetence->getHistoDestruction()->format('d/m/Y à H:i:s'); ?>
+                    <br/>
+                    <?php echo $agentCompetence->getHistoDestructeur()->getDisplayName(); ?>
+                </dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>

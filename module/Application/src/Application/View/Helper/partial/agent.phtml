@@ -122,8 +122,8 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                     <td>
                         <?php if ($canVoirMission) : ?>
                             <a
-                                <?php /** @see \Application\Controller\AgentController::afficherAgentMissionSpecifiqueAction() */?>
-                                    href="<?php echo $this->url('agent/afficher-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::afficherAction() */?>
+                                    href="<?php echo $this->url('mission-specifique/affectation/afficher', ['affectation' => $mission->getId()], [], true); ?>"
                                     class="ajax-modal"
                             >
                                 <span class="icon voir"></span></a>

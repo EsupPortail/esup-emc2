@@ -28,6 +28,7 @@ use Application\Provider\Privilege\SynchroPrivileges;
 use Application\Provider\Privilege\ValidationPrivileges;
 use Application\View\Helper\ActionIconViewHelper;
 use Autoform\Provider\Privilege\FormulairePrivileges;
+use Autoform\Provider\Privilege\IndexPrivileges;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Mailing\Provider\Privilege\MailingPrivileges;
@@ -52,7 +53,7 @@ return [
                     ],
                     'privileges' => [
                         MailingPrivileges::MAILING_AFFICHER,
-                        FormulairePrivileges::AFFICHER,
+                        IndexPrivileges::AFFICHER_INDEX,
                         SynchroPrivileges::SYNCHRO_AFFICHER,
                         UtilisateurPrivileges::UTILISATEUR_AFFICHER,
                         RolePrivileges::ROLE_AFFICHER,

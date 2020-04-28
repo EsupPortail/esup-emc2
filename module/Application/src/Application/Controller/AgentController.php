@@ -150,15 +150,6 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    public function afficherAgentMissionSpecifiqueAction()
-    {
-        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
-        return new ViewModel([
-            'title' => "Affichage d'une mission spécifique de l'agent",
-            'agentMissionSpecifique' => $agentMissionSpecifique,
-        ]);
-    }
-
     public function modifierAgentMissionSpecifiqueAction()
     {
         $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
@@ -269,7 +260,7 @@ class AgentController extends AbstractActionController
         $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
         return new ViewModel([
             'title' => "Affichage d'une application maîtrisée par un agent",
-            'applicationAgent' => $applicationAgent,
+            'agentApplication' => $applicationAgent,
         ]);
     }
 
@@ -374,7 +365,7 @@ class AgentController extends AbstractActionController
         $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
         return new ViewModel([
             'title' => "Affichage d'une compétence",
-            'competence' => $competence,
+            'agentCompetence' => $competence,
         ]);
     }
 
@@ -479,7 +470,7 @@ class AgentController extends AbstractActionController
         $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
         return new ViewModel([
             'title' => "Affichage d'une formation",
-            'competence' => $agentFormation,
+            'agentFormation' => $agentFormation,
         ]);
     }
 

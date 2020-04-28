@@ -8,11 +8,17 @@ use Fichier\Entity\Db\Fichier;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Agent {
+class Agent implements ResourceInterface{
     use ImportableAwareTrait;
     use AgentServiceAwareTrait;
     use DateTimeAwareTrait;
+
+    public function getResourceId()
+    {
+        return 'Agent';
+    }
 
     /** @var string */
     private $id;
