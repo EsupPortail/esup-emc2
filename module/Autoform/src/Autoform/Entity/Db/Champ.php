@@ -15,6 +15,7 @@ class Champ {
     const TYPE_SELECT       = "Select";
     const TYPE_PERIODE      = "Periode";
     const TYPE_ANNEE        = "Annee";
+    const TYPE_NOMBRE       = "Number";
     const TYPE_MULTIPLE     = "Multiple";
     const TYPE_ENTITY       = "Entity";
     const TYPE_ENTITY_MULTI = "Entity Multiple";

@@ -24,6 +24,11 @@ class StructureAssertion extends AbstractAssertion {
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
+        $isGestionnaire = false;
+        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+            $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $user);
+        }
+
         switch($privilege) {
 
             case StructurePrivileges::STRUCTURE_AFFICHER :
@@ -33,7 +38,6 @@ class StructureAssertion extends AbstractAssertion {
                     case RoleConstant::OBSERVATEUR:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
-                        $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $user);
                         return $isGestionnaire;
                     default:
                         return false;
@@ -46,7 +50,6 @@ class StructureAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
-                        $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $user);
                         return $isGestionnaire;
                     default:
                         return false;

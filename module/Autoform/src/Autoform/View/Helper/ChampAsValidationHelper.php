@@ -61,6 +61,7 @@ class ChampAsValidationHelper extends AbstractHelper
                 if ($data === null OR $data === 'on') $texte .= ($champ->getTexte())?:$champ->getLibelle();
                 break;
             case Champ::TYPE_TEXT :
+            case Champ::TYPE_NOMBRE :
             case Champ::TYPE_TEXTAREA :
                 $texte .= $champ->getLibelle(). ' : ';
                 if ($data !== '') {

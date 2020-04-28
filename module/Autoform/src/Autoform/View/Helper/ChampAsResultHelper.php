@@ -38,6 +38,9 @@ class ChampAsResultHelper extends AbstractHelper
             case Champ::TYPE_TEXTAREA :
                 $texte .= $view->partial('result/textarea', ['champ' => $champ, 'data' => $data]);
                 break;
+            case Champ::TYPE_NOMBRE :
+                $texte .= $view->partial('result/nombre', ['champ' => $champ, 'data' => $data]);
+                break;
             case Champ::TYPE_SELECT :
                 $texte .= $view->partial('result/select', ['champ' => $champ, 'data' => $data]);
                 break;

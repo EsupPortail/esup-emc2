@@ -25,6 +25,11 @@ class FichePosteAssertion extends AbstractAssertion {
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
+        $isGestionnaire = false;
+        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+            $isGestionnaire = $this->getFichePosteService()->isGererPar($entity, $user);
+        }
+
         switch($privilege) {
 
             case FichePostePrivileges::FICHEPOSTE_AFFICHER :
@@ -34,7 +39,6 @@ class FichePosteAssertion extends AbstractAssertion {
                     case RoleConstant::OBSERVATEUR:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
-                        $isGestionnaire = $this->getFichePosteService()->isGererPar($entity, $user);
                         return $isGestionnaire;
                     case RoleConstant::RESPONSABLE_EPRO:
                         //TODO return false;
@@ -51,7 +55,6 @@ class FichePosteAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
-                        $isGestionnaire = $this->getFichePosteService()->isGererPar($entity, $user);
                         return $isGestionnaire;
                     default:
                         return false;

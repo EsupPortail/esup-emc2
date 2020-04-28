@@ -15,7 +15,8 @@ $options = explode(';', $champ->getOptions());
             <?php echo $champ->getLibelle()?>&nbsp;:
             </label>
         <div class="col-sm-10">
-            <input class="form-control" type="text" id="text_<?php echo $champ->getId()?>" name="<?php echo $champ->getId()?>" value="<?php echo trim($reponse); ?>"
+            <input class="form-control" type="number" id="text_<?php echo $champ->getId()?>" name="<?php echo $champ->getId()?>" value="<?php echo trim($reponse); ?>"
+                />
         </div>
     </div>
 </div>

@@ -23,6 +23,7 @@ class ChampForm extends Form {
                     Champ::TYPE_TEXT        => "Texte libre court",
                     Champ::TYPE_TEXTAREA    => "Texte libre long ",
                     Champ::TYPE_CHECKBOX    => "Boîte à cocher",
+                    Champ::TYPE_NOMBRE      => "Nombre",
                     Champ::TYPE_SELECT      => "Choix simple parmi selection",
                     Champ::TYPE_MULTIPLE    => "Choix multiple parmi selection",
                     Champ::TYPE_PERIODE     => "Période",

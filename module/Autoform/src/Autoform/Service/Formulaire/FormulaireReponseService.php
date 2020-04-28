@@ -2,7 +2,6 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Application\Entity\Db\Demande;
 use Autoform\Entity\Db\Champ;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Entity\Db\FormulaireInstance;
@@ -15,6 +14,7 @@ use Exception;
 use UnicaenApp\Entity\UserInterface;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -47,31 +47,6 @@ class FormulaireReponseService {
     }
 
     /**
-     * @param Formulaire $formulaire
-     * @param Demande $demande
-     * @return FormulaireReponse[]
-     */
-    public function getFormulaireResponsesByFormulaireAndDemande($formulaire, $demande)
-    {
-        $qb = $this->getEntityManager()->getRepository(FormulaireReponse::class)->createQueryBuilder('reponse')
-            ->addSelect('champ')->join('reponse.champ', 'champ')
-            ->addSelect('categorie')->join('champ.categorie', 'categorie')
-            ->andWhere('categorie.formulaire = :formulaire')
-            ->setParameter('formulaire', $formulaire)
-            ->andWhere('reponse.demande = :demande')
-            ->setParameter('demande', $demande)
-        ;
-
-        /** @var FormulaireReponse[] $result */
-        $result = $qb->getQuery()->getResult();
-
-        $reponses = [];
-        foreach ($result as $item) {
-            $reponses[$item->getChamp()->getId()] = $item;
-        }
-        return $reponses;
-    }
-    /**
      * @param integer $id
      * @return FormulaireReponse
      */
@@ -96,7 +71,7 @@ class FormulaireReponseService {
      */
     public function create($reponse)
     {
-        /** @var UserInterface $user */
+        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
         /** @var DateTime $date */
         try {
@@ -124,7 +99,7 @@ class FormulaireReponseService {
      */
     public function update($reponse)
     {
-        /** @var UserInterface $user */
+        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
         /** @var DateTime $date */
         try {
@@ -149,7 +124,7 @@ class FormulaireReponseService {
      */
     public function historise($reponse)
     {
-        /** @var UserInterface $user */
+        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
         /** @var DateTime $date */
         try {
@@ -172,7 +147,7 @@ class FormulaireReponseService {
      * @param FormulaireReponse $reponse
      * @return FormulaireReponse
      */
-    public function restaure($reponse)
+    public function restore($reponse)
     {
         $reponse->setHistoDestructeur(null);
         $reponse->setHistoDestruction(null);
@@ -295,6 +270,7 @@ class FormulaireReponseService {
                 return isset($data[$champ->getId()]) ? $data[$champ->getId()] : null;
                 break;
             case Champ::TYPE_TEXT :
+            case Champ::TYPE_NOMBRE :
             case Champ::TYPE_TEXTAREA :
                 if (isset($data[$champ->getId()])) {
                     $value = trim($data[$champ->getId()]);
