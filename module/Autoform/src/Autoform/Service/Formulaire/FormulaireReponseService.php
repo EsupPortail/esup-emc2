@@ -7,63 +7,20 @@ use Autoform\Entity\Db\Formulaire;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
 use Autoform\Service\Champ\ChampServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Exception;
-use UnicaenApp\Entity\UserInterface;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireReponseService {
+    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use ChampServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $label
-     * @return FormulaireReponse
-     */
-    public function getFormulaireRequestedReponse($controller, $label)
-    {
-        $id = $controller->params()->fromRoute($label);
-        $reponse = $this->getFormulaireReponse($id);
-        return $reponse;
-    }
-
-    /**
-     * @return FormulaireReponse[]
-     */
-    public function getFormulaireReponses()
-    {
-        $qb = $this->getEntityManager()->getRepository(FormulaireReponse::class)->createQueryBuilder('reponse');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return FormulaireReponse
-     */
-    public function getFormulaireReponse($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(FormulaireReponse::class)->createQueryBuilder('reponse')
-            ->andWhere('reponse.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Reponse partagent le même identifiant [".$id."].", $e);
-        }
-        return $result;
-    }
+    /** GESTION DES ENTITES  ******************************************************************************************/
 
     /**
      * @param FormulaireReponse $reponse
@@ -71,14 +28,9 @@ class FormulaireReponseService {
      */
     public function create($reponse)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
+
         $reponse->setHistoCreateur($user);
         $reponse->setHistoCreation($date);
         $reponse->setHistoModificateur($user);
@@ -99,14 +51,9 @@ class FormulaireReponseService {
      */
     public function update($reponse)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
+
         $reponse->setHistoModificateur($user);
         $reponse->setHistoModification($date);
 
@@ -124,14 +71,9 @@ class FormulaireReponseService {
      */
     public function historise($reponse)
     {
-        /** @var User $user */
         $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
+        $date = $this->getDateTime();
+
         $reponse->setHistoDestructeur($user);
         $reponse->setHistoDestruction($date);
 
@@ -173,6 +115,38 @@ class FormulaireReponseService {
             throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Reponse.", $e);
         }
         return $reponse;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
+
+    /**
+     * @return FormulaireReponse[]
+     */
+    public function getFormulaireReponses()
+    {
+        $qb = $this->getEntityManager()->getRepository(FormulaireReponse::class)->createQueryBuilder('reponse');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return FormulaireReponse
+     */
+    public function getFormulaireReponse($id)
+    {
+        $qb = $this->getEntityManager()->getRepository(FormulaireReponse::class)->createQueryBuilder('reponse')
+            ->andWhere('reponse.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Reponse partagent le même identifiant [".$id."].", $e);
+        }
+        return $result;
     }
 
     /**

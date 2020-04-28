@@ -2,7 +2,6 @@
 
 namespace Autoform;
 
-use Application\Provider\Privilege\AdministrationPrivileges;
 use Autoform\Controller\ValidationController;
 use Autoform\Controller\ValidationControllerFactory;
 use Autoform\Provider\Privilege\FormulairePrivileges;

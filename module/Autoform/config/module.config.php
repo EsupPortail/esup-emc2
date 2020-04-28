@@ -60,26 +60,6 @@ return array(
         ],
     ],
 
-    'form_elements' => [
-        'factories' => [
-//            IndicateurForm::class => IndicateurFormFactory::class,
-        ],
-    ],
-    'hydrators' => [
-        'invokables' => [
-//            IndicateurHydrator::class => IndicateurHydrator::class,
-        ],
-    ],
-    'controllers' => [
-        'factories' => [
-//            MailingController::class => MailingControllerFactory::class,
-        ],
-    ],
-    'view_helpers' => [
-        'invokables' => [
-//            'completIndicateurThese'    => CompletIndicateurTheseHelper::class,
-        ],
-    ],
     'view_manager' => [
         'template_path_stack' => [
             __DIR__ . '/../view',

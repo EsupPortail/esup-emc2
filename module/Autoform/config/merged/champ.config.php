@@ -9,7 +9,6 @@ use Autoform\Form\Champ\ChampHydratorFactory;
 use Autoform\Service\Champ\ChampService;
 use Autoform\Service\Champ\ChampServiceFactory;
 use Autoform\View\Helper\ChampAsInputHelperFactory;
-use Autoform\View\Helper\ChampAsResultHelper;
 use Autoform\View\Helper\ChampAsResultHelperFactory;
 use Autoform\View\Helper\ChampAsValidationHelper;
 use Autoform\View\Helper\InstanceAsDivHelper;
