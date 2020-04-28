@@ -129,11 +129,15 @@ class ChampService {
     }
 
     /**
+     * @param string $champ
+     * @param string $order
      * @return Champ[]
      */
-    public function getChamps()
+    public function getChamps($champ = 'id', $order = 'ASC')
     {
-        $qb = $this->getEntityManager()->getRepository(Champ::class)->createQueryBuilder('champ');
+        $qb = $this->getEntityManager()->getRepository(Champ::class)->createQueryBuilder('champ')
+            ->orderBy('champ.' . $champ, $order)
+        ;
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -172,25 +176,6 @@ class ChampService {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs Champ partagent le même identifiant [".$id."].", $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param integer $ordre
-     * @return Champ
-     */
-    public function getChampByOrdre($ordre)
-    {
-        $qb = $this->getEntityManager()->getRepository(Champ::class)->createQueryBuilder('champ')
-            ->andWhere('champ.ordre = :ordre')
-            ->setParameter('ordre', $ordre)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Champ partagent le même ordre [".$ordre."].", $e);
         }
         return $result;
     }

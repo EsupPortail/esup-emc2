@@ -161,26 +161,6 @@ class FormulaireService {
         return $result;
     }
 
-    /**
-     * @param integer $id
-     * @return Champ
-     */
-    public function getChamp($id)
-    {
-        $qb = $this->getEntityManager()->getRepository(Champ::class)->createQueryBuilder('champ')
-            ->andWhere('champ.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Champ partagent le même identifiant [".$id."].", $e);
-        }
-        return $result;
-    }
-
-
     public function compacter($formulaire) {
         $categories = $this->getCategorieService()->getCategoriesByFormulaire($formulaire, 'ordre');
 

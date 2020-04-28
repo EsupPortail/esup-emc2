@@ -131,11 +131,15 @@ class CategorieService {
     }
 
     /**
+     * @param string $champ
+     * @param string $ordre
      * @return Categorie[]
      */
-    public function getCategories()
+    public function getCategories($champ = 'id', $ordre = 'ASC')
     {
-        $qb = $this->getEntityManager()->getRepository(Categorie::class)->createQueryBuilder('categorie');
+        $qb = $this->getEntityManager()->getRepository(Categorie::class)->createQueryBuilder('categorie')
+            ->orderBy('categorie.' . $champ, $ordre)
+        ;
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -174,25 +178,6 @@ class CategorieService {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs Categorie partagent le même identifiant [".$id."].", $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param integer $ordre
-     * @return Categorie
-     */
-    public function getCategorieByOrdre($ordre)
-    {
-        $qb = $this->getEntityManager()->getRepository(Categorie::class)->createQueryBuilder('categorie')
-            ->andWhere('categorie.ordre = :ordre')
-            ->setParameter('ordre', $ordre)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Categorie partagent le même ordre [".$ordre."].", $e);
         }
         return $result;
     }
