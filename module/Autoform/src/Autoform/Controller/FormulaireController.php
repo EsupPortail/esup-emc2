@@ -30,6 +30,8 @@ class FormulaireController extends AbstractActionController {
     use ChampFormAwareTrait;
     use FormulaireFormAwareTrait;
 
+    /** GESTION DES FORMULAIRES ***************************************************************************************/
+
     public function indexAction()
     {
         $formulaires = $this->getFormulaireService()->getFormulaires();
@@ -127,6 +129,8 @@ class FormulaireController extends AbstractActionController {
         return $this->redirect()->toRoute('autoform/formulaires', [], [] , true);
     }
 
+    /** GESTION DES CATEGORIES ****************************************************************************************/
+
     public function ajouterCategorieAction() {
         $formulaire = $this->getFormulaireService()->getRequestedFormulaire($this, 'formulaire');
         $categorie = new Categorie();
@@ -223,6 +227,8 @@ class FormulaireController extends AbstractActionController {
 
         return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
+
+    /** GESTION DES CHAMPS ********************************************************************************************/
 
     public function ajouterChampAction() {
         $formulaire = $this->getFormulaireService()->getRequestedFormulaire($this, 'formulaire');
@@ -323,6 +329,8 @@ class FormulaireController extends AbstractActionController {
 
         return $this->redirect()->toRoute('autoform/formulaire/modifier', ['formulaire' => $formulaire->getId()], [], true);
     }
+
+    /** AFFICHAGES ****************************************************************************************************/
 
     /**
      * si dans les paramètres passés en query on a retour alors la redirection "finale" doit être vers cette adresse

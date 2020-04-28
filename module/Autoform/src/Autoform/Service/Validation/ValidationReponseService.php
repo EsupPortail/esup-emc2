@@ -8,7 +8,6 @@ use Autoform\Entity\Db\Validation;
 use Autoform\Entity\Db\ValidationReponse;
 use Autoform\Service\Formulaire\FormulaireReponseServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -17,6 +16,55 @@ use Zend\Mvc\Controller\AbstractActionController;
 class ValidationReponseService {
     use EntityManagerAwareTrait;
     use FormulaireReponseServiceAwareTrait;
+
+    /** GESTION DES ENTITES *******************************************************************************************/
+
+    /**
+     * @param ValidationReponse $reponse
+     * @return ValidationReponse
+     */
+    public function create($reponse)
+    {
+        try {
+            $this->getEntityManager()->persist($reponse);
+            $this->getEntityManager()->flush($reponse);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la création d'un Reponse.", $e);
+        }
+
+        return $reponse;
+    }
+
+    /**
+     * @param ValidationReponse $reponse
+     * @return ValidationReponse
+     */
+    public function update($reponse)
+    {
+        try {
+            $this->getEntityManager()->flush($reponse);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Reponse.", $e);
+        }
+        return $reponse;
+    }
+
+    /**
+     * @param ValidationReponse $reponse
+     * @return ValidationReponse
+     */
+    public function delete($reponse)
+    {
+        try {
+            $this->getEntityManager()->remove($reponse);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Reponse.", $e);
+        }
+        return $reponse;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @param AbstractActionController $controller
@@ -83,57 +131,6 @@ class ValidationReponseService {
     }
 
     /**
-     * @param ValidationReponse $reponse
-     * @return ValidationReponse
-     */
-    public function create($reponse)
-    {
-        try {
-            $this->getEntityManager()->persist($reponse);
-            $this->getEntityManager()->flush($reponse);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la création d'un Reponse.", $e);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la création d'un Reponse.", $e);
-        }
-
-        return $reponse;
-    }
-
-    /**
-     * @param ValidationReponse $reponse
-     * @return ValidationReponse
-     */
-    public function update($reponse)
-    {
-        try {
-            $this->getEntityManager()->flush($reponse);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Reponse.", $e);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Reponse.", $e);
-        }
-        return $reponse;
-    }
-
-    /**
-     * @param ValidationReponse $reponse
-     * @return ValidationReponse
-     */
-    public function delete($reponse)
-    {
-        try {
-            $this->getEntityManager()->remove($reponse);
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Reponse.", $e);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Reponse.", $e);
-        }
-        return $reponse;
-    }
-
-    /**
      * @param Validation $validation
      * @param array $data
      */
@@ -166,7 +163,6 @@ class ValidationReponseService {
             } else {
                 foreach ($data as $name => $reponse) {
                     $prefix = "reponse_".$key."_";
-                    $computed = substr($name,0, strlen($prefix));
                     if (substr($name,0, strlen($prefix)) === $prefix) {
                         $value[] = substr($name, strlen($prefix));
                     }

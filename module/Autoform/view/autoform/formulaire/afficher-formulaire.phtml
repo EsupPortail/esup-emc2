@@ -1,11 +1,15 @@
 <?php
 
 /**
- * @var \Autoform\Entity\Db\Formulaire $formulaire
- * @var \Application\Entity\Db\Demande $demande
- * @var \Autoform\Entity\Db\int[] $reponses
+ * @see \Autoform\Controller\FormulaireController::afficherFormulaireAction()
+ * @var Formulaire $formulaire
+ * @var array $reponses
  * @var string $url
  */
+
+use Autoform\Entity\Db\Categorie;
+use Autoform\Entity\Db\Champ;
+use Autoform\Entity\Db\Formulaire;
 
 ?>
 
@@ -20,19 +24,19 @@
         <br/>
 
         <?php
-            /** @var \Autoform\Entity\Db\Categorie[] $categories */
+            /** @var Categorie[] $categories */
             $categories = $formulaire->getCategories();
-            $categories = array_filter($categories, function (\Autoform\Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
-            usort($categories, function (\Autoform\Entity\Db\Categorie $a, \Autoform\Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+            $categories = array_filter($categories, function (Categorie $categorie) { return $categorie->estNonHistorise();});
+            usort($categories, function (Categorie $a, Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
         ?>
 
         <?php foreach ($categories as $categorie) : ?>
 
             <?php
-                /** @var \Autoform\Entity\Db\Champ[] $champs */
+                /** @var Champ[] $champs */
                 $champs = $categorie->getChamps();
-                $champs = array_filter($champs, function (\Autoform\Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
-                usort($champs, function (\Autoform\Entity\Db\Champ $a, \Autoform\Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+                $champs = array_filter($champs, function (Champ $champ) { return $champ->estNonHistorise();});
+                usort($champs, function (Champ $a, Champ $b) { return $a->getOrdre() - $b->getOrdre();});
             ?>
 
             <?php if (!empty($champs)) : ?>

@@ -5,12 +5,11 @@ namespace Autoform\Service\Categorie;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Service\Champ\ChampServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -18,6 +17,106 @@ class CategorieService {
     use ChampServiceAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+    use DateTimeAwareTrait;
+
+    /** GESTION DES ENTITES *******************************************************************************************/
+
+    /**
+     * @param Categorie $categorie
+     * @return Categorie
+     */
+    public function create($categorie)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $categorie->setHistoCreateur($user);
+        $categorie->setHistoCreation($date);
+        $categorie->setHistoModificateur($user);
+        $categorie->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->persist($categorie);
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la création d'un Categorie.", $e);
+        }
+        return $categorie;
+    }
+
+    /**
+     * @param Categorie $categorie
+     * @return Categorie
+     */
+    public function update($categorie)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $categorie->setHistoModificateur($user);
+        $categorie->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Categorie.", $e);
+        }
+        return $categorie;
+    }
+
+    /**
+     * @param Categorie $categorie
+     * @return Categorie
+     */
+    public function historise($categorie)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $categorie->setHistoDestructeur($user);
+        $categorie->setHistoDestruction($date);
+
+        try {
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Categorie.", $e);
+        }
+        return $categorie;
+    }
+
+    /**
+     * @param Categorie $categorie
+     * @return Categorie
+     */
+    public function restaure($categorie)
+    {
+        $categorie->setHistoDestructeur(null);
+        $categorie->setHistoDestruction(null);
+
+        try {
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Categorie.", $e);
+        }
+        return $categorie;
+    }
+
+    /**
+     * @param Categorie $categorie
+     * @return Categorie
+     */
+    public function delete($categorie)
+    {
+        try {
+            $this->getEntityManager()->remove($categorie);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Categorie.", $e);
+        }
+        return $categorie;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @param AbstractActionController $controller
@@ -78,118 +177,6 @@ class CategorieService {
         }
         return $result;
     }
-
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
-    public function create($categorie)
-    {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
-        $categorie->setHistoCreateur($user);
-        $categorie->setHistoCreation($date);
-        $categorie->setHistoModificateur($user);
-        $categorie->setHistoModification($date);
-
-        $this->getEntityManager()->persist($categorie);
-        try {
-            $this->getEntityManager()->flush($categorie);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la création d'un Categorie.", $e);
-        }
-        return $categorie;
-    }
-
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
-    public function update($categorie)
-    {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
-        $categorie->setHistoModificateur($user);
-        $categorie->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($categorie);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Categorie.", $e);
-        }
-        return $categorie;
-    }
-
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
-    public function historise($categorie)
-    {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
-        $categorie->setHistoDestructeur($user);
-        $categorie->setHistoDestruction($date);
-
-        try {
-            $this->getEntityManager()->flush($categorie);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Categorie.", $e);
-        }
-        return $categorie;
-    }
-
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
-    public function restaure($categorie)
-    {
-        $categorie->setHistoDestructeur(null);
-        $categorie->setHistoDestruction(null);
-
-        try {
-            $this->getEntityManager()->flush($categorie);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Categorie.", $e);
-        }
-        return $categorie;
-    }
-
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
-    public function delete($categorie)
-    {
-        $this->getEntityManager()->remove($categorie);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Categorie.", $e);
-        }
-        return $categorie;
-    }
-
-
 
     /**
      * @param integer $ordre

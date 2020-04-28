@@ -11,6 +11,10 @@ use Zend\View\Renderer\PhpRenderer;
 
 class ValidationControllerFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return ValidationController
+     */
     public function __invoke(ContainerInterface $container)
     {
         /**

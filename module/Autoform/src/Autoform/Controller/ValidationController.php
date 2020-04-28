@@ -3,7 +3,6 @@
 namespace Autoform\Controller;
 
 use Autoform\Entity\Db\Validation;
-use Autoform\Service\Exporter\Validation\ValidationExporter;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireReponseServiceAwareTrait;
 use Autoform\Service\Validation\ValidationReponseServiceAwareTrait;
@@ -97,25 +96,6 @@ class ValidationController extends AbstractActionController {
             'fReponses' => $fReponses,
             'vReponses' => $vReponses,
         ]);
-    }
-
-    public function exportPdfAction()
-    {
-        $validation = $this->getValidationService()->getRequestedValidation($this, 'validation');
-        $instance = $validation->getFormulaireInstance();
-        $formulaire = $instance->getFormulaire();
-
-        $fReponses = $this->getFormulaireReponseService()->getFormulaireResponsesByFormulaireInstance($instance);
-        $vReponses = $this->getValidationReponseService()->getValidationResponsesByValidation($validation);
-
-        $exporter = new ValidationExporter($this->renderer, 'A4');
-        $exporter->setVars([
-            'formulaire' => $formulaire,
-            'fReponses' => $fReponses,
-            'vReponses' => $vReponses,
-        ]);
-        $exporter->export('export.pdf');
-        exit;
     }
 
     public function historiserAction()

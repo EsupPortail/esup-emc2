@@ -4,18 +4,117 @@ namespace Autoform\Service\Champ;
 
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ChampService {
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+    use DateTimeAwareTrait;
+
+    /** GESTION DES ENTITES *******************************************************************************************/
+
+    /**
+     * @param Champ $champ
+     * @return Champ
+     */
+    public function create($champ)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $champ->setHistoCreateur($user);
+        $champ->setHistoCreation($date);
+        $champ->setHistoModificateur($user);
+        $champ->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->persist($champ);
+            $this->getEntityManager()->flush($champ);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la création d'un Champ.", $e);
+        }
+        return $champ;
+    }
+
+    /**
+     * @param Champ $champ
+     * @return Champ
+     */
+    public function update($champ)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $champ->setHistoModificateur($user);
+        $champ->setHistoModification($date);
+
+        try {
+            $this->getEntityManager()->flush($champ);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Champ.", $e);
+        }
+        return $champ;
+    }
+
+    /**
+     * @param Champ $champ
+     * @return Champ
+     */
+    public function historise($champ)
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $date = $this->getDateTime();
+
+        $champ->setHistoDestructeur($user);
+        $champ->setHistoDestruction($date);
+
+        try {
+            $this->getEntityManager()->flush($champ);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Champ.", $e);
+        }
+        return $champ;
+    }
+
+    /**
+     * @param Champ $champ
+     * @return Champ
+     */
+    public function restaure($champ)
+    {
+        $champ->setHistoDestructeur(null);
+        $champ->setHistoDestruction(null);
+
+        try {
+            $this->getEntityManager()->flush($champ);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Champ.", $e);
+        }
+        return $champ;
+    }
+
+    /**
+     * @param Champ $champ
+     * @return Champ
+     */
+    public function delete($champ)
+    {
+        try {
+            $this->getEntityManager()->remove($champ);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Champ.", $e);
+        }
+        return $champ;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @param AbstractActionController $controller
@@ -76,118 +175,6 @@ class ChampService {
         }
         return $result;
     }
-
-    /**
-     * @param Champ $champ
-     * @return Champ
-     */
-    public function create($champ)
-    {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
-        $champ->setHistoCreateur($user);
-        $champ->setHistoCreation($date);
-        $champ->setHistoModificateur($user);
-        $champ->setHistoModification($date);
-
-        $this->getEntityManager()->persist($champ);
-        try {
-            $this->getEntityManager()->flush($champ);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la création d'un Champ.", $e);
-        }
-        return $champ;
-    }
-
-    /**
-     * @param Champ $champ
-     * @return Champ
-     */
-    public function update($champ)
-    {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
-        $champ->setHistoModificateur($user);
-        $champ->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($champ);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Champ.", $e);
-        }
-        return $champ;
-    }
-
-    /**
-     * @param Champ $champ
-     * @return Champ
-     */
-    public function historise($champ)
-    {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        /** @var DateTime $date */
-        try {
-            $date = new DateTime();
-        } catch (\Exception $e) {
-            throw new RuntimeException("Problème lors de la récupération de la date", $e);
-        }
-        $champ->setHistoDestructeur($user);
-        $champ->setHistoDestruction($date);
-
-        try {
-            $this->getEntityManager()->flush($champ);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Champ.", $e);
-        }
-        return $champ;
-    }
-
-    /**
-     * @param Champ $champ
-     * @return Champ
-     */
-    public function restaure($champ)
-    {
-        $champ->setHistoDestructeur(null);
-        $champ->setHistoDestruction(null);
-
-        try {
-            $this->getEntityManager()->flush($champ);
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Champ.", $e);
-        }
-        return $champ;
-    }
-
-    /**
-     * @param Champ $champ
-     * @return Champ
-     */
-    public function delete($champ)
-    {
-        $this->getEntityManager()->remove($champ);
-        try {
-            $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la suppression d'un Champ.", $e);
-        }
-        return $champ;
-    }
-
-
 
     /**
      * @param integer $ordre

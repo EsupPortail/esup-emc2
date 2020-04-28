@@ -14,6 +14,10 @@ use Interop\Container\ContainerInterface;
 
 class FormulaireControllerFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return FormulaireController
+     */
     public function __invoke(ContainerInterface $container)
     {
         /**

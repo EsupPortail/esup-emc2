@@ -1,32 +1,39 @@
 <?php
 
 /**
- * @var \Autoform\Entity\Db\Formulaire $formulaire
- * @var \Application\Entity\Db\Demande $demande
+ * @see \Autoform\Controller\ValidationController::afficherResultatAction()
+ * @var Formulaire $formulaire
 // * @var \Autoform\Entity\Db\Validation $validation
- * @var \Autoform\Entity\Db\Formulaireinstance $instance
- * @var \Autoform\Entity\Db\FormulaireReponse[] $fReponses
- * @var \Autoform\Entity\Db\ValidationReponse[] $vReponses
+ * @var Formulaireinstance $instance
+ * @var FormulaireReponse[] $fReponses
+ * @var ValidationReponse[] $vReponses
  * @var string $url
  */
+
+use Autoform\Entity\Db\Categorie;
+use Autoform\Entity\Db\Champ;
+use Autoform\Entity\Db\Formulaire;
+use Autoform\Entity\Db\Formulaireinstance;
+use Autoform\Entity\Db\FormulaireReponse;
+use Autoform\Entity\Db\ValidationReponse;
 
 ?>
 
         <form method="post" action="<?php echo $url; ?>">
         <?php
-            /** @var \Autoform\Entity\Db\Categorie[] $categories */
+            /** @var Categorie[] $categories */
             $categories = $formulaire->getCategories();
-            $categories = array_filter($categories, function (\Autoform\Entity\Db\Categorie $categorie) { return $categorie->estNonHistorise();});
-            usort($categories, function (\Autoform\Entity\Db\Categorie $a, \Autoform\Entity\Db\Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
+            $categories = array_filter($categories, function (Categorie $categorie) { return $categorie->estNonHistorise();});
+            usort($categories, function (Categorie $a, Categorie $b) { return $a->getOrdre() - $b->getOrdre();});
         ?>
 
         <?php foreach ($categories as $categorie) : ?>
 
             <?php
-                /** @var \Autoform\Entity\Db\Champ[] $champs */
+                /** @var Champ[] $champs */
                 $champs = $categorie->getChamps();
-                $champs = array_filter($champs, function (\Autoform\Entity\Db\Champ $champ) { return $champ->estNonHistorise();});
-                usort($champs, function (\Autoform\Entity\Db\Champ $a, \Autoform\Entity\Db\Champ $b) { return $a->getOrdre() - $b->getOrdre();});
+                $champs = array_filter($champs, function (Champ $champ) { return $champ->estNonHistorise();});
+                usort($champs, function (Champ $a, Champ $b) { return $a->getOrdre() - $b->getOrdre();});
 
                 $results = [];
                 foreach ($champs as $champ) {

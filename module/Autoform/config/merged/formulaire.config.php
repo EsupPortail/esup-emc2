@@ -54,7 +54,6 @@ return [
                     'controller' => FormulaireController::class,
                     'action' => [
                         'modifier',
-                        'modifier-description',
                         'ajouter-categorie',
                         'modifier-categorie',
                         'historiser-categorie',
