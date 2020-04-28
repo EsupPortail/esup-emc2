@@ -10,10 +10,10 @@ use Application\Provider\Privilege\AgentPrivileges;
  */
 
 $canVoirMission         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canAjouterMission      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
-$canModifierMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
-$canHistoriserMission   = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
-$canDetruireMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
+$canAjouterMission      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canModifierMission     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
+$canHistoriserMission   = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruireMission     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
 
 ?>
 

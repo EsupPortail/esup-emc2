@@ -25,16 +25,4 @@ class AgentPrivileges extends Privileges
     const AGENT_ELEMENT_HISTORISER          = 'agent-agent_element_historiser';
     const AGENT_ELEMENT_DETRUIRE            = 'agent-agent_element_detruire';
     const AGENT_ELEMENT_VALIDER             = 'agent-agent_element_valider';
-
-    const AGENT_ENTRETIENPRO_VOIR           = 'agent-agent_entretienpro_voir';
-    const AGENT_ENTRETIENPRO_AJOUTER        = 'agent-agent_entretienpro_ajouter';
-    const AGENT_ENTRETIENPRO_MODIFIER       = 'agent-agent_entretienpro_modifier';
-    const AGENT_ENTRETIENPRO_HISTORISER     = 'agent-agent_entretienpro_historiser';
-    const AGENT_ENTRETIENPRO_DETRUIRE       = 'agent-agent_entretienpro_detruire';
-
-    const AGENT_FICHIER_AFFICHER = 'agent-agent_fichier_afficher';
-    const AGENT_FICHIER_AJOUTER = 'agent-agent_fichier_ajouter';
-    const AGENT_FICHIER_MODIFIER = 'agent-agent_fichier_modifier';
-    const AGENT_FICHIER_HISTORISER = 'agent-agent_fichier_historiser';
-    const AGENT_FICHIER_DETRUIRE = 'agent-agent_fichier_detruire';
 }

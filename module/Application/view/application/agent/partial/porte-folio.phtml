@@ -9,10 +9,10 @@ use Fichier\Entity\Db\Fichier;
  * @var Agent $agent
  */
 
-$canVoirFichier         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_AFFICHER));
-$canAjouterFichier      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_AJOUTER));
-$canHistoriserFichier   = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_HISTORISER));
-$canDetruireFichier     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_FICHIER_DETRUIRE));
+$canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+$canAjouterFichier      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canHistoriserFichier   = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruireFichier     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
 
 ?>
 
