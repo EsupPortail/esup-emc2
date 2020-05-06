@@ -77,6 +77,7 @@ class MetierService {
             ->addSelect('domaine')->leftJoin('metier.domaine','domaine')
             ->addSelect('famille')->leftJoin('domaine.famille','famille')
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
+            ->addSelect('reference')->leftJoin('metier.references', 'reference')
         ;
         return $qb;
     }

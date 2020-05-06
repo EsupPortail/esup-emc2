@@ -84,7 +84,9 @@ use Autoform\Entity\Db\Champ;
         <ul>
         <?php foreach ($champs as $champ) : ?>
             <?php if ($champ->estNonHistorise()) : ?>
-                <?php echo $this->champAsResult()->render($champ, (isset($reponses[$champ->getId()]))?$reponses[$champ->getId()]:""); ?>
+                <?php if (isset($reponses[$champ->getId()]) AND $reponses[$champ->getId()] !== null) : ?>
+                    <?php echo $this->champAsResult()->render($champ, $reponses[$champ->getId()]); ?>
+                <?php endif; ?>
             <?php endif; ?>
         <?php endforeach; ?>
         </ul>
@@ -111,7 +113,7 @@ use Autoform\Entity\Db\Champ;
         <td>
             <?php if ($entretien->getValidationAgent()) : ?>
                 <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?> <br/>
-                <?php echo $entretien->getValidationAgent()->getHistoModification()->format('d/m/y'); ?>
+                <?php echo $entretien->getValidationAgent()->getHistoModification()->format('d/m/Y'); ?>
             <?php else : ?>
                 L'agent n'a pas encore validé&middot;e l'entretien professionnel.
             <?php endif; ?>
@@ -119,7 +121,7 @@ use Autoform\Entity\Db\Champ;
         <td>
             <?php if ($entretien->getValidationResponsable()) : ?>
                 <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?> <br/>
-                <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/y'); ?>
+                <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/Y'); ?>
             <?php else : ?>
                 Le responsable n'a pas encore validé&middot;e l'entretien professionnel.
             <?php endif; ?>

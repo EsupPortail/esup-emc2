@@ -5,6 +5,10 @@ namespace Application\Controller;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\Metier;
+use Application\Entity\Db\MetierReference;
+use Application\Entity\Db\MetierReferentiel;
+use Application\Form\MetierReference\MetierReferenceFormAwareTrait;
+use Application\Form\MetierReferentiel\MetierReferentielFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\Domaine\DomaineForm;
@@ -14,6 +18,8 @@ use Application\Form\Metier\MetierFormAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
+use Application\Service\MetierReference\MetierReferenceServiceAwareTrait;
+use Application\Service\MetierReferentiel\MetierReferentielServiceAwareTrait;
 use DateTime;
 use UnicaenApp\View\Model\CsvModel;
 use Zend\Http\Request;
@@ -24,20 +30,27 @@ class MetierController extends AbstractActionController {
     use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
+    use MetierReferenceServiceAwareTrait;
+    use MetierReferentielServiceAwareTrait;
 
     use DomaineFormAwareTrait;
     use MetierFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
+    use MetierReferentielFormAwareTrait;
+    use MetierReferenceFormAwareTrait;
 
     public function indexAction() {
         $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
         $domaines = $this->getDomaineService()->getDomaines();
         $metiers = $this->getMetierService()->getMetiers();
+        $referentiels = $this->getMetierReferentielService()->getMetiersReferentiels();
+
 
         return new ViewModel([
             'metiers' => $metiers,
             'familles' => $familles,
             'domaines' => $domaines,
+            'referentiels' => $referentiels,
         ]);
     }
 
@@ -353,6 +366,194 @@ class MetierController extends AbstractActionController {
         return $vm;
     }
 
+    /** METIER REFERENTIEL  *******************************************************************************************/
+
+    public function ajouterReferentielAction()
+    {
+        $referentiel = new MetierReferentiel();
+        $form = $this->getMetierReferentielForm();
+        $form->setAttribute('action', $this->url()->fromRoute('metier/ajouter-referentiel', [], [], true));
+        $form->bind($referentiel);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMetierReferentielService()->create($referentiel);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'un référentiel métier",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierReferentielAction()
+    {
+        $referentiel = $this->getMetierReferentielService()->getRequestedMetierReferentiel($this);
+        $form = $this->getMetierReferentielForm();
+        $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-referentiel', ['referentiel' => $referentiel->getId()], [], true));
+        $form->bind($referentiel);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMetierReferentielService()->update($referentiel);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'un référentiel métier",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserReferentielAction()
+    {
+        $referentiel = $this->getMetierReferentielService()->getRequestedMetierReferentiel($this);
+        $this->getMetierReferentielService()->historise($referentiel);
+        return $this->redirect()->toRoute('metier', [], ["fragment" => "referentiel"], true);
+    }
+
+    public function restaurerReferentielAction()
+    {
+        $referentiel = $this->getMetierReferentielService()->getRequestedMetierReferentiel($this);
+        $this->getMetierReferentielService()->restore($referentiel);
+        return $this->redirect()->toRoute('metier', [], ["fragment" => "referentiel"], true);
+    }
+
+    public function effacerReferentielAction()
+    {
+        $referentiel = $this->getMetierReferentielService()->getRequestedMetierReferentiel($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getMetierReferentielService()->delete($referentiel);
+            //return $this->redirect()->toRoute('home');
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($referentiel !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du référentiel " . $referentiel->getLibelleCourt(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('metier/effacer-referentiel', ["metier" => $referentiel->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** METIER REFERENCE **********************************************************************************************/
+
+    public function ajouterReferenceAction()
+    {
+        $metier = $this->getMetierService()->getRequestedMetier($this);
+        $reference = new MetierReference();
+        $reference->setMetier($metier);
+        $form = $this->getMetierReferenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('metier/ajouter-reference', [], [], true));
+        $form->bind($reference);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMetierReferenceService()->create($reference);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une référence",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierReferenceAction()
+    {
+        $reference = $this->getMetierReferenceService()->getRequestedMetierReference($this);
+        $form = $this->getMetierReferenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-reference', ['reference' => $reference->getId()], [], true));
+        $form->bind($reference);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMetierReferenceService()->update($reference);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une référence métier",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserReferenceAction()
+    {
+        $reference = $this->getMetierReferenceService()->getRequestedMetierReference($this);
+        $this->getMetierReferenceService()->historise($reference);
+        return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
+    }
+
+    public function restaurerReferenceAction()
+    {
+        $reference = $this->getMetierReferenceService()->getRequestedMetierReference($this);
+        $this->getMetierReferenceService()->restore($reference);
+        return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
+    }
+
+    public function effacerReferenceAction()
+    {
+        $reference = $this->getMetierReferenceService()->getRequestedMetierReference($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getMetierReferenceService()->delete($reference);
+            //return $this->redirect()->toRoute('home');
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($reference !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la référence " . $reference->getTitre(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('metier/effacer-reference', ["reference" => $reference->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     /** CARTOGRAPHIE ***************************************************************************************************/
 
     public function cartographieAction() {
@@ -425,4 +626,6 @@ class MetierController extends AbstractActionController {
 
         return $result;
     }
+
+
 }

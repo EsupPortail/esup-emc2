@@ -26,6 +26,8 @@ class Metier implements HistoriqueAwareInterface {
     private $lien;
 
 
+    /** @var ArrayCollection (MetierReference) */
+    private $references;
     /** @var ArrayCollection (FicheMetierType) */
     private $fichesMetiers;
 
@@ -141,6 +143,14 @@ class Metier implements HistoriqueAwareInterface {
     public function getFichesMetiers()
     {
         return $this->fichesMetiers;
+    }
+
+    /**
+     * @return MetierReference[]
+     */
+    public function getReferences()
+    {
+        return $this->references->toArray();
     }
 
 }

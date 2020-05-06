@@ -12,6 +12,14 @@ use Application\Form\Metier\MetierForm;
 use Application\Form\Metier\MetierFormFactory;
 use Application\Form\Metier\MetierHydrator;
 use Application\Form\Metier\MetierHydratorFactory;
+use Application\Form\MetierReference\MetierReferenceForm;
+use Application\Form\MetierReference\MetierReferenceFormFactory;
+use Application\Form\MetierReference\MetierReferenceHydrator;
+use Application\Form\MetierReference\MetierReferenceHydraytorFactory;
+use Application\Form\MetierReferentiel\MetierReferentielForm;
+use Application\Form\MetierReferentiel\MetierReferentielFormFactory;
+use Application\Form\MetierReferentiel\MetierReferentielHydrator;
+use Application\Form\MetierReferentiel\MetierReferentielHydratorFactory;
 use Application\Provider\Privilege\MetierPrivileges;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\Domaine\DomaineServiceFactory;
@@ -19,6 +27,10 @@ use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
 use Application\Service\Metier\MetierService;
 use Application\Service\Metier\MetierServiceFactory;
+use Application\Service\MetierReference\MetierReferenceService;
+use Application\Service\MetierReference\MetierReferenceServiceFactory;
+use Application\Service\MetierReferentiel\MetierReferentielService;
+use Application\Service\MetierReferentiel\MetierReferentielServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -42,6 +54,8 @@ return [
                         'ajouter-domaine',
                         'ajouter-famille',
                         'ajouter-metier',
+                        'ajouter-reference',
+                        'ajouter-referentiel',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_AJOUTER,
@@ -53,6 +67,8 @@ return [
                         'modifier-domaine',
                         'modifier-famille',
                         'modifier-metier',
+                        'modifier-reference',
+                        'modifier-referentiel',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_MODIFIER,
@@ -64,9 +80,13 @@ return [
                         'historiser-domaine',
                         'historiser-famille',
                         'historiser-metier',
+                        'historiser-reference',
+                        'historiser-referentiel',
                         'restaurer-domaine',
                         'restaurer-famille',
                         'restaurer-metier',
+                        'restaurer-reference',
+                        'restaurer-referentiel',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_HISTORISER,
@@ -78,6 +98,8 @@ return [
                         'effacer-domaine',
                         'effacer-famille',
                         'effacer-metier',
+                        'effacer-reference',
+                        'effacer-referentiel',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_DETRUIRE,
@@ -295,6 +317,112 @@ return [
                         ],
                     ],
 
+                    /** REFERENCE ****************************************************************************************/
+
+                    'ajouter-reference' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-reference/:metier',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'ajouter-reference',
+                            ],
+                        ],
+                    ],
+                    'modifier-reference' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-reference/:reference',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'modifier-reference',
+                            ],
+                        ],
+                    ],
+                    'historiser-reference' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-reference/:reference',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'historiser-reference',
+                            ],
+                        ],
+                    ],
+                    'restaurer-reference' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-reference/:reference',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'restaurer-reference',
+                            ],
+                        ],
+                    ],
+                    'effacer-reference' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/effacer-reference/:reference',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'effacer-reference',
+                            ],
+                        ],
+                    ],
+
+                    /** REFERENTIEL ****************************************************************************************/
+
+                    'ajouter-referentiel' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter-referentiel',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'ajouter-referentiel',
+                            ],
+                        ],
+                    ],
+                    'modifier-referentiel' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-referentiel/:referentiel',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'modifier-referentiel',
+                            ],
+                        ],
+                    ],
+                    'historiser-referentiel' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-referentiel/:referentiel',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'historiser-referentiel',
+                            ],
+                        ],
+                    ],
+                    'restaurer-referentiel' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-referentiel/:referentiel',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'restaurer-referentiel',
+                            ],
+                        ],
+                    ],
+                    'effacer-referentiel' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/effacer-referentiel/:referentiel',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'effacer-referentiel',
+                            ],
+                        ],
+                    ],
+
                     /** CARTOGRAPHIE **********************************************************************************/
 
                     'cartographie' => [
@@ -330,6 +458,8 @@ return [
         'factories' => [
             DomaineService::class => DomaineServiceFactory::class,
             FamilleProfessionnelleService::class => FamilleProfessionnelleServiceFactory::class,
+            MetierReferenceService::class => MetierReferenceServiceFactory::class,
+            MetierReferentielService::class => MetierReferentielServiceFactory::class,
             MetierService::class => MetierServiceFactory::class,
         ],
     ],
@@ -342,12 +472,16 @@ return [
         'factories' => [
             DomaineForm::class => DomaineFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
+            MetierReferenceForm::class => MetierReferenceFormFactory::class,
+            MetierReferentielForm::class => MetierReferentielFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             DomaineHydrator::class => DomaineHydratorFactory::class,
             MetierHydrator::class => MetierHydratorFactory::class,
+            MetierReferenceHydrator::class => MetierReferenceHydraytorFactory::class,
+            MetierReferentielHydrator::class => MetierReferentielHydratorFactory::class,
         ],
     ]
 ];

@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\Metier" table="metier">
+    <entity name="Application\Entity\Db\MetierReference" table="metier_reference">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
-        <field name="fonction"          type="string"   length="128"      column="fonction"               nullable="false"  />
-        <field name="lien"              type="string"   length="1024"     column="lien"                   nullable="true"  />
-        <field name="emploiType"        type="string"   length="1024"     column="emploi_type"            nullable="true"  />
-        <one-to-many target-entity="Application\Entity\Db\MetierReference" mapped-by="metier" field="references"/>
-
-        <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
-            <join-column name="domaine_id" referenced-column-name="id" />
+        <many-to-one target-entity="Application\Entity\Db\Metier"  field="metier">
+            <join-column name="metier_id" referenced-column-name="id"/>
         </many-to-one>
-
-        <one-to-many target-entity="Application\Entity\Db\FicheMetier" mapped-by="metier" field="fichesMetiers"/>
+        <many-to-one target-entity="Application\Entity\Db\MetierReferentiel"  field="referentiel">
+            <join-column name="referentiel_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="code"           type="string"   length="256"      column="code"               nullable="false"  />
+        <field name="lien"           type="string"   length="1024"     column="lien"               nullable="true"  />
 
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
