@@ -84,6 +84,10 @@ span.icon.etudiant:before {
     content: "\f501";
 }
 
+span.icon.personnel:before {
+    content: "\f007";
+}
+
 span.icon.synchroniser:before {
     content: "\f021";
 }
@@ -130,4 +134,8 @@ span.icon.telecharger:before {
 
 span.icon.televerser:before {
     content: "\f093";
+}
+
+span.icon.fiche-poste:before {
+    content: "\f1c4";
 }

@@ -44,8 +44,10 @@ class StructureService
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->addSelect('poste')->leftJoin('structure.postes', 'poste')
             ->addSelect('mission')->leftJoin('structure.missions', 'mission')
-            ->orderBy('structure.code');
-        if ($ouverte) $qb = $qb->andWhere("structure.histo IS NULL");
+            ->orderBy('structure.code')
+            ->andWhere("structure.histo IS NULL")
+        ;
+        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -93,6 +95,7 @@ class StructureService
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($term).'%')
             ->andWhere('structure.histo IS NULL')
+            ->andWhere('structure.fermeture IS NULL')
         ;
 
         if ($structures !== null) {
@@ -138,9 +141,10 @@ class StructureService
 
     /**
      * @param User $user
+     * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByGestionnaire($user)
+    public function getStructuresByGestionnaire($user, $ouverte = true)
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.gestionnaires', 'gestionnaireSelection')
@@ -148,7 +152,9 @@ class StructureService
             ->andWhere('gestionnaireSelection.id = :userId')
             ->setParameter('userId', $user->getId())
             ->orderBy('structure.libelleCourt')
+            ->andWhere("structure.histo IS NULL")
         ;
+        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -167,8 +173,9 @@ class StructureService
 //            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
             ->andWhere('structure.parent = :structure')
             ->setParameter('structure', $structure)
-            ->orderBy('structure.code');
-        if ($ouverte) $qb = $qb->andWhere("structure.histo IS NULL");
+            ->orderBy('structure.code')
+            ->andWhere("structure.histo IS NULL");
+        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
         $result = $qb->getQuery()->getResult();
 
         return $result;

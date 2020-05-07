@@ -84,7 +84,7 @@ class AgentController extends AbstractActionController
         usort($statuts, function(AgentStatut $a, AgentStatut $b) { return $a->getDebut() > $b->getDebut();});
 
         return new ViewModel([
-            'title' => 'Listing de tous les status et grades de ' . $agent->getDenomination(),
+            'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
             'agent' => $agent,
             'statuts' => $statuts,
             'grades' => $grades,

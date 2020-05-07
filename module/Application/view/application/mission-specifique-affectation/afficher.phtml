@@ -29,7 +29,7 @@ use Application\Entity\Db\AgentMissionSpecifique;
                 <?php echo ($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"---"); ?>
             </dd>
 
-            <dt> Décharge </dt>
+            <dt> Volume horaire associé à la mission pour une année complète</dt>
             <dd>
                 <?php if ($affectation->getDecharge()) : ?>
                     <?php echo $affectation->getDecharge(); ?> h.

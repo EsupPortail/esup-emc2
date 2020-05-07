@@ -108,7 +108,7 @@ class AgentMissionSpecifiqueForm extends Form {
             'type' => Number::class,
             'name' => 'decharge',
             'options' => [
-                'label' => "Décharge associée à la mission :",
+                'label' => "Volume horaire associé à la mission pour une année complète  :",
             ],
             'attributes' => [
                 'id' => 'decharge',

@@ -564,12 +564,17 @@ class MetierController extends AbstractActionController {
             $fonction = $metier->getFonction();
             $domaine =  $metier->getDomaine();
             $famille = ($domaine)?$domaine->getFamille():null;
+            $references = [];
+            foreach ($metier->getReferences() as $reference) {
+                $references[] = $reference->getTitre();
+            };
+
             $entry = [
                 'famille'  => ($famille)?$famille->__toString():"---",
                 'fonction' => ($fonction)?$fonction:"---",
                 'domaine'  => ($domaine)?$domaine->__toString():"---",
                 'metier'   => ($metier)?$metier->__toString():"---",
-                'emploi-type'   => ($metier->getEmploiType())?$metier->getEmploiType():"---",
+                'références'   => implode("<br/>", $references),
                 'nbFiche'   => count($metier->getFichesMetiers()),
             ];
             $results[] = $entry;
@@ -595,12 +600,17 @@ class MetierController extends AbstractActionController {
             $fonction = $metier->getFonction();
             $domaine = ($metier)?$metier->getDomaine():null;
             $famille = ($domaine)?$domaine->getFamille():null;
+            $references = [];
+            foreach ($metier->getReferences() as $reference) {
+                $references[] = $reference->getTitre();
+            };
+
             $entry = [
                 'famille'  => ($famille)?$famille->__toString():"---",
                 'domaine'  => ($domaine)?$domaine->__toString():"---",
                 'fonction' => ($fonction)?:"---",
                 'metier'   => ($metier)?$metier->__toString():"---",
-                'emploi-type'   => ($metier->getEmploiType())?$metier->getEmploiType():"---",
+                'références'   => implode("\n", $references),
                 'nbFiche'   => count($metier->getFichesMetiers()),
             ];
             $results[] = $entry;
@@ -613,7 +623,7 @@ class MetierController extends AbstractActionController {
             return $a['metier'] < $b['metier'];
         });
 
-        $headers = ['Famille', 'Domaine', 'Fonction', 'Metier', 'Emploi-type', '#Fiche'];
+        $headers = ['Famille', 'Domaine', 'Fonction', 'Metier', 'Références', '#Fiche'];
 
         $today = new DateTime();
 

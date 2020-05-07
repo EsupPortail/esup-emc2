@@ -14,6 +14,12 @@ use Application\Entity\Db\FicheTypeExterne;
         <div class="row">
             <div class="col-md-8">
                 <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelle(); ?> </h2>
+                <?php $metier =  $fiche->getFicheType()->getMetier(); ?>
+                <?php if ($metier) : ?>
+                    <?php foreach($metier->getReferences() as $reference) : ?>
+                        <a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
             <div class="col-md-1 pull-right">
                 <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>

@@ -46,17 +46,10 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
                 <em><?php echo $metier->getLibelle(); ?></em>
             </h1>
 
-            <?php if ($metier AND ($metier->getEmploiType() !== null OR $metier->getLien())) : ?>
-                <dl class="dl-horizontal">
-                    <dt> Lien REFERENS </dt>
-                    <dd>
-                        <?php if ($metier->getEmploiType()): ?>
-                            <a href="<?php echo Metier::Prefix_REFERENS . $metier->getEmploiType() ?>"> Emploi-type <?php echo $metier->getEmploiType(); ?></a>
-                        <?php else: ?>
-                            <a href="<?php echo $metier->getLien(); ?>"><?php echo $metier->getLien(); ?></a>
-                        <?php endif; ?>
-                    </dd>
-                </dl>
+            <?php if ($metier) : ?>
+                <?php foreach($metier->getReferences() as $reference) : ?>
+                    <a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
         <div class="col-md-4">
