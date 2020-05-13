@@ -20,10 +20,8 @@ class Metier implements HistoriqueAwareInterface {
     private $domaine;
     /** @var string */
     private $fonction;
-    /** @var string */
-    private $emploiType;
-    /** @var string */
-    private $lien;
+    /** @var boolean */
+    private $hasExpertise;
 
 
     /** @var ArrayCollection (MetierReference) */
@@ -97,40 +95,22 @@ class Metier implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getEmploiType()
-    {
-        return $this->emploiType;
-    }
+   public function hasExpertise() {
+        return $this->hasExpertise;
+   }
 
     /**
-     * @param string $emploiType
-     * @return Metier
+     * @param bool $has
+     * @return $this
      */
-    public function setEmploiType(string $emploiType)
-    {
-        $this->emploiType = $emploiType;
-        return $this;
-    }
+   public function setExpertise(bool $has) {
+       $this->hasExpertise = $has;
+       return $this;
+   }
 
-    /**
-     * @return string
-     */
-    public function getLien()
-    {
-        return $this->lien;
-    }
 
-    /**
-     * @param string $lien
-     * @return Metier
-     */
-    public function setLien($lien)
-    {
-        $this->lien = $lien;
-        return $this;
-    }
 
     public function __toString()
     {

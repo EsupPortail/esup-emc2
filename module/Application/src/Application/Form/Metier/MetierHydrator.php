@@ -19,8 +19,6 @@ class MetierHydrator implements HydratorInterface {
             'domaine' => ($object->getDomaine())?$object->getDomaine()->getId():null,
             'fonction' => $object->getFonction(),
             'libelle' => $object->getLibelle(),
-            'emploi-type' => $object->getEmploiType(),
-            'lien' => $object->getLien(),
         ];
         return $data;
     }
@@ -37,8 +35,6 @@ class MetierHydrator implements HydratorInterface {
         $object->setLibelle($data['libelle']);
         $object->setFonction($data['fonction']);
         $object->setDomaine($domaine);
-        $object->setEmploiType($data['emploi-type']);
-        $object->setLien($data['lien']);
         return $object;
     }
 

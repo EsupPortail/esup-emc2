@@ -8,8 +8,6 @@
 
         <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
         <field name="fonction"          type="string"   length="128"      column="fonction"               nullable="false"  />
-        <field name="lien"              type="string"   length="1024"     column="lien"                   nullable="true"  />
-        <field name="emploiType"        type="string"   length="1024"     column="emploi_type"            nullable="true"  />
         <one-to-many target-entity="Application\Entity\Db\MetierReference" mapped-by="metier" field="references"/>
 
         <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">

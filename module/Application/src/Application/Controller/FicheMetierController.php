@@ -95,7 +95,7 @@ class FicheMetierController extends  AbstractActionController{
         $metier = $fiche->getMetier();
         $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_". str_replace(" ","_",$metier->getLibelle()).'.pdf';
         try {
-            $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $metier->getEmploiType());
+            $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $fiche->getId());
         } catch (MpdfException $e) {
             throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0 , $e);
         }

@@ -55,8 +55,15 @@ use Application\Entity\Db\Formation;
     <?php echo $fiche->getMetier()->getLibelle(); ?>
 </h1>
 
-<?php if ($fiche->getMetier()->getEmploiType()) : ?>
-    Emploi-type (REFERENS) : <?php echo $fiche->getMetier()->getEmploiType(); ?>
+<?php $references = $fiche->getMetier()->getReferences() ;?>
+
+<?php if ($references and !empty($references)) : ?>
+    <h3> Références </h3>
+    <ul>
+    <?php foreach ($references as $reference) : ?>
+        <li><?php echo $reference->getTitre(); ?></li>
+    <?php endforeach; ?>
+    </ul>
 <?php endif; ?>
 
 <h2>Missions principales</h2>

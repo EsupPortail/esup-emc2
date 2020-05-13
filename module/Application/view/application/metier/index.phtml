@@ -308,14 +308,6 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if ($metier->getEmploiType()) : ?>
-                                    <a href="<?php echo Metier::Prefix_REFERENS . $metier->getEmploiType(); ?>"><?php echo $metier->getEmploiType(); ?></a>
-                                <?php endif; ?>
-                                <?php if ($metier->getLien() AND (!$metier->getEmploiType())) : ?>
-                                    <a href="<?php echo $metier->getLien(); ?>"> Lien </a>
-                                <?php endif; ?>
-                            </td>
-                            <td>
                                 <?php if ($canEditer) : ?>
                                     <a
                                         <?php /** @see \Application\Controller\MetierController::modifierMetierAction() */ ?>
