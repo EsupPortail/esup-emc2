@@ -40,6 +40,7 @@ return [
                         'afficher',
                         'exporter',
                         'exporter-toutes',
+
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AFFICHER,
@@ -72,24 +73,24 @@ return [
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
                     ],
-                    [
-                        'controller' => FicheMetierController::class,
-                        'action' => [
-                            'historiser',
-                            'restaurer',
-                        ],
-                        'privileges' => [
-                            FicheMetierPrivileges::FICHEMETIER_HISTORISER,
-                        ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
                     ],
-                    [
-                        'controller' => FicheMetierController::class,
-                        'action' => [
-                            'detruire',
-                        ],
-                        'privileges' => [
-                            FicheMetierPrivileges::FICHEMETIER_DETRUIRE,
-                        ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'detruire',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_DETRUIRE,
                     ],
                 ],
             ],
