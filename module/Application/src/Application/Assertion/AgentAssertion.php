@@ -84,6 +84,15 @@ class AgentAssertion extends AbstractAssertion {
                         return  $isResponsable;
                 }
                 return false;
+            case AgentPrivileges::AGENT_ELEMENT_AJOUTER_EPRO:
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                        return true;
+                    case RoleConstant::GESTIONNAIRE:
+                        return $isGestionnaire;
+                }
+                return false;
         }
 
         return true;

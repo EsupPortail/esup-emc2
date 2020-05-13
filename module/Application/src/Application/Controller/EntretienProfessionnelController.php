@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
@@ -54,9 +55,14 @@ class EntretienProfessionnelController extends AbstractActionController {
 
     public function creerAction()
     {
+        $agentId = $this->params()->fromQuery('agent');
+        $agent = $this->getAgentService()->getAgent($agentId);
+
         $entretien = new EntretienProfessionnel();
         $entretien->setAnnee($this->getAnneeScolaire());
+        if ($agent) $entretien->setAgent($agent);
 
+        /** @var EntretienProfessionnelForm $form */
         $form = $this->getEntretienProfessionnelForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', [], [], true));
         $form->bind($entretien);
