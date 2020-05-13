@@ -16,8 +16,6 @@ class Metier implements HistoriqueAwareInterface {
     /** @var string */
     private $libelle;
 
-    /** @var Domaine */
-    private $domaine;
     /** @var ArrayCollection (Domaine) */
     private  $domaines;
     /** @var string */
@@ -76,14 +74,6 @@ class Metier implements HistoriqueAwareInterface {
     {
         $this->fonction = $fonction;
         return $this;
-    }
-
-    /**
-     * @return Domaine
-     */
-    public function getDomaine()
-    {
-        return $this->domaine;
     }
 
     /**

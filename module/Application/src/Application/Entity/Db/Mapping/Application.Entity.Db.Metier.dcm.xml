@@ -11,10 +11,6 @@
         <field name="hasExpertise"      type="boolean"                    column="expertise"              nullable="true"  />
         <one-to-many target-entity="Application\Entity\Db\MetierReference" mapped-by="metier" field="references"/>
 
-        <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
-            <join-column name="domaine_id" referenced-column-name="id" />
-        </many-to-one>
-
         <many-to-many field="domaines" target-entity="Application\Entity\Db\Domaine" inversed-by="metier" fetch="LAZY">
             <join-table name="metier_domaine">
                 <join-columns>

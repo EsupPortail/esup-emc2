@@ -573,7 +573,7 @@ class MetierController extends AbstractActionController {
         $results = [];
         foreach($metiers as $metier) {
             $fonction = $metier->getFonction();
-            $domaine =  $metier->getDomaine();
+            $domaine =  null; //$metier->getDomaine();
             $famille = ($domaine)?$domaine->getFamille():null;
             $references = [];
             foreach ($metier->getReferences() as $reference) {
@@ -609,7 +609,7 @@ class MetierController extends AbstractActionController {
         $results = [];
         foreach($metiers as $metier) {
             $fonction = $metier->getFonction();
-            $domaine = ($metier)?$metier->getDomaine():null;
+            $domaine = null; // ($metier)?$metier->getDomaine():null;
             $famille = ($domaine)?$domaine->getFamille():null;
             $references = [];
             foreach ($metier->getReferences() as $reference) {
