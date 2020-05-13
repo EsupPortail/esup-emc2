@@ -18,6 +18,8 @@ class Metier implements HistoriqueAwareInterface {
 
     /** @var Domaine */
     private $domaine;
+    /** @var ArrayCollection (Domaine) */
+    private  $domaines;
     /** @var string */
     private $fonction;
     /** @var boolean */
@@ -85,16 +87,6 @@ class Metier implements HistoriqueAwareInterface {
     }
 
     /**
-     * @param Domaine $domaine
-     * @return Metier
-     */
-    public function setDomaine($domaine)
-    {
-        $this->domaine = $domaine;
-        return $this;
-    }
-
-    /**
      * @return bool
      */
    public function hasExpertise() {
@@ -131,6 +123,26 @@ class Metier implements HistoriqueAwareInterface {
     public function getReferences()
     {
         return $this->references->toArray();
+    }
+
+    /**
+     * @return Domaine[]
+     */
+    public function getDomaines()
+    {
+        $domaines =  $this->domaines->toArray();
+        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle();});
+        return $domaines;
+    }
+
+    public function clearDomaines()
+    {
+        $this->domaines->clear();
+    }
+
+    public function addDomaine(Domaine $domaine)
+    {
+        $this->domaines->add($domaine);
     }
 
 }

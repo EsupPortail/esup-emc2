@@ -268,10 +268,10 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                     <thead>
                     <tr>
                         <th> Libelle </th>
-                        <th> Domaine </th>
+                        <th> Domaines </th>
                         <th> Fonction </th>
                         <th> Références </th>
-                        <th> Enploi-type </th>
+                        <th> Expertise </th>
                         <th class="cell-action"> Action </th>
                     </tr>
                     </thead>
@@ -279,7 +279,13 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                     <?php foreach($metiers as $metier): ?>
                         <tr <?php if ($metier->estHistorise()) echo ' class="historise" '; ?>>
                             <td> <?php echo $metier->getLibelle(); ?> </td>
-                            <td> <?php echo $metier->getDomaine(); ?> </td>
+                            <td>
+                                <ul>
+                                <?php foreach ($metier->getDomaines() as $domaine) : ?>
+                                    <li> <?php echo $domaine; ?> </li>
+                                <?php endforeach; ?>
+                                </ul>
+                            </td>
                             <td> <?php echo $metier->getFonction(); ?> </td>
                             <td>
                                 <?php $references =  $metier->getReferences(); ?>
@@ -305,6 +311,13 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                                         <?php endif; ?>
                                         <br/>
                                     <?php endforeach ?>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($metier->hasExpertise()) : ?>
+                                    <span class="icon ok" style="color:darkgreen;"></span>
+                                <?php else: ?>
+                                    <span class="icon ko" style="color:darkred;"></span>
                                 <?php endif; ?>
                             </td>
                             <td>

@@ -4,6 +4,7 @@ namespace Application\Form\Metier;
 
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
@@ -35,16 +36,17 @@ class MetierForm extends Form {
         //fonction
         $this->add([
             'type' => Select::class,
-            'name' => 'domaine',
+            'name' => 'domaines',
             'options' => [
                 'label' => "Domaine professionnel* :",
-                'empty_option' => "Sélectionner un domaine ...",
+                'empty_option' => "Sélectionner des domaines ...",
                 'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'fonction',
+                'id' => 'domaines',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
+                'multiple'          => 'multiple',
             ],
         ]);
         // libelle
@@ -58,26 +60,15 @@ class MetierForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
-        // lien
+        // expertise
         $this->add([
-            'type' => Text::class,
-            'name' => 'emploi-type',
+            'type' => Checkbox::class,
+            'name' => 'expertise',
             'options' => [
-                'label' => "Emploi-Type Referens :",
+                'label' => "Associable à des expertises métiers",
             ],
             'attributes' => [
-                'id' => 'emploi-type',
-            ],
-        ]);
-        // lien
-        $this->add([
-            'type' => Text::class,
-            'name' => 'lien',
-            'options' => [
-                'label' => "Lien vers Referens :",
-            ],
-            'attributes' => [
-                'id' => 'lien',
+                'id' => 'expertise',
             ],
         ]);
         // button
@@ -99,10 +90,9 @@ class MetierForm extends Form {
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
             'fonction'          => [ 'required' => true,  ],
-            'domaine'           => [ 'required' => true,  ],
+            'domaines'          => [ 'required' => true,  ],
             'libelle'           => [ 'required' => true,  ],
-            'emploi-type'       => [ 'required' => false, ],
-            'lien'              => [ 'required' => false, ],
+            'expertise'         => [ 'required' => false, ],
         ]));
     }
 }

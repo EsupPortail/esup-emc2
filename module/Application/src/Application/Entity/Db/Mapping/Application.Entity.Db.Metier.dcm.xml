@@ -8,11 +8,23 @@
 
         <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
         <field name="fonction"          type="string"   length="128"      column="fonction"               nullable="false"  />
+        <field name="hasExpertise"      type="boolean"                    column="expertise"              nullable="true"  />
         <one-to-many target-entity="Application\Entity\Db\MetierReference" mapped-by="metier" field="references"/>
 
         <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
             <join-column name="domaine_id" referenced-column-name="id" />
         </many-to-one>
+
+        <many-to-many field="domaines" target-entity="Application\Entity\Db\Domaine" inversed-by="metier" fetch="LAZY">
+            <join-table name="metier_domaine">
+                <join-columns>
+                    <join-column name="metier_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="domaine_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
         <one-to-many target-entity="Application\Entity\Db\FicheMetier" mapped-by="metier" field="fichesMetiers"/>
 

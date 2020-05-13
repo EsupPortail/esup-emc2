@@ -15,10 +15,17 @@ class MetierHydrator implements HydratorInterface {
      */
     public function extract($object)
     {
+        $domaineIds = [];
+        $domaines = $object->getDomaines();
+        if ($domaines) {
+            foreach ($domaines as $domaine) $domaineIds[] = $domaine->getId();
+        }
+
         $data = [
-            'domaine' => ($object->getDomaine())?$object->getDomaine()->getId():null,
+            'domaines' => $domaineIds,
             'fonction' => $object->getFonction(),
             'libelle' => $object->getLibelle(),
+            'expertise' => ($object->hasExpertise()),
         ];
         return $data;
     }
@@ -32,9 +39,16 @@ class MetierHydrator implements HydratorInterface {
     {
         $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
 
+        $object->clearDomaines();
+        foreach ($data['domaines'] as $id) {
+            $domaine = $this->getDomaineService()->getDomaine($id);
+            if ($domaine) $object->addDomaine($domaine);
+        }
+
         $object->setLibelle($data['libelle']);
         $object->setFonction($data['fonction']);
-        $object->setDomaine($domaine);
+        $object->setExpertise($data['expertise']);
+
         return $object;
     }
 

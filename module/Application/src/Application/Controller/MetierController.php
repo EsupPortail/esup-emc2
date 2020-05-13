@@ -359,7 +359,7 @@ class MetierController extends AbstractActionController {
         if ($metier !== null) {
             $fiches = $metier->getFichesMetiers();
 
-            if (empty($fiches)) {
+            if (count($fiches) === 0) {
                 $vm->setTemplate('application/default/confirmation');
                 $vm->setVariables([
                     'title' => "Suppression du métier " . $metier->getLibelle(),

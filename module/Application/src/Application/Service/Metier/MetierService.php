@@ -136,8 +136,10 @@ class MetierService {
         $result = [];
         foreach ($metiers as $metier) {
             if ($historiser OR $metier->estNonHistorise())
-                if ($metier->getDomaine()) {
-                    $result[$metier->getDomaine()->getLibelle()][] = $metier;
+                if ($metier->getDomaines()) {
+                    foreach ($metier->getDomaines() as $domaine) {
+                        $result[$domaine->getLibelle()][] = $metier;
+                    }
                 } else {
                     $vide[] = $metier;
                 }
