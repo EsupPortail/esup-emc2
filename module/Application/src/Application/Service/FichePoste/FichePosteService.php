@@ -141,7 +141,7 @@ class FichePosteService {
             ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
             ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
             ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
-            ->addSelect('domaine')->leftJoin('metier.domaine', 'domaine')
+            ->addSelect('domaine')->leftJoin('metier.domaines', 'domaine')
 //            ->addSelect('fmApplication')->join('fichemetier.applications', 'fmApplication')
 //            ->addSelect('fmCompetence')->join('fichemetier.competences', 'fmCompetence')
 //            ->addSelect('fmFormation')->join('fichemetier.formations', 'fmFormation')

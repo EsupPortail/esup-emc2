@@ -11,13 +11,13 @@
         <field name="hasExpertise"      type="boolean"                    column="expertise"              nullable="true"  />
         <one-to-many target-entity="Application\Entity\Db\MetierReference" mapped-by="metier" field="references"/>
 
-        <many-to-many field="domaines" target-entity="Application\Entity\Db\Domaine" inversed-by="metier" fetch="LAZY">
+        <many-to-many field="domaines" inversed-by="metiers" target-entity="Application\Entity\Db\Domaine">
             <join-table name="metier_domaine">
                 <join-columns>
-                    <join-column name="metier_id" referenced-column-name="id"/>
+                    <join-column name="metier_id" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="domaine_id" referenced-column-name="id"/>
+                    <join-column name="domaine_id" referenced-column-name="id" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>

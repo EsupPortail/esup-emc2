@@ -74,7 +74,7 @@ class MetierService {
     private function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
-            ->addSelect('domaine')->leftJoin('metier.domaine','domaine')
+            ->addSelect('domaine')->leftJoin('metier.domaines','domaine')
             ->addSelect('famille')->leftJoin('domaine.famille','famille')
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')

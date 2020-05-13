@@ -89,7 +89,7 @@ class FicheMetierService {
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaine', 'domaine')
+            ->addSelect('domaine')->join('metier.domaines', 'domaine')
 //            ->addSelect('application')->leftJoin('ficheMetier.applications', 'application')
 //            ->addSelect('formation')->leftJoin('ficheMetier.formations', 'formation')
 //            ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
@@ -151,7 +151,7 @@ class FicheMetierService {
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('fiche')
             ->addSelect('metier')->join('fiche.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaine', 'domaine')
+            ->addSelect('domaine')->join('metier.domaines', 'domaine')
             ->addSelect('famille')->join('domaine.famille', 'famille')
             ->andWhere('famille = :famille')
             ->setParameter('famille', $famille)
@@ -170,7 +170,7 @@ class FicheMetierService {
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('fiche')
             ->addSelect('metier')->join('fiche.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaine', 'domaine')
+            ->addSelect('domaine')->join('metier.domaines', 'domaine')
             ->addSelect('famille')->join('domaine.famille', 'famille')
             ->andWhere('domaine = :domaine')
             ->setParameter('domaine', $domaine)

@@ -12,7 +12,16 @@
             <join-column name="famille_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many target-entity="Application\Entity\Db\Metier" field="metiers" mapped-by="domaine"/>
+        <many-to-many field="metiers" inversed-by="domaines" target-entity="Application\Entity\Db\Metier">
+            <join-table name="metier_domaine">
+                <join-columns>
+                    <join-column name="domaine_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="metier_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

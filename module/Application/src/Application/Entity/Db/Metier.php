@@ -31,7 +31,9 @@ class Metier implements HistoriqueAwareInterface {
 
     public function __construct()
     {
+        $this->references = new ArrayCollection();
         $this->fichesMetiers = new ArrayCollection();
+        $this->domaines = new ArrayCollection();
     }
 
     /**
