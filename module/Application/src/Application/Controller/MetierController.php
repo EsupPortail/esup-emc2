@@ -345,6 +345,7 @@ class MetierController extends AbstractActionController {
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
 
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -356,12 +357,22 @@ class MetierController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($metier !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression du metier " . $metier->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('metier/effacer-metier', ["metier" => $metier->getId()], [], true),
-            ]);
+            $fiches = $metier->getFichesMetiers();
+
+            if (empty($fiches)) {
+                $vm->setTemplate('application/default/confirmation');
+                $vm->setVariables([
+                    'title' => "Suppression du métier " . $metier->getLibelle(),
+                    'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                    'action' => $this->url()->fromRoute('metier/effacer-metier', ["metier" => $metier->getId()], [], true),
+                ]);
+            } else {
+                $vm->setTemplate('application/default/probleme');
+                $vm->setVariables([
+                    'title' => "Suppression du métier " . $metier->getLibelle() . " impossible",
+                    'text' => "La suppresion du métier ". $metier->getLibelle() ." est impossible car celui-ci est associé à ". count($fiches). " fiche(s) métier(s).",
+                ]);
+            }
         }
         return $vm;
     }
