@@ -4,6 +4,7 @@ namespace Application\Form\AgentApplication;
 
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -53,6 +54,17 @@ class AgentApplicationForm extends Form {
                 'data-live-search'  => 'true',
             ]
         ]);
+        //Année
+        $this->add([
+            'type' => Number::class,
+            'name' => 'annee',
+            'options' => [
+                'label' => "Année de la formation :",
+            ],
+            'attributes' => [
+                'id' => 'annee',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -70,12 +82,9 @@ class AgentApplicationForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'application' => [
-                'required' => true,
-            ],
-            'type' => [
-                'required' => true,
-            ],
+            'application'   => [ 'required' => true, ],
+            'type'          => [ 'required' => true, ],
+            'annee'         => [ 'required' => false, ],
         ]));
     }
 }

@@ -19,6 +19,8 @@ class AgentApplication implements ValidableInterface, HistoriqueAwareInterface {
     private $application;
     /** @var string */
     private $type;
+    /** @var integer */
+    private $annee;
 
     /**
      * @return int
@@ -81,4 +83,24 @@ class AgentApplication implements ValidableInterface, HistoriqueAwareInterface {
         $this->type = $type;
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getAnnee()
+    {
+        return $this->annee;
+    }
+
+    /**
+     * @param int $annee
+     * @return AgentApplication
+     */
+    public function setAnnee($annee)
+    {
+        $this->annee = $annee;
+        return $this;
+    }
+
+
 }

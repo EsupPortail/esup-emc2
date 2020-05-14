@@ -17,6 +17,8 @@ use Application\Entity\Db\AgentApplication;
             <dd> <?php echo $agentApplication->getApplication()->getLibelle(); ?></dd>
             <dt> Type de formation </dt>
             <dd> <?php echo $agentApplication->getType(); ?></dd>
+            <dt> Année de formation </dt>
+            <dd> <?php echo ($agentApplication->getAnnee())?:"Non renseignée"; ?></dd>
             <dt> Validation </dt>
             <dd>
                 <?php if ($agentApplication->getValidation() === null) : ?>

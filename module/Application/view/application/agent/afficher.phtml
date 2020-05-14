@@ -155,6 +155,9 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                     <?php echo $application->getApplication()->getLibelle(); ?>
                     <br/>
                     <?php echo $application->getType(); ?>
+                    <?php if ($application->getAnnee()) : ?>
+                        (<?php echo $application->getAnnee(); ?>)
+                    <?php endif; ?>
                     - &nbsp;
                     <?php if ($application->getValidation()) : ?>
                         <?php $validation = $application->getValidation(); ?>
