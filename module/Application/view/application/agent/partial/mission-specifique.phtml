@@ -57,7 +57,7 @@ $canDetruireMission     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMEN
                     <?php echo $mission->getDecharge(); ?> h.
                     <?php if ($mission->estEnCours()) $cumulDecharge += $mission->getDecharge(); ?>
                 <?php else : ?>
-                    Sans décharge
+                    Aucun
                 <?php endif; ?>
             </td>
             <td>

@@ -115,7 +115,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                         <?php echo $mission->getDecharge(); ?> h.
                         <?php if ($mission->estEnCours()) $cumulDecharge += $mission->getDecharge(); ?>
                     <?php else : ?>
-                        Sans décharge
+                        Aucun
                     <?php endif; ?>
                 </td>
                 <?php if ($mode === 'edition') : ?>

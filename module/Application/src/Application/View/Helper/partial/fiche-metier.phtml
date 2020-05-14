@@ -80,12 +80,16 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
 <!-- MISSIONS PRINCIPALE ---------------------------------------------------------------------------------------------->
 
     <h2> Missions principales</h2>
+    <?php $nb = 0; ?>
 
     <ul>
         <?php foreach ($activites as $activite) : ?>
             <?php if (array_search($activite->getActivite()->getId(), $activitesListe) !== false) : ?>
                 <li>
-                    <?php echo $activite->getActivite()->getLibelle(); ?>
+                    <?php
+                        $nb += 1;
+                        echo $activite->getActivite()->getLibelle();
+                    ?>
                 </li>
             <?php endif; ?>
         <?php endforeach; ?>
@@ -98,7 +102,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         <div class="col-md-5">
             <h2>
                 Activités associées
-                <span class="badge"> <?php echo count($activites); ?> </span>
+                <span class="badge"> <?php echo $nb; ?>/<?php echo count($activites); ?> </span>
             </h2>
         </div>
         <div class="pull-right" style="margin-right:1rem;">

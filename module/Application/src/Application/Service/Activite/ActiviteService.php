@@ -105,7 +105,7 @@ class ActiviteService {
      * @param string $ordre
      * @return Activite[]
      */
-    public function getActivites($champ = 'libelle', $ordre = 'ASC')
+    public function getActivites($champ = 'id', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
             ->addOrderBy('activite.' . $champ, $ordre)
