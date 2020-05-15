@@ -2,10 +2,14 @@
 
 namespace Application\Entity\Db;
 
-class Correspondance {
+use Application\Entity\SynchroAwareInterface;
+use Application\Entity\SynchroAwareTrait;
+
+class Correspondance implements SynchroAwareInterface {
+    use SynchroAwareTrait;
 
     /** @var integer */
-    private $id;
+    private $source_id;
     /** @var string */
     private $categorie;
     /** @var string */
@@ -20,8 +24,27 @@ class Correspondance {
      */
     public function getId()
     {
-        return $this->id;
+        return $this->source_id;
     }
+
+    /**
+     * @return int
+     */
+    public function getSourceId()
+    {
+        return $this->source_id;
+    }
+
+    /**
+     * @param int $source_id
+     * @return Correspondance
+     */
+    public function setSourceId($source_id)
+    {
+        $this->source_id = $source_id;
+        return $this;
+    }
+
 
     /**
      * @return string

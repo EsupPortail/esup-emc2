@@ -30,25 +30,9 @@ class CorrespondanceService {
      * @param string $ordre
      * @return Correspondance[]
      */
-    public function getCorrespondances($champ = 'libelleLong', $ordre = 'ASC') {
+    public function getCorrespondances($champ = 'categorie', $ordre = 'ASC') {
         $qb = $this->createQueryBuilder()
-            ->andWhere('correspondance.histo = :histo')
-            ->setParameter('histo', 'O')
-            ->orderBy('correspondance.' . $champ, $ordre)
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Correspondance[]
-     */
-    public function getCorrespondancesHistorises($champ = 'libelleLong', $ordre = 'ASC') {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('correspondance.histo != :histo')
-            ->setParameter('histo', 'O')
+            ->andWhere('correspondance.histo IS NULL')
             ->orderBy('correspondance.' . $champ, $ordre)
         ;
         $result = $qb->getQuery()->getResult();

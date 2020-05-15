@@ -2,13 +2,16 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\Correspondance" table="correspondance">
 
-        <id name="id"               column="id"             type="string"       length="40">
+        <id name="source_id"               column="source_id"             type="integer">
         </id>
 
         <field name="categorie"     column="c_bap"          type="string"       length="10"   />
         <field name="libelleCourt"  column="lib_court"      type="string"       length="20"   />
         <field name="libelleLong"   column="lib_long"       type="string"       length="200"  />
-        <field name="histo"         column="histo"          type="string"       length="10"  />
+
+        <!-- WEB SERVICE SYNCHRO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="synchro"     type="datetime"               column="synchro"/>
+        <field name="histo"     type="datetime"                 column="histo"/>
 
     </entity>
 </doctrine-mapping>
