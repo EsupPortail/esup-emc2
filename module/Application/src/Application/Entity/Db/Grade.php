@@ -2,7 +2,11 @@
 
 namespace Application\Entity\Db;
 
-class Grade {
+use Application\Entity\SynchroAwareInterface;
+use Application\Entity\SynchroAwareTrait;
+
+class Grade implements SynchroAwareInterface {
+    use SynchroAwareTrait;
 
     /** @var string */
     private $id;
@@ -12,8 +16,6 @@ class Grade {
     private $libelleLong;
     /** @var string */
     private $code;
-    /** @var string */
-    private $histo;
 
     /**
      * @return string
@@ -74,24 +76,6 @@ class Grade {
     public function setCode($code)
     {
         $this->code = $code;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHisto()
-    {
-        return $this->histo;
-    }
-
-    /**
-     * @param string $histo
-     * @return Grade
-     */
-    public function setHisto($histo)
-    {
-        $this->histo = $histo;
         return $this;
     }
 
