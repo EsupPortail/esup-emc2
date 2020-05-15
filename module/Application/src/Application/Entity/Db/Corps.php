@@ -2,7 +2,11 @@
 
 namespace Application\Entity\Db;
 
-class Corps {
+use Application\Entity\SynchroAwareInterface;
+use Application\Entity\SynchroAwareTrait;
+
+class Corps implements SynchroAwareInterface {
+    use SynchroAwareTrait;
 
     /** @var integer */
     private $id;
