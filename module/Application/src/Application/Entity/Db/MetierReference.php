@@ -18,6 +18,8 @@ class MetierReference implements HistoriqueAwareInterface {
     private $code;
     /** @var string */
     private $lien;
+    /** @var integer */
+    private $page;
 
     /**
      * @return int
@@ -112,7 +114,39 @@ class MetierReference implements HistoriqueAwareInterface {
      */
     public function getUrl()
     {
-        if ($this->getLien() !== null) return $this->getLien();
-        return $this->referentiel->getPrefix() . $this->getCode();
+        switch($this->getReferentiel()->getType()) {
+            case MetierReferentiel::WEB :
+                if ($this->getLien())                       return $this->getLien();
+                if ($this->getReferentiel()->getPrefix())   return $this->referentiel->getPrefix() . $this->getCode();
+                return "";
+            case MetierReferentiel::PDF :
+                $url = "";
+                if ($this->getReferentiel()->getPrefix())   $url = $this->getReferentiel()->getPrefix();
+                if ($this->getLien())                       $url = $this->getLien();
+                if ($this->getPage()) {
+                    $url = $url . "#page=" . $this->getPage();
+                }
+                return $url;
+        }
     }
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param int $page
+     * @return MetierReference
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+        return $this;
+    }
+
+
 }

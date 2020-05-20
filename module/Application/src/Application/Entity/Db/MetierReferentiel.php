@@ -8,6 +8,10 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 class MetierReferentiel implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+    const WEB="web";
+    const PDF="pdf";
+
+
     /** @var integer */
     private $id;
     /** @var string */
@@ -16,6 +20,8 @@ class MetierReferentiel implements HistoriqueAwareInterface {
     private $libelleLong;
     /** @var string */
     private $prefix;
+    /** @var string */
+    private $type;
 
     /**
      * @return int
@@ -88,6 +94,25 @@ class MetierReferentiel implements HistoriqueAwareInterface {
         $this->prefix = $prefix;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return MetierReferentiel
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
 
 
 }

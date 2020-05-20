@@ -22,6 +22,7 @@ class MetierReferenceHydrator implements HydratorInterface {
             'referentiel' => ($object->getReferentiel())?$object->getReferentiel()->getId():null,
             'code' => $object->getCode(),
             'lien' => $object->getLien(),
+            'page' => $object->getPage(),
         ];
         return $data;
     }
@@ -37,11 +38,13 @@ class MetierReferenceHydrator implements HydratorInterface {
         $referentiel = (isset($data['referentiel']))?$this->getMetierReferentielService()->getMetierReferentiel($data['referentiel']):null;
         $code = (isset($data['code']) AND trim($data['code']) !== "")?$data['code']:null;
         $lien = (isset($data['lien']) AND trim($data['lien']) !== "")?$data['lien']:null;
+        $page = (isset($data['page']) AND trim($data['page']) !== "")?$data['page']:null;
 
         $object->setMetier($metier);
         $object->setReferentiel($referentiel);
         $object->setCode($code);
         $object->setLien($lien);
+        $object->setPage($page);
 
         return $object;
     }

@@ -9,7 +9,7 @@
         <field name="libelleCourt"      type="string"   length="256"      column="libelle_court"               nullable="false"  />
         <field name="libelleLong"       type="string"   length="1024"     column="libelle_long"                nullable="false"  />
         <field name="prefix"            type="string"   length="1024"     column="prefix"                      nullable="true"  />
-
+        <field name="type"              type="string"   length="255"      column="type"                        nullable="true"  />
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

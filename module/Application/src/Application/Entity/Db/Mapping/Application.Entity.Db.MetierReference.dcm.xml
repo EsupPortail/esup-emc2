@@ -14,7 +14,7 @@
         </many-to-one>
         <field name="code"           type="string"   length="256"      column="code"               nullable="false"  />
         <field name="lien"           type="string"   length="1024"     column="lien"               nullable="true"  />
-
+        <field name="page"           type="integer"                    column="page"               nullable="true"  />
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

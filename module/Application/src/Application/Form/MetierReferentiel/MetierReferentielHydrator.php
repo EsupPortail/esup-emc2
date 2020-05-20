@@ -17,6 +17,7 @@ class MetierReferentielHydrator implements HydratorInterface {
             'libelle_court' => $object->getLibelleCourt(),
             'libelle_long'  => $object->getLibelleLong(),
             'prefix'        => $object->getPrefix(),
+            'type'          => $object->getType(),
         ];
         return $data;
     }
@@ -31,6 +32,7 @@ class MetierReferentielHydrator implements HydratorInterface {
         $object->setLibelleCourt($data['libelle_court']);
         $object->setLibelleLong($data['libelle_long']);
         $object->setPrefix($data['prefix']);
+        $object->setType($data['type']);
         return $object;
     }
 

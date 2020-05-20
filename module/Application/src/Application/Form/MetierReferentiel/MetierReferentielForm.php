@@ -2,8 +2,10 @@
 
 namespace Application\Form\MetierReferentiel;
 
+use Application\Entity\Db\MetierReferentiel;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Radio;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
@@ -41,10 +43,25 @@ class MetierReferentielForm extends Form {
             'type' => Text::class,
             'name' => 'prefix',
             'options' => [
-                'label' => "Préfixe des adresse su référentiel :",
+                'label' => "Préfixe du référentiel :",
             ],
             'attributes' => [
                 'id' => 'prefix',
+            ],
+        ]);
+        // type
+        $this->add([
+            'type' => Radio::class,
+            'name' => 'type',
+            'options' => [
+                'label' => "Type du référentiel * :",
+                'value_options' => [
+                    MetierReferentiel::PDF => "PDF",
+                    MetierReferentiel::WEB => "Web",
+                ],
+            ],
+            'attributes' => [
+                'id' => 'type',
             ],
         ]);
         // button
@@ -68,6 +85,7 @@ class MetierReferentielForm extends Form {
             'libelle_court'          => [ 'required' => true,  ],
             'libelle_long'           => [ 'required' => true,  ],
             'prefix'                 => [ 'required' => false, ],
+            'type'                   => [ 'required' => true, ],
         ]));
     }
 }

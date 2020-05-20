@@ -5,6 +5,7 @@ namespace Application\Form\MetierReference;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\MetierReferentiel\MetierReferentielServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
@@ -63,7 +64,7 @@ class MetierReferenceForm extends Form {
                 'id' => 'code',
             ],
         ]);
-        //code
+        //lien
         $this->add([
             'type' => Text::class,
             'name' => 'lien',
@@ -72,6 +73,17 @@ class MetierReferenceForm extends Form {
             ],
             'attributes' => [
                 'id' => 'lien',
+            ],
+        ]);
+        //page
+        $this->add([
+            'type' => Number::class,
+            'name' => 'page',
+            'options' => [
+                'label' => "Page dans le document PDF :",
+            ],
+            'attributes' => [
+                'id' => 'page',
             ],
         ]);
         // button
@@ -96,6 +108,7 @@ class MetierReferenceForm extends Form {
             'referentiel'           => [ 'required' => true,  ],
             'code'                  => [ 'required' => true,  ],
             'lien'                  => [ 'required' => false,  ],
+            'page'                  => [ 'required' => false,  ],
         ]));
     }
 }
