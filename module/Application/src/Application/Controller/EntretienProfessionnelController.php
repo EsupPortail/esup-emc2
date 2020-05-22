@@ -107,12 +107,25 @@ class EntretienProfessionnelController extends AbstractActionController {
         $validationAgent = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ACCEPTER_ENTRETIEN_AGENT', $entretien);
         $validationResponsable = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ACCEPTER_ENTRETIEN_RESPONSABLE', $entretien);
 
+        $agent = $entretien->getAgent();
+        $fichespostes = ($agent)?$agent->getFiches():[];
+        $fichesmetiers = [];
+        foreach ($fichespostes as $ficheposte) {
+            $fiches = $ficheposte->getFichesMetiers();
+            foreach ($fiches as $fiche) {
+                $fichesmetiers[] = $fiche->getFicheType();
+            }
+        }
 
         return new ViewModel([
             'title' => 'Entretien professionnel '.$entretien->getAnnee().' de '.$entretien->getAgent()->getDenomination(),
             'entretien' => $entretien,
             'validationAgent' => $validationAgent,
             'validationResponsable' => $validationResponsable,
+
+            'agent' => $agent,
+            'fichespostes' => $fichespostes,
+            'fichesmetiers' => $fichesmetiers
         ]);
     }
 
@@ -120,8 +133,22 @@ class EntretienProfessionnelController extends AbstractActionController {
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
 
+        $agent = $entretien->getAgent();
+        $fichespostes = ($agent)?$agent->getFiches():[];
+        $fichesmetiers = [];
+        foreach ($fichespostes as $ficheposte) {
+            $fiches = $ficheposte->getFichesMetiers();
+            foreach ($fiches as $fiche) {
+                $fichesmetiers[] = $fiche->getFicheType();
+            }
+        }
+
         return new ViewModel([
             'entretien' => $entretien,
+
+            'agent' => $agent,
+            'fichespostes' => $fichespostes,
+            'fichesmetiers' => $fichesmetiers
         ]);
     }
 

@@ -1,12 +1,19 @@
 <?php
 
 /**
- * @var \Application\Entity\Db\EntretienProfessionnel $entretien
+ * @see \Application\Controller\EntretienProfessionnelController::modifierAction()
+ * @var EntretienProfessionnel $entretien
+ * @var Agent $agent
+ * @var FichePoste[] $fichespostes
+ * @var FicheMetier[] $fichesmetiers
  */
 
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\EntretienProfessionnel;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 
-
-$this->headTitle('Édition de l\'entretien professionnel');
+$this->headTitle('Modification de l\'entretien professionnel');
 ?>
 
 <h1 class="page-header">
@@ -15,38 +22,16 @@ $this->headTitle('Édition de l\'entretien professionnel');
     <?php echo $entretien->getAgent()->getNomUsuel(); ?>
 </h1>
 
+
+<h1 class="page-header">
+    Affichage de l'entretien professionnel
+</h1>
+
+
 <div class="main">
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    Informations sur l'entretien
-                </div>
-                <div class="panel-body">
-                    <dl>
-                        <dt> Année</dt>
-                        <dd> <?php echo $entretien->getAnnee(); ?> </dd>
-                        <dt> Agent</dt>
-                        <dd>
-                            <?php echo $entretien->getAgent()->getPrenom(); ?>
-                            <?php echo $entretien->getAgent()->getNomUsuel(); ?>
-                        </dd>
-                        <dt> Responsable</dt>
-                        <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>
-                    </dl>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <a href="<?php echo $this->url('entretien-professionnel', [], [], true); ?>" class="btn btn-primary">
-                <span class="icon retour"></span>
-                Retourner à l'index
-            </a>
-        </div>
-    </div>
+    <?php
+    echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
+    ?>
 
     <h2> Formulaire d'entretien  </h2>
 
