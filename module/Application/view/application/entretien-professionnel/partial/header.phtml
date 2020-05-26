@@ -65,9 +65,7 @@ use Application\Entity\Db\FichePoste;
                 </dl>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-6">
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h2>Informations complémentaires</h2>
@@ -81,6 +79,42 @@ use Application\Entity\Db\FichePoste;
                     <dt> Date </dt>
                     <dd> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </dd>
                 </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Documents utiles</h2>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1417615828609&LANGUE=0" target="_blank">
+                            Guide de l'entretien professionnel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.unicaen.fr/intranet/ressources-humaines/biatss/les-outils-de-l-entretien-professionnel-615681.kjsp" target="_blank">
+                            Outils de l'entretien professionnel
+                        </a>
+                    </li><li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461231853773&LANGUE=0" target="_blank">
+                            Grille d'entretien
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461232125307&LANGUE=0" target="_blank">
+                            Compétence
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461232163617&LANGUE=0" target="_blank">
+                            Définitions
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
