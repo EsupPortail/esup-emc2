@@ -31,10 +31,6 @@ $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIE
 $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
 ?>
 
-<h1 class="page-header">
-    Modification de la fiche de poste #<?php echo $fiche->getId(); ?>
-</h1>
-
 <?php if (! $canModifier ) : ?>
 
     <div class="alert alert-danger col-md-8">
@@ -52,15 +48,10 @@ $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
     </style>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <h1 class="page-header">
-                Fiche de poste #<?php echo $fiche->getId(); ?><br/>
-                <strong>
-                    <?php echo ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():"<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale"; ?>
-                    <?php if($fiche->getLibelle() !== null) : ?>
-                        (<?php echo $fiche->getLibelle(); ?>)
-                    <?php endif; ?>
-                </strong>
+<!--                Fiche de poste #--><?php //echo $fiche->getId(); ?><!--<br/>-->
+                <?php echo $this->partial('partial/intitule', ['ficheposte' => $fiche], [], true); ?>
             </h1>
         </div>
         <div class="pull-right">

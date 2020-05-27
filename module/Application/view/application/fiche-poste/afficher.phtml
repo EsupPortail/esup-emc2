@@ -17,7 +17,8 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
 ?>
 
 <h1 class="page-header">
-    Fiche de poste #<?php echo $fiche->getId(); ?>
+<!--    Fiche de poste #--><?php //echo $fiche->getId(); ?><!-- <br/>-->
+    <?php echo $this->partial('partial/intitule', ['ficheposte' => $fiche], [], true); ?>
 </h1>
 
 <?php if (! $canAfficher) : ?>

@@ -1,0 +1,31 @@
+<?php
+
+use Application\Entity\Db\FichePoste;
+
+/**
+ * @var FichePoste $ficheposte
+ */
+
+$ficheprincipale = null;
+if ($ficheposte->getFicheTypeExternePrincipale()) {
+    $ficheprincipale = $ficheposte->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+}else {
+    $ficheprincipale = "Aucune fiche métier principale";
+}
+$saisielibre = $ficheposte->getLibelle();
+
+?>
+
+<?php if ($saisielibre) : ?>
+    <strong>
+        <?php echo $saisielibre; ?>
+    </strong>
+    <br/>
+    Rattachée à
+<?php endif; ?>
+<strong>
+    <?php echo $ficheprincipale; ?>
+</strong>
+
+
+
