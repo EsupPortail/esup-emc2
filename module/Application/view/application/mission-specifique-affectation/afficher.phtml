@@ -19,7 +19,13 @@ use Application\Entity\Db\AgentMissionSpecifique;
             <dd> <?php echo $affectation->getMission()->getLibelle(); ?> </dd>
 
             <dt> Structure </dt>
-            <dd> <?php echo $affectation->getStructure()->getLibelleLong(); ?> </dd>
+            <dd>
+                <?php if ($affectation->getStructure()) : ?>
+                    <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                <?php else : ?>
+                    Aucune Structure
+                <?php endif; ?>
+            </dd>
 
             <dt> Période </dt>
             <dd>

@@ -77,7 +77,7 @@ $query = ['retour' => $this->url(null,[],
 
                     <td> <?php echo $affectation->getAgent()->getDenomination(); ?> </td>
                     <td> <?php echo ($affectation->getMission()?$affectation->getMission()->getLibelle():"---"); ?> </td>
-                    <td> <?php echo $affectation->getStructure()->getLibelleCourt(); ?> </td>
+                    <td> <?php echo ($affectation->getStructure())?$affectation->getStructure()->getLibelleCourt():"Aucune structure"; ?> </td>
                     <td> <?php echo $affectation->getDateDebut()->format('d/m/Y'); ?> </td>
                     <td> <?php echo ($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"--"); ?> </td>
                     <td> <?php echo ($affectation->getDecharge()?$affectation->getDecharge(). "h.":"Aucune"); ?> </td>

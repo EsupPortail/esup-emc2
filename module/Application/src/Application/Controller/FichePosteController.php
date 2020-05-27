@@ -778,8 +778,26 @@ class FichePosteController extends AbstractActionController {
     public function supprimerExpertiseAction()
     {
         $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
-        $this->getExpertiseService()->delete($expertise);
-        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getExpertiseService()->delete($expertise);
+            //return $this->redirect()->toRoute('role', [], [], true);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($expertise !== null) {
+            $vm->setTemplate('unicaen-utilisateur/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'expertise " . $expertise->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-poste/supprimer-expertise', ["expertise" => $expertise->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     /** SPECIFICITE ***************************************************************************************************/

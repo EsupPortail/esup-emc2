@@ -100,6 +100,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
             <?php
                 /** @var AgentMissionSpecifique $mission */
             foreach ($agent->getMissionsSpecifiques() as $mission) :
+                $structure = $mission->getStructure();
             ?>
             <tr
                 <?php if (!$mission->estEnCours()) : ?>
@@ -107,7 +108,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                 <?php endif; ?>
             >
                 <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
-                <td> <?php echo $mission->getStructure()->getLibelleLong(); ?> </td>
+                <td> <?php echo ($structure)?$structure->getLibelleLong():"Aucune structure"; ?> </td>
                 <td> <?php echo $mission->getDateDebut()->format('d/m/Y'); ?> </td>
                 <td> <?php echo ($mission->getDateFin())?$mission->getDateFin()->format('d/m/Y'):"---"; ?> </td>
                 <td>

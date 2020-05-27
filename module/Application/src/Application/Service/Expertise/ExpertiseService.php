@@ -78,7 +78,7 @@ class ExpertiseService {
             ->addSelect('createur')->join('expertise.histoCreateur', 'createur')
             ->addSelect('modificateur')->join('expertise.histoModificateur', 'modificateur')
             ->addSelect('destructeur')->leftJoin('expertise.histoDestructeur', 'destructeur')
-            ->addSelect('ficheposte')->leftJoin('expertise.$ficheposte', 'ficheposte')
+            ->addSelect('ficheposte')->leftJoin('expertise.ficheposte', 'ficheposte')
         ;
         return $qb;
     }

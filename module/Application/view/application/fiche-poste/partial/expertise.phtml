@@ -72,6 +72,7 @@ $date = new DateTime();
                                 <a <?php /** @see \Application\Controller\FichePosteController::supprimerExpertiseAction() */?>
                                     href="<?php echo $this->url('fiche-poste/supprimer-expertise',['expertise' => $expertise->getId()], [], true); ?>"
                                     title="Supprimer l'expertise"
+                                    class="ajax-modal" data-event="modification"
                                 >
                                     <span class="icon detruire"></span></a>
                             <?php endif; ?>
