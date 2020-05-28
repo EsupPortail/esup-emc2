@@ -24,6 +24,24 @@ class DomaineForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
+        //fonction
+        $this->add([
+            'type' => Select::class,
+            'name' => 'fonction',
+            'options' => [
+                'label' => "Fonction :",
+                'empty_option' => "Sélectionner une fonction ...",
+                'value_options' => [
+                    'Soutien' => 'Soutien',
+                    'Support' => 'Support',
+                ],
+            ],
+            'attributes' => [
+                'id' => 'fonction',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
         // famille
         $this->add([
             'type' => Select::class,

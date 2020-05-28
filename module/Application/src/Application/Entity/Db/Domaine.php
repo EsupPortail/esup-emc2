@@ -13,7 +13,8 @@ class Domaine implements HistoriqueAwareInterface {
     private $id;
     /** @var string */
     private $libelle;
-
+    /** @var string */
+    private $typeFonction;
     /** @var FamilleProfessionnelle */
     private $famille;
     /** @var ArrayCollection */
@@ -47,6 +48,24 @@ class Domaine implements HistoriqueAwareInterface {
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeFonction()
+    {
+        return $this->typeFonction;
+    }
+
+    /**
+     * @param string $typeFonction
+     * @return Domaine
+     */
+    public function setTypeFonction($typeFonction)
+    {
+        $this->typeFonction = $typeFonction;
         return $this;
     }
 

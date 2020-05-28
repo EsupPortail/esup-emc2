@@ -23,7 +23,6 @@ class MetierHydrator implements HydratorInterface {
 
         $data = [
             'domaines' => $domaineIds,
-            'fonction' => $object->getFonction(),
             'libelle' => $object->getLibelle(),
             'expertise' => ($object->hasExpertise()),
         ];
@@ -46,7 +45,6 @@ class MetierHydrator implements HydratorInterface {
         }
 
         $object->setLibelle($data['libelle']);
-        $object->setFonction($data['fonction']);
         $object->setExpertise($data['expertise']);
 
         return $object;

@@ -192,6 +192,7 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                     <thead>
                     <tr>
                         <th> Libelle </th>
+                        <th> Type de fonction </th>
                         <th> Famille professionnelle </th>
                         <th> #metier </th>
                         <th class="cell-action"> Action </th>
@@ -201,6 +202,14 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                     <?php foreach($domaines as $domaine): ?>
                         <tr <?php if ($domaine->estHistorise()) echo ' class="historise" '; ?>>
                             <td> <?php echo $domaine->getLibelle(); ?> </td>
+                            <td>
+                                <?php if ($domaine->getTypeFonction() === "Support") : ?>
+                                    <span class="label label-info">Support</span>
+                                <?php endif; ?>
+                                <?php if ($domaine->getTypeFonction() === "Soutien") : ?>
+                                    <span class="label label-primary">Soutien</span>
+                                <?php endif; ?>
+                            </td>
                             <td> <?php echo $domaine->getFamille(); ?> </td>
                             <td>
                                 <?php echo count($domaine->getMetiers()); ?>
@@ -253,9 +262,9 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                         <br/>
                         <?php if ($canAjouter) : ?>
                             <a  <?php /** @see \Application\Controller\MetierController::ajouterMetierAction() */ ?>
-                                href="<?php echo $this->url('metier/ajouter-metier', [], [], true);?>"
-                                class="btn btn-primary action ajax-modal"
-                                data-event="modification"
+                                    href="<?php echo $this->url('metier/ajouter-metier', [], [], true);?>"
+                                    class="btn btn-primary action ajax-modal"
+                                    data-event="modification"
                             >
                                 <span class="icon ajouter"></span>
                                 Ajouter un métier
@@ -269,7 +278,6 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                     <tr>
                         <th> Libelle </th>
                         <th> Domaines </th>
-                        <th> Fonction </th>
                         <th> Références </th>
                         <th> Expertise </th>
                         <th class="cell-action"> Action </th>
@@ -281,37 +289,44 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                             <td> <?php echo $metier->getLibelle(); ?> </td>
                             <td>
                                 <ul>
-                                <?php foreach ($metier->getDomaines() as $domaine) : ?>
-                                    <li> <?php echo $domaine; ?> </li>
-                                <?php endforeach; ?>
+                                    <?php foreach ($metier->getDomaines() as $domaine) : ?>
+                                        <li>
+                                            <?php echo $domaine; ?>
+                                            <?php if ($domaine->getTypeFonction() === "Support") : ?>
+                                                <span class="label label-info">Support</span>
+                                            <?php endif; ?>
+                                            <?php if ($domaine->getTypeFonction() === "Soutien") : ?>
+                                                <span class="label label-primary">Soutien</span>
+                                            <?php endif; ?>
+                                        </li>
+                                    <?php endforeach; ?>
                                 </ul>
                             </td>
-                            <td> <?php echo $metier->getFonction(); ?> </td>
                             <td>
                                 <?php $references =  $metier->getReferences(); ?>
                                 <?php if (empty($references)) : ?>
                                     Aucune
                                 <?php else: ?>
-                                    <?php foreach ($references as $reference) : ?>
-                                        <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
-                                            <?php echo $reference->getCode(); ?>
-                                        </a>
-                                        <?php if ($canEditer) : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::modifierReferenceAction() */ ?>
-                                            href="<?php echo $this->url('metier/modifier-reference', ['reference' => $reference->getId()], [], true); ?>"
+                                <?php foreach ($references as $reference) : ?>
+                                <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
+                                    <?php echo $reference->getCode(); ?>
+                                </a>
+                                <?php if ($canEditer) : ?>
+                                <a  <?php /** @see \Application\Controller\MetierController::modifierReferenceAction() */ ?>
+                                        href="<?php echo $this->url('metier/modifier-reference', ['reference' => $reference->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon editer" title="Modifier la référence"></span></a>
+                                <a href="">
+                                    <a  <?php /** @see \Application\Controller\MetierController::effacerReferenceAction() */ ?>
+                                            href="<?php echo $this->url('metier/effacer-reference', ['reference' => $reference->getId()], [], true); ?>"
                                             class="ajax-modal" data-event="modification"
-                                        >
-                                            <span class="icon editer" title="Modifier la référence"></span></a>
-                                        <a href="">
-                                            <a  <?php /** @see \Application\Controller\MetierController::effacerReferenceAction() */ ?>
-                                                    href="<?php echo $this->url('metier/effacer-reference', ['reference' => $reference->getId()], [], true); ?>"
-                                                    class="ajax-modal" data-event="modification"
-                                            >
-                                            <span class="icon detruire" title="Supprimer la référence"></span></a>
-                                        <?php endif; ?>
-                                        <br/>
+                                    >
+                                        <span class="icon detruire" title="Supprimer la référence"></span></a>
+                                    <?php endif; ?>
+                                    <br/>
                                     <?php endforeach ?>
-                                <?php endif; ?>
+                                    <?php endif; ?>
                             </td>
                             <td>
                                 <?php if ($metier->hasExpertise()) : ?>
@@ -324,9 +339,9 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                                 <?php if ($canEditer) : ?>
                                     <a
                                         <?php /** @see \Application\Controller\MetierController::modifierMetierAction() */ ?>
-                                        href="<?php echo $this->url('metier/modifier-metier', ['metier' => $metier->getId()], [], true); ?>"
-                                        class="ajax-modal"
-                                        data-event="modification"
+                                            href="<?php echo $this->url('metier/modifier-metier', ['metier' => $metier->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
                                     >
                                         <span class="icon editer" title="Modifier le métier"></span></a>
                                 <?php endif; ?>
@@ -354,8 +369,8 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                                 <?php endif; ?>
                                 <?php if ($canEffacer) : ?>
                                     <a  <?php /** @see \Application\Controller\MetierController::effacerMetierAction() */ ?>
-                                        href="<?php echo $this->url('metier/effacer-metier', ['metier' => $metier->getId()], [], true); ?>"
-                                        class="ajax-modal" data-event="modification"
+                                            href="<?php echo $this->url('metier/effacer-metier', ['metier' => $metier->getId()], [], true); ?>"
+                                            class="ajax-modal" data-event="modification"
                                     >
                                         <span class="icon detruire"  title="Supprimer l'application"></span></a>
                                 <?php endif; ?>

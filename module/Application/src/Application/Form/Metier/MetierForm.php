@@ -15,25 +15,7 @@ class MetierForm extends Form {
 
     public function init()
     {
-        //domaine
-        $this->add([
-            'type' => Select::class,
-            'name' => 'fonction',
-            'options' => [
-                'label' => "Fonction :",
-                'empty_option' => "Sélectionner une fonction ...",
-                'value_options' => [
-                    'Soutien' => 'Soutien',
-                    'Support' => 'Support',
-                ],
-            ],
-            'attributes' => [
-                'id' => 'fonction',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
-        //fonction
+        //domaines
         $this->add([
             'type' => Select::class,
             'name' => 'domaines',
@@ -89,7 +71,6 @@ class MetierForm extends Form {
 
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'fonction'          => [ 'required' => true,  ],
             'domaines'          => [ 'required' => true,  ],
             'libelle'           => [ 'required' => true,  ],
             'expertise'         => [ 'required' => false, ],

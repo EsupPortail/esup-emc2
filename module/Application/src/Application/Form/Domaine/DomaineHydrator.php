@@ -18,6 +18,7 @@ class DomaineHydrator implements HydratorInterface {
         $data = [
             'libelle' => $object->getLibelle(),
             'famille' => ($object->getFamille())?$object->getFamille()->getId():null,
+            'fonction' => $object->getTypeFonction(),
         ];
         return $data;
     }
@@ -32,7 +33,9 @@ class DomaineHydrator implements HydratorInterface {
         $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($data['famille']);
 
         $object->setLibelle($data['libelle']);
+        $object->setTypeFonction($data['fonction']);
         $object->setFamille($famille);
+
 
         return $object;
     }

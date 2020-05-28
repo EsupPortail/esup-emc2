@@ -18,8 +18,6 @@ class Metier implements HistoriqueAwareInterface {
 
     /** @var ArrayCollection (Domaine) */
     private  $domaines;
-    /** @var string */
-    private $fonction;
     /** @var boolean */
     private $hasExpertise;
 
@@ -58,24 +56,6 @@ class Metier implements HistoriqueAwareInterface {
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFonction()
-    {
-        return $this->fonction;
-    }
-
-    /**
-     * @param string $fonction
-     * @return Metier
-     */
-    public function setFonction($fonction)
-    {
-        $this->fonction = $fonction;
-        return $this;
     }
 
     /**

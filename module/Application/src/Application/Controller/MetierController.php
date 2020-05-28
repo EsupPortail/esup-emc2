@@ -253,7 +253,7 @@ class MetierController extends AbstractActionController {
         if ($domaine !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du domaine" . $domaine->getLibelle(),
+                'title' => "Suppression du domaine " . $domaine->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('metier/effacer-domaine', ["domaine" => $domaine->getId()], [], true),
             ]);
@@ -572,7 +572,7 @@ class MetierController extends AbstractActionController {
 
         $results = [];
         foreach($metiers as $metier) {
-            $fonction = $metier->getFonction();
+            $fonction = null; //$metier->getDgetFonction();
             $domaine =  null; //$metier->getDomaine();
             $famille = ($domaine)?$domaine->getFamille():null;
             $references = [];
@@ -608,7 +608,7 @@ class MetierController extends AbstractActionController {
 
         $results = [];
         foreach($metiers as $metier) {
-            $fonction = $metier->getFonction();
+            $fonction = null; //$metier->getFonction();
             $domaine = null; // ($metier)?$metier->getDomaine():null;
             $famille = ($domaine)?$domaine->getFamille():null;
             $references = [];

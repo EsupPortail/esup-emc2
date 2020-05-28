@@ -7,6 +7,7 @@
         </id>
 
         <field name="libelle"           type="string" length="256"      column="libelle"                nullable="false"/>
+        <field name="typeFonction"      type="string" length="256"      column="type_fonction"                nullable="false"/>
 
         <many-to-one target-entity="Application\Entity\Db\FamilleProfessionnelle"  field="famille">
             <join-column name="famille_id" referenced-column-name="id"/>
