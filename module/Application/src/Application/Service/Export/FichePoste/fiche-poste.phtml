@@ -31,18 +31,21 @@ $agent = ($fiche->getAgent())?:null;
 
 $now = new DateTime();
 
+$libelleSupplemantaire = $fiche->getLibelle();
+$metierLibelle = ($metier)?$metier->getLibelle():null;
 
 ?>
 
 <div class="titre-block">
     <div class="titre-intitule">
+        <?php if ($libelleSupplemantaire) : ?>
+            <strong><?php echo $libelleSupplemantaire; ?> <br/></strong>
+            Rattachée à
+        <?php endif; ?>
         <?php if ($metier): ?>
-                <?php echo $metier->getLibelle(); ?>
+                <strong><?php echo $metier->getLibelle(); ?></strong>
         <?php else: ?>
             Aucun métier principal de renseigné
-        <?php endif; ?>
-        <?php if ($fiche->getLibelle()) : ?>
-            (<?php echo $fiche->getLibelle(); ?>)
         <?php endif; ?>
     </div>
     <div class="titre-affectation">

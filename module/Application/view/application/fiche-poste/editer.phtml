@@ -57,8 +57,6 @@ $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
         <div class="pull-right">
             <br/>
             <br/>
-            <br/>
-            <br/>
             <a
                 <?php /** @see \Application\Controller\FichePosteController::associerTitreAction() */ ?>
                 href="<?php echo $this->url('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true); ?>"
