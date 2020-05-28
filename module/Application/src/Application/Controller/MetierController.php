@@ -572,30 +572,34 @@ class MetierController extends AbstractActionController {
 
         $results = [];
         foreach($metiers as $metier) {
-            $fonction = null; //$metier->getDgetFonction();
-            $domaine =  null; //$metier->getDomaine();
-            $famille = ($domaine)?$domaine->getFamille():null;
+
             $references = [];
             foreach ($metier->getReferences() as $reference) {
                 $references[] = $reference->getTitre();
             };
 
-            $entry = [
-                'famille'  => ($famille)?$famille->__toString():"---",
-                'fonction' => ($fonction)?$fonction:"---",
-                'domaine'  => ($domaine)?$domaine->__toString():"---",
-                'metier'   => ($metier)?$metier->__toString():"---",
-                'références'   => implode("<br/>", $references),
-                'nbFiche'   => count($metier->getFichesMetiers()),
-            ];
-            $results[] = $entry;
+            $domaines = $metier->getDomaines();
+            if (empty($domaines)) $domaines[] = null;
+
+            foreach ($domaines as $domaine) {
+                $famille = ($domaine) ? $domaine->getFamille() : null;
+                $fonction =  ($domaine) ? $domaine->getTypeFonction() : null;
+
+                $entry = [
+                    'metier'     => ($metier) ? $metier->__toString() : "---",
+                    'références' => implode("<br/>", $references),
+                    'domaine'    => ($domaine) ? $domaine->__toString() : "---",
+                    'fonction'   => ($fonction) ? $fonction : "---",
+                    'famille'    => ($famille) ? $famille->__toString() : "---",
+                    'nbFiche'    => count($metier->getFichesMetiers()),
+                ];
+                $results[] = $entry;
+            }
         }
 
         usort($results, function($a, $b) {
-            if ($a['famille'] !== $b['famille'])     return $a['famille'] < $b['famille'];
-            if ($a['fonction'] !== $b['fonction'])   return $a['fonction'] < $b['fonction'];
-            if ($a['domaine'] !== $b['domaine'])     return $a['domaine'] < $b['domaine'];
-            return $a['metier'] < $b['metier'];
+            if ($a['metier'] !== $b['metier'])  return $a['metier'] > $b['metier'];
+            return $a['domaine'] > $b['domaine'];
         });
 
         return new ViewModel([
@@ -608,33 +612,37 @@ class MetierController extends AbstractActionController {
 
         $results = [];
         foreach($metiers as $metier) {
-            $fonction = null; //$metier->getFonction();
-            $domaine = null; // ($metier)?$metier->getDomaine():null;
-            $famille = ($domaine)?$domaine->getFamille():null;
+
             $references = [];
             foreach ($metier->getReferences() as $reference) {
                 $references[] = $reference->getTitre();
             };
 
-            $entry = [
-                'famille'  => ($famille)?$famille->__toString():"---",
-                'domaine'  => ($domaine)?$domaine->__toString():"---",
-                'fonction' => ($fonction)?:"---",
-                'metier'   => ($metier)?$metier->__toString():"---",
-                'références'   => implode("\n", $references),
-                'nbFiche'   => count($metier->getFichesMetiers()),
-            ];
-            $results[] = $entry;
+            $domaines = $metier->getDomaines();
+            if (empty($domaines)) $domaines[] = null;
+
+            foreach ($domaines as $domaine) {
+                $famille = ($domaine) ? $domaine->getFamille() : null;
+                $fonction =  ($domaine) ? $domaine->getTypeFonction() : null;
+
+                $entry = [
+                    'metier'     => ($metier) ? $metier->__toString() : "---",
+                    'références' => implode("<br/>", $references),
+                    'domaine'    => ($domaine) ? $domaine->__toString() : "---",
+                    'fonction'   => ($fonction) ? $fonction : "---",
+                    'famille'    => ($famille) ? $famille->__toString() : "---",
+                    'nbFiche'    => count($metier->getFichesMetiers()),
+                ];
+                $results[] = $entry;
+            }
         }
 
         usort($results, function($a, $b) {
-            if ($a['famille'] !== $b['famille'])     return $a['famille'] < $b['famille'];
-            if ($a['domaine'] !== $b['domaine'])     return $a['domaine'] < $b['domaine'];
-            if ($a['fonction'] !== $b['fonction'])   return $a['fonction'] < $b['fonction'];
-            return $a['metier'] < $b['metier'];
+            if ($a['metier'] !== $b['metier'])  return $a['metier'] > $b['metier'];
+            return $a['domaine'] > $b['domaine'];
         });
 
-        $headers = ['Famille', 'Domaine', 'Fonction', 'Metier', 'Références', '#Fiche'];
+        $headers = [ 'Metier', 'Références', 'Domaine', 'Fonction', 'Famille', '#Fiche'];
 
         $today = new DateTime();
 

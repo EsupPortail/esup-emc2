@@ -40,11 +40,11 @@ $this->headTitle('Cartographie des métiers');
     <table class="table table-condensed">
         <thead>
             <tr>
-                <th> Famille professionnelle </th>
-                <th> Fonction </th>
-                <th> Domaine </th>
                 <th> Métier </th>
                 <th> Références </th>
+                <th> Domaine </th>
+                <th> Fonction </th>
+                <th> Famille professionnelle </th>
                 <th> #Fiche métier</th>
 <!--                <th> #Fiche poste </th>-->
             </tr>
@@ -54,11 +54,11 @@ $this->headTitle('Cartographie des métiers');
 
 
             <tr>
-                <td> <?php echo $result['famille']; ?> </td>
-                <td> <?php echo $result['fonction']; ?> </td>
-                <td> <?php echo $result['domaine']; ?> </td>
                 <td> <?php echo $result['metier']; ?> </td>
                 <td> <?php echo $result['références']; ?> </td>
+                <td> <?php echo $result['domaine']; ?> </td>
+                <td> <?php echo $result['fonction']; ?> </td>
+                <td> <?php echo $result['famille']; ?> </td>
                 <td> <?php echo $result['nbFiche']; ?> </td>
             </tr>
             <?php endforeach; ?>
