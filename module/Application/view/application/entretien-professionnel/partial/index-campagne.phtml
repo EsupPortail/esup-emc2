@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @var EntretienProfessionnelCampagne[] $campagnes
+ */
+
+use Application\Entity\Db\EntretienProfessionnelCampagne;
+
+?>
+<a
+    <?php /** @see \Application\Controller\EntretienProfessionnelController::ajouterCampagneAction() */?>
+    href="<?php echo $this->url('entretien-professionnel/campagne/ajouter', [], [], true); ?>"
+    class="btn btn-primary action ajax-modal" data-event="modification"
+    >
+    <span class="icon ajouter"></span>
+    Ajouter une campagne
+</a>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Année</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Précède</th>
+            <th>#Entretiens</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($campagnes as $campagne) : ?>
+            <tr>
+                <td> <?php echo $campagne->getAnnee(); ?> </td>
+                <td> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?> </td>
+                <td> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?> </td>
+                <td> <?php echo ($campagne->getPrecede())?$campagne->getPrecede()->getAnnee():"---"; ?> </td>
+                <td> ??? </td>
+                <td> ... </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

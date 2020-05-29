@@ -8,7 +8,13 @@ use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydrator;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydratorFactory;
+use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneForm;
+use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneFormFactory;
+use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneHydrator;
+use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneHydratorFactory;
 use Application\Provider\Privilege\EntretienproPrivileges;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceFactory;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -76,6 +82,14 @@ return [
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_DETRUIRE,
                     ],
+                ],
+
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'ajouter-campagne',
+                    ],
+                    'roles' => [],
                 ],
             ],
         ],
@@ -212,6 +226,26 @@ return [
                             ],
                         ],
                     ],
+                    'campagne' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => false,
+                        'options' => [
+                            'route'    => '/campagne',
+                        ],
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Literal::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'ajouter-campagne',
+                                    ],
+                                ],
+                            ],
+                        ]
+                    ],
                 ],
             ],
         ],
@@ -220,6 +254,7 @@ return [
     'service_manager' => [
         'factories' => [
             EntretienProfessionnelService::class => EntretienProfessionnelServiceFactory::class,
+            EntretienProfessionnelCampagneService::class => EntretienProfessionnelCampagneServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -230,11 +265,13 @@ return [
     'form_elements' => [
         'factories' => [
             EntretienProfessionnelForm::class => EntretienProfessionnelFormFactory::class,
+            EntretienProfessionnelCampagneForm::class => EntretienProfessionnelCampagneFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             EntretienProfessionnelHydrator::class => EntretienProfessionnelHydratorFactory::class,
+            EntretienProfessionnelCampagneHydrator::class => EntretienProfessionnelCampagneHydratorFactory::class,
         ],
     ]
 

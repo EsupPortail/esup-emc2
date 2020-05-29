@@ -3,10 +3,13 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Entity\Db\EntretienProfessionnelCampagne;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
+use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\Export\EntretienProfessionnel\EntretienProfessionnelPdfExporter;
 use Autoform\Entity\Db\FormulaireInstance;
@@ -28,12 +31,15 @@ class EntretienProfessionnelController extends AbstractActionController {
     use DateTimeAwareTrait;
     use AgentServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
+    use EntretienProfessionnelCampagneServiceAwareTrait;
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
 
     use EntretienProfessionnelFormAwareTrait;
-    use EntretienProfessionnelServiceAwareTrait;
+    use EntretienProfessionnelCampagneFormAwareTrait;
+
     use FormulaireServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
 
@@ -47,9 +53,11 @@ class EntretienProfessionnelController extends AbstractActionController {
     public function indexAction()
     {
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels();
+        $campagnes = $this->getEntretienProfessionnelCampagneService()->getEntretiensProfessionnelsCampagnes();
 
         return new ViewModel([
             'entretiens' => $entretiens,
+            'campagnes' => $campagnes,
         ]);
     }
 
@@ -293,5 +301,34 @@ class EntretienProfessionnelController extends AbstractActionController {
         }
         $exporter->export($filemane);
         exit;
+    }
+
+    /** CAMPAGNE ******************************************************************************************************/
+
+    public function ajouterCampagneAction()
+    {
+        $campagne = new EntretienProfessionnelCampagne();
+        //TODO set date par defaut
+
+        $form = $this->getEntretienProfessionnelCampagneForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/ajouter', [], [], true));
+        $form->bind($campagne);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getEntretienProfessionnelCampagneService()->create($campagne);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une campagne d'entretien professionnel",
+            'form' => $form,
+        ]);
+        return $vm;
     }
 }

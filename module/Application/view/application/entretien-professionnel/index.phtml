@@ -1,18 +1,16 @@
 <?php
 
 /**
- * @var Application\Entity\Db\EntretienProfessionnel[] $entretiens
+ * @see \Application\Controller\EntretienProfessionnelController::indexAction()
+ * @var EntretienProfessionnelCampagne[] $campagnes
+ * @var EntretienProfessionnel[] $entretiens
  */
 
-use Application\Provider\Privilege\EntretienproPrivileges;
+use Application\Entity\Db\EntretienProfessionnel;
+use Application\Entity\Db\EntretienProfessionnelCampagne;
 
 $this->headTitle('Index des entretiens professionnel');
 
-$canVoir        = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
-$canAjouter     = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AJOUTER));
-$canModifier    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER));
-$canHistoriser  = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_HISTORISER));
-$canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 ?>
 
 <h1 class="page-header">
@@ -21,99 +19,60 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
 <div class="main">
 
-    <?php if ($canAjouter) : ?>
-        <a
-            <?php /** @see \Application\Controller\EntretienProfessionnelController::creerAction() */ ?>
-                href="<?php echo $this->url('entretien-professionnel/creer', [], [], true); ?>"
-                class="btn btn-primary action ajax-modal" data-event="modification">
-            <span class="icon ajouter action"></span>
-            Créer un entretien professionnel
-        </a>
-    <?php endif; ?>
 
-    <h2> Liste des entretiens enregistrés </h2>
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
 
-    <table class="table table-condensed">
-        <thead>
-        <tr>
-            <th> Année </th>
-            <th> Agent </th>
-            <th> Responsable </th>
-            <th> Date </th>
-            <th> Modifée </th>
-            <th> Action </th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($entretiens as $entretien) : ?>
-            <tr>
-                <td> <?php echo $entretien->getAnnee(); ?> </td>
-                <td>
-                    <?php echo $entretien->getAgent()->getPrenom(); ?>
-                    <?php echo $entretien->getAgent()->getNomUsuel(); ?>
-                </td>
-                <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
-                <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
-                <td> <?php echo $entretien->getHistoModification()->format('d/m/Y'); ?> </td>
-                <td>
-                    <?php if ($canVoir) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::afficherAction() */?>
-                                href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true) ?>"
-                                class="ajax-modal"
-                        >
-                            <span class="icon voir" title="Voir le compte-rendu de l'entretien professionnel"></a>
-                    <?php endif; ?>
+            <li role="campagne">
+                <a href="#campagne" aria-controls="campagne" role="tab" data-toggle="tabz">
+                    Campagnes
+                    <span class="badge">
+                    <?php echo count($campagnes); ?>
+                </span>
+                </a>
+            </li>
 
-                    <?php if ($canVoir) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::exporterAction() */?>
-                                href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true) ?>"
-                        >
-                            <span class="icon pdf" title="Exporter l'entretien professionnel"></a>
-                    <?php endif; ?>
+            <li role="entretien">
+                <a href="#entretien" aria-controls="entretien" role="tab" data-toggle="tabz">
+                    Entretiens
+                    <span class="badge">
+                    <?php echo count($entretiens); ?>
+                </span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-                    <?php if ($canModifier) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierAction() */?>
-                                href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
-                        >
-                            <span class="icon editer" title="Modifier le compte-rendu de l'entretien professionnel"></span></a>
-                    <?php endif; ?>
+    <div class="main-with-tab">
 
-                    <?php if ($canHistoriser) : ?>
-                        <?php if ($entretien->estNonHistorise()) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\EntretienProfessionnelController::historiserAction() */?>
-                                    href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
-                            >
-                                <span class="icon historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span></a>
-                        <?php else : ?>
-                            <a
-                                <?php /** @see \Application\Controller\EntretienProfessionnelController::restaurerAction() */?>
-                                    href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
-                            >
-                                <span class="icon restaurer" title="Restaurer le compte-rendu de l'entretien professionnel"></span></a>
-                        <?php endif; ?>
-                    <?php endif; ?>
+        <div class="tab-content">
 
-                    <?php if ($canDetruire) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::detruireAction() */?>
-                                href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
-                        >
-                            <span class="icon detruire" title="Supprimer définitivement le compte-rendu de l'entretien professionnel"></span></a>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+            <!-- CAMPAGNES ------------------------------------------------------------------------------------------------>
+            <div id="campagne" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-campagne', ['campagnes' => $campagnes]); ?>
+            </div>
 
+            <!-- ENTRETIENS ------------------------------------------------------------------------------------------------>
+            <div id="entretien" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-entretien', ['entretiens' => $entretiens]); ?>
+            </div>
+        </div>
+    </div>
 <script>
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "campagne";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+    });
+
     $("body").on("modification", function (event) {
         event.div.modal('hide');
         window.location.reload();
