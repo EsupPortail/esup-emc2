@@ -394,4 +394,17 @@ class FicheMetierController extends  AbstractActionController{
         ]);
         return $vm;
     }
+
+    public function changerExpertiseAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
+        if ($fiche->hasExpertise()) {
+            $fiche->setExpertise(false);
+        } else  {
+            $fiche->setExpertise(true);
+        }
+        $this->getFicheMetierService()->update($fiche);
+
+        return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
+    }
 }

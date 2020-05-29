@@ -7,7 +7,6 @@
         </id>
 
         <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
-        <field name="hasExpertise"      type="boolean"                    column="expertise"              nullable="true"  />
 
         <one-to-many target-entity="Application\Entity\Db\MetierReference" mapped-by="metier" field="references"/>
 

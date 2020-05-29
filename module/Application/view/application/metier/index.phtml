@@ -279,7 +279,6 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                         <th> Libelle </th>
                         <th> Domaines </th>
                         <th> Références </th>
-                        <th> Expertise </th>
                         <th class="cell-action"> Action </th>
                     </tr>
                     </thead>
@@ -327,13 +326,6 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
                                     <br/>
                                     <?php endforeach ?>
                                     <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if ($metier->hasExpertise()) : ?>
-                                    <span class="icon ok" style="color:darkgreen;"></span>
-                                <?php else: ?>
-                                    <span class="icon ko" style="color:darkred;"></span>
-                                <?php endif; ?>
                             </td>
                             <td>
                                 <?php if ($canEditer) : ?>

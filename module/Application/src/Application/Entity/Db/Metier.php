@@ -9,8 +9,6 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 class Metier implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    const Prefix_REFERENS = "https://data.enseignementsup-recherche.gouv.fr/pages/fiche_emploi_type_referens_iii_itrf/?refine.referens_id=";
-
     /** @var integer */
     private $id;
     /** @var string */
@@ -18,10 +16,6 @@ class Metier implements HistoriqueAwareInterface {
 
     /** @var ArrayCollection (Domaine) */
     private  $domaines;
-    /** @var boolean */
-    private $hasExpertise;
-
-
     /** @var ArrayCollection (MetierReference) */
     private $references;
     /** @var ArrayCollection (FicheMetierType) */
@@ -57,24 +51,6 @@ class Metier implements HistoriqueAwareInterface {
     {
         $this->libelle = $libelle;
     }
-
-    /**
-     * @return bool
-     */
-   public function hasExpertise() {
-        return $this->hasExpertise;
-   }
-
-    /**
-     * @param bool $has
-     * @return $this
-     */
-   public function setExpertise(bool $has) {
-       $this->hasExpertise = $has;
-       return $this;
-   }
-
-
 
     public function __toString()
     {

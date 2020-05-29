@@ -368,8 +368,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
     public function hasExpertise() {
         /** @var FicheTypeExterne $fichesMetier */
         foreach ($this->fichesMetiers as $fichesMetier) {
-            $metier = $fichesMetier->getFicheType()->getMetier();
-            if ($metier AND $metier->hasExpertise()) return true;
+            if ($fichesMetier->getFicheType()->hasExpertise()) return true;
         }
         return false;
     }

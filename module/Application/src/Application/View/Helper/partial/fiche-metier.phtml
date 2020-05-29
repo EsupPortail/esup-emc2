@@ -43,14 +43,8 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         <div class="col-md-8">
             <h1 class="page-header">
                 Fiche métier #<?php echo $fichemetier->getId(); ?> <br/>
-                <em><?php echo $metier->getLibelle(); ?></em>
+                <strong><?php echo $metier->getLibelle(); ?></strong>
             </h1>
-
-            <?php if ($metier) : ?>
-                <?php foreach($metier->getReferences() as $reference) : ?>
-                    <span class="badge" style="background-color: #dfc4b2"><a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a></span>
-                <?php endforeach; ?>
-            <?php endif; ?>
         </div>
         <div class="col-md-4">
             <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
@@ -70,6 +64,45 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         </div>
     </div>
 <?php endif; ?>
+
+<div class="row">
+    <div class="col-md-8">
+    <?php if ($fichemetier->hasExpertise()) : ?>
+        <span class="label" style="background-color: darkgreen;"> Expertise </span>
+    <?php else: ?>
+        <span class="label" style="background-color: darkred;"> Pas d'expertise </span>
+    <?php endif; ?>
+
+        &nbsp;
+
+    <?php if ($metier) : ?>
+        <?php foreach($metier->getReferences() as $reference) : ?>
+            <span class="badge" style="background-color: #dfc4b2"><a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a></span>
+        <?php endforeach; ?>
+    <?php endif; ?>
+    </div>
+    <div class="col-md-4">
+        <div class="pull-right" style="margin-right:1rem;">
+            <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+                <a
+                    <?php /** @see FicheMetierController::changerExpertiseAction() */?>
+                    href="<?php echo $this->url('fiche-metier-type/changer-expertise', ['fiche' => $fichemetier->getId()], [], true); ?>"
+                    class="btn btn-primary action"
+                >
+                    <?php if ($fichemetier->hasExpertise()) : ?>
+                        <span class="icon retirer"></span>
+                        Retirer expertise
+                    <?php else: ?>
+                        <span class="icon ajouter"></span>
+                        Ajouter expertise
+                <?php endif; ?>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<br/>
 
 <div class="main">
 

@@ -67,6 +67,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         <th> Libellé </th>
         <th> Fonction </th>
         <th> Domaine </th>
+        <th> Expertise </th>
         <th class="cell-action"> Action </th>
     </tr>
     </thead>
@@ -80,6 +81,13 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         <li> <?php echo $domaine; ?> (<?php echo $domaine->getTypeFonction(); ?>)</li>
                     <?php endforeach; ?>
                     </ul>
+                </td>
+                <td>
+                    <?php if ($fiche->hasExpertise()) : ?>
+                        <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
+                    <?php else: ?>
+                        <span class="badge" style="background-color: darkred;">&nbsp;</span>
+                    <?php endif; ?>
                 </td>
                 <td>
                     <?php if ($canVoir) : ?>

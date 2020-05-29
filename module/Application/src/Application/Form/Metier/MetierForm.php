@@ -42,17 +42,6 @@ class MetierForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
-        // expertise
-        $this->add([
-            'type' => Checkbox::class,
-            'name' => 'expertise',
-            'options' => [
-                'label' => "Associable à des expertises métiers",
-            ],
-            'attributes' => [
-                'id' => 'expertise',
-            ],
-        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -73,7 +62,6 @@ class MetierForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'domaines'          => [ 'required' => true,  ],
             'libelle'           => [ 'required' => true,  ],
-            'expertise'         => [ 'required' => false, ],
         ]));
     }
 }

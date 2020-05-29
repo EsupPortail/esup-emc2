@@ -45,6 +45,7 @@
         </many-to-many>
 
         <one-to-many target-entity="Application\Entity\Db\FicheMetierTypeActivite" mapped-by="fiche" field="activites"/>
+        <field name="hasExpertise"      type="boolean"                  column="expertise"          nullable="true"  />
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

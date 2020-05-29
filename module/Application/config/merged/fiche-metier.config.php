@@ -66,6 +66,7 @@ return [
                         'ajouter-nouvelle-activite',
                         'ajouter-activite-existante',
 
+                        'changer-expertise',
                         'modifier-application',
                         'modifier-formation',
                         'gerer-competences',
@@ -224,6 +225,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'changer-expertise' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/changer-expertise/:fiche',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'changer-expertise',
                             ],
                         ],
                         'may_terminate' => true,

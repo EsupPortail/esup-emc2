@@ -391,7 +391,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
     $expertises = array_filter($expertises, function (Expertise $e) { return $e->getHistoDestruction() === null;});
 ?>
 
-<?php if (!empty($expertises)) : ?>
+<?php if (!empty($expertises) AND $fiche->hasExpertise()) : ?>
     <div class="">
         <div class="titre-banner">
             Expertises

@@ -32,6 +32,10 @@ span.icon.ajouter:before {
     content: "\f0fe";
 }
 
+span.icon.retirer:before {
+    content: "\f146";
+}
+
 span.icon.ajouter-plusieurs:before {
     content: "\f067";
 }
