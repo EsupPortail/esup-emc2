@@ -30,8 +30,7 @@ class CorpsService {
      */
     public function getCorps($champ = 'libelleLong', $ordre = 'ASC') {
         $qb = $this->createQueryBuilder()
-            ->andWhere('corps.histo = :histo')
-            ->setParameter('histo', 'O')
+            ->andWhere('corps.histo IS NULL')
             ->orderBy('corps.' . $champ, $ordre)
         ;
         $result = $qb->getQuery()->getResult();
@@ -45,8 +44,7 @@ class CorpsService {
      */
     public function getCorpsHistorises($champ = 'libelleLong', $ordre = 'ASC') {
         $qb = $this->createQueryBuilder()
-            ->andWhere('corps.histo != :histo')
-            ->setParameter('histo', 'O')
+            ->andWhere('corps.histo IS NOT NULL')
             ->orderBy('corps.' . $champ, $ordre)
         ;
         $result = $qb->getQuery()->getResult();

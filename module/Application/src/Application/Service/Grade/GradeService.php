@@ -28,8 +28,7 @@ class GradeService {
     public function getGrades($champ = 'libelleLong', $ordre ='ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere("grade.histo = :nope")
-            ->setParameter('nope', 'O')
+            ->andWhere("grade.histo IS NULL")
             ->orderBy('grade.' . $champ, $ordre)
         ;
         $result = $qb->getQuery()->getResult();
@@ -44,8 +43,7 @@ class GradeService {
     public function getGradesHistorises($champ = 'libelleLong', $ordre ='ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere("grade.histo != :nope")
-            ->setParameter('nope', 'O')
+            ->andWhere("grade.histo IS NOT NULL")
             ->orderBy('grade.' . $champ, $ordre)
         ;
         $result = $qb->getQuery()->getResult();
