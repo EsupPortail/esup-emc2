@@ -17,6 +17,7 @@
         <field name="relationsExternes" type="string" length="2048"     column="relations_externes"     nullable="true"/>
         <field name="contraintes"       type="string" length="2048"     column="contraintes"            nullable="true"/>
         <field name="moyens"            type="string" length="2048"     column="moyens"                 nullable="true"/>
+        <field name="formations"        type="string" length="2048"     column="formations"             nullable="true"/>
 
 
     </entity>

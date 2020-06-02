@@ -2,6 +2,7 @@
 
 namespace Application\Form\EntretienProfessionnel;
 
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use DateTime;
 use UnicaenApp\Form\Element\Date;
 use UnicaenApp\Form\Element\SearchAndSelect;
@@ -11,6 +12,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class EntretienProfessionnelForm extends Form {
+    use EntretienProfessionnelCampagneServiceAwareTrait;
 
     private $urlAgent;
     private $urlResponsable;
@@ -66,17 +68,23 @@ class EntretienProfessionnelForm extends Form {
                 'placeholder' => "Nom de l'agent ...",
             ]);
         $this->add($agent);
-        //Annee       (initialisée à l'annee scolaire en cours)
+        //CAMPAGNE (SELECT)
         $this->add([
+            'name' => 'campagne',
             'type' => Select::class,
-            'name' => 'annee',
             'options' => [
-                'label' => "Année scolaire de l'entretien* :",
-                'value_options' => $anneeOpt,
+                'label' => 'Campagne * : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => "Sélectionner une campagne ... ",
+                'value_options' => $this->getEntretienProfessionnelCampagneService()->getEntretiensProfessionnelsCampagnesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'annee',
-            ],
+                'id'                => 'campagne',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ]
         ]);
 
         //Date        (initialisée à la date du jour)
@@ -110,7 +118,7 @@ class EntretienProfessionnelForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'responsable'       => [ 'required' => true,  ],
             'agent'             => [ 'required' => true,  ],
-            'annee'             => [ 'required' => true,  ],
+            'campagne'          => [ 'required' => true,  ],
             'date_entretien'    => [ 'required' => true,  ],
         ]));
     }

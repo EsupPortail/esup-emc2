@@ -93,6 +93,20 @@ class SpecificitePosteForm extends Form {
                 'class' => 'type2 form-control moyens',
             ]
         ]);
+        // moyens
+        $this->add([
+            'name' => 'formations',
+            'type' => 'textarea',
+            'options' => [
+                'label' => 'Formations et qualifications nécessaires : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+            ],
+            'attributes' => [
+                'class' => 'type2 form-control formations',
+            ]
+        ]);
         // button
         $this->add([
             'type' => Button::class,

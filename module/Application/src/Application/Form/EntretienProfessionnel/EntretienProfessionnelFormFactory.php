@@ -3,10 +3,9 @@
 namespace Application\Form\EntretienProfessionnel;
 
 use Application\Controller\AgentController;
-use Application\Service\Agent\AgentService;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\Role\RoleService;
-use UnicaenUtilisateur\Service\User\UserService;
+use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 
 class EntretienProfessionnelFormFactory {
@@ -14,13 +13,9 @@ class EntretienProfessionnelFormFactory {
     public function __invoke(ContainerInterface $container)
     {
         /**
-         * @var AgentService $agentService
-         * @var RoleService $roleService
-         * @var UserService $userService
+         * @var EntretienProfessionnelCampagneService $campagneService
          */
-        $agentService = $container->get(AgentService::class);
-        $roleService = $container->get(RoleService::class);
-        $userService = $container->get(UserService::class);
+        $campagneService = $container->get(EntretienProfessionnelCampagneService::class);
 
         /**
          * @var EntretienProfessionnelHydrator $hydrator
@@ -29,7 +24,7 @@ class EntretienProfessionnelFormFactory {
 
         /** @var HelperPluginManager $pluginManager */
         $pluginManager = $container->get('ViewHelperManager');
-        /** @var \Zend\View\Helper\Url $urlManager */
+        /** @var Url $urlManager */
         $urlManager = $pluginManager->get('Url');
         /** @see AgentController::rechercherAction() */
         $urlAgent       =  $urlManager->__invoke('agent/rechercher', [], [], true);
@@ -40,6 +35,7 @@ class EntretienProfessionnelFormFactory {
          * @var EntretienProfessionnelForm $form
          */
         $form = new EntretienProfessionnelForm();
+        $form->setEntretienProfessionnelCampagneService($campagneService);
         $form->setUrlAgent($urlAgent);
         $form->setUrlResponsable($urlReponsable);
         $form->setHydrator($hydrator);

@@ -22,6 +22,7 @@ class SpecificitePosteHydrator implements HydratorInterface {
             "relations_externes" => $object->getRelationsExternes(),
             "contraintes" => $object->getContraintes(),
             "moyens" => $object->getMoyens(),
+            "formations" => $object->getFormations(),
         ];
         return $data;
     }
@@ -45,6 +46,8 @@ class SpecificitePosteHydrator implements HydratorInterface {
         if ($data['contraintes'] !== '' ) $object->setContraintes($data['contraintes']);
         $object->setMoyens(null);
         if ($data['moyens'] !== '' ) $object->setMoyens($data['moyens']);
+        $object->setFormations(null);
+        if ($data['formations'] !== '' ) $object->setFormations($data['formations']);
 
         return $object;
     }

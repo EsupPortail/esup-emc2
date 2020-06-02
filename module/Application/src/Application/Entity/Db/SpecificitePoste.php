@@ -21,6 +21,8 @@ class SpecificitePoste {
     private $contraintes;
     /** @var string */
     private $moyens;
+    /** @var string */
+    private $formations;
 
     /**
      * @return int
@@ -156,6 +158,25 @@ class SpecificitePoste {
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getFormations()
+    {
+        return $this->formations;
+    }
+
+    /**
+     * @param string $formations
+     * @return SpecificitePoste
+     */
+    public function setFormations($formations)
+    {
+        $this->formations = $formations;
+        return $this;
+    }
+
+
     /** @return SpecificitePoste */
     public function clone_it()
     {
@@ -166,6 +187,7 @@ class SpecificitePoste {
         $result->setRelationsExternes($this->getRelationsExternes());
         $result->setContraintes($this->getContraintes());
         $result->setMoyens($this->getMoyens());
+        $result->setFormations($this->getFormations());
         return $result;
     }
 

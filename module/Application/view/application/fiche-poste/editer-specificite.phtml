@@ -121,5 +121,23 @@ use Zend\Form\Form;
                 });
             }
         });
+        tinymce.init({
+            selector: '.formations',
+            toolbar: 'newdocument undo redo | bold italic underline | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'formations',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('formations').getContent());
+                    $('textarea#formations').val(tinymce.get('formations').getContent());
+                });
+            }
+        });
     });
 </script>

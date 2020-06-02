@@ -37,3 +37,8 @@ use Application\Entity\Db\SpecificitePoste;
     <h3> Moyens et outils mis à disposition </h3>
     <?php echo $specificite->getMoyens(); ?>
 <?php endif; ?>
+
+<?php if ($specificite->getFormations()) : ?>
+    <h3> Formations ou qualifations nécessaires </h3>
+    <?php echo $specificite->getFormations(); ?>
+<?php endif; ?>
