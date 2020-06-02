@@ -330,4 +330,68 @@ class EntretienProfessionnelController extends AbstractActionController {
         ]);
         return $vm;
     }
+
+    public function modifierCampagneAction()
+    {
+        $campagne = $this->getEntretienProfessionnelCampagneService()->getRequestedEntretienProfessionnelCampagne($this);
+
+        $form = $this->getEntretienProfessionnelCampagneForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/modifier', ['campagne' => $campagne->getId()], [], true));
+        $form->bind($campagne);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getEntretienProfessionnelCampagneService()->update($campagne);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une campagne d'entretien professionnel",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserCampagneAction()
+    {
+        $campagne = $this->getEntretienProfessionnelCampagneService()->getRequestedEntretienProfessionnelCampagne($this);
+        $this->getEntretienProfessionnelCampagneService()->historise($campagne);
+        return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
+    }
+
+    public function restaurerCampagneAction()
+    {
+        $campagne = $this->getEntretienProfessionnelCampagneService()->getRequestedEntretienProfessionnelCampagne($this);
+        $this->getEntretienProfessionnelCampagneService()->restore($campagne);
+        return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
+    }
+
+    public function detruireCampagneAction()
+    {
+        $campagne = $this->getEntretienProfessionnelCampagneService()->getRequestedEntretienProfessionnelCampagne($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelCampagneService()->delete($campagne);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($campagne !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la campagne " . $campagne->getAnnee(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/campagne/detruire', ["campagne" => $campagne->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
 }

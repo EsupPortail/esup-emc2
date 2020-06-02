@@ -88,6 +88,10 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'ajouter-campagne',
+                        'modifier-campagne',
+                        'historiser-campagne',
+                        'restaurer-campagne',
+                        'detruire-campagne',
                     ],
                     'roles' => [],
                 ],
@@ -241,6 +245,50 @@ return [
                                     'defaults' => [
                                         'controller' => EntretienProfessionnelController::class,
                                         'action'     => 'ajouter-campagne',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/modifier/:campagne',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'modifier-campagne',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/historiser/:campagne',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'historiser-campagne',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/restaurer/:campagne',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'restaurer-campagne',
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/detruire/:campagne',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'detruire-campagne',
                                     ],
                                 ],
                             ],

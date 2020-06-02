@@ -6,15 +6,24 @@
 
 use Application\Entity\Db\EntretienProfessionnelCampagne;
 
+$canAfficher = true;
+$canAjouter = true;
+$canModifier = true;
+$canHistoriser = true;
+$canDetruire = true;
+
 ?>
-<a
-    <?php /** @see \Application\Controller\EntretienProfessionnelController::ajouterCampagneAction() */?>
-    href="<?php echo $this->url('entretien-professionnel/campagne/ajouter', [], [], true); ?>"
-    class="btn btn-primary action ajax-modal" data-event="modification"
-    >
-    <span class="icon ajouter"></span>
-    Ajouter une campagne
-</a>
+
+<?php if ($canAjouter) : ?>
+    <a
+        <?php /** @see \Application\Controller\EntretienProfessionnelController::ajouterCampagneAction() */?>
+        href="<?php echo $this->url('entretien-professionnel/campagne/ajouter', [], [], true); ?>"
+        class="btn btn-primary action ajax-modal" data-event="modification"
+        >
+        <span class="icon ajouter"></span>
+        Ajouter une campagne
+    </a>
+<?php endif; ?>
 
 <table class="table table-condensed">
     <thead>
@@ -35,7 +44,47 @@ use Application\Entity\Db\EntretienProfessionnelCampagne;
                 <td> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?> </td>
                 <td> <?php echo ($campagne->getPrecede())?$campagne->getPrecede()->getAnnee():"---"; ?> </td>
                 <td> <?php echo count($campagne->getEntretiensProfessionnels()); ?> </td>
-                <td> ... </td>
+                <td>
+                    <?php if ($canModifier) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierCampagneAction() */?>
+                            href="<?php echo $this->url('entretien-professionnel/campagne/modifier', ['campagne' => $campagne->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                            data-toggle="tooltip" data-html="true"
+                            title="Modification de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                        >
+                        <span class="icon editer"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser) : ?>
+                        <?php if ($campagne->estNonHistorise()) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\EntretienProfessionnelController::historiserCampagneAction() */?>
+                                    href="<?php echo $this->url('entretien-professionnel/campagne/historiser', ['campagne' => $campagne->getId()], [], true); ?>"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="Historisation de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                            >
+                            <span class="icon historiser"></span></a>
+                        <?php else : ?>
+                            <a
+                                <?php /** @see \Application\Controller\EntretienProfessionnelController::restaurerCampagneAction() */?>
+                                    href="<?php echo $this->url('entretien-professionnel/campagne/restaurer', ['campagne' => $campagne->getId()], [], true); ?>"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="Restauration de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                            >
+                            <span class="icon restaurer"></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruire) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\EntretienProfessionnelController::detruireCampagneAction() */?>
+                                href="<?php echo $this->url('entretien-professionnel/campagne/detruire', ['campagne' => $campagne->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                                data-toggle="tooltip" data-html="true"
+                                title="Suppression de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
+                        >
+                        <span class="icon detruire"></span></a>
+                    <?php endif; ?>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
