@@ -244,6 +244,7 @@ class FicheMetierController extends  AbstractActionController{
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
+                $this->getActiviteService()->updateLibelle($activite, $data);
                 $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
             }
         }
