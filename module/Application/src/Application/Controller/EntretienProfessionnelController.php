@@ -67,7 +67,6 @@ class EntretienProfessionnelController extends AbstractActionController {
         $agent = $this->getAgentService()->getAgent($agentId);
 
         $entretien = new EntretienProfessionnel();
-        $entretien->setAnnee($this->getAnneeScolaire());
         if ($agent) $entretien->setAgent($agent);
 
         /** @var EntretienProfessionnelForm $form */
@@ -126,7 +125,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => 'Entretien professionnel '.$entretien->getAnnee().' de '.$entretien->getAgent()->getDenomination(),
+            'title' => 'Entretien professionnel '.$entretien->getCampagne()->getAnnee().' de '.$entretien->getAgent()->getDenomination(),
             'entretien' => $entretien,
             'validationAgent' => $validationAgent,
             'validationResponsable' => $validationResponsable,

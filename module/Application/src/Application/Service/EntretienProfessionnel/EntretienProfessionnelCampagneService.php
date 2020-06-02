@@ -119,7 +119,8 @@ class EntretienProfessionnelCampagneService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnelCampagne::class)->createQueryBuilder('campagne')
-            ->addSelect('precede')->leftJoin('campagne.precede', 'precede');
+            ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
+            ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien');
 
         return $qb;
     }

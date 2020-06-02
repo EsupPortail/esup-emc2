@@ -21,7 +21,6 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
         $data = [
             'responsable' => $object->getResponsable(),
             'agent' => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
-            'annee' => $object->getAnnee(),
             'date_entretien' => $object->getDateEntretien(),
         ];
         return $data;
@@ -40,7 +39,6 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
 
         $object->setResponsable($reponsable);
         $object->setAgent($agent);
-        $object->setAnnee($data['annee']);
         $object->setDateEntretien($date);
 
         return $object;

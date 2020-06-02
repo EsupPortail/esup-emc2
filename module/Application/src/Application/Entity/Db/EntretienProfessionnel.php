@@ -18,8 +18,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface {
     private $agent;
     /** @var User */
     private $responsable;
-    /** @var string */
-    private $annee;
+    /** @var EntretienProfessionnelCampagne */
+    private $campagne;
     /** @var DateTime */
     private $dateEntretien;
     /** @var FormulaireInstance */
@@ -79,16 +79,25 @@ class EntretienProfessionnel implements HistoriqueAwareInterface {
      */
     public function getAnnee()
     {
-        return $this->annee;
+        if ($this->campagne === null) return "Aucune campagne";
+        return $this->campagne->getAnnee();
     }
 
     /**
-     * @param string $annee
+     * @return EntretienProfessionnelCampagne
+     */
+    public function getCampagne()
+    {
+        return $this->campagne;
+    }
+
+    /**
+     * @param EntretienProfessionnelCampagne $campagne
      * @return EntretienProfessionnel
      */
-    public function setAnnee($annee)
+    public function setCampagne($campagne)
     {
-        $this->annee = $annee;
+        $this->campagne = $campagne;
         return $this;
     }
 

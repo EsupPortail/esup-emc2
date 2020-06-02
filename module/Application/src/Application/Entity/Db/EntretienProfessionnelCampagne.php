@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -19,6 +20,8 @@ class EntretienProfessionnelCampagne implements HistoriqueAwareInterface {
     private $dateFin;
     /** @var EntretienProfessionnelCampagne */
     private $precede;
+    /** @var ArrayCollection (EntretienProfessionnel) */
+    private $entretiens;
 
     /**
      * @return int
@@ -100,7 +103,13 @@ class EntretienProfessionnelCampagne implements HistoriqueAwareInterface {
         return $this;
     }
 
-
+    /**
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensProfessionnels()
+    {
+        return $this->entretiens->toArray();
+    }
 
 
 }

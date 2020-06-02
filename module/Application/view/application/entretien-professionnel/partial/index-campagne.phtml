@@ -34,7 +34,7 @@ use Application\Entity\Db\EntretienProfessionnelCampagne;
                 <td> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?> </td>
                 <td> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?> </td>
                 <td> <?php echo ($campagne->getPrecede())?$campagne->getPrecede()->getAnnee():"---"; ?> </td>
-                <td> ??? </td>
+                <td> <?php echo count($campagne->getEntretiensProfessionnels()); ?> </td>
                 <td> ... </td>
             </tr>
         <?php endforeach; ?>

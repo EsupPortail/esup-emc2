@@ -14,6 +14,8 @@
             <join-column name="precede_id" referenced-column-name="id"/>
         </many-to-one>
 
+        <one-to-many target-entity="Application\Entity\Db\EntretienProfessionnel" mapped-by="campagne" field="entretiens"/>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
