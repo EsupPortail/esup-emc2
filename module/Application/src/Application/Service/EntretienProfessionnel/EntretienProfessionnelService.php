@@ -78,7 +78,7 @@ class EntretienProfessionnelService {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
             ->addSelect('agent')->join('entretien.agent', 'agent')
             ->addSelect('responsable')->join('entretien.responsable', 'responsable')
-            ->addSelect('campagne')->join('entertien.campagne', 'campagne')
+            ->addSelect('campagne')->join('entretien.campagne', 'campagne')
             ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
             ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
             ->addSelect('formulaire')->join('formulaireInstance.formulaire', 'formulaire')
@@ -93,8 +93,8 @@ class EntretienProfessionnelService {
      */
     public function getEntretiensProfessionnels()
     {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->orderBy('entretien.id');
+        $qb = $this->createQueryBuilder()
+            ->orderBy('campagne.annee, agent.nomUsuel, agent.prenom');
         $result = $qb->getQuery()->getResult();
         return $result;
     }

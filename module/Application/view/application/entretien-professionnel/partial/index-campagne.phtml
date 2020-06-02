@@ -5,12 +5,13 @@
  */
 
 use Application\Entity\Db\EntretienProfessionnelCampagne;
+use Application\Provider\Privilege\CampagnePrivileges;
 
-$canAfficher = true;
-$canAjouter = true;
-$canModifier = true;
-$canHistoriser = true;
-$canDetruire = true;
+$canAfficher    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AFFICHER));
+$canAjouter     = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_AJOUTER));
+$canModifier    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
+$canHistoriser  = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_HISTORISER));
+$canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_DETRUIRE));
 
 ?>
 
