@@ -73,7 +73,7 @@ class FichePosteController extends AbstractActionController {
 
     public function indexAction()
     {
-        $fiches             = $this->getFichePosteService()->getFichesPostes();
+        $fiches = $this->getFichePosteService()->getFichesPostes();
 
         $fichesCompletes = [];
         $fichesIncompletes = [];

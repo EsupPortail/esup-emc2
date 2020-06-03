@@ -16,6 +16,7 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\Poste;
+use Application\Entity\Db\Structure;
 
 $canAssocierAgent = true;
 $canAssocierMetierType = true;
@@ -113,12 +114,7 @@ $metierLibelle = ($metier)?$metier->getLibelle():null;
             </tr>
             <tr>
                 <th> Grades </th>
-                <?php
-                $grades = [];
-                foreach ($agent->getGrades() as $grade) {
-                    if ($grade->getDateDebut() <= $now AND ($grade->getDateFin() === null OR $grade->getDateFin() > $now)) $grades[] = $grade;
-                }
-                ?>
+                <?php $grades = $agent->getGradesActifs(); ?>
                 <td>
                     <ul>
                         <?php foreach ($grades as $grade): ?>
@@ -176,46 +172,68 @@ $metierLibelle = ($metier)?$metier->getLibelle():null;
         Environnement du poste de travail dans l'organisation
     </div>
 
-    <?php if ($fiche->getPoste() !== null && $fiche->getPoste()->getStructure() !== null) : ?>
-        <?php if ($fiche->getPoste()->getStructure()->getDescription() !== null) :?>
-            <?php echo $fiche->getPoste()->getStructure()->getDescription(); ?>
-        <?php else: ?>
-            Aucune description de fournie pour l'affectation
-        <?php endif; ?>
-    <?php else: ?>
-        Aucune affectation de renseignée.
-    <?php endif; ?>
+    <?php
+        /** @var Structure[] $structures */
+        $structures = [];
+        foreach ($grades as $agentGrade) {
+            $structure = $agentGrade->getStructure();
+            if ($structure !== null) $structures[] = $structure;
+        }
+    ?>
 
-    <?php if ($poste === null): ?>
-        Aucun poste de renseigné
-    <?php else : ?>
-        <table class="info">
-            <tr>
-                <th> Numéro de poste </th>
-                <td> <?php echo $poste->getNumeroPoste(); ?> </td>
-            </tr>
-            <tr>
-                <th> Affectation  </th>
-                <td> <?php echo $poste->getStructure()->getLibelleLong(); ?> </td>
-            </tr>
-            <tr>
-                <th> Rattachement hiérarchique  </th>
-                <td> <?php echo $poste->getRattachementHierarchique()->getDenomination(); ?> </td>
-            </tr>
-            <tr>
-                <th> Correspondance </th>
-                <td> BAP <?php echo $poste->getCorrespondance()->getCategorie(); ?> - <?php echo strtolower($poste->getCorrespondance()->getLibelleLong()); ?></td>
-            </tr>
-            <tr>
-                <th> Domaine professionnel </th>
-                <td> <?php echo $poste->getDomaine()->getLibelle(); ?> </td>
-            </tr>
-            <tr>
-                <th> Fonction </th>
-                <td> <?php echo $poste->getFonction(); ?> </td>
-            </tr>
-        </table>
-    <?php endif; ?>
+    Structures dans lesquelles l'agent est affecté :
+    <ul>
+        <?php foreach ($structures as $structure) : ?>
+            <li><?php echo $structure->getLibelleLong(); ?></li>
+        <?php endforeach; ?>
+    </ul>
+
+    <?php foreach ($structures as $structure) : ?>
+    <div class="fiche-banner">
+        <?php echo $structure->getLibelleLong(); ?>
+    </div>
+
+        <?php if ($structure->getDescription() !== null) :?>
+            <?php echo $structure->getDescription(); ?>
+        <?php else: ?>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aucune description de fournie pour l'affectation <em><?php echo $structure->getLibelleCourt(); ?></em>.
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+
+
+<!--    --><?php //if ($poste === null): ?>
+<!--        Aucun poste de renseigné-->
+<!--    --><?php //else : ?>
+<!--        <table class="info">-->
+<!--            <tr>-->
+<!--                <th> Numéro de poste </th>-->
+<!--                <td> --><?php //echo $poste->getNumeroPoste(); ?><!-- </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th> Affectation  </th>-->
+<!--                <td> --><?php //echo $poste->getStructure()->getLibelleLong(); ?><!-- </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th> Rattachement hiérarchique  </th>-->
+<!--                <td> --><?php //echo $poste->getRattachementHierarchique()->getDenomination(); ?><!-- </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th> Correspondance </th>-->
+<!--                <td> BAP --><?php //echo $poste->getCorrespondance()->getCategorie(); ?><!-- - --><?php //echo strtolower($poste->getCorrespondance()->getLibelleLong()); ?><!--</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th> Domaine professionnel </th>-->
+<!--                <td> --><?php //echo $poste->getDomaine()->getLibelle(); ?><!-- </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th> Fonction </th>-->
+<!--                <td> --><?php //echo $poste->getFonction(); ?><!-- </td>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    --><?php //endif; ?>
 </div>
 
 <br/>

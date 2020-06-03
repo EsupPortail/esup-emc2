@@ -352,7 +352,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
     public function isComplete()
     {
         if (! $this->getAgent()) return false;
-        if (! $this->getPoste()) return false;
+//        if (! $this->getPoste()) return false;
         if (! $this->getFicheTypeExternePrincipale()) return false;
         return true;
     }
@@ -360,7 +360,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
     public function isVide()
     {
         if ( $this->getAgent()) return false;
-        if ( $this->getPoste()) return false;
+//        if ( $this->getPoste()) return false;
         if ( $this->getFicheTypeExternePrincipale()) return false;
         return true;
     }

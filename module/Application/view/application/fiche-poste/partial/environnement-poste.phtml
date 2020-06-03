@@ -1,17 +1,25 @@
 <?php
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
  * @var FichePoste $fiche
+ * @var Agent $agent
  * @var string mode
  */
 
 $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
 
 $poste = $fiche->getPoste();
-$structure=($poste)?$poste->getStructure():null;
+/** @var Structure[] $structures */
+$structures = [];
+foreach ($agent->getGradesActifs() as $agentGrade) {
+    $structure = $agentGrade->getStructure();
+    if ($structure !== null) $structures[] = $structure;
+}
 
 ?>
 
@@ -22,22 +30,25 @@ $structure=($poste)?$poste->getStructure():null;
                 <h2> Environnement du poste de travail </h2>
             </div>
             <div class="col-md-6">
-                <?php if($mode === 'edition' AND $canModifier) : ?>
-                    <?php /** @see \Application\Controller\FichePosteController::associerPosteAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?>"
-                       class="btn btn-primary action ajax-modal pull-right"
-                       data-event="modification"
-                    >
-                        <span class="icon selectionner"></span>
-                        Associer un poste
-                    </a>
-                <?php endif; ?>
+<!--                --><?php //if($mode === 'edition' AND $canModifier) : ?>
+<!--                    --><?php ///** @see \Application\Controller\FichePosteController::associerPosteAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('fiche-poste/associer-poste',['fiche-poste' => $fiche->getId()], ["query" => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true); ?><!--"-->
+<!--                       class="btn btn-primary action ajax-modal pull-right"-->
+<!--                       data-event="modification"-->
+<!--                    >-->
+<!--                        <span class="icon selectionner"></span>-->
+<!--                        Associer un poste-->
+<!--                    </a>-->
+<!--                --><?php //endif; ?>
             </div>
         </div>
     </div>
     <div class="panel-body">
-        <h3> Affectation du poste </h3>
-        <?php if ($structure !== null) : ?>
+<!--        <h3> Affectation du poste </h3>-->
+
+        <?php foreach ($structures as $structure) : ?>
+            <h4> <?php echo $structure->getLibelleLong(); ?> </h4>
+
             <?php if ($structure->getDescription() !== null) :?>
                 <?php echo $structure->getDescription(); ?>
             <?php else: ?>
@@ -46,21 +57,16 @@ $structure=($poste)?$poste->getStructure():null;
                     Aucune description de fournie pour l'affectation <em><?php echo $structure->getLibelleCourt(); ?></em>.
                 </div>
             <?php endif; ?>
-        <?php else : ?>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                Aucune affectation de renseignée.
-            </div>
-        <?php endif; ?>
+        <?php endforeach; ?>
 
-        <h3> Positionnement dans l'établissement</h3>
-        <?php if ($poste === null) : ?>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                Aucun poste n'est attaché à ce poste
-            </div>
-        <?php else: ?>
-            <?php echo $this->poste($poste); ?>
-        <?php endif; ?>
+        <!--        <h3> Positionnement dans l'établissement</h3>-->
+<!--        --><?php //if ($poste === null) : ?>
+<!--            <div class="alert alert-warning">-->
+<!--                <i class="fas fa-exclamation-triangle"></i>-->
+<!--                Aucun poste n'est attaché à ce poste-->
+<!--            </div>-->
+<!--        --><?php //else: ?>
+<!--            --><?php //echo $this->poste($poste); ?>
+<!--        --><?php //endif; ?>
     </div>
 </div>

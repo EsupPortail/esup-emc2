@@ -68,14 +68,8 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
         <?php echo $this->partial('partial/fiches-postes', ['fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
 
-        <div class="row">
-            <div class="col-md-6">
-                <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
-            </div>
-            <div class="col-md-6">
-                <?php echo $this->partial('partial/postes', ['postes' => $postes]); ?>
-            </div>
-        </div>
+        <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
+        <?php //echo $this->partial('partial/postes', ['postes' => $postes]); ?>
 
     </div>
 <?php endif; ?>

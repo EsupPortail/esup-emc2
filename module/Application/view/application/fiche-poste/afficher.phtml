@@ -55,7 +55,7 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
         </div>
     </div>
 
-    <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'mode' => 'affichage']); ?>
+    <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'mode' => 'affichage']); ?>
 
     <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
 
