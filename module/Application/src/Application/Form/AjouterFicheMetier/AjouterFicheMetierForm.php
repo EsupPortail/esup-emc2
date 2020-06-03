@@ -48,6 +48,8 @@ class AjouterFicheMetierForm extends Form {
             ],
             'attributes' => [
                 'id' => 'fiche_type',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
 
