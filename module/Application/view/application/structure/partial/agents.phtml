@@ -31,7 +31,7 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
     <tr>
         <th>Dénomination</th>
         <th>Grade</th>
-        <th>Poste</th>
+<!--        <th>Poste</th>-->
         <th>Fiche</th>
         <th class="cell-action"> Action </th>
     </tr>
@@ -57,20 +57,20 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
                     <?php echo $grade->getGrade()->getLibelleCourt(); ?>
                 <?php endforeach; ?>
             </td>
-            <td>
-                <?php $posteA = $agent->getPosteActif(); ?>
-                <?php if ($posteA != null ) : ?>
-                    <span
-                        class="icon ok" style="color:darkgreen;"
-                        data-toggle="tooltip" data-html="true"
-                        title="<?php echo $posteA->getNumeroPoste(); ?>"
-                    >
-
-                                    </span>
-                <?php else : ?>
-                    <span class="icon ko" style="color:darkred;"></span>
-                <?php endif; ?>
-            </td>
+<!--            <td>-->
+<!--                --><?php //$posteA = $agent->getPosteActif(); ?>
+<!--                --><?php //if ($posteA != null ) : ?>
+<!--                    <span-->
+<!--                        class="icon ok" style="color:darkgreen;"-->
+<!--                        data-toggle="tooltip" data-html="true"-->
+<!--                        title="--><?php //echo $posteA->getNumeroPoste(); ?><!--"-->
+<!--                    >-->
+<!---->
+<!--                                    </span>-->
+<!--                --><?php //else : ?>
+<!--                    <span class="icon ko" style="color:darkred;"></span>-->
+<!--                --><?php //endif; ?>
+<!--            </td>-->
             <td>
                 <?php $fiche = $agent->getFichePosteActif(); ?>
                 <?php if ($fiche !== null) : ?>
