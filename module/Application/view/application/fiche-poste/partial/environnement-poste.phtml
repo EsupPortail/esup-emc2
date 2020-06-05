@@ -16,9 +16,11 @@ $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIE
 $poste = $fiche->getPoste();
 /** @var Structure[] $structures */
 $structures = [];
-foreach ($agent->getGradesActifs() as $agentGrade) {
-    $structure = $agentGrade->getStructure();
-    if ($structure !== null) $structures[] = $structure;
+if ($agent !== null) {
+    foreach ($agent->getGradesActifs() as $agentGrade) {
+        $structure = $agentGrade->getStructure();
+        if ($structure !== null) $structures[] = $structure;
+    }
 }
 
 ?>

@@ -47,6 +47,8 @@ $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
         a.action {width: 18em;}
     </style>
 
+    <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
     <div class="row">
         <div class="col-md-9">
             <h1 class="page-header">

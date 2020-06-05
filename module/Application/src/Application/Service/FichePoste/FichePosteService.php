@@ -3,6 +3,7 @@
 namespace Application\Service\FichePoste;
 
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
@@ -628,5 +629,25 @@ class FichePosteService {
         }
 
         return $dictionnaire;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return FichePoste
+     */
+    public function getFichePosteByAgent(Agent $agent)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fiche.agent = :agent')
+            ->setParameter('agent',$agent)
+            ->andWhere('fiche.histoDestruction IS NULL')
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs fiche de postes actives associés à l'agent [".$agent->getId()."|".$agent->getDenomination()."]",0,$e);
+        }
+        return $result;
     }
 }

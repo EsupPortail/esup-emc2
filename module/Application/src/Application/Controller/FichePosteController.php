@@ -98,6 +98,15 @@ class FichePosteController extends AbstractActionController {
     public function ajouterAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        if ($agent) {
+            $fiche = $this->getFichePosteService()->getFichePosteByAgent($agent);
+            if ($fiche !== null) {
+                $this->flashMessenger()->addErrorMessage("La fiche de poste existe déjà l'ajout n'a pu être effectué.");
+                return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
+            }
+        }
+
         $fiche = new FichePoste();
         $fiche->setAgent($agent);
         $this->getFichePosteService()->create($fiche);
@@ -106,11 +115,19 @@ class FichePosteController extends AbstractActionController {
 
     public function dupliquerAction()
     {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        if ($agent !== null) {
+            $fiche = $this->getFichePosteService()->getFichePosteByAgent($agent);
+            if ($fiche !== null) {
+                $this->flashMessenger()->addErrorMessage("La fiche de poste existe déjà la duplication n'a pu être effectuée.");
+                return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
+            }
+        }
 
+        $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] = $structure;
-        $agent = $this->getAgentService()->getRequestedAgent($this);
+
         $fiches = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
 
         /** @var Request $request */
