@@ -336,8 +336,16 @@ class FichePosteController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFichePosteService()->update($fiche);
+
+            $agentId = $form->get('agent')->getValue();
+            $agent = $this->getAgentService()->getAgent($agentId);
+            $fiche_old = $this->getFichePosteService()->getFichePosteByAgent($agent);
+            if ($fiche_old !== null) {
+                $this->flashMessenger()->addErrorMessage("Cet agent est déjà associé à une fiche de poste active.");
+            } else {
+                if ($form->isValid()) {
+                    $this->getFichePosteService()->update($fiche);
+                }
             }
         }
 

@@ -17,11 +17,12 @@ use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 
-$canAssocierMetierType = true;
-
 $canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canEditerExpertise = true || $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+
+$canAssocierAgent = $canEditer;
+$canAssocierMetierType = $canEditer;
 
 $mode = 'edition';
 $date = new DateTime();
