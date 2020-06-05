@@ -8,6 +8,8 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
@@ -28,6 +30,9 @@ class StructureController extends AbstractActionController {
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
+
+    use EntretienProfessionnelServiceAwareTrait;
+    use EntretienProfessionnelCampagneServiceAwareTrait;
 
     use AgentMissionSpecifiqueFormAwareTrait;
     use AjouterGestionnaireFormAwareTrait;
@@ -86,6 +91,14 @@ class StructureController extends AbstractActionController {
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
+        /** Campagne */
+        $campagnes = $this->getEntretienProfessionnelCampagneService()->getCampagnesActives();
+        $entretiens = [];
+        foreach ($campagnes as $campagne) {
+            //TODO something
+            $a=1;
+        }
+
         return new ViewModel([
             'selecteur' => $selecteur,
 
@@ -97,6 +110,9 @@ class StructureController extends AbstractActionController {
             'fichesIncompletes' => $fichesIncompletes,
             'agents' => $agents,
             'postes' => $postes,
+
+            'campagnes' => $campagnes,
+            'entretiens' => $entretiens,
 
         ]);
     }

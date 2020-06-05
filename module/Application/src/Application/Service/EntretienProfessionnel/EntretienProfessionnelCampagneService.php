@@ -3,6 +3,7 @@
 namespace Application\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\EntretienProfessionnelCampagne;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -181,6 +182,22 @@ class EntretienProfessionnelCampagneService {
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getEntretienProfessionnelCampagne($id);
+        return $result;
+    }
+
+    /**
+     * @param DateTime $date
+     * @return EntretienProfessionnelCampagne[]
+     */
+    public function getCampagnesActives($date = null)
+    {
+        if ($date === null) $date = $this->getDateTime();
+        $qb = $this->createQueryBuilder()
+            ->andWhere('campagne.dateFin >= :date')
+            ->setParameter('date', $date)
+        ;
+
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 }

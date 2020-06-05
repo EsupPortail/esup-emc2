@@ -8,6 +8,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use Application\Service\Structure\StructureService;
 use Autoform\Service\Formulaire\FormulaireInstanceService;
 use Autoform\Service\Formulaire\FormulaireService;
 use Interop\Container\ContainerInterface;
@@ -28,6 +29,7 @@ class EntretienProfessionnelControllerFactory {
          * @var EntretienProfessionnelCampagneService $entretienProfesionnelCampagneService
          * @var FormulaireService $formulaireService
          * @var FormulaireInstanceService $formulaireInstanceService
+         * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
          */
@@ -38,6 +40,7 @@ class EntretienProfessionnelControllerFactory {
         $entretienProfesionnelCampagneService = $container->get(EntretienProfessionnelCampagneService::class);
         $formulaireService = $container->get(FormulaireService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
+        $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
 
@@ -63,6 +66,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
         $controller->setFormulaireService($formulaireService);
+        $controller->setStructureService($structureService);
         $controller->setEntretienProfessionnelForm($entretienProfessionnelForm);
         $controller->setEntretienProfessionnelCampagneForm($campagneForm);
         return $controller;

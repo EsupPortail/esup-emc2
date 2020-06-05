@@ -6,6 +6,8 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\Structure\StructureForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\Poste\PosteService;
@@ -20,6 +22,8 @@ class StructureControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var EntretienProfessionnelService $entretienService
+         * @var EntretienProfessionnelCampagneService $campagneService
          * @var FichePosteService $fichePosteService
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var PosteService $posteService
@@ -28,6 +32,8 @@ class StructureControllerFactory {
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $entretienService = $container->get(EntretienProfessionnelService::class);
+        $campagneService = $container->get(EntretienProfessionnelCampagneService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $posteService = $container->get(PosteService::class);
@@ -48,6 +54,8 @@ class StructureControllerFactory {
         $controller = new StructureController();
 
         $controller->setAgentService($agentService);
+        $controller->setEntretienProfessionnelService($entretienService);
+        $controller->setEntretienProfessionnelCampagneService($campagneService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setPosteService($posteService);

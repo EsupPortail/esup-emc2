@@ -519,14 +519,6 @@ span.activite {
     font-variant-position: super;
 }
 
-span.agent {
-    font-weight: bolder;
-    color: darkgreen;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
-
 div.panel div.main {
 
     margin: 0px;
@@ -648,4 +640,8 @@ span.highlight {
 
 span.highlight.campagne {
     color: darkgreen;
+}
+
+span.highlight.agent {
+    color: darkblue;
 }

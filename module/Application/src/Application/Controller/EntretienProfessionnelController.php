@@ -12,6 +12,7 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\Export\EntretienProfessionnel\EntretienProfessionnelPdfExporter;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
@@ -36,6 +37,7 @@ class EntretienProfessionnelController extends AbstractActionController {
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
+    use StructureServiceAwareTrait;
 
     use EntretienProfessionnelFormAwareTrait;
     use EntretienProfessionnelCampagneFormAwareTrait;
@@ -103,6 +105,59 @@ class EntretienProfessionnelController extends AbstractActionController {
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Création d\'un nouvel entretien professionnel',
+            'form'  => $form,
+        ]);
+        return $vm;
+    }
+
+    public function ajouterAction()
+    {
+        $campagne = $this->getEntretienProfessionnelCampagneService()->getRequestedEntretienProfessionnelCampagne($this);
+        $agentId = $this->params()->fromQuery('agent');
+        $agent = ($agentId)?$this->getAgentService()->getAgent($agentId):null;
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = ($structureId)?$this->getStructureService()->getStructure($structureId):null;
+
+        $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
+        if ($entretien === null) $entretien = new EntretienProfessionnel();
+        $entretien->setCampagne($campagne);
+        $entretien->setAgent($agent);
+
+        /** @var EntretienProfessionnelForm $form */
+        $form = $this->getEntretienProfessionnelForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/ajouter', ['campagne' => $campagne->getId()], ["query" => ["structure" => $structureId, "agent" => $agentId]], true));
+        $form->bind($entretien);
+
+        //TODO reduire les selects et recherches à l'aide de la structure
+
+        //TODO retour
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                //TODO dans le service ...
+                $instance = new FormulaireInstance();
+                $formulaire = $this->getFormulaireService()->getFormulaire(1);
+                $instance->setFormulaire($formulaire);
+                $this->getFormulaireInstanceService()->create($instance);
+                $entretien->setFormulaireInstance($instance);
+                $this->getEntretienProfessionnelService()->create($entretien);
+
+                $previous = $this->getEntretienProfessionnelService()->getPreviousEntretienProfessionnel($entretien);
+                $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
+                foreach ($recopies as $recopie) {
+                    $splits = explode(";",$recopie->getValeur());
+                    $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
+                }
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajout d\'un entretien professionnel professionnel',
             'form'  => $form,
         ]);
         return $vm;

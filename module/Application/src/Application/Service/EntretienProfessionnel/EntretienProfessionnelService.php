@@ -4,6 +4,7 @@ namespace Application\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Entity\Db\EntretienProfessionnelCampagne;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -163,5 +164,23 @@ class EntretienProfessionnelService {
 
         if ($result === null) return null;
         return $result[0];
+    }
+
+    public function getEntretienProfessionnelByAgentAndCampagne(Agent $agent, EntretienProfessionnelCampagne $campagne)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('entretien.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('entretien.campagne = :campagne')
+            ->setParameter('campagne', $campagne)
+            ->andWhere('entretien.histoDestruction IS NULL')
+            ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs entretiens professionnels ont été trouvés pour la campagne [".$campagne->getId()."|".$campagne->getAnnee()."] et l'agent [".$agent->getId()."|".$agent->getDenomination()."]",0,$e);
+        }
+        return $result;
     }
 }

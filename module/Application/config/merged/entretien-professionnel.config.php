@@ -48,6 +48,7 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'creer',
+                        'ajouter',
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
@@ -139,6 +140,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'creer',
+                            ],
+                        ],
+                    ],
+                    'ajouter' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/ajouter/:campagne',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'ajouter',
                             ],
                         ],
                     ],
