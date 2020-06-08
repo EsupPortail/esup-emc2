@@ -5,6 +5,7 @@ namespace Application\Service\Structure;
 use Application\Entity\Db\Structure;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -35,18 +36,28 @@ class StructureService
     /** REQUETAGES ****************************************************************************************************/
 
     /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder() {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+            ->addSelect('type')->join('structure.type', 'type')
+            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
+            ->addSelect('ficheposte')->leftJoin('poste.fichePoste', 'ficheposte')
+            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
+            ->orderBy('structure.code')
+            ->andWhere("structure.histo IS NULL")
+        ;
+        return $qb;
+    }
+
+    /**
      * @param bool $ouverte
      * @return Structure[]
      */
     public function getStructures($ouverte = true)
     {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
-            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
-            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
-            ->orderBy('structure.code')
-            ->andWhere("structure.histo IS NULL")
-        ;
+        $qb = $this->createQueryBuilder();
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
         $result = $qb->getQuery()->getResult();
 
@@ -60,8 +71,7 @@ class StructureService
     public function getStructure($id)
     {
         if ($id === "" OR $id === null) return null;
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+        $qb = $this->createQueryBuilder()
             ->andWhere('structure.id = :id')
             ->setParameter('id', $id);
         try {
