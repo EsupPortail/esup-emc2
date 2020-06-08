@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @var MetierReferentiel[] $referentiels
+ * @var boolean[] $droits
+ */
+
+use Application\Entity\Db\MetierReferentiel;
+
+$canAjouter        = $droits["ajouter"];
+$canEditer         = $droits["editer"];
+$canHistoriser     = $droits["historiser"];
+$canEffacer        = $droits["effacer"];
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Liste des référentiels metiers
+        </h2>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <?php if ($canAjouter) : ?>
+            <a  <?php /** @see \Application\Controller\MetierController::ajouterReferentielAction() */ ?>
+                href="<?php echo $this->url('metier/ajouter-referentiel', [], [], true);?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter un référentiel
+            </a>
+        <?php endif;?>
+    </div>
+</div>
+<br/>
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th> Libelle court</th>
+        <th> Libelle long </th>
+        <th> Préfix </th>
+        <th class="cell-action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($referentiels as $referentiel) : ?>
+        <tr <?php if ($referentiel->estHistorise()) echo 'class="historise"'; ?>>
+            <td> <?php echo $referentiel->getLibelleCourt(); ?> </td>
+            <td> <?php echo $referentiel->getLibelleLong(); ?> </td>
+            <td>
+                <?php if ($referentiel->getPrefix()) : ?>
+                    <span class="icon ok" style="color:darkgreen" title="<?php echo $referentiel->getPrefix(); ?>"></span>
+                <?php else: ?>
+                    <span class="icon ko" style="color:darkred"></span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\MetierController::modifierReferentielAction() */ ?>
+                        href="<?php echo $this->url('metier/modifier-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                    >
+                        <span class="icon editer" title="Modifier le référentiel métier"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($referentiel->estNonHistorise()) : ?>
+                        <a  <?php /** @see \Application\Controller\MetierController::historiserReferentielAction() */ ?>
+                            href="<?php echo $this->url('metier/historiser-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser le référentiel métier"></span></a>
+                    <?php else : ?>
+                        <a  <?php /** @see \Application\Controller\MetierController::restaurerReferentielAction() */ ?>
+                            href="<?php echo $this->url('metier/restaurer-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer le référentiel métier"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canEffacer) : ?>
+                    <a  <?php /** @see \Application\Controller\MetierController::effacerReferentielAction() */ ?>
+                        href="<?php echo $this->url('metier/effacer-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"  title="Supprimer le référentiel métier"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

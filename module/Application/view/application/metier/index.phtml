@@ -8,7 +8,6 @@
  * @var MetierReferentiel[] $referentiels
  */
 
-
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\Metier;
@@ -17,12 +16,14 @@ use Application\Provider\Privilege\MetierPrivileges;
 
 $this->headTitle('Métiers, familles professionnelles et domaines');
 
-$canAjouter        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AJOUTER));
-$canEditer         = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER));
-$canHistoriser     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER));
-$canEffacer        = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_DETRUIRE));
 $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_CARTOGRAPHIE));
 
+$droits = [
+    "ajouter"       => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AJOUTER)),
+    "editer"        => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER)),
+    "historiser"    => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER)),
+    "effacer"       => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_DETRUIRE)),
+];
 ?>
 
 <h1 class="page-header">
@@ -88,374 +89,24 @@ $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPriv
 
             <!-- FAMILLE ---------------------------------------------------------------------------------------------->
             <div id="famille" class="tab-pane " role="tabpanel">
-
-                <div class="row">
-                    <div class="col-md-8">
-                        <h2>
-                            Familles professionnelles
-                        </h2>
-                    </div>
-                    <div class="pull-right">
-                        <br/>
-                        <?php if ($canAjouter) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\MetierController::ajouterFamilleAction() */?>
-                                href="<?php echo $this->url('metier/ajouter-famille', [], [], true);?>"
-                                class="btn btn-primary action ajax-modal"
-                                data-event="modification"
-                            >
-                                <span class="icon ajouter"></span>
-                                Ajouter une famille professionnelle
-                            </a>
-                        <?php endif;?>
-                    </div>
-                    <br/>
-                </div>
-                <br/>
-                <table class="datatable table table-condensed">
-                    <thead>
-                    <tr>
-                        <th> Libelle </th>
-                        <th> #domaines </th>
-                        <th class="cell-action"> Action </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($familles as $famille): ?>
-                        <tr <?php if ($famille->estHistorise()) echo ' class="historise" '; ?>>
-                            <td> <?php echo $famille->getLibelle(); ?> </td>
-                            <td>
-                                <?php echo count($famille->getDomaines()); ?>
-                            </td>
-                            <td>
-                                <?php if ($canEditer) : ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\MetierController::modifierFamilleAction() */?>
-                                        href="<?php echo $this->url('metier/modifier-famille', ['famille' => $famille->getId()], [], true); ?>"
-                                        class="ajax-modal"
-                                        data-event="modification"
-                                    >
-                                        <span class="icon editer" title="Modifier la famille professionnelle"></span></a>
-                                <?php endif; ?>
-                                <?php if ($canHistoriser) : ?>
-                                    <?php if ($famille->estNonHistorise()) : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::historiserFamilleAction() */ ?>
-                                                href="<?php echo $this->url('metier/historiser-famille', ['famille' => $famille->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon historiser" title="Historiser la famille professionnelle"></span></a>
-                                    <?php else : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::restaurerFamilleAction() */ ?>
-                                                href="<?php echo $this->url('metier/restaurer-famille', ['famille' => $famille->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon restaurer" title="Restaurer la famille professionnelle"></span></a>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if ($canEffacer) : ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\MetierController::effacerFamilleAction() */?>
-                                        href="<?php echo $this->url('metier/effacer-famille', ['famille' => $famille->getId()], [], true); ?>"
-                                        class="ajax-modal" data-event="modification"
-                                    >
-                                        <span class="icon detruire"  title="Supprimer la famille professionnelle"></span></a>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <?php echo $this->partial('partial/listing-famille.phtml', ['familles' => $familles, 'droits' => $droits]); ?>
             </div>
 
             <!-- DOMAINE ---------------------------------------------------------------------------------------------->
             <div id="domaine" class="tab-pane " role="tabpanel">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h2>
-                            Domaines
-                        </h2>
-                    </div>
-                    <div class="pull-right"><br/>
-                        <?php if ($canAjouter) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\MetierController::ajouterDomaineAction() */ ?>
-                                href="<?php echo $this->url('metier/ajouter-domaine', [], [], true);?>"
-                                class="btn btn-primary action ajax-modal"
-                                data-event="modification"
-                            >
-                                <span class="icon ajouter"></span>
-                                Ajouter un domaine
-                            </a>
-                        <?php endif;?>
-                    </div>
-                </div>
-                <br/>
-                <table class="datatable table table-condensed">
-                    <thead>
-                    <tr>
-                        <th> Libelle </th>
-                        <th> Type de fonction </th>
-                        <th> Famille professionnelle </th>
-                        <th> #metier </th>
-                        <th class="cell-action"> Action </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($domaines as $domaine): ?>
-                        <tr <?php if ($domaine->estHistorise()) echo ' class="historise" '; ?>>
-                            <td> <?php echo $domaine->getLibelle(); ?> </td>
-                            <td>
-                                <?php if ($domaine->getTypeFonction() === "Support") : ?>
-                                    <span class="label label-info">Support</span>
-                                <?php endif; ?>
-                                <?php if ($domaine->getTypeFonction() === "Soutien") : ?>
-                                    <span class="label label-primary">Soutien</span>
-                                <?php endif; ?>
-                            </td>
-                            <td> <?php echo $domaine->getFamille(); ?> </td>
-                            <td>
-                                <?php echo count($domaine->getMetiers()); ?>
-                            </td>
-                            <td>
-                                <?php if ($canEditer) : ?>
-                                    <a  <?php /** @see \Application\Controller\MetierController::modifierDomaineAction() */ ?>
-                                        href="<?php echo $this->url('metier/modifier-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
-                                        class="ajax-modal"
-                                        data-event="modification"
-                                    >
-                                        <span class="icon editer" title="Modifier le domaine"></span></a>
-                                <?php endif; ?>
-                                <?php if ($canHistoriser) : ?>
-                                    <?php if ($domaine->estNonHistorise()) : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::historiserDomaineAction() */ ?>
-                                                href="<?php echo $this->url('metier/historiser-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon historiser" title="Historiser le domaine"></span></a>
-                                    <?php else : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::restaurerDomaineAction() */ ?>
-                                                href="<?php echo $this->url('metier/restaurer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon restaurer" title="Restaurer le domaine"></span></a>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if ($canEffacer) : ?>
-                                    <a  <?php /** @see \Application\Controller\MetierController::effacerDomaineAction() */ ?>
-                                        href="<?php echo $this->url('metier/effacer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
-                                        class="ajax-modal" data-event="modification"
-                                    >
-                                        <span class="icon detruire"  title="Supprimer le domaine"></span></a>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <?php echo $this->partial('partial/listing-domaine.phtml', ['domaines' => $domaines, 'droits' => $droits]); ?>
             </div>
 
             <!-- METIER ----------------------------------------------------------------------------------------------->
             <div id="metier" class="tab-pane " role="tabpanel">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h2>
-                            Liste des métiers
-                        </h2>
-                    </div>
-                    <div class="pull-right">
-                        <br/>
-                        <?php if ($canAjouter) : ?>
-                            <a  <?php /** @see \Application\Controller\MetierController::ajouterMetierAction() */ ?>
-                                    href="<?php echo $this->url('metier/ajouter-metier', [], [], true);?>"
-                                    class="btn btn-primary action ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon ajouter"></span>
-                                Ajouter un métier
-                            </a>
-                        <?php endif;?>
-                    </div>
-                </div>
-                <br/>
-                <table class="datatable table table-condensed">
-                    <thead>
-                    <tr>
-                        <th> Libelle </th>
-                        <th> Domaines </th>
-                        <th> Références </th>
-                        <th class="cell-action"> Action </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($metiers as $metier): ?>
-                        <tr <?php if ($metier->estHistorise()) echo ' class="historise" '; ?>>
-                            <td> <?php echo $metier->getLibelle(); ?> </td>
-                            <td>
-                                <ul>
-                                    <?php foreach ($metier->getDomaines() as $domaine) : ?>
-                                        <li>
-                                            <?php echo $domaine; ?>
-                                            <?php if ($domaine->getTypeFonction() === "Support") : ?>
-                                                <span class="label label-info">Support</span>
-                                            <?php endif; ?>
-                                            <?php if ($domaine->getTypeFonction() === "Soutien") : ?>
-                                                <span class="label label-primary">Soutien</span>
-                                            <?php endif; ?>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </td>
-                            <td>
-                                <?php $references =  $metier->getReferences(); ?>
-                                <?php if (empty($references)) : ?>
-                                    Aucune
-                                <?php else: ?>
-                                <?php foreach ($references as $reference) : ?>
-                                <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
-                                    <?php echo $reference->getCode(); ?>
-                                </a>
-                                <?php if ($canEditer) : ?>
-                                <a  <?php /** @see \Application\Controller\MetierController::modifierReferenceAction() */ ?>
-                                        href="<?php echo $this->url('metier/modifier-reference', ['reference' => $reference->getId()], [], true); ?>"
-                                        class="ajax-modal" data-event="modification"
-                                >
-                                    <span class="icon editer" title="Modifier la référence"></span></a>
-                                <a href="">
-                                    <a  <?php /** @see \Application\Controller\MetierController::effacerReferenceAction() */ ?>
-                                            href="<?php echo $this->url('metier/effacer-reference', ['reference' => $reference->getId()], [], true); ?>"
-                                            class="ajax-modal" data-event="modification"
-                                    >
-                                        <span class="icon detruire" title="Supprimer la référence"></span></a>
-                                    <?php endif; ?>
-                                    <br/>
-                                    <?php endforeach ?>
-                                    <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if ($canEditer) : ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\MetierController::modifierMetierAction() */ ?>
-                                            href="<?php echo $this->url('metier/modifier-metier', ['metier' => $metier->getId()], [], true); ?>"
-                                            class="ajax-modal"
-                                            data-event="modification"
-                                    >
-                                        <span class="icon editer" title="Modifier le métier"></span></a>
-                                <?php endif; ?>
-                                <?php if ($canEditer) : ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\MetierController::ajouterReferenceAction() */ ?>
-                                            href="<?php echo $this->url('metier/ajouter-reference', ['metier' => $metier->getId()], [], true); ?>"
-                                            class="ajax-modal"
-                                            data-event="modification"
-                                    >
-                                        <span class="icon ajouter" title="ajouter une référence"></span></a>
-                                <?php endif; ?>
-                                <?php if ($canHistoriser) : ?>
-                                    <?php if ($metier->estNonHistorise()) : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::historiserMetierAction() */ ?>
-                                                href="<?php echo $this->url('metier/historiser-metier', ['metier' => $metier->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon historiser" title="Historiser le métier"></span></a>
-                                    <?php else : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::restaurerMetierAction() */ ?>
-                                                href="<?php echo $this->url('metier/restaurer-metier', ['metier' => $metier->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon restaurer" title="Restaurer le métier"></span></a>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if ($canEffacer) : ?>
-                                    <a  <?php /** @see \Application\Controller\MetierController::effacerMetierAction() */ ?>
-                                            href="<?php echo $this->url('metier/effacer-metier', ['metier' => $metier->getId()], [], true); ?>"
-                                            class="ajax-modal" data-event="modification"
-                                    >
-                                        <span class="icon detruire"  title="Supprimer l'application"></span></a>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <?php echo $this->partial('partial/listing-metier.phtml', ['metiers' => $metiers, 'droits' => $droits]); ?>
             </div>
             <!-- REFERENTIEL ----------------------------------------------------------------------------------------------->
             <div id="referentiel" class="tab-pane " role="tabpanel">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h2>
-                            Liste des référentiels metiers
-                        </h2>
-                    </div>
-                    <div class="pull-right">
-                        <br/>
-                        <?php if ($canAjouter) : ?>
-                            <a  <?php /** @see \Application\Controller\MetierController::ajouterReferentielAction() */ ?>
-                                    href="<?php echo $this->url('metier/ajouter-referentiel', [], [], true);?>"
-                                    class="btn btn-primary action ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon ajouter"></span>
-                                Ajouter un référentiel
-                            </a>
-                        <?php endif;?>
-                    </div>
-                </div>
-                <br/>
-                <table class="datatable table table-condensed">
-                    <thead>
-                    <tr>
-                        <th> Libelle court</th>
-                        <th> Libelle long </th>
-                        <th> Préfix </th>
-                        <th class="cell-action"> Action </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($referentiels as $referentiel) : ?>
-                        <tr <?php if ($referentiel->estHistorise()) echo 'class="historise"'; ?>>
-                            <td> <?php echo $referentiel->getLibelleCourt(); ?> </td>
-                            <td> <?php echo $referentiel->getLibelleLong(); ?> </td>
-                            <td>
-                                <?php if ($referentiel->getPrefix()) : ?>
-                                    <span class="icon ok" style="color:darkgreen" title="<?php echo $referentiel->getPrefix(); ?>"></span>
-                                <?php else: ?>
-                                    <span class="icon ko" style="color:darkred"></span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if ($canEditer) : ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\MetierController::modifierReferentielAction() */ ?>
-                                            href="<?php echo $this->url('metier/modifier-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
-                                            class="ajax-modal"
-                                            data-event="modification"
-                                    >
-                                        <span class="icon editer" title="Modifier le référentiel métier"></span></a>
-                                <?php endif; ?>
-                                <?php if ($canHistoriser) : ?>
-                                    <?php if ($referentiel->estNonHistorise()) : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::historiserReferentielAction() */ ?>
-                                                href="<?php echo $this->url('metier/historiser-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon historiser" title="Historiser le référentiel métier"></span></a>
-                                    <?php else : ?>
-                                        <a  <?php /** @see \Application\Controller\MetierController::restaurerReferentielAction() */ ?>
-                                                href="<?php echo $this->url('metier/restaurer-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
-                                        >
-                                            <span class="icon restaurer" title="Restaurer le référentiel métier"></span></a>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if ($canEffacer) : ?>
-                                    <a  <?php /** @see \Application\Controller\MetierController::effacerReferentielAction() */ ?>
-                                            href="<?php echo $this->url('metier/effacer-referentiel', ['referentiel' => $referentiel->getId()], [], true); ?>"
-                                            class="ajax-modal" data-event="modification"
-                                    >
-                                        <span class="icon detruire"  title="Supprimer le référentiel métier"></span></a>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <?php echo $this->partial('partial/listing-referentiel.phtml', ['referentiels' => $referentiels, 'droits' => $droits]); ?>
             </div>
         </div>
     </div>
-
-
 
 </div>
 

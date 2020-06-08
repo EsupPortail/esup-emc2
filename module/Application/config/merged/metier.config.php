@@ -31,6 +31,7 @@ use Application\Service\MetierReference\MetierReferenceService;
 use Application\Service\MetierReference\MetierReferenceServiceFactory;
 use Application\Service\MetierReferentiel\MetierReferentielService;
 use Application\Service\MetierReferentiel\MetierReferentielServiceFactory;
+use Application\View\Helper\TypeFonctionViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -483,5 +484,10 @@ return [
             MetierReferenceHydrator::class => MetierReferenceHydraytorFactory::class,
             MetierReferentielHydrator::class => MetierReferentielHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'typefonction' => TypeFonctionViewHelper::class,
+        ],
+    ],
 ];

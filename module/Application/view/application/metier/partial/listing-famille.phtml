@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @var FamilleProfessionnelle[] $familles
+ * @var boolean[] $droits
+ */
+
+use Application\Entity\Db\FamilleProfessionnelle;
+
+$canAjouter        = $droits["ajouter"];
+$canEditer         = $droits["editer"];
+$canHistoriser     = $droits["historiser"];
+$canEffacer        = $droits["effacer"];
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Familles professionnelles
+        </h2>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <?php if ($canAjouter) : ?>
+            <a
+                <?php /** @see \Application\Controller\MetierController::ajouterFamilleAction() */?>
+                href="<?php echo $this->url('metier/ajouter-famille', [], [], true);?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une famille professionnelle
+            </a>
+        <?php endif;?>
+    </div>
+    <br/>
+</div>
+<br/>
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th> Libelle </th>
+        <th> #domaines </th>
+        <th class="cell-action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($familles as $famille): ?>
+        <tr <?php if ($famille->estHistorise()) echo ' class="historise" '; ?>>
+            <td> <?php echo $famille->getLibelle(); ?> </td>
+            <td>
+                <?php echo count($famille->getDomaines()); ?>
+            </td>
+            <td>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\MetierController::modifierFamilleAction() */?>
+                        href="<?php echo $this->url('metier/modifier-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                    >
+                        <span class="icon editer" title="Modifier la famille professionnelle"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($famille->estNonHistorise()) : ?>
+                        <a  <?php /** @see \Application\Controller\MetierController::historiserFamilleAction() */ ?>
+                            href="<?php echo $this->url('metier/historiser-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser la famille professionnelle"></span></a>
+                    <?php else : ?>
+                        <a  <?php /** @see \Application\Controller\MetierController::restaurerFamilleAction() */ ?>
+                            href="<?php echo $this->url('metier/restaurer-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer la famille professionnelle"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canEffacer) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\MetierController::effacerFamilleAction() */?>
+                        href="<?php echo $this->url('metier/effacer-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"  title="Supprimer la famille professionnelle"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

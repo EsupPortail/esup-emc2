@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @var Domaine $domaine
+ */
+
+use Application\Entity\Db\Domaine;
+
+$type = $domaine->getTypeFonction();
+?>
+
+<span class="label <?php echo $type; ?>">
+    <?php echo $type; ?>
+</span>
+
+<style>
+    span.label.Support {
+        background-color: seagreen;
+    }
+    span.label.Soutien {
+        background-color: darkslateblue;
+    }
+</style>

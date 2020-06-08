@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @var Domaine[] $domaines
+ * @var boolean[] $droits
+ */
+
+use Application\Entity\Db\Domaine;
+
+$canAjouter        = $droits["ajouter"];
+$canEditer         = $droits["editer"];
+$canHistoriser     = $droits["historiser"];
+$canEffacer        = $droits["effacer"];
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Domaines
+        </h2>
+    </div>
+    <div class="pull-right"><br/>
+        <?php if ($canAjouter) : ?>
+            <a
+                <?php /** @see \Application\Controller\MetierController::ajouterDomaineAction() */ ?>
+                href="<?php echo $this->url('metier/ajouter-domaine', [], [], true);?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter un domaine
+            </a>
+        <?php endif;?>
+    </div>
+</div>
+<br/>
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th> Libelle </th>
+        <th> Type de fonction </th>
+        <th> Famille professionnelle </th>
+        <th> #metier </th>
+        <th class="cell-action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($domaines as $domaine): ?>
+        <tr <?php if ($domaine->estHistorise()) echo ' class="historise" '; ?>>
+            <td> <?php echo $domaine->getLibelle(); ?> </td>
+            <td>
+                <?php echo $this->typefonction($domaine); ?>
+            </td>
+            <td> <?php echo $domaine->getFamille(); ?> </td>
+            <td>
+                <?php echo count($domaine->getMetiers()); ?>
+            </td>
+            <td>
+                <?php if ($canEditer) : ?>
+                    <a  <?php /** @see \Application\Controller\MetierController::modifierDomaineAction() */ ?>
+                        href="<?php echo $this->url('metier/modifier-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                    >
+                        <span class="icon editer" title="Modifier le domaine"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($domaine->estNonHistorise()) : ?>
+                        <a  <?php /** @see \Application\Controller\MetierController::historiserDomaineAction() */ ?>
+                            href="<?php echo $this->url('metier/historiser-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser le domaine"></span></a>
+                    <?php else : ?>
+                        <a  <?php /** @see \Application\Controller\MetierController::restaurerDomaineAction() */ ?>
+                            href="<?php echo $this->url('metier/restaurer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer le domaine"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canEffacer) : ?>
+                    <a  <?php /** @see \Application\Controller\MetierController::effacerDomaineAction() */ ?>
+                        href="<?php echo $this->url('metier/effacer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"  title="Supprimer le domaine"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
