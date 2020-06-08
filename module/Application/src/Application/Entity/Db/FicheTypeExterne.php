@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Class FicheTypeExterne
  * Lien entre une fiche métier et les fiches types
@@ -23,6 +25,8 @@ class FicheTypeExterne {
     private $estPrincipale;
     /** @var string */
     private $activites;
+    /** @var ArrayCollection (DomaineRepartition) */
+    private $domaineRepartitions;
 
     /**
      * @return int
@@ -122,6 +126,21 @@ class FicheTypeExterne {
         return $this;
     }
 
+    public function getDomaineRepartitions()
+    {
+        return $this->domaineRepartitions;
+    }
+
+    public function getDomaineRepartitionsAsArray()
+    {
+        $array = [];
+        /** @var DomaineRepartition $repartition */
+        foreach($this->domaineRepartitions as $repartition) {
+            $array[$repartition->getDomaine()->getId()] = $repartition->getQuotite();
+        }
+        return $array;
+    }
+
     /**
      * @return FicheTypeExterne
      */
@@ -132,6 +151,7 @@ class FicheTypeExterne {
         $result->setQuotite($this->getQuotite());
         $result->setPrincipale($this->getPrincipale());
         $result->setActivites($this->getActivites());
+        //to do clone la repartition
         return $result;
     }
 

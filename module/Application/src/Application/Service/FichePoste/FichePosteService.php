@@ -4,6 +4,7 @@ namespace Application\Service\FichePoste;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\DomaineRepartition;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
@@ -198,6 +199,21 @@ class FichePosteService {
         } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de l'ajout d'une fiche metier externe.", $e);
         }
+
+        $domaines = $ficheTypeExterne->getFicheType()->getMetier()->getDomaines();
+        try {
+            foreach ($domaines as $domaine) {
+                $repartition = new DomaineRepartition();
+                $repartition->setFicheMetierExterne($ficheTypeExterne);
+                $repartition->setDomaine($domaine);
+                $repartition->setQuotite(100);
+                $this->getEntityManager()->persist($repartition);
+                $this->getEntityManager()->flush($repartition);
+            }
+        } catch (ORMException $e) {
+            throw new RuntimeException("Une erreur s'est produite lors de l'ajout des DomaineRepartition.", $e);
+        }
+
         return $ficheTypeExterne;
     }
 
@@ -649,5 +665,25 @@ class FichePosteService {
             throw new RuntimeException("Plusieurs fiche de postes actives associés à l'agent [".$agent->getId()."|".$agent->getDenomination()."]",0,$e);
         }
         return $result;
+    }
+
+    public function updateRepatitions(FicheTypeExterne $fichetype, $data)
+    {
+        /** @var DomaineRepartition[] $repartitions */
+        $repartitions = $fichetype->getDomaineRepartitions()->toArray();
+        foreach ($repartitions as $repartition) {
+            $domaineId = $repartition->getDomaine()->getId();
+            $value = isset($data[$domaineId])?$data[$domaineId]:0;
+
+            $repartition->setQuotite($value);
+        }
+
+        try {
+            foreach ($repartitions as $repartition) {
+                $this->getEntityManager()->flush($repartition);
+            }
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement de la répartition.",0,$e);
+        }
     }
 }

@@ -25,39 +25,47 @@ $fichemetier = $fiche->getFicheType();
             <div class="col-md-7">
                 <div class="col-md-6">
                     <u>Répartition par domaine</u>
+                    <a  <?php /** @see \Application\Controller\FichePosteController::modifierRepartitionAction() */ ?>
+                        href="<?php echo $this->url("fiche-poste/modifier-repartition", ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type' => $fiche->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon editer" title="Modifier la répartition par domaine"></span>
+                    </a>
                     <ul>
-                    <?php foreach ($fichemetier->getMetier()->getDomaines() as $domaine) : ?>
-                        <li>
-                            <?php echo $domaine->getLibelle(); ?>
-                            <?php echo $this->typefonction($domaine); ?>
-                            100%
-                        </li>
-                    <?php endforeach; ?>
+                    <?php $repartitions = $fiche->getDomaineRepartitionsAsArray(); ?>
+                        <?php if($repartitions === null OR empty($repartitions)) : ?>
+                            <span class="alert-danger"><span class="icon attention"></span>Aucune répartition de faite</span>
+                        <?php else: ?>
+                            <?php $somme = 0; ?>
+                            <?php foreach ($fichemetier->getMetier()->getDomaines() as $domaine) : ?>
+                                <li>
+                                    <?php echo $domaine->getLibelle(); ?>
+                                    <?php echo $this->typefonction($domaine); ?>
+                                    <?php echo $repartitions[$domaine->getId()]; ?>%
+                                    <?php $somme += $repartitions[$domaine->getId()]; ?>
+                                </li>
+                            <?php endforeach; ?>
+                            <?php if ($somme !== 100) : ?>
+                                <span class="alert-danger"><span class="icon attention"></span>Quotité incorrecte (<strong><?php echo $somme; ?>%</strong> &ne; 100%)</span>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
-                <div class="col-md-2 pull-right">
+                <div class="col-md-5">
+                    <u> Répartition par métier</u>
                     <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
                         <a
                             <?php /** @see \Application\Controller\FichePosteController::modifierFicheMetierAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
+                                href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
                         >
-                           <span class="icon editer" title="Modifier la fiche métier"></span></a>
-                        <a
-                            <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                        >
-                           <span class="icon listing" title="Sélectionner les activités associées"></span></a>
+                            <span class="icon editer" title="Modifier la fiche métier"></span></a>
                         <a
                             <?php /** @see \Application\Controller\FichePosteController::retirerFicheMetierAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
+                                href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                         >
                             <span class="icon detruire" title="Retirer la fiche métier"></span></a>
                     <?php endif; ?>
-                </div>
-                <div class="col-md-4 pull-right">
-                    <u> Répartition par métier</u>
                     <ul>
                         <li>
                             <?php echo $fiche->getQuotite(); ?> %
@@ -66,6 +74,16 @@ $fichemetier = $fiche->getFicheType();
                             <?php endif ;?>
                         </li>
                     </ul>
+                </div>
+                <div class="col-md-1">
+                    <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+                        <a
+                            <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
+                            href="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                        >
+                           <span class="icon listing" title="Sélectionner les activités associées"></span></a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

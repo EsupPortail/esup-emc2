@@ -114,6 +114,7 @@ return [
                         'ajouter-fiche-metier',
                         'retirer-fiche-metier',
                         'modifier-fiche-metier',
+                        'modifier-repartition',
                         'selectionner-activite',
 
                         'selectionner-applications-retirees',
@@ -323,6 +324,17 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'modifier-fiche-metier',
+                            ],
+                        ],
+                    ],
+                    'modifier-repartition' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/modifier-repartition/:fiche-poste/:fiche-type',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'modifier-repartition',
                             ],
                         ],
                     ],
