@@ -24,21 +24,26 @@ use Application\Entity\Db\FicheTypeExterne;
     <table>
     <?php foreach ($domaines as $domaine) : ?>
         <tr>
-            <td>
+            <td style="width:40%;">
                 <?php echo $domaine->getLibelle(); ?>
                 <?php echo $this->typefonction($domaine); ?> :
             </td>
-            <td>
-                <select id="<?php echo $domaine->getId(); ?>" name="<?php echo $domaine->getId(); ?>">
+            <td style="width:40%;">
+                <select id="<?php echo $domaine->getId(); ?>" name="<?php echo $domaine->getId(); ?>" class="form-control">
                     <?php for($valeur = 0 ; $valeur <= 100; $valeur += 10) : ?>
-                        <option value="<?php echo $valeur; ?>" <?php if ($valeur == $repartitions[$domaine->getId()]) echo " selected "; ?>> <?php echo $valeur; ?> </option>
+                        <option value="<?php echo $valeur; ?>" <?php if ($valeur == $repartitions[$domaine->getId()]) echo " selected "; ?>> <?php echo $valeur; ?>% </option>
                     <?php endfor; ?>
                 </select>
             </td>
         </tr>
         <?php endforeach; ?>
+        <tr><td></td><td>&nbsp;</td></tr>
         <tr><td></td><td>
     <input type="submit" class="btn btn-primary" value="Enregistrer"/>
             </td></tr>
     </table>
 </form>
+
+<script>
+    $('select').selectpicker();
+</script>

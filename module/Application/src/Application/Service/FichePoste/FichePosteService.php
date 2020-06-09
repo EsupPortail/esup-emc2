@@ -87,10 +87,29 @@ class FichePosteService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            // AGENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+            //status de l'agent
+            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+            ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
+            //grade de l'agent
+            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+            ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
+            ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
+            ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
+            ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
+            //missions spécifiques
+            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
+            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
+            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
+            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
+
+
+
             ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
 //            ->addSelect('fichemetier')->leftJoin('fiche.fichesMetiers', 'fichemetier')
 //            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
-            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
             ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
             ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
             ;
@@ -102,11 +121,12 @@ class FichePosteService {
      */
     public function getFichesPostes()
     {
-        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
-            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
-            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
-            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+//        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+//            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+//            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+//            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
+//            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+        $qb = $this->createQueryBuilder()
             ->andWhere('fiche.histoDestruction IS NULL')
             ->orderBy('fiche.id', 'ASC');
 
@@ -120,44 +140,45 @@ class FichePosteService {
      */
     public function getFichePoste($id)
     {
-        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
-            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-            ->addSelect('agentgrade')->leftJoin('agent.grades', 'agentgrade')
-            ->addSelect('grade')->leftJoin('agentgrade.grade', 'grade')
-            ->addSelect('corps')->leftJoin('agentgrade.corps', 'corps')
-            ->addSelect('correspondance')->leftJoin('agentgrade.bap', 'correspondance')
-
-            ->addSelect('agentmission')->leftJoin('agent.missionsSpecifiques', 'agentmission')
-            ->addSelect('mission')->leftJoin('agentmission.mission', 'mission')
-            ->addSelect('m_structure')->leftJoin('agentmission.structure', 'm_structure')
-
-            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
-            ->addSelect('poste_domaine')        ->leftJoin('poste.domaine', 'poste_domaine')
-            ->addSelect('poste_structure')      ->leftJoin('poste.structure', 'poste_structure')
-            ->addSelect('poste_structure_t')    ->leftJoin('poste_structure.type', 'poste_structure_t')
-            ->addSelect('poste_correspondance') ->leftJoin('poste.correspondance', 'poste_correspondance')
-            ->addSelect('poste_responsable')    ->leftJoin('poste.rattachementHierarchique', 'poste_responsable')
-
-
-            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
-            ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
-            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
-            ->addSelect('domaine')->leftJoin('metier.domaines', 'domaine')
-//            ->addSelect('fmApplication')->join('fichemetier.applications', 'fmApplication')
-//            ->addSelect('fmCompetence')->join('fichemetier.competences', 'fmCompetence')
-//            ->addSelect('fmFormation')->join('fichemetier.formations', 'fmFormation')
-            //activite
-            ->addSelect('ftActivite')->leftJoin('fichemetier.activites', 'ftActivite')
-            ->addSelect('activite')->leftJoin('ftActivite.activite', 'activite')
-            ->addSelect('aLibelle')->leftJoin('activite.libelles', 'aLibelle')
-            ->addSelect('aApplication')->leftJoin('activite.applications', 'aApplication')
-            ->addSelect('aCompetence')->leftJoin('activite.competences', 'aCompetence')
-            ->addSelect('aFormation')->leftJoin('activite.formations', 'aFormation')
-            ->addSelect('aDescription')->leftJoin('activite.descriptions', 'aDescription')
-
-            ->addSelect('expertise')->leftJoin('fiche.expertises', 'expertise')
-            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
+//        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+//            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+//            ->addSelect('agentgrade')->leftJoin('agent.grades', 'agentgrade')
+//            ->addSelect('grade')->leftJoin('agentgrade.grade', 'grade')
+//            ->addSelect('corps')->leftJoin('agentgrade.corps', 'corps')
+//            ->addSelect('correspondance')->leftJoin('agentgrade.bap', 'correspondance')
+//
+//            ->addSelect('agentmission')->leftJoin('agent.missionsSpecifiques', 'agentmission')
+//            ->addSelect('mission')->leftJoin('agentmission.mission', 'mission')
+//            ->addSelect('m_structure')->leftJoin('agentmission.structure', 'm_structure')
+//
+//            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+//            ->addSelect('poste_domaine')        ->leftJoin('poste.domaine', 'poste_domaine')
+//            ->addSelect('poste_structure')      ->leftJoin('poste.structure', 'poste_structure')
+//            ->addSelect('poste_structure_t')    ->leftJoin('poste_structure.type', 'poste_structure_t')
+//            ->addSelect('poste_correspondance') ->leftJoin('poste.correspondance', 'poste_correspondance')
+//            ->addSelect('poste_responsable')    ->leftJoin('poste.rattachementHierarchique', 'poste_responsable')
+//
+//
+//            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+//            ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
+//            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
+//            ->addSelect('domaine')->leftJoin('metier.domaines', 'domaine')
+////            ->addSelect('fmApplication')->join('fichemetier.applications', 'fmApplication')
+////            ->addSelect('fmCompetence')->join('fichemetier.competences', 'fmCompetence')
+////            ->addSelect('fmFormation')->join('fichemetier.formations', 'fmFormation')
+//            //activite
+//            ->addSelect('ftActivite')->leftJoin('fichemetier.activites', 'ftActivite')
+//            ->addSelect('activite')->leftJoin('ftActivite.activite', 'activite')
+//            ->addSelect('aLibelle')->leftJoin('activite.libelles', 'aLibelle')
+//            ->addSelect('aApplication')->leftJoin('activite.applications', 'aApplication')
+//            ->addSelect('aCompetence')->leftJoin('activite.competences', 'aCompetence')
+//            ->addSelect('aFormation')->leftJoin('activite.formations', 'aFormation')
+//            ->addSelect('aDescription')->leftJoin('activite.descriptions', 'aDescription')
+//
+//            ->addSelect('expertise')->leftJoin('fiche.expertises', 'expertise')
+//            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
+        $qb = $this->createQueryBuilder()
             ->andWhere('fiche.id = :id')
             ->setParameter('id', $id)
         ;

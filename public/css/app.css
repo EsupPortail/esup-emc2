@@ -616,15 +616,8 @@ span.ferme {
 .tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}
 
 
-span.user {
-    font-weight: bold;
-    color: purple;
-}
 
-span.structure {
-    font-weight: bold;
-    color: darkblue;
-}
+
 
 span.date {
     font-weight: normal;
@@ -644,4 +637,12 @@ span.highlight.campagne {
 
 span.highlight.agent {
     color: darkblue;
+}
+
+span.highlight.structure {
+    color: darkslategray;
+}
+
+span.highlight.user {
+    color: purple;
 }

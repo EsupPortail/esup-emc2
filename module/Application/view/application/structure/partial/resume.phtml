@@ -25,7 +25,7 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
                     data-event="modification"
                 >
                     <span class="icon editer" data-toggle="tooltip" data-html="true"
-                          title="Modifier la description de la structure <span class='structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                     </span></a>
             <?php endif; ?>
         </h2>
@@ -59,7 +59,7 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
                     data-event="modification"
                 >
                     <span class="icon editer" data-toggle="tooltip" data-html="true"
-                          title="Ajouter un gestionnaire à la structure <span class='structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                          title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                     </span></a>
             <?php endif; ?>
         </h2>
@@ -73,7 +73,7 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
                             href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>"
                         >
                             <span class="icon detruire"  data-toggle="tooltip" data-html="true"
-                                  title="Supprimer la gestion de structure <span class='structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='user'><?php echo $gestionnaire->getDisplayName(); ?></span>">
+                                  title="Supprimer la gestion de structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='highlight user'><?php echo $gestionnaire->getDisplayName(); ?></span>">
                             </span></a>
                     <?php endif; ?>
                 </li>

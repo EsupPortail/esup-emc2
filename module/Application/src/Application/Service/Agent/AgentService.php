@@ -45,22 +45,49 @@ class AgentService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-//            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+            //status de l'agent
+            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+            ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
+            //grade de l'agent
+            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+            ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
+            ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
+            ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
+            ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
+
+            //applications liées à l'agent
+            ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
+            ->addSelect('application')->leftJoin('agentapplication.application', 'application')
+            //competences liées à l'agent
+            ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
+            ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
+            ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
+            ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
+            //formations liées à l'agent
+            ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
+            ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
+            ->addSelect('formation_theme')->leftJoin('formation.theme', 'formation_theme')
+
+            //missions spécifiques
+            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
+            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
+            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
+            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
 
 //            ->addSelect('fichePoste')->leftJoin('agent.fiches','fichePoste')
 //            ->addSelect('fpPoste')->leftJoin('fichePoste.poste', 'fpPoste')
 //            ->addSelect('structure')->leftJoin('fichePoste.structure', 'structure')
 //
-            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
-            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
-            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+
 
             ->addSelect('entretien')->leftJoin('agent.entretiens', 'entretien')
             ->addSelect('entretienValidationAgent')->leftJoin('entretien.validationAgent', 'entretienValidationAgent')
 //            ->addSelect('evaModificateur')->leftJoin('entretienValidationAgent.histoModificateur', 'evaModificateur')
             ->addSelect('entretienValidationResponsable')->leftJoin('entretien.validationResponsable', 'entretienValidationResponsable')
 //            ->addSelect('evrModificateur')->leftJoin('entretienValidationResponsable.histoModificateur', 'evrModificateur')
+
+            ->addSelect('fichier')->leftJoin('agent.fichiers', 'fichier')
 
 
 
