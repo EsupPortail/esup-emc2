@@ -2,18 +2,18 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Provider\Privilege\AgentPrivileges;
 
 /**
  * @var AgentMissionSpecifique[] $missions
  * @var Agent $agent
+ * @var array $droits
  */
 
-$canVoirMission         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canAjouterMission      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
-$canModifierMission     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
-$canHistoriserMission   = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
-$canDetruireMission     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canVoirMission         = $droits['voir'];
+$canAjouterMission      = $droits['ajouter'];
+$canModifierMission     = $droits['modifier'];
+$canHistoriserMission   = $droits['historiser'];
+$canDetruireMission     = $droits['detruire'];
 
 ?>
 

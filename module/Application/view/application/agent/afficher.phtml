@@ -19,7 +19,17 @@ $canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTOR
 $canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
 $canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
 
+$droits = [
+    'voir'            =>      $canVoir,
+    'ajouter'         =>      $canAjouter,
+    'modifier'        =>      $canModifier,
+    'historiser'      =>      $canHistoriser,
+    'detruire'        =>      $canDetruire,
+    'valider'         =>      $canValider,
+];
+
 $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
+
 ?>
 
 <h1 class="page-header">
@@ -68,8 +78,9 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         <div class="col-md-4">
             <!-- Information générale "application" -->
             <dl>
-                <dt> Identifiant source </dt>
+                <dt> Identifiant sources </dt>
                 <dd>
+                    OCTOPUS - <?php echo $agent->getId(); ?> <br/>
                     <?php if($agent->getSourceId()) : ?>
                         <?php echo $agent->getSourceName(); ?>
                     -
@@ -121,10 +132,10 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $agent->getFiches()], []); ?>
 
     <?php echo $this->partial('partial/entretien-professionnel',
-        ['entretiens' => $agent->getEntretiensProfessionnels(), 'agent' => $agent, 'user' => $user, 'role' => $role]
+        ['entretiens' => $agent->getEntretiensProfessionnels(), 'agent' => $agent, "droits" => $droits]
     , []); ?>
 
-    <?php echo $this->partial('partial/mission-specifique', ['missions' => $agent->getMissionsSpecifiques(), 'agent' => $agent], []); ?>
+    <?php echo $this->partial('partial/mission-specifique', ['missions' => $agent->getMissionsSpecifiques(), 'agent' => $agent,  "droits" => $droits], []); ?>
 
     <h2> Applications, compétences et formations</h2>
 
@@ -455,7 +466,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         </div>
     </div>
 
-    <?php echo $this->partial('partial/porte-folio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent], []); ?>
+    <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
 
 </div>
 

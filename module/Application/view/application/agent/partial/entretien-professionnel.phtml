@@ -2,25 +2,19 @@
 
 /**
  * @var EntretienProfessionnel[] $entretiens
- * @var boolean $isAgent
  * @var Agent $agent
- * @var User $user
- * @var Role $role
+ * @var array $droits
  */
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
-use Application\Provider\Privilege\AgentPrivileges;
-use UnicaenUtilisateur\Entity\Db\Role;
-use UnicaenUtilisateur\Entity\Db\User;
 
 
-$canVoirEntretienPro         = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
-$canAjouterEntretienPro      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER_EPRO);
-$canModifierEntretienPro     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
-$canHistoriserEntretienPro   = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
-$canDetruireEntretienPro     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canVoirEntretienPro         = $droits['voir'];
+$canAjouterEntretienPro      = $droits['ajouter'];
+$canModifierEntretienPro     = $droits['modifier'];
+$canHistoriserEntretienPro   = $droits['historiser'];
+$canDetruireEntretienPro     = $droits['detruire'];
 ?>
 
 <h2>

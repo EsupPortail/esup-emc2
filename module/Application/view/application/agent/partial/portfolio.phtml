@@ -7,12 +7,13 @@ use Fichier\Entity\Db\Fichier;
 /**
  * @var Fichier[] $fichiers
  * @var Agent $agent
+ * @var array $droits
  */
 
-$canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
-$canAjouterFichier      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
-$canHistoriserFichier   = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
-$canDetruireFichier     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canVoirFichier         = $droits['voir'];
+$canAjouterFichier      = $droits['ajouter'];
+$canHistoriserFichier   = $droits['historiser'];
+$canDetruireFichier     = $droits['detruire'];
 
 ?>
 
