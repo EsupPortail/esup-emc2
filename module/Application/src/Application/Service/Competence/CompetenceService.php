@@ -176,15 +176,17 @@ class CompetenceService {
 
     /**
      * @param Competence $competence
+     * @param int $max_length
      * @return array
      */
-    private function competenceOptionify(Competence $competence) {
+    private function competenceOptionify(Competence $competence, $max_length=60) {
+        $texte = (strlen($competence->getLibelle())>$max_length)?substr($competence->getLibelle(),0,$max_length)." ...":$competence->getLibelle();
         $this_option = [
             'value' =>  $competence->getId(),
             'attributes' => [
-                'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $competence->getLibelle():"",
+                'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $texte:"",
             ],
-            'label' => $competence->getLibelle(),
+            'label' => $texte,
         ];
         return $this_option;
     }
