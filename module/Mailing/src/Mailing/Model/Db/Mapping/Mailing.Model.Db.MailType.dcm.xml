@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Mailing\Model\Db\MailType" table="mail_type">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="code"              type="string"   length="255"     column="code"                  nullable="false"  />
+        <field name="libelle"           type="string"   length="1023"    column="libelle"               nullable="false"  />
+        <field name="description"       type="string"   length="4096"    column="description"           nullable="true"  />
+        <field name="actif"             type="integer"                   column="actif"                 nullable="false"  />
+
+        <field name="sujet"             type="string"   length="4096"    column="sujet"                 nullable="true"  />
+        <field name="corps"             type="string"   length="4096"    column="corps"                 nullable="true"  />
+
+        <!-- HISTORIQUE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="histoCreation"       type="datetime"     column="histo_creation"       nullable="true"/>
+        <field name="histoModification"   type="datetime"     column="histo_modification"   nullable="true"/>
+        <field name="histoDestruction"    type="datetime"     column="histo_destruction"    nullable="true"/>
+        <many-to-one field="histoModificateur" target-entity="UnicaenUtilisateur\Entity\Db\User" fetch="LAZY">
+            <join-columns>
+                <join-column name="histo_modificateur_id" referenced-column-name="id"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="histoDestructeur" target-entity="UnicaenUtilisateur\Entity\Db\User" fetch="LAZY">
+            <join-columns>
+                <join-column name="histo_destructeur_id" referenced-column-name="id"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="histoCreateur" target-entity="UnicaenUtilisateur\Entity\Db\User" fetch="LAZY">
+            <join-columns>
+                <join-column name="histo_createur_id" referenced-column-name="id"/>
+            </join-columns>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

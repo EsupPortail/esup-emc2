@@ -105,18 +105,18 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
 
     <!-- GRAPH -------------------------------------------------------------------------------------------------------->
 
-    <div class="row">
-        <div class="col-md-6">
-            <?php echo $this->fichePosteGraph($fiche,
-                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
-                'radar', $date); ?>
-        </div>
-        <div class="col-md-6">
-            <?php echo $this->fichePosteGraph($fiche,
-                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
-                'bar', $date); ?>
-        </div>
-    </div>
+<!--    <div class="row">-->
+<!--        <div class="col-md-6">-->
+<!--            --><?php //echo $this->fichePosteGraph($fiche,
+//                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
+//                'radar', $date); ?>
+<!--        </div>-->
+<!--        <div class="col-md-6">-->
+<!--            --><?php //echo $this->fichePosteGraph($fiche,
+//                ["applications" => $applications, "competences" => $competences, "formations" => $formations, "activites" => $activites],
+//                'bar', $date); ?>
+<!--        </div>-->
+<!--    </div>-->
 
     <!-- EXPERTISES LIEES A LA FICHE DE POSTE ------------------------------------------------------------------------->
     <?php echo $this->partial('partial/expertise', ['fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
