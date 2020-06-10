@@ -21,7 +21,7 @@ $canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(Fich
 $canEditer = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canEditerExpertise = true || $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 
-$canAssocierAgent = $canEditer;
+$canAssocierAgent = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_ASSOCIERAGENT));
 $canAssocierMetierType = $canEditer;
 
 $mode = 'edition';
