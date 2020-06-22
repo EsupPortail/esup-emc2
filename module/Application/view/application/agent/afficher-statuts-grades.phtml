@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentStatut;
 
@@ -8,6 +9,7 @@ use Application\Entity\Db\AgentStatut;
  * @see \Application\Controller\AgentController::afficherStatutsGradesAction()
  * @var string $title
  * @var Agent $agent
+ * @var AgentAffectation[] $affectations
  * @var AgentStatut[] $statuts
  * @var AgentGrade[] $grades
  */
@@ -17,13 +19,19 @@ $this->headTitle($title)
 ?>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <h2> Statuts </h2>
+        <?php foreach ($affectations as $affectation) : ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+    <div class="col-md-3">
         <h2> Statuts </h2>
         <?php foreach ($statuts as $statut) : ?>
             <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
         <h2> Grades </h2>
         <?php foreach ($grades as $grade) : ?>
             <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>

@@ -35,12 +35,18 @@ class Agent implements ResourceInterface{
     /** @var int */
     private $quotite;
 
+    /** @var ArrayCollection (AgentAffectation)  */
+    private $affectations;
+    /** @var ArrayCollection (AgentGrade) */
+    private $grades;
+    /** @var ArrayCollection (AgentStatut)*/
+    private $statuts;
+
     /** @var ArrayCollection (FichePoste) */
     private $fiches;
     /** @var ArrayCollection (EntretienProfessionnel) */
     private $entretiens;
-    /** @var ArrayCollection (AgentStatut)*/
-    private $statuts;
+
     /** @var ArrayCollection (AgentMissionSpecifique) */
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
@@ -51,8 +57,7 @@ class Agent implements ResourceInterface{
     private $competences;
     /** @var ArrayCollection (AgentFormation) */
     private $formations;
-    /** @var ArrayCollection (AgentGrade) */
-    private $grades;
+
 
     public function __construct()
     {
@@ -113,6 +118,29 @@ class Agent implements ResourceInterface{
     {
         return ucwords(strtolower($this->getPrenom()), "-").' '.$this->getNomUsuel();
 
+    }
+
+    /**
+     * @return AgentAffectation[]
+     */
+    public function getAffectations()
+    {
+        return $this->affectations->toArray();
+    }
+
+    /**
+     * @return AgentAffectation[]
+     */
+    public function getAffectationsActifs()
+    {
+        $date = $this->getDateTime();
+
+        $affectations = [];
+        /** @var AgentAffectation $affectation */
+        foreach ($this->affectations as $affectation) {
+            if ($affectation->getDateDebut() <= $date AND $affectation->getDateFin() >= $date) $affectations[] = $affectation;
+        }
+        return $affectations;
     }
 
     /**

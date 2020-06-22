@@ -25,6 +25,7 @@ use Application\Form\AgentFormation\AgentFormationHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
+use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
@@ -602,6 +603,7 @@ return [
     'view_helpers' => [
         'invokables' => [
             'agent' => AgentViewHelper::class,
+            'agentAffectation' => AgentAffectationViewHelper::class,
             'agentStatut' => AgentStatutViewHelper::class,
             'agentGrade' => AgentGradeViewHelper::class,
         ],

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\AgentAffectation" table="agent_affectation">
+
+        <id name="id" type="integer" column="affectation_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Structure"  field="structure">
+            <join-column name="structure_id" referenced-column-name="source_id"/>
+        </many-to-one>
+        <field name="dateDebut"               column="date_debut"       type="datetime"/>
+        <field name="dateFin"                 column="date_fin"         type="datetime"/>
+        <field name="idOrig"                  column="id_orig"          type="string" length="255"/>
+        <field name="principale"              column="t_principale"     type="string" length="1"/>
+
+    </entity>
+</doctrine-mapping>

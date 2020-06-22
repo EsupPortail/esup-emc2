@@ -11,6 +11,10 @@
         <field name="prenom"                   column="prenom"              type="string" length="64" />
         <field name="nomUsuel"                 column="nom_usage"           type="string" length="64" />
 
+        <one-to-many target-entity="Application\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
+        <one-to-many target-entity="Application\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>
+        <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
+
         <field name="quotite"                  column="quotite"             type="integer" />
 
         <one-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="utilisateur">
@@ -23,8 +27,6 @@
         <one-to-many target-entity="Application\Entity\Db\AgentApplication" mapped-by="agent" field="applications"/>
         <one-to-many target-entity="Application\Entity\Db\AgentCompetence" mapped-by="agent" field="competences"/>
         <one-to-many target-entity="Application\Entity\Db\AgentFormation" mapped-by="agent" field="formations"/>
-        <one-to-many target-entity="Application\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>
-        <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
         <one-to-many target-entity="Application\Entity\Db\EntretienProfessionnel" mapped-by="agent" field="entretiens"/>
 
         <many-to-many field="fichiers" target-entity="Fichier\Entity\Db\Fichier" inversed-by="fichier" fetch="LAZY">

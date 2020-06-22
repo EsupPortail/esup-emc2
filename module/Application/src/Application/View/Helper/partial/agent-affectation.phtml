@@ -1,0 +1,86 @@
+<?php
+
+
+/**
+ * @var AgentAffectation $affectation
+ * @var array $options
+ */
+
+use Application\Entity\Db\AgentAffectation;
+
+$debug = false;
+
+$displayStructure   = (isset($options['structure']) AND $options['structure'] !== false);
+$displayPeriode     = (isset($options['periode']) AND $options['periode'] !== false);
+$displayIdentifiant = (isset($options['identifiant']) AND $options['identifiant'] !== false);
+$displayAgent       = (isset($options['agent']) AND $options['agent'] !== false);
+$displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== false);
+?>
+
+<?php if($debug) : ?>
+    <div class="alert alert-warning">
+        <ul>
+            <li>Display Structure =  <?php echo $displayStructure; ?></li>
+            <li>Display Période =  <?php echo $displayPeriode; ?></li>
+            <li>Display Identifiant =  <?php echo $displayIdentifiant; ?></li>
+            <li>Display Agent =  <?php echo $displayAgent; ?></li>
+            <li>Display Témoin =  <?php echo $displayTemoin; ?></li>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<div class="agent-status">
+    <div>
+    <?php if ($displayStructure) : ?>
+        <span class="badge structure" title="<?php echo $affectation->getStructure()->getLibelleLong(); ?>">
+            <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+        </span>
+    <?php endif; ?>
+    </div>
+
+    <div>
+        <?php if ($displayPeriode) : ?>
+            <?php
+                $debut  = ($affectation->getDateDebut())?$affectation->getDateDebut()->format('d/m/Y'):'---';
+                $fin    = ($affectation->getDateFin() && $affectation->getDateFin()->format('d/m/Y') !== '31/12/1999')?$affectation->getDateFin()->format('d/m/Y'):'---';
+            ?>
+            <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
+        <?php endif; ?>
+    </div>
+
+    <div>
+        <?php if ($displayIdentifiant) : ?>
+            <strong> Identifiant </strong> <br/>
+                <span class="badge">
+                    <?php echo $affectation->getIdOrig(); ?>
+                </span>
+        <?php endif; ?>
+
+        <?php if ($displayAgent) : ?>
+            <strong> Agent  : </strong> <br/>
+                <span class="badge">
+                    <?php echo $affectation->getAgent()->getDenomination(); ?>
+                </span>
+        <?php endif; ?>
+
+        <?php if ($displayTemoin) : ?>
+<!--            <strong> Témoins actifs : </strong>--> <br/>
+
+                <ul>
+                <?php
+                    if ($affectation->isPrincipale())        echo '<li>Principale</li>';
+                ?>
+                </ul>
+        <?php endif; ?>
+
+    </div>
+</div>
+
+<style>
+    div.agent-status {
+        border: solid lightblue 1px;
+        margin: 1rem;
+        padding: 1rem;
+        /*border-radius: 5px;*/
+    }
+</style>

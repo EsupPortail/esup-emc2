@@ -9,7 +9,7 @@
         <field name="idOrigine"                 column="id_orig"            type="string" length="256" />
 
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
-            <join-column name="individu_id" referenced-column-name="c_individu"/>
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Structure"  field="structure">
             <join-column name="structure_id" referenced-column-name="source_id"/>

@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
@@ -78,6 +79,8 @@ class AgentController extends AbstractActionController
     public function afficherStatutsGradesAction() {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
+        $affectations = $agent->getAffectations();
+        usort($affectations, function(AgentAffectation $a, AgentAffectation $b) { return $a->getDateDebut() > $b->getDateDebut();});
         $grades = $agent->getGrades();
         usort($grades, function(AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() > $b->getDateDebut();});
         $statuts = $agent->getStatuts();
@@ -86,6 +89,7 @@ class AgentController extends AbstractActionController
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
             'agent' => $agent,
+            'affectations' => $affectations,
             'statuts' => $statuts,
             'grades' => $grades,
         ]);
