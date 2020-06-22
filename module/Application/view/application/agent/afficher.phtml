@@ -81,16 +81,6 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                 <dt> Identifiant sources </dt>
                 <dd>
                     OCTOPUS - <?php echo $agent->getId(); ?> <br/>
-                    <?php if($agent->getSourceId()) : ?>
-                        <?php echo $agent->getSourceName(); ?>
-                    -
-                        <?php echo $agent->getSourceId(); ?>
-                    <?php else: ?>
-                        <span class="probleme">
-                            <span class="icon attention"></span>
-                            <em> Aucune source pour cet agent </em>
-                        </span>
-                    <?php endif; ?>
                 <dt> Compte associé </dt>
                 <dd>
                     <?php if($agent->getUtilisateur()) : ?>

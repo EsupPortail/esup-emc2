@@ -5,9 +5,6 @@
         <id    name="id"                        column="c_individu"         type="string" length="40" >
         </id>
 
-        <field name="sourceName"                column="c_source"           type="string" length="40" />
-        <field name="sourceId"                  column="c_src_individu"     type="string" length="40" />
-
         <field name="prenom"                   column="prenom"              type="string" length="64" />
         <field name="nomUsuel"                 column="nom_usage"           type="string" length="64" />
 

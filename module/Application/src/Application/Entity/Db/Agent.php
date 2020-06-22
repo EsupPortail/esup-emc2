@@ -23,10 +23,6 @@ class Agent implements ResourceInterface{
     /** @var string */
     private $id;
     /** @var string */
-    private $sourceName;
-    /** @var integer */
-    private $sourceId;
-    /** @var string */
     private $prenom;
     /** @var string */
     private $nomUsuel;
@@ -77,22 +73,6 @@ class Agent implements ResourceInterface{
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSourceName()
-    {
-        return $this->sourceName;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSourceId()
-    {
-        return $this->sourceId;
     }
 
     /**
