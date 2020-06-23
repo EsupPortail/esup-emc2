@@ -97,20 +97,20 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         </div>
     </div>
 
-    <h2> Affectations, Statuts et grades </h2>
+    <h2> Statuts et grades </h2>
 
     <div class="row">
-        <div class="col-md-3">
-            <?php foreach ($agent->getAffectationsActifs() as $affectation) : ?>
-                <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
-            <?php endforeach; ?>
-        </div>
-        <div class="col-md-3">
+<!--        <div class="col-md-3">-->
+<!--            --><?php //foreach ($agent->getAffectationsActifs() as $affectation) : ?>
+<!--                --><?php //echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+<!--            --><?php //endforeach; ?>
+<!--        </div>-->
+        <div class="col-md-4">
             <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
                 <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
             <?php endforeach; ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
         <?php foreach ($agent->getGradesActifs() as $grade) : ?>
             <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>

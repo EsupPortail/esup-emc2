@@ -273,7 +273,7 @@ class AgentService {
             ->addSelect('ggrade')->join('grade.grade', 'ggrade')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-            ->andWhere('statut.titulaire = :true OR statut.cdi = :true')
+//            ->andWhere('statut.titulaire = :true OR statut.cdi = :true')
             ->andWhere('statut.administratif = :true')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')

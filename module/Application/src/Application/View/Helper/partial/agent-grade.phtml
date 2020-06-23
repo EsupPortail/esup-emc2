@@ -15,6 +15,7 @@ $displayPeriode     = (isset($options['periode']) AND $options['periode'] !== fa
 $displayIdentifiant = (isset($options['identifiant']) AND $options['identifiant'] !== false);
 $displayAgent       = (isset($options['agent']) AND $options['agent'] !== false);
 $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== false);
+$displayCorrespondance      = (isset($options['correspondance']) AND $options['correspondance'] !== false);
 ?>
 
 <?php if($debug) : ?>
@@ -55,6 +56,10 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
         <span class="badge">
             <?php echo $grade->getAgent()->getDenomination(); ?>
         </span>
+    <?php endif; ?>
+
+    <?php if ($displayCorrespondance) : ?>
+        <?php echo $grade->getBap()->getCategorie(); ?>
     <?php endif; ?>
 
     <?php if ($displayTemoin) : ?>

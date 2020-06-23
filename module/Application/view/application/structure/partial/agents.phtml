@@ -6,6 +6,7 @@
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
@@ -30,7 +31,7 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
     <thead>
     <tr>
         <th>Dénomination</th>
-<!--        <th>Statut</th>-->
+        <th>Statut</th>
         <th>Grade</th>
 <!--        <th>Poste</th>-->
         <th>Fiche</th>
@@ -52,14 +53,26 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
             </td>
-<!--            <td>-->
-<!--                --><?php //foreach ($agent->getStatutsActifs() as $statut) : ?>
-<!--                    --><?php //echo$this->agentStatut($statut, ['structure'=> true, 'periode' => true, 'temoin' => true]); ?>
-<!--                --><?php //endforeach; ?>
-<!--            </td>-->
             <td>
+                <?php $temoins = [ 'C.D.D.' => false, 'C.D.I.' => false, 'Titulaire' => false]; ?>
+                <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
+                    <?php if ($statut->isCdd()) $temoins['C.D.D'] = true; ?>
+                    <?php if ($statut->isCdi()) $temoins['C.D.I'] = true; ?>
+                    <?php if ($statut->isTitulaire()) $temoins['Titulaire'] = true; ?>
+                <?php endforeach; ?>
+                <ul>
+                    <?php foreach ($temoins as $temoin => $valeur) : ?>
+                        <?php if ($valeur === true) : ?>
+                            <li> <?php echo $temoin; ?></li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </td>
+            <td>
+                <?php /** @var AgentGrade $grade */ ?>
                 <?php foreach ($agent->getGradesActifs() as $grade) : ?>
                     <?php echo $grade->getStructure()->getLibelleCourt(); ?> <br/>
+                    BAP <?php echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?> -
                     <?php echo $grade->getGrade()->getLibelleCourt(); ?>
                 <?php endforeach; ?>
             </td>
