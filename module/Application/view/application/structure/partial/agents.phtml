@@ -56,10 +56,10 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
             <td>
                 <?php $temoins = []; ?>
                 <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
-                    <?php $temoins['Administratif'] = $statut->isAdministratif(); ?>
-                    <?php $temoins['Titulaire'] = $statut->isTitulaire(); ?>
-                    <?php $temoins['C.D.I.'] = $statut->isCdi(); ?>
-                    <?php $temoins['C.D.D.'] = $statut->isCdd(); ?>
+                    <?php if ($statut->isAdministratif()) $temoins['Administratif'] = true ; ?>
+                    <?php if ($statut->isTitulaire()) $temoins['Titulaire'] = true; ?>
+                    <?php if ($statut->isCdi()) $temoins['C.D.I.'] = true; ?>
+                    <?php if ($statut->isCdd()) $temoins['C.D.D.'] = true; ?>
                 <?php endforeach; ?>
                 <ul>
                     <?php foreach ($temoins as $temoin => $valeur) : ?>
