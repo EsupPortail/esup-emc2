@@ -30,6 +30,7 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
     <thead>
     <tr>
         <th>Dénomination</th>
+<!--        <th>Statut</th>-->
         <th>Grade</th>
 <!--        <th>Poste</th>-->
         <th>Fiche</th>
@@ -51,6 +52,11 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
             </td>
+<!--            <td>-->
+<!--                --><?php //foreach ($agent->getStatutsActifs() as $statut) : ?>
+<!--                    --><?php //echo$this->agentStatut($statut, ['structure'=> true, 'periode' => true, 'temoin' => true]); ?>
+<!--                --><?php //endforeach; ?>
+<!--            </td>-->
             <td>
                 <?php foreach ($agent->getGradesActifs() as $grade) : ?>
                     <?php echo $grade->getStructure()->getLibelleCourt(); ?> <br/>

@@ -45,7 +45,7 @@ $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::
             <tbody>
             <?php foreach ($agents as $agent) : ?>
                 <tr>
-                    <td> <span class="badge"><?php echo $agent->getSourceName(); ?> - <?php echo $agent->getSourceId(); ?></span></td>
+                    <td> <span class="badge">Octopus - <?php echo $agent->getId(); ?></span></td>
                     <td> <?php echo $agent->getDenomination(); ?></td>
                     <td>
                         <?php if ($agent->getUtilisateur() !== null) : ?>

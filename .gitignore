@@ -3,3 +3,4 @@ data/
 upload/
 .idea
 config/autoload/*local*
+composer.lock

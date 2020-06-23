@@ -20,7 +20,7 @@ $this->headTitle($title)
 
 <div class="row">
     <div class="col-md-3">
-        <h2> Statuts </h2>
+        <h2> Affectations </h2>
         <?php foreach ($affectations as $affectation) : ?>
             <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>

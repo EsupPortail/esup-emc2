@@ -7,6 +7,7 @@
 
         <field name="prenom"                   column="prenom"              type="string" length="64" />
         <field name="nomUsuel"                 column="nom_usage"           type="string" length="64" />
+        <field name="harpId"                   column="harp_id"             type="integer" />
 
         <one-to-many target-entity="Application\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
         <one-to-many target-entity="Application\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>

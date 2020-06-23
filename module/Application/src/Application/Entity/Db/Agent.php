@@ -29,6 +29,8 @@ class Agent implements ResourceInterface{
     /** @var User */
     private $utilisateur;
     /** @var int */
+    private $harpId;
+    /** @var int */
     private $quotite;
 
     /** @var ArrayCollection (AgentAffectation)  */
@@ -159,6 +161,14 @@ class Agent implements ResourceInterface{
             if ($grade->getDateFin() === null OR $grade->getDateFin() > $now) $grades[] = $grade;
         }
         return $grades;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getHarpId()
+    {
+        return $this->harpId;
     }
 
     /** Éléments non importés *****************************************************************************************/

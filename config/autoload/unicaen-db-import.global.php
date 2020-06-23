@@ -87,7 +87,7 @@ return [
                     'table'              => 'agent',
                     'connection'         => 'default',
                     'source_code_column' => 'c_individu',
-                    'columns'            => ['prenom', 'nom_usage'],
+                    'columns'            => ['prenom', 'nom_usage', 'harp_id'],
                 ],
             ],
             [
@@ -130,7 +130,7 @@ return [
                 'name' => 'Import_STATUT',
                 'source' => [
                     'name'               => 'Statut des agents geres par la DRH',
-                    'select'             => 'SELECT ID, ID_ORIG, C_SOURCE, INDIVIDU_ID, STRUCTURE_ID, D_DEBUT, D_FIN, T_TITULAIRE, T_CDI, T_CDD, T_VACATAIRE, T_ENSEIGNANT, T_ADMINISTRATIF, T_CHERCHEUR, T_ETUDIANT, T_AUDITEUR_LIBRE, T_DOCTORANT, T_DETACHE_IN, T_DETACHE_OUT, T_DISPO, T_HEBERGE, T_EMERITE, T_RETRAITE    FROM V_PREECOG_STATUT',
+                    'select'             => 'SELECT ID, ID_ORIG, C_SOURCE, AGENT_ID, STRUCTURE_ID, D_DEBUT, D_FIN, T_TITULAIRE, T_CDI, T_CDD, T_VACATAIRE, T_ENSEIGNANT, T_ADMINISTRATIF, T_CHERCHEUR, T_ETUDIANT, T_AUDITEUR_LIBRE, T_DOCTORANT, T_DETACHE_IN, T_DETACHE_OUT, T_DISPO, T_HEBERGE, T_EMERITE, T_RETRAITE    FROM V_PREECOG_STATUT',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
 //                    'columns'            => ['ID_ORIG', 'C_SOURCE', 'INDIVIDU_ID', 'STRUCTURE_ID', 'D_DEBUT', 'D_FIN', 'T_TITULAIRE', 'T_CDI', 'T_CDD', 'T_VACATAIRE', 'T_ENSEIGNANT', 'T_ADMINISTRATIF', 'T_CHERCHEUR', 'T_ETUDIANT', 'T_AUDITEUR_LIBRE', 'T_DOCTORANT', 'T_DETACHE_IN', 'T_DETACHE_OUT', 'T_DISPO', 'T_HEBERGE', 'T_EMERITE', 'T_RETRAITE', 'T_CLD', 'T_CLM'],

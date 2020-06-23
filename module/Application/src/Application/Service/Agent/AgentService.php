@@ -202,9 +202,7 @@ class AgentService {
     public function getAgentBySupannId($supannId)
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->andWhere('agent.sourceName = :harp')
-            ->andWhere('agent.sourceId = :supannId')
-            ->setParameter('harp', 'HARP')
+            ->andWhere('agent.harpId = :supannId')
             ->setParameter('supannId', $supannId);
 
         try {
@@ -275,6 +273,7 @@ class AgentService {
             ->addSelect('ggrade')->join('grade.grade', 'ggrade')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
+            ->andWhere('statut.titulaire = :true OR statut.cdi = :true')
             ->andWhere('statut.administratif = :true')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')

@@ -80,11 +80,11 @@ class AgentController extends AbstractActionController
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $affectations = $agent->getAffectations();
-        usort($affectations, function(AgentAffectation $a, AgentAffectation $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($affectations, function(AgentAffectation $a, AgentAffectation $b) { return $a->getDateDebut() < $b->getDateDebut();});
         $grades = $agent->getGrades();
-        usort($grades, function(AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($grades, function(AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut();});
         $statuts = $agent->getStatuts();
-        usort($statuts, function(AgentStatut $a, AgentStatut $b) { return $a->getDebut() > $b->getDebut();});
+        usort($statuts, function(AgentStatut $a, AgentStatut $b) { return $a->getDebut() < $b->getDebut();});
 
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
