@@ -4,6 +4,8 @@ namespace Mailing;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Config\Factory as ConfigFactory;
+use Zend\Stdlib\ArrayUtils;
+use Zend\Stdlib\Glob;
 
 class Module
 {
@@ -16,10 +18,15 @@ class Module
 
     public function getConfig()
     {
-        $paths = array_merge(
-            [__DIR__ . '/config/module.config.php']
+        $configInit = [
+            __DIR__ . '/config/module.config.php'
+        ];
+        $configFiles = ArrayUtils::merge(
+            $configInit,
+            Glob::glob(__DIR__ . '/config/merged/{,*.}{config}.php', Glob::GLOB_BRACE)
         );
-        return ConfigFactory::fromFiles($paths);
+
+        return ConfigFactory::fromFiles($configFiles);
     }
 
     public function getAutoloaderConfig()

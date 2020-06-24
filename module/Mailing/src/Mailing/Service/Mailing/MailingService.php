@@ -2,14 +2,16 @@
 
 namespace Mailing\Service\Mailing;
 
-use UnicaenUtilisateur\Entity\Db\Role;
-use UnicaenUtilisateur\Entity\Db\User;
+use Application\Entity\Db\EntretienProfessionnelCampagne;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Mailing\Model\Db\Mail;
+use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
@@ -19,6 +21,8 @@ use Zend\View\Renderer\PhpRenderer;
 
 class MailingService {
     use EntityManagerAwareTrait;
+    use MailTypeServiceAwareTrait;
+    use DateTimeAwareTrait;
 
     /** @var TransportInterface */
     private $transport;
@@ -36,68 +40,6 @@ class MailingService {
     }
 
     /**
-     * @param User $utilisateur
-     * @param Role $role
-     * @param string $alteration (ajout, retrait)
-     */
-    public function notificationChangementRole($utilisateur, $role, $alteration)
-    {
-        $mail = $utilisateur->getEmail();
-        $titre = $alteration . " du rôle ". $role->getRoleId();
-        $texte  = "";
-        switch($alteration) {
-            case "ajout" : $texte .= "<p>Vous venez de recevoir le rôle de ".$role->getRoleId()." dans l'application PrEECoG.</p>";
-                break;
-            case "retrait" : $texte .= "<p>Vous venez de perdre le rôle de ".$role->getRoleId()." dans l'application PrEECoG.</p>";
-                break;
-        }
-        $texte .= "<p>Pour vous connecter à celle-ci, suivez le lien suivant : <a href='".$this->rendererService->url('home', [], ['force_canonical' => true], true)."'>PrEECoG</a>.</p>";
-        $this->sendMail($mail, $titre, $texte);
-    }
-
-//    public function notifierMedecinDirecteurDemande($demande) {
-//        $denomination = $demande->getIdetudiant()->getPrenom() ." ". $demande->getIdetudiant()->getNom();
-//        $composante = ($demande->getIdcomposante())?$demande->getIdcomposante()->getLibelle():"Non renseignée";
-//        $date = ($demande->getDatecreation())?$demande->getDatecreation()->format("d/m/Y"):"Non renseignée";
-//
-//        $url = $this->rendererService->url('demande/detail', ['id' => $demande->getId()],  ['force_canonical' => true], true);
-//
-//        $sujet  = "";
-//        if ($demande->getUrgence()) $sujet .= " *** URGENT ***";
-//        if($demande->getVersion()>0) {
-//            $sujet .= "Nouvel avenant à la demande d'aménagement à valider (id:" . $demande->getId() . ")";
-//        } else {
-//            $sujet .= "Nouvelle demande d'aménagement à valider (id:" . $demande->getId() . ")";
-//        }
-//
-//        //TODO recuépérer cela de quelque part ...
-//        $mail = "sumpps.handicap@unicaen.fr";
-//
-//        $texte  = "";
-//        if ($demande->getUrgence()) $texte .= " *** URGENT ***";
-//        $texte .= "<p> Bonjour, </p>";
-//
-//        if($demande->getVersion()>0) {
-//            $texte .= "<p> L'avenant à la demande d'aménagement suivant attend votre validation : " . $url . "</p>";
-//        } else {
-//            $texte .= "<p> La demande d'aménagement suivante attend votre validation : " . $url . "</p>";
-//        }
-//        $texte .= "<table>";
-//        $texte .= "<tr><th> Étudiant </th>     <td>". $denomination ."</td></tr>";
-//        $texte .= "<tr><th> Composante </th>   <td>". $composante."</td></tr>";
-//        $texte .= "<tr><th> En date du </th>   <td>". $date."</td></tr>";
-//        $texte .= "</table>";
-//
-//
-//        $this->sendMail($mail, $sujet, $texte);
-//    }
-
-    public function sendTestMail($adresse)
-    {
-        $this->sendMail($adresse, "Mail de test", "Ceci est un mail de test.");
-    }
-
-    /**
      * @param Mail $mail
      */
     public function reEnvoi($mail)
@@ -106,18 +48,17 @@ class MailingService {
     }
 
     public function sendMail($to, $subject, $texte, $attachement_path = null) {
+//        return true;
 
         $message = (new Message())->setEncoding('UTF-8');
-        $message->setFrom('ne-pas-repondre@unicaen.fr', "PrEECoG");
+        $message->setFrom('ne-pas-repondre@unicaen.fr', "Catalogue de services");
         if (!is_array($to)) $to = [ $to ];
         if ($this->doNotSend) {
             $message->addTo($this->redirectTo);
         } else {
+            $to = array_unique($to);
             $message->addTo($to);
         }
-
-
-
 
         $mail = new Mail();
         $mail->setDateEnvoi(new DateTime());
@@ -129,14 +70,14 @@ class MailingService {
         $this->create($mail);
 
 
-        $sujet = '[PrEECoG] ' . $subject;
+        $sujet = '[catalogue-services] ' . $subject;
         if ($this->doNotSend) {
             $sujet .= ' {REDIR}';
         }
         $message->setSubject($sujet);
 
 
-        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application PrEECoG. </i></p>" . $texte;
+        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par le catalogue de services. </i></p>" . $texte;
 
         if ($this->doNotSend) {
             $texte .= "<br/><br/><hr/><br/>";
@@ -213,10 +154,10 @@ class MailingService {
      * @return Mail
      */
     public function create($mail) {
-        $this->getEntityManager()->persist($mail);
         try {
+            $this->getEntityManager()->persist($mail);
             $this->getEntityManager()->flush($mail);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la création du mail", $e);
         }
         return $mail;
@@ -229,7 +170,7 @@ class MailingService {
     public function update($mail) {
         try {
             $this->getEntityManager()->flush($mail);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la mise à jour du mail", $e);
         }
         return $mail;
@@ -240,10 +181,10 @@ class MailingService {
      */
     public function delete($mail)
     {
-        $this->getEntityManager()->remove($mail);
         try {
+            $this->getEntityManager()->remove($mail);
             $this->getEntityManager()->flush();
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Problème lors de la destruction du mail", $e);
         }
     }
@@ -260,36 +201,90 @@ class MailingService {
         return $mail;
     }
 
-    public function notificationDemandesValidations($validateur, $demandes)
+    /** MAIL FROM MAIL TYPE *******************************************************************************************/
+
+    /**
+     * @param string code
+     * @param array $variables
+     */
+    public function sendMailType($code, array $variables)
     {
-        $nb = count($demandes);
-
-        $mail = $validateur->getEmail();
-
-        $titre = "De nouvelles demandes de validations vous attendes";
-        if ($nb === 1) {
-            $titre = "Une nouvelle demande de validation vous attend";
+        $mailtype = $this->getMailTypeService()->getMailTypeByCode($code);
+        if ($mailtype === null) {
+            throw new RuntimeException("Le mail type [".$code."] n'existe pas !",0, null);
         }
 
-        $texte  = "Bonjour,";
+        if ($mailtype->isActif()) {
+            $sujet = $mailtype->getSujet();
+            $sujet = $this->replaceMacros($sujet, $variables);
+            $sujet = html_entity_decode(strip_tags($sujet));
 
-        if ($nb === 1) {
-            $texte .= "<p>";
-            $texte .= "Une nouvelle demande de validations vous a été affectée.";
-            $texte .= "</p>";
-            $texte .= "<p>";
-            $texte .= "Pour examiner cette demande, connectez-vous à l'aplication PrEECoG et sélectionnez le rôle de validateur.";
-            $texte .= "</p>";
-        } else {
-            $texte .= "<p>";
-            $texte .= count($demandes) . " nouvelles demandes de validations vous ont été affectées.";
-            $texte .= "</p>";
-            $texte .= "<p>";
-            $texte .= "Pour examiner ces demandes, connectez-vous à l'aplication PrEECoG et sélectionnez le rôle de validateur.";
-            $texte .= "</p>";
+            $corps = $mailtype->getCorps();
+            $corps = $this->replaceMacros($corps, $variables);
+
+            /** @var User $user */
+            $destinataire = $variables['user'];
+            $mails = [];
+            if (is_array($destinataire)) {
+                foreach ($destinataire as $user) {
+                    $mails[] = $user->getEmail();
+                }
+            } else {
+                $mails[] = $destinataire->getEmail();
+            }
+
+            $this->sendMail($mails, $sujet, $corps);
         }
+    }
 
-        $texte .= "<p>Pour vous connecter à PrEECoG, suivez le lien suivant : <a href='".$this->rendererService->url('home', [], ['force_canonical' => true], true)."'>PrEECoG</a>.</p>";
-        $this->sendMail($mail, $titre, $texte);
+    /**
+     * @param string $texteInitial
+     * @param array $variables
+     * @return string
+     */
+    private function replaceMacros($texteInitial, $variables)
+    {
+        $matches = [];
+        preg_match_all('/VAR\[[a-z,A-Z,0-9,#]*\]/', $texteInitial, $matches);
+
+        $patterns = array_unique($matches[0]);
+        $replacements = [];
+        foreach ($patterns as $pattern) {
+            $replacements[] = $this->getReplacementText($pattern, $variables);
+        }
+        $text = str_replace($patterns, $replacements, $texteInitial);
+
+        return $text;
+    }
+
+    /**
+     * @param string $identifier
+     * @param array $variables
+     * @return string
+     */
+    private function getReplacementText($identifier, $variables)
+    {
+        /**
+         * @var EntretienProfessionnelCampagne $campagne
+         */
+
+        //TODO améliorant en récuperant le entre [] et puis en splittant avec # et tester récupération ou non de l'object ...
+        switch ($identifier) {
+            /** DATE **************************************************************************************************/
+            case 'VAR[DATE#aujourdhui]' :
+                $date = $this->getDateTime()->format('d/m/Y');
+                return $date;
+            /** CAMPAGNE **********************************************************************************************/
+            case 'VAR[CAMPAGNE#annee]' :
+                $campagne = $variables['campagne'];
+                return $campagne->getAnnee();
+            case 'VAR[CAMPAGNE#debut]' :
+                $campagne = $variables['campagne'];
+                return $campagne->getDateDebut()->format('d/m/Y');
+            case 'VAR[CAMPAGNE#fin]' :
+                $campagne = $variables['campagne'];
+                return $campagne->getDateFin()->format('d/m/Y');
+        }
+        return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }
 }

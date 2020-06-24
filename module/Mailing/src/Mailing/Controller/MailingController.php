@@ -2,6 +2,8 @@
 
 namespace Mailing\Controller;
 
+use Mailing\Model\Db\MailType;
+use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Mailing\Model\Db\Mail;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
@@ -10,15 +12,21 @@ use Zend\View\Model\ViewModel;
 
 class MailingController extends AbstractActionController {
     use MailingServiceAwareTrait;
+    use MailTypeServiceAwareTrait;
     use UserServiceAwareTrait;
 
     public function indexAction()
     {
-        /** @var Mail[] $mails */
+        /**
+         * @var Mail[] $mails
+         * @var MailType[] $types
+         */
         $mails = $this->getMailingService()->getMails();
+        $types = $this->getMailTypeService()->getMailsTypes();
 
         return new ViewModel([
             'mails' => $mails,
+            'types' => $types,
         ]);
     }
 

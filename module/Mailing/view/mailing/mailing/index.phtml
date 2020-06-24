@@ -1,18 +1,16 @@
 <?php
 
 use Mailing\Model\Db\Mail;
+use Mailing\Model\Db\MailType;
 use Mailing\Provider\Privilege\MailingPrivileges;
 
 /**
+ * @see \Mailing\Controller\MailingController::indexAction()
  * @var Mail[] $mails
+ * @var MailType[] $types
  */
 
 $this->headTitle("Index des mails envoyées");
-
-$canTest        = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_TEST));
-$canAfficher    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER));
-$canReEnvoi     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_REENVOI));
-$canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_EFFACER));
 
 ?>
 
@@ -21,96 +19,66 @@ $canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivi
     Index des mails envoyées
 </h1>
 
-<div class="main">
 
-    <?php if ($canTest) : ?>
-    <a
-            href="<?php echo $this->url('mailing/mail-test', [], [] ,true);?>"
-            class="btn btn-primary action"
-    >
-        <i class="far fa-envelope"></i>
-        Envoie d'un mail de test
-    </a>
-    <?php endif; ?>
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="maillisting">
+            <a href="#maillisting" aria-controls="maillisting" role="tab" data-toggle="tabz">
+                Listing des mails
+            </a>
+        </li>
 
-    <table class="table table-extra-condensed">
-        <thead>
-            <tr>
-    <!--            <th> Id </th>-->
-                <th> Status </th>
-                <th> Date d'envoi </th>
-                <th> Destinataires </th>
-                <th> Redir </th>
-                <th> Sujet </th>
-                <th> Action </th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($mails as $mail) : ?>
-            <tr>
-    <!--            <td> --><?php //echo $mail->getId(); ?><!-- </td>-->
-                <td> <?php echo htmlStatus($mail->getStatusEnvoi()); ?> </td>
-                <td> <?php echo $mail->getDateEnvoi()->format("H:i:s d/m/Y"); ?> </td>
-                <td> <small><?php echo implode("<br/>",explode(",",$mail->getDestinatires())); ?></small> </td>
-                <td> <?php echo htmlRedirection($mail->isRedirection()); ?> </td>
-                <td> <small><?php echo $mail->getSujet(); ?> </small> </td>
-                <td>
-                    <?php if ($canAfficher) : ?>
-                        <a class="ajax-modal" href="<?php echo $this->url('mailing/afficher', ['id' => $mail->getId()], [], true); ?>">
-                            <i class="fas fa-eye"        title="Voir le mail"></i>
-                        </a>
-                    <?php endif; ?>
-                    <?php if ($canReEnvoi) : ?>
-                        <a  href="<?php echo $this->url('mailing/re-envoi', ['id' => $mail->getId()], [], true); ?>">
-                            <i class="far fa-envelope"   title="Envoyer à nouveau le mail"></i>
-                        </a>
-                    <?php endif; ?>
-                    <?php if ($canEffacer) : ?>
-                        <a  href="<?php echo $this->url('mailing/effacer', ['id' => $mail->getId()], [], true); ?>">
-                            <i class="fas fa-trash-alt"  title="Supprimer le mail de l'historique"></i>
-                        </a>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+        <li role="mailtype">
+            <a href="#mailtype" aria-controls="mailtype" role="tab" data-toggle="tabz">
+                Types de mails &nbsp;
+            </a>
+        </li>
+    </ul>
 
-<?php
-    function htmlStatus($status) {
-        switch ($status) {
-            case Mail::PENDING :
-                $text = '<span class="badge badge-warning"> PENDING </span>';
-                return $text;
-            case Mail::SUCCESS :
-                $text = '<span class="badge badge-success"> SUCCESS </span>';
-                return $text;
-            case Mail::FAILURE :
-                $text = '<span class="badge badge-danger"> FAILURE </span>';
-                return $text;
-            default :
-                $text = '<span class="badge"> FAILURE </span>';
-                return $text;
-        }
-    }
+        <div class="main-with-tab">
+            <div class="tab-content">
 
-    function htmlRedirection($redir) {
-        if ($redir === true) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
-        else return "";
-    }
-?>
+                <!-- listing ---------------------------------------------------------------------------------------------->
+                <div id="maillisting" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/liste-mail', ['mails' => $mails]); ?>
+                </div>
 
-<style>
-    .badge-warning {
-        background-color: #f89406;
-    }
+                <!-- type ---------------------------------------------------------------------------------------------->
+                <div id="mailtype" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/liste-type', ['types' => $types]); ?>
+                </div>
 
-    .badge-success {
-        background-color: #468847;
-    }
+            </div>
+        </div>
 
-    .badge-danger {
-        background-color: #b94a48;
-    }
-</style>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $('.datatable').DataTable( {
+            // sorting: false,
+            // paging: false,
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "metier";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

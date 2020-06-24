@@ -1,0 +1,30 @@
+<?php
+
+use Mailing\Model\Db\MailType;
+
+/**
+ * @var MailType $type
+ */
+
+?>
+
+<h2> Informations </h2>
+
+<dl>
+    <dt>Code</dt>
+    <dd> <?php echo $type->getCode(); ?> </dd>
+    <dt>Libellé</dt>
+    <dd> <?php echo $type->getLibelle(); ?> </dd>
+    <dt>Description</dt>
+    <dd> <?php echo $type->getDescription(); ?> </dd>
+</dl>
+
+<h2> Contenu </h2>
+
+<dl>
+    <dt> Sujet </dt>
+    <dd> <?php echo $type->getSujet(); ?> </dd>
+    <dt> Corps </dt>
+    <dd> <?php echo $type->getCorps(); ?> </dd>
+</dl>
+

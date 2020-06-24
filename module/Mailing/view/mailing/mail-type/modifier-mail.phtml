@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @var Form $form
+ */
+
+use Zend\Form\Form;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $('select').selectpicker();
+
+    let macros = [
+        {title: 'Date : aujourd\'hui', description: 'Date du jour (dd/mm/yyyy)', content: 'VAR[DATE#aujourdhui]'},
+        {title: 'Campagne : année', description: 'Année de la campagne d\'entretien professionnel', content: 'VAR[CAMPAGNE#annee]'},
+        {title: 'Campagne : début', description: 'Date de début de la campagne d\'entretien professionnel', content: 'VAR[CAMPAGNE#debut]'},
+        {title: 'Campagne : fin', description: 'Date de fin de la campagne d\'entretien professionnel', content: 'VAR[CAMPAGNE#fin]'},
+    ];
+
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.sujet',
+            toolbar: 'newdocument undo redo | template',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists template',
+            templates: macros,
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            body_id: 'motif',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    $('textarea#sujet').val(tinymce.get('sujet').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.corps',
+            toolbar: 'newdocument undo redo | bold italic | bullist | template',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists template',
+            templates: macros,
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            body_id: 'motif',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    $('textarea#corps').val(tinymce.get('corps').getContent());
+                });
+            }
+        });
+    });
+</script>
