@@ -17,6 +17,7 @@ use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Doctrine\ORM\ORMException;
+use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -34,6 +35,7 @@ class EntretienProfessionnelController extends AbstractActionController {
     use ConfigurationServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use EntretienProfessionnelCampagneServiceAwareTrait;
+    use MailingServiceAwareTrait;
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
@@ -91,12 +93,14 @@ class EntretienProfessionnelController extends AbstractActionController {
                 $this->getEntretienProfessionnelService()->create($entretien);
 
                 $previous = $this->getEntretienProfessionnelService()->getPreviousEntretienProfessionnel($entretien);
-                $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
-                foreach ($recopies as $recopie) {
-                    $splits = explode(";",$recopie->getValeur());
-                    $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
+                if ($previous) {
+                    $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
+                    foreach ($recopies as $recopie) {
+                        $splits = explode(";", $recopie->getValeur());
+                        $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
+                    }
                 }
-
+                $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
                 return $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true);
             }
         }
@@ -129,8 +133,8 @@ class EntretienProfessionnelController extends AbstractActionController {
         $form->bind($entretien);
 
         //TODO reduire les selects et recherches à l'aide de la structure
+        $form->get('responsable')->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-gestionnaire', ['structure' => $structure->getId()], [], true));
 
-        //TODO retour
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -146,11 +150,14 @@ class EntretienProfessionnelController extends AbstractActionController {
                 $this->getEntretienProfessionnelService()->create($entretien);
 
                 $previous = $this->getEntretienProfessionnelService()->getPreviousEntretienProfessionnel($entretien);
-                $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
-                foreach ($recopies as $recopie) {
-                    $splits = explode(";",$recopie->getValeur());
-                    $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
+                if ($previous) {
+                    $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
+                    foreach ($recopies as $recopie) {
+                        $splits = explode(";", $recopie->getValeur());
+                        $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
+                    }
                 }
+                $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
             }
         }
 
@@ -252,7 +259,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         return $vm;
     }
 
-    /** Validation élement associée à l'agent *************************************************************************/
+    /** Validation élément associée à l'agent *************************************************************************/
 
     public function validerElementAction()
     {
@@ -351,7 +358,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         try {
             $exporter->getMpdf()->SetTitle("Entretien professionnel de " . $agent . " du " . $entretien->getDateEntretien()->format("d/m/Y"));
         } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0 , $e);
+            throw new RuntimeException("Un problème est survenu lors du changement de titre par MPDF.", 0 , $e);
         }
         $exporter->export($filemane);
         exit;
@@ -362,7 +369,7 @@ class EntretienProfessionnelController extends AbstractActionController {
     public function ajouterCampagneAction()
     {
         $campagne = new EntretienProfessionnelCampagne();
-        //TODO set date par defaut
+        $campagne->setAnnee($this->getAnneeScolaire());
 
         $form = $this->getEntretienProfessionnelCampagneForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/ajouter', [], [], true));
@@ -374,6 +381,8 @@ class EntretienProfessionnelController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getEntretienProfessionnelCampagneService()->create($campagne);
+                $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_DAC", ['campagne' => $campagne, 'mailing' => 'ZZZcentrale-liste@unicaen.fr']);
+                $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_BIATSS", ['campagne' => $campagne, 'mailing' => 'ZZZunicaen-biats@unicaen.fr']);
             }
         }
 

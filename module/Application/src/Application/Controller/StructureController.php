@@ -15,6 +15,7 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwa
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
@@ -215,6 +216,27 @@ class StructureController extends AbstractActionController {
         exit;
     }
 
+    public function rechercherGestionnaireAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $users = [];
+
+        $term = $this->params()->fromQuery('term');
+        if ($term) {
+            foreach ($structures as $s) {
+                $gestionnaires = $s->getGestionnaires();
+                foreach ($gestionnaires as $gestionnaire) {
+                    if (strpos($gestionnaire->getDisplayName(), $term) !== false) $users[$gestionnaire->getId()] = $gestionnaire;
+                }
+            }
+            $result = $this->formatUtilisateurJSON($users);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
     /**
      * @param Structure[] $structures
      * @return array
@@ -227,6 +249,26 @@ class StructureController extends AbstractActionController {
                 'id'    => $structure->getId(),
                 'label' => $structure->getLibelleLong(),
                 'extra' => "<span class='badge' style='background-color: slategray;'>".$structure->getLibelleCourt()."</span>",
+            );
+        }
+        usort($result, function($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
+    /**
+     * @param User[] $users
+     * @return array
+     */
+    private function formatUtilisateurJSON($users)
+    {
+        $result = [];
+        foreach ($users as $user) {
+            $result[] = array(
+                'id'    => $user->getId(),
+                'label' => $user->getDisplayName(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>".$user->getEmail()."</span>",
             );
         }
         usort($result, function($a, $b) {

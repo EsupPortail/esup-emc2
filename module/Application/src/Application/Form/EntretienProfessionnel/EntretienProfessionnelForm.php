@@ -2,14 +2,19 @@
 
 namespace Application\Form\EntretienProfessionnel;
 
+use Application\Entity\Db\EntretienProfessionnel;
+use Application\Entity\Db\Structure;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
+use DateInterval;
 use DateTime;
 use UnicaenApp\Form\Element\Date;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenPrivilege\Entity\Db\Privilege;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
+use Zend\Validator\Callback;
 
 class EntretienProfessionnelForm extends Form {
     use EntretienProfessionnelCampagneServiceAwareTrait;
@@ -119,7 +124,45 @@ class EntretienProfessionnelForm extends Form {
             'responsable'       => [ 'required' => true,  ],
             'agent'             => [ 'required' => true,  ],
             'campagne'          => [ 'required' => true,  ],
-            'date_entretien'    => [ 'required' => true,  ],
+            'date_entretien'    => [
+                'required' => true,
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "L'entretien doit être conduit durant la campagne",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                /** @var EntretienProfessionnel $entretien */
+                                $entretien = $this->getObject();
+                                $campagne = $entretien->getCampagne();
+                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
+                                $res =  ($campagne->getDateDebut() <= $date AND $campagne->getDateFin() >= $date);
+                                return $res;
+                            },
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "L'entretien doit être conduit au minimum 15 jours après l'envoi de la convocation",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                /** @var EntretienProfessionnel $entretien */
+                                $maintenant = new DateTime();
+                                $maintenant = $maintenant->add(new DateInterval('P14D'));
+                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
+                                $res =  ($maintenant <= $date);
+                                return $res;
+                            },
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
+            ],
         ]));
     }
 }

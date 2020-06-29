@@ -12,6 +12,31 @@ $canAfficher    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivi
 $canReEnvoi     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_REENVOI));
 $canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_EFFACER));
 
+
+function htmlStatus($status)
+{
+    switch ($status) {
+        case Mail::PENDING :
+            $text = '<span class="badge badge-warning"> PENDING </span>';
+            return $text;
+        case Mail::SUCCESS :
+            $text = '<span class="badge badge-success"> SUCCESS </span>';
+            return $text;
+        case Mail::FAILURE :
+            $text = '<span class="badge badge-danger"> FAILURE </span>';
+            return $text;
+        default :
+            $text = '<span class="badge"> FAILURE </span>';
+            return $text;
+    }
+}
+
+function htmlRedirection($redir)
+{
+    if ($redir === true) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
+    else return "";
+}
+
 ?>
 
 <?php if ($canTest) : ?>

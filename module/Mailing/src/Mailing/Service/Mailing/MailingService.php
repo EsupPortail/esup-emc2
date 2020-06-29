@@ -2,6 +2,7 @@
 
 namespace Mailing\Service\Mailing;
 
+use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\EntretienProfessionnelCampagne;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -19,7 +20,8 @@ use Zend\Mime\Mime;
 use Zend\Mime\Part;
 use Zend\View\Renderer\PhpRenderer;
 
-class MailingService {
+class MailingService
+{
     use EntityManagerAwareTrait;
     use MailTypeServiceAwareTrait;
     use DateTimeAwareTrait;
@@ -34,9 +36,9 @@ class MailingService {
 
     public function __construct(TransportInterface $transport, $redirectTo, $doNotSend)
     {
-        $this->transport    = $transport;
-        $this->redirectTo   = $redirectTo;
-        $this->doNotSend    = $doNotSend;
+        $this->transport = $transport;
+        $this->redirectTo = $redirectTo;
+        $this->doNotSend = $doNotSend;
     }
 
     /**
@@ -44,15 +46,16 @@ class MailingService {
      */
     public function reEnvoi($mail)
     {
-        $this->sendMail(explode(",",$mail->getDestinatires()), $mail->getSujet(), $mail->getCorps());
+        $this->sendMail(explode(",", $mail->getDestinatires()), $mail->getSujet(), $mail->getCorps());
     }
 
-    public function sendMail($to, $subject, $texte, $attachement_path = null) {
+    public function sendMail($to, $subject, $texte, $attachement_path = null)
+    {
 //        return true;
 
         $message = (new Message())->setEncoding('UTF-8');
-        $message->setFrom('ne-pas-repondre@unicaen.fr', "Catalogue de services");
-        if (!is_array($to)) $to = [ $to ];
+        $message->setFrom('ne-pas-repondre@unicaen.fr', "PrEECoG");
+        if (!is_array($to)) $to = [$to];
         if ($this->doNotSend) {
             $message->addTo($this->redirectTo);
         } else {
@@ -63,27 +66,27 @@ class MailingService {
         $mail = new Mail();
         $mail->setDateEnvoi(new DateTime());
         $mail->setStatusEnvoi(Mail::PENDING);
-        $mail->setDestinatires(is_array($to)?implode(",",$to):$to);
+        $mail->setDestinatires(is_array($to) ? implode(",", $to) : $to);
         $mail->setRedir($this->doNotSend);
         $mail->setSujet($subject);
         $mail->setCorps($texte);
         $this->create($mail);
 
 
-        $sujet = '[catalogue-services] ' . $subject;
+        $sujet = '[PrEECoG] ' . $subject;
         if ($this->doNotSend) {
             $sujet .= ' {REDIR}';
         }
         $message->setSubject($sujet);
 
 
-        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par le catalogue de services. </i></p>" . $texte;
+        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application PrEECoG. </i></p>" . $texte;
 
         if ($this->doNotSend) {
             $texte .= "<br/><br/><hr/><br/>";
             $texte .= "Initialement envoyé à :";
             $texte .= "<ul>";
-            foreach ($to as $t) $texte .= "<li>".$t."</li>";
+            foreach ($to as $t) $texte .= "<li>" . $t . "</li>";
             $texte .= "</ul>";
 
         }
@@ -122,8 +125,7 @@ class MailingService {
     public function getMails()
     {
         $qb = $this->getEntityManager()->getRepository(Mail::class)->createQueryBuilder('mail')
-            ->orderBy('mail.id', 'DESC')
-        ;
+            ->orderBy('mail.id', 'DESC');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -137,8 +139,7 @@ class MailingService {
     {
         $qb = $this->getEntityManager()->getRepository(Mail::class)->createQueryBuilder('mail')
             ->andWhere('mail.id = :id')
-            ->setParameter('id', $mailId)
-        ;
+            ->setParameter('id', $mailId);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -153,7 +154,8 @@ class MailingService {
      * @param Mail $mail
      * @return Mail
      */
-    public function create($mail) {
+    public function create($mail)
+    {
         try {
             $this->getEntityManager()->persist($mail);
             $this->getEntityManager()->flush($mail);
@@ -167,7 +169,8 @@ class MailingService {
      * @param Mail $mail
      * @return Mail
      */
-    public function update($mail) {
+    public function update($mail)
+    {
         try {
             $this->getEntityManager()->flush($mail);
         } catch (ORMException $e) {
@@ -211,7 +214,7 @@ class MailingService {
     {
         $mailtype = $this->getMailTypeService()->getMailTypeByCode($code);
         if ($mailtype === null) {
-            throw new RuntimeException("Le mail type [".$code."] n'existe pas !",0, null);
+            throw new RuntimeException("Le mail type [" . $code . "] n'existe pas !", 0, null);
         }
 
         if ($mailtype->isActif()) {
@@ -222,15 +225,20 @@ class MailingService {
             $corps = $mailtype->getCorps();
             $corps = $this->replaceMacros($corps, $variables);
 
-            /** @var User $user */
-            $destinataire = $variables['user'];
             $mails = [];
-            if (is_array($destinataire)) {
-                foreach ($destinataire as $user) {
-                    $mails[] = $user->getEmail();
+
+            if (isset($variables['mailing']) and $variables['mailing'] !== "") $mails[] = $variables['mailing'];
+
+            if (isset($variables['user'])) {
+                /** @var User $user */
+                $destinataire = $variables['user'];
+                if (is_array($destinataire)) {
+                    foreach ($destinataire as $user) {
+                        $mails[] = $user->getEmail();
+                    }
+                } else {
+                    $mails[] = $destinataire->getEmail();
                 }
-            } else {
-                $mails[] = $destinataire->getEmail();
             }
 
             $this->sendMail($mails, $sujet, $corps);
@@ -266,14 +274,19 @@ class MailingService {
     {
         /**
          * @var EntretienProfessionnelCampagne $campagne
+         * @var EntretienProfessionnel $entretien
          */
 
-        //TODO améliorant en récuperant le entre [] et puis en splittant avec # et tester récupération ou non de l'object ...
+        //TODO améliorant en récupérant le entre [] et puis en splittant avec # et tester récupération ou non de l'object ...
         switch ($identifier) {
             /** DATE **************************************************************************************************/
             case 'VAR[DATE#aujourdhui]' :
                 $date = $this->getDateTime()->format('d/m/Y');
                 return $date;
+            /** APPLICATION *******************************************************************************************/
+            case 'VAR[PREECOG#lien]' :
+                $lien = '<a href="' . 'https://preecog.unicaen.fr' . '">PrEECoG</a>';
+                return $lien;
             /** CAMPAGNE **********************************************************************************************/
             case 'VAR[CAMPAGNE#annee]' :
                 $campagne = $variables['campagne'];
@@ -284,6 +297,17 @@ class MailingService {
             case 'VAR[CAMPAGNE#fin]' :
                 $campagne = $variables['campagne'];
                 return $campagne->getDateFin()->format('d/m/Y');
+            /** ENTRETIEN *********************************************************************************************/
+//                {title: 'Entretien : date', description: 'Date de l\'entretien', content: 'VAR[ENTRETIEN#date]'},
+            case 'VAR[ENTRETIEN#agent]' :
+                $entretien = $variables['entretien'];
+                return $entretien->getAgent()->getDenomination();
+            case 'VAR[ENTRETIEN#responsable]' :
+                $entretien = $variables['entretien'];
+                return $entretien->getResponsable()->getDisplayName();
+            case 'VAR[ENTRETIEN#date]' :
+                $entretien = $variables['entretien'];
+                return $entretien->getDateEntretien()->format('d/m/Y');
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

@@ -12,6 +12,7 @@ use Application\Service\Structure\StructureService;
 use Autoform\Service\Formulaire\FormulaireInstanceService;
 use Autoform\Service\Formulaire\FormulaireService;
 use Interop\Container\ContainerInterface;
+use Mailing\Service\Mailing\MailingService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -29,6 +30,7 @@ class EntretienProfessionnelControllerFactory {
          * @var EntretienProfessionnelCampagneService $entretienProfesionnelCampagneService
          * @var FormulaireService $formulaireService
          * @var FormulaireInstanceService $formulaireInstanceService
+         * @var MailingService $mailingService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
@@ -40,6 +42,7 @@ class EntretienProfessionnelControllerFactory {
         $entretienProfesionnelCampagneService = $container->get(EntretienProfessionnelCampagneService::class);
         $formulaireService = $container->get(FormulaireService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
+        $mailingService = $container->get(MailingService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
@@ -66,6 +69,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
         $controller->setFormulaireService($formulaireService);
+        $controller->setMailingService($mailingService);
         $controller->setStructureService($structureService);
         $controller->setEntretienProfessionnelForm($entretienProfessionnelForm);
         $controller->setEntretienProfessionnelCampagneForm($campagneForm);

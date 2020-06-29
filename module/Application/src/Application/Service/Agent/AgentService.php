@@ -269,14 +269,18 @@ class AgentService {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->addSelect('grade')->join('agent.grades', 'grade')
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('ggrade')->join('grade.grade', 'ggrade')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
-            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-//            ->andWhere('statut.titulaire = :true OR statut.cdi = :true')
+            ->andWhere('statut.dispo = :false')
             ->andWhere('statut.administratif = :true')
+            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
+            ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
+            ->andWhere('affectation.principale = :true')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
+            ->setParameter('false', 'N')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
 
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
@@ -284,7 +288,7 @@ class AgentService {
         ;
 
         if ($structures !== null) {
-            $qb = $qb->andWhere('grade.structure IN (:structures)')
+            $qb = $qb->andWhere('affectation.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
 
