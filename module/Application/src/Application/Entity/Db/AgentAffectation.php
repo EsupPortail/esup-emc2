@@ -3,8 +3,10 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 
 class AgentAffectation {
+    use DateTimeAwareTrait;
 
     /** @var integer */
     private $id;
@@ -75,6 +77,16 @@ class AgentAffectation {
     public function isPrincipale()
     {
         return ($this->principale === 'O');
+    }
+
+    /**
+     * @param DateTime $date
+     * @return bool
+     */
+    public function isActive($date = null)
+    {
+        if ($date === null) $date = $this->getDateTime();
+        return ($this->dateDebut <= $date AND ($this->dateFin === null OR $this->dateFin >= $date));
     }
 
 

@@ -19,13 +19,6 @@ $canDetruireEntretienPro     = $droits['detruire'];
 
 <h2>
     Entretiens professionnels
-<!--    --><?php //if ($canAjouterEntretienPro) : ?>
-<!--        <a-->
-<!--            --><?php ///** @see \Application\Controller\EntretienProfessionnelController::creerAction() */?>
-<!--            href="--><?php //echo $this->url('entretien-professionnel/creer', [], ['query' => ['agent' => $agent->getId()]], true); ?><!--" class="ajax-modal" data-event="modification">-->
-<!--            <span class="icon ajouter" title="Ajouter un entretien professionnel pour l'agent"></span>-->
-<!--        </a>-->
-<!--    --><?php //endif; ?>
 </h2>
 
 <table class="table table-condensed">
@@ -85,8 +78,8 @@ $canDetruireEntretienPro     = $droits['detruire'];
                 <?php endif; ?>
 
                 <?php if ($canModifierEntretienPro AND $entretien->getValidationResponsable() === null) : ?>
-                    <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
+                    <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::renseignerAction() */?>
+                        href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
                         target="_blank"
                     >
                         <span class="icon editer" title="Modifier l'entretien professionnel"></span></a>

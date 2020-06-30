@@ -20,6 +20,7 @@ use Doctrine\ORM\ORMException;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
@@ -65,18 +66,36 @@ class EntretienProfessionnelController extends AbstractActionController {
         ]);
     }
 
+    // TODO creerAction et ajouterAction font quasi la même chose penser à factoriser
+
     public function creerAction()
     {
-        $agentId = $this->params()->fromQuery('agent');
-        $agent = $this->getAgentService()->getAgent($agentId);
+        // From route
+        $campagne = $this->getEntretienProfessionnelCampagneService()->getRequestedEntretienProfessionnelCampagne($this);
 
-        $entretien = new EntretienProfessionnel();
-        if ($agent) $entretien->setAgent($agent);
+        // From Query
+        $agentId = $this->params()->fromQuery('agent');
+        $agent = ($agentId)?$this->getAgentService()->getAgent($agentId):null;
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = ($structureId)?$this->getStructureService()->getStructure($structureId):null;
+
+        // ne pas dupliquer les entretiens
+        $entretien = null;
+        if ($campagne !== null AND $agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
+        if ($entretien === null) $entretien = new EntretienProfessionnel();
+        if ($campagne !== null) $entretien->setCampagne($campagne);
+        if ($agent !== null) $entretien->setAgent($agent);
 
         /** @var EntretienProfessionnelForm $form */
         $form = $this->getEntretienProfessionnelForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', [], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
         $form->bind($entretien);
+
+        if ($structure !== null) {
+            /** @var SearchAndSelect $element */
+            $element = $form->get('responsable');
+            $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-gestionnaires', ['structure' => $structure->getId()], [], true));
+        }
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -86,6 +105,7 @@ class EntretienProfessionnelController extends AbstractActionController {
             if ($form->isValid()) {
                 /** Creation de l'instance de formulaire **/
                 $instance = new FormulaireInstance();
+                //TODO ne plus avoir '1'
                 $formulaire = $this->getFormulaireService()->getFormulaire(1);
                 $instance->setFormulaire($formulaire);
                 $this->getFormulaireInstanceService()->create($instance);
@@ -101,39 +121,35 @@ class EntretienProfessionnelController extends AbstractActionController {
                     }
                 }
                 $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
-                return $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true);
+//                return $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true);
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Création d\'un nouvel entretien professionnel',
+            'title' => 'Ajout d\'un nouvel entretien professionnel',
             'form'  => $form,
         ]);
         return $vm;
     }
 
-    public function ajouterAction()
+    public function modifierAction()
     {
-        $campagne = $this->getEntretienProfessionnelCampagneService()->getRequestedEntretienProfessionnelCampagne($this);
-        $agentId = $this->params()->fromQuery('agent');
-        $agent = ($agentId)?$this->getAgentService()->getAgent($agentId):null;
-        $structureId = $this->params()->fromQuery('structure');
-        $structure = ($structureId)?$this->getStructureService()->getStructure($structureId):null;
-
-        $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
-        if ($entretien === null) $entretien = new EntretienProfessionnel();
-        $entretien->setCampagne($campagne);
-        $entretien->setAgent($agent);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        $agent = $entretien->getAgent();
+        if ($structure === null) $structure = $agent->getAffectationPrincipale()->getStructure();
 
         /** @var EntretienProfessionnelForm $form */
         $form = $this->getEntretienProfessionnelForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/ajouter', ['campagne' => $campagne->getId()], ["query" => ["structure" => $structureId, "agent" => $agentId]], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/modifier-parametre', ['entretien' => $entretien->getId()], [], true));
         $form->bind($entretien);
-
-        //TODO reduire les selects et recherches à l'aide de la structure
-        $form->get('responsable')->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-gestionnaire', ['structure' => $structure->getId()], [], true));
+        /** @var SearchAndSelect $element */
+        $element = $form->get('responsable');
+        $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-gestionnaires', ['structure' => $structure->getId()], [], true));
+        $element = $form->get('agent');
+        $element->setAttribute('readonly', true);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -141,30 +157,14 @@ class EntretienProfessionnelController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                //TODO dans le service ...
-                $instance = new FormulaireInstance();
-                $formulaire = $this->getFormulaireService()->getFormulaire(1);
-                $instance->setFormulaire($formulaire);
-                $this->getFormulaireInstanceService()->create($instance);
-                $entretien->setFormulaireInstance($instance);
-                $this->getEntretienProfessionnelService()->create($entretien);
-
-                $previous = $this->getEntretienProfessionnelService()->getPreviousEntretienProfessionnel($entretien);
-                if ($previous) {
-                    $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
-                    foreach ($recopies as $recopie) {
-                        $splits = explode(";", $recopie->getValeur());
-                        $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
-                    }
-                }
-                $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
+                $this->getEntretienProfessionnelService()->update($entretien);
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Ajout d\'un entretien professionnel professionnel',
+            'title' => 'Modification d\'un entretien professionnel professionnel',
             'form'  => $form,
         ]);
         return $vm;
@@ -198,7 +198,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         ]);
     }
 
-    public function modifierAction()
+    public function renseignerAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
 

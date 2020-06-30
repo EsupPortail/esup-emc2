@@ -3,13 +3,11 @@
 namespace Application\Form\EntretienProfessionnel;
 
 use Application\Entity\Db\EntretienProfessionnel;
-use Application\Entity\Db\Structure;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use UnicaenApp\Form\Element\Date;
 use UnicaenApp\Form\Element\SearchAndSelect;
-use UnicaenPrivilege\Entity\Db\Privilege;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;

@@ -48,7 +48,7 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'creer',
-                        'ajouter',
+                        'modifier',
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
@@ -57,7 +57,7 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
-                        'modifier',
+                        'renseigner',
                         'valider-element',
                         'revoquer-validation',
                     ],
@@ -143,14 +143,14 @@ return [
                             ],
                         ],
                     ],
-                    'ajouter' => [
+                    'modifier' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/ajouter/:campagne',
+                            'route'    => '/modifier/:entretien[/:structure]',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'ajouter',
+                                'action'     => 'modifier',
                             ],
                         ],
                     ],
@@ -176,14 +176,14 @@ return [
                             ],
                         ],
                     ],
-                    'modifier' => [
+                    'renseigner' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/modifier/:entretien',
+                            'route'    => '/renseigner/:entretien',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'modifier',
+                                'action'     => 'renseigner',
                             ],
                         ],
                     ],

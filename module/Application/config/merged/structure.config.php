@@ -54,6 +54,7 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'rechercher',
+                        'rechercher-gestionnaires',
                         'rechercher-with-structure-mere',
                         'graphe',
                     ],
@@ -190,6 +191,17 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'rechercher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'rechercher-gestionnaires' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/rechercher-gestionnaires/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'rechercher-gestionnaires',
                             ],
                         ],
                         'may_terminate' => true,

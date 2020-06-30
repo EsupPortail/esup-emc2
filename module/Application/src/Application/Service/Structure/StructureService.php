@@ -228,4 +228,35 @@ class StructureService
         if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $user);
         return false;
     }
+
+    /**
+     * @param Structure $structure
+     * @param bool $filles
+     * @return User[]
+     */
+    public function getGestionnairesByStructure(Structure $structure, $filles = true) {
+        $gestionnaires = [];
+        $vue = [];
+
+        $structures = [];
+        $structures[] = $structure;
+        $vue[$structure->getId()] = true;
+
+        while (! empty($structures)) {
+            $current = array_shift($structures);
+            foreach ($current->getGestionnaires() as $gestionnaire) {
+                $gestionnaires[$gestionnaire->getId()] = $gestionnaire;
+            }
+            if ($filles) {
+                foreach ($current->getEnfants() as $enfant) {
+                    if ($vue[$enfant->getId()] !== true) {
+                        $structures[] = $enfant;
+                        $vue[$enfant->getId()] = true;
+                    }
+                }
+            }
+        }
+        return $gestionnaires;
+    }
+
 }

@@ -69,8 +69,8 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
                 <?php if ($canModifier) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
+                        <?php /** @see \Application\Controller\EntretienProfessionnelController::renseignerAction() */?>
+                        href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
                     >
                         <span class="icon editer" title="Modifier le compte-rendu de l'entretien professionnel"></span></a>
                 <?php endif; ?>

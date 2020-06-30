@@ -10,7 +10,8 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Agent implements ResourceInterface{
+class Agent implements ResourceInterface
+{
     use ImportableAwareTrait;
     use AgentServiceAwareTrait;
     use DateTimeAwareTrait;
@@ -33,11 +34,11 @@ class Agent implements ResourceInterface{
     /** @var int */
     private $quotite;
 
-    /** @var ArrayCollection (AgentAffectation)  */
+    /** @var ArrayCollection (AgentAffectation) */
     private $affectations;
     /** @var ArrayCollection (AgentGrade) */
     private $grades;
-    /** @var ArrayCollection (AgentStatut)*/
+    /** @var ArrayCollection (AgentStatut) */
     private $statuts;
 
     /** @var ArrayCollection (FichePoste) */
@@ -98,7 +99,7 @@ class Agent implements ResourceInterface{
      */
     public function getDenomination()
     {
-        return ucwords(strtolower($this->getPrenom()), "-").' '.$this->getNomUsuel();
+        return ucwords(strtolower($this->getPrenom()), "-") . ' ' . $this->getNomUsuel();
 
     }
 
@@ -111,6 +112,21 @@ class Agent implements ResourceInterface{
     }
 
     /**
+     * @return AgentAffectation
+     */
+    public function getAffectationPrincipale()
+    {
+        $structure = null;
+        /** @var AgentAffectation $affectation */
+        foreach ($this->affectations as $affectation) {
+            if ($affectation->isPrincipale() and $affectation->isActive()) {
+                return $affectation;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return AgentAffectation[]
      */
     public function getAffectationsActifs()
@@ -120,7 +136,7 @@ class Agent implements ResourceInterface{
         $affectations = [];
         /** @var AgentAffectation $affectation */
         foreach ($this->affectations as $affectation) {
-            if ($affectation->getDateDebut() <= $date AND $affectation->getDateFin() >= $date) $affectations[] = $affectation;
+            if ($affectation->isActive()) $affectations[] = $affectation;
         }
         return $affectations;
     }
@@ -128,37 +144,41 @@ class Agent implements ResourceInterface{
     /**
      * @return AgentStatut[]
      */
-    public function getStatuts() {
+    public function getStatuts()
+    {
         return $this->statuts->toArray();
     }
 
     /**
      * @return AgentStatut[]
      */
-    public function getStatutsActifs() {
+    public function getStatutsActifs()
+    {
         $now = $this->getDateTime();
         $statuts = [];
         /** @var AgentStatut $statut */
         foreach ($this->statuts as $statut) {
-            if ($statut->getFin() === null OR $statut->getFin() > $now) $statuts[] = $statut;
+            if ($statut->getFin() === null or $statut->getFin() > $now) $statuts[] = $statut;
         }
         return $statuts;
     }
 
     /** @return AgentGrade[] */
-    public function getGrades() {
+    public function getGrades()
+    {
         return $this->grades->toArray();
     }
 
     /**
      * @return AgentGrade[]
      */
-    public function getGradesActifs() {
+    public function getGradesActifs()
+    {
         $now = $this->getDateTime();
         $grades = [];
         /** @var AgentGrade $grade */
         foreach ($this->grades as $grade) {
-            if ($grade->getDateFin() === null OR $grade->getDateFin() > $now) $grades[] = $grade;
+            if ($grade->getDateFin() === null or $grade->getDateFin() > $now) $grades[] = $grade;
         }
         return $grades;
     }
@@ -262,7 +282,9 @@ class Agent implements ResourceInterface{
     public function fetchFiles($nature)
     {
         $fichiers = $this->getFichiers();
-        $fichiers = array_filter($fichiers, function (Fichier $f) use ($nature) { return ($f->getHistoDestruction() === null && $f->getNature()->getCode() === $nature);});
+        $fichiers = array_filter($fichiers, function (Fichier $f) use ($nature) {
+            return ($f->getHistoDestruction() === null && $f->getNature()->getCode() === $nature);
+        });
 
         return $fichiers;
     }
@@ -272,7 +294,8 @@ class Agent implements ResourceInterface{
     /**
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnels() {
+    public function getEntretiensProfessionnels()
+    {
         $entretiens = [];
         /** @var EntretienProfessionnel $entretien */
         foreach ($this->entretiens as $entretien) {
@@ -287,18 +310,19 @@ class Agent implements ResourceInterface{
      * @return MissionSpecifique[]
      */
     /** @return AgentMissionSpecifique[] */
-    public function getMissionsSpecifiques() {
+    public function getMissionsSpecifiques()
+    {
         $missions = [];
         /** @var AgentMissionSpecifique $mission */
         foreach ($this->missionsSpecifiques as $mission) {
 //            if ($mission->estNonHistorise())
-                $missions[] = $mission;
+            $missions[] = $mission;
         }
-        usort($missions, function(AgentMissionSpecifique $a, AgentMissionSpecifique $b) {
-            $aDebut = ($a->getDateDebut())?$a->getDateDebut()->format('Y-m-d'):"---";
-            $aFin = ($a->getDateFin())?$a->getDateFin()->format('Y-m-d'):"---";
-            $bDebut = ($b->getDateDebut())?$b->getDateDebut()->format('Y-m-d'):"---";
-            $bFin = ($b->getDateFin())?$b->getDateFin()->format('Y-m-d'):"---";
+        usort($missions, function (AgentMissionSpecifique $a, AgentMissionSpecifique $b) {
+            $aDebut = ($a->getDateDebut()) ? $a->getDateDebut()->format('Y-m-d') : "---";
+            $aFin = ($a->getDateFin()) ? $a->getDateFin()->format('Y-m-d') : "---";
+            $bDebut = ($b->getDateDebut()) ? $b->getDateDebut()->format('Y-m-d') : "---";
+            $bFin = ($b->getDateFin()) ? $b->getDateFin()->format('Y-m-d') : "---";
             if ($aDebut !== $bDebut) return $aDebut > $bDebut;
             return $aFin > $bFin;
         });
@@ -308,7 +332,8 @@ class Agent implements ResourceInterface{
     /** APPLICATIONS, COMPETENCES ET FORMATIONS ***********************************************************************/
 
     /** @return AgentApplication[] */
-    public function getApplications() {
+    public function getApplications()
+    {
         $applications = [];
         /** @var AgentApplication $application */
         foreach ($this->applications as $application) {
@@ -318,7 +343,8 @@ class Agent implements ResourceInterface{
     }
 
     /** @return AgentCompetence[] */
-    public function getCompetences() {
+    public function getCompetences()
+    {
         $competences = [];
         /** @var AgentCompetence $competence */
         foreach ($this->competences as $competence) {
@@ -328,7 +354,8 @@ class Agent implements ResourceInterface{
     }
 
     /** @return AgentFormation[] */
-    public function getFormations() {
+    public function getFormations()
+    {
         $formations = [];
         /** @var AgentCompetence $formation */
         foreach ($this->formations as $formation) {
@@ -348,11 +375,11 @@ class Agent implements ResourceInterface{
         $fiches = [];
         /** @var FichePoste $fiche */
         foreach ($this->fiches as $fiche) {
-            if ($fiche->getHistoCreation() <= $now AND $fiche->estNonHistorise($now)) {
+            if ($fiche->getHistoCreation() <= $now and $fiche->estNonHistorise($now)) {
                 $fiches[] = $fiche;
             }
         }
-        if (count($fiches) > 1 ) throw new RuntimeException("Un agent a plus d'une fiche de poste active", 0 , null);
+        if (count($fiches) > 1) throw new RuntimeException("Un agent a plus d'une fiche de poste active", 0, null);
         if (empty($fiches)) return null;
         return $fiches[0];
     }
@@ -363,6 +390,6 @@ class Agent implements ResourceInterface{
     public function getPosteActif()
     {
         $fiche = $this->getFichePosteActif();
-        return ($fiche)?$fiche->getPoste():null;
+        return ($fiche) ? $fiche->getPoste() : null;
     }
 }

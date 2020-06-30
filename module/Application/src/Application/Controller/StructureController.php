@@ -216,22 +216,23 @@ class StructureController extends AbstractActionController {
         exit;
     }
 
-    public function rechercherGestionnaireAction()
+    /**
+     * @return JsonModel
+     */
+    public function rechercherGestionnairesAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $users = [];
+        $users = $this->getStructureService()->getGestionnairesByStructure($structure);
+        $selected = [];
 
         $term = $this->params()->fromQuery('term');
         if ($term) {
-            foreach ($structures as $s) {
-                $gestionnaires = $s->getGestionnaires();
-                foreach ($gestionnaires as $gestionnaire) {
-                    if (strpos($gestionnaire->getDisplayName(), $term) !== false) $users[$gestionnaire->getId()] = $gestionnaire;
-                }
+            $term = strtolower($term);
+            foreach ($users as $user) {
+                if (strpos(strtolower($user->getDisplayName()), $term) !== false) $selected[] = $user;
             }
-            $result = $this->formatUtilisateurJSON($users);
+            $result = $this->formatUtilisateurJSON($selected);
             return new JsonModel($result);
         }
         exit;
