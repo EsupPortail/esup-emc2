@@ -14,6 +14,7 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
 use Application\View\Helper\ApplicationBlocViewHelper;
+use Application\View\Helper\FicheMetierEtatViewHelper;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FicheMetierViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
@@ -349,6 +350,7 @@ return [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
             'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
+            'ficheMetierEtat' => FicheMetierEtatViewHelper::class,
             'ficheMetier'  => FicheMetierViewHelper::class,
             'applicationBloc' => ApplicationBlocViewHelper::class,
         ],

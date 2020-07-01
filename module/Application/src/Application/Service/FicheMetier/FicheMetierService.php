@@ -7,6 +7,7 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierEtat;
 use Application\Entity\Db\Formation;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
@@ -15,6 +16,7 @@ use Application\Service\GestionEntiteHistorisationTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractController;
 
@@ -82,17 +84,44 @@ class FicheMetierService {
     /** REQUETAGE *****************************************************************************************************/
 
     /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+            ->addSelect('metier')->join('ficheMetier.metier', 'metier')
+            ->addSelect('domaine')->join('metier.domaines', 'domaine')
+            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
+            ;
+        return $qb;
+    }
+
+    /**
      * @param string $order an attribute use to sort
      * @return FicheMetier[]
      */
     public function getFichesMetiers($order = 'id')
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
-            ->addSelect('metier')->join('ficheMetier.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaines', 'domaine')
+       $qb = $this->createQueryBuilder()
 //            ->addSelect('application')->leftJoin('ficheMetier.applications', 'application')
 //            ->addSelect('formation')->leftJoin('ficheMetier.formations', 'formation')
 //            ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
+            ->orderBy('ficheMetier.', $order)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param string $order an attribute use to sort
+     * @return FicheMetier[]
+     */
+    public function getFichesMetiersValides($order = 'id')
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('etat.code = :code')
+            ->setParameter('code', FicheMetierEtat::CODE_VALIDE)
             ->orderBy('ficheMetier.', $order)
         ;
 

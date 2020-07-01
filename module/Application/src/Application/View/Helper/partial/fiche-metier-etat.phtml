@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @var FicheMetier $fiche
+ */
+
+use Application\Entity\Db\FicheMetier;
+
+?>
+
+<span class="label <?php echo $fiche->getEtat()->getCode(); ?>">
+    <?php echo $fiche->getEtat()->getLibelle(); ?>
+</span>
+
+<style>
+    span.label.REDACTION {
+        background-color: darkorange;
+    }
+
+    span.label.VALIDE {
+        background-color: darkgreen;
+    }
+
+    span.label.SECRET {
+        background-color: hotpink;
+    }
+</style>

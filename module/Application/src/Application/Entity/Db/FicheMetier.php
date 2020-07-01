@@ -15,7 +15,8 @@ class FicheMetier implements HistoriqueAwareInterface {
     private $metier;
     /** @var boolean */
     private $hasExpertise;
-
+    /** @var FicheMetierEtat */
+    private $etat;
 
     /** @var ArrayCollection */
     private $activites;
@@ -77,6 +78,22 @@ class FicheMetier implements HistoriqueAwareInterface {
     public function setExpertise(bool $has) {
         $this->hasExpertise = $has;
         return $this;
+    }
+
+    /**
+     * @return FicheMetierEtat
+     */
+    public function getEtat()
+    {
+        return $this->etat;
+    }
+
+    /**
+     * @param FicheMetierEtat $etat
+     */
+    public function setEtat($etat)
+    {
+        $this->etat = $etat;
     }
 
     /**

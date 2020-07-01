@@ -113,7 +113,7 @@ class AjouterFicheMetierForm extends Form {
     private function generateFicheTypeOptions()
     {
         $options = [];
-        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
+        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersValides();
 
         $dictionnaire = [];
         foreach ($fichesMetiers as $ficheMetier) {
