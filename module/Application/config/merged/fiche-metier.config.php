@@ -10,9 +10,15 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
 use Application\Form\FicheMetier\LibelleHydratorFactory;
+use Application\Form\FicheMetierEtat\FicheMetierEtatForm;
+use Application\Form\FicheMetierEtat\FicheMetierEtatFormFactory;
+use Application\Form\FicheMetierEtat\FicheMetierEtatHydrator;
+use Application\Form\FicheMetierEtat\FicheMetierEtatHydratorFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\Service\FicheMetierEtat\FicheMetierEtatService;
+use Application\Service\FicheMetierEtat\FicheMetierEtatServiceFactory;
 use Application\View\Helper\ApplicationBlocViewHelper;
 use Application\View\Helper\FicheMetierEtatViewHelper;
 use Application\View\Helper\FicheMetierExterneViewHelper;
@@ -328,6 +334,7 @@ return [
         ],
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
+            FicheMetierEtatService::class => FicheMetierEtatServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -339,11 +346,13 @@ return [
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
+            FicheMetierEtatForm::class => FicheMetierEtatFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             LibelleHydrator::class => LibelleHydratorFactory::class,
+            FicheMetierEtatHydrator::class => FicheMetierEtatHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

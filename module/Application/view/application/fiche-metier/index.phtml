@@ -90,7 +90,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php echo $this->ficheMetierEtat($fiche); ?>
+                    <?php echo $this->ficheMetierEtat($fiche->getEtat()); ?>
                 </td>
                 <td>
                     <?php if ($canVoir) : ?>

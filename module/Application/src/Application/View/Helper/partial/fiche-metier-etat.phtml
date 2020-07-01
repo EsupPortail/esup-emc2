@@ -1,15 +1,15 @@
 <?php
 
 /**
- * @var FicheMetier $fiche
+ * @var FicheMetierEtat $etat
  */
 
-use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierEtat;
 
 ?>
 
-<span class="label <?php echo $fiche->getEtat()->getCode(); ?>">
-    <?php echo $fiche->getEtat()->getLibelle(); ?>
+<span class="label <?php echo $etat->getCode(); ?>">
+    <?php echo $etat->getLibelle(); ?>
 </span>
 
 <style>
