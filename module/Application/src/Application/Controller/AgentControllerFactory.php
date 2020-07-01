@@ -8,6 +8,7 @@ use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentFormation\AgentFormationForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\Structure\StructureService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
@@ -23,6 +24,7 @@ class AgentControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var EntretienProfessionnelService $entretienService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
          * @var NatureService $natureService
@@ -31,6 +33,7 @@ class AgentControllerFactory {
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $entretienService = $container->get(EntretienProfessionnelService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
         $natureService = $container->get(NatureService::class);
@@ -57,6 +60,7 @@ class AgentControllerFactory {
         $controller = new AgentController();
 
         $controller->setAgentService($agentService);
+        $controller->setEntretienProfessionnelService($entretienService);
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
         $controller->setNatureService($natureService);

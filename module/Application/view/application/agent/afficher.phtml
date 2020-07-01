@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\EntretienProfessionnel;
 use Application\Provider\Privilege\AgentPrivileges;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -8,6 +9,7 @@ use UnicaenUtilisateur\Entity\Db\User;
 /**
  * @see AgentController::afficherAction()
  * @var Agent   $agent
+ * @var EntretienProfessionnel[] $entretiens
  * @var User    $user
  * @var Role    $role
  */
@@ -128,7 +130,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $agent->getFiches()], []); ?>
 
     <?php echo $this->partial('partial/entretien-professionnel',
-        ['entretiens' => $agent->getEntretiensProfessionnels(), 'agent' => $agent, "droits" => $droits]
+        ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits]
     , []); ?>
 
     <?php echo $this->partial('partial/mission-specifique', ['missions' => $agent->getMissionsSpecifiques(), 'agent' => $agent,  "droits" => $droits], []); ?>

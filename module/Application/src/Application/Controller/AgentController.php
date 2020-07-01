@@ -20,6 +20,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
@@ -40,6 +41,7 @@ class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use ApplicationServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
@@ -65,6 +67,7 @@ class AgentController extends AbstractActionController
     public function afficherAction() {
 
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
@@ -73,6 +76,7 @@ class AgentController extends AbstractActionController
             'agent' => $agent,
             'role'  => $role,
             'user'  => $user,
+            'entretiens' => $entretiens,
         ]);
     }
 
