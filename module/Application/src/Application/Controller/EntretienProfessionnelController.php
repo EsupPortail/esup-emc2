@@ -12,6 +12,7 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\Export\EntretienProfessionnel\EntretienProfessionnelPdfExporter;
+use Application\Service\RendererAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
@@ -23,7 +24,6 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Http\Request;
@@ -48,12 +48,7 @@ class EntretienProfessionnelController extends AbstractActionController {
     use FormulaireServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
 
-    private $renderer;
-
-    public function setRenderer($renderer)
-    {
-        $this->renderer = $renderer;
-    }
+   use RendererAwareTrait;
 
     public function indexAction()
     {
@@ -66,7 +61,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         ]);
     }
 
-    // TODO creerAction et ajouterAction font quasi la même chose penser à factoriser
+    /** Gestion des entretiens professionnels *************************************************************************/
 
     public function creerAction()
     {
@@ -79,10 +74,12 @@ class EntretienProfessionnelController extends AbstractActionController {
         $structureId = $this->params()->fromQuery('structure');
         $structure = ($structureId)?$this->getStructureService()->getStructure($structureId):null;
 
-        // ne pas dupliquer les entretiens
+        // ne pas dupliquer les entretiens (si il existe alors on l'affiche)
         $entretien = null;
         if ($campagne !== null AND $agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
-        if ($entretien === null) $entretien = new EntretienProfessionnel();
+        if ($entretien !== null) return $this->redirect()->toRoute('entretien-professionnel/afficher', ["campagne" => $campagne->getId()], [], true);
+
+        $entretien = new EntretienProfessionnel();
         if ($campagne !== null) $entretien->setCampagne($campagne);
         if ($agent !== null) $entretien->setAgent($agent);
 
@@ -103,25 +100,11 @@ class EntretienProfessionnelController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                /** Creation de l'instance de formulaire **/
-                $instance = new FormulaireInstance();
-                //TODO ne plus avoir '1'
-                $formulaire = $this->getFormulaireService()->getFormulaire(1);
-                $instance->setFormulaire($formulaire);
-                $this->getFormulaireInstanceService()->create($instance);
+                $instance = $this->getFormulaireInstanceService()->createInstance('ENTRETIEN_PROFESSIONNEL');
                 $entretien->setFormulaireInstance($instance);
                 $this->getEntretienProfessionnelService()->create($entretien);
-
-                $previous = $this->getEntretienProfessionnelService()->getPreviousEntretienProfessionnel($entretien);
-                if ($previous) {
-                    $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
-                    foreach ($recopies as $recopie) {
-                        $splits = explode(";", $recopie->getValeur());
-                        $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
-                    }
-                }
+                $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
                 $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
-//                return $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true);
             }
         }
 
@@ -269,12 +252,16 @@ class EntretienProfessionnelController extends AbstractActionController {
 
         $validationType = null;
         $elementText = null;
+
         switch ($type) {
             case 'Agent' :
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("ENTRETIEN_AGENT");
                 break;
             case 'Responsable' :
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("ENTRETIEN_RESPONSABLE");
+                break;
+            case 'DRH' :
+                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("ENTRETIEN_DRH");
                 break;
         }
 
@@ -284,17 +271,10 @@ class EntretienProfessionnelController extends AbstractActionController {
             $data = $request->getPost();
             $validation = null;
             if ($data["reponse"] === "oui") {
-                $validation = new ValidationInstance();
-                $validation->setType($validationType);
-                $validation->setEntity($entretien);
-                $this->getValidationInstanceService()->create($validation);
+                $validation = $this->getValidationInstanceService()->createValidation($validationType, $entretien);
             }
             if ($data["reponse"] === "non") {
-                $validation = new ValidationInstance();
-                $validation->setType($validationType);
-                $validation->setEntity($entretien);
-                $validation->setValeur("Refus");
-                $this->getValidationInstanceService()->create($validation);
+                $validation = $this->getValidationInstanceService()->createValidation($validationType, $entretien, "Refus");
             }
             if ($validation !== null AND $entretien !== null) {
                 switch ($type) {
@@ -303,6 +283,9 @@ class EntretienProfessionnelController extends AbstractActionController {
                         break;
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
+                        break;
+                    case 'DRH' :
+                        $entretien->setValidationDRH($validation);
                         break;
                 }
                 $this->getEntretienProfessionnelService()->update($entretien);

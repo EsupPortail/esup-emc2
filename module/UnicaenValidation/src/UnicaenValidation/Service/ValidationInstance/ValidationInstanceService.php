@@ -2,6 +2,7 @@
 
 namespace UnicaenValidation\Service\ValidationInstance;
 
+use Application\Entity\Db\EntretienProfessionnel;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -10,6 +11,7 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Entity\Db\ValidationType;
 use UnicaenValidation\Entity\ValidableInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -218,6 +220,22 @@ class ValidationInstanceService {
             return $entity;
         }
         return null;
+    }
+
+    /**
+     * @param ValidationType $validationType
+     * @param EntretienProfessionnel $entretien
+     * @param string $value
+     * @return ValidationInstance
+     */
+    public function createValidation(ValidationType $validationType, EntretienProfessionnel $entretien, $value = null)
+    {
+        $validation = new ValidationInstance();
+        $validation->setType($validationType);
+        $validation->setEntity($entretien);
+        $validation->setValeur($value);
+        $this->create($validation);
+        return $validation;
     }
 
 }

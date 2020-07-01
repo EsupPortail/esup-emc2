@@ -29,6 +29,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface {
     private $validationAgent;
     /** @var ValidationInstance */
     private $validationResponsable;
+    /** @var ValidationInstance */
+    private $validationDRH;
+
 
     /**
      * @return int
@@ -172,4 +175,21 @@ class EntretienProfessionnel implements HistoriqueAwareInterface {
         $this->validationResponsable = $validationResponsable;
         return $this;
     }
+
+    /**
+     * @return ValidationInstance
+     */
+    public function getValidationDRH()
+    {
+        return $this->validationDRH;
+    }
+
+    /**
+     * @param ValidationInstance $validationDRH
+     */
+    public function setValidationDRH($validationDRH)
+    {
+        $this->validationDRH = $validationDRH;
+    }
+
 }

@@ -5,7 +5,9 @@ namespace Application\Service\EntretienProfessionnel;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\EntretienProfessionnelCampagne;
+use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -16,7 +18,8 @@ class EntretienProfessionnelService {
 //    use EntityManagerAwareTrait;
 //    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
-
+    use ConfigurationServiceAwareTrait;
+    use FormulaireInstanceServiceAwareTrait;
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
@@ -85,6 +88,7 @@ class EntretienProfessionnelService {
             ->addSelect('formulaire')->join('formulaireInstance.formulaire', 'formulaire')
             ->addSelect('categorie')->join('formulaire.categories', 'categorie')
             ->addSelect('champ')->join('categorie.champs', 'champ')
+            //todo recupérer les validations
         ;
         return $qb;
     }
@@ -138,7 +142,7 @@ class EntretienProfessionnelService {
         $qb = $this->createQueryBuilder()
             ->andWhere('entretien.agent = :agent')
             ->setParameter('agent', $agent)
-            ->orderBy('entretien.annee, entretien.id', 'ASC')
+            ->orderBy('campagne.annee', 'ASC')
         ;
 
         $result = $qb->getQuery()->getResult();
@@ -182,5 +186,18 @@ class EntretienProfessionnelService {
             throw new RuntimeException("Plusieurs entretiens professionnels ont été trouvés pour la campagne [".$campagne->getId()."|".$campagne->getAnnee()."] et l'agent [".$agent->getId()."|".$agent->getDenomination()."]",0,$e);
         }
         return $result;
+    }
+
+    public function recopiePrecedent(EntretienProfessionnel $entretien)
+    {
+        $previous = $this->getPreviousEntretienProfessionnel($entretien);
+        if ($previous) {
+            $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
+            foreach ($recopies as $recopie) {
+                $splits = explode(";", $recopie->getValeur());
+                $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
+            }
+        }
+        return $entretien;
     }
 }
