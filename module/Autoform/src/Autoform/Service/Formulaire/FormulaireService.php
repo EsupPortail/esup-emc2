@@ -7,6 +7,7 @@ use Autoform\Entity\Db\Formulaire;
 use Autoform\Service\Categorie\CategorieServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -119,22 +120,23 @@ class FormulaireService {
     /** REQUETAGES ****************************************************************************************************/
 
     /**
-     * @param AbstractActionController $controller
-     * @param string $label
-     * @return Formulaire
+     * @return QueryBuilder
      */
-    public function getRequestedFormulaire($controller, $label)
+    public function createQueryBuilder()
     {
-        $id = $controller->params()->fromRoute($label);
-        $formulaire = $this->getFormulaire($id);
-        return $formulaire;
+        $qb = $this->getEntityManager()->getRepository(Formulaire::class)->createQueryBuilder('formulaire')
+            ->addSelect('categorie')->leftJoin('formulaire.categories', 'categorie')
+            ->addSelect('champ')->leftJoin('categorie.champs', 'champ')
+        ;
+        return $qb;
     }
+
     /**
      * @return Formulaire[]
      */
     public function getFormulaires()
     {
-        $qb = $this->getEntityManager()->getRepository(Formulaire::class)->createQueryBuilder('formulaire');
+        $qb = $this->createQueryBuilder();
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -146,9 +148,7 @@ class FormulaireService {
      */
     public function getFormulaire($id)
     {
-        $qb = $this->getEntityManager()->getRepository(Formulaire::class)->createQueryBuilder('formulaire')
-            ->addSelect('categorie')->leftJoin('formulaire.categories', 'categorie')
-            ->addSelect('champ')->leftJoin('categorie.champs', 'champ')
+        $qb = $this->createQueryBuilder()
             ->andWhere('formulaire.id = :id')
             ->setParameter('id', $id)
         ;
@@ -159,6 +159,37 @@ class FormulaireService {
             throw new RuntimeException("Plusieurs Formulaire partagent le même identifiant [".$id."].", $e);
         }
         return $result;
+    }
+
+    /**
+     * @param string $code
+     * @return Formulaire
+     */
+    public function getFormulaireByCode($code)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formulaire.code = :code')
+            ->setParameter('code', $code)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Formulaire partagent le même code [".$code."].", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $label
+     * @return Formulaire
+     */
+    public function getRequestedFormulaire($controller, $label)
+    {
+        $id = $controller->params()->fromRoute($label);
+        $formulaire = $this->getFormulaire($id);
+        return $formulaire;
     }
 
     public function compacter($formulaire) {

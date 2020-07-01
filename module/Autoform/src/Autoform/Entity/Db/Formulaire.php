@@ -14,6 +14,8 @@ class Formulaire {
     private $libelle;
     /** @var string */
     private $description;
+    /** @var string */
+    private $code;
 
     /** @var ArrayCollection */
     private $categories;
@@ -65,6 +67,22 @@ class Formulaire {
     {
         $this->description = $description;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
     }
 
     /**

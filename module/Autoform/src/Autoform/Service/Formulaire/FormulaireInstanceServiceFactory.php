@@ -12,17 +12,21 @@ class FormulaireInstanceServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
+         * @var FormulaireService $formulaireService
+         * @var FormulaireReponseService $formulaireReponseService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
+        $formulaireService = $container->get(FormulaireService::class);
         $formulaireReponseService = $container->get(FormulaireReponseService::class);
+        $userService = $container->get(UserService::class);
 
         /** @var FormulaireInstanceService $service */
         $service = new FormulaireInstanceService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
+        $service->setFormulaireService($formulaireService);
         $service->setFormulaireReponseService($formulaireReponseService);
+        $service->setUserService($userService);
         return $service;
     }
 }

@@ -16,6 +16,7 @@ class FormulaireInstanceService {
     use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
+    use FormulaireServiceAwareTrait;
     use FormulaireReponseServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -120,6 +121,20 @@ class FormulaireInstanceService {
 
         return $instance;
     }
+
+    /**
+     * @param string $code
+     * @return FormulaireInstance
+     */
+    public function createInstance($code)
+    {
+        $instance = new FormulaireInstance();
+        $formulaire = $this->getFormulaireService()->getFormulaireByCode($code);
+        $instance->setFormulaire($formulaire);
+        $this->create($instance);
+        return $instance;
+    }
+
 
     /** REQUETAGES ****************************************************************************************************/
 
