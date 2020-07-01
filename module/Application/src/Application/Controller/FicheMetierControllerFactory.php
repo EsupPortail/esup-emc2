@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\LibelleForm;
+use Application\Form\FicheMetierEtat\FicheMetierEtatForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionFormation\SelectionFormationForm;
@@ -12,6 +13,7 @@ use Application\Service\Activite\ActiviteService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\FicheMetier\FicheMetierService;
+use Application\Service\FicheMetierEtat\FicheMetierEtatService;
 use Interop\Container\ContainerInterface;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -23,11 +25,13 @@ class FicheMetierControllerFactory {
          * @var ActiviteService $activiteService
          * @var DomaineService $domaineService
          * @var FicheMetierService $ficheMetierService
+         * @var FicheMetierEtatService $ficheMetierEtatService
          * @var ConfigurationService $configurationService
          */
         $activiteService = $container->get(ActiviteService::class);
         $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $ficheMetierEtatService = $container->get(FicheMetierEtatService::class);
         $configurationService = $container->get(ConfigurationService::class);
 
 
@@ -35,6 +39,7 @@ class FicheMetierControllerFactory {
          * @var LibelleForm $libelleForm
          * @var ActiviteForm $activiteForm
          * @var ActiviteExistanteForm $activiteExistanteForm
+         * @var FicheMetierEtatForm $ficheMetierEtatForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetenceForm
          * @var SelectionFormationForm $selectionFormationForm
@@ -42,6 +47,7 @@ class FicheMetierControllerFactory {
         $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class); //2 ?
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
         $activiteExistanteForm = $container->get('FormElementManager')->get(ActiviteExistanteForm::class); //2 ?
+        $ficheMetierEtatForm = $container->get('FormElementManager')->get(FicheMetierEtatForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
@@ -56,11 +62,13 @@ class FicheMetierControllerFactory {
         $controller->setActiviteService($activiteService);
         $controller->setDomaineService($domaineService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setFicheMetierEtatService($ficheMetierEtatService);
         $controller->setConfigurationService($configurationService);
 
         $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);
         $controller->setActiviteExistanteForm($activiteExistanteForm);
+        $controller->setFicheMetierEtatForm($ficheMetierEtatForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
         $controller->setSelectionFormationForm($selectionFormationForm);

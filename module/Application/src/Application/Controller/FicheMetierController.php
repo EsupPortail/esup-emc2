@@ -4,12 +4,14 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierEtat;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
+use Application\Form\FicheMetierEtat\FicheMetieEtatFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -21,6 +23,7 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -36,9 +39,11 @@ class FicheMetierController extends  AbstractActionController{
     use ActiviteServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FicheMetierEtatServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;
+    use FicheMetieEtatFormAwareTrait;
     use LibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -170,6 +175,7 @@ class FicheMetierController extends  AbstractActionController{
     {
         /** @var FicheMetier $fiche */
         $fiche = new FicheMetier();
+        $fiche->setEtat($this->getFicheMetierEtatService()->getEtatByCode(FicheMetierEtat::CODE_REDACTION));
 
         /** @var LibelleForm $form */
         $form = $this->getLibelleForm();
@@ -407,5 +413,32 @@ class FicheMetierController extends  AbstractActionController{
         $this->getFicheMetierService()->update($fiche);
 
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
+    }
+
+    public function changerEtatAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getFicheMetierEtatForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fiche);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Changement de l'état de la fiche metier [".$fiche->getMetier()->getLibelle()."]",
+            'form' => $form,
+        ]);
+        return $vm;
     }
 }

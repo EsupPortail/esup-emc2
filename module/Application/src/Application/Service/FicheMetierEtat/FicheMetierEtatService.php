@@ -57,4 +57,22 @@ class FicheMetierEtatService {
         }
         return $result;
     }
+
+    /**
+     * @param string $code
+     * @return FicheMetierEtat
+     */
+    public function getEtatByCode($code)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('etat.code = :code')
+            ->setParameter('code', $code)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FicheMetierEtat partagent le même code [".$code."]");
+        }
+        return $result;
+    }
 }
