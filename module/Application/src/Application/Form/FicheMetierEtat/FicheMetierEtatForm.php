@@ -4,27 +4,52 @@ namespace Application\Form\FicheMetierEtat;
 
 use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
+use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class FicheMetierEtatForm extends Form {
-    use FicheMetierEtatServiceAwareTrait;
 
     public function init()
     {
         $this->add([
-            'type' => Select::class,
-            'name' => 'etat',
+            'type' => Text::class,
+            'name' => 'code',
             'options' => [
-                'label' => "État de la fiche métier :",
-                'empty_option' => "Sélectionner un état ...",
-                'value_options' => $this->getFicheMetierEtatService()->getEtatsAsOption(),
+                'label' => "Code (utilisé pour la recherche) :",
             ],
             'attributes' => [
-                'id' => 'etat',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'id' => 'code',
+            ],
+        ]);
+        $this->add([
+            'type' => Text::class,
+            'name' => 'libelle',
+            'options' => [
+                'label' => "Libelle (utilisé sur le badge) :",
+            ],
+            'attributes' => [
+                'id' => 'libelle',
+            ],
+        ]);
+        $this->add([
+            'type' => Text::class,
+            'name' => 'description',
+            'options' => [
+                'label' => "Description (utilisée dans le formulaire) :",
+            ],
+            'attributes' => [
+                'id' => 'description',
+            ],
+        ]);
+        $this->add([
+            'type' => Text::class,
+            'name' => 'couleur',
+            'options' => [
+                'label' => "Couleur (utilisée sur le badge) :",
+            ],
+            'attributes' => [
+                'id' => 'couleur',
             ],
         ]);
         //submit
@@ -44,9 +69,10 @@ class FicheMetierEtatForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'etat' => [
-                'required' => true,
-            ],
+            'code'          => [     'required' => true,     ],
+            'libelle'       => [     'required' => true,     ],
+            'description'   => [     'required' => true,     ],
+            'couleur'       => [     'required' => true,     ],
         ]));
     }
 }

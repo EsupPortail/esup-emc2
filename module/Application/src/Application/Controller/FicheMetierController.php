@@ -16,6 +16,7 @@ use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetieEtatFormAwareTrait;
 use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -47,6 +48,7 @@ class FicheMetierController extends  AbstractActionController{
     use LibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
+    use SelectionFicheMetieEtatFormAwareTrait;
     use SelectionFormationFormAwareTrait;
 
     use ConfigurationServiceAwareTrait;
@@ -71,10 +73,13 @@ class FicheMetierController extends  AbstractActionController{
             $fichesMetiers = $this->getFicheMetierService()->getFicheByDomaine($domaine);
         }
 
+        $etats = $this->getFicheMetierEtatService()->getEtats();
+
         return new ViewModel([
             'domaineSelect'  => $domaine,
             'domaines' => $domaines,
             'fiches'   => $fichesMetiers,
+            'etats' => $etats,
         ]);
     }
 
@@ -415,11 +420,13 @@ class FicheMetierController extends  AbstractActionController{
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
     }
 
+    /** GESTION DES ETATS DES FICHES METIERS **************************************************************************/
+
     public function changerEtatAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        $form = $this->getFicheMetierEtatForm();
+        $form = $this->getSelectionFicheMetierEtatForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
@@ -441,4 +448,85 @@ class FicheMetierController extends  AbstractActionController{
         ]);
         return $vm;
     }
+
+    public function ajouterEtatAction()
+    {
+        $etat = new FicheMetierEtat();
+
+        $form = $this->getFicheMetierEtatForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/etat/ajouter', [], [], true));
+        $form->bind($etat);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierEtatService()->create($etat);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'un état",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierEtatAction()
+    {
+        $etat = $this->getFicheMetierEtatService()->getRequestedEtat($this);
+
+        $form = $this->getFicheMetierEtatForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/etat/modifier', ['etat' => $etat->getId()], [], true));
+        $form->bind($etat);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierEtatService()->update($etat);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'un état",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function supprimerEtatAction()
+    {
+        $etat = $this->getFicheMetierEtatService()->getRequestedEtat($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") {
+                $this->getFicheMetierEtatService()->delete($etat);
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($etat !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'état [".$etat->getCode()."]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-metier-type/etat/supprimer', ["etat" => $etat->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
 }

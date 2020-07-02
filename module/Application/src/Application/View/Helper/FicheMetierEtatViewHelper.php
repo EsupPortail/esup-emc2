@@ -3,6 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\FicheMetierEtat;
+use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
@@ -10,6 +11,8 @@ use Zend\View\Resolver\TemplatePathStack;
 
 class FicheMetierEtatViewHelper extends AbstractHelper
 {
+    use FicheMetierEtatServiceAwareTrait;
+
     /**
      * @param FicheMetierEtat $etat
      * @param array $options

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @see \Application\View\Helper\FicheMetierEtatViewHelper
  * @var FicheMetierEtat $etat
  */
 
@@ -13,15 +14,9 @@ use Application\Entity\Db\FicheMetierEtat;
 </span>
 
 <style>
-    span.label.REDACTION {
-        background-color: darkorange;
-    }
-
-    span.label.VALIDE {
-        background-color: darkgreen;
-    }
-
-    span.label.SECRET {
-        background-color: hotpink;
+    span.label.<?php echo $etat->getCode(); ?> {
+        background-color: <?php echo $etat->getCouleur(); ?>;
+        min-width: 10rem;
+        display: inline-block;
     }
 </style>

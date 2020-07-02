@@ -8,6 +8,8 @@
 
         <field name="code"                 column="code"              type="string" length="256"    nullable="false"/>
         <field name="libelle"              column="libelle"           type="string" length="1024"   nullable="false"/>
+        <field name="description"          column="description"       type="string" length="1024"   nullable="false"/>
+        <field name="couleur"              column="couleur"           type="string" length="256"    nullable="false"/>
 
     </entity>
 </doctrine-mapping>

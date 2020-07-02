@@ -3,33 +3,37 @@
 namespace Application\Form\FicheMetierEtat;
 
 use Application\Entity\Db\FicheMetier;
-use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
+use Application\Entity\Db\FicheMetierEtat;
 use Zend\Hydrator\HydratorInterface;
 
 class FicheMetierEtatHydrator implements HydratorInterface {
-    use FicheMetierEtatServiceAwareTrait;
 
     /**
-     * @param FicheMetier $object
+     * @param FicheMetierEtat $object
      * @return array
      */
     public function extract($object)
     {
         $data = [
-            'etat' => ($object->getEtat())?$object->getEtat()->getId():0,
+            'code'          => ($object->getCode())?$object->getCode():null,
+            'libelle'       => ($object->getLibelle())?$object->getLibelle():null,
+            'description'   => ($object->getDescription())?$object->getDescription():null,
+            'couleur'       => ($object->getCouleur())?$object->getCouleur():null,
         ];
         return $data;
     }
 
     /**
      * @param array $data
-     * @param FicheMetier $object
-     * @return FicheMetier
+     * @param FicheMetierEtat $object
+     * @return FicheMetierEtat
      */
     public function hydrate(array $data, $object)
     {
-        $etat = (isset($data['etat']))?$this->getFicheMetierEtatService()->getEtat($data['etat']):null;
-        $object->setEtat($etat);
+        $object->setCode(isset($data['code'])?$data['code']:null);
+        $object->setLibelle(isset($data['libelle'])?$data['libelle']:null);
+        $object->setDescription(isset($data['description'])?$data['description']:null);
+        $object->setCouleur(isset($data['couleur'])?$data['couleur']:null);
         return $object;
     }
 

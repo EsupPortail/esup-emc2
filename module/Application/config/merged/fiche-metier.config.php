@@ -14,6 +14,10 @@ use Application\Form\FicheMetierEtat\FicheMetierEtatForm;
 use Application\Form\FicheMetierEtat\FicheMetierEtatFormFactory;
 use Application\Form\FicheMetierEtat\FicheMetierEtatHydrator;
 use Application\Form\FicheMetierEtat\FicheMetierEtatHydratorFactory;
+use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatForm;
+use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatFormFactory;
+use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatHydrator;
+use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatHydratorFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
@@ -102,6 +106,17 @@ return [
                         FicheMetierPrivileges::FICHEMETIER_DETRUIRE,
                     ],
                 ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'ajouter-etat',
+                        'modifier-etat',
+                        'supprimer-etat',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -138,6 +153,51 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'etat' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/etat',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                            ],
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => FicheMetierController::class,
+                                        'action'     => 'ajouter-etat',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:etat',
+                                    'defaults' => [
+                                        'controller' => FicheMetierController::class,
+                                        'action'     => 'modifier-etat',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'supprimer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/supprimer/:etat',
+                                    'defaults' => [
+                                        'controller' => FicheMetierController::class,
+                                        'action'     => 'supprimer-etat',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ],
+                    ],
                     'ajouter' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -359,12 +419,14 @@ return [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
             FicheMetierEtatForm::class => FicheMetierEtatFormFactory::class,
+            SelectionFicheMetierEtatForm::class => SelectionFicheMetierEtatFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             LibelleHydrator::class => LibelleHydratorFactory::class,
             FicheMetierEtatHydrator::class => FicheMetierEtatHydratorFactory::class,
+            SelectionFicheMetierEtatHydrator::class => SelectionFicheMetierEtatHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
@@ -376,6 +438,5 @@ return [
             'applicationBloc' => ApplicationBlocViewHelper::class,
         ],
     ],
-
 
 ];

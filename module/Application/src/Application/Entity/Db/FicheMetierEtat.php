@@ -14,6 +14,10 @@ class FicheMetierEtat {
     private $code;
     /** @var string */
     private $libelle;
+    /** @var string */
+    private $description;
+    /** @var string */
+    private $couleur;
 
     /**
      * @return int
@@ -53,5 +57,41 @@ class FicheMetierEtat {
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return FicheMetierEtat
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCouleur()
+    {
+        return $this->couleur;
+    }
+
+    /**
+     * @param string $couleur
+     * @return FicheMetierEtat
+     */
+    public function setCouleur($couleur)
+    {
+        $this->couleur = $couleur;
+        return $this;
     }
 }

@@ -8,6 +8,7 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetierEtat\FicheMetierEtatForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatForm;
 use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Configuration\ConfigurationService;
@@ -42,6 +43,7 @@ class FicheMetierControllerFactory {
          * @var FicheMetierEtatForm $ficheMetierEtatForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetenceForm
+         * @var SelectionFicheMetierEtatForm $selectionFicheMetierForm
          * @var SelectionFormationForm $selectionFormationForm
          */
         $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class); //2 ?
@@ -50,6 +52,7 @@ class FicheMetierControllerFactory {
         $ficheMetierEtatForm = $container->get('FormElementManager')->get(FicheMetierEtatForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
+        $selectionFicheMetierForm = $container->get('FormElementManager')->get(SelectionFicheMetierEtatForm::class);
         $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
 
         /* @var PhpRenderer $renderer  */
@@ -71,6 +74,7 @@ class FicheMetierControllerFactory {
         $controller->setFicheMetierEtatForm($ficheMetierEtatForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
+        $controller->setSelectionFicheMetierEtatForm($selectionFicheMetierForm);
         $controller->setSelectionFormationForm($selectionFormationForm);
 
         return $controller;
