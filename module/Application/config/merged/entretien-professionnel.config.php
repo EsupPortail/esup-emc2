@@ -133,10 +133,10 @@ return [
                 ],
                 'child_routes' => [
                     'creer' => [
-                        'type'  => Literal::class,
+                        'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/creer',
+                            'route'    => '/creer[/:campagne]',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'creer',

@@ -126,7 +126,7 @@ class EntretienProfessionnelController extends AbstractActionController {
 
         /** @var EntretienProfessionnelForm $form */
         $form = $this->getEntretienProfessionnelForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/modifier-parametre', ['entretien' => $entretien->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true));
         $form->bind($entretien);
         /** @var SearchAndSelect $element */
         $element = $form->get('responsable');
