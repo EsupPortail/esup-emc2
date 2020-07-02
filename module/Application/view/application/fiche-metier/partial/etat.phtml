@@ -49,7 +49,7 @@ $canSupprimerEtat = $canEtat;
                         <span class="icon editer" title="Modifier l'état" data-toggle="tooltip" data-html="true"></span>
                     </a>
                 <?php endif; ?>
-                <?php if ($canSupprimerEtat === true) : ?>
+                <?php if ($canSupprimerEtat === true AND $etat->getId() !== 0) : ?>
                     <a
                         <?php /** @see \Application\Controller\FicheMetierController::supprimerEtatAction() */?>
                             href="<?php echo $this->url('fiche-metier-type/etat/supprimer', ['etat' => $etat->getId()], [], true); ?>"
