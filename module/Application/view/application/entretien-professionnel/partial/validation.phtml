@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @var EntretienProfessionnel $entretien
+ */
+
+use Application\Entity\Db\EntretienProfessionnel;
+
+?>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2> Validation de l'agent </h2>
+
+        <?php if ($entretien->getValidationAgent() === null): ?>
+            <a
+                <?php /** @see \Application\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Agent'], [], true); ?>"
+                class="btn btn-success action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon validation-do"></span>
+                Validation de l'agent
+            </a>
+        <?php else : ?>
+            <div class="alert alert-info">
+                Validation <strong>Agent</strong> effectuée.
+                <dl>
+                    <dt> Validateur </dt>
+                    <dd> <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?> </dd>
+                    <dt> Date de la validation </dt>
+                    <dd> <?php echo $entretien->getValidationAgent()->getHistoModification()->format('d/m/y'); ?> </dd>
+                </dl>
+            </div>
+
+            <a
+                <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationAgent()->getId()], [], true); ?>"
+                class="btn btn-danger action"
+            >
+                <span class="icon validation-undo"></span>
+                Révoquer la validation
+            </a>
+        <?php endif; ?>
+    </div>
+
+    <div class="col-md-4">
+        <h2> Validation du responsable </h2>
+
+        <?php if ($entretien->getValidationResponsable() === null): ?>
+            <a
+                <?php /** @see \Application\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Responsable'], [], true); ?>"
+                class="btn btn-success action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon validation-do"></span>
+                Validation du responsable
+            </a>
+        <?php else : ?>
+            <div class="alert alert-info">
+                Validation <strong>Responsable</strong> effectuée.
+                <dl>
+                    <dt> Validateur </dt>
+                    <dd> <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?> </dd>
+                    <dt> Date de la validation </dt>
+                    <dd> <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/y'); ?> </dd>
+                </dl>
+            </div>
+
+            <a
+                <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationResponsable()->getId()], [], true); ?>"
+                class="btn btn-danger action"
+            >
+                <span class="icon validation-undo"></span>
+                Révoquer la validation
+            </a>
+        <?php endif; ?>
+    </div>
+
+    <div class="col-md-4">
+        <h2> Validation de la Direction des Ressources Humaines </h2>
+
+        <?php if ($entretien->getValidationDRH() === null): ?>
+            <a
+                <?php /** @see \Application\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'DRH'], [], true); ?>"
+                class="btn btn-success action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon validation-do"></span>
+                Validation de la DRH
+            </a>
+        <?php else : ?>
+            <div class="alert alert-info">
+                Validation <strong>DRH</strong> effectuée.
+                <dl>
+                    <dt> Validateur </dt>
+                    <dd> <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?> </dd>
+                    <dt> Date de la validation </dt>
+                    <dd> <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/y'); ?> </dd>
+                </dl>
+            </div>
+
+            <a
+                <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationDRH()->getId()], [], true); ?>"
+                class="btn btn-danger action"
+            >
+                <span class="icon validation-undo"></span>
+                Révoquer la validation
+            </a>
+        <?php endif; ?>
+    </div>
+</div>

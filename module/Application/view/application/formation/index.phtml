@@ -4,12 +4,13 @@
  * @see RessourceRhController::indexMissionSpecifiqueAction()
  *
  * @var Formation[] $formations
+ * @var FormationGroupe[] $groupes
  * @var FormationTheme[] $themes
  */
 
 use Application\Controller\FormationController;
-use Application\Controller\RessourceRhController;
 use Application\Entity\Db\Formation;
+use Application\Entity\Db\FormationGroupe;
 use Application\Entity\Db\FormationTheme;
 use Application\Provider\Privilege\FormationPrivileges;
 
@@ -34,6 +35,14 @@ $this->headTitle("Index des formations");
                 Formations &nbsp;
                 <span class="badge">
                     <?php echo count($formations); ?>
+                </span>
+            </a>
+        </li>
+        <li role="groupe">
+            <a href="#groupe" aria-controls="groupe" role="tab" data-toggle="tabz">
+                Groupes &nbsp;
+                <span class="badge">
+                    <?php echo count($groupes); ?>
                 </span>
             </a>
         </li>
@@ -154,7 +163,111 @@ $this->headTitle("Index des formations");
                     </tbody>
                 </table>
             </div>
+            <div id="groupe" class="tab-pane " role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>
+                            Groupes des formations
+                        </h2>
+                    </div>
+                    <div class="col-md-4">
+                        <?php if ($canAjouter) : ?>
+                            <br/>
+                            <a
+                                <?php /** @see FormationController::ajouterGroupeAction() */ ?>
+                                    href="<?php echo $this->url('formation-groupe/ajouter', [], [], true); ?>"
+                                    class="btn btn-primary action ajax-modal"
+                                    data-event="modification">
+                                <span class="icon ajouter"></span>
+                                Ajouter un groupe
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
+                <br/>
+
+                <table class="datatable table table-condensed">
+                    <thead>
+                    <tr>
+                        <th> Badge </th>
+                        <th> Libellé </th>
+                        <th> #Formation </th>
+                        <th> Modification </th>
+                        <th> Action </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($groupes as $groupe) : ?>
+                        <tr>
+                            <td> <span class="label" style="background-color:<?php echo $groupe->getCouleur(); ?>;display:inline-block; width:10rem;">Groupe </span></td>
+                            <td> <?php echo $groupe->getLibelle(); ?> </td>
+                            <td> <?php echo count($groupe->getFormations()); ?> </td>
+                            <td>
+                                <small>
+                                    <?php echo $groupe->getHistoModification()->format('d/m/Y à H:i'); ?>
+                                    <br/>
+                                    <?php echo $groupe->getHistoModificateur()->getDisplayName(); ?>
+                                </small>
+                            </td>
+                            <td>
+                                <?php if ($canAfficher) : ?>
+                                    <a  <?php /** @see FormationController::afficherGroupeAction() */ ?>
+                                            href="<?php echo $this->url('formation-groupe/afficher', ['formation-groupe' => $groupe->getId()], [], true); ?>"
+                                            class="ajax-modal">
+                                        <span class="icon voir" title="Afficher le groupe"></span></a>
+                                <?php else : ?>
+                                    <span class="icon voir" style="color:lightgrey;"></span>
+                                <?php endif; ?>
+                                <?php if ($canEditer) : ?>
+                                    <a
+                                        <?php /** @see FormationController::editerGroupeAction() */ ?>
+                                            href="<?php  echo $this->url('formation-groupe/editer', ['formation-groupe' => $groupe->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
+                                    >
+                                        <span class="icon editer" title="Modifier le groupe"></span></a>
+                                <?php else : ?>
+                                    <span class="icon editer" style="color:lightgrey;"></span>
+                                <?php endif; ?>
+                                <?php if ($canHistoriser) : ?>
+                                    <?php if ($theme->estNonHistorise()) : ?>
+                                        <a
+                                            <?php /** @see FormationController::historiserGroupeAction() */ ?>
+                                                href="<?php  echo $this->url('formation-groupe/historiser', ['formation-groupe' => $groupe->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon historiser" title="Historiser le groupe"></span></a>
+                                    <?php else : ?>
+
+                                        <a
+                                            <?php /** @see FormationController::restaurerGroupeAction() */ ?>
+                                                href="<?php  echo $this->url('formation-groupe/restaurer', ['formation-groupe' => $groupe->getId()], [], true); ?>"
+                                        >
+                                            <span class="icon restaurer" title="Restaurer le groupe"></span></a>
+                                    <?php endif; ?>
+                                <?php else : ?>
+                                    <?php if ($theme->estNonHistorise()) : ?>
+                                        <span class="icon historiser" style="color:lightgrey;"></span>
+                                    <?php else : ?>
+                                        <span class="icon restaurer" style="color:lightgrey;"></span>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($canDetruire) : ?>
+                                    <a
+                                        <?php /** @see FormationController::detruireGroupeAction() */ ?>
+                                            href="<?php  echo $this->url('formation-groupe/detruire', ['formation-groupe' => $groupe->getId()], [], true); ?>"
+                                            class="ajax-modal" data-event="modification"
+                                    >
+                                        <span class="icon detruire" title="Afficher le groupe"></span></a>
+                                <?php else : ?>
+                                    <span class="icon detruire" style="color:lightgrey;"></span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
             <div id="formation" class="tab-pane " role="tabpanel">
                 <div class="row">
@@ -187,6 +300,7 @@ $this->headTitle("Index des formations");
                     <tr>
                         <th> Libellé </th>
                         <th> Thème </th>
+                        <th> Groupe </th>
                         <th> Lien </th>
                         <th> Modification </th>
                         <th> Action </th>
@@ -197,6 +311,7 @@ $this->headTitle("Index des formations");
                         <tr>
                             <td> <?php echo $formation->getLibelle(); ?> </td>
                             <td> <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():""; ?> </td>
+                            <td> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():""; ?> </td>
                             <td>
                                 <?php if ($formation->getLien() !== null) : ?>
                                     <a href="<?php echo $formation->getLien(); ?>">

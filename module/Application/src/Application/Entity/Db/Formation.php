@@ -17,6 +17,8 @@ class Formation implements HistoriqueAwareInterface {
     private $description;
     /** @var string */
     private $lien;
+    /** @var FormationGroupe */
+    private $groupe;
     /** @var FormationTheme */
     private $theme;
 
@@ -91,6 +93,24 @@ class Formation implements HistoriqueAwareInterface {
     public function setLien($lien)
     {
         $this->lien = $lien;
+        return $this;
+    }
+
+    /**
+     * @return FormationGroupe
+     */
+    public function getGroupe()
+    {
+        return $this->groupe;
+    }
+
+    /**
+     * @param FormationGroupe $groupe
+     * @return Formation
+     */
+    public function setGroupe($groupe)
+    {
+        $this->groupe = $groupe;
         return $this;
     }
 

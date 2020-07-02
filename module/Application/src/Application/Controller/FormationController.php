@@ -3,9 +3,12 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Formation;
+use Application\Entity\Db\FormationGroupe;
 use Application\Entity\Db\FormationTheme;
 use Application\Form\Formation\FormationFormAwareTrait;
+use Application\Form\FormationGroupe\FormationGroupeFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
+use Application\Service\Formation\FormationGroupeServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\Formation\FormationThemeServiceAwareTrait;
 use Zend\Http\Request;
@@ -15,9 +18,11 @@ use Zend\View\Model\ViewModel;
 class FormationController extends AbstractActionController
 {
     use FormationServiceAwareTrait;
+    use FormationGroupeServiceAwareTrait;
     use FormationThemeServiceAwareTrait;
 
     use FormationFormAwareTrait;
+    use FormationGroupeFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
 
     /** INDEX *********************************************************************************************************/
@@ -25,9 +30,11 @@ class FormationController extends AbstractActionController
     public function indexAction()
     {
         $formations = $this->getFormationService()->getFormations('libelle');
+        $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
         $themes = $this->getFormationThemeService()->getFormationsThemes();
         return new ViewModel([
             'formations' => $formations,
+            'groupes' => $groupes,
             'themes' => $themes,
         ]);
     }
@@ -38,7 +45,7 @@ class FormationController extends AbstractActionController
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         return new ViewModel([
-            'title' => 'Affichage de la formation ['.$formation->getLibelle().']',
+            'title' => 'Affichage de la formation [' . $formation->getLibelle() . ']',
             'formation' => $formation,
         ]);
     }
@@ -101,14 +108,14 @@ class FormationController extends AbstractActionController
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $this->getFormationService()->historise($formation);
-        return $this->redirect()->toRoute('formation', [], [], true);
+        return $this->redirect()->toRoute('formation', [], ['fragment' => 'formation'], true);
     }
 
     public function restaurerAction()
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $this->getFormationService()->restore($formation);
-        return $this->redirect()->toRoute('formation', [], [], true);
+        return $this->redirect()->toRoute('formation', [], ['fragment' => 'formation'], true);
 
     }
 
@@ -131,6 +138,108 @@ class FormationController extends AbstractActionController
                 'title' => "Suppression de la formation [" . $formation->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('formation/detruire', ["formation" => $formation->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** FORMATION GROUPE **********************************************************************************************/
+
+    public function afficherGroupeAction()
+    {
+        $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
+
+        return new ViewModel([
+            'title' => 'Affichage du groupe',
+            'groupe' => $groupe,
+        ]);
+    }
+
+    public function ajouterGroupeAction()
+    {
+        $groupe = new FormationGroupe();
+        $form = $this->getFormationGroupeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-groupe/ajouter', [], [], true));
+        $form->bind($groupe);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationGroupeService()->create($groupe);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajouter un groupe de formation',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function editerGroupeAction()
+    {
+        $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
+        $form = $this->getFormationGroupeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-groupe/editer', ['formation-groupe' => $groupe->getId()], [], true));
+        $form->bind($groupe);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationGroupeService()->update($groupe);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modifier un groupe de formation',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserGroupeAction()
+    {
+        $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
+        $this->getFormationGroupeService()->historise($groupe);
+        return $this->redirect()->toRoute('formation', [], ['fragment' => 'groupe'], true);
+    }
+
+    public function restaurerGroupeAction()
+    {
+        $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
+        $this->getFormationGroupeService()->restore($groupe);
+        return $this->redirect()->toRoute('formation', [], ['fragment' => 'groupe'], true);
+    }
+
+    public function detruireGroupeAction()
+    {
+        $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFormationGroupeService()->delete($groupe);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($groupe !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du groupe de formation [" . $groupe->getLibelle() . "]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('formation-groupe/detruire', ["formation-groupe" => $groupe->getId()], [], true),
             ]);
         }
         return $vm;
@@ -204,14 +313,14 @@ class FormationController extends AbstractActionController
     {
         $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
         $this->getFormationThemeService()->historise($theme);
-        return $this->redirect()->toRoute('formation', [], [], true);
+        return $this->redirect()->toRoute('formation', [], ['fragment' => 'theme'], true);
     }
 
     public function restaurerThemeAction()
     {
         $theme = $this->getFormationThemeService()->getRequestedFormationTheme($this);
         $this->getFormationThemeService()->restore($theme);
-        return $this->redirect()->toRoute('formation', [], [], true);
+        return $this->redirect()->toRoute('formation', [], ['fragment' => 'theme'], true);
     }
 
     public function detruireThemeAction()

@@ -8,14 +8,22 @@ use Application\Form\Formation\FormationForm;
 use Application\Form\Formation\FormationFormFactory;
 use Application\Form\Formation\FormationHydrator;
 use Application\Form\Formation\FormationHydratorFactory;
+use Application\Form\FormationGroupe\FormationGroupeForm;
+use Application\Form\FormationGroupe\FormationGroupeFormFactory;
+use Application\Form\FormationGroupe\FormationGroupeHydrator;
+use Application\Form\FormationGroupe\FormationGroupeHydratorFactory;
 use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Form\SelectionFormation\SelectionFormationFormFactory;
 use Application\Form\SelectionFormation\SelectionFormationHydrator;
 use Application\Provider\Privilege\FormationPrivileges;
+use Application\Service\Formation\FormationGroupeService;
+use Application\Service\Formation\FormationGroupeServiceFactory;
 use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -38,6 +46,7 @@ return [
                     'action' => [
                         'afficher',
 
+                        'afficher-groupe',
                         'afficher-theme',
                     ],
                     'privileges' => [
@@ -48,6 +57,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'ajouter',
+                        'ajouter-groupe',
                         'ajouter-theme',
                     ],
                     'privileges' => [
@@ -58,6 +68,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'editer',
+                        'editer-groupe',
                         'editer-theme',
                     ],
                     'privileges' => [
@@ -69,6 +80,8 @@ return [
                     'action' => [
                         'historiser',
                         'restaurer',
+                        'historiser-groupe',
+                        'restaurer-groupe',
                         'historiser-theme',
                         'restaurer-theme',
                     ],
@@ -80,6 +93,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'detruire',
+                        'detruire-groupe',
                         'detruire-theme',
                     ],
                     'privileges' => [
@@ -183,6 +197,78 @@ return [
                     ],
                 ],
             ],
+            'formation-groupe' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/formation-groupe',
+                    'defaults' => [
+                        'controller' => FormationController::class,
+                    ],
+                ],
+                'may_terminate' => false,
+                'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:formation-groupe',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'afficher-groupe',
+                            ],
+                        ],
+                    ],
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'ajouter-groupe',
+                            ],
+                        ],
+                    ],
+                    'editer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/editer/:formation-groupe',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'editer-groupe',
+                            ],
+                        ],
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:formation-groupe',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'historiser-groupe',
+                            ],
+                        ],
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:formation-groupe',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'restaurer-groupe',
+                            ],
+                        ],
+                    ],
+                    'detruire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire/:formation-groupe',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'detruire-groupe',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             'formation' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -262,7 +348,9 @@ return [
     'service_manager' => [
         'factories' => [
             FormationService::class => FormationServiceFactory::class,
+            FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
+            ParcoursDeFormationService::class => ParcoursDeFormationServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -273,15 +361,18 @@ return [
     'form_elements' => [
         'factories' => [
             FormationForm::class => FormationFormFactory::class,
+            FormationGroupeForm::class => FormationGroupeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokables' => [
             SelectionFormationHydrator::class => SelectionFormationHydrator::class,
+//            FormationGroupeHydrator::class => FormationGroupeHydrator::class,
         ],
         'factories' => [
             FormationHydrator::class => FormationHydratorFactory::class,
+            FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
         ],
     ]
 

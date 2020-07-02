@@ -12,9 +12,9 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\Export\EntretienProfessionnel\EntretienProfessionnelPdfExporter;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Doctrine\ORM\ORMException;
@@ -37,6 +37,7 @@ class EntretienProfessionnelController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;
     use EntretienProfessionnelCampagneServiceAwareTrait;
     use MailingServiceAwareTrait;
+    use ParcoursDeFormationServiceAwareTrait;
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
@@ -188,6 +189,8 @@ class EntretienProfessionnelController extends AbstractActionController {
         $agent = $entretien->getAgent();
         $fichespostes = ($agent)?$agent->getFiches():[];
         $fichesmetiers = [];
+        $parcours = $this->getParcoursDeFormationService()->getParcoursDeFormation(1); //TODO recuperer le bon
+
         foreach ($fichespostes as $ficheposte) {
             $fiches = $ficheposte->getFichesMetiers();
             foreach ($fiches as $fiche) {
@@ -197,6 +200,7 @@ class EntretienProfessionnelController extends AbstractActionController {
 
         return new ViewModel([
             'entretien' => $entretien,
+            'parcours' => $parcours,
 
             'agent' => $agent,
             'fichespostes' => $fichespostes,

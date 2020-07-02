@@ -3,11 +3,13 @@
 namespace Application\Form\Formation;
 
 use Application\Entity\Db\Formation;
+use Application\Service\Formation\FormationGroupeServiceAwareTrait;
 use Application\Service\Formation\FormationThemeServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class FormationHydrator implements HydratorInterface {
     use FormationThemeServiceAwareTrait;
+    use FormationGroupeServiceAwareTrait;
 
     /**
      * @var Formation $object
@@ -19,6 +21,7 @@ class FormationHydrator implements HydratorInterface {
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
             'lien' => $object->getLien(),
+            'groupe' => ($object->getGroupe())?$object->getGroupe()->getId():null,
             'theme' => ($object->getTheme())?$object->getTheme()->getId():null,
         ];
 
@@ -32,12 +35,13 @@ class FormationHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $theme = null;
-        if (isset($data['theme']) && $data['theme'] !== "" ) $theme = $this->getFormationThemeService()->getFormationTheme($data['theme']);
+        $groupe = (isset($data['groupe']) && $data['groupe'] !== "" ) ? $this->getFormationGroupeService()->getFormationGroupe($data['groupe']) : null;
+        $theme = (isset($data['theme']) && $data['theme'] !== "" ) ? $this->getFormationThemeService()->getFormationTheme($data['theme']) : null;
         $object->setLibelle($data['libelle']);
         $object->setDescription($data['description']);
         $object->setLien($data['lien']);
         $object->setTheme($theme);
+        $object->setGroupe($groupe);
         return $object;
     }
 

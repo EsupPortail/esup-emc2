@@ -8,6 +8,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\Structure\StructureService;
 use Autoform\Service\Formulaire\FormulaireInstanceService;
 use Autoform\Service\Formulaire\FormulaireService;
@@ -31,6 +32,7 @@ class EntretienProfessionnelControllerFactory {
          * @var FormulaireService $formulaireService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailingService $mailingService
+         * @var ParcoursDeFormationService $parcoursDeFormationService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
@@ -43,6 +45,7 @@ class EntretienProfessionnelControllerFactory {
         $formulaireService = $container->get(FormulaireService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailingService = $container->get(MailingService::class);
+        $parcoursDeFormationService = $container->get(ParcoursDeFormationService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
@@ -66,6 +69,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);
         $controller->setEntretienProfessionnelCampagneService($entretienProfesionnelCampagneService);
         $controller->setFormulaireInstanceService($formulaireInstanceService);
+        $controller->setParcoursDeFormationService($parcoursDeFormationService);
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
         $controller->setFormulaireService($formulaireService);
