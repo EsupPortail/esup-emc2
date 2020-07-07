@@ -63,9 +63,8 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
             <?php endif; ?>
         </div>
     </div>
-<?php endif; ?>
 
-<div class="row">
+    <div class="row">
     <div class="col-md-8">
     <?php if ($fichemetier->hasExpertise()) : ?>
         <span class="label" style="background-color: darkgreen;"> Expertise </span>
@@ -101,7 +100,7 @@ if (isset($options['sans-titre'])) $sansTitre = ($options['sans-titre'] === true
         </div>
     </div>
 </div>
-
+<?php endif; ?>
 <br/>
 
 <div class="main">

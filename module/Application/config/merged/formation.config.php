@@ -24,6 +24,8 @@ use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceFactory;
+use Application\View\Helper\FormationGroupeViewHelper;
+use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -374,6 +376,10 @@ return [
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
         ],
-    ]
-
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'formationGroupe' => FormationGroupeViewHelper::class,
+        ],
+    ],
 ];

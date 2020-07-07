@@ -4,6 +4,7 @@ namespace Application\Service\Formation;
 
 use Application\Entity\Db\FormationGroupe;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\RendererAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -14,6 +15,7 @@ class FormationGroupeService {
 //    use UserServiceAwareTrait;
 //    use DateTimeAwareTrait;
     use GestionEntiteHistorisationTrait;
+    use RendererAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -95,6 +97,23 @@ class FormationGroupeService {
     }
 
     /**
+     * @param FormationGroupe $groupe
+     * @return array
+     */
+    public function optionify(FormationGroupe $groupe) {
+        $res = $this->renderer->formationGroupe($groupe);
+
+        $this_option = [
+            'value' =>  $groupe->getId(),
+            'attributes' => [
+                'data-content' => $res . "&nbsp;&nbsp;&nbsp;&nbsp;".$groupe->getLibelle(),
+            ],
+            'label' => $groupe->getLibelle(),
+        ];
+        return $this_option;
+    }
+
+    /**
      * @return array
      */
     public function getFormationsGroupesAsOption()
@@ -102,7 +121,8 @@ class FormationGroupeService {
         $groupes = $this->getFormationsGroupes();
         $array = [];
         foreach ($groupes as $groupe) {
-            $array[$groupe->getId()] = $groupe->getLibelle();
+            $option = $this->optionify($groupe);
+            $array[$groupe->getId()] = $option;
         }
         return $array;
     }

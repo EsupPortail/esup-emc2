@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @var FormationTheme[] $themes
+ * @var boolean[] $droits
+ */
+
+use Application\Entity\Db\FormationTheme;
+
+$canAfficher = $droits['afficher'];
+$canAjouter = $droits['ajouter'];
+$canEditer = $droits['editer'];
+$canHistoriser = $droits['historiser'];
+$canDetruire = $droits['detruire'];
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Thèmes des formations
+        </h2>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canAjouter) : ?>
+            <br/>
+            <a
+                <?php /** @see FormationController::ajouterAction() */ ?>
+                href="<?php echo $this->url('formation-theme/ajouter', [], [], true); ?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter un thème
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<br/>
+
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th> Libellé </th>
+        <th> #Formation </th>
+        <th> Modification </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($themes as $theme) : ?>
+        <tr>
+            <td> <?php echo $theme->getLibelle(); ?> </td>
+            <td> <?php echo count($theme->getFormations()); ?> </td>
+            <td>
+                <small>
+                    <?php echo $theme->getHistoModification()->format('d/m/Y à H:i'); ?>
+                    <br/>
+                    <?php echo $theme->getHistoModificateur()->getDisplayName(); ?>
+                </small>
+            </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a  <?php /** @see FormationController::afficherThemeAction() */ ?>
+                        href="<?php  echo $this->url('formation-theme/afficher', ['formation-theme' => $theme->getId()], [], true); ?>"
+                        class="ajax-modal">
+                        <span class="icon voir" title="Afficher le thème"></span></a>
+                <?php else : ?>
+                    <span class="icon voir" style="color:lightgrey;"></span>
+                <?php endif; ?>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see FormationController::editerThemeAction() */ ?>
+                        href="<?php  echo $this->url('formation-theme/editer', ['formation-theme' => $theme->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                    >
+                        <span class="icon editer" title="Modifier le thème"></span></a>
+                <?php else : ?>
+                    <span class="icon editer" style="color:lightgrey;"></span>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($theme->estNonHistorise()) : ?>
+                        <a
+                            <?php /** @see FormationController::historiserThemeAction() */ ?>
+                            href="<?php  echo $this->url('formation-theme/historiser', ['formation-theme' => $theme->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser le thème"></span></a>
+                    <?php else : ?>
+
+                        <a
+                            <?php /** @see FormationController::restaurerThemeAction() */ ?>
+                            href="<?php  echo $this->url('formation-theme/restaurer', ['formation-theme' => $theme->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer le thème"></span></a>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <?php if ($theme->estNonHistorise()) : ?>
+                        <span class="icon historiser" style="color:lightgrey;"></span>
+                    <?php else : ?>
+                        <span class="icon restaurer" style="color:lightgrey;"></span>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruire) : ?>
+                    <a
+                        <?php /** @see FormationController::detruireThemeAction() */ ?>
+                        href="<?php echo $this->url('formation-theme/detruire', ['formation-theme' => $theme->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire" title="Afficher le thème"></span></a>
+                <?php else : ?>
+                    <span class="icon detruire" style="color:lightgrey;"></span>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
