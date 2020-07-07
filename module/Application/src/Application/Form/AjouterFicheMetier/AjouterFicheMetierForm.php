@@ -2,6 +2,8 @@
 
 namespace Application\Form\AjouterFicheMetier;
 
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\MetierReference;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -126,8 +128,15 @@ class AjouterFicheMetierForm extends Form {
         ksort($dictionnaire);
         foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
+            /** @var FicheMetier $fiche */
             foreach ($listing as $fiche) {
-                $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle();
+                $references = [];
+                /** @var MetierReference $reference */
+                foreach ($fiche->getMetier()->getReferences() as $reference) {
+                    $references[] = $reference->getTitre();
+                }
+                $str_references = implode(", ", $references);
+                $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . (!empty($references)?" (".$str_references.")":"") ;
             }
             $array = [
                 'label' => $clef,
