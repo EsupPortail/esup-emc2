@@ -11,6 +11,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Service\Formation\FormationGroupeServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\Formation\FormationThemeServiceAwareTrait;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -20,6 +21,7 @@ class FormationController extends AbstractActionController
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationThemeServiceAwareTrait;
+    use ParcoursDeFormationServiceAwareTrait;
 
     use FormationFormAwareTrait;
     use FormationGroupeFormAwareTrait;

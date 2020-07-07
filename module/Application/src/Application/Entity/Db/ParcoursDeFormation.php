@@ -3,15 +3,24 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class ParcoursDeFormation {
+    use HistoriqueAwareTrait;
+
+    const TYPE_CATEGORIE = 'Catégorie';
+    const TYPE_METIER    = 'Métier';
 
     /** @var integer */
     private $id;
     /** @var string */
+    private $type;
+    /** @var integer */
+    private $reference;
+    /** @var string */
     private $libelle;
-    /** @var ArrayCollection (string) */
-    private $categories;
+    /** @var string */
+    private $description;
     /** @var ArrayCollection (Formation) */
     private $formations;
 
@@ -21,6 +30,42 @@ class ParcoursDeFormation {
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return ParcoursDeFormation
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param int $reference
+     * @return ParcoursDeFormation
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
+        return $this;
     }
 
     /**
@@ -42,40 +87,20 @@ class ParcoursDeFormation {
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function getCategories()
+    public function getDescription()
     {
-        $categories = $this->categories->toArray();
-        return $categories;
+        return $this->description;
     }
 
     /**
-     * @param string $categorie
-     * @return boolean
-     */
-    public function hasCategorie($categorie)
-    {
-        return $this->categories->contains($categorie);
-    }
-
-    /**
-     * @param string $categorie
+     * @param string $description
      * @return ParcoursDeFormation
      */
-    public function addCategorie($categorie)
+    public function setDescription($description)
     {
-        if (! $this->categories->contains($categorie)) $this->categories->add($categorie);
-        return $this;
-    }
-
-    /**
-     * @param string $categorie
-     * @return ParcoursDeFormation
-     */
-    public function removeCategorie($categorie)
-    {
-        $this->categories->removeElement($categorie);
+        $this->description = $description;
         return $this;
     }
 

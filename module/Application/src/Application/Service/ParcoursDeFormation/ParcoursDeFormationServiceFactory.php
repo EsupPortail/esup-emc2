@@ -2,6 +2,7 @@
 
 namespace Application\Service\ParcoursDeFormation;
 
+use Application\Service\Metier\MetierService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 
@@ -15,12 +16,15 @@ class ParcoursDeFormationServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
+         * @var MetierService $metierService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $metierService = $container->get(MetierService::class);
 
         /** @var ParcoursDeFormationService $service */
         $service = new ParcoursDeFormationService();
         $service->setEntityManager($entityManager);
+        $service->setMetierService($metierService);
         return $service;
     }
 }

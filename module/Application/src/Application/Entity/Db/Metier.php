@@ -13,6 +13,8 @@ class Metier implements HistoriqueAwareInterface {
     private $id;
     /** @var string */
     private $libelle;
+    /** @var integer */
+    private $categorie;
 
     /** @var ArrayCollection (Domaine) */
     private  $domaines;
@@ -93,4 +95,21 @@ class Metier implements HistoriqueAwareInterface {
         $this->domaines->add($domaine);
     }
 
+    /**
+     * @return int
+     */
+    public function getCategorie()
+    {
+        return $this->categorie;
+    }
+
+    /**
+     * @param int $categorie
+     * @return Metier
+     */
+    public function setCategorie($categorie)
+    {
+        $this->categorie = $categorie;
+        return $this;
+    }
 }

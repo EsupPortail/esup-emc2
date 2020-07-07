@@ -24,8 +24,8 @@ return [
          * Informations concernant cette application
          */
         'app_infos' => [
-            'nom'     => "PrEECoG",
-            'desc'    => "Gestion Prévisionnelle des effectifs, des emplois et des compétences",
+            'nom'     => "PrECoG",
+            'desc'    => "Prévisionnel des emplois et des compétences : Outil de gestion",
             'version' => "0.4.9",
             'date'    => "13/12/2019",
             'contact' => ['mail' => "dsi.applications@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],

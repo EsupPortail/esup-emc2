@@ -22,10 +22,7 @@ use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceFactory;
 use Application\View\Helper\FormationGroupeViewHelper;
-use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -352,7 +349,6 @@ return [
             FormationService::class => FormationServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
-            ParcoursDeFormationService::class => ParcoursDeFormationServiceFactory::class,
         ],
     ],
     'controllers'     => [

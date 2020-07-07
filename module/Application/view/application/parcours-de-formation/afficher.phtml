@@ -1,0 +1,51 @@
+<?php
+
+use Application\Entity\Db\Metier;
+use Application\Entity\Db\ParcoursDeFormation;
+
+/**
+ * @var ParcoursDeFormation $parcours
+ * @var Metier $reference
+ */
+
+$nogroup = "ZZZZ";
+$formationArray = [];
+foreach ($parcours->getFormations() as $formation) {
+    $groupe = ($formation->getGroupe())?$formation->getGroupe()->getLibelle():$nogroup;
+    $formationArray[$groupe][] = $formation;
+}
+
+ksort($formationArray);
+?>
+
+<dl class="dl-horizontal">
+    <dt> Libellé </dt>
+    <dd> <?php echo $parcours->getLibelle(); ?> </dd>
+    <dt> Description </dt>
+    <dd> <?php echo $parcours->getDescription(); ?> </dd>
+    <dt> Référence </dt>
+    <dd>
+        <?php if ($parcours->getType() === ParcoursDeFormation::TYPE_CATEGORIE) : ?>
+            <?php echo $parcours->getType(); ?> <?php echo $parcours->getReference(); ?>
+        <?php endif; ?>
+        <?php if ($parcours->getType() === ParcoursDeFormation::TYPE_METIER) : ?>
+            <?php echo $parcours->getType(); ?> <?php echo $parcours->getReference(); ?> : <?php echo $reference->getLibelle(); ?>
+        <?php endif; ?>
+    </dd>
+</dl>
+
+<?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
+    <?php if ($groupe !== $nogroup) : ?>
+        <?php echo $this->formationGroupe($formationSubarray[0]->getGroupe()); ?>
+    <?php else: ?>
+        <span class="badge">Sans groupe ...</span>
+    <?php endif; ?>
+
+    <ul>
+    <?php  foreach($formationSubarray as $formation) : ?>
+        <li>
+            <?php echo $formation->getLibelle(); ?>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+<?php endforeach; ?>

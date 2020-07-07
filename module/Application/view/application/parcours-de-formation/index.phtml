@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @see \Application\Controller\ParcoursDeFormationController::indexAction()
+ * @var ParcoursDeFormation[] $parcoursCategorie
+ * @var ParcoursDeFormation[] $parcoursMetier
+ */
+
+use Application\Entity\Db\ParcoursDeFormation;
+
+$droits = [];
+
+?>
+
+<h1 class="page-header">
+    Index des parcours de formation
+</h1>
+
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="categorie">
+            <a href="#categorie" aria-controls="categorie" role="tab" data-toggle="tabz" >
+                Parcours de formation <br/>
+                Catégorie &nbsp;
+                <span class="badge">
+                    <?php echo count($parcoursCategorie); ?>
+                </span>
+            </a>
+        </li>
+        <li role="metier">
+            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz">
+                Parcours de formation <br/>
+                Métier &nbsp;
+                <span class="badge">
+                    <?php echo count($parcoursMetier); ?>
+                </span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="main-with-tab">
+
+        <div class="tab-content">
+
+            <div id="categorie" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursCategorie, 'droits' => $droits], [], true); ?>
+            </div>
+            <div id="metier" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursMetier, 'droits' => $droits], [], true); ?>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "categorie";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
