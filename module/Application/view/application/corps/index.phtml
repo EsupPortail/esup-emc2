@@ -2,12 +2,13 @@
 
 /**
  * @see \Application\Controller\CorpsController::indexAction()
+ * @var Categorie[] $categories
  * @var Corps[] $corps
  * @var Grade[] $grades
  * @var Correspondance[] $correspondances
  */
 
-
+use Application\Entity\Db\Categorie;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Grade;
@@ -20,7 +21,7 @@ $this->headTitle('Corps, grades et correspondances');
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
-            Corps, grades et correspondances
+            Catégories, corps, grades et correspondances
         </h1>
     </div>
     <div class="pull-right col-md-4 alert alert-info">
@@ -31,6 +32,15 @@ $this->headTitle('Corps, grades et correspondances');
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
+
+        <li role="categorie">
+            <a href="#categorie" aria-controls="categorie" role="tab" data-toggle="tabz">
+                Catégories
+                <span class="badge">
+                    <?php echo count($categories); ?>
+                </span>
+            </a>
+        </li>
 
         <li role="corps">
             <a href="#corps" aria-controls="corps" role="tab" data-toggle="tabz">
@@ -63,6 +73,11 @@ $this->headTitle('Corps, grades et correspondances');
     <div class="main-with-tab">
 
         <div class="tab-content">
+
+            <!-- CATEGORIES ------------------------------------------------------------------------------------------->
+            <div id="categorie" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-categorie', ['categories' => $categories]); ?>
+            </div>
 
             <!-- CORPS ------------------------------------------------------------------------------------------------>
             <div id="corps" class="tab-pane " role="tabpanel">

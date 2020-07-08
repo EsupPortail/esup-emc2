@@ -127,7 +127,7 @@ class MetierService {
         return $metier;
     }
 
-    public function getMetiersTypesAsMultiOptions(bool $historiser = false)
+    public function getMetiersTypesAsMultiOptions($historiser = false)
     {
         /** @var Metier[] $metiers */
         $metiers = $this->getMetiers();

@@ -345,7 +345,7 @@ return [
                                 'label'    => 'Compétences',
                                 'route'    => 'competence',
                                 'resource' => CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER),
-                                'order'    => 500,
+                                'order'    => 600,
                             ],
                         ],
                     ],

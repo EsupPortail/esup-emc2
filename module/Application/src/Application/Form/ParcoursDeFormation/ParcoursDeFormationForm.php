@@ -3,6 +3,7 @@
 namespace Application\Form\ParcoursDeFormation;
 
 use Application\Entity\Db\ParcoursDeFormation;
+use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -14,6 +15,7 @@ use Zend\InputFilter\Factory;
 use Zend\Validator\Callback;
 
 class ParcoursDeFormationForm extends Form {
+    use CategorieServiceAwareTrait;
     use MetierServiceAwareTrait;
     use FormationServiceAwareTrait;
 
@@ -55,11 +57,7 @@ class ParcoursDeFormationForm extends Form {
             'options' => [
                 'label' => "Catégorie (laisser vide si concerne un métier) :",
                 'empty_option' => "Sélectionner une catégorie ...",
-                'value_options' => [
-                    1 => 'A',
-                    2 => 'B',
-                    3 => 'C',
-                ],
+                'value_options' => $this->getCategorieService()->getCategorieAsOption(),
             ],
             'attributes' => [
                 'id' => 'categorie',
