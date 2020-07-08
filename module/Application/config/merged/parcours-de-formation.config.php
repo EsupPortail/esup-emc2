@@ -24,7 +24,11 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'ajouter',
                         'modifier',
+                        'historiser',
+                        'restaurer',
+                        'detruire',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INDEX,
@@ -77,6 +81,17 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'ajouter' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter/:type',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'modifier' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -84,6 +99,39 @@ return [
                             'defaults' => [
                                 'controller' => ParcoursDeFormationController::class,
                                 'action'     => 'modifier',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:parcours-de-formation',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:parcours-de-formation',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'detruire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/detruire/:parcours-de-formation',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'detruire',
                             ],
                         ],
                         'may_terminate' => true,

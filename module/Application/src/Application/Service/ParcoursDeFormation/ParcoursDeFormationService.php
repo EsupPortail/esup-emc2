@@ -4,17 +4,72 @@ namespace Application\Service\ParcoursDeFormation;
 
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ParcoursDeFormationService {
-    use EntityManagerAwareTrait;
+//    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
     use MetierServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
+    /** GESTION DES ENTITES *******************************************************************************************/
+
+    /**
+     * @param ParcoursDeFormation $parcours
+     * @return ParcoursDeFormation
+     */
+    public function create(ParcoursDeFormation $parcours)
+    {
+        $this->createFromTrait($parcours);
+        return $parcours;
+    }
+
+    /**
+     * @param ParcoursDeFormation $parcours
+     * @return ParcoursDeFormation
+     */
+    public function update(ParcoursDeFormation $parcours)
+    {
+        $this->updateFromTrait($parcours);
+        return $parcours;
+    }
+
+    /**
+     * @param ParcoursDeFormation $parcours
+     * @return ParcoursDeFormation
+     */
+    public function historise(ParcoursDeFormation $parcours)
+    {
+        $this->historiserFromTrait($parcours);
+        return $parcours;
+    }
+
+    /**
+     * @param ParcoursDeFormation $parcours
+     * @return ParcoursDeFormation
+     */
+    public function restore(ParcoursDeFormation $parcours)
+    {
+        $this->restoreFromTrait($parcours);
+        return $parcours;
+    }
+
+    /**
+     * @param ParcoursDeFormation $parcours
+     * @return ParcoursDeFormation
+     */
+    public function delete(ParcoursDeFormation $parcours)
+    {
+        $this->deleteFromTrait($parcours);
+        return $parcours;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
     /**
      * @return QueryBuilder
      */

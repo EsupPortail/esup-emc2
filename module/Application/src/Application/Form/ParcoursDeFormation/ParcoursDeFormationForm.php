@@ -7,8 +7,11 @@ use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
+use Zend\Form\Element\Text;
 use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
+use Zend\Validator\Callback;
 
 class ParcoursDeFormationForm extends Form {
     use MetierServiceAwareTrait;
@@ -16,6 +19,18 @@ class ParcoursDeFormationForm extends Form {
 
     public function init()
     {
+        // libelle
+        $this->add([
+            'type' => Text::class,
+            'name' => 'libelle',
+            'options' => [
+                'label' => "Libelle :",
+            ],
+            'attributes' => [
+                'id' => 'libelle',
+            ],
+        ]);
+
         $this->add([
             'type' => Select::class,
             'name' => 'type',
@@ -113,5 +128,33 @@ class ParcoursDeFormationForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        //inputFilter
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'libelle'            => [ 'required' => true, ],
+            'description'        => [ 'required' => false, ],
+            'type'               => [ 'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "Le champ de référence (Catégorie ou métier) doit être saisi",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            if($context['type'] === ParcoursDeFormation::TYPE_CATEGORIE) return $context['categorie'] !== '';
+                            if($context['type'] === ParcoursDeFormation::TYPE_METIER) return $context['metier'] !== '';
+                            return $value !== '';
+                        },
+                        //'break_chain_on_failure' => true,
+                    ],
+                ]],
+            ],
+            'metier'             => [ 'required' => false, ],
+            'categorie'          => [ 'required' => false, ],
+            'formations'         => [ 'required' => false, ],
+        ]));
+
     }
+
+
 }

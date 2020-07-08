@@ -43,10 +43,10 @@ $droits = [];
         <div class="tab-content">
 
             <div id="categorie" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursCategorie, 'droits' => $droits], [], true); ?>
+                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursCategorie, 'type' => ParcoursDeFormation::TYPE_CATEGORIE, 'droits' => $droits], [], true); ?>
             </div>
             <div id="metier" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursMetier, 'droits' => $droits], [], true); ?>
+                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursMetier, 'type' => ParcoursDeFormation::TYPE_METIER, 'droits' => $droits], [], true); ?>
             </div>
 
         </div>

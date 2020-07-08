@@ -2,6 +2,7 @@
 
 /**
  * @var ParcoursDeFormation[] $parcours
+ * @var string $type
  * @var boolean[] $droits
  */
 
@@ -11,6 +12,25 @@ $canAfficher = true;
 $canModifier = true;
 ?>
 
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Parcours de formation : <?php echo $type; ?>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <a
+            <?php /** @see \Application\Controller\ParcoursDeFormationController::ajouterAction() */ ?>
+                href="<?php echo $this->url('parcours-de-formation/ajouter', ['type' => $type], [], true); ?>"
+                class="btn btn-primary action ajax-modal" data-event="modification"
+            >
+            <span class="icon ajouter"> Ajouter un parcours de formation</span>
+        </a>
+        <br/>
+        <br/>
+    </div>
+</div>
 <table class="datatable table table-condensed">
     <thead>
         <tr>

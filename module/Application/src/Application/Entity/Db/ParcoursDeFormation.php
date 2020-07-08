@@ -3,9 +3,10 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class ParcoursDeFormation {
+class ParcoursDeFormation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     const TYPE_CATEGORIE = 'Catégorie';
@@ -109,6 +110,7 @@ class ParcoursDeFormation {
      */
     public function getFormations()
     {
+        if ($this->formations === null) return [];
         return $this->formations->toArray();
     }
 
@@ -138,6 +140,19 @@ class ParcoursDeFormation {
     public function removeFormation(Formation $formation)
     {
         $this->formations->removeElement($formation);
+        return $this;
+    }
+
+    /**
+     * @param Formation[] $formations
+     * @return ParcoursDeFormation
+     */
+    public function setFormations($formations)
+    {
+        $this->formations->clear();
+        foreach($formations as $formation) {
+            $this->formations->add($formation);
+        }
         return $this;
     }
 }

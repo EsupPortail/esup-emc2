@@ -5,6 +5,7 @@ namespace Application\Service\ParcoursDeFormation;
 use Application\Service\Metier\MetierService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class ParcoursDeFormationServiceFactory {
 
@@ -17,14 +18,17 @@ class ParcoursDeFormationServiceFactory {
         /**
          * @var EntityManager $entityManager
          * @var MetierService $metierService
+         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $metierService = $container->get(MetierService::class);
+        $userService = $container->get(UserService::class);
 
         /** @var ParcoursDeFormationService $service */
         $service = new ParcoursDeFormationService();
         $service->setEntityManager($entityManager);
         $service->setMetierService($metierService);
+        $service->setUserService($userService);
         return $service;
     }
 }
