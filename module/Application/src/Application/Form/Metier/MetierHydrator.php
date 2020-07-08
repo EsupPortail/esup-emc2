@@ -3,10 +3,12 @@
 namespace Application\Form\Metier;
 
 use Application\Entity\Db\Metier;
+use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class MetierHydrator implements HydratorInterface {
+    use CategorieServiceAwareTrait;
     use DomaineServiceAwareTrait;
 
     /**
@@ -22,6 +24,7 @@ class MetierHydrator implements HydratorInterface {
         }
 
         $data = [
+            'categorie' => $object->getCategorie()->getId(),
             'domaines' => $domaineIds,
             'libelle' => $object->getLibelle(),
         ];
@@ -35,7 +38,7 @@ class MetierHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
+        $categorie = $this->getCategorieService()->getCategorie($data['categorie']);
 
         $object->clearDomaines();
         foreach ($data['domaines'] as $id) {
@@ -44,6 +47,7 @@ class MetierHydrator implements HydratorInterface {
         }
 
         $object->setLibelle($data['libelle']);
+        $object->setCategorie($categorie);
 
         return $object;
     }

@@ -392,4 +392,12 @@ class Agent implements ResourceInterface
         $fiche = $this->getFichePosteActif();
         return ($fiche) ? $fiche->getPoste() : null;
     }
+
+    /**
+     *
+     */
+    public function hasValidatedFormation(Formation $formation)
+    {
+        return $false;
+    }
 }

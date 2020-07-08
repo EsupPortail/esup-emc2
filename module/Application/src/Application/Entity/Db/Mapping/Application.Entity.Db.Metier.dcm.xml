@@ -23,6 +23,9 @@
 
         <one-to-many target-entity="Application\Entity\Db\FicheMetier" mapped-by="metier" field="fichesMetiers"/>
 
+        <many-to-one target-entity="Application\Entity\Db\Categorie"  field="categorie">
+            <join-column name="categorie_id" referenced-column-name="id"/>
+        </many-to-one>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

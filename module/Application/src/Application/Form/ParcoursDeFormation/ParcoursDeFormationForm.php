@@ -62,7 +62,7 @@ class ParcoursDeFormationForm extends Form {
             'attributes' => [
                 'id' => 'categorie',
                 'class'             => 'bootstrap-selectpicker show-tick',
-                //'data-live-search'  => 'true',
+                'data-live-search'  => 'true',
             ],
         ]);
 
@@ -77,7 +77,7 @@ class ParcoursDeFormationForm extends Form {
             'attributes' => [
                 'id' => 'metier',
                 'class'             => 'bootstrap-selectpicker show-tick',
-                //'data-live-search'  => 'true',
+                'data-live-search'  => 'true',
             ],
         ]);
 

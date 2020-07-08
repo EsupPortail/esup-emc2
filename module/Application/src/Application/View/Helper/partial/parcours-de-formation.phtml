@@ -1,0 +1,66 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\ParcoursDeFormation;
+
+$displayValidation = false;
+/**
+ * @see \Application\View\Helper\ParcoursDeFormationViewHelper
+ * @var ParcoursDeFormation $parcours
+ * @var Agent $agent
+ * @var array $option
+ */
+
+$nogroup = "ZZZZ";
+$formationArray = [];
+foreach ($parcours->getFormations() as $formation) {
+    $groupe = ($formation->getGroupe())?$formation->getGroupe()->getLibelle():$nogroup;
+    $formationArray[$groupe][] = $formation;
+}
+
+ksort($formationArray);
+?>
+
+<h3>
+    <?php echo $parcours->getLibelle(); ?>
+</h3>
+
+<!--<dl class="dl-horizontal">-->
+<!--    <dt> Libellé </dt>-->
+<!--    <dd> --><?php //echo $parcours->getLibelle(); ?><!-- </dd>-->
+<!--    <dt> Description </dt>-->
+<!--    <dd> --><?php //echo $parcours->getDescription(); ?><!-- </dd>-->
+<!--    <dt> Référence </dt>-->
+<!--    <dd>-->
+<!--        --><?php //if ($parcours->getType() === ParcoursDeFormation::TYPE_CATEGORIE) : ?>
+<!--            --><?php //echo $parcours->getType(); ?><!-- --><?php //echo $parcours->getReference(); ?>
+<!--        --><?php //endif; ?>
+<!--        --><?php //if ($parcours->getType() === ParcoursDeFormation::TYPE_METIER) : ?>
+<!--            --><?php //echo $parcours->getType(); ?><!-- --><?php //echo $parcours->getReference(); ?><!-- : --><?php //echo $reference->getLibelle(); ?>
+<!--        --><?php //endif; ?>
+<!--    </dd>-->
+<!--</dl>-->
+
+<?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
+    <?php if ($groupe !== $nogroup) : ?>
+        <?php echo $this->formationGroupe($formationSubarray[0]->getGroupe()); ?>
+    <?php else: ?>
+        <span class="badge">Sans groupe ...</span>
+    <?php endif; ?>
+
+    <ul>
+        <?php  foreach($formationSubarray as $formation) : ?>
+            <li>
+                <?php echo $formation->getLibelle(); ?>
+                <?php if ($displayValidation AND $agent !== null) : ?>
+                    <?php $validatedFormation = $agent->hasValidatedFormation($formation); ?>
+                    <?php if ($validatedFormation) : ?>
+                        <span class="icon ok"></span>
+                    <?php else : ?>
+                        <span class="icon question"></span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endforeach; ?>

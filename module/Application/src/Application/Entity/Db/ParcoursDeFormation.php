@@ -25,6 +25,11 @@ class ParcoursDeFormation implements HistoriqueAwareInterface {
     /** @var ArrayCollection (Formation) */
     private $formations;
 
+    public function __construct()
+    {
+        $this->formations = new ArrayCollection();
+    }
+
     /**
      * @return int
      */

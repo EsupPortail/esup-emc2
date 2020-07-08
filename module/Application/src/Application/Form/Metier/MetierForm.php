@@ -2,6 +2,7 @@
 
 namespace Application\Form\Metier;
 
+use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
@@ -11,6 +12,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class MetierForm extends Form {
+    use CategorieServiceAwareTrait;
     use DomaineServiceAwareTrait;
 
     public function init()
@@ -42,6 +44,21 @@ class MetierForm extends Form {
                 'id' => 'libelle',
             ],
         ]);
+        //categorie
+        $this->add([
+            'type' => Select::class,
+            'name' => 'categorie',
+            'options' => [
+                'label' => "Catégorie (laisser vide si concerne un métier) :",
+                'empty_option' => "Sélectionner une catégorie ...",
+                'value_options' => $this->getCategorieService()->getCategorieAsOption(),
+            ],
+            'attributes' => [
+                'id' => 'categorie',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                //'data-live-search'  => 'true',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -62,6 +79,7 @@ class MetierForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'domaines'          => [ 'required' => true,  ],
             'libelle'           => [ 'required' => true,  ],
+            'categorie'         => [ 'required' => false,  ],
         ]));
     }
 }

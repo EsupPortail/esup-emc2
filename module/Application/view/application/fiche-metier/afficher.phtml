@@ -3,13 +3,15 @@
 /**
  * @see FicheMetierController::afficherAction()
  * @var FicheMetier $fiche
+ * @var ParcoursDeFormation $parcours
  */
 
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\ParcoursDeFormation;
 
 ?>
 
 <?php
-    echo $this->ficheMetier($fiche, null, ['mode' => 'affichage']);
+    echo $this->ficheMetier($fiche, null, ['mode' => 'affichage', 'parcours' => $parcours]);
 ?>
 

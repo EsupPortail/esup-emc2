@@ -17,6 +17,7 @@ use Application\Service\Expertise\ExpertiseService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FormationsRetirees\FormationsRetireesService;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
@@ -37,6 +38,7 @@ class FichePosteControllerFactory {
          * @var FormationsRetireesService $formationsConserseesService
          * @var ExpertiseService $expertiseService
          * @var SpecificitePosteService $specificitePosteService
+         * @var ParcoursDeFormationService $parcoursService
          */
         $agentService = $container->get(AgentService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -49,6 +51,7 @@ class FichePosteControllerFactory {
         $formationsConserseesService = $container->get(FormationsRetireesService::class);
         $expertiseService = $container->get(ExpertiseService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
+        $parcoursService = $container->get(ParcoursDeFormationService::class);
 
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
@@ -83,6 +86,7 @@ class FichePosteControllerFactory {
         $controller->setFormationsRetireesService($formationsConserseesService);
         $controller->setExpertiseService($expertiseService);
         $controller->setSpecificitePosteService($specificitePosteService);
+        $controller->setParcoursDeFormationService($parcoursService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierAgentForm($associerAgentForm);

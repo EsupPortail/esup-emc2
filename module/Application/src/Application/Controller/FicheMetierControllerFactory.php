@@ -15,6 +15,7 @@ use Application\Service\Configuration\ConfigurationService;
 use Application\Service\Domaine\DomaineService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetierEtat\FicheMetierEtatService;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Interop\Container\ContainerInterface;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -28,13 +29,14 @@ class FicheMetierControllerFactory {
          * @var FicheMetierService $ficheMetierService
          * @var FicheMetierEtatService $ficheMetierEtatService
          * @var ConfigurationService $configurationService
+         * @var ParcoursDeFormationService $parcoursService
          */
         $activiteService = $container->get(ActiviteService::class);
         $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $ficheMetierEtatService = $container->get(FicheMetierEtatService::class);
         $configurationService = $container->get(ConfigurationService::class);
-
+        $parcoursService = $container->get(ParcoursDeFormationService::class);
 
         /**
          * @var LibelleForm $libelleForm
@@ -67,6 +69,7 @@ class FicheMetierControllerFactory {
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFicheMetierEtatService($ficheMetierEtatService);
         $controller->setConfigurationService($configurationService);
+        $controller->setParcoursDeFormationService($parcoursService);
 
         $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);

@@ -8,6 +8,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierAgent\AssocierAgentForm;
@@ -28,6 +29,7 @@ use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FormationsRetirees\FormationsRetireesServiceAwareTrait;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
@@ -55,6 +57,7 @@ class FichePosteController extends AbstractActionController {
     use FormationsRetireesServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
+    use ParcoursDeFormationServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -192,6 +195,9 @@ class FichePosteController extends AbstractActionController {
         $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche, $date);
 
+        //parcours de formation
+        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
+
         return new ViewModel([
             'title' => $titre,
             'fiche' => $fiche,
@@ -199,6 +205,7 @@ class FichePosteController extends AbstractActionController {
             'competences' => $competences,
             'formations' => $formations,
             'activites' => $activites,
+            'parcours' => $parcours,
         ]);
     }
 

@@ -2,6 +2,8 @@
 
 namespace Application\Service\ParcoursDeFormation;
 
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Service\GestionEntiteHistorisationTrait;
@@ -148,5 +150,67 @@ class ParcoursDeFormationService {
             return $metier;
         }
         return null;
+    }
+
+    /**
+     * @param string $type
+     * @param int $reference
+     * @return ParcoursDeFormation
+     */
+    public function getParcoursDeFormationByTypeAndReference($type, $reference)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("parcours.type = :type")
+            ->andWhere("parcours.reference = :reference")
+            ->setParameter('type', $type)
+            ->setParameter('reference', $reference)
+            ->andWhere('parcours.histoDestruction IS NULL')
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs ParcoursDeFormation partagent le même type et référence [".$type."|".$reference."]", 0 , $e);
+        }
+        return $result;
+    }
+
+    /** ARRAY GENERATION **********************************************************************************************/
+
+    /**
+     * @param FicheMetier $ficheMetier
+     * @param array $array
+     * @return array
+     */
+    public function generateParcoursArrayFromFicheMetier(FicheMetier $ficheMetier, &$array = null)
+    {
+        if ($array === null) $array = [];
+        $metier = $ficheMetier->getMetier();
+        $categorie = ($metier)?$metier->getCategorie():null;
+
+        if ($metier !== null) {
+            $parcours = $this->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_METIER, $metier->getId());
+            if ($parcours !== null) $array[ParcoursDeFormation::TYPE_METIER][$metier->getId()] = $parcours;
+        }
+        if ($categorie !== null) {
+            $parcours = $this->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $categorie->getId());
+            if ($parcours !== null) $array[ParcoursDeFormation::TYPE_CATEGORIE][$categorie->getId()] = $parcours;
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param FichePoste $fichePoste
+     * @return array
+     */
+    public function generateParcoursArrayFromFichePoste(FichePoste $fichePoste)
+    {
+        $array = [];
+        foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $this->generateParcoursArrayFromFicheMetier($ficheMetier, $array);
+        }
+        return $array;
     }
 }

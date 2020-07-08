@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
+use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
@@ -25,6 +26,7 @@ use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -41,6 +43,7 @@ class FicheMetierController extends  AbstractActionController{
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FicheMetierEtatServiceAwareTrait;
+    use ParcoursDeFormationServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;
@@ -86,10 +89,12 @@ class FicheMetierController extends  AbstractActionController{
     public function afficherAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
+        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
 
         return new ViewModel([
             'title' => 'Visualisation d\'une fiche métier',
             'fiche' => $fiche,
+            'parcours' => $parcours,
         ]);
     }
 
