@@ -9,7 +9,10 @@
 use Application\Entity\Db\ParcoursDeFormation;
 
 $canAfficher = true;
+$canAjouter = true;
 $canModifier = true;
+$canHistoriser = true;
+$canDetruire = true;
 ?>
 
 <div class="row">
@@ -20,6 +23,7 @@ $canModifier = true;
     </div>
     <div class="pull-right">
         <br/>
+        <?php if($canAjouter) : ?>
         <a
             <?php /** @see \Application\Controller\ParcoursDeFormationController::ajouterAction() */ ?>
                 href="<?php echo $this->url('parcours-de-formation/ajouter', ['type' => $type], [], true); ?>"
@@ -27,6 +31,7 @@ $canModifier = true;
             >
             <span class="icon ajouter"> Ajouter un parcours de formation</span>
         </a>
+        <?php endif; ?>
         <br/>
         <br/>
     </div>
@@ -71,6 +76,29 @@ $canModifier = true;
                                 class="ajax-modal" data-event="modification"
                         >
                             <span class="icon editer" title="Modifier le parcours de formation"></span></a>
+                    <?php endif; ?>
+                    <?php if($canHistoriser) : ?>
+                        <?php if ($parcour->estHistorise()) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\ParcoursDeFormationController::restaurerAction() */?>
+                                    href="<?php echo $this->url('parcours-de-formation/restaurer', ['parcours-de-formation' => $parcour->getId()], [], true); ?>"
+                            >
+                                <span class="icon restaurer" title="Restaurer le parcours de formation"></span></a>
+                        <?php else : ?>
+                            <a
+                                <?php /** @see \Application\Controller\ParcoursDeFormationController::historiserAction() */?>
+                                    href="<?php echo $this->url('parcours-de-formation/historiser', ['parcours-de-formation' => $parcour->getId()], [], true); ?>"
+                            >
+                                <span class="icon historiser" title="Historiser le parcours de formation"></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if($canDetruire) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\ParcoursDeFormationController::detruireAction() */?>
+                                href="<?php echo $this->url('parcours-de-formation/detruire', ['parcours-de-formation' => $parcour->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon detruire" title="Detruire le parcours de formation"></span></a>
                     <?php endif; ?>
                 </td>
             </tr>
