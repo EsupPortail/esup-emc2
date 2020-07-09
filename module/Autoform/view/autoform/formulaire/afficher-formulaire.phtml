@@ -16,8 +16,8 @@ use Autoform\Entity\Db\Formulaire;
 
     <form class="autoform" method="post" action="<?php echo $url; ?>" >
 
-        <span id="hide" class="btn btn-info"> Cacher les catégories </span>
-        <span id="show" class="btn btn-info">Afficher les catégories </span>
+<!--        <span id="hide" class="btn btn-info"> Cacher les catégories </span>-->
+<!--        <span id="show" class="btn btn-info">Afficher les catégories </span>-->
         <input type="submit" value="Valider le formulaire" class="btn btn-primary"/>
 
         <br/>
@@ -59,19 +59,19 @@ use Autoform\Entity\Db\Formulaire;
     </form>
 
 <script>
-    $('div.body-reductible').each(function() { $(this).hide()});
-
-    $('div.title-reductible').click(function() {
-        $(this).siblings().each(function() { $(this).toggle(); });
-    });
-
-    $('span#hide').click(function() {
-        $('div.body-reductible').each(function() { $(this).hide()});
-    });
-
-    $('span#show').click(function() {
-        $('div.body-reductible').each(function() { $(this).show()});
-    });
+    // $('div.body-reductible').each(function() { $(this).hide()});
+    //
+    // $('div.title-reductible').click(function() {
+    //     $(this).siblings().each(function() { $(this).toggle(); });
+    // });
+    //
+    // $('span#hide').click(function() {
+    //     $('div.body-reductible').each(function() { $(this).hide()});
+    // });
+    //
+    // $('span#show').click(function() {
+    //     $('div.body-reductible').each(function() { $(this).show()});
+    // });
 
     $("select.periode").change(function() {
         checkPeriode($(this));

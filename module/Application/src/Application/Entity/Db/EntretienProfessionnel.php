@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
@@ -24,6 +25,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface {
     private $dateEntretien;
     /** @var FormulaireInstance */
     private $formulaireInstance;
+
+    /** @var ArrayCollection (Observation) */
+    private $observations;
 
     /** @var ValidationInstance */
     private $validationAgent;
@@ -139,6 +143,58 @@ class EntretienProfessionnel implements HistoriqueAwareInterface {
         $this->formulaireInstance = $formulaireInstance;
         return $this;
     }
+
+    /** OBSERVATIONS **************************************************************************************************/
+
+    /**
+     * @return EntretienProfessionnelObservation[]
+     */
+    public function getObservations()
+    {
+        return $this->observations->toArray();
+    }
+
+    /**
+     * @param EntretienProfessionnelObservation $observation
+     * @return boolean
+     */
+    public function hasObservation($observation)
+    {
+        return $this->observations->contains($observation);
+    }
+
+    /**
+     * @param EntretienProfessionnelObservation $observation
+     * @return EntretienProfessionnel
+     */
+    public function addObservation(EntretienProfessionnelObservation $observation)
+    {
+        if ($this->hasObservation($observation)) $this->observations->add($observation);
+        return $this;
+    }
+
+    /**
+     * @param EntretienProfessionnelObservation $observation
+     * @return EntretienProfessionnel
+     */
+    public function removeObservation(EntretienProfessionnelObservation $observation)
+    {
+        $this->observations->removeElement($observation);
+        return $this;
+    }
+
+    /**
+     * @param EntretienProfessionnelObservation[] $observations
+     * @return EntretienProfessionnel
+     */
+    public function setObservations($observations)
+    {
+        $this->observations->clear();
+        foreach ($observations as $observation) $this->addObservation($observation);
+        return $this;
+    }
+
+    /** VALIDATION ****************************************************************************************************/
 
     /**
      * @return ValidationInstance
