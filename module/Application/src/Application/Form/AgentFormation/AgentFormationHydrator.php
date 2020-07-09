@@ -20,7 +20,7 @@ class AgentFormationHydrator implements HydratorInterface {
     {
         $data = [
             'formation' => ($object->getFormation())?$object->getFormation()->getId():null,
-            'date' => ($object->getFormation())?$object->getDate()->format('Y-m-d'):null,
+            'date' => ($object->getDate())?$object->getDate()->format('Y-m-d'):null,
         ];
         return $data;
     }

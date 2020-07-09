@@ -394,10 +394,28 @@ class Agent implements ResourceInterface
     }
 
     /**
-     *
+     * @param Formation $formation
+     * @return AgentFormation
+     */
+    public function hasFormation(Formation $formation)
+    {
+        /** @var AgentFormation $aformation */
+        foreach ($this->formations as $aformation) {
+            if ($aformation->getFormation() === $formation) return $aformation;
+        }
+        return null;
+    }
+
+    /**
+     * @param Formation $formation
+     * @return AgentFormation
      */
     public function hasValidatedFormation(Formation $formation)
     {
-        return $false;
+        /** @var AgentFormation $aformation */
+        foreach ($this->formations as $aformation) {
+            if ($aformation->getFormation() === $formation AND $aformation->estValide()) return $aformation;
+        }
+        return null;
     }
 }

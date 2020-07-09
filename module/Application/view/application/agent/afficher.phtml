@@ -417,7 +417,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                                 <span class="icon editer" title="Modifier une formation liée à l'agent"></span></a>
                         <?php endif; ?>
                         <?php if ($canHistoriser) : ?>
-                            <?php if ($application->estNonHistorise()) : ?>
+                            <?php if ($formation->estNonHistorise()) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\AgentController::historiserAgentFormationAction() */?>
                                         href="<?php echo $this->url('agent/historiser-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"

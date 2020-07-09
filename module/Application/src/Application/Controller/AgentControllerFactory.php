@@ -9,6 +9,7 @@ use Application\Form\AgentFormation\AgentFormationForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use Application\Service\Formation\FormationService;
 use Application\Service\Structure\StructureService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
@@ -29,6 +30,7 @@ class AgentControllerFactory {
          * @var ValidationTypeService $validationTypeService
          * @var NatureService $natureService
          * @var FichierService $fichierService
+         * @var FormationService $formationService
          * @var StructureService $structureService
          * @var UserService $userService
          */
@@ -38,6 +40,7 @@ class AgentControllerFactory {
         $validationTypeService = $container->get(ValidationTypeService::class);
         $natureService = $container->get(NatureService::class);
         $fichierService = $container->get(FichierService::class);
+        $formationService = $container->get(FormationService::class);
         $userService = $container->get(UserService::class);
         $structureService = $container->get(StructureService::class);
 
@@ -65,6 +68,7 @@ class AgentControllerFactory {
         $controller->setValidationTypeService($validationTypeService);
         $controller->setNatureService($natureService);
         $controller->setFichierService($fichierService);
+        $controller->setFormationService($formationService);
         $controller->setUserService($userService);
         $controller->setStructureService($structureService);
 

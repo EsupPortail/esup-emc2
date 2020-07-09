@@ -3,6 +3,7 @@
 /**
  * @var Agent $agent
  * @var ParcoursDeFormation $parcours
+ * @var array $options
  */
 
 use Application\Entity\Db\Agent;
@@ -14,33 +15,33 @@ $canModifier = true;
 $canHistoriser = true;
 $canDetruire = true;
 $canValider = true;
+
 ?>
 
-<h2> Entrée dans le métier </h2>
+<h2> Parcours de formation </h2>
 
-<dl class="dl-horizontal">
-    <dt>
-        Catégorie de l'agent
-    </dt>
-    <dd>
-        <?php $grades = $agent->getGradesActifs(); ?>
-        <?php foreach ($grades as $grade) : ?>
-            <?php echo '&nbsp;'. $grade->getCorps()->getCategorie(); ?>
-        <?php endforeach; ?>
-    </dd>
-</dl>
+<div class="row">
+    <div class="col-md-6">
+        <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
+            <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
+                <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
+        <?php endif; ?>
+    </div>
+    <div class="col-md-6">
+        <?php if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
+            <?php foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
+                <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <span class="icon attention">Pas de parcours de formation associé au métier.</span>
+        <?php endif; ?>
+    </div>
+</div>
 
-Quid que faire quand un agent est position sur plusieurs grades (affection) ? LE PLUS ELEVE ?
 
-<?php echo  $parcours->getLibelle(); ?>
-
-<table>
-    <?php foreach ($parcours->getFormations() as $formation) :  ?>
-        <tr><td>
-            <?php echo $formation->getLibelle(); ?>
-        </td></tr>
-    <?php endforeach; ?>
-</table>
 
 <h2> Acquis de l'agent </h2>
 
@@ -319,7 +320,7 @@ Quid que faire quand un agent est position sur plusieurs grades (affection) ? LE
                                 <span class="icon editer" title="Modifier une formation liée à l'agent"></span></a>
                         <?php endif; ?>
                         <?php if ($canHistoriser) : ?>
-                            <?php if ($application->estNonHistorise()) : ?>
+                            <?php if ($formation->estNonHistorise()) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\AgentController::historiserAgentFormationAction() */?>
                                         href="<?php echo $this->url('agent/historiser-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
@@ -365,7 +366,6 @@ Quid que faire quand un agent est position sur plusieurs grades (affection) ? LE
         </ul>
     </div>
 </div>
-
 
 <style>
     div.bloc {

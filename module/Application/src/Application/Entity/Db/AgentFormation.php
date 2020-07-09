@@ -83,4 +83,12 @@ class AgentFormation implements ValidableInterface, HistoriqueAwareInterface {
         return $this;
     }
 
+    public function estValide()
+    {
+        $validation = $this->getValidation();
+        if ($validation === null) return false;
+        if ($validation->getValeur() !== null) return false;
+        return true;
+    }
+
 }

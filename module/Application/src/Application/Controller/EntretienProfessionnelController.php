@@ -184,12 +184,13 @@ class EntretienProfessionnelController extends AbstractActionController {
 
     public function renseignerAction()
     {
+        /** TODO  revoir ici une seul fiche de poste actives sinon c'est la merde */
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
 
         $agent = $entretien->getAgent();
         $fichespostes = ($agent)?$agent->getFiches():[];
         $fichesmetiers = [];
-        $parcours = $this->getParcoursDeFormationService()->getParcoursDeFormation(1); //TODO recuperer le bon
+        $parcours = ($fichespostes[0])?$this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichespostes[0]):null;
 
         foreach ($fichespostes as $ficheposte) {
             $fiches = $ficheposte->getFichesMetiers();

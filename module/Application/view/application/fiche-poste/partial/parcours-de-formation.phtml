@@ -23,7 +23,7 @@ use Application\Entity\Db\ParcoursDeFormation;
             <div class="col-md-6">
                 <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
                     <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
-                        <?php echo $this->parcoursDeFormation($parcour, $options); ?>
+                        <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
@@ -32,7 +32,7 @@ use Application\Entity\Db\ParcoursDeFormation;
             <div class="col-md-6">
                 <?php if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
                     <?php foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
-                        <?php echo $this->parcoursDeFormation($parcour, $options); ?>
+                        <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <span class="icon attention">Pas de parcours de formation associé au métier.</span>

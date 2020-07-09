@@ -1,15 +1,24 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Categorie;
+use Application\Entity\Db\FormationGroupe;use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 
-$displayValidation = false;
 /**
  * @see \Application\View\Helper\ParcoursDeFormationViewHelper
  * @var ParcoursDeFormation $parcours
+ * @var Categorie|Metier $reference
  * @var Agent $agent
  * @var array $option
  */
+
+$asListe = false;
+$asArray=true;
+
+$canModifier = isset($options['modification'])?$options['modification']:false;
+
+
 
 $nogroup = "ZZZZ";
 $formationArray = [];
@@ -19,48 +28,134 @@ foreach ($parcours->getFormations() as $formation) {
 }
 
 ksort($formationArray);
+
 ?>
 
 <h3>
-    <?php echo $parcours->getLibelle(); ?>
+    <?php if ($reference !== null) : ?>
+        <?php echo $reference->getLibelle(); ?>
+    <?php else : ?>
+        <?php echo $parcours->getLibelle(); ?>
+    <?php endif; ?>
 </h3>
 
-<!--<dl class="dl-horizontal">-->
-<!--    <dt> Libellé </dt>-->
-<!--    <dd> --><?php //echo $parcours->getLibelle(); ?><!-- </dd>-->
-<!--    <dt> Description </dt>-->
-<!--    <dd> --><?php //echo $parcours->getDescription(); ?><!-- </dd>-->
-<!--    <dt> Référence </dt>-->
-<!--    <dd>-->
-<!--        --><?php //if ($parcours->getType() === ParcoursDeFormation::TYPE_CATEGORIE) : ?>
-<!--            --><?php //echo $parcours->getType(); ?><!-- --><?php //echo $parcours->getReference(); ?>
-<!--        --><?php //endif; ?>
-<!--        --><?php //if ($parcours->getType() === ParcoursDeFormation::TYPE_METIER) : ?>
-<!--            --><?php //echo $parcours->getType(); ?><!-- --><?php //echo $parcours->getReference(); ?><!-- : --><?php //echo $reference->getLibelle(); ?>
-<!--        --><?php //endif; ?>
-<!--    </dd>-->
-<!--</dl>-->
+<?php if ($asListe) : ?>
+    <?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
+        <?php if ($groupe !== $nogroup) : ?>
+            <?php echo $this->formationGroupe($formationSubarray[0]->getGroupe()); ?>
+        <?php else: ?>
+            <span class="badge">Sans groupe ...</span>
+        <?php endif; ?>
 
-<?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
-    <?php if ($groupe !== $nogroup) : ?>
-        <?php echo $this->formationGroupe($formationSubarray[0]->getGroupe()); ?>
-    <?php else: ?>
-        <span class="badge">Sans groupe ...</span>
-    <?php endif; ?>
-
-    <ul>
-        <?php  foreach($formationSubarray as $formation) : ?>
-            <li>
-                <?php echo $formation->getLibelle(); ?>
-                <?php if ($displayValidation AND $agent !== null) : ?>
-                    <?php $validatedFormation = $agent->hasValidatedFormation($formation); ?>
-                    <?php if ($validatedFormation) : ?>
-                        <span class="icon ok"></span>
-                    <?php else : ?>
-                        <span class="icon question"></span>
+        <ul>
+            <?php  foreach($formationSubarray as $formation) : ?>
+                <li>
+                    <?php echo $formation->getLibelle(); ?>
+                    <?php if (false AND $agent !== null) : ?>
+                        <?php $validatedFormation = $agent->hasValidatedFormation($formation); ?>
+                        <?php if ($validatedFormation) : ?>
+                            <span class="icon ok"></span>
+                        <?php else : ?>
+                            <span class="icon question"></span>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
-            </li>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<?php if ($asArray) : ?>
+    <table class="parcours-de-formation">
+        <?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
+            <?php if ($groupe !== $nogroup) : ?>
+                <?php /** @var FormationGroupe $groupe */ $groupe = $formationSubarray[0]->getGroupe(); ?>
+                <tr>
+                    <th colspan="2" style="background-color: <?php echo $groupe->getCouleur(); ?>;">
+                        <?php echo $groupe->getLibelle(); ?>
+                    </th>
+                </tr>
+            <?php else : ?>
+                <tr>
+                    <th colspan="2" style="background-color: gray;">
+                        Sans groupe ...
+                    </th>
+                </tr>
+            <?php endif; ?>
+
+            <?php  foreach($formationSubarray as $formation) : ?>
+            <tr>
+                <td class="libelle"> <?php echo $formation->getLibelle(); ?> </td>
+                <td class="formation">
+                    <?php if ($agent !== null) : ?>
+                        <?php $agentFormation = $agent->hasFormation($formation); ?>
+                        <?php if ($agentFormation !== null) : ?>
+                            <?php if ($agentFormation->getValidation()) : ?>
+                                <?php if ($agentFormation->getValidation()->getValeur() === null) : ?>
+                                    <span class="icon ok" style="color: darkgreen;"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Validée le <?php echo $agentFormation->getValidation()->getHistoModification()->format('d/m/Y'); ?> par <?php echo $agentFormation->getValidation()->getHistoModificateur()->getDisplayName(); ?>"
+                                    ></span>
+                                <?php else : ?>
+                                    <span class="icon ko" style="color: darkred;"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Refusée le <?php echo $agentFormation->getValidation()->getHistoModification()->format('d/m/Y'); ?> par <?php echo $agentFormation->getValidation()->getHistoModificateur()->getDisplayName(); ?>"
+                                    ></span>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <?php if ($canModifier) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+                                        href="<?php echo $this->url('agent/valider-element', ['type' => "AgentFormation", 'id' => $agentFormation->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                    >
+                                <?php endif; ?>
+                                <span class="icon question" style="color: cornflowerblue;"
+                                      data-toggle="tooltip" data-html="true"
+                                      title="Formation en attente de validation"
+                                ></span>
+                                <?php if ($canModifier) : ?>
+                                    </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if ($canModifier) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::ajouterAgentFormationAction() */?>
+                                        href="<?php echo $this->url('agent/ajouter-agent-formation', ['agent' => $agent->getId(), 'formation' => $formation->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                >
+                                    <span class="icon ajouter"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Ajouter une formation"
+                                    ></span>
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
         <?php endforeach; ?>
-    </ul>
-<?php endforeach; ?>
+    </table>
+<?php endif; ?>
+
+<style>
+    table.parcours-de-formation {
+        width:95%;
+    }
+
+    table.parcours-de-formation th {
+        padding: 0.5rem;
+        color: white;
+    }
+    table.parcours-de-formation td.libelle {
+        padding-left: 1rem;
+        width:80%;
+    }
+    table.parcours-de-formation td.formation {
+        text-align: center;
+    }
+</style>

@@ -21,6 +21,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
@@ -46,6 +47,7 @@ class AgentController extends AbstractActionController
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
     use FichierServiceAwareTrait;
+    use FormationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -447,11 +449,13 @@ class AgentController extends AbstractActionController
     public function ajouterAgentFormationAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        $formation = $this->getFormationService()->getRequestedFormation($this);
 
         $agentFormation = new AgentFormation();
         $agentFormation->setAgent($agent);
+        $agentFormation->setFormation($formation);
         $form = $this->getAgentFormationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-formation', ['agent' => $agent->getId()]));
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-formation', ['agent' => $agent->getId(), 'formation' => ($formation)?$formation->getId():null]));
         $form->bind($agentFormation);
 
         /** @var Request $request */

@@ -425,7 +425,7 @@ return [
                     'ajouter-agent-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-agent-formation/:agent',
+                            'route'    => '/ajouter-agent-formation/:agent[/:formation]',
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'ajouter-agent-formation',

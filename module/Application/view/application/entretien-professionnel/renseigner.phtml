@@ -3,6 +3,7 @@
 /**
  * @see \Application\Controller\EntretienProfessionnelController::renseignerAction()
  * @var EntretienProfessionnel $entretien
+ * @var array $parcours
  * @var Agent $agent
  * @var FichePoste[] $fichespostes
  * @var FicheMetier[] $fichesmetiers
@@ -70,7 +71,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
 
             <div id="parcours" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/parcours.phtml', ['agent' => $entretien->getAgent(), 'parcours' => $parcours]); ?>
+                <?php echo $this->partial('partial/parcours.phtml', ['agent' => $entretien->getAgent(), 'parcours' => $parcours, 'options' => ['modification' => true]]); ?>
             </div>
 
             <div id="avis" class="tab-pane " role="tabpanel">

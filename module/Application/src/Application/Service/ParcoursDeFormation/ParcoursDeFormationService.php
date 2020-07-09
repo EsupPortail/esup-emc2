@@ -2,10 +2,12 @@
 
 namespace Application\Service\ParcoursDeFormation;
 
+use Application\Entity\Db\Categorie;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
+use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -16,6 +18,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class ParcoursDeFormationService {
 //    use EntityManagerAwareTrait;
 //    use UserServiceAwareTrait;
+    use CategorieServiceAwareTrait;
     use MetierServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
@@ -141,12 +144,16 @@ class ParcoursDeFormationService {
 
     /**
      * @param ParcoursDeFormation $parcours
-     * @return Metier
+     * @return Categorie|Metier
      */
     public function getReference(ParcoursDeFormation $parcours)
     {
+        if ($parcours->getType() === ParcoursDeFormation::TYPE_CATEGORIE) {
+            $categorie = $this->getCategorieService()->getCategorie($parcours->getReference());
+            return $categorie;
+        }
         if ($parcours->getType() === ParcoursDeFormation::TYPE_METIER) {
-            $metier = $this->getMetierService()->getMetier($parcours->getId());
+            $metier = $this->getMetierService()->getMetier($parcours->getReference());
             return $metier;
         }
         return null;

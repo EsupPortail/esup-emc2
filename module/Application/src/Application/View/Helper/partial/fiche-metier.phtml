@@ -426,7 +426,7 @@ $a=1;
                     <div class="col-md-6">
                         <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
                             <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
-                                <?php echo $this->parcoursDeFormation($parcour, $options); ?>
+                                <?php echo $this->parcoursDeFormation($parcour, null, $options); ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <span class="icon attention">Pas de parcours de formation associé à la catégorie <?php echo $fichemetier->getMetier()->getCategorie()->getLibelle(); ?>.</span>
@@ -435,7 +435,7 @@ $a=1;
                     <div class="col-md-6">
                         <?php if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
                             <?php foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
-                                <?php echo $this->parcoursDeFormation($parcour, $options); ?>
+                                <?php echo $this->parcoursDeFormation($parcour, null, $options); ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <span class="icon attention">Pas de parcours de formation associé au métier <?php echo $fichemetier->getMetier()->getLibelle(); ?>.</span>
