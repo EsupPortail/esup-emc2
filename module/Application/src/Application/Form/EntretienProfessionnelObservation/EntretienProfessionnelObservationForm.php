@@ -21,8 +21,7 @@ class EntretienProfessionnelObservationForm extends Form {
                 ],
             ],
             'attributes' => [
-                'id' =>  'obs-entretien',
-                'class' => 'type2 form-control',
+                'class' => 'type2 form-control obs-entretien',
             ]
         ]);
         // perspective
@@ -36,8 +35,7 @@ class EntretienProfessionnelObservationForm extends Form {
                 ],
             ],
             'attributes' => [
-                'id' => 'obs-perspective',
-                'class' => 'type2 form-control',
+                'class' => 'type2 form-control obs-perspective',
             ]
         ]);
         // button

@@ -503,7 +503,7 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('application/entretien-professionnel/observation-form');
         $vm->setVariables([
             'title' => "Modification d'une observation",
             'form' => $form,

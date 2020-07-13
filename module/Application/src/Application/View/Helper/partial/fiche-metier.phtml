@@ -160,17 +160,12 @@ $a=1;
         </div>
     </div>
 
+    <?php $allRetirees = []; if ($ficheposte) $allRetirees = $ficheposte->getDescriptionsRetirees(); ?>
     <?php foreach ($activites as $ficheActivite): ?>
         <?php if (array_search($ficheActivite->getActivite()->getId(), $activitesListe) !== false) : ?>
             <?php
                 $retirees = [];
-                if ($ficheposte) {
-                    $allRetirees = $ficheposte->getDescriptionsRetirees();
-                    /** @var FicheposteActiviteDescriptionRetiree $retiree */
-                    foreach ($allRetirees as $retiree) {
-                        if ($retiree->getHistoDestruction() === null AND $retiree->getActivite() === $activite->getActivite()) $retirees[] = $retiree;
-                    }
-                }
+                if ($ficheposte) $retirees = FicheposteActiviteDescriptionRetiree::filtrer($ficheActivite->getActivite(), $allRetirees);
             ?>
             <?php echo $this->activite($ficheActivite, $options['mode'], ['ficheposte' => $ficheposte, 'fichemetier' => $fichemetier, 'retirees' => $retirees]); ?>
         <?php endif; ?>

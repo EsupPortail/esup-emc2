@@ -98,4 +98,17 @@ class FicheposteActiviteDescriptionRetiree {
         return $this;
     }
 
+    /**
+     * @param Activite $activite
+     * @param FicheposteActiviteDescriptionRetiree[] $retirees
+     * @return FicheposteActiviteDescriptionRetiree[]
+     */
+    static public function filtrer($activite, $retirees)
+    {
+        $result = [];
+        foreach ($retirees as $retiree) {
+            if ($activite->getId() === $retiree->getDescription()->getActivite()->getId()) $result[] = $retiree;
+        }
+        return $result;
+    }
 }
