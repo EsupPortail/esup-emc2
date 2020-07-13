@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
@@ -192,6 +193,22 @@ class EntretienProfessionnel implements HistoriqueAwareInterface {
         $this->observations->clear();
         foreach ($observations as $observation) $this->addObservation($observation);
         return $this;
+    }
+
+    /**
+     * @return EntretienProfessionnelObservation
+     */
+    public function getObservationActive()
+    {
+        $observation = null;
+        /** @var EntretienProfessionnelObservation $obs */
+        foreach ($this->observations as $obs) {
+            if ($obs->estNonHistorise()) {
+                if ($observation !== null) throw new RuntimeException("Plusieurs observations actives pour l'entretien #".$this->id, 0, null);
+                $observation = $obs;
+            }
+        }
+        return $observation;
     }
 
     /** VALIDATION ****************************************************************************************************/

@@ -12,9 +12,15 @@ use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampag
 use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneFormFactory;
 use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneHydrator;
 use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneHydratorFactory;
+use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationForm;
+use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationFormFactory;
+use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationHydrator;
+use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationHydratorFactory;
 use Application\Provider\Privilege\EntretienproPrivileges;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceFactory;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelObservationService;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelObservationServiceFactory;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -96,10 +102,20 @@ return [
                     ],
                     'roles' => [],
                 ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'ajouter-observation',
+                        'modifier-observation',
+                        'historiser-observation',
+                        'restaurer-observation',
+                        'detruire-observation',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
-
     'navigation'      => [
         'default' => [
             'home' => [
@@ -242,6 +258,7 @@ return [
                             ],
                         ],
                     ],
+                    /** CAMPAGNE */
                     'campagne' => [
                         'type'  => Literal::class,
                         'may_terminate' => false,
@@ -306,6 +323,71 @@ return [
                             ],
                         ]
                     ],
+                    /** OBSERVATION */
+                    'observation' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => false,
+                        'options' => [
+                            'route'    => '/observation',
+                        ],
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/ajouter/:entretien-professionnel',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'ajouter-observation',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/modifier/:observation',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'modifier-observation',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/historiser/:observation',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'historiser-observation',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/restaurer/:observation',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'restaurer-observation',
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/detruire/:observation',
+                                    'defaults' => [
+                                        'controller' => EntretienProfessionnelController::class,
+                                        'action'     => 'detruire-observation',
+                                    ],
+                                ],
+                            ],
+                        ]
+                    ],
                 ],
             ],
         ],
@@ -315,6 +397,7 @@ return [
         'factories' => [
             EntretienProfessionnelService::class => EntretienProfessionnelServiceFactory::class,
             EntretienProfessionnelCampagneService::class => EntretienProfessionnelCampagneServiceFactory::class,
+            EntretienProfessionnelObservationService::class => EntretienProfessionnelObservationServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -326,12 +409,14 @@ return [
         'factories' => [
             EntretienProfessionnelForm::class => EntretienProfessionnelFormFactory::class,
             EntretienProfessionnelCampagneForm::class => EntretienProfessionnelCampagneFormFactory::class,
+            EntretienProfessionnelObservationForm::class => EntretienProfessionnelObservationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             EntretienProfessionnelHydrator::class => EntretienProfessionnelHydratorFactory::class,
             EntretienProfessionnelCampagneHydrator::class => EntretienProfessionnelCampagneHydratorFactory::class,
+            EntretienProfessionnelObservationHydrator::class => EntretienProfessionnelObservationHydratorFactory::class,
         ],
     ]
 

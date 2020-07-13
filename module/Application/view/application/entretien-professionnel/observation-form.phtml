@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @var EntretienProfessionnelObservationForm $form
+ */
+
+use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationForm;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function() {
+        // tinymce.remove();
+        tinymce.init({
+            selector: '.obs-entretien',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'obs-entretien',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('obs-entretien').getContent());
+                    $('textarea#obs-entretien').val(tinymce.get('obs-entretien').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.obs-perspective',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'obs-perspective',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                     // console.log(tinymce.get('obs-perspective').getContent());
+                    $('textarea#obs-perspective').val(tinymce.get('obs-perspective').getContent());
+                });
+            }
+        });
+    });
+</script>
+
+<style>
+    .form-control {
+        height:auto;
+    }
+</style>

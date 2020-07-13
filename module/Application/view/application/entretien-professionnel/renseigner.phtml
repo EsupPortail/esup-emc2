@@ -51,7 +51,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
         <li role="avis">
             <a href="#avis" aria-controls="avis" role="tab" data-toggle="tabz" >
-                Avis &nbsp;
+                Observation &nbsp;
             </a>
         </li>
 
@@ -75,7 +75,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
 
             <div id="avis" class="tab-pane " role="tabpanel">
-<!--                --><?php //echo $this->partial('partial/listing-metier.phtml', ['metiers' => $metiers, 'droits' => $droits]); ?>
+                <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits]); ?>
             </div>
 
             <div id="validation" class="tab-pane " role="tabpanel">

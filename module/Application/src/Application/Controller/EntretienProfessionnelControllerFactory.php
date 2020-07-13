@@ -4,9 +4,11 @@ namespace Application\Controller;
 
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneForm;
+use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelObservationService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\Structure\StructureService;
@@ -29,6 +31,7 @@ class EntretienProfessionnelControllerFactory {
          * @var ConfigurationService $configurationService
          * @var EntretienProfessionnelService $entretienProfesionnelService
          * @var EntretienProfessionnelCampagneService $entretienProfesionnelCampagneService
+         * @var EntretienProfessionnelObservationService $entretienProfessionnelObservationService
          * @var FormulaireService $formulaireService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailingService $mailingService
@@ -42,6 +45,7 @@ class EntretienProfessionnelControllerFactory {
         $configurationService = $container->get(ConfigurationService::class);
         $entretienProfesionnelService = $container->get(EntretienProfessionnelService::class);
         $entretienProfesionnelCampagneService = $container->get(EntretienProfessionnelCampagneService::class);
+        $entretienProfessionnelObservationService = $container->get(EntretienProfessionnelObservationService::class);
         $formulaireService = $container->get(FormulaireService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailingService = $container->get(MailingService::class);
@@ -53,9 +57,11 @@ class EntretienProfessionnelControllerFactory {
         /**
          * @var EntretienProfessionnelForm $entretienProfessionnelForm
          * @var EntretienProfessionnelCampagneForm $campagneForm
+         * @var EntretienProfessionnelObservationForm $observationForm
          */
         $entretienProfessionnelForm = $container->get('FormElementManager')->get(EntretienProfessionnelForm::class);
         $campagneForm = $container->get('FormElementManager')->get(EntretienProfessionnelCampagneForm::class);
+        $observationForm = $container->get('FormElementManager')->get(EntretienProfessionnelObservationForm::class);
 
         /* @var PhpRenderer $renderer  */
         $renderer = $container->get('ViewRenderer');
@@ -63,11 +69,13 @@ class EntretienProfessionnelControllerFactory {
         /** @var EntretienProfessionnelController $controller */
         $controller = new EntretienProfessionnelController();
         $controller->setRenderer($renderer);
+
         $controller->setAgentService($agentService);
         $controller->setUserService($userService);
         $controller->setConfigurationService($configurationService);
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);
         $controller->setEntretienProfessionnelCampagneService($entretienProfesionnelCampagneService);
+        $controller->setEntretienProfessionnelObservationService($entretienProfessionnelObservationService);
         $controller->setFormulaireInstanceService($formulaireInstanceService);
         $controller->setParcoursDeFormationService($parcoursDeFormationService);
         $controller->setValidationInstanceService($validationInstanceService);
@@ -75,8 +83,11 @@ class EntretienProfessionnelControllerFactory {
         $controller->setFormulaireService($formulaireService);
         $controller->setMailingService($mailingService);
         $controller->setStructureService($structureService);
+
         $controller->setEntretienProfessionnelForm($entretienProfessionnelForm);
         $controller->setEntretienProfessionnelCampagneForm($campagneForm);
+        $controller->setEntretienProfessionnelObservationForm($observationForm);
+
         return $controller;
     }
 }

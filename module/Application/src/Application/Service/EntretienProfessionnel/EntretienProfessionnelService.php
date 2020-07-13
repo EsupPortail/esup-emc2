@@ -126,7 +126,7 @@ class EntretienProfessionnelService {
      * @param string $paramName
      * @return EntretienProfessionnel
      */
-    public function getRequestedEntretienProfessionnel($controller, $paramName)
+    public function getRequestedEntretienProfessionnel($controller, $paramName = 'entretien-professionnel')
     {
         $id = $controller->params()->fromRoute($paramName);
         $entretien = $this->getEntretienProfessionnel($id);

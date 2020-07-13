@@ -4,12 +4,15 @@ namespace Application\Controller;
 
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\EntretienProfessionnelCampagne;
+use Application\Entity\Db\EntretienProfessionnelObservation;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use Application\Form\EntretienProfessionnelCampagne\EntretienProfessionnelCampagneFormAwareTrait;
+use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
+use Application\Service\EntretienProfessionnel\EntretienProfessionnelObservationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\Export\EntretienProfessionnel\EntretienProfessionnelPdfExporter;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
@@ -30,12 +33,14 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class EntretienProfessionnelController extends AbstractActionController {
+class EntretienProfessionnelController extends AbstractActionController
+{
     use DateTimeAwareTrait;
     use AgentServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use EntretienProfessionnelCampagneServiceAwareTrait;
+    use EntretienProfessionnelObservationServiceAwareTrait;
     use MailingServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -45,11 +50,12 @@ class EntretienProfessionnelController extends AbstractActionController {
 
     use EntretienProfessionnelFormAwareTrait;
     use EntretienProfessionnelCampagneFormAwareTrait;
+    use EntretienProfessionnelObservationFormAwareTrait;
 
     use FormulaireServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
 
-   use RendererAwareTrait;
+    use RendererAwareTrait;
 
     public function indexAction()
     {
@@ -71,13 +77,13 @@ class EntretienProfessionnelController extends AbstractActionController {
 
         // From Query
         $agentId = $this->params()->fromQuery('agent');
-        $agent = ($agentId)?$this->getAgentService()->getAgent($agentId):null;
+        $agent = ($agentId) ? $this->getAgentService()->getAgent($agentId) : null;
         $structureId = $this->params()->fromQuery('structure');
-        $structure = ($structureId)?$this->getStructureService()->getStructure($structureId):null;
+        $structure = ($structureId) ? $this->getStructureService()->getStructure($structureId) : null;
 
         // ne pas dupliquer les entretiens (si il existe alors on l'affiche)
         $entretien = null;
-        if ($campagne !== null AND $agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
+        if ($campagne !== null and $agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
         if ($entretien !== null) return $this->redirect()->toRoute('entretien-professionnel/afficher', ["campagne" => $campagne->getId()], [], true);
 
         $entretien = new EntretienProfessionnel();
@@ -113,7 +119,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Ajout d\'un nouvel entretien professionnel',
-            'form'  => $form,
+            'form' => $form,
         ]);
         return $vm;
     }
@@ -149,7 +155,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Modification d\'un entretien professionnel professionnel',
-            'form'  => $form,
+            'form' => $form,
         ]);
         return $vm;
     }
@@ -161,7 +167,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         $validationResponsable = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ACCEPTER_ENTRETIEN_RESPONSABLE', $entretien);
 
         $agent = $entretien->getAgent();
-        $fichespostes = ($agent)?$agent->getFiches():[];
+        $fichespostes = ($agent) ? $agent->getFiches() : [];
         $fichesmetiers = [];
         foreach ($fichespostes as $ficheposte) {
             $fiches = $ficheposte->getFichesMetiers();
@@ -171,7 +177,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => 'Entretien professionnel '.$entretien->getCampagne()->getAnnee().' de '.$entretien->getAgent()->getDenomination(),
+            'title' => 'Entretien professionnel ' . $entretien->getCampagne()->getAnnee() . ' de ' . $entretien->getAgent()->getDenomination(),
             'entretien' => $entretien,
             'validationAgent' => $validationAgent,
             'validationResponsable' => $validationResponsable,
@@ -188,9 +194,9 @@ class EntretienProfessionnelController extends AbstractActionController {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
 
         $agent = $entretien->getAgent();
-        $fichespostes = ($agent)?$agent->getFiches():[];
+        $fichespostes = ($agent) ? $agent->getFiches() : [];
         $fichesmetiers = [];
-        $parcours = ($fichespostes[0])?$this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichespostes[0]):null;
+        $parcours = ($fichespostes[0]) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichespostes[0]) : null;
 
         foreach ($fichespostes as $ficheposte) {
             $fiches = $ficheposte->getFichesMetiers();
@@ -239,7 +245,7 @@ class EntretienProfessionnelController extends AbstractActionController {
         if ($entretien !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " .$entretien->getDateEntretien()->format('d/m/Y'),
+                'title' => "Suppression de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/detruire', ["entretien" => $entretien->getId()], [], true),
             ]);
@@ -281,7 +287,7 @@ class EntretienProfessionnelController extends AbstractActionController {
             if ($data["reponse"] === "non") {
                 $validation = $this->getValidationInstanceService()->createValidation($validationType, $entretien, "Refus");
             }
-            if ($validation !== null AND $entretien !== null) {
+            if ($validation !== null and $entretien !== null) {
                 switch ($type) {
                     case 'Agent' :
                         $entretien->setValidationAgent($validation);
@@ -324,7 +330,7 @@ class EntretienProfessionnelController extends AbstractActionController {
 
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);
-        } catch(ORMException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
@@ -342,11 +348,11 @@ class EntretienProfessionnelController extends AbstractActionController {
 
         $agent = $entretien->getAgent()->getDenomination();
         $date = $entretien->getDateEntretien()->format('Ymd');
-        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_". str_replace(" ","_",$agent).'_'.$date.'.pdf';
+        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $agent) . '_' . $date . '.pdf';
         try {
             $exporter->getMpdf()->SetTitle("Entretien professionnel de " . $agent . " du " . $entretien->getDateEntretien()->format("d/m/Y"));
         } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est survenu lors du changement de titre par MPDF.", 0 , $e);
+            throw new RuntimeException("Un problème est survenu lors du changement de titre par MPDF.", 0, $e);
         }
         $exporter->export($filemane);
         exit;
@@ -442,6 +448,102 @@ class EntretienProfessionnelController extends AbstractActionController {
                 'title' => "Suppression de la campagne " . $campagne->getAnnee(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('entretien-professionnel/campagne/detruire', ["campagne" => $campagne->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** OBSERVATION ***************************************************************************************************/
+
+    public function ajouterObservationAction()
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $observation = new EntretienProfessionnelObservation();
+        $observation->setEntretien($entretien);
+
+        $form = $this->getEntretienProfessionnelObservationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true));
+        $form->bind($observation);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getEntretienProfessionnelObservationService()->create($observation);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/entretien-professionnel/observation-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une observation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierObservationAction()
+    {
+        $observation = $this->getEntretienProfessionnelObservationService()->getRequestedEntretienProfessionnelObservation($this);
+
+        $form = $this->getEntretienProfessionnelObservationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observation/modifier', ['observation' => $observation->getId()], [], true));
+        $form->bind($observation);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getEntretienProfessionnelObservationService()->update($observation);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'une observation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserObservationAction()
+    {
+        $observation = $this->getEntretienProfessionnelObservationService()->getRequestedEntretienProfessionnelObservation($this);
+        $this->getEntretienProfessionnelObservationService()->historise($observation);
+        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
+    }
+
+    public function restaurerObservationAction()
+    {
+        $observation = $this->getEntretienProfessionnelObservationService()->getRequestedEntretienProfessionnelObservation($this);
+        $this->getEntretienProfessionnelObservationService()->restore($observation);
+        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
+    }
+
+    public function detruireObservationAction()
+    {
+        $observation = $this->getEntretienProfessionnelObservationService()->getRequestedEntretienProfessionnelObservation($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelObservationService()->delete($observation);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($observation !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'observation",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/observation/detruire', ["observation" => $observation->getId()], [], true),
             ]);
         }
         return $vm;
