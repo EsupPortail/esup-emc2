@@ -540,7 +540,7 @@ class FichePosteService {
 
         foreach ($fichesMetiers as $ficheMetier) {
             foreach ($ficheMetier->getApplications() as $application) {
-                $dictionnaire[$application->getId()]["object"] = $application;
+                $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $ficheMetier;
                 $dictionnaire[$application->getId()]["conserve"] = true;
             }
@@ -548,7 +548,7 @@ class FichePosteService {
 
         foreach ($activites as $activite) {
             foreach ($activite->getApplications() as $application) {
-                $dictionnaire[$application->getId()]["object"] = $application;
+                $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $activite;
                 $dictionnaire[$application->getId()]["conserve"] = true;
             }

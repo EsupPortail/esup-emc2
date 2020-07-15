@@ -23,7 +23,6 @@ use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
 use Application\Service\FicheMetierEtat\FicheMetierEtatService;
 use Application\Service\FicheMetierEtat\FicheMetierEtatServiceFactory;
-use Application\View\Helper\ApplicationBlocViewHelper;
 use Application\View\Helper\FicheMetierEtatViewHelper;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FicheMetierViewHelper;
@@ -435,7 +434,6 @@ return [
             'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
             'ficheMetierEtat' => FicheMetierEtatViewHelper::class,
             'ficheMetier'  => FicheMetierViewHelper::class,
-            'applicationBloc' => ApplicationBlocViewHelper::class,
         ],
     ],
 

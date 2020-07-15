@@ -2,6 +2,7 @@
 
 namespace Application\Service\FicheMetier;
 
+use Application\Entity\Db\Activite;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\Domaine;
@@ -356,6 +357,32 @@ class FicheMetierService {
         }
 
         return $fiche;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @param DateTime $date
+     * @return array
+     */
+    public function getApplicationsDictionnaires(FicheMetier $fiche, DateTime $date = null)
+    {
+        $dictionnaire = [];
+
+        foreach ($fiche->getApplications() as $application) {
+                $dictionnaire[$application->getId()]["entite"] = $application;
+                $dictionnaire[$application->getId()]["raison"][] = $fiche;
+                $dictionnaire[$application->getId()]["conserve"] = true;
+        }
+
+        foreach ($fiche->getActivites() as $activite) {
+            foreach ($activite->getActivite()->getApplications() as $application) {
+                $dictionnaire[$application->getId()]["entite"] = $application;
+                $dictionnaire[$application->getId()]["raison"][] = $activite;
+                $dictionnaire[$application->getId()]["conserve"] = true;
+            }
+        }
+
+        return $dictionnaire;
     }
 
 }

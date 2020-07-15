@@ -252,30 +252,35 @@ $a=1;
 
         <?php /** @var Application $application */ ?>
         <?php
-        $dictionnaireApplication = [];
-        foreach($fichemetier->getApplications() as $application) {
-            if ($ficheposte === null) $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $metier->getLibelle();
-            else {
-                $conservees = $ficheposte->getApplicationsRetirees();
-                $found = null;
-                /** @var FicheposteApplicationRetiree $conservee */
-                foreach ($conservees as $conservee) {
-                    if ($conservee->getHistoDestruction() === null AND $conservee->getApplication() === $application) {
-                        $found = $conservee;
-                        break;
+        if (! isset($options['applications'])) {
+            $dictionnaireApplication = [];
+            foreach ($fichemetier->getApplications() as $application) {
+                if ($ficheposte === null) $dictionnaireApplication[$application->getLibelle()][] = 'fiche|' . $metier->getLibelle();
+                else {
+                    $conservees = $ficheposte->getApplicationsRetirees();
+                    $found = null;
+                    /** @var FicheposteApplicationRetiree $conservee */
+                    foreach ($conservees as $conservee) {
+                        if ($conservee->getHistoDestruction() === null and $conservee->getApplication() === $application) {
+                            $found = $conservee;
+                            break;
+                        }
+                    }
+                    if ($found === null) {
+                        $dictionnaireApplication[$application->getLibelle()][] = 'fiche|' . $metier->getLibelle();
                     }
                 }
-                if ($found === null) {
-                    $dictionnaireApplication[$application->getLibelle()][] = 'fiche|'. $metier->getLibelle();
+            }
+
+            foreach($fichemetier->getActivites() as $element) {
+                if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
+                    foreach ($element->getActivite()->getApplications() as $application) {
+                        $dictionnaireApplication[$application->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
+                    }
                 }
             }
-        }
-        foreach($fichemetier->getActivites() as $element) {
-            if (array_search($element->getActivite()->getId(), $activitesListe) !== false) {
-                foreach ($element->getActivite()->getApplications() as $application) {
-                    $dictionnaireApplication[$application->getLibelle()][] = 'activite|' . $element->getActivite()->getLibelle();
-                }
-            }
+        } else {
+            $dictionnaireApplication = $options['applications'];
         }
         ?>
 
@@ -306,25 +311,10 @@ $a=1;
                 </div>
             </div>
             <div class="panel-body">
-                <ul>
-                    <?php ksort($dictionnaireApplication); ?>
-                    <?php foreach($dictionnaireApplication as $application => $source) : ?>
-                        <li>
-                            <?php echo $application; ?>
-                            <sup>
-                                <?php foreach($source as $item) : ?>
-                                    <?php $split = explode('|', $item); ?>
-                                    <?php if($split[0] === 'fiche') : ?>
-                                        <span class="fiche-metier" title="Associée à la fiche métier [<?php echo $split[1]; ?>]">F</span>
-                                    <?php endif; ?>
-                                    <?php if($split[0] === 'activite') : ?>
-                                        <span class="activite" title="Associée à l'activité [<?php echo $split[1]; ?>]">A</span>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </sup>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication); ?></div>
+                </div>
             </div>
         </div>
 
@@ -337,6 +327,7 @@ $a=1;
                     <span class="icon formation"></span>
                     Parcours de formation
             </div>
+            <div class="panel-body">
 
             <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
             <div class="row">
@@ -350,7 +341,7 @@ $a=1;
             <?php else : ?>
                 <span class="icon attention"> Aucun parcours de formation d'associé à cette fiche métier.</span>
             <?php endif; ?>
-
+            </div>
         </div>
     </div>
 <?php endif; ?>

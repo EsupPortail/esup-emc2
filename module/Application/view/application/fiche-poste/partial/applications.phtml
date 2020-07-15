@@ -43,24 +43,6 @@ foreach ($applications as $item) {
         </div>
     </div>
     <div class="panel-body">
-        <ul>
-            <?php foreach ($cApplications as $item) : ?>
-                <li>
-                    <?php echo $item["object"]->getLibelle(); ?>
-                    <?php foreach ($item["raison"] as $raison) : ?>
-                        <?php if ($raison instanceof  FicheMetier) : ?>
-                            <span class="fiche-metier" title="<?php echo $raison->getMetier()->getLibelle(); ?>">
-                                F
-                            </span>
-                        <?php endif; ?>
-                        <?php if ($raison instanceof  Activite) : ?>
-                            <span class="activite" title="<?php echo $raison->getLibelle(); ?>">
-                                A
-                            </span>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <?php echo $this->applicationBloc($applications); ?>
     </div>
 </div>

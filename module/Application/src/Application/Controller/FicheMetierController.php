@@ -90,21 +90,39 @@ class FicheMetierController extends  AbstractActionController{
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
+        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
 
         return new ViewModel([
             'title' => 'Visualisation d\'une fiche métier',
             'fiche' => $fiche,
             'parcours' => $parcours,
+            'applications' => $applications,
+        ]);
+    }
+
+    public function editerAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);
+        if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
+        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
+        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
+
+        return new ViewModel([
+            'fiche' => $fiche,
+            'parcours' => $parcours,
+            'applications' => $applications,
         ]);
     }
 
     public function exporterAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
+        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
 
         $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'fiche' => $fiche,
+            'applications' => $applications,
         ]);
 
         $metier = $fiche->getMetier();
@@ -127,16 +145,6 @@ class FicheMetierController extends  AbstractActionController{
         $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_fiches_metiers.pdf";
         $exporter->exportAll($fiches, $filemane);
         exit;
-    }
-
-    public function editerAction()
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);
-        if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
-
-        return new ViewModel([
-            'fiche' => $fiche,
-        ]);
     }
 
     public function historiserAction()

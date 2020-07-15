@@ -20,6 +20,7 @@ use Application\Service\Application\ApplicationGroupeService;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
 use Application\Service\Application\ApplicationGroupeServiceFactory;
+use Application\View\Helper\ApplicationBlocViewHelper;
 use Application\View\Helper\ApplicationGroupeViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -276,6 +277,7 @@ return [
     'view_helpers' => [
         'invokables' => [
             'applicationGroupe' => ApplicationGroupeViewHelper::class,
+            'applicationBloc' => ApplicationBlocViewHelper::class,
         ],
     ],
 
