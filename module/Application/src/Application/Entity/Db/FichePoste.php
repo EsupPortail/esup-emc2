@@ -42,8 +42,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
     private $applicationsRetirees;
     /** @var ArrayCollection (FicheposteCompetenceRetiree) */
     private $competencesRetirees;
-    /** @var ArrayCollection (FicheposteFormationRetiree) */
-    private $formationsRetirees;
 
     public function __invoke()
     {
@@ -51,7 +49,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
         $this->descriptionsRetirees = new ArrayCollection();
         $this->applicationsRetirees = new ArrayCollection();
         $this->competencesRetirees = new ArrayCollection();
-        $this->formationsRetirees = new ArrayCollection();
     }
 
     public function getId()
@@ -229,27 +226,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
 
     public function clearCompetencesRetirees() {
         $this->competencesRetirees->clear();
-    }
-
-    /** Formations Retirées *******************************************************************************************/
-
-    /** @return ArrayCollection */
-    public function getFormationsRetirees() {
-        return $this->formationsRetirees;
-    }
-
-    /** @param FicheposteFormationRetiree $formation */
-    public function addFormationRetiree(FicheposteFormationRetiree $formation) {
-        $this->formationsRetirees->add($formation);
-    }
-
-    /** @param FicheposteFormationRetiree $formation */
-    public function removeFormationRetiree(FicheposteFormationRetiree $formation) {
-        $this->formationsRetirees->removeElement($formation);
-    }
-
-    public function clearFormationsRetirees() {
-        $this->formationsRetirees->clear();
     }
 
     /** Applications Retirées *****************************************************************************************/

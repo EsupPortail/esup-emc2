@@ -1,0 +1,231 @@
+<?php
+
+/**
+ * @var FicheMetier $fiche
+ */
+
+use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceType;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\Formation;
+
+$metier = $fiche->getMetier();
+?>
+
+<style>
+    h1, h2 {
+        color: #123456;
+    }
+
+    h1 {
+        font-weight: normal;
+        font-size: 15pt;
+    }
+
+    h2 {
+        font-size: 14pt;
+    }
+
+    h3 {
+        font-size: 13pt;
+    }
+
+    h4 {
+        font-size: 12pt;
+    }
+
+    body {
+        font-size: 10pt;
+    }
+
+    div.main-block {
+        font-size: 14pt;
+        color: #123456;
+        border-bottom: 1px solid #123456;
+        background: lightblue;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    div.secondary-block {
+        font-size: 13pt;
+        color: #123456;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    div.activite {
+        border-left : 2px solid #123456;
+        border-bottom : 1px solid #123456;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+        font-size: 9pt;
+    }
+
+    table.info-cartouche th {
+        text-align: right;
+    }
+
+    table.activite {
+        padding-left: 2rem;
+    }
+
+    table.activite th {
+        text-align: left;
+    }
+    table.activite td {
+        font-size: 9pt;
+        /*margin-left: 5rem;*/
+        padding-left: 2rem;
+        border-left: 1px solid black;
+    }
+</style>
+
+<?php
+    $activites = $fiche->getActivites();
+    usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() < $b->getPosition();});
+?>
+
+<!-- TITRE ------------------------------------------------------------------------------------------------------------>
+
+<div style="display: flex; ">
+    <div style="float:left;width:64%;">
+        <h1><?php echo $metier->getLibelle(); ?></h1>
+    </div>
+    <div style="float:right;width:36%;">
+        <?php $references = $metier->getReferences() ;?>
+            <table class="info-cartouche">
+                <tr>
+                    <th> Catégorie :</th>
+                    <td> <?php echo $metier->getCategorie()->getCode(); ?> </td>
+                </tr>
+                <tr>
+                    <th> Références : </th>
+                    <?php if ($references and !empty($references)) : ?>
+                        <?php $first = true; ?>
+                        <?php foreach ($references as $reference) : ?>
+                            <?php if (!$first) echo "<tr><th></th>"; ?>
+                            <td>
+                                <?php echo $reference->getTitre(); ?>
+                            </td></tr>
+                            <?php $first = false; ?>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+
+            </table>
+
+    </div>
+</div>
+
+<!-- MISSIONS PRINCIPALES --------------------------------------------------------------------------------------------->
+
+<div class="main-block">
+    Missions principales
+</div>
+
+<?php //echo $fiche->getMissionsPrincipales(); ?>
+
+<?php foreach($activites as $activite) : ?>
+    <?php if ($activite->getActivite()->estNonHistorise()) : ?>
+
+        <table class="activite">
+            <tr>
+                <th><?php echo $activite->getActivite()->getLibelle(); ?></th>
+            </tr>
+            <tr>
+                <td>
+                        <?php foreach ($activite->getActivite()->getDescriptions() as $description) : ?>
+                            &ndash; <?php echo $description->getLibelle(); ?> <br/>
+                        <?php endforeach; ?>
+                </td>
+            </tr>
+        </table>
+
+    <?php endif ;?>
+<?php endforeach; ?>
+
+<!-- PARCOURS DE FORMATION -------------------------------------------------------------------------------------------->
+
+<div class="main-block">
+    Parcours de formation pour la prise de poste
+</div>
+
+<?php
+$competences = $fiche->getCompetences();
+usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
+
+$types = [];
+foreach($competences as $competence) {
+    $type = $competence->getType();
+    $types[$type->getId()] = $type;
+}
+usort($types, function(CompetenceType $a, CompetenceType $b) { return $a->getOrdre() > $b->getOrdre();});
+
+$dictionnaire = [];
+foreach ($types as $type) $dictionnaire[$type->getLibelle()] = [];
+foreach ($competences as $competence) {
+    $dictionnaire[$competence->getType()->getLibelle()][] = $competence;
+}
+?>
+
+<?php if (! empty($competences)) : ?>
+    <div class="secondary-block">
+        Compétences
+    </div>
+
+    <?php foreach ($dictionnaire as $type => $listing) : ?>
+
+        <table class="activite">
+            <tr>
+                <th><?php echo $type; ?></th>
+            </tr>
+            <tr>
+                <td>
+                    <?php foreach ($listing as $description) : ?>
+                        &ndash; <?php echo $description->getLibelle(); ?> <br/>
+                    <?php endforeach; ?>
+                </td>
+            </tr>
+        </table>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<?php
+$applications = $fiche->getApplications();
+usort($applications, function (Application $a, Application $b) { return $a->getLibelle() > $b->getLibelle();});
+?>
+
+<?php if (! empty($applications)) : ?>
+    <div class="secondary-block">
+        Applications
+    </div>
+
+    <table class="activite">
+        <tr>
+            <td>
+                <?php foreach ($applications as $application) : ?>
+                    &ndash; <?php echo $application->getLibelle(); ?> <br/>
+                <?php endforeach; ?>
+            </td>
+        </tr>
+    </table>
+<?php endif; ?>
+
+<?php
+$formations = $fiche->getFormations();
+usort($formations, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+?>
+
+<?php if (! empty($formations)) : ?>
+    <div class="secondary-block">
+        Formations
+    </div>
+    <div class="activite">
+        <ul>
+            <?php foreach ($formations as $formation) : ?>
+                <li> <?php echo $formation->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

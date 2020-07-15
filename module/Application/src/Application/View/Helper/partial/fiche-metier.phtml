@@ -18,6 +18,7 @@ use Application\Entity\Db\ParcoursDeFormation;
 
 
 $metier = $fichemetier->getMetier();
+
 /**
  * @var FicheMetierTypeActivite[] $activites
  */
@@ -176,9 +177,7 @@ $a=1;
 
 <?php if ($ficheposte === null) : ?>
     <div class="main">
-        <h2>
-            Parcours de formation pour la prise de poste
-        </h2>
+<!--        <h2> Parcours de formation pour la prise de poste</h2>-->
 
         <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
 
@@ -416,28 +415,20 @@ $a=1;
                     <span class="icon formation"></span>
                     Parcours de formation
             </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
-                            <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
-                                <?php echo $this->parcoursDeFormation($parcour, null, $options); ?>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <span class="icon attention">Pas de parcours de formation associé à la catégorie <?php echo $fichemetier->getMetier()->getCategorie()->getLibelle(); ?>.</span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="col-md-6">
-                        <?php if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
-                            <?php foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
-                                <?php echo $this->parcoursDeFormation($parcour, null, $options); ?>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <span class="icon attention">Pas de parcours de formation associé au métier <?php echo $fichemetier->getMetier()->getLibelle(); ?>.</span>
-                        <?php endif; ?>
-                    </div>
+
+            <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $parcour) : ?>
+                    <?php echo $this->parcoursDeFormation($parcour); ?>
+                <?php endforeach; ?>
                 </div>
             </div>
+            <?php else : ?>
+                <span class="icon attention"> Aucun parcours de formation d'associé à cette fiche métier.</span>
+            <?php endif; ?>
+
         </div>
     </div>
 <?php endif; ?>

@@ -16,7 +16,6 @@ use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\Expertise\ExpertiseService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
-use Application\Service\FormationsRetirees\FormationsRetireesService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
@@ -35,7 +34,6 @@ class FichePosteControllerFactory {
          * @var ActivitesDescriptionsRetireesService $activitesDescriptionsRetireesSercice
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
-         * @var FormationsRetireesService $formationsConserseesService
          * @var ExpertiseService $expertiseService
          * @var SpecificitePosteService $specificitePosteService
          * @var ParcoursDeFormationService $parcoursService
@@ -48,7 +46,6 @@ class FichePosteControllerFactory {
         $activitesDescriptionsRetireesSercice = $container->get(ActivitesDescriptionsRetireesService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
-        $formationsConserseesService = $container->get(FormationsRetireesService::class);
         $expertiseService = $container->get(ExpertiseService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
@@ -83,7 +80,6 @@ class FichePosteControllerFactory {
         $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesSercice);
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
-        $controller->setFormationsRetireesService($formationsConserseesService);
         $controller->setExpertiseService($expertiseService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);

@@ -31,7 +31,7 @@ class FicheMetierPdfExporter extends PdfExporter
         //$this->addBodyHtml('<style>' . file_get_contents('/css/app.css') . '</style>');
         $this->setHeaderScript('empty.phtml');
         $this->setFooterScript('empty.phtml');
-        $this->addBodyScript('fiche-metier.phtml', false, $this->vars);
+        $this->addBodyScript('fiche-metier-pdf.phtml', false, $this->vars);
         return PdfExporter::export($filename, $destination, $memoryLimit);
     }
 
@@ -49,7 +49,7 @@ class FicheMetierPdfExporter extends PdfExporter
         $this->setFooterScript('empty.phtml');
         foreach ($fiches as $fiche) {
             $this->vars["fiche"] = $fiche;
-            $this->addBodyScript('fiche-metier.phtml', !$first, $this->vars);
+            $this->addBodyScript('fiche-metier-pdf.phtml', !$first, $this->vars);
             $first = false;
         }
         return PdfExporter::export($filename, $destination, $memoryLimit);

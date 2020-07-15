@@ -40,8 +40,6 @@ use Application\Service\Expertise\ExpertiseService;
 use Application\Service\Expertise\ExpertiseServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
-use Application\Service\FormationsRetirees\FormationsRetireesService;
-use Application\Service\FormationsRetirees\FormationsRetireesServiceFactory;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FichePosteGraphViewHelper;
@@ -484,7 +482,6 @@ return [
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
             ExpertiseService::class => ExpertiseServiceFactory::class,
             FichePosteService::class => FichePosteServiceFactory::class,
-            FormationsRetireesService::class => FormationsRetireesServiceFactory::class,
             SpecificitePosteService::class => SpecificitePosteServiceFactory::class,
         ],
     ],

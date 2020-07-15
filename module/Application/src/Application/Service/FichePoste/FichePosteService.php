@@ -607,11 +607,6 @@ class FichePosteService {
             }
         }
 
-        $retirees = $fiche->getFormationsRetirees();
-        foreach ($retirees as $retiree) {
-            $dictionnaire[$retiree->getFormation()->getId()]["conserve"] = false;
-        }
-
         return $dictionnaire;
     }
 

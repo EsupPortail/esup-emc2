@@ -8,7 +8,6 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
-use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierAgent\AssocierAgentForm;
@@ -28,7 +27,6 @@ use Application\Service\Expertise\ExpertiseServiceAwareTrait;
 use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\FormationsRetirees\FormationsRetireesServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -54,7 +52,6 @@ class FichePosteController extends AbstractActionController {
     use ActivitesDescriptionsRetireesServiceAwareTrait;
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
-    use FormationsRetireesServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
@@ -88,7 +85,6 @@ class FichePosteController extends AbstractActionController {
                 else $fichesIncompletes[] = $fiche;
             }
         }
-
 
         return new ViewModel([
             'fiches' => $fiches,
@@ -648,39 +644,6 @@ class FichePosteController extends AbstractActionController {
             'title' => "Sélection des formations pour la fiche de poste",
             'ficheposte' => $ficheposte,
             'competences' => $competences,
-        ]);
-    }
-
-    /** Formation conservées ****************************************************************************************/
-
-    public function selectionnerFormationsRetireesAction() {
-        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-
-        /** @var array $formations*/
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($ficheposte, $this->getDateTime());
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-
-            foreach ($formations as $item) {
-                $formation = $item['object'];
-                $checked = (isset($data[$formation->getId()]) AND $data[$formation->getId()] === "on");
-
-                if ($checked === false AND $item['conserve'] === true) {
-                    $this->getFormationsRetireesService()->add($ficheposte, $formation);
-                }
-                if ($checked === true AND $item['conserve'] === false) {
-                    $this->getFormationsRetireesService()->remove($ficheposte, $formation);
-                }
-            }
-        }
-
-        return new ViewModel([
-            'title' => "Sélection des formations pour la fiche de poste",
-            'ficheposte' => $ficheposte,
-            'formations' => $formations,
         ]);
     }
 

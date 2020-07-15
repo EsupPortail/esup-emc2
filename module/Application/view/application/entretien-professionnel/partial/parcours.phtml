@@ -21,7 +21,8 @@ $canValider = true;
 <h2> Parcours de formation </h2>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
         <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
             <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
                 <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
@@ -30,15 +31,15 @@ $canValider = true;
             <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
         <?php endif; ?>
     </div>
-    <div class="col-md-6">
-        <?php if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
-            <?php foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
-                <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <span class="icon attention">Pas de parcours de formation associé au métier.</span>
-        <?php endif; ?>
-    </div>
+<!--    <div class="col-md-6">-->
+<!--        --><?php //if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
+<!--            --><?php //foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
+<!--                --><?php //echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
+<!--            --><?php //endforeach; ?>
+<!--        --><?php //else: ?>
+<!--            <span class="icon attention">Pas de parcours de formation associé au métier.</span>-->
+<!--        --><?php //endif; ?>
+<!--    </div>-->
 </div>
 
 
