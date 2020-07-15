@@ -16,6 +16,8 @@ class Application {
     private $url;
     /** @var boolean */
     private $actif;
+    /** @var ApplicationGroupe */
+    private $groupe;
 
     /** @var ArrayCollection */
     private  $activites;
@@ -105,6 +107,24 @@ class Application {
     public function setActif($actif)
     {
         $this->actif = $actif;
+        return $this;
+    }
+
+    /**
+     * @return ApplicationGroupe
+     */
+    public function getGroupe()
+    {
+        return $this->groupe;
+    }
+
+    /**
+     * @param ApplicationGroupe $groupe
+     * @return Application
+     */
+    public function setGroupe($groupe)
+    {
+        $this->groupe = $groupe;
         return $this;
     }
 

@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @var Application[] $applications
+ * @var boolean[] $droits
+ */
+
+use Application\Entity\Db\Application;
+
+$canAfficher = $droits['canAfficher'];
+$canAjouter = $droits['canAjouter'];
+$canEditer = $droits['canEditer'];
+$canEffacer = $droits['canEffacer'];
+
+?>
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Applications
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouter) : ?>
+            <br/>
+            <a  <?php /** @see \Application\Controller\ApplicationController::creerAction() */?>
+                href="<?php echo $this->url('application/creer', [], [], true);?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une application
+            </a>
+            <br/><br/>
+        <?php endif; ?>
+    </div>
+</div>
+
+<br/>
+<br/>
+
+<table id="datatable" class="table table-condensed">
+    <thead>
+    <tr>
+        <th> Libelle</th>
+        <th> Groupe</th>
+        <th> Liens </th>
+        <th> Actif </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($applications as $application): ?>
+        <tr>
+            <td> <?php echo $application->getLibelle(); ?> </td>
+            <td>
+                <?php if ($application->getGroupe()) : ?>
+                    <?php echo $this->applicationGroupe($application->getGroupe()); ?>
+                <?php endif; ?>
+            </td>
+            <td> <a href="<?php echo $application->getUrl(); ?>"><?php echo $application->getUrl(); ?></a> </td>
+            <td>
+                <?php if ($application->isActif()) : ?>
+                    <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
+                <?php endif;?>
+            </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\ApplicationController::afficherAction() */?>
+                        href="<?php echo $this->url('application/afficher', ['id' => $application->getId()], [], true); ?>" class="ajax-modal">
+                        <span class="icon voir"        title="Voir l'application"></span></a>
+                <?php endif; ?>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\ApplicationController::editerAction() */?>
+                        href="<?php echo $this->url('application/editer', ['id' => $application->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                        <span class="icon editer" title="Modifier l'application"></span></a>
+                <?php endif; ?>
+                <!--                        --><?php //if ($canEditer) : ?>
+                <!--                            <a href="--><?php ////echo $this->url('application/formation', ['id' => $application->getId()], [], true); ?><!--"  class="ajax-modal" data-event="modification">-->
+                <!--                                <span class="icon formation" title="Modifier liste des formations"></span></a>-->
+                <!--                        --><?php //endif; ?>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\ApplicationController::changerStatusAction() */?>
+                        href="<?php echo $this->url('application/changer-status', ['id' => $application->getId()], [], true); ?>">
+                        <span class="icon power"  title="Activer/Desactiver l'application"></span></a>
+                <?php endif; ?>
+                <?php if ($canEffacer) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\ApplicationController::effacerAction() */?>
+                        href="<?php echo $this->url('application/effacer', ['id' => $application->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"  title="Supprimer l'application"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+

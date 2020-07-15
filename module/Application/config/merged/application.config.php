@@ -8,12 +8,19 @@ use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormFactory;
 use Application\Form\Application\ApplicationHydrator;
 use Application\Form\Application\ApplicationHydratorFactory;
+use Application\Form\ApplicationGroupe\ApplicationGroupeForm;
+use Application\Form\ApplicationGroupe\ApplicationGroupeFormFactory;
+use Application\Form\ApplicationGroupe\ApplicationGroupeHydrator;
+use Application\Form\ApplicationGroupe\ApplicationGroupeHydratorFactory;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
 use Application\Form\SelectionApplication\SelectionApplicationHydrator;
 use Application\Provider\Privilege\ApplicationPrivileges;
+use Application\Service\Application\ApplicationGroupeService;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
+use Application\Service\Application\ApplicationGroupeServiceFactory;
+use Application\View\Helper\ApplicationGroupeViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -35,6 +42,7 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'afficher',
+                        'afficher-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
@@ -45,6 +53,9 @@ return [
                     'action' => [
                         'changer-status',
                         'editer',
+                        'modifier-groupe',
+                        'historiser-groupe',
+                        'restaurer-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EDITER,
@@ -54,6 +65,7 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'creer',
+                        'ajouter-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AJOUTER,
@@ -63,6 +75,7 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'effacer',
+                        'detruire-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EFFACER,
@@ -72,17 +85,17 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
                     'ressource' => [
                         'pages' => [
                             'application' => [
-                                'label'    => 'Applications',
-                                'route'    => 'application',
+                                'label' => 'Applications',
+                                'route' => 'application',
                                 'resource' => ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER),
-                                'order'    => 200,
+                                'order' => 200,
                             ],
                         ],
                     ],
@@ -91,66 +104,138 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'application' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/application',
+                    'route' => '/application',
                     'defaults' => [
                         'controller' => ApplicationController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'afficher' => [
-                        'type'  => Segment::class,
+                    'groupe' => [
+                        'type' => Literal::class,
+                        'may_terminate' => false,
                         'options' => [
-                            'route'    => '/afficher/:id',
+                            'route' => '/groupe',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
-                                'action'     => 'afficher',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'afficher' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/afficher/:application-groupe',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'afficher-groupe',
+                                    ],
+                                ],
+                            ],
+                            'ajouter' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'ajouter-groupe',
+                                    ],
+                                ],
+                            ],
+                            'editer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/modifier/:application-groupe',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'modifier-groupe',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/historiser/:application-groupe',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'historiser-groupe',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/restaurer/:application-groupe',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'restaurer-groupe',
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/detruire/:application-groupe',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'detruire-groupe',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'afficher' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/afficher/:id',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action' => 'afficher',
                             ],
                         ],
                     ],
                     'changer-status' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/changer-status/:id',
+                            'route' => '/changer-status/:id',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
-                                'action'     => 'changer-status',
+                                'action' => 'changer-status',
                             ],
                         ],
                     ],
                     'editer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/editer/:id',
+                            'route' => '/editer/:id',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
-                                'action'     => 'editer',
+                                'action' => 'editer',
                             ],
                         ],
                     ],
                     'effacer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/effacer/:id',
+                            'route' => '/effacer/:id',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
-                                'action'     => 'effacer',
+                                'action' => 'effacer',
                             ],
                         ],
                     ],
                     'creer' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/creer',
+                            'route' => '/creer',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
-                                'action'     => 'creer',
+                                'action' => 'creer',
                             ],
                         ],
                     ]
@@ -164,9 +249,10 @@ return [
         ],
         'factories' => [
             ApplicationService::class => ApplicationServiceFactory::class,
+            ApplicationGroupeService::class => ApplicationGroupeServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             ApplicationController::class => ApplicationControllerFactory::class,
         ],
@@ -174,6 +260,7 @@ return [
     'form_elements' => [
         'factories' => [
             ApplicationForm::class => ApplicationFormFactory::class,
+            ApplicationGroupeForm::class => ApplicationGroupeFormFactory::class,
             SelectionApplicationForm::class => SelectionApplicationFormFactory::class,
         ],
     ],
@@ -183,7 +270,13 @@ return [
         ],
         'factories' => [
             ApplicationHydrator::class => ApplicationHydratorFactory::class,
+            ApplicationGroupeHydrator::class => ApplicationGroupeHydratorFactory::class,
         ]
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'applicationGroupe' => ApplicationGroupeViewHelper::class,
+        ],
+    ],
 
 ];

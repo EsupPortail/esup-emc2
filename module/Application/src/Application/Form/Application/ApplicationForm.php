@@ -2,6 +2,7 @@
 
 namespace Application\Form\Application;
 
+use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -11,6 +12,7 @@ use Zend\InputFilter\Factory;
 
 class ApplicationForm extends Form {
     use FormationServiceAwareTrait;
+    use ApplicationGroupeServiceAwareTrait;
 
     public function init()
     {
@@ -24,6 +26,23 @@ class ApplicationForm extends Form {
             'attributes' => [
                 'id' => 'libelle',
             ],
+        ]);
+        //groupe
+        $this->add([
+            'name' => 'groupe',
+            'type' => Select::class,
+            'options' => [
+                'label' => "Groupe de l'application : ",
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'empty_option' => 'Sélectionner un groupe ...',
+                'value_options' => $this->getApplicationGroupeService()->getApplicationsGroupesAsOption(),
+            ],
+            'attributes' => [
+                'class' => 'description form-control',
+                'style' => 'height:300px;',
+            ]
         ]);
         // description
         $this->add([
@@ -85,6 +104,7 @@ class ApplicationForm extends Form {
         //filter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'               => [ 'required' => true,  ],
+            'groupe'                => [ 'required' => false,  ],
             'description'           => [ 'required' => false,  ],
             'url'                   => [ 'required' => false,  ],
             'formations'            => [ 'required' => false,  ],
