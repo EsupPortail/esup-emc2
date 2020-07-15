@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\Formation;
+namespace Application\Service\Application;
 
 use Application\Service\Application\ApplicationGroupeService;
 

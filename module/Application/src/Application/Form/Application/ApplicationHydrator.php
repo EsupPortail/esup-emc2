@@ -3,10 +3,12 @@
 namespace Application\Form\Application;
 
 use Application\Entity\Db\Application;
+use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ApplicationHydrator implements HydratorInterface {
+    use ApplicationGroupeServiceAwareTrait;
     use FormationServiceAwareTrait;
 
     /**
@@ -20,6 +22,7 @@ class ApplicationHydrator implements HydratorInterface {
 
         $data = [
             'libelle' => $object->getLibelle(),
+            'groupe' => ($object->getGroupe())?$object->getGroupe()->getId():null,
             'description' => $object->getDescription(),
             'url' => $object->getUrl(),
             'formations' => $formationIds,
@@ -35,9 +38,14 @@ class ApplicationHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $formations = [];
-        foreach($data['formations'] as $id) {
-            $formations[] = $this->getFormationService()->getFormation($id);
+        if (isset($data['formations'])) {
+            foreach ($data['formations'] as $id) {
+                $formations[] = $this->getFormationService()->getFormation($id);
+            }
         }
+
+        $groupe = (isset($data['groupe']))?$this->getApplicationGroupeService()->getApplicationGroupe($data['groupe']):null;
+        $object->setGroupe($groupe);
 
         $object->setLibelle($data['libelle']);
         if ($data['description'] === null || $data['description'] === '') {

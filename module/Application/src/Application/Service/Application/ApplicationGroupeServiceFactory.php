@@ -1,8 +1,7 @@
 <?php
 
-namespace Application\Service\Formation;
+namespace Application\Service\Application;
 
-use Application\Service\Application\ApplicationGroupeService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;

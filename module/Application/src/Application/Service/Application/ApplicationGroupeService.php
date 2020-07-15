@@ -150,7 +150,7 @@ class ApplicationGroupeService {
      * @param string $param
      * @return ApplicationGroupe
      */
-    public function getRequestedApplicationGroupe($controller, $param = 'formation-groupe')
+    public function getRequestedApplicationGroupe($controller, $param = 'application-groupe')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getApplicationGroupe($id);
