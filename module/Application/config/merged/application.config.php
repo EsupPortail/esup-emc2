@@ -8,12 +8,19 @@ use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormFactory;
 use Application\Form\Application\ApplicationHydrator;
 use Application\Form\Application\ApplicationHydratorFactory;
+use Application\Form\ApplicationGroupe\ApplicationGroupeForm;
+use Application\Form\ApplicationGroupe\ApplicationGroupeFormFactory;
+use Application\Form\ApplicationGroupe\ApplicationGroupeHydrator;
+use Application\Form\ApplicationGroupe\ApplicationGroupeHydratorFactory;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
 use Application\Form\SelectionApplication\SelectionApplicationHydrator;
 use Application\Provider\Privilege\ApplicationPrivileges;
+use Application\Service\Application\ApplicationGroupeService;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
+use Application\Service\Formation\ApplicationGroupeServiceFactory;
+use Application\View\Helper\ApplicationGroupeViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -164,6 +171,7 @@ return [
         ],
         'factories' => [
             ApplicationService::class => ApplicationServiceFactory::class,
+            ApplicationGroupeService::class => ApplicationGroupeServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -174,6 +182,7 @@ return [
     'form_elements' => [
         'factories' => [
             ApplicationForm::class => ApplicationFormFactory::class,
+            ApplicationGroupeForm::class => ApplicationGroupeFormFactory::class,
             SelectionApplicationForm::class => SelectionApplicationFormFactory::class,
         ],
     ],
@@ -183,7 +192,13 @@ return [
         ],
         'factories' => [
             ApplicationHydrator::class => ApplicationHydratorFactory::class,
+            ApplicationGroupeHydrator::class => ApplicationGroupeHydratorFactory::class,
         ]
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'applicationGroupe' => ApplicationGroupeViewHelper::class,
+        ],
+    ],
 
 ];
