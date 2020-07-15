@@ -85,7 +85,7 @@ $canEffacer        = $droits["effacer"];
                     <?php endif; ?>
             </td>
             <td>
-                <?php echo $metier->getCategorie()->getCode(); ?>
+                <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
             </td>
             <td>
                 <?php if ($canEditer) : ?>
