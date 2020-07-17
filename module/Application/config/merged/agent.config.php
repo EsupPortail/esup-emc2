@@ -26,6 +26,9 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
+use Application\View\Helper\AgentApplicationViewHelper;
+use Application\View\Helper\AgentCompetenceViewHelper;
+use Application\View\Helper\AgentFormationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
@@ -604,6 +607,9 @@ return [
         'invokables' => [
             'agent' => AgentViewHelper::class,
             'agentAffectation' => AgentAffectationViewHelper::class,
+            'agentApplication' => AgentApplicationViewHelper::class,
+            'agentCompetence' => AgentCompetenceViewHelper::class,
+            'agentFormation' => AgentFormationViewHelper::class,
             'agentStatut' => AgentStatutViewHelper::class,
             'agentGrade' => AgentGradeViewHelper::class,
         ],
