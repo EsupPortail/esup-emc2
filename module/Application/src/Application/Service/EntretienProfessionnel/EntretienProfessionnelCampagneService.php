@@ -3,20 +3,18 @@
 namespace Application\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\EntretienProfessionnelCampagne;
+use Application\Service\GestionEntiteHistorisationTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelCampagneService {
-    use UserServiceAwareTrait;
-    use DateTimeAwareTrait;
-    use EntityManagerAwareTrait;
+//    use UserServiceAwareTrait;
+//    use DateTimeAwareTrait;
+//    use EntityManagerAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -26,19 +24,7 @@ class EntretienProfessionnelCampagneService {
      */
     public function create(EntretienProfessionnelCampagne $campagne)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-        $campagne->setHistoCreation($date);
-        $campagne->setHistoCreateur($user);
-        $campagne->setHistoModification($date);
-        $campagne->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($campagne);
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0, $e);
-        }
+        $this->createFromTrait($campagne);
         return $campagne;
     }
 
@@ -48,16 +34,7 @@ class EntretienProfessionnelCampagneService {
      */
     public function update(EntretienProfessionnelCampagne $campagne)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-        $campagne->setHistoModification($date);
-        $campagne->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0, $e);
-        }
+        $this->updateFromTrait($campagne);
         return $campagne;
     }
 
@@ -67,16 +44,7 @@ class EntretienProfessionnelCampagneService {
      */
     public function historise(EntretienProfessionnelCampagne $campagne)
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-        $campagne->setHistoDestruction($date);
-        $campagne->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0, $e);
-        }
+        $this->historiserFromTrait($campagne);
         return $campagne;
     }
 
@@ -86,14 +54,7 @@ class EntretienProfessionnelCampagneService {
      */
     public function restore(EntretienProfessionnelCampagne $campagne)
     {
-        $campagne->setHistoDestruction(null);
-        $campagne->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0, $e);
-        }
+        $this->restoreFromTrait($campagne);
         return $campagne;
     }
 
@@ -103,12 +64,7 @@ class EntretienProfessionnelCampagneService {
      */
     public function delete(EntretienProfessionnelCampagne $campagne)
     {
-        try {
-            $this->getEntityManager()->remove($campagne);
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base.", 0, $e);
-        }
+        $this->deleteFromTrait($campagne);
         return $campagne;
     }
 
