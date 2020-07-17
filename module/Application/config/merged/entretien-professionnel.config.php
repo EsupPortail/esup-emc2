@@ -16,6 +16,7 @@ use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObs
 use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationFormFactory;
 use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationHydrator;
 use Application\Form\EntretienProfessionnelObservation\EntretienProfessionnelObservationHydratorFactory;
+use Application\Provider\Privilege\CampagnePrivileges;
 use Application\Provider\Privilege\EntretienproPrivileges;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceFactory;
@@ -90,17 +91,43 @@ return [
                         EntretienproPrivileges::ENTRETIENPRO_DETRUIRE,
                     ],
                 ],
-
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'ajouter-campagne',
+                    ],
+                    'privileges' => [
+                        CampagnePrivileges::CAMPAGNE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'modifier-campagne',
+                    ],
+                    'privileges' => [
+                        CampagnePrivileges::CAMPAGNE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'historiser-campagne',
                         'restaurer-campagne',
                         'detruire-campagne',
                     ],
-                    'roles' => [],
+                    'privileges' => [
+                        CampagnePrivileges::CAMPAGNE_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'detruire-campagne',
+                    ],
+                    'privileges' => [
+                        CampagnePrivileges::CAMPAGNE_DETRUIRE,
+                    ],
                 ],
                 [
                     'controller' => EntretienProfessionnelController::class,
