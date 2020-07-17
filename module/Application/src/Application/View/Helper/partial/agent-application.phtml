@@ -4,6 +4,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentApplication;
 
 /**
+ * @see \Application\View\Helper\PosteViewHelper
  * @var Agent $agent
  * @var array $options
  */
@@ -15,7 +16,7 @@ $canHistoriser  = (isset($options['droits']) AND isset($options['droits']['histo
 $canDetruire    = (isset($options['droits']) AND isset($options['droits']['detruire']))     ? $options['droits']['detruire']    : false;
 $canValider     = (isset($options['droits']) AND isset($options['droits']['valider']))      ? $options['droits']['valider']     : false;
 
-
+$retour         = (isset($options['retour'])) ? $options['retour'] : null;
 ?>
 
 <div class="row">

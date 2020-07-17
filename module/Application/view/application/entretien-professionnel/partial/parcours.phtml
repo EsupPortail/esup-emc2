@@ -29,9 +29,9 @@ $droits = [
 ];
 $options = [];
 $options['droits'] = $droits;
+$options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
 
 $agent = $entretien->getAgent();
-$retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
 
 /** @var AgentApplication $agentApplication */
 /** @var AgentCompetence $agentCompetence */
@@ -68,12 +68,21 @@ $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entr
 
 <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
 
-<?php echo $this->agentApplication($agent, $options); ?>
+<?php
+    /** @see \Application\View\Helper\AgentApplicationViewHelper */
+    echo $this->agentApplication($agent, $options);
+?>
 
 <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
 
-<?php echo $this->agentCompetence($agent, $options); ?>
+<?php
+    /** @see \Application\View\Helper\AgentCompetenceViewHelper */
+    echo $this->agentCompetence($agent, $options);
+    ?>
 
 <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
 
-<?php echo $this->agentFormation($agent, $options); ?>
+<?php
+    /** @see \Application\View\Helper\AgentFormationViewHelper */
+    echo $this->agentFormation($agent, $options);
+?>

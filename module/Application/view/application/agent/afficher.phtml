@@ -30,8 +30,10 @@ $droits = [
     'detruire'        =>      $canDetruire,
     'valider'         =>      $canValider,
 ];
+
 $options  = [];
 $options['droits'] = $droits;
+$options['retour'] = $this->url('agent/afficher', ['agent' => $agent->getId()], [], true);
 
 $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
@@ -147,15 +149,24 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
     <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
 
-    <?php echo $this->agentApplication($agent, $options); ?>
+    <?php
+    /** @see \Application\View\Helper\AgentApplicationViewHelper */
+    echo $this->agentApplication($agent, $options);
+    ?>
 
     <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
 
-    <?php echo $this->agentCompetence($agent, $options); ?>
+    <?php
+    /** @see \Application\View\Helper\AgentCompetenceViewHelper */
+    echo $this->agentCompetence($agent, $options);
+    ?>
 
     <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
 
-    <?php echo $this->agentFormation($agent, $options); ?>
+    <?php
+    /** @see \Application\View\Helper\AgentFormationViewHelper */
+    echo $this->agentFormation($agent, $options);
+    ?>
 
     <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
 
