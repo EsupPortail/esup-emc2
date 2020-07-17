@@ -47,7 +47,13 @@ $canEffacer        = $droits["effacer"];
     <tbody>
     <?php foreach($metiers as $metier): ?>
         <tr <?php if ($metier->estHistorise()) echo ' class="historise" '; ?>>
-            <td> <?php echo $metier->getLibelle(); ?> </td>
+            <td>
+                <span title='<?php echo $metier->generateTooltip(); ?>'
+                      data-toggle='tooltip' data-html='true'
+                >
+                    <?php echo $metier->getLibelle(); ?>
+                </span>
+            </td>
             <td>
                 <ul>
                     <?php foreach ($metier->getDomaines() as $domaine) : ?>

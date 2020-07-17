@@ -383,7 +383,7 @@ usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { retu
 
         <ul>
         <?php foreach ($cApplications as $application) : ?>
-            <li> <?php echo $application["object"]->getLibelle(); ?> </li>
+            <li> <?php echo $application["entite"]->getLibelle(); ?> </li>
         <?php endforeach; ?>
         </ul>
     <?php endif; ?>

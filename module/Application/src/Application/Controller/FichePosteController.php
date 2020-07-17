@@ -595,7 +595,7 @@ class FichePosteController extends AbstractActionController {
             $data = $request->getPost();
 
             foreach ($applications as $item) {
-                $application = $item['object'];
+                $application = $item['entite'];
                 $checked = (isset($data[$application->getId()]) AND $data[$application->getId()] === "on");
 
                 if ($checked === false AND $item['conserve'] === true) {

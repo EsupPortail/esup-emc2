@@ -9,6 +9,7 @@
 
 use Application\Entity\Db\FichePoste;
 
+usort($applications, function($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle();});
 ?>
 
 
@@ -22,11 +23,11 @@ use Application\Entity\Db\FichePoste;
         <label>
             <input
                     type="checkbox"
-                    id="<?php echo $item['object']->getId(); ?>"
-                    name="<?php echo $item['object']->getId(); ?>"
+                    id="<?php echo $item['entite']->getId(); ?>"
+                    name="<?php echo $item['entite']->getId(); ?>"
                     <?php if ($item['conserve']) echo "checked"; ?>
             />
-            <?php echo $item['object']->getLibelle(); ?>
+            <?php echo $item['entite']->getLibelle(); ?>
         </label>
     </div>
 <?php endforeach; ?>

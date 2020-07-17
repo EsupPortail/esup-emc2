@@ -6,6 +6,7 @@ use Application\Entity\Db\FicheMetier;
 /**
  * @see FicheMetierController::editerAction()
  * @var FicheMetier $fiche
+ * @var array $applications
  */
 
-echo $this->ficheMetier($fiche, null, ['mode' => 'edition-fiche-metier']);
+echo $this->ficheMetier($fiche, null, ['mode' => 'edition-fiche-metier', 'applications' => $applications, 'parcours' => $parcours]);
