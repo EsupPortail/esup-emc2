@@ -7,6 +7,7 @@
         </id>
 
         <field name="libelle"           type="string" length="255"      column="libelle"                nullable="false"/>
+        <field name="couleur"           type="string" length="255"      column="couleur"                nullable="false"/>
         <field name="ordre"             type="integer"                  column="ordre"                  nullable="false"/>
         <one-to-many target-entity="Application\Entity\Db\Competence" mapped-by="type" field="competences"/>
 

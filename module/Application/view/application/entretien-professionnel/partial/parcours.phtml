@@ -7,6 +7,8 @@
  */
 
 use Application\Entity\Db\AgentApplication;
+use Application\Entity\Db\AgentCompetence;
+use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\ParcoursDeFormation;
 
@@ -21,6 +23,8 @@ $agent = $entretien->getAgent();
 $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
 
 /** @var AgentApplication $agentApplication */
+/** @var AgentCompetence $agentCompetence */
+/** @var AgentFormation $agentFormation */
 ?>
 
 <h2> Parcours de formation </h2>
@@ -117,7 +121,7 @@ $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entr
                             <?php echo $groupe->getLibelle(); ?>
                         </th>
                     <?php else :?>
-                        <th colspan="4" style="background: gray;"> Sans groupe ...</th>
+                        <th colspan="4" style="background: gray;" <?php if ($allHisto) echo 'class="historise"'; ?>> Sans groupe ...</th>
                     <?php endif; ?>
                 </tr>
                 <?php foreach ($liste as $agentApplication) : ?>
@@ -236,6 +240,147 @@ $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entr
     </div>
 </div>
 <br/>
+<?php
+$noGroupe = "ZZZZ";
+$dictionnaire = [];
+foreach ($agent->getCompetences(true) as $agentCompetence) {
+    $competence = $agentCompetence->getCompetence();
+    $groupe = $competence->getType();
+    $libelle = ($groupe)?$groupe->getLibelle():$noGroupe;
+    $dictionnaire[$libelle][] = $agentCompetence;
+}
+ksort($dictionnaire);
+?>
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <?php if ($canModifier) : ?>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="competences-historisees"> Afficher les compétences historisées
+                    </label>
+                </div>
+            </div>
+        <?php endif; ?>
+        <table class="parcours-de-formation" id="competences">
+            <tbody>
+            <?php foreach ($dictionnaire as $key => $liste) : ?>
+                <?php usort($liste, function(AgentCompetence $a, AgentCompetence $b) {return $a->getCompetence()->getLibelle() > $b->getCompetence()->getLibelle();}); ?>
+                <?php
+                $allHisto = true;
+                foreach ($liste as $agentCompetence) {
+                    if ($agentCompetence->estNonHistorise()) {
+                        $allHisto = false;
+                        break;
+                    }
+                }
+                ?>
+                <tr>
+                    <?php if ($key !== $noGroupe) : ?>
+                        <?php $groupe = $liste[0]->getCompetence()->getType(); ?>
+                        <th colspan="4" style="background: <?php echo $groupe->getCouleur(); ?>;" <?php if ($allHisto) echo 'class="historise"'; ?>>
+                            <?php echo $groupe->getLibelle(); ?>
+                        </th>
+                    <?php else :?>
+                        <th colspan="4" style="background: gray;" <?php if ($allHisto) echo 'class="historise"'; ?>> Sans groupe ...</th>
+                    <?php endif; ?>
+                </tr>
+                <?php foreach ($liste as $agentCompetence) : ?>
+                    <tr <?php if ($agentCompetence->estHistorise()) echo 'class="historise"'; ?>>
+                        <td> <?php echo $agentCompetence->getCompetence()->getLibelle(); ?> </td>
+                        <td> <?php echo $agentCompetence->getNiveau() ?> </td>
+                        <td>
+                            <?php if ($agentCompetence->getValidation()) : ?>
+                            <?php $validation = $agentCompetence->getValidation(); ?>
+                            <?php if ($validation->getValeur() === null) : ?>
+                                <span
+                                        style="color:darkgreen;"
+                                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                                <span class="icon ok"></span>
+                                Validée
+                            </span>
+                            <?php else: ?>
+                            <span
+                                    style="color:darkred;"
+                                    title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                                <span class="icon ko"></span>
+                            Refusée
+                        <?php endif; ?>
+                                <?php else : ?>
+                                    Aucune validation
+                                <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($canVoir) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::afficherAgentCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/afficher-agent-competence', ['agent-competence' => $agentCompetence->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                >
+                                    <span class="icon voir" title="Afficher une compétence liées à l'agent"></span></a>
+                            <?php endif; ?>
+                            <?php if ($canModifier) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::modifierAgentCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/modifier-agent-competence', ['agent-competence' => $agentCompetence->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                >
+                                    <span class="icon editer" title="Modifier une compétence liées à l'agent"></span></a>
+                            <?php endif; ?>
+                            <?php if ($canHistoriser) : ?>
+                                <?php if ($agentCompetence->estNonHistorise()) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::historiserAgentCompetenceAction() */?>
+                                            href="<?php echo $this->url('agent/historiser-agent-competence', ['agent-competence' => $agentCompetence->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon historiser" title="Historiser une compétence liées à l'agent"></span></a>
+                                <?php else: ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::restaurerAgentCompetenceAction() */?>
+                                            href="<?php echo $this->url('agent/restaurer-agent-competence', ['agent-competence' => $agentCompetence->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon restaurer" title="Restaurer une compétence liées à l'agent"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php if ($canDetruire) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::detruireAgentCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/detruire-agent-competence', ['agent-competence' => $agentCompetence->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                >
+                                    <span class="icon detruire" title="Supprimer définitivement une compétence liées à l'agent"></span>
+                                </a>
+                            <?php endif; ?>
+                            <?php if ($canValider) : ?>
+                                <?php if ($agentCompetence->getValidation() === null) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentCompetence", 'id' => $agentCompetence->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
+                                    >
+                                        <span class="icon validation-do" title="Valider la compétence"></span></a>
+                                <?php else: ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/revoquer-element', ['validation' => $agentCompetence->getValidation()->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon validation-undo" title="Dévalider la compétence"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
 
@@ -259,237 +404,146 @@ $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entr
     </div>
 </div>
 <br/>
+<?php
+$noGroupe = "ZZZZ";
+$dictionnaire = [];
+foreach ($agent->getFormations(true) as $agentFormation) {
+    $formation = $agentFormation->getFormation();
+    $groupe = $formation->getGroupe();
+    $libelle = ($groupe)?$groupe->getLibelle():$noGroupe;
+    $dictionnaire[$libelle][] = $agentFormation;
+}
+ksort($dictionnaire);
+?>
 
-<div class="blocs">
-
-    <div class="bloc">
-        <h3>
-            <span class="icon competence"></span>
-            Compétences
-            <?php if ($canAjouter) : ?>
-                <a
-                    <?php /** @see \Application\Controller\AgentController::ajouterAgentCompetenceAction() */?>
-                    href="<?php echo $this->url('agent/ajouter-agent-competence', ['agent' => $agent->getId()], [], true); ?>"
-                    class="ajax-modal"
-                    data-event="modification"
-                >
-                    <span class="icon ajouter" title="Ajouter une compétence liée à l'agent"></span>
-                </a>
-            <?php endif; ?>
-        </h3>
-
-        <ul>
-            <?php foreach ($agent->getCompetences() as $competence) : ?>
-                <li>
-                    <?php echo $competence->getCompetence()->getLibelle(); ?>
-                    <br/>
-                    <?php echo $competence->getNiveau(); ?>
-                    - &nbsp;
-                    <?php if ($competence->getValidation()) : ?>
-                    <?php $validation = $competence->getValidation(); ?>
-                    <?php if ($validation->getValeur() === null) : ?>
-                        <span
-                            style="color:darkgreen;"
-                            title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <?php if ($canModifier) : ?>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="formations-historisees"> Afficher les formations historisées
+                    </label>
+                </div>
+            </div>
+        <?php endif; ?>
+        <table class="parcours-de-formation" id="formations">
+            <tbody>
+            <?php foreach ($dictionnaire as $key => $liste) : ?>
+                <?php usort($liste, function(AgentFormation $a, AgentFormation $b) {return $a->getFormation()->getLibelle() > $b->getFormation()->getLibelle();}); ?>
+                <?php
+                $allHisto = true;
+                foreach ($liste as $agentFormation) {
+                    if ($agentFormation->estNonHistorise()) {
+                        $allHisto = false;
+                        break;
+                    }
+                }
+                ?>
+                <tr>
+                    <?php if ($key !== $noGroupe) : ?>
+                        <?php $groupe = $liste[0]->getFormation()->getGroupe(); ?>
+                        <th colspan="4" style="background: <?php echo $groupe->getCouleur(); ?>;" <?php if ($allHisto) echo 'class="historise"'; ?>>
+                            <?php echo $groupe->getLibelle(); ?>
+                        </th>
+                    <?php else :?>
+                        <th colspan="4" style="background: gray;" <?php if ($allHisto) echo 'class="historise"'; ?>> Sans groupe ...</th>
+                    <?php endif; ?>
+                </tr>
+                <?php foreach ($liste as $agentFormation) : ?>
+                    <tr <?php if ($agentFormation->estHistorise()) echo 'class="historise"'; ?>>
+                        <td> <?php echo $agentFormation->getFormation()->getLibelle(); ?> </td>
+                        <td> <?php echo $agentFormation->getDate()->format('d/m/Y') ?> </td>
+                        <td>
+                            <?php if ($agentFormation->getValidation()) : ?>
+                            <?php $validation = $agentFormation->getValidation(); ?>
+                            <?php if ($validation->getValeur() === null) : ?>
+                                <span
+                                        style="color:darkgreen;"
+                                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
                                 <span class="icon ok"></span>
                                 Validée
                             </span>
-                    <?php else: ?>
-                    <span
-                        style="color:darkred;"
-                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                            <?php else: ?>
+                            <span
+                                    style="color:darkred;"
+                                    title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
                                 <span class="icon ko"></span>
                             Refusée
                         <?php endif; ?>
-                        <?php else : ?>
-                            Aucune validation
-                        <?php endif; ?>
-                    <br/>
-                        <?php if ($canVoir) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\AgentController::afficherAgentCompetenceAction() */?>
-                                    href="<?php echo $this->url('agent/afficher-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                            >
-                                <span class="icon voir" title="Afficher une compétence liée à l'agent"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canModifier) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\AgentController::modifierAgentCompetenceAction() */?>
-                                    href="<?php echo $this->url('agent/modifier-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon editer" title="Modifier une compétence liée à l'agent"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canHistoriser) : ?>
-                            <?php if ($competence->estNonHistorise()) : ?>
+                                <?php else : ?>
+                                    Aucune validation
+                                <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($canVoir) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::historiserAgentCompetenceAction() */?>
-                                        href="<?php echo $this->url('agent/historiser-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
+                                    <?php /** @see \Application\Controller\AgentController::afficherAgentFormationAction() */?>
+                                        href="<?php echo $this->url('agent/afficher-agent-formation', ['agent-formation' => $agentFormation->getId()], [], true); ?>"
+                                        class="ajax-modal"
                                 >
-                                    <span class="icon historiser" title="Historiser une compétence liée à l'agent"></span></a>
-                            <?php else: ?>
-                                <a
-                                    <?php /** @see \Application\Controller\AgentController::restaurerAgentCompetenceAction() */?>
-                                        href="<?php echo $this->url('agent/restaurer-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
-                                >
-                                    <span class="icon restaurer" title="Restaurer une compétence liée à l'agent"></span></a>
+                                    <span class="icon voir" title="Afficher une formation suivie par l'agent"></span></a>
                             <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if ($canDetruire) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\AgentController::detruireAgentCompetenceAction() */?>
-                                    href="<?php echo $this->url('agent/detruire-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon detruire" title="Supprimer définitivement une compétence liée à l'agent"></span>
-                            </a>
-                        <?php endif; ?>
-                        <?php if ($canValider) : ?>
-                            <?php if ($competence->getValidation() === null) : ?>
+                            <?php if ($canModifier) : ?>
                                 <a
-                                <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                href="<?php echo $this->url('agent/valider-element', ['type' => "AgentCompetence", 'id' => $competence->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
+                                    <?php /** @see \Application\Controller\AgentController::modifierAgentFormationAction() */?>
+                                        href="<?php echo $this->url('agent/modifier-agent-formation', ['agent-formation' => $agentFormation->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
                                 >
-                                <span class="icon validation-do" title="Valider la compétence"></span></a>
-                            <?php else: ?>
-                                <a
-                                <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
-                                    href="<?php echo $this->url('agent/revoquer-element', ['validation' => $competence->getValidation()->getId()], [], true); ?>"
-                                >
-                                <span class="icon validation-undo" title="Dévalider la compétence"></span></a>
+                                    <span class="icon editer" title="Modifier une formation suivie par l'agent"></span></a>
                             <?php endif; ?>
-                        <?php endif; ?>
-                </li>
+                            <?php if ($canHistoriser) : ?>
+                                <?php if ($agentFormation->estNonHistorise()) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::historiserAgentFormationAction() */?>
+                                            href="<?php echo $this->url('agent/historiser-agent-formation', ['agent-formation' => $agentFormation->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon historiser" title="Historiser une formation suivie par l'agent"></span></a>
+                                <?php else: ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::restaurerAgentFormationAction() */?>
+                                            href="<?php echo $this->url('agent/restaurer-agent-formation', ['agent-formation' => $agentFormation->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon restaurer" title="Restaurer une formation suivie par l'agent"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php if ($canDetruire) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::detruireAgentFormationAction() */?>
+                                        href="<?php echo $this->url('agent/detruire-agent-formation', ['agent-formation' => $agentFormation->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                >
+                                    <span class="icon detruire" title="Supprimer définitivement une formation suivie par  l'agent"></span>
+                                </a>
+                            <?php endif; ?>
+                            <?php if ($canValider) : ?>
+                                <?php if ($agentFormation->getValidation() === null) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentFormation", 'id' => $agentFormation->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
+                                    >
+                                        <span class="icon validation-do" title="Valider une formation"></span></a>
+                                <?php else: ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/revoquer-element', ['validation' => $agentFormation->getValidation()->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon validation-undo" title="Dévalider une formation"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             <?php endforeach; ?>
-        </ul>
-    </div>
-    <div class="bloc">
-        <h3>
-            <span class="icon formation"></span>
-            Formations
-            <?php if ($canAjouter) : ?>
-                <a
-                    <?php /** @see \Application\Controller\AgentController::ajouterAgentFormationAction() */?>
-                    href="<?php echo $this->url('agent/ajouter-agent-formation', ['agent' => $agent->getId()], [], true); ?>"
-                    class="ajax-modal"
-                    data-event="modification"
-                >
-                    <span class="icon ajouter" title="Ajouter une formation liée à l'agent"></span>
-                </a>
-            <?php endif; ?>
-        </h3>
-
-        <ul>
-            <?php foreach ($agent->getFormations() as $formation) : ?>
-                <li>
-                    <?php echo $formation->getFormation()->getLibelle(); ?> <br/>
-                    <?php echo $formation->getDate()->format('d/m/Y'); ?>
-                    - &nbsp;
-                    <?php if ($formation->getValidation()) : ?>
-                    <?php $validation = $formation->getValidation(); ?>
-                    <?php if ($validation->getValeur() === null) : ?>
-                        <span
-                            style="color:darkgreen;"
-                            title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
-                                <span class="icon ok"></span>
-                                Validée
-                            </span>
-                    <?php else: ?>
-                    <span
-                        style="color:darkred;"
-                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
-                                <span class="icon ko"></span>
-                            Refusée
-                        <?php endif; ?>
-                        <?php else : ?>
-                            Aucune validation
-                        <?php endif; ?>
-                    <br/>
-                        <?php if ($canVoir) : ?>
-                            <a
-                            <?php /** @see \Application\Controller\AgentController::afficherAgentFormationAction() */?>
-                                href="<?php echo $this->url('agent/afficher-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
-                                class="ajax-modal"
-                            >
-                            <span class="icon voir" title="Afficher une formation liée à l'agent"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canModifier) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\AgentController::modifierAgentFormationAction() */?>
-                                    href="<?php echo $this->url('agent/modifier-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon editer" title="Modifier une formation liée à l'agent"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canHistoriser) : ?>
-                            <?php if ($formation->estNonHistorise()) : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\AgentController::historiserAgentFormationAction() */?>
-                                        href="<?php echo $this->url('agent/historiser-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
-                                >
-                                    <span class="icon historiser" title="Historiser une formation liée à l'agent"></span></a>
-                            <?php else: ?>
-                                <a
-                                    <?php /** @see \Application\Controller\AgentController::restaurerAgentFormationAction() */?>
-                                        href="<?php echo $this->url('agent/restaurer-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
-                                >
-                                    <span class="icon restaurer" title="Restaurer une formation liée à l'agent"></span></a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if ($canDetruire) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\AgentController::detruireAgentFormationAction() */?>
-                                    href="<?php echo $this->url('agent/detruire-agent-formation', ['agent-formation' => $formation->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon detruire" title="Supprimer définitivement une formation liée à l'agent"></span>
-                            </a>
-                        <?php endif; ?>
-                        <?php if ($canValider) : ?>
-                            <?php if ($formation->getValidation() === null) : ?>
-                                <a
-                            <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentFormation", 'id' => $formation->getId()], [], true); ?>"
-                            class="ajax-modal"
-                            data-event="modification"
-                                >
-                            <span class="icon validation-do" title="Valider la formation"></span></a>
-                            <?php else: ?>
-                                <a
-                            <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
-                                href="<?php echo $this->url('agent/revoquer-element', ['validation' => $formation->getValidation()->getId()], [], true); ?>"
-                                >
-                            <span class="icon validation-undo" title="Dévalider la formation"></span></a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+            </tbody>
+        </table>
     </div>
 </div>
-
-<style>
-    div.bloc {
-        border: solid lightblue 1px;
-        margin: 0.5rem;
-        padding: 0.5rem;
-        width: 32%;
-        min-width: 200px;
-        float: left;
-    }
-
-    .blocs {
-        display: flex;
-        flex-wrap: wrap;
-    }
-</style>
 
 <script>
 
@@ -504,11 +558,43 @@ $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entr
         }
     }
 
+    function toggleCompetencesHistorisees() {
+        let checked = $('input#competences-historisees').prop('checked');
+        if (checked === true) {
+            $('table#competences  th.historise').show();
+            $('table#competences  tr.historise').show();
+        } else {
+            $('table#competences  th.historise').hide();
+            $('table#competences  tr.historise').hide();
+        }
+    }
+
+    function toggleFormationsHistorisees() {
+        let checked = $('input#formations-historisees').prop('checked');
+        if (checked === true) {
+            $('table#formations  th.historise').show();
+            $('table#formations  tr.historise').show();
+        } else {
+            $('table#formations  th.historise').hide();
+            $('table#formations  tr.historise').hide();
+        }
+    }
+
     $(document).ready(function() {
         toogleApplicationsHistorisees();
+        toggleCompetencesHistorisees();
+        toggleFormationsHistorisees();
     });
 
     $('input#applications-historisees').change(function() {
         toogleApplicationsHistorisees();
     });
+    $('input#competences-historisees').change(function() {
+        toggleCompetencesHistorisees();
+    });
+    $('input#formations-historisees').change(function() {
+        toggleFormationsHistorisees();
+    });
+
+
 </script>

@@ -21,6 +21,8 @@ class CompetenceType implements HistoriqueAwareInterface {
     private $competences;
     /** @var integer */
     private $ordre;
+    /** @var string */
+    private $couleur;
 
     public function __construct()
     {
@@ -106,6 +108,24 @@ class CompetenceType implements HistoriqueAwareInterface {
     public function setOrdre($ordre)
     {
         $this->ordre = $ordre;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCouleur()
+    {
+        return $this->couleur;
+    }
+
+    /**
+     * @param string $couleur
+     * @return CompetenceType
+     */
+    public function setCouleur($couleur)
+    {
+        $this->couleur = $couleur;
         return $this;
     }
 

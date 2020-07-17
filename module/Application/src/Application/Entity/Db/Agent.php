@@ -345,24 +345,30 @@ class Agent implements ResourceInterface
         return $applications;
     }
 
-    /** @return AgentCompetence[] */
-    public function getCompetences()
+    /**
+     * @param bool $include_historisees
+     * @return AgentCompetence[]
+     */
+    public function getCompetences($include_historisees = false)
     {
         $competences = [];
         /** @var AgentCompetence $competence */
         foreach ($this->competences as $competence) {
-            if ($competence->estNonHistorise()) $competences[] = $competence;
+            if ($include_historisees OR $competence->estNonHistorise()) $competences[] = $competence;
         }
         return $competences;
     }
 
-    /** @return AgentFormation[] */
-    public function getFormations()
+    /**
+     * @param bool $include_historisees
+     * @return AgentFormation[]
+     */
+    public function getFormations($include_historisees = false)
     {
         $formations = [];
         /** @var AgentCompetence $formation */
         foreach ($this->formations as $formation) {
-            if ($formation->estNonHistorise()) $formations[] = $formation;
+            if ($include_historisees OR $formation->estNonHistorise()) $formations[] = $formation;
         }
         return $formations;
     }

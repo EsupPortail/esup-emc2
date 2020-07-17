@@ -415,15 +415,23 @@ class AgentController extends AbstractActionController
 
     public function historiserAgentCompetenceAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
         $this->getAgentService()->historiserAgentCompetence($competence);
+
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $competence->getAgent()->getId()], [], true);
     }
 
     public function restaurerAgentCompetenceAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
         $this->getAgentService()->restoreAgentCompetence($competence);
+
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $competence->getAgent()->getId()], [], true);
     }
 
@@ -522,15 +530,23 @@ class AgentController extends AbstractActionController
 
     public function historiserAgentFormationAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
         $this->getAgentService()->historiserAgentFormation($agentFormation);
+
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentFormation->getAgent()->getId()], [], true);
     }
 
     public function restaurerAgentFormationAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
         $this->getAgentService()->restoreAgentFormation($agentFormation);
+
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentFormation->getAgent()->getId()], [], true);
     }
 
