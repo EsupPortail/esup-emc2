@@ -38,7 +38,7 @@ class MetierHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $categorie = $this->getCategorieService()->getCategorie($data['categorie']);
+        $categorie = (isset($data['categorie']) AND $data['categorie'] !== '')?$this->getCategorieService()->getCategorie($data['categorie']):null;
 
         $object->clearDomaines();
         foreach ($data['domaines'] as $id) {
