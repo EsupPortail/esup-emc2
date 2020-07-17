@@ -20,7 +20,7 @@ class Metier implements HistoriqueAwareInterface {
     private  $domaines;
     /** @var ArrayCollection (MetierReference) */
     private $references;
-    /** @var ArrayCollection (FicheMetierType) */
+    /** @var ArrayCollection (FicheMetier) */
     private $fichesMetiers;
 
     public function __construct()
@@ -111,5 +111,30 @@ class Metier implements HistoriqueAwareInterface {
     {
         $this->categorie = $categorie;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function generateTooltip()
+    {
+        $html  = '';
+        /** ligne sur le metier **/
+        $html .= '<span class="highlight metier">'.htmlentities($this->getLibelle(),ENT_QUOTES).'</span><br/>';
+        /** lignes sur les domaines du metier **/
+        $html .= '<strong>Domaines</strong> :';
+        $html .= '<ul>';
+        foreach ($this->getDomaines() as $domaine) {
+            $html .= '<li>'.$domaine->getLibelle().'</li>';
+        }
+        $html .= '</ul>';
+        /** ligne sur l'expertise */
+        //TODO statuer sur ce qui est expert ou pas
+        /** ligne sur les refs */
+        $html .= '<strong>Références</strong> :';
+        foreach ($this->getReferences() as $reference) {
+            $html .= '<span class="badge" style="margin:0.25rem;">'.$reference->getReferentiel()->getLibelleCourt().' - '.$reference->getCode().'</span><br/>';
+        }
+        return '<span style="text-align:left;">'.$html.'</span>';
     }
 }

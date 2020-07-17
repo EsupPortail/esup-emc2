@@ -193,7 +193,15 @@ foreach ($competences as $competence) {
 
 <?php
 $applications = $fiche->getApplications();
-usort($applications, function (Application $a, Application $b) { return $a->getLibelle() > $b->getLibelle();});
+
+$nogroupe = "zzz";
+$dictionnaire = [];
+foreach ($applications as $application) {
+    $groupe = $application->getGroupe();
+    $libelle = ($groupe !== null)?$groupe->getLibelle():$nogroupe;
+    $dictionnaire[$libelle][] = $application;
+}
+ksort($dictionnaire);
 ?>
 
 <?php if (! empty($applications)) : ?>
@@ -201,15 +209,20 @@ usort($applications, function (Application $a, Application $b) { return $a->getL
         Applications
     </div>
 
-    <table class="activite">
-        <tr>
-            <td>
-                <?php foreach ($applications as $application) : ?>
-                    &ndash; <?php echo $application->getLibelle(); ?> <br/>
-                <?php endforeach; ?>
-            </td>
-        </tr>
-    </table>
+    <?php foreach($dictionnaire as $key => $liste) : ?>
+        <table class="activite">
+            <tr>
+                <th> <?php echo ($key !== $nogroupe)?$key:"Sans groupe ..."; ?> </th>
+            </tr>
+            <tr>
+                <td>
+                    <?php foreach ($liste as $application) : ?>
+                        &ndash; <?php echo $application->getLibelle(); ?> <br/>
+                    <?php endforeach; ?>
+                </td>
+            </tr>
+        </table>
+    <?php endforeach; ?>
 <?php endif; ?>
 
 <?php

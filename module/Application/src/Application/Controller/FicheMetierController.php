@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
-use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
@@ -26,6 +25,7 @@ use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
+use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
@@ -35,7 +35,8 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class FicheMetierController extends  AbstractActionController{
+class FicheMetierController extends AbstractActionController
+{
     use DateTimeAwareTrait;
 
     /** Traits associé aux services */
@@ -43,7 +44,9 @@ class FicheMetierController extends  AbstractActionController{
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FicheMetierEtatServiceAwareTrait;
+    use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
+
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;
@@ -72,17 +75,19 @@ class FicheMetierController extends  AbstractActionController{
             $domaine = null;
             $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
         } else {
-            $domaine  = $this->getDomaineService()->getDomaine($domaineId);
+            $domaine = $this->getDomaineService()->getDomaine($domaineId);
             $fichesMetiers = $this->getFicheMetierService()->getFicheByDomaine($domaine);
         }
 
         $etats = $this->getFicheMetierEtatService()->getEtats();
+        $metiers = $this->getMetierService()->getMetiers();
 
         return new ViewModel([
-            'domaineSelect'  => $domaine,
+            'domaineSelect' => $domaine,
             'domaines' => $domaines,
-            'fiches'   => $fichesMetiers,
+            'fiches' => $fichesMetiers,
             'etats' => $etats,
+            'metiers' => $metiers,
         ]);
     }
 
@@ -93,7 +98,7 @@ class FicheMetierController extends  AbstractActionController{
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
 
         return new ViewModel([
-            'title' => 'Visualisation d\'une fiche métier',
+            'title' => "Visualisation d'une fiche métier",
             'fiche' => $fiche,
             'parcours' => $parcours,
             'applications' => $applications,
@@ -126,11 +131,11 @@ class FicheMetierController extends  AbstractActionController{
         ]);
 
         $metier = $fiche->getMetier();
-        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_". str_replace(" ","_",$metier->getLibelle()).'.pdf';
+        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) . '.pdf';
         try {
             $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $fiche->getId());
         } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0 , $e);
+            throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0, $e);
         }
         $exporter->export($filemane);
         exit;
@@ -142,7 +147,7 @@ class FicheMetierController extends  AbstractActionController{
 
         $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
         $exporter->setVars([]);
-        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') ."_fiches_metiers.pdf";
+        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') . "_fiches_metiers.pdf";
         $exporter->exportAll($fiches, $filemane);
         exit;
     }
@@ -181,7 +186,7 @@ class FicheMetierController extends  AbstractActionController{
         if ($fiche !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la fiche de poste  de ". (($fiche AND $fiche->getMetier())?$fiche->getMetier()->getLibelle():"[Aucun métier]"),
+                'title' => "Suppression de la fiche de poste  de " . (($fiche and $fiche->getMetier()) ? $fiche->getMetier()->getLibelle() : "[Aucun métier]"),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier-type/detruire', ["fiche-metier" => $fiche->getId()], [], true),
             ]);
@@ -197,7 +202,7 @@ class FicheMetierController extends  AbstractActionController{
 
         /** @var LibelleForm $form */
         $form = $this->getLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [] , true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [], true));
         $form->bind($fiche);
 
         /** @var Request $request */
@@ -229,7 +234,7 @@ class FicheMetierController extends  AbstractActionController{
 
         /** @var LibelleForm $form */
         $form = $this->getLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-libelle',['id' => $fiche->getId()],[], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
         /** @var Request $request */
         $request = $this->getRequest();
@@ -258,7 +263,7 @@ class FicheMetierController extends  AbstractActionController{
         $activite = new Activite();
         /** @var ActiviteForm $form */
         $form = $this->getActiviteForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-nouvelle-activite',['id' => $fiche->getId()],[], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-nouvelle-activite', ['id' => $fiche->getId()], [], true));
         $form->bind($activite);
 
         /** @var Request $request */
@@ -307,7 +312,7 @@ class FicheMetierController extends  AbstractActionController{
 
         $activites = $this->getActiviteService()->getActivites();
         $options = [];
-        foreach($activites as $activite) {
+        foreach ($activites as $activite) {
             $options[$activite->getId()] = [
                 "title" => $activite->getLibelle(),
                 "description" => $activite->getDescription(),
@@ -337,8 +342,8 @@ class FicheMetierController extends  AbstractActionController{
         $coupleId = $this->params()->fromRoute('id');
         $couple = $this->getActiviteService()->getFicheMetierTypeActivite($coupleId);
 
-        if ($direction === 'up')    $this->getActiviteService()->moveUp($couple);
-        if ($direction === 'down')  $this->getActiviteService()->moveDown($couple);
+        if ($direction === 'up') $this->getActiviteService()->moveUp($couple);
+        if ($direction === 'down') $this->getActiviteService()->moveDown($couple);
 
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 
@@ -401,7 +406,7 @@ class FicheMetierController extends  AbstractActionController{
 
         /** @var SelectionCompetenceForm $form */
         $form = $this->getSelectionCompetenceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/gerer-competences',['fiche' => $fiche->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/gerer-competences', ['fiche' => $fiche->getId()], [], true));
         $form->bind($fiche);
 
         /**  @var Request $request */
@@ -414,8 +419,8 @@ class FicheMetierController extends  AbstractActionController{
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Gestion des compétences de la fiche métier ". $fiche->getMetier()->getLibelle(),
-            'form'  => $form,
+            'title' => "Gestion des compétences de la fiche métier " . $fiche->getMetier()->getLibelle(),
+            'form' => $form,
         ]);
         return $vm;
     }
@@ -425,7 +430,7 @@ class FicheMetierController extends  AbstractActionController{
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
         if ($fiche->hasExpertise()) {
             $fiche->setExpertise(false);
-        } else  {
+        } else {
             $fiche->setExpertise(true);
         }
         $this->getFicheMetierService()->update($fiche);
@@ -456,7 +461,7 @@ class FicheMetierController extends  AbstractActionController{
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Changement de l'état de la fiche metier [".$fiche->getMetier()->getLibelle()."]",
+            'title' => "Changement de l'état de la fiche metier [" . $fiche->getMetier()->getLibelle() . "]",
             'form' => $form,
         ]);
         return $vm;
@@ -534,7 +539,7 @@ class FicheMetierController extends  AbstractActionController{
         if ($etat !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de l'état [".$etat->getCode()."]",
+                'title' => "Suppression de l'état [" . $etat->getCode() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier-type/etat/supprimer', ["etat" => $etat->getId()], [], true),
             ]);

@@ -646,3 +646,7 @@ span.highlight.structure {
 span.highlight.user {
     color: purple;
 }
+
+span.highlight.metier {
+    color: darkorange;
+}

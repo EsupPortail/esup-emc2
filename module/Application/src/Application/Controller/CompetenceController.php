@@ -127,7 +127,6 @@ class CompetenceController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getCompetenceService()->delete($competence);
-            //return $this->redirect()->toRoute('competence', [], [], true);
             exit();
         }
 
@@ -229,7 +228,6 @@ class CompetenceController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getCompetenceThemeService()->delete($theme);
-            //return $this->redirect()->toRoute('competence', [], [], true);
             exit();
         }
 
@@ -331,7 +329,6 @@ class CompetenceController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getCompetenceTypeService()->delete($type);
-            //return $this->redirect()->toRoute('competence', [], [], true);
             exit();
         }
 

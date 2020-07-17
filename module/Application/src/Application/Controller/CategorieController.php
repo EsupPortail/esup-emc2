@@ -99,7 +99,6 @@ class CategorieController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getCategorieService()->delete($categorie);
-            //return $this->redirect()->toRoute('home');
             exit();
         }
 

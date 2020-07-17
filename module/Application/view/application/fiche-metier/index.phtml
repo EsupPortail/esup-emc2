@@ -3,6 +3,7 @@
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
+use Application\Entity\Db\Metier;
 
 /**
  * @see \Application\Controller\FicheMetierController::indexAction()
@@ -10,6 +11,7 @@ use Application\Entity\Db\FicheMetierEtat;
  * @var Domaine $domaineSelect
  * @var FicheMetier[] $fiches
  * @var FicheMetierEtat[] $etats
+ * @var Metier[] $metiers
  */
 
 $this->headTitle('Index des fiches métiers');
@@ -32,6 +34,15 @@ $this->headTitle('Index des fiches métiers');
             </a>
         </li>
 
+<!--        <li role="metier">-->
+<!--            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz">-->
+<!--                Fiches métiers bis &nbsp;-->
+<!--                <span class="badge">-->
+<!--                    --><?php //echo count($metiers); ?>
+<!--                </span>-->
+<!--            </a>-->
+<!--        </li>-->
+
         <li role="etat">
             <a href="#etat" aria-controls="etat" role="tab" data-toggle="tabz">
                 États &nbsp;
@@ -50,6 +61,11 @@ $this->headTitle('Index des fiches métiers');
             <!-- FAMILLE ---------------------------------------------------------------------------------------------->
             <div id="fiche" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect]); ?>
+            </div>
+
+            <!-- FAMILLE ---------------------------------------------------------------------------------------------->
+            <div id="metier" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/fiche-metier-bis.phtml', ['metiers' => $metiers, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect]); ?>
             </div>
 
             <!-- DOMAINE ---------------------------------------------------------------------------------------------->
