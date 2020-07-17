@@ -88,9 +88,9 @@ ksort($dictionnaire);
                 </tr>
                 <?php foreach ($liste as $agentApplication) : ?>
                     <tr <?php if ($agentApplication->estHistorise()) echo 'class="historise"'; ?>>
-                        <td> <?php echo $agentApplication->getApplication()->getLibelle(); ?> </td>
-                        <td> <?php echo $agentApplication->getAnnee(); ?> <?php echo $agentApplication->getType(); ?> </td>
-                        <td>
+                        <td class="libelle-cell"> <?php echo $agentApplication->getApplication()->getLibelle(); ?> </td>
+                        <td class="info-cell"> <?php echo $agentApplication->getAnnee(); ?> <?php echo $agentApplication->getType(); ?> </td>
+                        <td class="validation-cell">
                             <?php if ($agentApplication->getValidation()) : ?>
                             <?php $validation = $agentApplication->getValidation(); ?>
                             <?php if ($validation->getValeur() === null) : ?>
@@ -111,7 +111,7 @@ ksort($dictionnaire);
                                     Aucune validation
                                 <?php endif; ?>
                         </td>
-                        <td>
+                        <td class="action-cell">
                             <?php if ($canVoir) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\AgentController::afficherAgentApplicationAction() */?>

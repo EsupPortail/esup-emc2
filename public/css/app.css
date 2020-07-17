@@ -650,3 +650,21 @@ span.highlight.user {
 span.highlight.metier {
     color: darkorange;
 }
+
+ table.parcours-de-formation td.libelle-cell {
+     /*background: lightgreen;*/
+     /*width: 20rem;*/
+ }
+table.parcours-de-formation td.info-cell {
+    /*background: lightyellow;*/
+    width: 25rem;
+}
+table.parcours-de-formation td.validation-cell {
+    /*background: lightpink;*/
+    width: 15rem;
+}
+table.parcours-de-formation td.action-cell {
+    /*background: lightblue;*/
+    width: 12rem;
+    text-align: right;
+}

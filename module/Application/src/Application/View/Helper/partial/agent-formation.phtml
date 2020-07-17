@@ -89,9 +89,9 @@ ksort($dictionnaire);
                 </tr>
                 <?php foreach ($liste as $agentFormation) : ?>
                     <tr <?php if ($agentFormation->estHistorise()) echo 'class="historise"'; ?>>
-                        <td> <?php echo $agentFormation->getFormation()->getLibelle(); ?> </td>
-                        <td> <?php echo $agentFormation->getDate()->format('d/m/Y') ?> </td>
-                        <td>
+                        <td class="libelle-cell"> <?php echo $agentFormation->getFormation()->getLibelle(); ?> </td>
+                        <td class="info-cell"> <?php echo $agentFormation->getDate()->format('d/m/Y') ?> </td>
+                        <td class="validation-cell">
                             <?php if ($agentFormation->getValidation()) : ?>
                             <?php $validation = $agentFormation->getValidation(); ?>
                             <?php if ($validation->getValeur() === null) : ?>
@@ -112,7 +112,7 @@ ksort($dictionnaire);
                                     Aucune validation
                                 <?php endif; ?>
                         </td>
-                        <td>
+                        <td class="action-cell">
                             <?php if ($canVoir) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\AgentController::afficherAgentFormationAction() */?>
