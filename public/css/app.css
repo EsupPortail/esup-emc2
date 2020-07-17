@@ -561,7 +561,7 @@ span.badge.structure {
 
 span.historise {
     color: gray;
-    text-decoration: line-through;
+    /*text-decoration: line-through;*/
 }
 
 span.todo {
@@ -597,8 +597,8 @@ span.probleme {
 }
 
 tr.historise td {
-    color:gray;
-    text-decoration: line-through;
+    color:lightslategray;
+    /*text-decoration: line-through;*/
 }
 
 th.cell-action {

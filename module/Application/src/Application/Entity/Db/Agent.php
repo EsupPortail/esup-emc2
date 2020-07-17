@@ -331,13 +331,16 @@ class Agent implements ResourceInterface
 
     /** APPLICATIONS, COMPETENCES ET FORMATIONS ***********************************************************************/
 
-    /** @return AgentApplication[] */
-    public function getApplications()
+    /**
+     * @param bool $include_historisees
+     * @return AgentApplication[]
+     */
+    public function getApplications($include_historisees = false)
     {
         $applications = [];
         /** @var AgentApplication $application */
         foreach ($this->applications as $application) {
-            if ($application->estNonHistorise()) $applications[] = $application;
+            if ($include_historisees OR $application->estNonHistorise()) $applications[] = $application;
         }
         return $applications;
     }

@@ -71,7 +71,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
 
             <div id="parcours" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/parcours.phtml', ['agent' => $entretien->getAgent(), 'parcours' => $parcours, 'options' => ['modification' => true]]); ?>
+                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'options' => ['modification' => true]]); ?>
             </div>
 
             <div id="avis" class="tab-pane " role="tabpanel">

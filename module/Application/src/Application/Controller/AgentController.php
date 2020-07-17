@@ -302,15 +302,23 @@ class AgentController extends AbstractActionController
 
     public function historiserAgentApplicationAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
         $this->getAgentService()->historiserAgentApplication($applicationAgent);
+
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $applicationAgent->getAgent()->getId()], [], true);
     }
 
     public function restaurerAgentApplicationAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
         $this->getAgentService()->restoreAgentApplication($applicationAgent);
+
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $applicationAgent->getAgent()->getId()], [], true);
     }
 
@@ -629,6 +637,8 @@ class AgentController extends AbstractActionController
 
     public function revoquerElementAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
         $this->getValidationInstanceService()->historise($validation);
 
@@ -642,6 +652,7 @@ class AgentController extends AbstractActionController
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $entity->getAgent()->getId()], [], true);
     }
     

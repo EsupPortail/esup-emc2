@@ -1,12 +1,13 @@
 <?php
 
 /**
- * @var Agent $agent
+ * @var EntretienProfessionnel $entretien
  * @var ParcoursDeFormation $parcours
  * @var array $options
  */
 
-use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentApplication;
+use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\ParcoursDeFormation;
 
 $canVoir = true;
@@ -16,6 +17,10 @@ $canHistoriser = true;
 $canDetruire = true;
 $canValider = true;
 
+$agent = $entretien->getAgent();
+$retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
+
+/** @var AgentApplication $agentApplication */
 ?>
 
 <h2> Parcours de formation </h2>
@@ -46,115 +51,217 @@ $canValider = true;
 
 <h2> Acquis de l'agent </h2>
 
-<div class="blocs">
-    <div class="bloc">
-        <h3>
-            <span class="icon application"></span>
-            Applications
-            <?php if ($canAjouter) : ?>
-                <a
-                    <?php /** @see \Application\Controller\AgentController::ajouterAgentApplicationAction() */?>
+<!-- APPLICATION ------------------------------------------------------------------------------------------------------>
+
+<div class="row">
+    <div class="col-md-8" style="border-bottom: 1px solid #31708f">
+        <h3> <span class="icon application"></span> Applications maîtrisées </h3>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <?php if ($canAjouter) : ?>
+            <a
+                <?php /** @see \Application\Controller\AgentController::ajouterAgentApplicationAction() */?>
                     href="<?php echo $this->url('agent/ajouter-agent-application', ['agent' => $agent->getId()], [], true); ?>"
-                    class="ajax-modal"
+                    class="ajax-modal btn btn-primary action"
                     data-event="modification"
-                >
-                    <span class="icon ajouter" title="Ajouter une application maîtriser par l'agent"></span>
-                </a>
-            <?php endif; ?>
-        </h3>
-        <ul>
-            <?php foreach ($agent->getApplications() as $application) : ?>
-                <li>
-                    <?php echo $application->getApplication()->getLibelle(); ?>
-                    <br/>
-                    <?php echo $application->getType(); ?>
-                    <?php if ($application->getAnnee()) : ?>
-                        (<?php echo $application->getAnnee(); ?>)
+            >
+                <span class="icon ajouter" title="Ajouter une application maîtrisée par l'agent"></span>
+                Ajouter une application
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+<br/>
+<?php
+    $noGroupe = "ZZZ";
+    $dictionnaire = [];
+    foreach ($agent->getApplications(true) as $agentApplication) {
+        $application = $agentApplication->getApplication();
+        $groupe = $application->getGroupe();
+        $libelle = ($groupe)?$groupe->getLibelle():$noGroupe;
+        $dictionnaire[$libelle][] = $agentApplication;
+    }
+    ksort($dictionnaire);
+?>
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <?php if ($canModifier) : ?>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="applications-historisees"> Afficher les applications historisées
+                    </label>
+                </div>
+            </div>
+        <?php endif; ?>
+        <table class="parcours-de-formation" id="applications">
+            <tbody>
+            <?php foreach ($dictionnaire as $key => $liste) : ?>
+                <?php usort($liste, function(AgentApplication $a, AgentApplication $b) {return $a->getApplication()->getLibelle() > $b->getApplication()->getLibelle();}); ?>
+                <?php
+                    $allHisto = true;
+                    foreach ($liste as $agentApplication) {
+                        if ($agentApplication->estNonHistorise()) {
+                            $allHisto = false;
+                            break;
+                        }
+                    }
+                ?>
+                <tr>
+                    <?php if ($key !== $noGroupe) : ?>
+                        <?php $groupe = $liste[0]->getApplication()->getGroupe(); ?>
+                        <th colspan="4" style="background: <?php echo $groupe->getCouleur(); ?>;" <?php if ($allHisto) echo 'class="historise"'; ?>>
+                            <?php echo $groupe->getLibelle(); ?>
+                        </th>
+                    <?php else :?>
+                        <th colspan="4" style="background: gray;"> Sans groupe ...</th>
                     <?php endif; ?>
-                    - &nbsp;
-                    <?php if ($application->getValidation()) : ?>
-                    <?php $validation = $application->getValidation(); ?>
-                    <?php if ($validation->getValeur() === null) : ?>
-                        <span
-                            style="color:darkgreen;"
-                            title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                </tr>
+                <?php foreach ($liste as $agentApplication) : ?>
+                    <tr <?php if ($agentApplication->estHistorise()) echo 'class="historise"'; ?>>
+                        <td> <?php echo $agentApplication->getApplication()->getLibelle(); ?> </td>
+                        <td> <?php echo $agentApplication->getAnnee(); ?> <?php echo $agentApplication->getType(); ?> </td>
+                        <td>
+                            <?php if ($agentApplication->getValidation()) : ?>
+                            <?php $validation = $agentApplication->getValidation(); ?>
+                            <?php if ($validation->getValeur() === null) : ?>
+                                <span
+                                        style="color:darkgreen;"
+                                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
                                 <span class="icon ok"></span>
                                 Validée
                             </span>
-                    <?php else: ?>
-                    <span
-                        style="color:darkred;"
-                        title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
+                            <?php else: ?>
+                            <span
+                                    style="color:darkred;"
+                                    title=" Par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $validation->getHistoModification()->format("d/m/Y"); ?>">
                                 <span class="icon ko"></span>
                             Refusée
                         <?php endif; ?>
-                        <?php else : ?>
-                            Aucune validation
-                        <?php endif; ?>
-                    <br/>
-                    <?php if ($canVoir) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\AgentController::afficherAgentApplicationAction() */?>
-                                href="<?php echo $this->url('agent/afficher-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
-                                class="ajax-modal"
-                        >
-                            <span class="icon voir" title="Afficher une application maîtriser par l'agent"></span></a>
-                    <?php endif; ?>
-                        <?php if ($canModifier) : ?>
-                            <a
-                            <?php /** @see \Application\Controller\AgentController::modifierAgentApplicationAction() */?>
-                                href="<?php echo $this->url('agent/modifier-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
-                            >
-                            <span class="icon editer" title="Modifier une application maîtriser par l'agent"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canHistoriser) : ?>
-                            <?php if ($application->estNonHistorise()) : ?>
+                                <?php else : ?>
+                                    Aucune validation
+                                <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($canVoir) : ?>
                                 <a
-                                <?php /** @see \Application\Controller\AgentController::historiserAgentApplicationAction() */?>
-                                    href="<?php echo $this->url('agent/historiser-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
+                                    <?php /** @see \Application\Controller\AgentController::afficherAgentApplicationAction() */?>
+                                        href="<?php echo $this->url('agent/afficher-agent-application', ['agent-application' => $agentApplication->getId()], [], true); ?>"
+                                        class="ajax-modal"
                                 >
-                                <span class="icon historiser" title="Historiser une application maîtriser par l'agent"></span></a>
-                            <?php else: ?>
-                                <a
-                                <?php /** @see \Application\Controller\AgentController::restaurerAgentApplicationAction() */?>
-                                    href="<?php echo $this->url('agent/restaurer-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
-                                >
-                                <span class="icon restaurer" title="Restaurer une application maîtriser par l'agent"></span></a>
+                                    <span class="icon voir" title="Afficher une application maîtriser par l'agent"></span></a>
                             <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if ($canDetruire) : ?>
-                            <a
-                            <?php /** @see \Application\Controller\AgentController::detruireAgentApplicationAction() */?>
-                                href="<?php echo $this->url('agent/detruire-agent-application', ['agent-application' => $application->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
-                            >
-                            <span class="icon detruire" title="Supprimer définitivement une application maîtriser par l'agent"></span>
-                        </a>
-                        <?php endif; ?>
-                        <?php if ($canValider) : ?>
-                            <?php if ($application->getValidation() === null) : ?>
+                            <?php if ($canModifier) : ?>
                                 <a
-                                <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                href="<?php echo $this->url('agent/valider-element', ['type' => "AgentApplication", 'id' => $application->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
+                                    <?php /** @see \Application\Controller\AgentController::modifierAgentApplicationAction() */?>
+                                        href="<?php echo $this->url('agent/modifier-agent-application', ['agent-application' => $agentApplication->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
                                 >
-                                <span class="icon validation-do" title="Valider l'application"></span></a>
-                            <?php else: ?>
-                                <a
-                                <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
-                                    href="<?php echo $this->url('agent/revoquer-element', ['validation' => $application->getValidation()->getId()], [], true); ?>"
-                                >
-                                <span class="icon validation-undo" title="Dévalider l'application"></span></a>
+                                    <span class="icon editer" title="Modifier une application maîtriser par l'agent"></span></a>
                             <?php endif; ?>
-                        <?php endif; ?>
-                </li>
+                            <?php if ($canHistoriser) : ?>
+                                <?php if ($agentApplication->estNonHistorise()) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::historiserAgentApplicationAction() */?>
+                                            href="<?php echo $this->url('agent/historiser-agent-application', ['agent-application' => $agentApplication->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon historiser" title="Historiser une application maîtriser par l'agent"></span></a>
+                                <?php else: ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::restaurerAgentApplicationAction() */?>
+                                            href="<?php echo $this->url('agent/restaurer-agent-application', ['agent-application' => $agentApplication->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon restaurer" title="Restaurer une application maîtriser par l'agent"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php if ($canDetruire) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::detruireAgentApplicationAction() */?>
+                                        href="<?php echo $this->url('agent/detruire-agent-application', ['agent-application' => $agentApplication->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                >
+                                    <span class="icon detruire" title="Supprimer définitivement une application maîtriser par l'agent"></span>
+                                </a>
+                            <?php endif; ?>
+                            <?php if ($canValider) : ?>
+                                <?php if ($agentApplication->getValidation() === null) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentApplication", 'id' => $agentApplication->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
+                                    >
+                                        <span class="icon validation-do" title="Valider l'application"></span></a>
+                                <?php else: ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/revoquer-element', ['validation' => $agentApplication->getValidation()->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                    >
+                                        <span class="icon validation-undo" title="Dévalider l'application"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             <?php endforeach; ?>
-        </ul>
+            </tbody>
+        </table>
     </div>
+</div>
+
+<!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
+
+<div class="row">
+    <div class="col-md-8" style="border-bottom: 1px solid #31708f">
+        <h3> <span class="icon competence"></span> Compétences liées</h3>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <?php if ($canAjouter) : ?>
+            <a
+                <?php /** @see \Application\Controller\AgentController::ajouterAgentCompetenceAction() */?>
+                    href="<?php echo $this->url('agent/ajouter-agent-competence', ['agent' => $agent->getId()], [], true); ?>"
+                    class="ajax-modal btn btn-primary action"
+                    data-event="modification"
+            >
+                <span class="icon ajouter" title="Ajouter une compétence pour l'agent"></span>
+                Ajouter une compétence
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+<br/>
+
+<!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
+
+<div class="row">
+    <div class="col-md-8" style="border-bottom: 1px solid #31708f">
+        <h3> <span class="icon formation"></span> Formations suivies </h3>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <?php if ($canAjouter) : ?>
+            <a
+                <?php /** @see \Application\Controller\AgentController::ajouterAgentFormationAction() */?>
+                    href="<?php echo $this->url('agent/ajouter-agent-formation', ['agent' => $agent->getId()], [], true); ?>"
+                    class="ajax-modal btn btn-primary action"
+                    data-event="modification"
+            >
+                <span class="icon ajouter" title="Ajouter une formation pour l'agent"></span>
+                Ajouter une formation
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+<br/>
+
+<div class="blocs">
+
     <div class="bloc">
         <h3>
             <span class="icon competence"></span>
@@ -216,7 +323,7 @@ $canValider = true;
                                 <span class="icon editer" title="Modifier une compétence liée à l'agent"></span></a>
                         <?php endif; ?>
                         <?php if ($canHistoriser) : ?>
-                            <?php if ($application->estNonHistorise()) : ?>
+                            <?php if ($competence->estNonHistorise()) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\AgentController::historiserAgentCompetenceAction() */?>
                                         href="<?php echo $this->url('agent/historiser-agent-competence', ['agent-competence' => $competence->getId()], [], true); ?>"
@@ -383,3 +490,25 @@ $canValider = true;
         flex-wrap: wrap;
     }
 </style>
+
+<script>
+
+    function toogleApplicationsHistorisees() {
+        let checked = $('input#applications-historisees').prop('checked');
+        if (checked === true) {
+            $('table#applications  th.historise').show();
+            $('table#applications  tr.historise').show();
+        } else {
+            $('table#applications  th.historise').hide();
+            $('table#applications  tr.historise').hide();
+        }
+    }
+
+    $(document).ready(function() {
+        toogleApplicationsHistorisees();
+    });
+
+    $('input#applications-historisees').change(function() {
+        toogleApplicationsHistorisees();
+    });
+</script>
