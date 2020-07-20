@@ -238,6 +238,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
+     * @return bool
+     */
+    public function hasValidationAgent() {
+        return ($this->validationAgent AND $this->validationAgent->estNonHistorise());
+    }
+
+    /**
      * @return ValidationInstance
      */
     public function getValidationResponsable()
@@ -256,6 +263,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
+     * @return bool
+     */
+    public function hasValidationResponsable() {
+        return ($this->validationResponsable AND $this->validationResponsable->estNonHistorise());
+    }
+
+    /**
      * @return ValidationInstance
      */
     public function getValidationDRH()
@@ -271,4 +285,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->validationDRH = $validationDRH;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasValidationDRH() {
+        return ($this->validationDRH AND $this->validationDRH->estNonHistorise());
+    }
 }

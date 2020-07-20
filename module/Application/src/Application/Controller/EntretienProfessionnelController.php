@@ -291,12 +291,15 @@ class EntretienProfessionnelController extends AbstractActionController
                 switch ($type) {
                     case 'Agent' :
                         $entretien->setValidationAgent($validation);
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.'DRH@unicaen.fr']);
                         break;
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
                         break;
                     case 'DRH' :
                         $entretien->setValidationDRH($validation);
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getResponsable()->getEmail()]);
                         break;
                 }
                 $this->getEntretienProfessionnelService()->update($entretien);
@@ -321,12 +324,14 @@ class EntretienProfessionnelController extends AbstractActionController
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
         $this->getValidationInstanceService()->historise($validation);
 
-        /** TODO c'est vraiment crado (faire mieux ...) */
+
         /** @var EntretienProfessionnel $entity */
         $entity = $this->getValidationInstanceService()->getEntity($validation);
 
+        /** TODO c'est vraiment crado (faire mieux ...) */
         if ($validation->getType()->getCode() === "ENTRETIEN_AGENT") $entity->setValidationAgent(null);
         if ($validation->getType()->getCode() === "ENTRETIEN_RESPONSABLE") $entity->setValidationResponsable(null);
+        if ($validation->getType()->getCode() === "ENTRETIEN_DRH") $entity->setValidationDRH(null);
 
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);

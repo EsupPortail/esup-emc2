@@ -9,7 +9,7 @@ use Application\Provider\Privilege\EntretienproPrivileges;
 
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
-$canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
 
 ?>
 
@@ -17,7 +17,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
     <h3 class="categorie"> Validation du responsable de l'entretien professionnel </h3>
 
     <div class="row">
-        <?php if ($entretien->getValidationResponsable() !== null AND $entretien->getValidationResponsable()->estNonHistorise()) : ?>
+        <?php if ($entretien->hasValidationResponsable()) : ?>
             <div class="col-md-8">
                 <div class="row">
                     <div class="alert alert-success">
@@ -40,7 +40,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
             </div>
             <div class="pull-right">
                 <br/>
-                <?php if ($canValiderResponsable) : ?>
+                <?php if ($canValiderResponsable && ! $entretien->hasValidationAgent()) : ?>
                     <a
                         <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationResponsable()->getId()], [], true); ?>"
@@ -81,7 +81,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
 
     <div class="row">
 
-        <?php if ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise()) : ?>
+        <?php if (!$entretien->hasValidationResponsable()) : ?>
             <div class="col-md-8">
                 <div class="alert alert-warning">
                     <span class="icon attention"></span>
@@ -89,7 +89,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
                 </div>
             </div>
         <?php else : ?>
-            <?php if ($entretien->getValidationAgent() !== null AND $entretien->getValidationAgent()->estNonHistorise()) : ?>
+            <?php if ($entretien->hasValidationAgent()) : ?>
                 <div class="col-md-8">
                     <div class="row">
                         <div class="alert alert-success">
@@ -112,7 +112,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
                 </div>
                 <div class="pull-right">
                     <br/>
-                    <?php if ($canValiderResponsable) : ?>
+                    <?php if ($canValiderAgent && ! $entretien->hasValidationDRH()) : ?>
                         <a
                             <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationAgent()->getId()], [], true); ?>"
@@ -155,7 +155,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
 
     <div class="row">
 
-        <?php if ($entretien->getValidationAgent() === null OR $entretien->getValidationAgent()->estHistorise()) : ?>
+        <?php if (!$entretien->hasValidationAgent()) : ?>
             <div class="col-md-8">
                 <div class="alert alert-warning">
                     <span class="icon attention"></span>
@@ -163,7 +163,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
                 </div>
             </div>
         <?php else : ?>
-            <?php if ($entretien->getValidationDRH() !== null AND $entretien->getValidationDRH()->estNonHistorise()) : ?>
+            <?php if ($entretien->hasValidationDRH()) : ?>
                 <div class="col-md-8">
                     <div class="row">
                         <div class="alert alert-success">
@@ -186,7 +186,7 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
                 </div>
                 <div class="pull-right">
                     <br/>
-                    <?php if ($canValiderResponsable) : ?>
+                    <?php if ($canValiderDrh ) : ?>
                         <a
                             <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationDRH()->getId()], [], true); ?>"
@@ -222,3 +222,9 @@ $canValiderRdh          = $this->isAllowed($entretien, EntretienproPrivileges::E
         <?php endif; ?>
     </div>
 </div>
+
+<style>
+    h3.categorie {
+        border-bottom: 1px solid #31708f;
+    }
+</style>
