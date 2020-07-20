@@ -11,4 +11,5 @@ class RoleConstant {
     const VALIDATEUR        = 'Validateur';
     const OBSERVATEUR       = 'Observateur';
     const RESPONSABLE_EPRO  = "Responsable d'entretien pro.";
+    const DRH               = "Direction des ressources humaines";
 }

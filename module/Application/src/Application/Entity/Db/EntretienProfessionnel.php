@@ -10,9 +10,15 @@ use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface {
     use HistoriqueAwareTrait;
+
+    public function getResourceId()
+    {
+        return 'EntretienProfessionnel';
+    }
 
     /** @var integer */
     private $id;

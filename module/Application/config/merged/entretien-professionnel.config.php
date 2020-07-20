@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\EntretienProfessionnelAssertion;
+use Application\Assertion\EntretienProfessionnelAssertionFactory;
 use Application\Controller\EntretienProfessionnelController;
 use Application\Controller\EntretienProfessionnelControllerFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
@@ -25,11 +27,32 @@ use Application\Service\EntretienProfessionnel\EntretienProfessionnelObservation
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'EntretienProfessionnel' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
+                            EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,
+                            EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH,
+                        ],
+                        'resources' => ['EntretienProfessionnel'],
+                        'assertion' => EntretienProfessionnelAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -422,6 +445,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            EntretienProfessionnelAssertion::class => EntretienProfessionnelAssertionFactory::class,
             EntretienProfessionnelService::class => EntretienProfessionnelServiceFactory::class,
             EntretienProfessionnelCampagneService::class => EntretienProfessionnelCampagneServiceFactory::class,
             EntretienProfessionnelObservationService::class => EntretienProfessionnelObservationServiceFactory::class,

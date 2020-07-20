@@ -12,4 +12,8 @@ class EntretienproPrivileges extends Privileges
     const ENTRETIENPRO_MODIFIER     = 'entretienpro-entretienpro_modifier';
     const ENTRETIENPRO_HISTORISER   = 'entretienpro-entretienpro_historiser';
     const ENTRETIENPRO_DETRUIRE     = 'entretienpro-entretienpro_detruire';
+
+    const ENTRETIENPRO_VALIDER_AGENT = 'entretienpro-entretienpro_valider_agent';
+    const ENTRETIENPRO_VALIDER_RESPONSABLE = 'entretienpro-entretienpro_valider_responsable';
+    const ENTRETIENPRO_VALIDER_DRH = 'entretienpro-entretienpro_valider_drh';
 }

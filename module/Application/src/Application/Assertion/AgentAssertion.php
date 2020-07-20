@@ -20,6 +20,8 @@ class AgentAssertion extends AbstractAssertion {
             return false;
         }
 
+        /** @var Agent $entity */
+
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
@@ -61,7 +63,7 @@ class AgentAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                         return true;
                     case RoleConstant::PERSONNEL:
-                        return ($entity->getUtilisateur() === $user);
+                        return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
                     case RoleConstant::GESTIONNAIRE:
                             return $isGestionnaire;
                 }

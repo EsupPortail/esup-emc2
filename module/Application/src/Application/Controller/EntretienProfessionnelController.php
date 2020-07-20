@@ -334,7 +334,7 @@ class EntretienProfessionnelController extends AbstractActionController
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
-        return $this->redirect()->toRoute('entretien-professionnel/modifier', ['entretien' => $entity->getId()], [], true);
+        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entity->getId()], ['fragment' => 'validation'], true);
     }
 
     public function exporterAction()

@@ -17,8 +17,8 @@ $formulaire = $instance->getFormulaire();
 
 <form class="autoform" method="post" action="<?php echo $url; ?>" >
 
-    <span id="hide" class="btn btn-info"> Cacher les catégories </span>
-    <span id="show" class="btn btn-info">Afficher les catégories </span>
+<!--    <span id="hide" class="btn btn-info"> Cacher les catégories </span>-->
+<!--    <span id="show" class="btn btn-info">Afficher les catégories </span>-->
     <input type="submit" value="Valider le formulaire" class="btn btn-primary"/>
 
     <br/>
@@ -42,11 +42,10 @@ $formulaire = $instance->getFormulaire();
 
         <?php if (!empty($champs)) : ?>
 
-            <div class="panel panel-info">
-                <div class="panel-heading title-reductible">
-                    <h2> <?php echo $categorie->getLibelle(); ?> </h2>
-                </div>
-                <div class="panel-body body-reductible">
+            <div class="categorie">
+                <h3 class="categorie"> <?php echo $categorie->getLibelle(); ?> </h3>
+
+                <div class="champs">
                     <?php foreach ($champs as $champ) : ?>
                         <div> <?php echo $this->champAsInput()->render($champ, $reponses); ?> </div>
                     <?php endforeach; ?>
@@ -60,19 +59,19 @@ $formulaire = $instance->getFormulaire();
 </form>
 
 <script>
-    $('div.body-reductible').each(function() { $(this).hide()});
-
-    $('div.title-reductible').click(function() {
-        $(this).siblings().each(function() { $(this).toggle(); });
-    });
-
-    $('span#hide').click(function() {
-        $('div.body-reductible').each(function() { $(this).hide()});
-    });
-
-    $('span#show').click(function() {
-        $('div.body-reductible').each(function() { $(this).show()});
-    });
+    // $('div.body-reductible').each(function() { $(this).hide()});
+    //
+    // $('div.title-reductible').click(function() {
+    //     $(this).siblings().each(function() { $(this).toggle(); });
+    // });
+    //
+    // $('span#hide').click(function() {
+    //     $('div.body-reductible').each(function() { $(this).hide()});
+    // });
+    //
+    // $('span#show').click(function() {
+    //     $('div.body-reductible').each(function() { $(this).show()});
+    // });
 
     $("select.periode").change(function() {
         checkPeriode($(this));
@@ -82,19 +81,17 @@ $formulaire = $instance->getFormulaire();
         checkPeriode($(this));
     });
 
-    function checkPeriode(element) {
-        let name = element.attr('name');
-        let splits = name.split("_");
-        let id = splits[1];
-        let value = $("select[name="+name+"] option:selected").val();
-
-        if (value === "Balisée") {
-            $("span#datation_" + id).show();
-        } else {
-            $("span#datation_" + id).hide();
-        }
-    }
-
-    $('.selectpicker').selectpicker();
+    // $('.selectpicker').selectpicker();
 
 </script>
+
+<style>
+    h3.categorie {
+        border-bottom: 1px solid #31708f;
+    }
+
+    div.categorie div.champs {
+        margin-left: 2rem;
+        width:95%;
+    }
+</style>

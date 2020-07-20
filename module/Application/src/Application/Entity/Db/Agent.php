@@ -427,4 +427,17 @@ class Agent implements ResourceInterface
         }
         return null;
     }
+
+    public function hasEntretienEnCours() {
+        $now = $this->getDateTime();
+
+        /** @var EntretienProfessionnel $entretien */
+        foreach ($this->entretiens as $entretien) {
+            if ($entretien->getDateEntretien() > $now
+                AND $entretien->getValidationResponsable() === null AND $entretien->getValidationResponsable()->estNonHistorise()
+                AND $entretien->estNonHistorise()) return true;
+        }
+
+        return false;
+    }
 }

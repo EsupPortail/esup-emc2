@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: metivier
- * Date: 14/12/18
- * Time: 12:06
- */
 
 namespace Application\Provider\Privilege;
-
 
 use UnicaenPrivilege\Provider\Privilege\Privileges;
 

@@ -27,5 +27,26 @@ $options = explode(';', $champ->getOptions());
 </style>
 
 <script>
-
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.autoform-textarea',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'textarea_<?php echo $champ->getId(); ?>',
+            setup: function (editor) {
+                 editor.on("focusout", function () {
+                     console.log('textarea_<?php echo $champ->getId(); ?>');
+                     console.log(tinymce.get('textarea_<?php echo $champ->getId(); ?>').getContent());
+                     $('textarea_<?php echo $champ->getId(); ?>').val(tinymce.get('textarea_<?php echo $champ->getId(); ?>').getContent());
+                 });
+            }
+        });
+    });
 </script>

@@ -11,13 +11,15 @@ use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\ParcoursDeFormation;
+use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\EntretienproPrivileges;
 
-$canVoir = true;
-$canAjouter = true;
-$canModifier = true;
-$canHistoriser = true;
-$canDetruire = true;
-$canValider = true;
+$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
+$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
 
 $droits = [
     'afficher' => $canVoir,
@@ -36,7 +38,41 @@ $agent = $entretien->getAgent();
 /** @var AgentApplication $agentApplication */
 /** @var AgentCompetence $agentCompetence */
 /** @var AgentFormation $agentFormation */
+
+$DEBUG = true;
+$now = new DateTime();
 ?>
+
+<?php if ($DEBUG) : ?>
+    <div class="alert alert-warning">
+        <strong> Débug : </strong> <br/>
+
+        <dl class='dl-horizontal'>
+            <dt> Date de l'entretien dépassé </dt>
+            <dd> <strong><?php echo ($entretien->getDateEntretien() > $now)?"Non dépassé":"Dépassé"; ?></strong> <?php echo $entretien->getDateEntretien()->format('d/m/Y  H:i:s'); ?>
+                &lt;?&lt; <?php echo $now->format('d/m/Y H:i:s'); ?>
+            </dd>
+            <dt> Validé par le responsable </dt>
+            <dd>
+                <?php if ($entretien->getValidationResponsable() !== null AND $entretien->getValidationResponsable()->estNonHistorise()) : ?>
+                    <strong>Validé</strong>
+                    <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
+                    <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/Y H:i:s') ?>
+                <?php else : ?>
+                    <strong>Non validé</strong> null
+                <?php endif; ?>
+            </dd>
+        </dl>
+
+        <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+            <span class="icon editer"></span> Modification
+        <?php else : ?>
+            <span class="icon voir"></span> Affichage
+        <?php endif; ?>
+        <?php //var_dump(($entretien->getDateEntretien() < $now)); ?>
+        <?php //var_dump(($entretien->getValidationResponsable())); ?>
+    </div>
+<?php endif; ?>
 
 <h2> Parcours de formation </h2>
 
