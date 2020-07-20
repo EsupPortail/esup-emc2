@@ -44,7 +44,7 @@ class ApplicationHydrator implements HydratorInterface {
             }
         }
 
-        $groupe = (isset($data['groupe']))?$this->getApplicationGroupeService()->getApplicationGroupe($data['groupe']):null;
+        $groupe = (isset($data['groupe']) AND trim($data['groupe']) !== "")?$this->getApplicationGroupeService()->getApplicationGroupe($data['groupe']):null;
         $object->setGroupe($groupe);
 
         $object->setLibelle($data['libelle']);
