@@ -269,6 +269,14 @@ span.icon.verification:before {
     content: "\f0a3 ";
 }
 
+span.icon.toggle-on:before {
+    content: "\f205";
+}
+
+span.icon.toogle-off:before {
+    content: "\f007";
+}
+
 div.survol:hover {
     background-color: lightgoldenrodyellow;
 }

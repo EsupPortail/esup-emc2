@@ -71,7 +71,8 @@ return [
                 [
                     'controller' => StructureController::class,
                     'action' => [
-                        'editer-description'
+                        'editer-description',
+                        'toggle-resume-mere',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION,
                     'assertion'  => StructureAssertion::class,
@@ -178,6 +179,18 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'editer-description',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'toggle-resume-mere' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/toggle-resume-mere/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'toggle-resume-mere',
                             ],
                         ],
                         'may_terminate' => true,

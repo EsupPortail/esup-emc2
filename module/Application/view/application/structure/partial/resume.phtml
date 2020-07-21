@@ -27,8 +27,28 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
                     <span class="icon editer" data-toggle="tooltip" data-html="true"
                           title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                     </span></a>
+                <a
+                    <?php /** @see \Application\Controller\StructureController::editerDescriptionAction() */ ?>
+                        href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], [], true); ?>"
+                >
+                    <?php if ($structure->getRepriseResumeMere()) : ?>
+                        <span class="icon ko" data-toggle="tooltip" data-html="true"
+                              title="Ne plus réutiliser le résumé de la structure mère">
+                        </span></a>
+                    <?php else : ?>
+                        <span class="icon ok" data-toggle="tooltip" data-html="true"
+                          title="Réutiliser le résumé de la structure mère">
+                        </span></a>
+                    <?php endif; ?>
+
             <?php endif; ?>
         </h2>
+        <?php if ($structure->getRepriseResumeMere()) : ?>
+            <div class="alert alert-info">
+                <span class="icon information"></span>
+                Reprise du résumé de la structure mère.
+            </div>
+        <?php endif; ?>
         <?php if ($structure->getDescription()) : ?>
             <?php echo $structure->getDescription(); ?>
         <?php else : ?>

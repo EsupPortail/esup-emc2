@@ -34,6 +34,8 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     private $ouverture;
     /** @var DateTime */
     private $fermeture;
+    /** @var Boolean */
+    private $repriseResumeMere;
     /** @var Structure */
     private $parent;
     /** @var ArrayCollection (Structure) */
@@ -116,7 +118,11 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
      */
     public function getDescription()
     {
-        return $this->description;
+        $text = "";
+        if ($this->getRepriseResumeMere() AND $this->parent !== null) {
+            $text .= $this->parent->getDescription() . "<br/>";
+        }
+        return $text . $this->description ;
     }
 
     /**
@@ -267,7 +273,23 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function getRepriseResumeMere()
+    {
+        return $this->repriseResumeMere;
+    }
 
+    /**
+     * @param bool $repriseResumeMere
+     * @return Structure
+     */
+    public function setRepriseResumeMere($repriseResumeMere)
+    {
+        $this->repriseResumeMere = $repriseResumeMere;
+        return $this;
+    }
 
     /**
      * @return string

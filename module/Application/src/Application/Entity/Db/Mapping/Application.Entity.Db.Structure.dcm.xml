@@ -12,6 +12,7 @@
         <field name="description"               column="description"        type="string" length="10240"/>
         <field name="ouverture"                 column="ouverture"          type="datetime"  />
         <field name="fermeture"                 column="fermeture"          type="datetime"  />
+        <field name="repriseResumeMere"         column="resume_mere"        type="boolean"  />
 
         <many-to-one target-entity="Application\Entity\Db\StructureType" field="type">
             <join-column name="type" referenced-column-name="source_id" />

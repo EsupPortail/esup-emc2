@@ -189,6 +189,15 @@ class StructureController extends AbstractActionController {
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
 
+    public function toggleResumeMereAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structure->setRepriseResumeMere(! $structure->getRepriseResumeMere());
+        $this->getStructureService()->update($structure);
+
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+    }
+
     /** Fonctions de recherche ****************************************************************************************/
     public function rechercherAction()
     {
