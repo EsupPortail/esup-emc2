@@ -11,12 +11,14 @@ $options = explode(';', $champ->getOptions());
 
 <div class="row">
 <div class="form-group">
-    <label for="textarea_<?php echo $champ->getId(); ?>" class="col-sm-2 control-label">
-        <?php echo $champ->getLibelle(); ?>&nbsp;:
-    </label>
-    <div class="col-sm-10">
+<!--    <label for="textarea_--><?php //echo $champ->getId(); ?><!--" class="col-sm-2 control-label">-->
+    <strong><?php echo $champ->getLibelle(); ?>&nbsp;:</strong><br/>
+<!--    </label>-->
+    <div class="col-sm-12">
         <textarea class="form-control autoform-textarea" id="textarea_<?php echo $champ->getId(); ?>" name="<?php echo $champ->getId(); ?>" ><?php echo trim($reponse); ?></textarea>
+        <br/>
         </div>
+
 </div>
 </div>
 

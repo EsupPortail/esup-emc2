@@ -47,7 +47,7 @@ class InstanceAsTextHelper extends AbstractHelper
                 }
 
                 if (!empty($champs) && !(empty($results))) {
-                    $text .= '<h3>' . $categorie->getLibelle() . '</h3>';
+                    $text .= '<h3 class="categorie">' . $categorie->getLibelle() . '</h3>';
                     $text .= '<ul>';
                     /** @var Champ $champ */
                     foreach ($champs as $champ) {
