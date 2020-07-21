@@ -3,6 +3,7 @@
 namespace Application\Form\FormationGroupe;
 
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Color;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
@@ -36,7 +37,7 @@ class FormationGroupeForm extends Form {
         ]);
         //couleur
         $this->add([
-            'type' => Text::class,
+            'type' => Color::class,
             'name' => 'couleur',
             'options' => [
                 'label' => "Couleur :",
