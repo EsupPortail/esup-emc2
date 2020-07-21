@@ -37,11 +37,6 @@ class AgentAssertion extends AbstractAssertion {
             }
         }
 
-        $isResponsable = false;
-        if ($role->getRoleId === RoleConstant::RESPONSABLE_EPRO) {
-            //todo
-        }
-
         switch($privilege) {
             case AgentPrivileges::AGENT_ELEMENT_VOIR:
                 switch ($role->getRoleId()) {
@@ -76,16 +71,6 @@ class AgentAssertion extends AbstractAssertion {
                 }
                 return false;
             case AgentPrivileges::AGENT_ELEMENT_VALIDER:
-                switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                        return true;
-                    case RoleConstant::GESTIONNAIRE:
-                        return $isGestionnaire;
-                    case RoleConstant::RESPONSABLE_EPRO:
-                        return  $isResponsable;
-                }
-                return false;
             case AgentPrivileges::AGENT_ELEMENT_AJOUTER_EPRO:
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
