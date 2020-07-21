@@ -31,6 +31,10 @@ class ChampAsInputHelper extends AbstractHelper
 
         $reponse = (isset($data[$champ->getId()]))?$data[$champ->getId()]->getReponse():null;
 
+//        var_dump($champ->getId());
+//        var_dump(isset($data[$champ->getId()]));
+//        var_dump($reponse);
+
         switch($champ->getElement()) {
 
             case Champ::TYPE_LABEL :

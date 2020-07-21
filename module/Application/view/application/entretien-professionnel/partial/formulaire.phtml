@@ -3,13 +3,11 @@
 /**
  * @var EntretienProfessionnel $entretien
  */
-$DEBUG = true;
+$DEBUG = false;
 
 
 use Application\Entity\Db\EntretienProfessionnel;
 
-$formulaire = $entretien->getFormulaireInstance();
-$reponses = $formulaire->getReponses();
 $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
 
 $now = new DateTime();
@@ -48,10 +46,28 @@ $now = new DateTime();
     </div>
 <?php endif; ?>
 
+<?php
+    $instance = $entretien->getFormulaireInstance();
+    $formulaire = $instance->getFormulaire();
+    $reponses = $instance->getReponses();
+
+    /** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+    $data = [];
+    foreach ($reponses as $reponse) {
+        $data[$reponse->getChamp()->getId()] = $reponse;
+    }
+?>
+
 <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
-    MODIFIABLE
-    <?php echo $this->instanceAsFormulaire()->render($formulaire, $retour, $reponses); ?>
+    <?php
+        /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+        $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+        echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+    ?>
 <?php else : ?>
     NON MODIF
-<!--    $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $entretien->getFormulaireInstance()->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);-->
+    <?php echo $this->instanceAsText()->render($instance); ?>
 <?php endif; ?>
+

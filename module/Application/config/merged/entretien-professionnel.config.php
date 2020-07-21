@@ -6,8 +6,6 @@ use Application\Assertion\EntretienProfessionnelAssertion;
 use Application\Assertion\EntretienProfessionnelAssertionFactory;
 use Application\Controller\EntretienProfessionnelController;
 use Application\Controller\EntretienProfessionnelControllerFactory;
-use Application\Form\EntretienProfesionnelFormulaire\EntretienProfessionnelFormulaireForm;
-use Application\Form\EntretienProfesionnelFormulaire\EntretienProfessionnelFormulaireFormFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelFormFactory;
 use Application\Form\EntretienProfessionnel\EntretienProfessionnelHydrator;
@@ -488,7 +486,6 @@ return [
         'factories' => [
             EntretienProfessionnelForm::class => EntretienProfessionnelFormFactory::class,
             EntretienProfessionnelCampagneForm::class => EntretienProfessionnelCampagneFormFactory::class,
-            EntretienProfessionnelFormulaireForm::class => EntretienProfessionnelFormulaireFormFactory::class,
             EntretienProfessionnelObservationForm::class => EntretienProfessionnelObservationFormFactory::class,
         ],
     ],
