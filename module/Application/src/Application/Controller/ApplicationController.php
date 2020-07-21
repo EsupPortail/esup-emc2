@@ -23,16 +23,25 @@ class ApplicationController  extends AbstractActionController {
 
     public function indexAction()
     {
+        $groupeId = $this->params()->fromQuery('groupe');
         /**
          * @var Application[] $activites
          * @var ApplicationGroupe[] $groupes
          */
-        $applications = $this->getApplicationService()->getApplications('libelle');
+
+        $applications = [];
+        if ($groupeId !== null AND $groupeId !== "") {
+            $groupe = $this->getApplicationGroupeService()->getApplicationGroupe($groupeId);
+            $applications = $this->getApplicationService()->getApplicationsGyGroupe($groupe);
+        } else {
+            $applications = $this->getApplicationService()->getApplications();
+        }
         $groupes = $this->getApplicationGroupeService()->getApplicationsGroupes('libelle');
 
         return new ViewModel([
             'applications' => $applications,
             'groupes' => $groupes,
+            'groupeSelected' => $groupeId,
         ]);
 }
 

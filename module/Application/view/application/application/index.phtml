@@ -8,6 +8,7 @@ use Application\Provider\Privilege\ApplicationPrivileges;
  * @see \Application\Controller\ApplicationController::indexAction()
  * @var Application[] $applications
  * @var ApplicationGroupe[] $groupes
+ * @var int $groupeSelected
  */
 
 
@@ -19,6 +20,10 @@ $droits['canEffacer']  = $this->isAllowed(ApplicationPrivileges::getResourceId(A
 
 $this->headTitle("Index des applications");
 ?>
+
+<h1 class="page-header">
+    Applications et groupes d'application
+</h1>
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
@@ -49,7 +54,7 @@ $this->headTitle("Index des applications");
             </div>
 
             <div id="application" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-application', ['applications' => $applications, 'droits' => $droits], [], true); ?>
+                <?php echo $this->partial('partial/index-application', ['applications' => $applications, 'groupes' => $groupes, 'groupeSelected' => $groupeSelected, 'droits' => $droits], [], true); ?>
             </div>
         </div>
     </div>
@@ -67,6 +72,8 @@ $this->headTitle("Index des applications");
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
+        name = name.split("?")[0];
+        console.log(name);
         if (name === undefined || name === "") name = "application";
 
         $('a[aria-controls=' + name + ']').tab('show');

@@ -3,8 +3,10 @@
 namespace Application\Service\Application;
 
 use Application\Entity\Db\Application;
+use Application\Entity\Db\ApplicationGroupe;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -60,13 +62,24 @@ class ApplicationService {
     /** REQUETES ******************************************************************************************************/
 
     /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(Application::class)->createQueryBuilder('application')
+            ->addSelect('groupe')->leftJoin('application.groupe', 'groupe')
+        ;
+        return $qb;
+    }
+
+    /**
      * @param string $champ
      * @param string $ordre
      * @return Application[]
      */
     public function getApplications($champ = 'libelle', $ordre='ASC')
     {
-        $qb = $this->getEntityManager()->getRepository(Application::class)->createQueryBuilder('application')
+        $qb = $this->createQueryBuilder()
             ->orderBy('application.' . $champ, $ordre)
         ;
 
@@ -88,6 +101,28 @@ class ApplicationService {
         }
 
         return $array;
+    }
+
+    /**
+     * @param ApplicationGroupe $groupe
+     * @return Application[]
+     */
+    public function getApplicationsGyGroupe($groupe)
+    {
+        $qb = $this->createQueryBuilder()
+            ->orderBy('application.libelle')
+        ;
+        if ($groupe) {
+            $qb = $qb->andWhere('groupe.id = :groupeId')
+                ->setParameter('groupeId', $groupe->getId())
+            ;
+        } else {
+            $qb = $qb->andWhere('groupe IS NULL')
+            ;
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /**

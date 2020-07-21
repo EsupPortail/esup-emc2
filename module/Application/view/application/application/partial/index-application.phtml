@@ -1,11 +1,14 @@
 <?php
 
+use Application\Entity\Db\Application;
+use Application\Entity\Db\ApplicationGroupe;
+
 /**
  * @var Application[] $applications
+ * @var ApplicationGroupe[] $groupes
+ * @var int $groupeSelected
  * @var boolean[] $droits
  */
-
-use Application\Entity\Db\Application;
 
 $canAfficher = $droits['canAfficher'];
 $canAjouter = $droits['canAjouter'];
@@ -14,18 +17,34 @@ $canEffacer = $droits['canEffacer'];
 
 ?>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-4">
         <h2>
             Applications
         </h2>
     </div>
-    <div class="pull-right">
+    <div class="col-md-4">
+            Filtrer les applications par groupe : <br/>
+            <select id="groupe-select" name="groupe-select" class="selectpicker" data-live-search="true">
+                <option value="" <?php if (null == $groupeSelected) echo " selected "; ?>>
+                    Aucune sélection
+                </option>
+                <?php foreach ($groupes as $groupe): ?>
+                    <option value="<?php echo $groupe->getId(); ?>" <?php if ($groupe->getId() == $groupeSelected) echo " selected "; ?>>
+                        <?php echo $groupe->getLibelle(); ?>
+                    </option>
+                <?php endforeach; ?>
+                <option value="-1" <?php if (-1 == $groupeSelected) echo " selected "; ?>>
+                    Sans groupe
+                </option>
+            </select>
+    </div>
+    <div class="col-md-4">
         <?php if ($canAjouter) : ?>
             <br/>
             <a  <?php /** @see \Application\Controller\ApplicationController::creerAction() */?>
-                href="<?php echo $this->url('application/creer', [], [], true);?>"
-                class="btn btn-primary action ajax-modal"
-                data-event="modification"
+                    href="<?php echo $this->url('application/creer', [], [], true);?>"
+                    class="btn btn-primary action ajax-modal"
+                    data-event="modification"
             >
                 <span class="icon ajouter"></span>
                 Ajouter une application
@@ -99,4 +118,12 @@ $canEffacer = $droits['canEffacer'];
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $('select#groupe-select').change(function() {
+        let selected = $('select#groupe-select option:selected').val();
+        let new_url = "?groupe="+ selected + "#application" ;
+        window.location.href = new_url;
+    });
+</script>
 
