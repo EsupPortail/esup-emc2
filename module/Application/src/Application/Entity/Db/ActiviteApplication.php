@@ -2,8 +2,6 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\Db\Activite;
-use Application\Entity\Db\Application;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class ActiviteApplication {

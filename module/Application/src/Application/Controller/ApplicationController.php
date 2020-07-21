@@ -14,12 +14,12 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ApplicationController  extends AbstractActionController {
-    /** Trait utilisés pour les services */
     use ApplicationServiceAwareTrait;
     use ApplicationGroupeServiceAwareTrait;
-    /** Trait utilisées pour les formulaires */
     use ApplicationFormAwareTrait;
     use ApplicationGroupeFormAwareTrait;
+
+    /** APPLICATION ***************************************************************************************************/
 
     public function indexAction()
     {

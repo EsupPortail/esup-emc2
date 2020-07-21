@@ -8,11 +8,10 @@ use Application\Service\Validation\ValidationDemandeService;
 use Interop\Container\ContainerInterface;
 use UnicaenAuthentification\Service\UserContext;
 use UnicaenUtilisateur\Service\Role\RoleService;
-use UnicaenUtilisateur\Service\User\UserService;;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class IndexControllerFactory {
 
-    //TODO fix le probleme avec userContext ...
     public function __invoke(ContainerInterface $container)
     {
         /**

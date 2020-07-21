@@ -32,7 +32,6 @@ class IndexController extends AbstractActionController
         /** @var Agent $agent */
         $agent = null;
 
-
         if ($this->getServiceUserContext()->getLdapUser()) {
             $supannId = ((int) $this->getServiceUserContext()->getLdapUser()->getSupannEmpId());
             $agent = $this->getAgentService()->getAgentBySupannId($supannId);

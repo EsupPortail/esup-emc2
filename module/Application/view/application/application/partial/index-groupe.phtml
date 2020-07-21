@@ -82,7 +82,7 @@ use Application\Entity\Db\ApplicationGroupe;
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <a
-                        <?php /** @see ApplicationController::editerGroupeAction() */ ?>
+                        <?php /** @see ApplicationController::modifierGroupeAction() */ ?>
                         href="<?php  echo $this->url('application/groupe/editer', ['application-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"

@@ -11,9 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class PosteController extends AbstractActionController {
-    /** Trait utilisés pour les services */
     use PosteServiceAwareTrait;
-    /** Trait utilisés pour les formulaires */
     use PosteFormAwareTrait;
 
     public function indexAction()
