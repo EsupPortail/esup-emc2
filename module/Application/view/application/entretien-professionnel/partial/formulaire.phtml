@@ -7,6 +7,12 @@ $DEBUG = false;
 
 
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Provider\Privilege\EntretienproPrivileges;
+
+$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
+$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
+$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+$canRenseigner = $canValiderDrh OR $canValiderResponsable OR $canValiderAgent;
 
 $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
 
@@ -58,16 +64,20 @@ $now = new DateTime();
     }
 ?>
 
-<?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
-    <?php
-        /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
-        $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
-        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+<?php if ($canRenseigner) : ?>
+    <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+        <?php
+            /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+            $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+            $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
-        echo $this->instanceAsFormulaire()->render($instance, $url, $data);
-    ?>
+            echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+        ?>
+    <?php else : ?>
+        <?php echo $this->instanceAsText()->render($instance); ?>
+    <?php endif; ?>
 <?php else : ?>
-    NON MODIF
-    <?php echo $this->instanceAsText()->render($instance); ?>
+    <div class="alert alert-danger">
+        Vous ne pouvez vous le formulaire d'entretien professionnel.
+    </div>
 <?php endif; ?>
-

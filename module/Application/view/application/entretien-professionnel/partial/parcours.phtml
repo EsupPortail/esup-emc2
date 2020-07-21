@@ -12,7 +12,8 @@ use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\EntretienproPrivileges;
+
+$agent = $entretien->getAgent();
 
 $canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
 $canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
@@ -30,10 +31,10 @@ $droits = [
     'valider' => $canValider,
 ];
 $options = [];
+$options['modification'] = $canModifier;
 $options['droits'] = $droits;
 $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
 
-$agent = $entretien->getAgent();
 
 /** @var AgentApplication $agentApplication */
 /** @var AgentCompetence $agentCompetence */
