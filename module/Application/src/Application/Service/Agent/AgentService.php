@@ -232,6 +232,8 @@ class AgentService {
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
 //            ->andWhere('statut.administratif = :true')
             ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
+            ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
+            ->andWhere('affectation.principale = :true')
             //->andWhere('fiche.id IS NULL')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
