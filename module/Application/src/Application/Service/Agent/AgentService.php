@@ -228,6 +228,7 @@ class AgentService {
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('fiche')->leftJoin('agent.fiches', 'fiche')
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
 //            ->andWhere('statut.administratif = :true')
@@ -237,6 +238,7 @@ class AgentService {
             //->andWhere('fiche.id IS NULL')
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
+            ->setParameter('false', 'N')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
         if ($structure !== null && $sousstructure === true) {
