@@ -4,9 +4,10 @@ namespace Application\Entity\Db;
 
 use Application\Entity\SynchroAwareInterface;
 use Application\Entity\SynchroAwareTrait;
+use DateTime;
 
-class Grade implements SynchroAwareInterface {
-    use SynchroAwareTrait;
+class Grade {
+    use ImportableAwareTrait;
 
     /** @var string */
     private $id;
@@ -16,6 +17,8 @@ class Grade implements SynchroAwareInterface {
     private $libelleLong;
     /** @var string */
     private $code;
+    /** @var DateTime */
+    private $histo;
 
     /**
      * @return string
@@ -76,6 +79,24 @@ class Grade implements SynchroAwareInterface {
     public function setCode($code)
     {
         $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getHisto()
+    {
+        return $this->histo;
+    }
+
+    /**
+     * @param DateTime $histo
+     * @return Grade
+     */
+    public function setHisto($histo)
+    {
+        $this->histo = $histo;
         return $this;
     }
 

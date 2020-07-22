@@ -155,7 +155,6 @@ return [
                     'select'             => 'SELECT ID,  C_CORPS as CODE, C_CATEGORIE as CATEGORIE, LIB_COURT, LIB_LONG, HISTO_DESTRUCTION as HISTO FROM CORPS',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
-//                    'columns'            => ['LIB_COURT', 'LIB_LONG', 'C_CORPS', 'C_CATEGORIE', 'HISTO_DESTRUCTION'],
                 ],
                 'intermediate_table' => 'src_corps',
                 'destination' => [
@@ -163,10 +162,28 @@ return [
                     'table'              => 'corps',
                     'connection'         => 'default',
                     'source_code_column' => 'id',
-//                    'columns'            => ['code', 'categorie', 'lib_court', 'lib_long', 'histo'],
                     'columns'            => ['code', 'categorie', 'lib_court', 'lib_long', 'histo'],
                 ],
             ],
+                        [
+                'name' => 'Import_GRADE',
+                'source' => [
+                    'name'               => 'Grades des agents remonté depuis OCTOPUS',
+                    'select'             => 'SELECT ID, C_GRADE AS CODE, LIB_COURT, LIB_LONG, HISTO_DESTRUCTION AS HISTO FROM GRADE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                    'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'HISTO'],
+                ],
+                'intermediate_table' => 'src_grade',
+                'destination' => [
+                    'name'               => 'Grades des agents remonté depuis OCTOPUS',
+                    'table'              => 'grade',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['lib_court', 'lib_long', 'code', 'histo'],
+                ],
+            ],
+
 //            [
 //                'name' => 'Import_STRUCTURE',
 //                'source' => [
@@ -237,24 +254,6 @@ return [
 //                    'connection'         => 'default',
 //                    'source_code_column' => 'id',
 //                    'columns'            => ['c_bap', 'lib_court', 'lib_long', 'histo'],
-//                ],
-//            ],
-//            [
-//                'name' => 'Import_GRADE',
-//                'source' => [
-//                    'name'               => 'Grades des agents remonté depuis OCTOPUS',
-//                    'select'             => 'SELECT * FROM V_PREECOG_GRADE',
-//                    'connection'         => 'octopus',
-//                    'source_code_column' => 'ID',
-//                    'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'HISTO'],
-//                ],
-//                'intermediate_table' => 'src_grade',
-//                'destination' => [
-//                    'name'               => 'Grades des agents remonté depuis OCTOPUS',
-//                    'table'              => 'grade',
-//                    'connection'         => 'default',
-//                    'source_code_column' => 'id',
-//                    'columns'            => ['lib_court', 'lib_long', 'code', 'histo'],
 //                ],
 //            ],
 
