@@ -29,7 +29,7 @@ class ApplicationGroupeForm extends Form {
             'type' => Number::class,
             'name' => 'ordre',
             'options' => [
-                'label' => "Ordre* :",
+                'label' => "Ordre :",
             ],
             'attributes' => [
                 'id' => 'ordre',
@@ -64,7 +64,7 @@ class ApplicationGroupeForm extends Form {
         //input
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'   => [ 'required' => true, ],
-            'ordre'     => [ 'required' => true, ],
+            'ordre'     => [ 'required' => false, ],
             'couleur'   => [ 'required' => false, ],
         ]));
     }
