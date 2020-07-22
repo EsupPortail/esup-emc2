@@ -183,6 +183,24 @@ return [
                     'columns'            => ['lib_court', 'lib_long', 'code', 'histo'],
                 ],
             ],
+            [
+                'name' => 'Import_BAP',
+                'source' => [
+                    'name'               => 'BAP des agents remonté depuis OCTOPUS',
+                    'select'             => 'SELECT ID, C_BAP, LIB_COURT, LIB_LONG, HISTO_DESTRUCTION AS HISTO FROM BAP',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                    'columns'            => ['C_BAP', 'LIB_COURT', 'LIB_LONG', 'HISTO'],
+                ],
+                'intermediate_table' => 'src_correspondance',
+                'destination' => [
+                    'name'               => 'BAP des agents remonté depuis OCTOPUS',
+                    'table'              => 'correspondance',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['c_bap', 'lib_court', 'lib_long', 'histo'],
+                ],
+            ],
 
 //            [
 //                'name' => 'Import_STRUCTURE',
@@ -238,24 +256,7 @@ return [
 //                    'columns'            => ['fonction_id', 'libelle', 'genre', 'defaut'],
 //                ],
 //            ],
-//            [
-//                'name' => 'Import_BAP',
-//                'source' => [
-//                    'name'               => 'BAP des agents remonté depuis OCTOPUS',
-//                    'select'             => 'SELECT * FROM V_PREECOG_BAP',
-//                    'connection'         => 'octopus',
-//                    'source_code_column' => 'ID',
-//                    'columns'            => ['C_BAP', 'LIB_COURT', 'LIB_LONG', 'HISTO'],
-//                ],
-//                'intermediate_table' => 'src_correspondance',
-//                'destination' => [
-//                    'name'               => 'BAP des agents remonté depuis OCTOPUS',
-//                    'table'              => 'correspondance',
-//                    'connection'         => 'default',
-//                    'source_code_column' => 'id',
-//                    'columns'            => ['c_bap', 'lib_court', 'lib_long', 'histo'],
-//                ],
-//            ],
+//
 
         ],
 

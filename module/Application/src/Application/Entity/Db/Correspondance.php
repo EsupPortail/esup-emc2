@@ -2,11 +2,10 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\SynchroAwareInterface;
-use Application\Entity\SynchroAwareTrait;
+use DateTime;
 
-class Correspondance implements SynchroAwareInterface {
-    use SynchroAwareTrait;
+class Correspondance  {
+    use ImportableAwareTrait;
 
     /** @var integer */
     private $source_id;
@@ -16,7 +15,7 @@ class Correspondance implements SynchroAwareInterface {
     private $libelleCourt;
     /** @var string */
     private $libelleLong;
-    /** @var string */
+    /** @var DateTime */
     private $histo;
 
     /**
@@ -101,7 +100,7 @@ class Correspondance implements SynchroAwareInterface {
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getHisto()
     {
@@ -109,7 +108,7 @@ class Correspondance implements SynchroAwareInterface {
     }
 
     /**
-     * @param string $histo
+     * @param DateTime $histo
      * @return Correspondance
      */
     public function setHisto($histo)
