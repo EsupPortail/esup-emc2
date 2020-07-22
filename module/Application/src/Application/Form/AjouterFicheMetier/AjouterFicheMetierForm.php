@@ -167,6 +167,7 @@ class AjouterFicheMetierForm extends Form {
         $ficheSelect = $this->get('fiche_type');
 
         $niveau = $agent->getMeilleurNiveau();
+        if ($niveau === null) return;
 
         /** @var array $fiches */
         $fiches = $this->getFicheMetierService()->getFichesMetiersWithNiveau($niveau - 1);

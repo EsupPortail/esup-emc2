@@ -452,7 +452,7 @@ class Agent implements ResourceInterface
             $level = $grade->getCorps()->getNiveau();
             if ($level !== null and $level <= $niveau) $niveau = $level;
         }
-        return $niveau;
+        return ($niveau !== 999)?$niveau:null;
 
     }
 }

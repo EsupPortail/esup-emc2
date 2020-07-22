@@ -344,11 +344,14 @@ class FichePosteService {
         $fiches = $this->getFichesPostesByStructures($structures, $sousstructure);
         $niveau = $agent->getMeilleurNiveau();
 
-        if ($niveau === 999) return $fiches;
+        if ($niveau === null) return $fiches;
 
         $result = [];
         foreach ($fiches as $fiche) {
-            if ($fiche->isComplete() AND $fiche->getAgent()->getMeilleurNiveau() >= ($niveau - 1)) $result[] = $fiche;
+            if ($fiche->isComplete()) {
+                $niveauA = $fiche->getAgent()->getMeilleurNiveau();
+                if ($niveauA === null or $niveauA >= ($niveau - 1)) $result[] = $fiche;
+            }
         }
 
         return $result;
