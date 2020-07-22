@@ -10,6 +10,10 @@ use Application\Form\Categorie\CategorieForm;
 use Application\Form\Categorie\CategorieFormFactory;
 use Application\Form\Categorie\CategorieHydrator;
 use Application\Form\Categorie\CategorieHydratorFactory;
+use Application\Form\ModifierNiveau\ModifierNiveauForm;
+use Application\Form\ModifierNiveau\ModifierNiveauFormFactory;
+use Application\Form\ModifierNiveau\ModifierNiveauHydrator;
+use Application\Form\ModifierNiveau\ModifierNiveauHydratorFactory;
 use Application\Provider\Privilege\CorpsPrivileges;
 use Application\Service\Categorie\CategorieService;
 use Application\Service\Categorie\CategorieServiceFactory;
@@ -30,10 +34,19 @@ return [
                 [
                     'controller' => CorpsController::class,
                     'action' => [
-                        'index'
+                        'index',
                     ],
                     'privileges' => [
                         CorpsPrivileges::CORPS_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => CorpsController::class,
+                    'action' => [
+                        'modifier-niveau',
+                    ],
+                    'privileges' => [
+                        CorpsPrivileges::CORPS_MODIFIER,
                     ],
                 ],
                 [
@@ -85,7 +98,19 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes' => [],
+                'child_routes' => [
+                    'modifier-niveau' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-niveau/:corps',
+                            'defaults' => [
+                                'controller' => CorpsController::class,
+                                'action'     => 'modifier-niveau',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                ],
             ],
             'categorie' => [
                 /** CATEGORIE ***************************************************************************************/
@@ -171,11 +196,13 @@ return [
     'form_elements' => [
         'factories' => [
             CategorieForm::class => CategorieFormFactory::class,
+            ModifierNiveauForm::class => ModifierNiveauFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             CategorieHydrator::class => CategorieHydratorFactory::class,
+            ModifierNiveauHydrator::class => ModifierNiveauHydratorFactory::class,
         ],
     ]
 

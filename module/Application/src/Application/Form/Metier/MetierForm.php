@@ -6,6 +6,7 @@ use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
+use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
@@ -59,6 +60,20 @@ class MetierForm extends Form {
                 //'data-live-search'  => 'true',
             ],
         ]);
+        //niveau :: number
+        $this->add([
+            'type' => Number::class,
+            'name' => 'niveau',
+            'options' => [
+                'label' => "Niveau :",
+            ],
+            'attributes' => [
+                'id' => 'niveau',
+                'min'  => '1',
+                'max'  => '10',
+                'step' => '1',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -80,6 +95,7 @@ class MetierForm extends Form {
             'domaines'          => [ 'required' => true,  ],
             'libelle'           => [ 'required' => true,  ],
             'categorie'         => [ 'required' => false,  ],
+            'niveau'         => [ 'required' => false,  ],
         ]));
     }
 }

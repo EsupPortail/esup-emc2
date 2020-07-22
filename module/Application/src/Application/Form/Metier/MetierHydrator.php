@@ -27,6 +27,7 @@ class MetierHydrator implements HydratorInterface {
             'categorie' => ($object->getCategorie())?$object->getCategorie()->getId():null,
             'domaines' => $domaineIds,
             'libelle' => $object->getLibelle(),
+            'niveau' => $object->getNiveau(),
         ];
         return $data;
     }
@@ -38,7 +39,8 @@ class MetierHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $categorie = (isset($data['categorie']) AND $data['categorie'] !== '')?$this->getCategorieService()->getCategorie($data['categorie']):null;
+        $categorie = (isset($data['categorie']) AND trim($data['categorie']) !== '')?$this->getCategorieService()->getCategorie($data['categorie']):null;
+        $niveau = (isset($data['niveau']) AND trim($data['niveau']) !== "")?$data['niveau']:null;
 
         $object->clearDomaines();
         foreach ($data['domaines'] as $id) {
@@ -48,6 +50,7 @@ class MetierHydrator implements HydratorInterface {
 
         $object->setLibelle($data['libelle']);
         $object->setCategorie($categorie);
+        $object->setNiveau($niveau);
 
         return $object;
     }

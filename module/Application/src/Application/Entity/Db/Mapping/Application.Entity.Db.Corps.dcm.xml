@@ -2,16 +2,15 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Application\Entity\Db\Corps" table="corps">
 
-        <id name="id"               column="source_id"             type="integer">
+        <id name="id"               column="id"             type="integer">
         </id>
 
-        <field name="libelleCourt"  column="lib_court"      type="string"       length="20"   />
-        <field name="libelleLong"   column="lib_long"       type="string"       length="200"  />
+        <field name="libelleCourt"  column="lib_court"      type="string"       length="20"  />
+        <field name="libelleLong"   column="lib_long"       type="string"       length="200" />
         <field name="code"          column="code"           type="string"       length="10"  />
         <field name="categorie"     column="categorie"      type="string"       length="10"  />
+        <field name="niveau"        column="niveau"         type="integer"                   />
+        <field name="histo"         column="histo"          type="datetime"                  />
 
-        <!-- WEB SERVICE SYNCHRO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="synchro"     type="datetime"               column="synchro"/>
-        <field name="histo"     type="datetime"                 column="histo"/>
     </entity>
 </doctrine-mapping>

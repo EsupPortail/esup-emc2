@@ -434,10 +434,25 @@ class Agent implements ResourceInterface
         /** @var EntretienProfessionnel $entretien */
         foreach ($this->entretiens as $entretien) {
             if ($entretien->getDateEntretien() > $now
-                AND $entretien->getValidationResponsable() === null AND $entretien->getValidationResponsable()->estNonHistorise()
+                AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estNonHistorise())
                 AND $entretien->estNonHistorise()) return true;
         }
 
         return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMeilleurNiveau()
+    {
+        $niveau = 999;
+        $grades = $this->getGradesActifs();
+        foreach ($grades as $grade) {
+            $level = $grade->getCorps()->getNiveau();
+            if ($level !== null and $level <= $niveau) $niveau = $level;
+        }
+        return $niveau;
+
     }
 }

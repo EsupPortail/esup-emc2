@@ -41,6 +41,7 @@ $canEffacer        = $droits["effacer"];
         <th> Domaines </th>
         <th> Références </th>
         <th> Catégorie </th>
+        <th> Niveau </th>
         <th class="cell-action"> Action </th>
     </tr>
     </thead>
@@ -92,6 +93,9 @@ $canEffacer        = $droits["effacer"];
             </td>
             <td>
                 <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
+            </td>
+            <td>
+                <?php echo ($metier->getNiveau())?$metier->getNiveau():""; ?>
             </td>
             <td>
                 <?php if ($canEditer) : ?>

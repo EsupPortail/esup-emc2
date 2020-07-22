@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Form\ModifierNiveau\ModifierNiveauForm;
 use Application\Service\Categorie\CategorieService;
 use Application\Service\Corps\CorpsService;
 use Application\Service\Correspondance\CorrespondanceService;
@@ -27,12 +28,18 @@ class CorpsControllerFactory {
         $correspondanceService = $container->get(CorrespondanceService::class);
         $gradeService = $container->get(GradeService::class);
 
+        /**
+         * @var ModifierNiveauForm $modifierNiveauForm
+         */
+        $modifierNiveauForm = $container->get('FormElementManager')->get(ModifierNiveauForm::class);
+
         /** @var CorpsController $controller */
         $controller = new CorpsController();
         $controller->setCategorieService($categorieService);
         $controller->setCorpsService($corpsService);
         $controller->setCorrespondanceService($correspondanceService);
         $controller->setGradeService($gradeService);
+        $controller->setModifierNiveauForm($modifierNiveauForm);
         return $controller;
     }
 }

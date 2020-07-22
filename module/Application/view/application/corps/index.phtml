@@ -12,10 +12,11 @@ use Application\Entity\Db\Categorie;
 use Application\Entity\Db\Corps;
 use Application\Entity\Db\Correspondance;
 use Application\Entity\Db\Grade;
+use Application\Provider\Privilege\CorpsPrivileges;
 
 $this->headTitle('Corps, grades et correspondances');
 
-
+$canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
 ?>
 
 <div class="row">
@@ -88,6 +89,8 @@ $this->headTitle('Corps, grades et correspondances');
                         <th> Libellé court</th>
                         <th> Code </th>
                         <th> Catégorie </th>
+                        <th> Niveau </th>
+                        <th style="width:3rem;"> Action </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -97,6 +100,18 @@ $this->headTitle('Corps, grades et correspondances');
                             <td> <?php echo $corp->getLibelleCourt(); ?> </td>
                             <td> <?php echo $corp->getCode(); ?> </td>
                             <td> <?php echo $corp->getCategorie(); ?> </td>
+                            <td> <?php echo $corp->getNiveau(); ?></td>
+                            <td>
+                                <?php if ($canModifier) : ?>
+                                <a
+                                        <?php /** @see \Application\Controller\CorpsController::modifierNiveauAction() */ ?>
+                                        href="<?php echo $this->url('corps/modifier-niveau', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
+                                        class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon editer" data-toggle="tooltip" data-html="true"
+                                          title="Modifier le niveu du corps"></span></a>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>

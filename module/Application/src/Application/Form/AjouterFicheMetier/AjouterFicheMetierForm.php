@@ -2,6 +2,7 @@
 
 namespace Application\Form\AjouterFicheMetier;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\MetierReference;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
@@ -155,5 +156,50 @@ class AjouterFicheMetierForm extends Form {
         }
         return $options;
 
+    }
+
+    /**
+     * @param Agent $agent
+     */
+    public function reinitWithAgent(Agent $agent)
+    {
+        /** @var Select $ficheSelect */
+        $ficheSelect = $this->get('fiche_type');
+
+        $niveau = $agent->getMeilleurNiveau();
+
+        /** @var array $fiches */
+        $fiches = $this->getFicheMetierService()->getFichesMetiersWithNiveau($niveau - 1);
+
+        $options = [];
+        $dictionnaire = [];
+        foreach ($fiches as $ficheMetier) {
+            $domaines = $ficheMetier->getMetier()->getDomaines();
+            foreach ($domaines as $domaine) {
+                $dictionnaire[($domaine) ? $domaine->getLibelle() : "Sans domaine"][] = $ficheMetier;
+            }
+        }
+
+        ksort($dictionnaire);
+        foreach ($dictionnaire as $clef => $listing) {
+            $optionsoptions = [];
+            /** @var FicheMetier $fiche */
+            foreach ($listing as $fiche) {
+                $references = [];
+                /** @var MetierReference $reference */
+                foreach ($fiche->getMetier()->getReferences() as $reference) {
+                    $references[] = $reference->getTitre();
+                }
+                $str_references = implode(", ", $references);
+                $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . (!empty($references)?" (".$str_references.")":"") ;
+            }
+            $array = [
+                'label' => $clef,
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
+        }
+
+        $ficheSelect->setValueOptions($options);
     }
 }

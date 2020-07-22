@@ -2,11 +2,11 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\SynchroAwareInterface;
-use Application\Entity\SynchroAwareTrait;
+use DateTime;
 
-class Corps implements SynchroAwareInterface {
-    use SynchroAwareTrait;
+class Corps
+{
+    use ImportableAwareTrait;
 
     /** @var integer */
     private $id;
@@ -18,8 +18,10 @@ class Corps implements SynchroAwareInterface {
     private $libelleLong;
     /** @var string */
     private $categorie;
-    /** @var string */
+    /** @var DateTime */
     private $histo;
+    /** @var integer */
+    private $niveau;
 
     /**
      * @return int
@@ -112,7 +114,7 @@ class Corps implements SynchroAwareInterface {
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getHisto()
     {
@@ -120,7 +122,7 @@ class Corps implements SynchroAwareInterface {
     }
 
     /**
-     * @param string $histo
+     * @param DateTime $histo
      * @return Corps
      */
     public function setHisto($histo)
@@ -128,6 +130,25 @@ class Corps implements SynchroAwareInterface {
         $this->histo = $histo;
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getNiveau()
+    {
+        return $this->niveau;
+    }
+
+    /**
+     * @param int $niveau
+     * @return Corps
+     */
+    public function setNiveau($niveau)
+    {
+        $this->niveau = $niveau;
+        return $this;
+    }
+
 
     public function __toString()
     {
