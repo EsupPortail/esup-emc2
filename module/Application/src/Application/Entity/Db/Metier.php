@@ -15,6 +15,8 @@ class Metier implements HistoriqueAwareInterface {
     private $libelle;
     /** @var Categorie */
     private $categorie;
+    /** @var integer */
+    private $niveau;
 
     /** @var ArrayCollection (Domaine) */
     private  $domaines;
@@ -110,6 +112,24 @@ class Metier implements HistoriqueAwareInterface {
     public function setCategorie($categorie)
     {
         $this->categorie = $categorie;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNiveau()
+    {
+        return $this->niveau;
+    }
+
+    /**
+     * @param int $niveau
+     * @return Metier
+     */
+    public function setNiveau($niveau)
+    {
+        $this->niveau = $niveau;
         return $this;
     }
 

@@ -434,7 +434,7 @@ class Agent implements ResourceInterface
         /** @var EntretienProfessionnel $entretien */
         foreach ($this->entretiens as $entretien) {
             if ($entretien->getDateEntretien() > $now
-                AND $entretien->getValidationResponsable() === null AND $entretien->getValidationResponsable()->estNonHistorise()
+                AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estNonHistorise())
                 AND $entretien->estNonHistorise()) return true;
         }
 

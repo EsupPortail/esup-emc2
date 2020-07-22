@@ -20,6 +20,12 @@ class StructureService
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
+     * Les structures sont importées de Octopus du coup les créations, historisations et suppressions sont gérées par
+     * le module d'import. Seul la mise à jour est utile car des informations sont mises à jour de façon interne dans
+     * l'application (p.e. les gestionnaires, les descriptions, ...)
+     */
+
+    /**
      * @param Structure
      * @return Structure
      */
