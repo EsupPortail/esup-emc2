@@ -440,4 +440,19 @@ class Agent implements ResourceInterface
 
         return false;
     }
+
+    /**
+     * @return int
+     */
+    public function getMeilleurNiveau()
+    {
+        $niveau = 999;
+        $grades = $this->getGradesActifs();
+        foreach ($grades as $grade) {
+            $level = $grade->getCorps()->getNiveau();
+            if ($level !== null and $level <= $niveau) $niveau = $level;
+        }
+        return $niveau;
+
+    }
 }

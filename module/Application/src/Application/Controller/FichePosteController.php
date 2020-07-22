@@ -127,7 +127,8 @@ class FichePosteController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] = $structure;
 
-        $fiches = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
+//        $fiches = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
+        $fiches = $this->getFichePosteService()->getFichesPostesByStructuresAndAgent($structures, true, $agent);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -404,11 +405,14 @@ class FichePosteController extends AbstractActionController {
     public function ajouterFicheMetierAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $agent = $fiche->getAgent();
 
         $ficheTypeExterne = new FicheTypeExterne();
         $form = $this->getAjouterFicheTypeForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/ajouter-fiche-metier', ['fiche-poste' => $fiche->getId()], [], true));
         $form->bind($ficheTypeExterne);
+
+        if ($agent AND ! empty($agent->getGradesActifs())) $form->reinitWithAgent($agent);
 
         /** @var Request $request */
         $request = $this->getRequest();

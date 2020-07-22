@@ -115,6 +115,21 @@ class FicheMetierService {
     }
 
     /**
+     * @param int $niveau
+     * @return FicheMetier[]
+     */
+    public function getFichesMetiersWithNiveau($niveau)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('metier.niveau IS NULL or metier.niveau >= :niveau')
+            ->setParameter('niveau', $niveau)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param string $order an attribute use to sort
      * @return FicheMetier[]
      */
@@ -212,11 +227,12 @@ class FicheMetierService {
     }
 
     /**
+     * @param int $niveau
      * @return array
      */
-    public function getFichesMetiersAsOptions()
+    public function getFichesMetiersAsOptions($niveau =0)
     {
-        $fiches = $this->getFichesMetiers();
+        $fiches = $this->getFichesMetiersWithNiveau($niveau);
         $array = [];
         foreach ($fiches as $fiche) {
             $array[$fiche->getId()] = $fiche->getMetier()->getLibelle();

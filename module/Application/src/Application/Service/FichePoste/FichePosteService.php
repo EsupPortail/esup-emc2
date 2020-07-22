@@ -334,6 +334,27 @@ class FichePosteService {
     }
 
     /**
+     * @param Structure[] $structures
+     * @param boolean $sousstructure
+     * @param Agent $agent
+     * @return FichePoste[]
+     */
+    public function getFichesPostesByStructuresAndAgent($structures = [], $sousstructure = false, $agent = null)
+    {
+        $fiches = $this->getFichesPostesByStructures($structures, $sousstructure);
+        $niveau = $agent->getMeilleurNiveau();
+
+        if ($niveau === 999) return $fiches;
+
+        $result = [];
+        foreach ($fiches as $fiche) {
+            if ($fiche->isComplete() AND $fiche->getAgent()->getMeilleurNiveau() >= ($niveau - 1)) $result[] = $fiche;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param Structure $structure
      * @param boolean $sousstructure
      * @return FichePoste[]
