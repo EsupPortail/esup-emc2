@@ -77,7 +77,19 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                 <?php endif; ?>
             </td>
             <td>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\FicheMetierController::changerEtatAction() */?>
+                            href="<?php echo $this->url('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                            title="Changer l'état de la fiche métier"
+                            class="ajax-modal" data-event="changer-etat"
+                    >
+                <?php endif; ?>
                 <?php echo $this->ficheMetierEtat($fiche->getEtat()); ?>
+                <?php if ($canEditer) : ?>
+                    </a>
+                <?php endif; ?>
+
             </td>
             <td>
                 <?php if ($canVoir) : ?>
@@ -96,15 +108,6 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         title="Exporter en PDF la fiche métier"
                     >
                         <span class="icon pdf"></span></a>
-                <?php endif; ?>
-                <?php if ($canVoir) : ?>
-                    <a
-                        <?php /** @see \Application\Controller\FicheMetierController::changerEtatAction() */?>
-                        href="<?php echo $this->url('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                        title="Changer l'état de la fiche métier"
-                        class="ajax-modal" data-event="changer-etat"
-                    >
-                        <span class="icon synchoniser"></span></a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <a href="<?php echo $this->url('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true); ?>"
