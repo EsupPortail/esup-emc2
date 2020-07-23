@@ -25,10 +25,6 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
             Catégories, corps, grades et correspondances
         </h1>
     </div>
-    <div class="pull-right col-md-4 alert alert-info">
-        <span class="icon synchoniser"></span>
-        Les corps, les grades et les correspondances sont synchronisés depuis Octopus.
-    </div>
 </div>
 
 <div role="tabpanel">
@@ -49,6 +45,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                 <span class="badge">
                     <?php echo count($corps); ?>
                 </span>
+                <?php echo $this->synchroniserIcon(); ?>
             </a>
         </li>
 
@@ -58,6 +55,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                 <span class="badge">
                     <?php echo count($grades); ?>
                 </span>
+                <?php echo $this->synchroniserIcon(); ?>
             </a>
         </li>
 
@@ -67,6 +65,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                 <span class="badge">
                     <?php echo count($correspondances); ?>
                 </span>
+                <?php echo $this->synchroniserIcon(); ?>
             </a>
         </li>
     </ul>
@@ -177,7 +176,9 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
         $('.datatable').DataTable( {
             language: {
                 url: '/localisation/fr_FR.json'
-            }
+            },
+            "pageLength": 10,
+            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
         } );
     } );
 

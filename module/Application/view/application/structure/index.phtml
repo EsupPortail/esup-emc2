@@ -96,13 +96,24 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
 
 
 <script>
+    let loaded = false;
+
     $(document).ready(function() {
-        $('#structures').DataTable( {
-            language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
-    } );
+        var table = $('#structures').DataTable();
+        let searchParams = new URLSearchParams(window.location.search);
+        let param = searchParams.get('search')
+        table.search(param);
+        table.draw();
+        loaded = true;
+    });
+
+    $(document).on('search.dt', function () {
+        if (loaded === true) {
+            let valeur = $('input').val();
+            console.log(valeur);
+            history.replaceState({}, null, '?search=' + valeur);
+        }
+    });
 
     $(function() {
         $("body").on("modification", function (event) {

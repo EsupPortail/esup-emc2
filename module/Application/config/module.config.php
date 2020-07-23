@@ -26,6 +26,7 @@ use Application\Provider\Privilege\StructurePrivileges;
 use Application\Provider\Privilege\SynchroPrivileges;
 use Application\Provider\Privilege\ValidationPrivileges;
 use Application\View\Helper\ActionIconViewHelper;
+use Application\View\Helper\SynchorniserIconViewHelper;
 use Autoform\Provider\Privilege\IndexPrivileges;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
@@ -249,6 +250,7 @@ return [
     'view_helpers' => [
         'invokables' => [
             'actionIcon' => ActionIconViewHelper::class,
+            'synchroniserIcon' => SynchorniserIconViewHelper::class,
         ],
     ],
 
