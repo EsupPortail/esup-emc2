@@ -659,6 +659,18 @@ span.highlight.metier {
     color: darkorange;
 }
 
+table.parcours-de-formation {
+    width:100%;
+}
+
+table.parcours-de-formation th {
+    color:white;
+    padding-bottom:0.5rem;
+    padding-top:0.5rem;
+    padding-left: 2rem;
+    border-bottom: 1px solid #31708f;
+}
+
  table.parcours-de-formation td.libelle-cell {
      /*background: lightgreen;*/
      /*width: 20rem;*/
