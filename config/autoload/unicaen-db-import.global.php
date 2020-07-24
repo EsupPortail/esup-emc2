@@ -201,25 +201,41 @@ return [
                     'columns'            => ['c_bap', 'lib_court', 'lib_long', 'histo'],
                 ],
             ],
-
-//            [
-//                'name' => 'Import_STRUCTURE',
-//                'source' => [
-//                    'name'               => 'Agents geres par la DRH',
-//                    'select'             => 'SELECT * FROM V_PREECOG_STRUCTURE',
-//                    'connection'         => 'octopus',
-//                    'source_code_column' => 'ID',
-//                    'columns'            => ['CODE', 'LIBELLE_COURT', 'LIBELLE_LONG', 'TYPE', 'HISTO', 'PARENT_ID'],
-//                ],
-//                'intermediate_table' => 'src_structure',
-//                'destination' => [
-//                    'name'               => 'Structure stockees dans octopus',
-//                    'table'              => 'structure',
-//                    'connection'         => 'default',
-//                    'source_code_column' => 'id',
-//                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type', 'histo','parent_id'],
-//                ],
-//            ],
+            [
+                'name' => 'Import_STRUCTURE_TYPE',
+                'source' => [
+                    'name'               => 'Type des structures remonté depuis OCTOPUS',
+                    'select'             => 'SELECT ID, CODE, LIBELLE FROM STRUCTURE_TYPE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                    'columns'            => ['CODE', 'LIBELLE'],
+                ],
+                'intermediate_table' => 'src_structure_type',
+                'destination' => [
+                    'name'               => 'Type des structures remonté depuis OCTOPUS',
+                    'table'              => 'structure_type',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['code', 'libelle'],
+                ],
+            ],
+            [
+                'name' => 'Import_STRUCTURE',
+                'source' => [
+                    'name'               => 'Agents geres par la DRH',
+                    'select'             => 'SELECT ID, CODE, LIBELLE_COURT, LIBELLE_LONG, TYPE_ID, DATE_OUVERTURE AS OUVERTURE, DATE_FERMETURE AS FERMETURE, HISTO, PARENT_ID FROM V_PREECOG_STRUCTURE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                ],
+                'intermediate_table' => 'src_structure',
+                'destination' => [
+                    'name'               => 'Structure stockees dans octopus',
+                    'table'              => 'structure',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'histo','parent_id'],
+                ],
+            ],
 //            [
 //                'name' => 'Import_FONCTION',
 //                'source' => [

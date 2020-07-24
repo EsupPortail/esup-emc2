@@ -5,8 +5,7 @@ namespace Application\Entity\Db;
 use Application\Entity\SynchroAwareInterface;
 use Application\Entity\SynchroAwareTrait;
 
-class StructureType implements SynchroAwareInterface {
-    use SynchroAwareTrait;
+class StructureType  {
 
     /** @var integer */
     private $id;

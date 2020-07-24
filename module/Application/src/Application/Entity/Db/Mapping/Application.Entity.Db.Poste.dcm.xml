@@ -18,7 +18,7 @@
             <join-column name="bap_id" referenced-column-name="id" />
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Structure" field="structure">
-            <join-column name="structure_id" referenced-column-name="source_id" />
+            <join-column name="structure_id" referenced-column-name="id" />
         </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Domaine" field="domaine">
             <join-column name="domaine" referenced-column-name="id" />
