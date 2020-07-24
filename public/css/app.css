@@ -688,3 +688,10 @@ table.parcours-de-formation td.action-cell {
     width: 12rem;
     text-align: right;
 }
+
+/** Datatable *****/
+
+table.datatable thead {
+    background-color: cornflowerblue;
+    border-color: #2e6da4;
+}
