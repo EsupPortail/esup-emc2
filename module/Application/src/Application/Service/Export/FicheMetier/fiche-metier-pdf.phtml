@@ -97,7 +97,7 @@ $metier = $fiche->getMetier();
             <table class="info-cartouche">
                 <tr>
                     <th> Catégorie :</th>
-                    <td> <?php echo $metier->getCategorie()->getCode(); ?> </td>
+                    <td> <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():"???"; ?> </td>
                 </tr>
                 <tr>
                     <th> Références : </th>
