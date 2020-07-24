@@ -34,14 +34,14 @@ $this->headTitle('Index des fiches métiers');
             </a>
         </li>
 
-<!--        <li role="metier">-->
-<!--            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz">-->
-<!--                Fiches métiers bis &nbsp;-->
-<!--                <span class="badge">-->
-<!--                    --><?php //echo count($metiers); ?>
-<!--                </span>-->
-<!--            </a>-->
-<!--        </li>-->
+        <li role="metier">
+            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz">
+                Fiches métiers bis &nbsp;
+                <span class="badge">
+                    <?php echo count($metiers); ?>
+                </span>
+            </a>
+        </li>
 
         <li role="etat">
             <a href="#etat" aria-controls="etat" role="tab" data-toggle="tabz">
@@ -79,15 +79,15 @@ $this->headTitle('Index des fiches métiers');
 
 
 <script>
-    $(document).ready(function() {
-        $('.datatable').DataTable( {
-            // sorting: false,
-            // paging: false,
-            language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
-    } );
+    // $(document).ready(function() {
+    //     $('.datatable').DataTable( {
+    //         // sorting: false,
+    //         // paging: false,
+    //         language: {
+    //             url: '/localisation/fr_FR.json'
+    //         }
+    //     } );
+    // } );
 
     $(function() {
         let hash = $(location).attr('hash');

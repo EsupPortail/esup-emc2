@@ -23,12 +23,8 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
             <span class="badge">
                 <?php echo count($structures); ?>
             </span>
+            <?php echo $this->synchroniserIcon(); ?>
         </h1>
-    </div>
-    <br/>
-    <div class="pull-right col-md-5 alert alert-info">
-        <span class="icon synchoniser"></span>
-        Les structures sont synchronisées depuis Octopus.
     </div>
 </div>
 <div class="main">
@@ -99,10 +95,12 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
     let loaded = false;
 
     $(document).ready(function() {
-        var table = $('#structures').DataTable();
+        var table = $('#structures').DataTable({
+            "paging": false
+        });
         let searchParams = new URLSearchParams(window.location.search);
         let param = searchParams.get('search')
-        table.search(param);
+        if (param !== null) table.search(param);
         table.draw();
         loaded = true;
     });
@@ -121,5 +119,6 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
             window.location.reload();
         });
     });
+
 </script>
 

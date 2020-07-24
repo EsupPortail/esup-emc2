@@ -225,7 +225,18 @@ class FicheMetierController extends AbstractActionController
             'form' => $form,
         ]);
         return $vm;
+    }
 
+    public function ajouterAvecMetierAction()
+    {
+        $metier = $this->getMetierService()->getRequestedMetier($this);
+        $redaction = $this->getFicheMetierEtatService()->getEtatByCode('REDACTION');
+        $fiche = new FicheMetier();
+        $fiche->setMetier($metier);
+        $fiche->setEtat($redaction);
+        $this->getFicheMetierService()->create($fiche);
+
+        return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
     }
 
     public function editerLibelleAction()

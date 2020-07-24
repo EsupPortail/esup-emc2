@@ -8,55 +8,177 @@ use Application\Entity\Db\Metier;
  * @var FicheMetier $fiche
  */
 
+$canVoir = true;
+$canEditer = true;
+$canHistoriser = true;
+$canDetruire = true;
+
 ?>
 
-<table class="datatable table table-condensed">
+<table class="datatable table table-condensed" id="metiers">
     <thead>
     <tr>
         <th> Métier </th>
-        <th> Fiche </th>
-        <th> État </th>
-        <th> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($metiers as $metier) : ?>
-        <?php
-            $fiches = $metier->getFichesMetiers();
-            $nbFiche = count($fiches);
-        ?>
+        <?php $fiches = $metier->getFichesMetiers(); ?>
+        <tr>
+            <td class="metier" id="<?php echo $metier->getId(); ?>">
+                <div class="row">
+                    <div class="col-md-8"><?php echo $metier->getLibelle(); ?></div>
+                    <div class="pull-right">#fiche:<?php echo count($fiches); ?></div>
+                </div>
+                <div class="fiches" id="f<?php echo $metier->getId(); ?>">
 
-            <?php if ($nbFiche === 0) : ?>
-                <tr><td>
-                    <span data-toggle="tooltip" data-html="true" title='<?php echo $metier->generateTooltip(); ?>'>
-                        <?php echo $metier->getLibelle(); ?>
-                    </span>
-                </td><td>
-                    Aucune fiche métier
-                </td><td></td>
-                <td></td>
-                </tr>
-            <?php else : ?>
-                <?php $first = true; ?>
-                <?php foreach ($fiches as $fiche) : ?>
-                    <tr>
-<!--                        --><?php //if ($first) : ?>
-<!--                            <td rowspan="--><?php //echo $nbFiche; ?><!--">-->
-                        <td>
-                                <span data-toggle="tooltip" data-html="true" title='<?php echo $metier->generateTooltip(); ?>'>
-                                    <?php echo $metier->getLibelle(); ?>
-                                </span>
-                            </td>
-<!--                            --><?php //$first = false; ?>
-<!--                        --><?php //else : ?>
-<!--                            <td></td>-->
-<!--                        --><?php //endif; ?>
-                        <td> #<?php echo $fiche->getId(); ?> (Création <?php echo $fiche->getHistoCreation()->format("d/m/Y à H:m:i"); ?>)</td>
-                        <td> <?php echo $this->ficheMetierEtat($fiche->getEtat()); ?></td>
-                        <td></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                    <a
+                        <?php /** @see \Application\Controller\FicheMetierController::ajouterAvecMetierAction() */ ?>
+                        href="<?php echo $this->url('fiche-metier-type/ajouter-avec-metier', ['metier' => $metier->getId()], [], true); ?>"
+                        class="btn btn-primary action"
+                    >
+                        <span class="icon ajouter"></span>
+                        Ajouter une fiche métier
+                    </a>
+
+                    <br/>
+                    <br/>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th style="width:12rem;"> État </th>
+                                <th> Id. </th>
+                                <th> Dernière modification </th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($metier->getFichesMetiers() as $fiche) : ?>
+                            <tr <?php if($fiche->estHistorise()) echo 'class="historise"'; ?>>
+                                <td>
+                                    <?php if ($canEditer) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\FicheMetierController::changerEtatAction() */?>
+                                                href="<?php echo $this->url('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                                                title="Changer l'état de la fiche métier"
+                                                class="ajax-modal" data-event="changer-etat"
+                                        >
+                                            <?php endif; ?>
+                                            <?php echo $this->ficheMetierEtat($fiche->getEtat()); ?>
+                                            <?php if ($canEditer) : ?>
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php echo $fiche->getId(); ?>
+                                </td>
+                                <td>
+                                    <?php echo $fiche->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+                                    par
+                                    <?php echo $fiche->getHistoModificateur()->getDisplayName(); ?>
+                                </td>
+                                <td>
+                                    <?php if ($canVoir) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */?>
+                                                href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
+                                                title="Afficher la fiche métier"
+                                                class="ajax-modal"
+                                        >
+                                            <span class="icon voir"></span></a>
+                                    <?php endif; ?>
+                                    <?php if ($canVoir) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\FicheMetierController::exporterAction() */?>
+                                                href="<?php echo $this->url('fiche-metier-type/exporter', ['id' => $fiche->getId()], [], true); ?>"
+                                                title="Exporter en PDF la fiche métier"
+                                        >
+                                            <span class="icon pdf"></span></a>
+                                    <?php endif; ?>
+                                    <?php if ($canEditer) : ?>
+                                        <a href="<?php echo $this->url('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true); ?>"
+                                           title="Modifier la fiche metier">
+                                            <span class="icon editer"></span></a>
+                                    <?php endif; ?>
+                                    <?php if ($canHistoriser) : ?>
+                                        <?php if($fiche->estNonHistorise()) :?>
+                                            <a href="<?php echo $this->url('fiche-metier-type/historiser', ['id' => $fiche->getId()], [], true); ?>"
+                                               title="Historiser la fiche metier">
+                                                <span class="icon historiser"></span></a>
+                                        <?php else: ?>
+                                            <a href="<?php echo $this->url('fiche-metier-type/restaurer', ['id' => $fiche->getId()], [], true); ?>"
+                                               title="Restaurer la fiche metier">
+                                                <span class="icon restaurer"></span></a>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                    <?php if ($canDetruire) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\FicheMetierController::detruireAction() */?>
+                                                href="<?php echo $this->url('fiche-metier-type/detruire', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                                                title="Détruire la fiche metier"
+                                                class="ajax-modal" data-event="destruction"
+                                        >
+                                            <span class="icon detruire"></span></a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<style>
+    div.fiches {
+        border: 1px solid grey;
+        background: whitesmoke;
+        border-radius: 0.5rem;
+        margin:2rem;
+        padding:1rem;
+    }
+
+    div.fiches table {
+        background-color: whitesmoke;
+    }
+
+    div.fiches table th{
+        background-color: cornflowerblue;
+    }
+    div.fiches table td{
+        /*background-color: whitesmoke;*/
+    }
+</style>
+
+<script>
+    $('div.fiches').hide();
+
+    $('td.metier').click(function() {
+        console.log($(this));
+        $('div.fiches').hide();
+        $(this).children('div.fiches').show();
+    })
+
+    let loaded = false;
+
+    $(document).ready(function() {
+        var table = $('table#metiers').DataTable();
+        let searchParams = new URLSearchParams(window.location.search);
+        let param = searchParams.get('search')
+        table.search(param);
+        table.draw();
+        loaded = true;
+    });
+
+    $(document).on('search.dt', function () {
+        if (loaded === true) {
+            let valeur = $('input[aria-controls=metiers]').val();
+            console.log(valeur);
+            history.replaceState({}, null, '?search=' + valeur + '#metier');
+        }
+    });
+</script>

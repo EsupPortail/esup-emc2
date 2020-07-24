@@ -60,6 +60,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'ajouter',
+                        'ajouter-avec-metier',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AJOUTER,
@@ -204,6 +205,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-avec-metier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-avec-metier/:metier',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'ajouter-avec-metier',
                             ],
                         ],
                         'may_terminate' => true,
