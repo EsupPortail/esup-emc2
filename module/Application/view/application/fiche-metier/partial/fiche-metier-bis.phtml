@@ -27,7 +27,13 @@ $canDetruire = true;
         <tr>
             <td class="metier" id="<?php echo $metier->getId(); ?>">
                 <div class="row">
-                    <div class="col-md-8"><?php echo $metier->getLibelle(); ?></div>
+                    <div class="col-md-8">
+                        <span title='<?php echo $metier->generateTooltip(); ?>'
+                              data-toggle='tooltip' data-html='true'
+                        >
+                            <?php echo $metier->getLibelle(); ?>
+                        </span>
+                    </div>
                     <div class="pull-right">#fiche:<?php echo count($fiches); ?></div>
                 </div>
                 <div class="fiches" id="f<?php echo $metier->getId(); ?>">
@@ -164,13 +170,18 @@ $canDetruire = true;
     })
 
     let loaded = false;
+    $('[data-toggle="tooltip"]').tooltip();
 
     $(document).ready(function() {
-        var table = $('table#metiers').DataTable();
+        var table = $('table#metiers').DataTable({
+            "paging": false
+        });
         let searchParams = new URLSearchParams(window.location.search);
         let param = searchParams.get('search')
-        table.search(param);
-        table.draw();
+        if (param !== null) {
+            table.search(param);
+            table.draw();
+        }
         loaded = true;
     });
 
@@ -179,6 +190,7 @@ $canDetruire = true;
             let valeur = $('input[aria-controls=metiers]').val();
             console.log(valeur);
             history.replaceState({}, null, '?search=' + valeur + '#metier');
+            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 </script>

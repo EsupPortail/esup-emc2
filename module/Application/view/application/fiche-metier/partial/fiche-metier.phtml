@@ -48,7 +48,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     </div>
 </div>
 
-<table id="fiche-metier" class="table table-condensed">
+<table id="fiches" class="table table-condensed datatable">
     <thead>
     <tr>
         <th> Libellé </th>
@@ -61,7 +61,13 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     <tbody>
     <?php foreach($fiches as $fiche): ?>
         <tr>
-            <td> <?php echo $fiche->getMetier()->getLibelle(); ?> </td>
+            <td>
+                <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
+                      data-toggle='tooltip' data-html='true'
+                >
+                    <?php echo $fiche->getMetier()->getLibelle(); ?>
+                </span>
+            </td>
             <td>
                 <ul>
                     <?php foreach ($fiche->getMetier()->getDomaines() as $domaine) : ?>
@@ -149,3 +155,11 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         <span class="icon pdf"></span> Exporter toutes les fiches
     </a>
 <?php endif; ?>
+
+<script>
+    $(document).ready(function() {
+        $('table#fiches').DataTable({
+            "paging": false
+        });
+    });
+</script>

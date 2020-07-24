@@ -100,8 +100,10 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
         });
         let searchParams = new URLSearchParams(window.location.search);
         let param = searchParams.get('search')
-        if (param !== null) table.search(param);
-        table.draw();
+        if (param !== null) {
+            table.search(param);
+            table.draw();
+        }
         loaded = true;
     });
 

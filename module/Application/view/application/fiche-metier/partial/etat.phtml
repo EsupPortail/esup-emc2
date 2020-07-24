@@ -24,7 +24,7 @@ $canSupprimerEtat = $canEtat;
     </a>
 <?php endif; ?>
 
-<table id="etat" class="table table-condensed">
+<table id="etats" class="table table-condensed datatable">
     <thead>
         <tr>
             <th> Badge </th>
@@ -65,7 +65,16 @@ $canSupprimerEtat = $canEtat;
 </table>
 
 <script>
+    // $(document).ready(function() {
+    //     var table_etat = $('table#etats').DataTable({
+    //         "paging": false
+    //     });
+
     $(function() {
+        $('table#etats').DataTable({
+            "paging": false
+        });
+
         $("body").on("creation-etat", function (event) {
             event.div.modal('hide');
             window.location.reload();

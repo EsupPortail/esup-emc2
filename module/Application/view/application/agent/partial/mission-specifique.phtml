@@ -17,19 +17,26 @@ $canDetruireMission     = $droits['detruire'];
 
 ?>
 
-<h2> Missions spécifiques
-    <?php if ($canAjouterMission) : ?>
-        <a
-            <?php /** @see \Application\Controller\AgentController::ajouterAgentMissionSpecifiqueAction() */?>
-            href="<?php echo $this->url('agent/ajouter-agent-mission-specifique', ['agent' => $agent->getId()], [], true); ?>"
-            class="ajax-modal"
-            data-event="modification"
-        >
-            <span class="icon ajouter"></span></a>
-    <?php endif; ?>
-</h2>
-
-<table class="table table-condensed">
+<div class="row">
+    <div class="col-md-8">
+        <h2> Missions spécifiques </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterMission) : ?>
+            <a
+                <?php /** @see \Application\Controller\AgentController::ajouterAgentMissionSpecifiqueAction() */?>
+                href="<?php echo $this->url('agent/ajouter-agent-mission-specifique', ['agent' => $agent->getId()], [], true); ?>"
+                class="ajax-modal btn btn-primary action"
+                data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une mission spécifique
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+<div>
+<table class="table table-condensed datatable">
     <thead>
     <tr>
         <th> Missions </th>
