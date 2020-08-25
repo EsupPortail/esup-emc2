@@ -4,12 +4,15 @@
  * @see \Application\Controller\FichePosteController::afficherAction()
  * @var FichePoste $fiche
  * @var array $parcours
+ * @var Competence[] $competences
+ * @var Application[] $applications
  */
 
+use Application\Entity\Db\Application;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Provider\Privilege\FichePostePrivileges;
-
 
 $date = new DateTime();
 $this->headTitle("Fiche de poste #" . $fiche->getId());
@@ -67,7 +70,6 @@ $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
         $fichesMetiers = array_filter($fichesMetiers, function (FicheTypeExterne $a) { return !$a->getPrincipale(); });
         usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
     ?>
-
 
     <?php /** @var FicheTypeExterne $ficheType **/ ?>
     <div class="panel panel-default">

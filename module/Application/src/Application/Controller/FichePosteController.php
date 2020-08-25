@@ -223,6 +223,9 @@ class FichePosteController extends AbstractActionController {
         $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche, $date);
 
+        //parcours de formation
+        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
+
         return new ViewModel([
             'fiche' => $fiche,
             'structure' => $structure,
@@ -230,6 +233,7 @@ class FichePosteController extends AbstractActionController {
             'competences' => $competences,
             'formations' => $formations,
             'activites' => $activites,
+            'parcours' => $parcours,
         ]);
     }
 

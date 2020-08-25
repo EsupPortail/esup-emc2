@@ -12,33 +12,27 @@ use Application\Entity\Db\ParcoursDeFormation;
 
 ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
+<div class="row">
+    <div class="col-md-10" style="margin-left:5rem;background-color:#d9edf7;">
         <h2>
             <span class="icon formation"></span>
             Parcours de formation
+        </h2>
     </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
-                <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
-                    <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
-                        <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
-                <?php endif; ?>
-            </div>
-<!--            <div class="col-md-6">-->
-<!--                --><?php //if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
-<!--                    --><?php //foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
-<!--                        --><?php //echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
-<!--                    --><?php //endforeach; ?>
-<!--                --><?php //else: ?>
-<!--                    <span class="icon attention">Pas de parcours de formation associé au métier.</span>-->
-<!--                --><?php //endif; ?>
-<!--            </div>-->
-        </div>
+    <div class="col-md-1" style="background-color:#d9edf7;">
+        <h2>&nbsp;</h2>
+    </div>
+</div>
+
+<div class="row" style="margin: 1rem;">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
+            <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
+                <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
+        <?php endif; ?>
     </div>
 </div>
