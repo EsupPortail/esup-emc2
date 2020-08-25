@@ -118,7 +118,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         <!-- AFFICHAGE DES SOUS ACTIVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <div class="<?php echo ($mode == 'edition-fiche-metier')?"col-md-7":"col-md-8"; ?>">
             <h4>
-                Description
+<!--                Description-->
                 <?php if ($canModifier AND $mode === "modifier-activite") : ?>
                     <a  <?php /** @see ActiviteController::ajouterDescriptionAction() */?>
                         href="<?php echo $this->url('activite/ajouter-description', ['activite' => $activite->getId()], [], true); ?>"
