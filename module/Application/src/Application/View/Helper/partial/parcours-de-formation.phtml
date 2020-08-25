@@ -49,7 +49,7 @@ ksort($formationArray);
             <?php  foreach($formationSubarray as $formation) : ?>
                 <li>
                     <?php echo $formation->getLibelle(); ?>
-                    <?php if (false AND $agent !== null) : ?>
+                    <?php if ($agent !== null) : ?>
                         <?php $validatedFormation = $agent->hasValidatedFormation($formation); ?>
                         <?php if ($validatedFormation) : ?>
                             <span class="icon ok"></span>
