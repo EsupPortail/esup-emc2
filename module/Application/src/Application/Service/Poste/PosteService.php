@@ -6,7 +6,6 @@ use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -82,7 +81,7 @@ class PosteService {
      * @return Poste[]
      */
     public function getPostes($champ = 'id', $ordre = 'ASC') {
-        $qb = $this->createQueryBuilder($champ = 'id', $ordre = 'ASC');
+        $qb = $this->createQueryBuilder($champ, $ordre);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -94,7 +93,7 @@ class PosteService {
      * @return Poste[]
      */
     public function getPostesLibres($champ = 'id', $ordre = 'ASC') {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder($champ, $ordre)
             ->andWhere('fiche IS NULL');
 
         $result = $qb->getQuery()->getResult();
@@ -121,7 +120,7 @@ class PosteService {
     }
 
     /**
-     * @param Structure $structure
+     * @param Structure|null $structure
      * @param bool $sousstructure
      * @param bool $libre
      * @return  Poste[]
