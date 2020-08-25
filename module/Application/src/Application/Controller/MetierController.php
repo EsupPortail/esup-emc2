@@ -587,6 +587,7 @@ class MetierController extends AbstractActionController {
 
                 $entry = [
                     'metier'     => ($metier) ? $metier->__toString() : "---",
+                    'niveau'     => ($metier) ? $metier->getNiveau() : "---",
                     'références' => implode("<br/>", $references),
                     'domaine'    => ($domaine) ? $domaine->__toString() : "---",
                     'fonction'   => ($fonction) ? $fonction : "---",
@@ -627,7 +628,8 @@ class MetierController extends AbstractActionController {
 
                 $entry = [
                     'metier'     => ($metier) ? $metier->__toString() : "---",
-                    'références' => implode("<br/>", $references),
+                    'niveau'     => ($metier) ? $metier->getNiveau() : "---",
+                    'références' => implode("\n", $references),
                     'domaine'    => ($domaine) ? $domaine->__toString() : "---",
                     'fonction'   => ($fonction) ? $fonction : "---",
                     'famille'    => ($famille) ? $famille->__toString() : "---",
@@ -642,7 +644,7 @@ class MetierController extends AbstractActionController {
             return $a['domaine'] > $b['domaine'];
         });
 
-        $headers = [ 'Metier', 'Références', 'Domaine', 'Fonction', 'Famille', '#Fiche'];
+        $headers = [ 'Metier', 'Niveau', 'Références', 'Domaine', 'Fonction', 'Famille', '#Fiche'];
 
         $today = new DateTime();
 
