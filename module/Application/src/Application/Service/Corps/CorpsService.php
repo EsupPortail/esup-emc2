@@ -4,7 +4,6 @@ namespace Application\Service\Corps;
 
 use Application\Entity\Db\Corps;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;

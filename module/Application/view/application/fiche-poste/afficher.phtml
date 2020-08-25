@@ -18,12 +18,30 @@ $date = new DateTime();
 $this->headTitle("Fiche de poste #" . $fiche->getId());
 
 $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
+$canExport   = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
 ?>
 
-<h1 class="page-header">
-<!--    Fiche de poste #--><?php //echo $fiche->getId(); ?><!-- <br/>-->
-    <?php echo $this->partial('partial/intitule', ['ficheposte' => $fiche], [], true); ?>
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+        <!--    Fiche de poste #--><?php //echo $fiche->getId(); ?><!-- <br/>-->
+            <?php echo $this->partial('partial/intitule', ['ficheposte' => $fiche], [], true); ?>
+        </h1>
+    </div>
+
+    <div class="pull-right">
+        <br/>
+        <br/>
+        <?php if ($canExport) : ?>
+            <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+               class="btn btn-primary action" target="_blank"
+            ><span
+                        data-toggle="tooltip" data-html="true"
+                        title="Exporter en PDF la fiche de poste"
+                        class="icon pdf"></span> Exporter au format PDF </a>
+        <?php endif; ?>
+    </div>
+</div>
 
 <?php if (! $canAfficher) : ?>
 

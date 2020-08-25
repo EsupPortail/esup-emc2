@@ -195,7 +195,7 @@ class EntretienProfessionnelService {
             $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
             foreach ($recopies as $recopie) {
                 $splits = explode(";", $recopie->getValeur());
-                $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $instance, $splits[0], $splits[1]);
+                $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $entretien->getFormulaireInstance(), $splits[0], $splits[1]);
             }
         }
         return $entretien;

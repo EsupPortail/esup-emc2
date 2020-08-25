@@ -142,7 +142,7 @@ class EntretienProfessionnelCampagneService {
     }
 
     /**
-     * @param DateTime $date
+     * @param DateTime|null $date
      * @return EntretienProfessionnelCampagne[]
      */
     public function getCampagnesActives($date = null)

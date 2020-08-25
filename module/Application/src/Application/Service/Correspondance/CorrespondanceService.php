@@ -11,10 +11,6 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 class CorrespondanceService {
     use EntityManagerAwareTrait;
 
-    /** Pas de gestion des entités car les Correspondances sont importés depuis octopus **/
-
-    /** TODO faire une methode pour forcer le rafraichissement depuis octopus ... */
-
     /** REQUETAGE *****************************************************************************************************/
 
     /**
