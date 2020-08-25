@@ -39,16 +39,16 @@ foreach ($cCompetences as $item) {
 
 <div class="row">
     <div class="col-md-10" style="margin-left:5rem;background-color:#d9edf7;">
-        <h2>
+        <h3 style="color:#3c6c8b;">
             <span class="icon competence"></span>
             Compétences
-            <span class="badge">
+            <span class="badge" style="background:#3c6c8b;">
                 <?php echo count($cCompetences); ?>
             </span>
-        </h2>
+        </h3>
     </div>
     <div class="col-md-1" style="background-color:#d9edf7;">
-        <h2>
+        <h3>
         <?php if ($mode === 'edition') : ?>
             <a <?php /** @see \Application\Controller\FichePosteController::selectionnerCompetencesRetireesAction() */ ?>
                     href="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
@@ -56,7 +56,7 @@ foreach ($cCompetences as $item) {
                 <span class="icon listing" title="Sélection des compétences liées à la fiche de poste"></span></a>
         <?php endif; ?>
             &nbsp;
-        </h2>
+        </h3>
     </div>
 </div>
 
@@ -64,7 +64,7 @@ foreach ($cCompetences as $item) {
     <div class="col-md-1"></div>
     <div class="col-md-10">
         <?php foreach ($dictionnaires as $key => $items) : ?>
-            <h3> <?php echo $key; ?> </h3>
+            <h4> <?php echo $key; ?> </h4>
             <ul>
                 <?php foreach ($items as $item) : ?>
                     <li>

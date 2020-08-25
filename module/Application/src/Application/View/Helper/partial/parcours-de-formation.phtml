@@ -29,13 +29,13 @@ ksort($formationArray);
 
 ?>
 
-<h3>
+<h4>
     <?php if ($reference !== null) : ?>
         <?php echo $reference->getLibelle(); ?>
     <?php else : ?>
         <?php echo $parcours->getLibelle(); ?>
     <?php endif; ?>
-</h3>
+</h4>
 
 <?php if ($asListe) : ?>
     <?php foreach ($formationArray as $groupe => $formationSubarray) : ?>

@@ -18,16 +18,16 @@ foreach ($applications as $item) {
 
 <div class="row">
     <div class="col-md-10" style="margin-left:5rem;background-color:#d9edf7;">
-        <h2>
+        <h3 style="color:#3c6c8b;">
             <span class="icon application"></span>
             Applications
-            <span class="badge">
+            <span class="badge" style="background:#3c6c8b;">
                 <?php echo count($cApplications); ?>
             </span>
-        </h2>
+        </h3>
     </div>
     <div class="col-md-1" style="background-color:#d9edf7;">
-        <h2>
+        <h3>
         <?php if ($mode === 'edition') : ?>
             <a <?php /** @see \Application\Controller\FichePosteController::selectionnerApplicationsRetireesAction() */ ?>
                     href="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
@@ -35,7 +35,7 @@ foreach ($applications as $item) {
                 <span class="icon listing" title="Sélection des applications liées à la fiche de poste"></span></a>
         <?php endif; ?>
             &nbsp;
-        </h2>
+        </h3>
     </div>
 </div>
 
