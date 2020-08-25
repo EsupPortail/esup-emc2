@@ -2,7 +2,6 @@
 
 namespace Application\Service\FicheMetier;
 
-use Application\Entity\Db\Activite;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\Domaine;

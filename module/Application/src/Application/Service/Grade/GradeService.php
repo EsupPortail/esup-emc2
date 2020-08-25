@@ -10,8 +10,6 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 class GradeService {
     use EntityManagerAwareTrait;
 
-    /** GESTION DES ENTITES - remonté d'octopus ***********************************************************************/
-
     /** REQUETAGE *****************************************************************************************************/
 
     public function createQueryBuilder()

@@ -4,12 +4,8 @@ namespace Application\Service\Formation;
 
 use Application\Entity\Db\FormationTheme;
 use Application\Service\GestionEntiteHistorisationTrait;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationThemeService {

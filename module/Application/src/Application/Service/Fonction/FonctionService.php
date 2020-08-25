@@ -4,7 +4,7 @@ namespace Application\Service\Fonction;
 
 use Application\Entity\Db\Fonction;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -77,13 +77,13 @@ class FonctionService {
 
     /**
      * @param Fonction $fonction
-     * @return $fonction
+     * @return Fonction
      */
     public function update($fonction)
     {
         try {
             $this->getEntityManager()->flush($fonction);
-        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException('Un problème est surevenue lors de l\'enregistrement en base.', $e);
         }
         return $fonction;
