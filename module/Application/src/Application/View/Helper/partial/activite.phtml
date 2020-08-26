@@ -51,7 +51,6 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
     <div class="col-md-10" style="margin-left:5rem;background-color:#d9edf7;">
         <h3 style="color:#3c6c8b;">
             <?php echo $activite->getLibelle(); ?>
-
             <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
                 <a
                     <?php /** @see ActiviteController::modifierLibelleAction() */?>
