@@ -13,6 +13,8 @@ class ActiviteDescription {
     private $activite;
     /** @var string */
     private $description;
+    /** @var integer */
+    private $ordre;
 
     /**
      * @return int
@@ -65,4 +67,23 @@ class ActiviteDescription {
         $this->description = $description;
         return $this;
     }
+
+    /**
+     * @return integer
+     */
+    public function getOrdre()
+    {
+        return $this->ordre;
+    }
+
+    /**
+     * @param integer $ordre
+     * @return ActiviteDescription
+     */
+    public function setOrdre(int $ordre)
+    {
+        $this->ordre = $ordre;
+        return $this;
+    }
 }
+

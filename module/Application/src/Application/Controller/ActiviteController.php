@@ -34,7 +34,7 @@ class ActiviteController  extends AbstractActionController {
     public function indexAction()
     {
         /** @var Activite[] $activites */
-        $activites = $this->getActiviteService()->getActivites('id');
+        $activites = $this->getActiviteService()->getActivites();
 
         return new ViewModel([
             'activites' => $activites,
@@ -73,7 +73,7 @@ class ActiviteController  extends AbstractActionController {
 
     public function afficherAction()
     {
-        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
 
         return new ViewModel([
             'title' => 'Visualisation d\'une activité',
@@ -110,7 +110,6 @@ class ActiviteController  extends AbstractActionController {
         $this->getActiviteService()->restore($activite);
         return $this->redirect()->toRoute('activite');
     }
-
 
     public function detruireAction()
     {
@@ -217,7 +216,6 @@ class ActiviteController  extends AbstractActionController {
                 $activiteDescription->setDescription($description);
                 $this->getActiviteDescriptionService()->create($activiteDescription);
             }
-
         }
 
         $vm = new ViewModel();
@@ -339,6 +337,48 @@ class ActiviteController  extends AbstractActionController {
             'form' => $form,
         ]);
         return $vm;
+    }
+
+    public function echangerOrdreDescriptionAction()
+    {
+        $description1 = $this->getActiviteDescriptionService()->getActiviteDescription($this->params()->fromRoute('description1'));
+        $description2 = $this->getActiviteDescriptionService()->getActiviteDescription($this->params()->fromRoute('description2'));
+
+        $ordre1 = $description1->getOrdre();
+        $ordre2 = $description2->getOrdre();
+
+        $description1->setOrdre($ordre2);
+        $description2->setOrdre($ordre1);
+        $this->getActiviteDescriptionService()->update($description1);
+        $this->getActiviteDescriptionService()->update($description2);
+
+        return new ViewModel();
+    }
+
+    public function updateOrdreDescriptionAction()
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+        $ordre = explode("_",$this->params()->fromRoute('ordre'));
+        $sort = [];
+        $position = 1;
+        foreach ($ordre as $item) {
+            $sort[$item] = $position;
+            $position++;
+        }
+
+        $descriptions = $activite->getDescriptions();
+        foreach ($descriptions as $description) {
+            if (! isset($sort[$description->getId()]) AND $description->getOrdre() !== null) {
+                $description->setOrdre(null);
+                $this->getActiviteDescriptionService()->update($description);
+            }
+            if ($description->getOrdre() != $sort[$description->getId()]) {
+                $description->setOrdre($sort[$description->getId()]);
+                $this->getActiviteDescriptionService()->update($description);
+            }
+        }
+
+        return new ViewModel();
     }
 
 }

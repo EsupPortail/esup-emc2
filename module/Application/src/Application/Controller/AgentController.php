@@ -749,7 +749,7 @@ class AgentController extends AbstractActionController
             $result[] = array(
                 'id'    => $agent->getId(),
                 'label' => $agent->getDenomination(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>".$agent->getSourceName()."</span>",
+                'extra' => "<span class='badge' style='background-color: slategray;'>"."OCTOPUS"."</span>",
             );
         }
         usort($result, function($a, $b) {

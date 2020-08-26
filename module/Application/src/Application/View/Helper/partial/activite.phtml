@@ -3,6 +3,7 @@
 use Application\Controller\ActiviteController;
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
@@ -139,10 +140,13 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                 <span class="icon ajouter-plusieurs" title="Ajouter plusieurs descriptions en une seule fois"></span></a>
         <?php endif; ?>
     </h4>
-    <?php $descriptions = $activite->getDescriptions(); ?>
-    <?php if (! empty($activite->getDescriptions())) : ?>
-        <ul>
-            <?php foreach ($activite->getDescriptions() as $description) : ?>
+    <?php
+        $descriptions = $activite->getDescriptions();
+        usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre() > $b->getOrdre();});
+    ?>
+    <?php if (! empty($descriptions)) : ?>
+        <ul id="descriptions">
+            <?php foreach ($descriptions as $description) : ?>
                 <?php
                     $display = true;
                     if ($retirees !== null) {
@@ -155,8 +159,10 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                     }
                 ?>
                 <?php if ($display) : ?>
-                <li>
-                    <?php echo $description->getDescription(); ?>
+                <li id="<?php echo $description->getId(); ?>">
+                    <span class="activite-bloc" id="<?php echo $description->getId(); ?>">
+                        <?php echo $description->getDescription(); ?>
+                    </span>
                     <?php if ($canModifier AND $mode === "modifier-activite") : ?>
                         <a  <?php /** @see ActiviteController::modifierDescriptionAction() */?>
                                 href="<?php echo $this->url('activite/modifier-description', ['description' => $description->getId()], [], true); ?>"
@@ -269,3 +275,37 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
         background-color: #aaaaaa;
     }
 </style>
+
+<script>
+    $(function() {
+        let mode = <?php echo "'".$mode."'"; ?>;
+        console.log(mode);
+        if (<?php echo "'".$mode."'"; ?> === 'modifier-activite') {
+            $('ul#descriptions').sortable({
+                update: function( event, ui ) {
+                    let ordre = "";
+                    $('ul#descriptions li').each(function () {
+                        if (ordre !== "") ordre += "_";
+                        ordre += $(this)[0].id ;
+                    });
+                    <?php /** @see ActiviteController::updateOrdreDescriptionAction() */ ?>
+                    let url = '../update-ordre-description/' + <?php echo "'".$activite->getId()."'"; ?> + '/' + ordre;
+                    // console.log(url);
+                    $.ajax({
+                       type: "POST",
+                       url: url,
+                       beforeSend:
+                           function () {
+                               $( "ul#descriptions" ).sortable( "option", "disabled", true );
+                           },
+                       success:
+                           function (retour) {
+                               $( "ul#descriptions" ).sortable( "option", "disabled", false );
+                           }
+                    });
+                }
+            });
+            $('ul#descriptions').disableSelection();
+        }
+    });
+</script>

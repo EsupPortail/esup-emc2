@@ -576,7 +576,7 @@ class MetierController extends AbstractActionController {
             $references = [];
             foreach ($metier->getReferences() as $reference) {
                 $references[] = $reference->getTitre();
-            };
+            }
 
             $domaines = $metier->getDomaines();
             if (empty($domaines)) $domaines[] = null;
@@ -617,7 +617,7 @@ class MetierController extends AbstractActionController {
             $references = [];
             foreach ($metier->getReferences() as $reference) {
                 $references[] = $reference->getTitre();
-            };
+            }
 
             $domaines = $metier->getDomaines();
             if (empty($domaines)) $domaines[] = null;
@@ -657,6 +657,4 @@ class MetierController extends AbstractActionController {
 
         return $result;
     }
-
-
 }

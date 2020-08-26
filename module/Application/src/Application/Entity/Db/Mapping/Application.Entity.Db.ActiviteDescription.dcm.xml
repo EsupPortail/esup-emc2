@@ -10,6 +10,7 @@
             <join-column name="activite_id" referenced-column-name="id"/>
         </many-to-one>
         <field name="description"       type="string" length="2047"     column="description"            nullable="false"/>
+        <field name="ordre"             type="integer"                  column="ordre"                  nullable="false"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
