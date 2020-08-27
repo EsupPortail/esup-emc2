@@ -185,12 +185,12 @@ $canDetruire = true;
         loaded = true;
     });
 
-    $(document).on('search.dt', function () {
-        if (loaded === true) {
-            let valeur = $('input[aria-controls=metiers]').val();
-            console.log(valeur);
-            history.replaceState({}, null, '?search=' + valeur + '#metier');
-            $('[data-toggle="tooltip"]').tooltip();
-        }
-    });
+    // $(document).on('search.dt', function () {
+    //     if (loaded === true) {
+    //         let valeur = $('input[aria-controls=metiers]').val();
+    //         console.log(valeur);
+    //         history.replaceState({}, null, '?search=' + valeur + '#metier');
+    //         $('[data-toggle="tooltip"]').tooltip();
+    //     }
+    // });
 </script>

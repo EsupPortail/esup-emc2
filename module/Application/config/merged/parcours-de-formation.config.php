@@ -4,6 +4,10 @@ namespace Application;
 
 use Application\Controller\ParcoursDeFormationController;
 use Application\Controller\ParcoursDeFormationControllerFactory;
+use Application\Form\ModifierRattachement\ModifierRattachementForm;
+use Application\Form\ModifierRattachement\ModifierRattachementFormFactory;
+use Application\Form\ModifierRattachement\ModifierRattachementHydrator;
+use Application\Form\ModifierRattachement\ModifierRattachementHydratorFactory;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationForm;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationFormFactory;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationHydrator;
@@ -30,6 +34,12 @@ return [
                         'historiser',
                         'restaurer',
                         'detruire',
+
+                        'modifier-libelle',
+                        'modifier-rattachement',
+                        'ajouter-formation',
+                        'retirer-formation',
+
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INDEX,
@@ -50,6 +60,13 @@ return [
                                 'route'    => 'parcours-de-formation',
                                 'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
                                 'order'    => 1150,
+                                'pages' => [
+                                    'modifier-parcours-de-foamtion' => [
+                                        'label'    => 'Parcours de formation',
+                                        'route'    => 'parcours-de-formation/modifier',
+                                        'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
+                                    ]
+                                ],
                             ],
                         ],
                     ],
@@ -85,7 +102,7 @@ return [
                     'ajouter' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter/:type',
+                            'route'    => '/ajouter[/:type]',
                             'defaults' => [
                                 'controller' => ParcoursDeFormationController::class,
                                 'action'     => 'ajouter',
@@ -100,6 +117,50 @@ return [
                             'defaults' => [
                                 'controller' => ParcoursDeFormationController::class,
                                 'action'     => 'modifier',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier-libelle' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-libelle/:parcours-de-formation',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'modifier-libelle',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier-rattachement' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-rattachement/:parcours-de-formation',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'modifier-rattachement',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-formation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-formation/:parcours-de-formation',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'ajouter-formation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'retirer-formation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-formation/:parcours-de-formation/:formation',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'retirer-formation',
                             ],
                         ],
                         'may_terminate' => true,
@@ -154,11 +215,13 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            ModifierRattachementForm::class => ModifierRattachementFormFactory::class,
             ParcoursDeFormationForm::class => ParcoursDeFormationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            ModifierRattachementHydrator::class => ModifierRattachementHydratorFactory::class,
             ParcoursDeFormationHydrator::class => ParcoursDeFormationHydratorFactory::class,
         ],
     ],

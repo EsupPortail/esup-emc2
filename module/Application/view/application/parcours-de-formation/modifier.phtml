@@ -1,0 +1,124 @@
+<?php
+
+use Application\Entity\Db\Categorie;
+use Application\Entity\Db\Metier;
+use Application\Entity\Db\ParcoursDeFormation;
+use Application\Provider\Privilege\FormationPrivileges;
+
+/**
+ * @see \Application\Controller\ParcoursDeFormationController::modifierAction()
+ * @var ParcoursDeFormation $parcours
+ * @var Categorie|Metier $reference
+ */
+
+$canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_EDITER));
+
+?>
+
+<h1 class="page-header">
+    Modification du parcours de formation #<?php echo $parcours->getId(); ?>
+</h1>
+
+<div class="main">
+
+    <h2> Description du parcours de formation </h2>
+
+    <dl class="dl-horizontal">
+        <dt> Intitlé du parcours </dt>
+        <dd> <?php if ($parcours->getLibelle() !== null) : ?>
+                <?php echo $parcours->getLibelle(); ?>
+            <?php else : ?>
+                <span style="color: darkred;"><span class="icon attention"></span> Aucun intitulé pour ce parcours de formation.</span>
+            <?php endif; ?>
+            <?php if ($canModifier) : ?>
+                <?php /** @see \Application\Controller\ParcoursDeFormationController::modifierLibelleAction() */ ?>
+                <a href="<?php echo $this->url('parcours-de-formation/modifier-libelle', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
+                   class="ajax-modal" data-event="modification"
+                >
+                    <span class="icon editer" data-toogle="tooltip" data-html="true" title="Modifier l'intitulé du parcours de formation"></span>
+                </a>
+            <?php endif; ?>
+        </dd>
+
+        <dt> Rattachement du parcours </dt>
+        <dd>
+            <?php if ($reference) : ?>
+                [<?php echo $parcours->getType(); ?>]
+                <?php echo $reference->getLibelle(); ?>
+            <?php else : ?>
+                <span style="color: darkred;"><span class="icon attention"></span> Aucun rattachement pour ce parcours de formation.</span>
+            <?php endif; ?>
+            <?php if ($canModifier) : ?>
+                <?php /** @see \Application\Controller\ParcoursDeFormationController::modifierRattachementAction() */ ?>
+                <a href="<?php echo $this->url('parcours-de-formation/modifier-rattachement', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
+                   class="ajax-modal" data-event="modification"
+                >
+                    <span class="icon editer" data-toogle="tooltip" data-html="true" title="Modifier le rattachement du parcours de formation"></span>
+                </a>
+            <?php endif; ?>
+        </dd>
+    </dl>
+
+
+    <h2> Formations du parcours de formation </h2>
+
+    <?php $formations = $parcours->getFormations(); ?>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h3>
+                #Formation : <?php echo count($formations); ?>
+            </h3>
+        </div>
+        <div class="pull-right">
+            <?php if ($canModifier) : ?>
+                <a href="<?php echo $this->url('parcours-de-formation/ajouter-formation', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
+                   class="btn btn-primary action ajax-modal" data-event="modification"
+                >
+                    <span class="icon ajouter"></span>Ajouter des formations </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php
+        $dictionnaire = [];
+        foreach ($formations as $formation) {
+            $groupe = ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"ZZZ";
+            $dictionnaire[$groupe][] = $formation;
+        }
+        ksort($dictionnaire);
+    ?>
+
+    <table style="width:90%;">
+    <?php foreach ($dictionnaire as $groupe => $gformations) : ?>
+        <?php $init = $gformations[0]; ?>
+        <tr> <th colspan="2" style="padding:1rem; background:<?php echo ($groupe === "ZZZ")?"lightgray":$init->getGroupe()->getCouleur(); ?>">
+            <?php echo ($groupe === "ZZZ")?"Sans groupe ...":$groupe; ?>
+        </th> </tr>
+        <?php foreach ($gformations as $formation) : ?>
+            <tr>
+                <td> <?php echo $formation->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canModifier) : ?>
+                        <?php /** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
+                        <a href="<?php echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formation->getId()], [], true); ?>"
+                        >
+                            <span class="icon detruire" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+    </table>
+
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

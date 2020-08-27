@@ -96,7 +96,6 @@ class AgentService {
         return $qb;
     }
 
-
     /**
      * @param string $order
      * @return Agent[]
@@ -131,7 +130,6 @@ class AgentService {
         if ($structures !== null) {
             $date = $this->getDateTime();
             $qb = $qb
-                ->addSelect('grade')->join('agent.grades', 'grade')
                 ->andWhere('grade.dateDebut <= :date')
                 ->andWhere('grade.dateFin IS NULL OR grade.dateFin >= :date')
                 ->setParameter('date', $date)
@@ -260,7 +258,6 @@ class AgentService {
         }
 
         return $result;
-
     }
 
     /**
@@ -301,7 +298,6 @@ class AgentService {
         $result = $qb->getQuery()->getResult();
 
         return $result;
-
     }
 
     /** AgentApplication **********************************************************************************************/

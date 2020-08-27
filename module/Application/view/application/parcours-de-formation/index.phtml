@@ -4,6 +4,7 @@
  * @see \Application\Controller\ParcoursDeFormationController::indexAction()
  * @var ParcoursDeFormation[] $parcoursCategorie
  * @var ParcoursDeFormation[] $parcoursMetier
+ * @var ParcoursDeFormation[] $parcoursVide
  */
 
 use Application\Entity\Db\ParcoursDeFormation;
@@ -36,6 +37,15 @@ $droits = [];
                 </span>
             </a>
         </li>
+        <li role="vide">
+            <a href="#vide" aria-controls="vide" role="tab" data-toggle="tabz">
+                Parcours de formation <br/>
+                Sans référence &nbsp;
+                <span class="badge">
+                    <?php echo count($parcoursVide); ?>
+                </span>
+            </a>
+        </li>
     </ul>
 
     <div class="main-with-tab">
@@ -47,6 +57,9 @@ $droits = [];
             </div>
             <div id="metier" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursMetier, 'type' => ParcoursDeFormation::TYPE_METIER, 'droits' => $droits], [], true); ?>
+            </div>
+            <div id="vide" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursVide, 'type' => null, 'droits' => $droits], [], true); ?>
             </div>
 
         </div>

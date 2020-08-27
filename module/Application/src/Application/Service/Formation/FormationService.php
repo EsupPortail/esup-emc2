@@ -199,4 +199,35 @@ class FormationService {
         }
         return $options;
     }
+
+    /**
+     * @return array
+     */
+    public function getFormationsGroupesAsGroupOptions()
+    {
+        $formations = $this->getFormations();
+        $dictionnaire = [];
+        foreach ($formations as $formation) {
+            $libelle = ($formation->getGroupe()) ? $formation->getGroupe()->getLibelle() : "ZZZ";
+            $dictionnaire[$libelle][] = $formation;
+        }
+        ksort($dictionnaire);
+
+        $options = [];
+        foreach ($dictionnaire as $clef => $listing) {
+            $optionsoptions = [];
+            usort($listing, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+
+            foreach ($listing as $formation) {
+                $optionsoptions[$formation->getId()] = $formation->getLibelle();
+            }
+
+            $options[] = [
+                'label' => ($clef === "ZZZ")?"Sans groupe":$clef,
+                'options' => $optionsoptions,
+            ];
+        }
+
+        return $options;
+    }
 }

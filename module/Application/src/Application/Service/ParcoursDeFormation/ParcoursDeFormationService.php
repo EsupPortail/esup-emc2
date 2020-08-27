@@ -104,10 +104,13 @@ class ParcoursDeFormationService {
      */
     public function getParcoursDeFormationsByType($type)
     {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('parcours.type = :type')
-            ->setParameter('type', $type)
-            ;
+        $qb = $this->createQueryBuilder();
+            if ($type !== null) {
+                $qb = $qb ->andWhere('parcours.type = :type')
+                          ->setParameter('type', $type);
+            } else {
+                $qb = $qb ->andWhere('parcours.type IS NULL');
+            }
         $result = $qb->getQuery()->getResult();
         return $result;
     }

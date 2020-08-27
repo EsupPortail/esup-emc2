@@ -4,6 +4,10 @@ namespace Application;
 
 use Application\Controller\FormationController;
 use Application\Controller\FormationControllerFactory;
+use Application\Form\AjouterFormation\AjouterFormationForm;
+use Application\Form\AjouterFormation\AjouterFormationFormFactory;
+use Application\Form\AjouterFormation\AjouterFormationHydrator;
+use Application\Form\AjouterFormation\AjouterFormationHydratorFactory;
 use Application\Form\Formation\FormationForm;
 use Application\Form\Formation\FormationFormFactory;
 use Application\Form\Formation\FormationHydrator;
@@ -358,6 +362,7 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            AjouterFormationForm::class => AjouterFormationFormFactory::class,
             FormationForm::class => FormationFormFactory::class,
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
@@ -369,6 +374,7 @@ return [
 //            FormationGroupeHydrator::class => FormationGroupeHydrator::class,
         ],
         'factories' => [
+            AjouterFormationHydrator::class => AjouterFormationHydratorFactory::class,
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
         ],

@@ -79,20 +79,12 @@ $this->headTitle('Index des fiches métiers');
 
 
 <script>
-    // $(document).ready(function() {
-    //     $('.datatable').DataTable( {
-    //         // sorting: false,
-    //         // paging: false,
-    //         language: {
-    //             url: '/localisation/fr_FR.json'
-    //         }
-    //     } );
-    // } );
-
     $(function() {
         let hash = $(location).attr('hash');
+        console.log(hash);
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "metier";
+        console.log(name);
+        if (name === undefined || name === "") name = "fiche";
 
         $('a[aria-controls=' + name + ']').tab('show');
 
