@@ -316,12 +316,19 @@ class FichePosteService {
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('fichemetier')->leftJoin('fiche.fichesMetiers', 'fichemetier')
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('statut.dispo = :false')
+            ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
+            //->andWhere('statut.administratif = :true')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-            ->andWhere('statut.administratif = :true')
+            ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
+            ->andWhere('affectation.principale = :true')
+
             ->setParameter('today', $today)
             //->setParameter('noEnd', $noEnd)
             ->setParameter('true', 'O')
+                ->setParameter('false', 'N')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
