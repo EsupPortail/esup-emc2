@@ -3,14 +3,261 @@
 namespace Application\Service\Fonction;
 
 use Application\Entity\Db\Fonction;
+use Application\Entity\Db\FonctionActivite;
+use Application\Entity\Db\FonctionDestination;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FonctionService {
     use EntityManagerAwareTrait;
+    use GestionEntiteHistorisationTrait;
+
+    /** Destinations **************************************************************************************************/
+
+    /**
+     * @param FonctionDestination $destination
+     * @return FonctionDestination
+     */
+    public function createDestination($destination)
+    {
+        $this->createFromTrait($destination);
+        return $destination;
+    }
+
+    /**
+     * @param FonctionDestination $destination
+     * @return FonctionDestination
+     */
+    public function updateDestination($destination)
+    {
+        $this->updateFromTrait($destination);
+        return $destination;
+    }
+
+    /**
+     * @param FonctionDestination $destination
+     * @return FonctionDestination
+     */
+    public function historiseDestination($destination)
+    {
+        $this->historiserFromTrait($destination);
+        return $destination;
+    }
+
+    /**
+     * @param FonctionDestination $destination
+     * @return FonctionDestination
+     */
+    public function restoreDestination($destination)
+    {
+        $this->restoreFromTrait($destination);
+        return $destination;
+    }
+
+    /**
+     * @param FonctionDestination $destination
+     * @return FonctionDestination
+     */
+    public function deleteDestination($destination)
+    {
+        $this->deleteFromTrait($destination);
+        return $destination;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilderDestination() {
+        $qb = $this->getEntityManager()->getRepository(FonctionDestination::class)->createQueryBuilder('destination')
+            ->addSelect('activite')->leftJoin('destination.activites','activite')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return FonctionDestination[]
+     */
+    public function getDestinations($champ = 'code', $ordre = 'ASC')
+    {
+        $qb = $this->createQueryBuilderDestination()
+            ->orderBy('destination.' . $champ, $ordre);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return FonctionDestination
+     */
+    public function getDestination($id)
+    {
+        $qb = $this->createQueryBuilderDestination()
+            ->andWhere('destination.id = :id')
+            ->setParameter('id' , $id);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FonctionDestination partagent le même id [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $param
+     * @return FonctionDestination
+     */
+    public function getResquestedDestrination($controller, $param='destination')
+    {
+        $id = $controller->params()->fromRoute($param);
+        $result = $this->getDestination($id);
+        return $result;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return array
+     */
+    public function getDestinationsAsOptions($champ = 'code', $ordre = 'ASC')
+    {
+        $destinations = $this->getDestinations($champ, $ordre);
+        $options = [];
+        foreach ($destinations as $destination) {
+            $options[$destination->getId()] = $destination->getCode() . " - " . $destination->getLibelle();
+        }
+        return $options;
+    }
+
+    /** Activite ******************************************************************************************************/
+
+    /**
+     * @param FonctionActivite $activite
+     * @return FonctionActivite
+     */
+    public function createActivite($activite)
+    {
+        $this->createFromTrait($activite);
+        return $activite;
+    }
+
+    /**
+     * @param FonctionActivite $activite
+     * @return FonctionActivite
+     */
+    public function updateActivite($activite)
+    {
+        $this->updateFromTrait($activite);
+        return $activite;
+    }
+
+    /**
+     * @param FonctionActivite $activite
+     * @return FonctionActivite
+     */
+    public function historiseActivite($activite)
+    {
+        $this->historiserFromTrait($activite);
+        return $activite;
+    }
+
+    /**
+     * @param FonctionActivite $activite
+     * @return FonctionActivite
+     */
+    public function restoreActivite($activite)
+    {
+        $this->restoreFromTrait($activite);
+        return $activite;
+    }
+
+    /**
+     * @param FonctionActivite $activite
+     * @return FonctionActivite
+     */
+    public function deleteActivite($activite)
+    {
+        $this->deleteFromTrait($activite);
+        return $activite;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilderActivite() {
+        $qb = $this->getEntityManager()->getRepository(FonctionActivite::class)->createQueryBuilder('activite')
+            ->addSelect('destination')->join('activite.destination','destination')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return FonctionActivite[]
+     */
+    public function getActivites($champ = 'code', $ordre = 'ASC')
+    {
+        $qb = $this->createQueryBuilderActivite()
+            ->orderBy('activite.' . $champ, $ordre);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $id
+     * @return FonctionActivite
+     */
+    public function getActivite($id)
+    {
+        $qb = $this->createQueryBuilderActivite()
+            ->andWhere('activite.id = :id')
+            ->setParameter('id' , $id);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FonctionActivite partagent le même id [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $param
+     * @return FonctionActivite
+     */
+    public function getResquestedActivite($controller, $param='activite')
+    {
+        $id = $controller->params()->fromRoute($param);
+        $result = $this->getActivite($id);
+        return $result;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return array
+     */
+    public function getActivitesAsOptions($champ = 'code', $ordre = 'ASC')
+    {
+        $activites = $this->getActivites($champ, $ordre);
+        $options = [];
+        foreach ($activites as $activite) {
+            $options[$activite->getId()] = $activite->getCode() . " - " . $activite->getLibelle();
+        }
+        return $options;
+    }
 
     /** Site **********************************************************************************************************/
 

@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Categorie;
+use Application\Entity\Db\Formation;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\FormationPrivileges;
@@ -91,6 +92,7 @@ $canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPriv
 
     <table style="width:90%;">
     <?php foreach ($dictionnaire as $groupe => $gformations) : ?>
+        <?php usort($gformations, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();}); ?>
         <?php $init = $gformations[0]; ?>
         <tr> <th colspan="2" style="padding:1rem; background:<?php echo ($groupe === "ZZZ")?"lightgray":$init->getGroupe()->getCouleur(); ?>">
             <?php echo ($groupe === "ZZZ")?"Sans groupe ...":$groupe; ?>
