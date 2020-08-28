@@ -129,7 +129,7 @@ $canEffacer = $droits['canEffacer'];
     let loaded = false;
 
     $(document).ready(function() {
-        var table = $('#applications').DataTable({
+        let table = $('#applications').DataTable({
             "paging": false
         });
         let searchParams = new URLSearchParams(window.location.search);
