@@ -8,6 +8,9 @@
 
 use Application\Entity\Db\FonctionActivite;
 use Application\Entity\Db\FonctionDestination;
+use Application\Provider\Privilege\FonctionPrivileges;
+
+$canModifier = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivileges::FONCTION_MODIFIER));
 
 ?>
 
@@ -16,28 +19,38 @@ use Application\Entity\Db\FonctionDestination;
 </h1>
 
 <div class="main">
-    <dl class="dl-horizontal">
-        <dt> #Destination </dt>
-        <dd> <?php echo count($destinations); ?> </dd>
-        <dt> #Activite </dt>
-        <dd> <?php echo count($activites); ?> </dd>
-    </dl>
 
-    <a href="<?php echo $this->url('fonction/destination/ajouter', [], [], true); ?>"
-       class="btn btn-primary action ajax-modal" data-event="modification"
-       >
-        <span class="icon ajouter"></span>
-        Ajouter une destination
-    </a>
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="dl-horizontal">
+                <dt> #Destination </dt>
+                <dd> <?php echo count($destinations); ?> </dd>
+                <dt> #Activite </dt>
+                <dd> <?php echo count($activites); ?> </dd>
+            </dl>
+        </div>
 
-    <a href="<?php echo $this->url('fonction/activite/ajouter', [], [], true); ?>"
-       class="btn btn-primary action ajax-modal" data-event="modification"
-    >
-        <span class="icon ajouter"></span>
-        Ajouter une activité
-    </a>
+        <div class="pull-right">
+            <?php if ($canModifier) : ?>
+                <a href="<?php echo $this->url('fonction/destination/ajouter', [], [], true); ?>"
+                   class="btn btn-primary action ajax-modal" data-event="modification"
+                   >
+                    <span class="icon ajouter"></span>
+                    Ajouter une destination
+                </a>
 
-    <br/>
+                <br/>
+
+                <a href="<?php echo $this->url('fonction/activite/ajouter', [], [], true); ?>"
+                   class="btn btn-primary action ajax-modal" data-event="modification"
+                >
+                    <span class="icon ajouter"></span>
+                    Ajouter une activité
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
     <br/>
 
     <table class='fonction' >
@@ -46,14 +59,16 @@ use Application\Entity\Db\FonctionDestination;
                 <td style="width:5rem;">
                     <?php echo $destination->getCode(); ?>
 
-                    <br/>
-                    <a href="<?php echo $this->url('fonction/destination/modifier', ['destination' => $destination->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
-                       data-toggle="tooltip" data-html="true" title="Modifier la destination">
-                        <span class="icon editer"></span></a>
-                    <a href="<?php echo $this->url('fonction/destination/supprimer', ['destination' => $destination->getId()], [], true); ?>"
-                       data-toggle="tooltip" data-html="true" title="Supprimer la destination">
-                        <span class="icon detruire"></span></a>
+                    <?php if ($canModifier) : ?>
+                        <br/>
+                        <a href="<?php echo $this->url('fonction/destination/modifier', ['destination' => $destination->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                           data-toggle="tooltip" data-html="true" title="Modifier la destination">
+                            <span class="icon editer"></span></a>
+                        <a href="<?php echo $this->url('fonction/destination/supprimer', ['destination' => $destination->getId()], [], true); ?>"
+                           data-toggle="tooltip" data-html="true" title="Supprimer la destination">
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
                 </td>
                 <td style='width:50%;'>
                     <?php echo $destination->getLibelle(); ?>
@@ -68,6 +83,7 @@ use Application\Entity\Db\FonctionDestination;
                             <td style="width:5rem;">
                                 <?php echo $activite->getCode(); ?>
 
+                                <?php if ($canModifier) : ?>
                                 <br/>
                                 <a href="<?php echo $this->url('fonction/activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
                                    class="ajax-modal" data-event="modification"
@@ -76,6 +92,7 @@ use Application\Entity\Db\FonctionDestination;
                                 <a href="<?php echo $this->url('fonction/activite/supprimer', ['activite' => $activite->getId()], [], true); ?>"
                                    data-toggle="tooltip" data-html="true" title="Supprimer l'activité">
                                     <span class="icon detruire"></span></a>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <?php echo $activite->getLibelle(); ?>

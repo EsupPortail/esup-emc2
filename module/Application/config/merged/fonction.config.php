@@ -12,7 +12,7 @@ use Application\Form\FonctionDestination\FonctionDestinationForm;
 use Application\Form\FonctionDestination\FonctionDestinationFormFactory;
 use Application\Form\FonctionDestination\FonctionDestinationHydrator;
 use Application\Form\FonctionDestination\FonctionDestinationHydratorFactory;
-use Application\Provider\Privilege\FormationPrivileges;
+use Application\Provider\Privilege\FonctionPrivileges;
 use Application\Service\Fonction\FonctionService;
 use Application\Service\Fonction\FonctionServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -36,7 +36,7 @@ return [
                         'supprimer-activite',
                     ],
                     'privileges' => [
-                        FormationPrivileges::FORMATION_INDEX,
+                        FonctionPrivileges::FONCTION_AFFICHER,
                     ],
                 ],
             ],
@@ -53,7 +53,7 @@ return [
                             'fonction' => [
                                 'label'    => 'Fonctions',
                                 'route'    => 'fonction',
-                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
+                                'resource' => FonctionPrivileges::getResourceId(FonctionPrivileges::FONCTION_AFFICHER),
                                 'order'    => 680,
                             ],
                         ],
