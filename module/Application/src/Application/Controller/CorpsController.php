@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\Corps\CorpsServiceAwareTrait;
 use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
@@ -12,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class CorpsController extends AbstractActionController {
+    use AgentServiceAwareTrait;
     use CategorieServiceAwareTrait;
     use CorpsServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
@@ -59,4 +61,26 @@ class CorpsController extends AbstractActionController {
         ]);
         return $vm;
     }
+
+    public function afficherAgentsAvecCorpsAction() {
+        $corps = $this->getCorpsService()->getRequestedCorps($this);
+        $agents = $this->getAgentService()->getAgentsWithCorps($corps);
+
+        return new ViewModel([
+            'title' => 'Agents ayant le corps ['. $corps->getLibelleCourt().']',
+            'corps' => $corps,
+            'agents' => $agents,
+        ]);
+    }
+    public function afficherAgentsAvecGradeAction() {
+        $grade = $this->getGradeService()->getRequestedGrade($this);
+        $agents = $this->getAgentService()->getAgentsWithGrade($grade);
+
+        return new ViewModel([
+            'title' => 'Agents ayant le grade ['. $grade->getLibelleCourt().']',
+            'grade' => $grade,
+            'agents' => $agents,
+        ]);
+    }
+
 }

@@ -43,6 +43,16 @@ return [
                 [
                     'controller' => CorpsController::class,
                     'action' => [
+                        'afficher-agents-avec-corps',
+                        'afficher-agents-avec-grade',
+                    ],
+                    'privileges' => [
+                        CorpsPrivileges::CORPS_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => CorpsController::class,
+                    'action' => [
                         'modifier-niveau',
                     ],
                     'privileges' => [
@@ -99,6 +109,28 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'afficher-agents-avec-corps' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-agents-avec-corps/:corps',
+                            'defaults' => [
+                                'controller' => CorpsController::class,
+                                'action'     => 'afficher-agents-avec-corps',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher-agents-avec-grade' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-agents-avec-grade/:grade',
+                            'defaults' => [
+                                'controller' => CorpsController::class,
+                                'action'     => 'afficher-agents-avec-grade',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'modifier-niveau' => [
                         'type'  => Segment::class,
                         'options' => [

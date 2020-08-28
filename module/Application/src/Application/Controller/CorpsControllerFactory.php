@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierNiveau\ModifierNiveauForm;
+use Application\Service\Agent\AgentService;
 use Application\Service\Categorie\CategorieService;
 use Application\Service\Corps\CorpsService;
 use Application\Service\Correspondance\CorrespondanceService;
@@ -18,11 +19,13 @@ class CorpsControllerFactory {
     public function __invoke(ContainerInterface $container)
     {
         /**
+         * @var AgentService $agentService
          * @var CategorieService $categorieService
          * @var CorpsService $corpsService
          * @var CorrespondanceService $correspondanceService
          * @var GradeService $gradeService
          */
+        $agentService = $container->get(AgentService::class);
         $categorieService = $container->get(CategorieService::class);
         $corpsService = $container->get(CorpsService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
@@ -35,6 +38,7 @@ class CorpsControllerFactory {
 
         /** @var CorpsController $controller */
         $controller = new CorpsController();
+        $controller->setAgentService($agentService);
         $controller->setCategorieService($categorieService);
         $controller->setCorpsService($corpsService);
         $controller->setCorrespondanceService($correspondanceService);

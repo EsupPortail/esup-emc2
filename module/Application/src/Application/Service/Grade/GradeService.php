@@ -6,6 +6,7 @@ use Application\Entity\Db\Grade;
 use Doctrine\ORM\NonUniqueResultException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class GradeService {
     use EntityManagerAwareTrait;
@@ -79,6 +80,18 @@ class GradeService {
             throw new RuntimeException("Plusieurs grades partagent le même identifiant [".$id."]");
         }
         return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $param
+     * @return Grade
+     */
+    public function getRequestedGrade($controller, $param = "grade")
+    {
+        $id = $controller->params()->fromRoute($param);
+        $grade = $this->getGrade($id);
+        return $grade;
     }
 
 }

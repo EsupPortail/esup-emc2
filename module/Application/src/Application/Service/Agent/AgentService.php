@@ -6,7 +6,10 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\Corps;
+use Application\Entity\Db\Grade;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -627,4 +630,29 @@ class AgentService {
         $this->deleteFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
     }
+
+    public function getAgentsWithGrade(Grade $grade) {
+        $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
+            ->addSelect('agent')->join('agentgrade.agent', 'agent')
+            ->addSelect('grade')->join('agentgrade.grade', 'grade')
+            ->andWhere('grade.id = :id')
+            ->setParameter('id', $grade->getId())
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getAgentsWithCorps(Corps $corps) {
+        $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
+            ->addSelect('agent')->join('agentgrade.agent', 'agent')
+            ->addSelect('corps')->join('agentgrade.corps', 'corps')
+            ->andWhere('corps.id = :id')
+            ->setParameter('id', $corps->getId())
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
 }

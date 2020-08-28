@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @see \Application\Controller\CorpsController::afficherAgentsAvecGradeAction();
+ * @var Grade $grade
+ * @var AgentGrade[] $agents
+ */
+
+use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\Grade;
+
+$now = new DateTime();
+?>
+
+<dl class="dl-horizontal">
+    <dt> Grade </dt>
+    <dd>[#<?php echo $grade->getId(); ?>] <?php echo $grade->getLibelleLong(); ?></dd>
+    <dt> #AgentGrade </dt>
+    <dd> <?php echo count($agents); ?></dd>
+</dl>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th> Id </th>
+            <th> Agent </th>
+            <th> Début </th>
+            <th> Fin </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($agents as $agent) : ?>
+        <tr <?php if ($agent->getDateFin() AND $agent->getDateFin() < $now) echo 'class="historise"'; ?> >
+            <td> <?php echo $agent->getId(); ?> </td>
+            <td> <?php echo $agent->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo ($agent->getDateDebut()) ? $agent->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agent->getDateFin()) ? $agent->getDateFin()->format('d/m/Y') : "---"; ?> </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+
