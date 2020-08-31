@@ -93,27 +93,57 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
 
 <script>
     let loaded = false;
+    let search ;
+    let page ;
+
+    $(window).bind('beforeunload', function() {
+        let params = '';
+        if (search !== null && search !== undefined) {
+            params += "search=" + search;
+        }
+        if (page !== null && page !== undefined)   {
+            if (params !== '') params += "&";
+            params += "page=" + page;
+        }
+        if (params !== '') {
+            console.log("params : " + params);
+            history.replaceState({}, null, '?' + params);
+        }
+    });
 
     $(document).ready(function() {
-        var table = $('#structures').DataTable({
-            "paging": false
-        });
+        let table = $('#structures').DataTable({});
         let searchParams = new URLSearchParams(window.location.search);
-        let param = searchParams.get('search')
-        if (param !== null) {
-            table.search(param);
-            table.draw();
+        let search = searchParams.get('search')
+        let page = searchParams.get('page')
+        if (/** search !== undefined && search !== "undefined" &&*/ search !== null && search !== "null") {
+            table.search(search);
         }
+        if (/**page !== undefined && page !== "undefined" &&*/ page !== null && page !== "null") {
+            table.page(parseInt(page));
+        }
+        table.draw(false);
+
         loaded = true;
     });
 
-    $(document).on('search.dt', function () {
+    $(document).on('#structures page.dt', function () {
         if (loaded === true) {
-            let valeur = $('input').val();
-            console.log(valeur);
-            history.replaceState({}, null, '?search=' + valeur);
+            let table  = $('#structures').DataTable();
+            page   = table.page();
+            console.log(page);
         }
     });
+
+    $(document).on('#structures search.dt', function () {
+        if (loaded === true) {
+            let table = $('#structures').DataTable();
+            search = table.search();
+            console.log(search);
+        }
+    });
+
+    // NB : il existe aussi un event order.dt
 
     $(function() {
         $("body").on("modification", function (event) {
