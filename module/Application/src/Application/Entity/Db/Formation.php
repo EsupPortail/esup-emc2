@@ -26,6 +26,8 @@ class Formation implements HistoriqueAwareInterface {
     private $applications;
     /** @var ArrayCollection */
     private $missions;
+    /** @var ArrayCollection (FormationInstance) */
+    private $instances;
 
 
     public function __construct()
@@ -214,6 +216,13 @@ class Formation implements HistoriqueAwareInterface {
             $options[] = $array;
         }
         return $options;
+    }
+
+    /** Formation Instances *******************************************************************************************/
+
+    public function getInstances()
+    {
+        return $this->instances->toArray();
     }
 
 }

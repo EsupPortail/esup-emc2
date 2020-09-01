@@ -98,9 +98,10 @@ class FormationController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('application/formation/modifier');
         $vm->setVariables([
             'title' => 'Edition d\'une formation',
+            'formation' => $formation,
             'form' => $form,
         ]);
         return $vm;
@@ -142,6 +143,34 @@ class FormationController extends AbstractActionController
                 'action' => $this->url()->fromRoute('formation/detruire', ["formation" => $formation->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    public function modifierFormationInformationsAction()
+    {
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+
+        $form = $this->getFormationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/modifier-formation-informations', ['formation' => $formation->getId()], [], true));
+        $form->bind($formation);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationService()->update($formation);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Modifier les informations de la formation',
+            'formation' => $formation,
+            'form' => $form,
+        ]);
         return $vm;
     }
 

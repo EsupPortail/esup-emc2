@@ -4,6 +4,8 @@ namespace Application;
 
 use Application\Controller\FormationController;
 use Application\Controller\FormationControllerFactory;
+use Application\Controller\FormationInstanceController;
+use Application\Controller\FormationInstanceControllerFactory;
 use Application\Form\AjouterFormation\AjouterFormationForm;
 use Application\Form\AjouterFormation\AjouterFormationFormFactory;
 use Application\Form\AjouterFormation\AjouterFormationHydrator;
@@ -26,6 +28,8 @@ use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
+use Application\Service\FormationInstance\FormationInstanceService;
+use Application\Service\FormationInstance\FormationInstanceServiceFactory;
 use Application\View\Helper\FormationGroupeViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -73,6 +77,8 @@ return [
                         'editer',
                         'editer-groupe',
                         'editer-theme',
+                        'modifier-formation-informations',
+                        'ajouter-instance',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_EDITER,
@@ -103,6 +109,16 @@ return [
                         FormationPrivileges::FORMATION_DETRUIRE,
                     ],
                 ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'ajouter',
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_EDITER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -128,6 +144,38 @@ return [
 
     'router'          => [
         'routes' => [
+            'formation-instance' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/formation-instance',
+                    'defaults' => [
+                        'controller' => FormationInstanceController::class,
+                    ],
+                ],
+                'may_terminate' => false,
+                'child_routes' => [
+                    'ajouter' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter/:formation',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             'formation-theme' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -313,6 +361,16 @@ return [
                             ],
                         ],
                     ],
+                    'modifier-formation-informations' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-formation-informations/:formation',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'modifier-formation-informations',
+                            ],
+                        ],
+                    ],
                     'historiser' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -351,13 +409,15 @@ return [
     'service_manager' => [
         'factories' => [
             FormationService::class => FormationServiceFactory::class,
+            FormationInstanceService::class => FormationInstanceServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            FormationController::class => FormationControllerFactory::class
+            FormationController::class => FormationControllerFactory::class,
+            FormationInstanceController::class => FormationInstanceControllerFactory::class,
         ],
     ],
     'form_elements' => [

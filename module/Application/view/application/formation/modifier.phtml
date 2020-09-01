@@ -1,0 +1,119 @@
+<?php
+
+use Application\Entity\Db\Formation;
+
+/**
+ * @var Formation $formation
+ * @var string $mode
+ */
+
+$instances = $formation->getInstances();
+?>
+
+<h1 class="page-header">
+    Formation #<?php echo $formation->getId(); ?>
+</h1>
+
+<div class="main">
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="dl-horizontal">
+                <dt>Libelle</dt>
+                <dd>
+                    <?php echo $formation->getLibelle(); ?>
+                </dd>
+                <dt>Description</dt>
+                <dd>
+                    <?php echo $formation->getDescription(); ?>
+                </dd>
+                <dt>Thème</dt>
+                <dd>
+                    <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():"Non renseigné"; ?>
+                </dd>
+                <dt>Groupe</dt>
+                <dd>
+                    <?php echo ($formation->getGroupe())?$this->formationGroupe($formation->getGroupe()):"Non renseigné"; ?>
+                </dd>
+                <dt>Lien</dt>
+                <dd>
+                    <?php echo ($formation->getLien())?"<a href='".$formation->getLien()."'>Lien vers la fiche de la formation</a>":"Non renseigné"; ?>
+                </dd>
+            </dl>
+        </div>
+        <div class="pull-right">
+            <?php /** @see \Application\Controller\FormationController::modifierFormationInformationsAction() */?>
+            <a      href="<?php echo $this->url('formation/modifier-formation-informations', ['formation' => $formation->getId()], [], true); ?>"
+                    class="btn btn-primary action ajax-modal" data-event="modification"
+            >
+                <span class="icon editer"></span>
+                Modifier les informations
+            </a>
+            <br/>
+            <?php /** @see \Application\Controller\FormationController::indexAction() */ ?>
+            <a      href="<?php echo $this->url('formation', [], ['fragment' => "formation"], true); ?>"
+                    class="btn btn-info action">
+                <span class="icon retour"></span>
+                Retour à l'index des formations
+
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2>
+                Instances de la formation
+                <span class="badge"><?php echo count($instances); ?></span>
+            </h2>
+        </div>
+        <div class="pull-right">
+            <br/>
+            <?php /** @see \Application\Entity\Db\FormationInstanceController::ajouterAction() */ ?>
+            <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
+                    class="btn btn-primary action ajax-modal" data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une instance
+            </a>
+            <br/>
+            <br/>
+        </div>
+    </div>
+
+    <table class="datatable table table-condensed">
+        <thead>
+            <tr>
+                <th> Id </th>
+                <th> Début </th>
+                <th> Fin </th>
+                <th> #Jour </th>
+                <th> #Inscrit </th>
+                <th> Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($instances as $instance) : ?>
+            <tr>
+                <td> <?php echo $instance->getId(); ?> </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors=[];
+            window.location.reload();
+        });
+    });
+</script>

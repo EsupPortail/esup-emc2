@@ -9,6 +9,7 @@ use Application\Entity\Db\Formation;
 
 $canAfficher = $droits['afficher'];
 $canAjouter = $droits['ajouter'];
+$canAjouterInstance = $droits['ajouter'];
 $canEditer = $droits['editer'];
 $canHistoriser = $droits['historiser'];
 $canDetruire = $droits['detruire'];
@@ -46,9 +47,9 @@ $canDetruire = $droits['detruire'];
         <th> Libellé </th>
         <th> Thème </th>
         <th> Groupe </th>
-        <th> Lien </th>
+<!--        <th> Lien </th>-->
         <th> Modification </th>
-        <th> Action </th>
+        <th style="width:9rem;"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -57,13 +58,13 @@ $canDetruire = $droits['detruire'];
             <td> <?php echo $formation->getLibelle(); ?> </td>
             <td> <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():""; ?> </td>
             <td> <?php echo ($formation->getGroupe())?$this->formationGroupe($formation->getGroupe()):""; ?> </td>
-            <td>
-                <?php if ($formation->getLien() !== null) : ?>
-                    <a href="<?php echo $formation->getLien(); ?>">
-                        <?php echo $formation->getLien(); ?>
-                    </a>
-                <?php endif; ?>
-            </td>
+<!--            <td>-->
+<!--                --><?php //if ($formation->getLien() !== null) : ?>
+<!--                    <a href="--><?php //echo $formation->getLien(); ?><!--">-->
+<!--                        --><?php //echo $formation->getLien(); ?>
+<!--                    </a>-->
+<!--                --><?php //endif; ?>
+<!--            </td>-->
             <td>
                 <small>
                     <?php echo $formation->getHistoModification()->format('d/m/Y à H:i'); ?>
@@ -76,21 +77,15 @@ $canDetruire = $droits['detruire'];
                     <a
                         <?php /** @see FormationController::afficherAction() */ ?>
                         href="<?php echo $this->url('formation/afficher', ['formation' => $formation->getId()], [], true); ?>"
-                        class="ajax-modal">
+                    >
                         <span class="icon voir" title="Afficher la formation"></span></a>
-                <?php else : ?>
-                    <span class="icon voir" style="color:lightgrey;"></span>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <a
                         <?php /** @see FormationController::editerAction() */ ?>
                         href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
-                        class="ajax-modal"
-                        data-event="modification"
                     >
                         <span class="icon editer" title="Modifier la formation"></span></a>
-                <?php else : ?>
-                    <span class="icon editer" style="color:lightgrey;"></span>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($formation->estNonHistorise()) : ?>
@@ -106,12 +101,6 @@ $canDetruire = $droits['detruire'];
                         >
                             <span class="icon restaurer" title="Restaurer la formation"></span></a>
                     <?php endif; ?>
-                <?php else : ?>
-                    <?php if ($formation->estNonHistorise()) : ?>
-                        <span class="icon historiser" style="color:lightgrey;"></span>
-                    <?php else : ?>
-                        <span class="icon restaurer" style="color:lightgrey;"></span>
-                    <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruire) : ?>
                     <a
@@ -119,9 +108,7 @@ $canDetruire = $droits['detruire'];
                         href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire" title="Afficher la formation"></span></a>
-                <?php else : ?>
-                    <span class="icon detruire" style="color:lightgrey;"></span>
+                        <span class="icon detruire" title="Supprimer la formation"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

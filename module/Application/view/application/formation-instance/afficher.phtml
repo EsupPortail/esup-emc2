@@ -1,0 +1,135 @@
+<?php
+
+use Application\Entity\Db\FormationInstance;
+use Application\Entity\Db\FormationInstanceJournee;
+
+/**
+ * @var FormationInstance $instance
+ */
+
+/** @var FormationInstanceJournee[] $journees */
+$journees = $instance->getJournees();
+?>
+
+<h1 class="page-header">
+    Instance de formation
+</h1>
+
+<div class="main">
+    <div class="row">
+        <div class="col-md-8">
+            <h2> Formation </h2>
+        </div>
+        <div class="pull-right">
+            <a      href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
+                    class="btn btn-info action">
+                <span class="icon retour"></span>
+                Retour à la formation associée
+            </a>
+            <br/>
+            <a      href="<?php echo $this->url('formation', [], [], true); ?>"
+                    class="btn btn-info action">
+                <span class="icon retour"></span>
+                <span class="icon retour"></span>
+                Retour à l'index des formations
+            </a>
+        </div>
+    </div>
+
+    <dl class="dl-horizontal">
+        <dt> Intitulé</dt>
+        <dd> <?php echo $instance->getFormation()->getLibelle(); ?> </dd>
+    </dl>
+
+    <h2> Instance </h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h3>
+                Journée(s) de formation
+                <span class="badge"> <?php echo count($journees); ?></span>
+            </h3>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-primary action">
+                <span class="icon ajouter"></span>
+                Ajouter journée de formation
+            </a>
+        </div>
+    </div>
+
+    <table id="journees" class="datatable table table-condensed">
+        <thead>
+            <tr>
+                <th> Jour </th>
+                <th> Début </th>
+                <th> Fin </th>
+                <th> Salle </th>
+                <th style="width:13rem;"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($journees as $journee) : ?>
+            <tr>
+                <td> <?php echo $journee->getJour(); ?> </td>
+                <td> <?php echo $journee->getDebut(); ?> </td>
+                <td> <?php echo $journee->getFin(); ?> </td>
+                <td> <?php echo $journee->getLieu(); ?></td>
+                <td>
+                    <span class="icon editer"></span>
+                    <span class="icon historiser"></span>
+                    <span class="icon detruire"></span>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h3> Agent(s) inscrit(s)</h3>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-primary action">
+                <span class="icon ajouter"></span>
+                Ajouter un agent
+            </a>
+        </div>
+    </div>
+
+    <table id="agents" class="datatable table table-condensed">
+        <thead>
+            <tr>
+                <th> Dénomination </th>
+                <th> Affection principale </th>
+                <th> Date d'ajout </th>
+                <th style="width:13rem;"> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> John Bob </td>
+                <td> M2C </td>
+                <td> 12/12/2020 </td>
+                <td>
+                    <span class="icon agent"></span>
+                    <span class="icon historiser"></span>
+                    <span class="icon pdf"></span>
+                    <span class="icon detruire"></span>
+                </td>
+            </tr>
+            <tr>
+                <td> Boby McJohn </td>
+                <td> CCC </td>
+                <td> 13/12/2020 </td>
+                <td>
+                    <span class="icon agent"></span>
+                    <span class="icon historiser"></span>
+                    <span class="icon pdf"></span>
+                    <span class="icon detruire"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

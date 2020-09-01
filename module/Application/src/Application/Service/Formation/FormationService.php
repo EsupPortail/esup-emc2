@@ -230,4 +230,20 @@ class FormationService {
 
         return $options;
     }
+
+    /**
+     * @param Formation $formation
+     * @param array $data
+     * @return Formation
+     */
+    public function updateLibelle(Formation $formation, $data)
+    {
+        /** @var string $libelle */
+        $libelle = null;
+        if (isset($data['libelle'])) $libelle = $data['libelle'];
+        $formation->setLibelle($libelle);
+        $this->update($formation);
+        return $formation;
+    }
+
 }
