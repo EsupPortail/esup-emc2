@@ -88,13 +88,33 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
             <?php endforeach; ?>
         </tbody>
     </table>
+
+<!--    <table id="temp" class="datatable table table-condensed">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th> Id </th>-->
+<!--            <th> libelle </th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            --><?php //for ($i = 1 ; $i <= 50 ; $i++) : ?>
+<!--                <tr>-->
+<!--                    <td> --><?php //echo $i; ?><!-- </td>-->
+<!--                    <td> --><?php //echo $i; ?><!-- </td>-->
+<!--                </tr>-->
+<!--            --><?php //endfor; ?>
+<!--        </tbody>-->
+<!--    </table>-->
 </div>
 
 
 <script>
     let loaded = false;
+    let table ;
     let search ;
     let page ;
+
+    let array = Array();
 
     $(window).bind('beforeunload', function() {
         let params = '';
@@ -105,11 +125,19 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
             if (params !== '') params += "&";
             params += "page=" + page;
         }
+        if (table !== null && table !== undefined)   {
+            if (params !== '') params += "&";
+            params += "table=" + table;
+        }
         if (params !== '') {
             console.log("params : " + params);
             history.replaceState({}, null, '?' + params);
         }
     });
+
+    // $(document).ready(function() {
+    //     $('.datatable').DataTable({});
+    // });
 
     $(document).ready(function() {
         let table = $('#structures').DataTable({});
@@ -127,23 +155,6 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
         loaded = true;
     });
 
-    $(document).on('#structures page.dt', function () {
-        if (loaded === true) {
-            let table  = $('#structures').DataTable();
-            page   = table.page();
-            console.log(page);
-        }
-    });
-
-    $(document).on('#structures search.dt', function () {
-        if (loaded === true) {
-            let table = $('#structures').DataTable();
-            search = table.search();
-            console.log(search);
-        }
-    });
-
-    // NB : il existe aussi un event order.dt
 
     $(function() {
         $("body").on("modification", function (event) {
@@ -152,5 +163,51 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
         });
     });
 
-</script>
+    $.fn.historique_recherche = function() {
+        this.each(function() {
 
+            // $(document).ready(function() {
+            //     let searchParams = new URLSearchParams(window.location.search);
+            //     let search = searchParams.get('search');
+            //     let page = searchParams.get('page')
+            //     let table = searchParams.get('table')
+            //
+            //     if (table !== null && table !== "null") {
+            //         let table_ = array[table];
+            //         console.log(table_);
+            //         if (search !== null && search !== "null") {
+            //             table_.search(search);
+            //         }
+            //         if (page !== null && page !== "null") {
+            //             table_.page(parseInt(page));
+            //         }
+            //         table_.draw(false);
+            //     }
+            // });
+
+            $(this).on('page.dt', function () {
+                if (loaded === true) {
+                    let table_  = $(this).DataTable();
+                    table  = $(this).attr('id');
+                    page   = table_.page();
+                    console.log("PAGE: " + table + " " + page);
+                }
+            });
+
+            $(this).on('search.dt', function () {
+                if (loaded === true) {
+                    let table_ = $(this).DataTable();
+                    table      = $(this).attr('id');
+                    search = table_.search();
+                    console.log("SEARCH: " + table + " " + search);
+                }
+            });
+
+            // NB : il existe aussi un event order.dt
+        });
+        return this;
+    }
+
+    $('table').historique_recherche();
+
+</script>

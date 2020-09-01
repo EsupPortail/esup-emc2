@@ -92,6 +92,8 @@ class FicheMetierService {
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
             ->addSelect('domaine')->join('metier.domaines', 'domaine')
             ->addSelect('etat')->join('ficheMetier.etat', 'etat')
+            ->addSelect('reference')->leftJoin('metier.references', 'reference')
+            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
             ;
         return $qb;
     }
