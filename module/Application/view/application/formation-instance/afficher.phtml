@@ -1,5 +1,6 @@
 <?php
 
+use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationInstance;
 use Application\Entity\Db\FormationInstanceJournee;
 
@@ -7,6 +8,8 @@ use Application\Entity\Db\FormationInstanceJournee;
  * @var FormationInstance $instance
  */
 
+/** @var Formation $formation */
+$formation = $instance->getFormation();
 /** @var FormationInstanceJournee[] $journees */
 $journees = $instance->getJournees();
 ?>
@@ -38,7 +41,11 @@ $journees = $instance->getJournees();
 
     <dl class="dl-horizontal">
         <dt> Intitulé</dt>
-        <dd> <?php echo $instance->getFormation()->getLibelle(); ?> </dd>
+        <dd> <?php echo $formation->getLibelle(); ?> </dd>
+        <dt>Description</dt>
+        <dd>
+            <?php echo ($formation->getDescription() !== null AND trim($formation->getDescription()) !== "")?$formation->getDescription():"Aucune description"; ?>
+        </dd>
     </dl>
 
     <h2> Instance </h2>

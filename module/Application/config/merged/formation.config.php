@@ -112,11 +112,38 @@ return [
                 [
                     'controller' => FormationInstanceController::class,
                     'action' => [
-                        'ajouter',
                         'afficher',
                     ],
                     'privileges' => [
-                        FormationPrivileges::FORMATION_EDITER,
+                        FormationPrivileges::FORMATION_INSTANCE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_INSTANCE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'restaurer',
+                        'historiser',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_INSTANCE_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_INSTANCE_SUPPRIMER,
                     ],
                 ],
             ],
@@ -171,6 +198,36 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'supprimer',
                             ],
                         ],
                     ],

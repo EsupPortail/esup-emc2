@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Db\FormationInstance;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -21,7 +22,6 @@ class FormationInstanceController extends AbstractActionController {
         $this->getFormationInstanceService()->create($instance);
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
-//        return $this->redirect()->toRoute('formation/editer', ['formation' => $formation->getId()], [], true);
     }
 
     public function afficherAction() {
@@ -48,20 +48,36 @@ class FormationInstanceController extends AbstractActionController {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->historise($instance);
 
-        return $this->redirect()->toRoute('formation/modifier', ['formation' => $instance->getFormation()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
     }
 
     public function restaurerAction() {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->restore($instance);
 
-        return $this->redirect()->toRoute('formation/modifier', ['formation' => $instance->getFormation()->getId()], [], true);
+        return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
     }
 
     public function supprimerAction() {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-        $this->getFormationInstanceService()->delete($instance);
 
-        return $this->redirect()->toRoute('formation/modifier', ['formation' => $instance->getFormation()->getId()], [], true);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFormationInstanceService()->delete($instance);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($instance !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression d'une instance de formation",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('formation-instance/supprimer', ["formation-instance" => $instance->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 }
