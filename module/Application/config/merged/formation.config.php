@@ -18,6 +18,10 @@ use Application\Form\FormationGroupe\FormationGroupeForm;
 use Application\Form\FormationGroupe\FormationGroupeFormFactory;
 use Application\Form\FormationGroupe\FormationGroupeHydrator;
 use Application\Form\FormationGroupe\FormationGroupeHydratorFactory;
+use Application\Form\FormationJournee\FormationJourneeForm;
+use Application\Form\FormationJournee\FormationJourneeFormFactory;
+use Application\Form\FormationJournee\FormationJourneeHydrator;
+use Application\Form\FormationJournee\FormationJourneeHydratorFactory;
 use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Form\SelectionFormation\SelectionFormationFormFactory;
 use Application\Form\SelectionFormation\SelectionFormationHydrator;
@@ -130,6 +134,15 @@ return [
                 [
                     'controller' => FormationInstanceController::class,
                     'action' => [
+                        'ajouter-journee',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_INSTANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
                         'restaurer',
                         'historiser',
                     ],
@@ -228,6 +241,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'ajouter-journee' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-journee/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'ajouter-journee',
                             ],
                         ],
                     ],
@@ -482,6 +505,7 @@ return [
             AjouterFormationForm::class => AjouterFormationFormFactory::class,
             FormationForm::class => FormationFormFactory::class,
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
+            FormationJourneeForm::class => FormationJourneeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
     ],
@@ -494,6 +518,7 @@ return [
             AjouterFormationHydrator::class => AjouterFormationHydratorFactory::class,
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
+            FormationJourneeHydrator::class => FormationJourneeHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

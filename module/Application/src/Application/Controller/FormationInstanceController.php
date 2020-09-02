@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\FormationInstance;
+use Application\Form\FormationJournee\FormationJourneeFormAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Zend\Http\Request;
@@ -12,6 +13,7 @@ use Zend\View\Model\ViewModel;
 class FormationInstanceController extends AbstractActionController {
     use FormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
+    use FormationJourneeFormAwareTrait;
 
     public function ajouterAction() {
         $formation = $this->getFormationService()->getRequestedFormation($this);
@@ -78,6 +80,22 @@ class FormationInstanceController extends AbstractActionController {
                 'action' => $this->url()->fromRoute('formation-instance/supprimer', ["formation-instance" => $instance->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    public function ajouterJourneeAction() {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+
+        $form = $this->getFormationJourneeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true));
+        $form->bind($instance);
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+           'title' => "Ajout d'une journée de formation",
+           'form' => $form,
+        ]);
         return $vm;
     }
 }
