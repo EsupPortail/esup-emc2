@@ -241,7 +241,7 @@ IntraNavigator = {
      */
     run: function ()
     {
-        var submitSelector = '.intranavigator form:not(.no-intranavigation form)';
+        var submitSelector = '.intranavigator form:not(.no-intranavigation)';
         var clickSelector = '.intranavigator a:not(.pop-ajax):not(.ajax-modal):not(.no-intranavigation):not(.no-intranavigation a)';
 
         /* TODO: trouver une meilleure solution que d'utiliser la classe CSS "no-intranavigation" pour désactiver l'intra-navigation ?*/
@@ -855,16 +855,34 @@ $.widget("unicaen.tabAjax", {
         return this;
     },
 
-    _create: function ()
+    getContent: function(tab)
     {
         var that = this;
 
+        tab = this.getTab(tab);
+        tid = tab.attr('data-target');
+        return that.element.find(".tab-pane" + tid).html();
+    },
+
+    getSelected: function()
+    {
+        var sel = this.element.find('.tab-pane.active').attr('id');
+
+        return sel;
+    },
+
+    _create: function ()
+    {
+        var that = this;
         this.element.find('.nav-tabs a').on('click', function (e)
         {
             e.preventDefault();
             that.select($(this));
             return false;
         });
+        if (!that.getContent(that.getSelected())){
+            that.select(that.getSelected());
+        }
     },
 
 });
