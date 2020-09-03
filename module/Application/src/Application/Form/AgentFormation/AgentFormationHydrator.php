@@ -20,7 +20,7 @@ class AgentFormationHydrator implements HydratorInterface {
     {
         $data = [
             'formation' => ($object->getFormation())?$object->getFormation()->getId():null,
-            'date' => ($object->getDate())?$object->getDate()->format('Y-m-d'):null,
+            'date' => ($object->getDate())?$object->getDate()->format('d/m/Y'):null,
         ];
         return $data;
     }
@@ -33,7 +33,7 @@ class AgentFormationHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $formation = isset($data['formation'])?$this->getFormationService()->getFormation($data['formation']):null;
-        $date = isset($data['date'])?DateTime::createFromFormat("Y-m-d",$data['date']):$this->getDateTime();
+        $date = isset($data['date'])?DateTime::createFromFormat("d/m/Y",$data['date']):$this->getDateTime();
 
         $object->setFormation($formation);
         $object->setDate($date);
