@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationInstance;
+use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
 
 /**
@@ -12,6 +13,8 @@ use Application\Entity\Db\FormationInstanceJournee;
 $formation = $instance->getFormation();
 /** @var FormationInstanceJournee[] $journees */
 $journees = $instance->getJournees();
+/** @var FormationInstanceInscrit[] $inscrits */
+$inscrits = $instance->getInscrits();
 ?>
 
 <h1 class="page-header">
@@ -32,8 +35,7 @@ $journees = $instance->getJournees();
             <br/>
             <a      href="<?php echo $this->url('formation', [], [], true); ?>"
                     class="btn btn-info action">
-                <span class="icon retour"></span>
-                <span class="icon retour"></span>
+                <span class="icon retour-double"></span>
                 Retour à l'index des formations
             </a>
         </div>
@@ -59,7 +61,8 @@ $journees = $instance->getJournees();
         </div>
         <div class="pull-right">
             <?php /** @see \Application\Controller\FormationInstanceController::ajouterJourneeAction() */?>
-            <a class="btn btn-primary action">
+            <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
+                    class="btn btn-primary action ajax-modal" data-event="modification">
                 <span class="icon ajouter"></span>
                 Ajouter journée de formation
             </a>
@@ -78,15 +81,31 @@ $journees = $instance->getJournees();
         </thead>
         <tbody>
             <?php foreach ($journees as $journee) : ?>
-            <tr>
+            <tr <?php if ($journee->estHistorise()) echo " class='historise' "; ?>>
                 <td> <?php echo $journee->getJour(); ?> </td>
                 <td> <?php echo $journee->getDebut(); ?> </td>
                 <td> <?php echo $journee->getFin(); ?> </td>
                 <td> <?php echo $journee->getLieu(); ?></td>
                 <td>
-                    <span class="icon editer"></span>
-                    <span class="icon historiser"></span>
-                    <span class="icon detruire"></span>
+                    <?php /** @see \Application\Controller\FormationInstanceController::modifierJourneeAction() */?>
+                    <a      href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification">
+                        <span class="icon editer"></span></a>
+                    <?php if ($journee->estNonHistorise()) : ?>
+                        <?php /** @see \Application\Controller\FormationInstanceController::historiserJourneeAction() */?>
+                        <a      href="<?php echo $this->url('formation-instance/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                >
+                            <span class="icon historiser"></span></a>
+                    <?php else : ?>
+                        <?php /** @see \Application\Controller\FormationInstanceController::restaurerJourneeAction() */?>
+                        <a      href="<?php echo $this->url('formation-instance/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                >
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                    <?php /** @see \Application\Controller\FormationInstanceController::supprimerJourneeAction() */?>
+                    <a      href="<?php echo $this->url('formation-instance/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification">
+                        <span class="icon detruire"></span></a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -95,10 +114,13 @@ $journees = $instance->getJournees();
 
     <div class="row">
         <div class="col-md-8">
-            <h3> Agent(s) inscrit(s)</h3>
+            <h3> Agent(s) inscrit(s)
+                <span class="badge"><?php echo count($inscrits); ?></span>
+            </h3>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary action">
+            <a      href="<?php echo $this->url('formation-instance/ajouter-agent', ['formation-instance' => $instance->getId()], [], true); ?>"
+                    class="btn btn-primary action ajax-modal" data-event="modification">
                 <span class="icon ajouter"></span>
                 Ajouter un agent
             </a>
@@ -115,29 +137,39 @@ $journees = $instance->getJournees();
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td> John Bob </td>
-                <td> M2C </td>
-                <td> 12/12/2020 </td>
+        <?php foreach ($inscrits as $inscrit) : ?>
+            <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+                <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
+                <td> <?php echo $inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong(); ?> </td>
+                <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
                 <td>
-                    <span class="icon agent"></span>
-                    <span class="icon historiser"></span>
+                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>">
+                        <span class="icon agent"></span></a>
                     <span class="icon pdf"></span>
-                    <span class="icon detruire"></span>
+                    <?php if ($inscrit->estNonHistorise()) : ?>
+                        <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>">
+                            <span class="icon historiser"></span></a>
+                    <?php else : ?>
+                        <a  href="<?php echo $this->url('formation-instance/restaurer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>">
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification">
+                        <span class="icon detruire"></span></a>
                 </td>
             </tr>
-            <tr>
-                <td> Boby McJohn </td>
-                <td> CCC </td>
-                <td> 13/12/2020 </td>
-                <td>
-                    <span class="icon agent"></span>
-                    <span class="icon historiser"></span>
-                    <span class="icon pdf"></span>
-                    <span class="icon detruire"></span>
-                </td>
-            </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 
 </div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors=[];
+            window.location.reload();
+        });
+    });
+</script>

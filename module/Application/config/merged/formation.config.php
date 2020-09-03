@@ -32,6 +32,10 @@ use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
+use Application\Service\FormationInstance\FormationInstanceInscritService;
+use Application\Service\FormationInstance\FormationInstanceInscritServiceFactory;
+use Application\Service\FormationInstance\FormationInstanceJourneeService;
+use Application\Service\FormationInstance\FormationInstanceJourneeServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Application\Service\FormationInstance\FormationInstanceServiceFactory;
 use Application\View\Helper\FormationGroupeViewHelper;
@@ -135,6 +139,15 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'ajouter-journee',
+                        'modifier-journee',
+                        'historiser-journee',
+                        'restaurer-journee',
+                        'supprimer-journee',
+
+                        'ajouter-agent',
+                        'historiser-agent',
+                        'restaurer-agent',
+                        'supprimer-agent',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INSTANCE_MODIFIER,
@@ -251,6 +264,86 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'ajouter-journee',
+                            ],
+                        ],
+                    ],
+                    'modifier-journee' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-journee/:journee',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'modifier-journee',
+                            ],
+                        ],
+                    ],
+                    'historiser-journee' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-journee/:journee',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'historiser-journee',
+                            ],
+                        ],
+                    ],
+                    'restaurer-journee' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-journee/:journee',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'restaurer-journee',
+                            ],
+                        ],
+                    ],
+                    'supprimer-journee' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-journee/:journee',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'supprimer-journee',
+                            ],
+                        ],
+                    ],
+                    'ajouter-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-agent/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'ajouter-agent',
+                            ],
+                        ],
+                    ],
+                    'historiser-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-agent/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'historiser-agent',
+                            ],
+                        ],
+                    ],
+                    'restaurer-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-agent/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'restaurer-agent',
+                            ],
+                        ],
+                    ],
+                    'supprimer-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-agent/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'supprimer-agent',
                             ],
                         ],
                     ],
@@ -490,6 +583,8 @@ return [
         'factories' => [
             FormationService::class => FormationServiceFactory::class,
             FormationInstanceService::class => FormationInstanceServiceFactory::class,
+            FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
+            FormationInstanceJourneeService::class => FormationInstanceJourneeServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
         ],

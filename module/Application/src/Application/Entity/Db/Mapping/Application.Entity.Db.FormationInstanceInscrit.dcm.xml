@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\FormationInstance" table="formation_instance">
+    <entity name="Application\Entity\Db\FormationInstanceInscrit" table="formation_instance_inscrit">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Application\Entity\Db\Formation"  field="formation">
-            <join-column name="formation_id" referenced-column-name="id"/>
+        <many-to-one target-entity="Application\Entity\Db\FormationInstance"  field="instance">
+            <join-column name="instance_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many field="journees" target-entity="Application\Entity\Db\FormationInstanceJournee" mapped-by="instance"/>
-        <one-to-many field="inscrits" target-entity="Application\Entity\Db\FormationInstanceInscrit" mapped-by="instance"/>
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
+        </many-to-one>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

@@ -109,7 +109,7 @@ $instances = $formation->getInstances();
             <tr <?php if ($instance->estHistorise()) echo 'class="historise"'; ?> >
                 <td> <?php echo $instance->getId(); ?> </td>
                 <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
-                <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
+                <td> <?php echo ($instance->getFin())?:"???"; ?></td>
                 <td> <?php echo ($instance->getJournees())?count($instance->getJournees()):"???"; ?></td>
                 <td> <?php echo ($instance->getInscrits())?count($instance->getInscrits()):"???"; ?></td>
                 <td>

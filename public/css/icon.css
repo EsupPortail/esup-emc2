@@ -12,6 +12,10 @@ span.icon.retour:before {
     content: "\f104";
 }
 
+span.icon.retour-double:before {
+    content: "\f100";
+}
+
 span.icon.voir:before {
     content: "\f06e";
 }

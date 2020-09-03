@@ -80,6 +80,10 @@ class FormationService {
             ->addSelect('modificateur')->join('formation.histoModificateur', 'modificateur')
             ->addSelect('destructeur')->leftjoin('formation.histoDestructeur', 'destructeur')
             ->addSelect('theme')->leftJoin('formation.theme', 'theme')
+            ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
+            ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
+            ->addSelect('journee')->leftJoin('finstance.journees', 'journee')
+//            ->addSelect('inscrit')->leftJoin('finstance.inscrits', 'inscrit')
         ;
         return $qb;
     }

@@ -2,10 +2,10 @@
 
 namespace Application\Form\FormationJournee;
 
+use UnicaenApp\Form\Element\Date;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Date;
 use Zend\Form\Element\Text;
-use Zend\Form\Element\Time;
+use Zend\Form\Element\DateTime as DateTimeElement;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
@@ -26,10 +26,11 @@ class FormationJourneeForm extends Form {
         ]);
         //debut
         $this->add([
-            'type' => Time::class,
+            'type' => DateTimeElement::class,
             'name' => 'debut',
             'options' => [
                 'label' => "Début de la journée * :",
+                'format' => 'H:i',
             ],
             'attributes' => [
                 'id' => 'debut',
@@ -37,10 +38,11 @@ class FormationJourneeForm extends Form {
         ]);
         //fin
         $this->add([
-            'type' => Time::class,
+            'type' => DateTimeElement::class,
             'name' => 'fin',
             'options' => [
                 'label' => "Fin de la journée * :",
+                'format' => 'H:i'
             ],
             'attributes' => [
                 'id' => 'fin',

@@ -76,6 +76,8 @@ class FormationInstanceService {
     {
         $qb= $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
             ->addSelect('formation')->join('Finstance.formation', 'formation')
+            ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
+//            ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
         ;
         return $qb;
     }
@@ -104,6 +106,7 @@ class FormationInstanceService {
     public function getFormationsInstancesByFormation(Formation $formation, $champ = 'id', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
+            ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
             ->andWhere('formation.id = :id')
             ->setParameter('id', $formation->getId())
             ->orderBy('Finstance.' . $champ, $ordre)
