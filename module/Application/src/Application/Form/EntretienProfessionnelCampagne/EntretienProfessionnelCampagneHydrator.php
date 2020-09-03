@@ -18,8 +18,8 @@ class  EntretienProfessionnelCampagneHydrator implements HydratorInterface {
     {
         $data = [
             'annee' => $object->getAnnee(),
-            'date_debut' => $object->getDateDebut()?$object->getDateDebut()->format('Y-m-d'):null,
-            'date_fin' => $object->getDateFin()?$object->getDateFin()->format('Y-m-d'):null,
+            'date_debut' => $object->getDateDebut()?$object->getDateDebut()->format('d/m/Y'):null,
+            'date_fin' => $object->getDateFin()?$object->getDateFin()->format('d/m/Y'):null,
             'precede' => $object->getPrecede()?$object->getPrecede()->getId():null,
         ];
         return $data;
