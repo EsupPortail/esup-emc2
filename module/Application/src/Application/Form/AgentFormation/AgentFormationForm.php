@@ -41,6 +41,7 @@ class AgentFormationForm extends Form {
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
+                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id'                => 'date',

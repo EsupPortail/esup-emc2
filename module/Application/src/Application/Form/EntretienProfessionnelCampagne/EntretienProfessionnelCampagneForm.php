@@ -50,6 +50,8 @@ class EntretienProfessionnelCampagneForm extends Form
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
+                'format' => 'd/m/Y'
+
             ],
             'attributes' => [
                 'id'                => 'date_debut',
@@ -64,6 +66,7 @@ class EntretienProfessionnelCampagneForm extends Form
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
+                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id'                => 'date_fin',

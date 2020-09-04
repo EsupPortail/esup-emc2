@@ -2,11 +2,13 @@
 
 /**
  * @var EntretienProfessionnel $entretien
+ * @var FichePoste $fichePoste
  */
 $DEBUG = false;
 
 
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\EntretienproPrivileges;
 
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
@@ -20,6 +22,19 @@ $now = new DateTime();
 ?>
 
 <h2> Formulaire d'entretien  </h2>
+
+<h3 class="categorie"> Missions du poste </h3>
+
+<ul>
+<?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
+    <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
+            <?php echo $ficheTypeExterne->getFicheType()->getMissionsPrincipales(); ?>
+    </li>
+<?php endforeach; ?>
+</ul>
+
+<br/>
+<br/>
 
 <?php if ($DEBUG) : ?>
     <div class="alert alert-warning">
