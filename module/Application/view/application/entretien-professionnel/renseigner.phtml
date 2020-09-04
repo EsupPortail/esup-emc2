@@ -16,6 +16,8 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 
+$ficheposte = $agent->getFichePosteActif();
+
 $this->headTitle('Modification de l\'entretien professionnel');
 ?>
 
@@ -67,7 +69,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         <div class="tab-content">
 
             <div id="formulaire" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien]); ?>
+                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte]); ?>
             </div>
 
             <div id="parcours" class="tab-pane " role="tabpanel">
