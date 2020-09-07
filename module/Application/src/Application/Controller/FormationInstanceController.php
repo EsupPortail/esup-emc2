@@ -247,6 +247,17 @@ class FormationInstanceController extends AbstractActionController {
         exit;
     }
 
+    public function exportTousEmargementsAction()
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+
+        $exporter = new EmargementPdfExporter($this->renderer, 'A4');
+        $exporter->setVars([]);
+        $filemane = "formation_".$instance->getFormation()->getId()."_du_".str_replace("/","-",$instance->getDebut())."_au_".str_replace("/","-",$instance->getFin())."_emargements.pdf";
+        $exporter->exportAll($instance->getJournees(), $filemane);
+        exit;
+    }
+
     /** INSCRIT ********************************************************************************************/
 
     public function ajouterAgentAction()
@@ -266,11 +277,15 @@ class FormationInstanceController extends AbstractActionController {
             $form->setData($data);
 
             if ($form->isValid()) {
-                $inscrit->setListe($instance->getListeDisponible());
-                $this->getFormationInstanceInscritService()->create($inscrit);
+                if (! $instance->hasAgent($inscrit->getAgent())) {
+                    $inscrit->setListe($instance->getListeDisponible());
+                    $this->getFormationInstanceInscritService()->create($inscrit);
 
-                $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE)?"principale":"complémentaire";
-                $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en <strong>liste ".$texte."</strong>.");
+                    $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
+                    $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en <strong>liste " . $texte . "</strong>.");
+                } else {
+                    $this->flashMessenger()->addErrorMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> est déjà inscrit&middot;e à l'instance de formation.");
+                }
             }
         }
 

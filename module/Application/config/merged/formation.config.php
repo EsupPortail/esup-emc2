@@ -158,6 +158,7 @@ return [
                         'envoyer-liste-complementaire',
 
                         'export-emargement',
+                        'export-tous-emargements',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INSTANCE_MODIFIER,
@@ -334,6 +335,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'export-emargement',
+                            ],
+                        ],
+                    ],
+                    'export-tous-emargements' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/export-tous-emargements/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'export-tous-emargements',
                             ],
                         ],
                     ],

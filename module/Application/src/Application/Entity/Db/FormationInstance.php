@@ -222,4 +222,16 @@ class FormationInstance implements HistoriqueAwareInterface {
         if ($liste === null AND ! $this->isListeComplementaireComplete()) $liste = FormationInstanceInscrit::COMPLEMENTAIRE;
         return $liste;
     }
+
+    /**
+     * @param Agent $agent
+     * @return bool
+     */
+    public function hasAgent(Agent $agent)
+    {
+        foreach ($this->inscrits as $inscrit) {
+            if ($inscrit->getAgent() === $agent) return true;
+        }
+        return false;
+    }
 }

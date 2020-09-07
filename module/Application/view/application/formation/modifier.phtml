@@ -111,7 +111,19 @@ $instances = $formation->getInstances();
                 <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
                 <td> <?php echo ($instance->getFin())?:"???"; ?></td>
                 <td> <?php echo ($instance->getJournees())?count($instance->getJournees()):"???"; ?></td>
-                <td> <?php echo ($instance->getInscrits())?count($instance->getListePrincipale())."/".count($instance->getListeComplementaire()):"???"; ?></td>
+                <td>
+                    <?php if ($instance->getInscrits()) : ?>
+                        Principale : <?php echo count($instance->getListePrincipale())."/".$instance->getNbPlacePrincipale(); ?>
+                        <?php if ($instance->isListePrincipaleComplete()) : ?>
+                            <span class="label label-success"> Complète</span>
+                        <?php endif; ?>
+                        <br/>
+                        Complémentaire : <?php echo count($instance->getListeComplementaire())."/".$instance->getNbPlaceComplementaire(); ?>
+                        <?php if ($instance->isListeComplementaireComplete()) : ?>
+                            <span class="label label-success"> Complète</span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </td>
                 <td>
                     <?php if ($canAfficherInstance) : ?>
                         <?php /** @see \Application\Controller\FormationInstanceController::afficherAction() */ ?>

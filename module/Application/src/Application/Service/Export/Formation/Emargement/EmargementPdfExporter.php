@@ -3,6 +3,7 @@
 namespace Application\Service\Export\Formation\Emargement;
 
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FormationInstanceJournee;
 use UnicaenApp\Exporter\Pdf as PdfExporter;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplatePathStack;
@@ -35,4 +36,23 @@ class EmargementPdfExporter extends PdfExporter
         return PdfExporter::export($filename, $destination, $memoryLimit);
     }
 
+    /**
+     * @param FormationInstanceJournee[] $journees
+     * @param null $filename
+     * @param string $destination
+     * @param null $memoryLimit
+     * @return string
+     */
+    public function exportAll($journees, $filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null)
+    {
+        $first = true;
+        $this->setHeaderScript('empty.phtml');
+        $this->setFooterScript('empty.phtml');
+        foreach ($journees as $journee) {
+            $this->vars["journee"] = $journee;
+            $this->addBodyScript('emargement.phtml', !$first, $this->vars);
+            $first = false;
+        }
+        return PdfExporter::export($filename, $destination, $memoryLimit);
+    }
 }
