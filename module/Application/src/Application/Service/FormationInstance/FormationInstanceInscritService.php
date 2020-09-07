@@ -73,7 +73,10 @@ class FormationInstanceInscritService {
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
             ->addSelect('agent')->join('inscrit.agent', 'agent')
+            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+            ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->addSelect('finstance')->join('inscrit.instance', 'finstance')
+            ->addSelect('formation')->join('finstance.formation', 'formation')
             ;
         return $qb;
     }

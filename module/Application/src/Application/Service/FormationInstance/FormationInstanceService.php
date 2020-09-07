@@ -77,7 +77,10 @@ class FormationInstanceService {
         $qb= $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
             ->addSelect('formation')->join('Finstance.formation', 'formation')
             ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
-//            ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
+            ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
+            ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
+            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+            ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
         ;
         return $qb;
     }

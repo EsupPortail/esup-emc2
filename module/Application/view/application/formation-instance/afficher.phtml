@@ -102,7 +102,7 @@ $historises = $instance->getListeHistorisee();
             <br/>
                 <?php /** @see \Application\Controller\FormationInstanceController::exportTousEmargementsAction() */?>
                 <a      href="<?php echo $this->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], [], true); ?>"
-                        class="btn btn-primary action ajax-modal" data-event="modification">
+                        class="btn btn-primary action" target="_blank">
                     <span class="icon pdf"></span>
                     Exporter les émargements
                 </a>

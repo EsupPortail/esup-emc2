@@ -42,6 +42,8 @@ class FormationInstanceController extends AbstractActionController {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
         $instance = new FormationInstance();
+        $instance->setNbPlacePrincipale(0);
+        $instance->setNbPlaceComplementaire(0);
         $instance->setFormation($formation);
 
         $this->getFormationInstanceService()->create($instance);
@@ -250,11 +252,13 @@ class FormationInstanceController extends AbstractActionController {
     public function exportTousEmargementsAction()
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $journees = $instance->getJournees();
+        $journees = array_filter($journees, function (FormationInstanceJournee $a) { return $a->estNonHistorise();});
 
         $exporter = new EmargementPdfExporter($this->renderer, 'A4');
         $exporter->setVars([]);
         $filemane = "formation_".$instance->getFormation()->getId()."_du_".str_replace("/","-",$instance->getDebut())."_au_".str_replace("/","-",$instance->getFin())."_emargements.pdf";
-        $exporter->exportAll($instance->getJournees(), $filemane);
+        $exporter->exportAll($journees, $filemane);
         exit;
     }
 
