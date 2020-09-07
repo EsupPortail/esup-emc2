@@ -111,7 +111,7 @@ $instances = $formation->getInstances();
                 <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
                 <td> <?php echo ($instance->getFin())?:"???"; ?></td>
                 <td> <?php echo ($instance->getJournees())?count($instance->getJournees()):"???"; ?></td>
-                <td> <?php echo ($instance->getInscrits())?count($instance->getInscrits()):"???"; ?></td>
+                <td> <?php echo ($instance->getInscrits())?count($instance->getListePrincipale())."/".count($instance->getListeComplementaire()):"???"; ?></td>
                 <td>
                     <?php if ($canAfficherInstance) : ?>
                         <?php /** @see \Application\Controller\FormationInstanceController::afficherAction() */ ?>

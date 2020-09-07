@@ -5,23 +5,38 @@ namespace Application\Controller;
 use Application\Entity\Db\FormationInstance;
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
+use Application\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Application\Form\FormationJournee\FormationJourneeFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Application\Service\Export\Formation\Emargement\EmargementPdfExporter;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Mpdf\MpdfException;
+use UnicaenApp\Exception\RuntimeException;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
+
+/** @method FlashMessenger flashMessenger() */
 
 class FormationInstanceController extends AbstractActionController {
     use FormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
+    use FormationInstanceFormAwareTrait;
     use FormationJourneeFormAwareTrait;
     use SelectionAgentFormAwareTrait;
+
+    private $renderer;
+
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function ajouterAction() {
         $formation = $this->getFormationService()->getRequestedFormation($this);
@@ -88,6 +103,34 @@ class FormationInstanceController extends AbstractActionController {
                 'action' => $this->url()->fromRoute('formation-instance/supprimer', ["formation-instance" => $instance->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    /** INSTANCE *******************************************************************************************/
+
+    public function modifierInformationsAction()
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+
+        $form = $this->getFormationInstanceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/modifier-informations', ['formation-instance' => $instance->getId()], [], true));
+        $form->bind($instance);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationInstanceService()->update($instance);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification des informations de l'instance",
+            'form' => $form,
+        ]);
         return $vm;
     }
 
@@ -184,6 +227,26 @@ class FormationInstanceController extends AbstractActionController {
         return $vm;
     }
 
+    public function exportEmargementAction()
+    {
+        $journee = $this->getFormationInstanceJourneeService()->getRequestedFormationInstanceJournee($this);
+
+        $exporter = new EmargementPdfExporter($this->renderer, 'A4');
+        $exporter->setVars([
+            'journee' => $journee,
+        ]);
+
+        //$filemane = "PrEECoG_Emargement_" . /** . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) .**/ '.pdf';
+        $filemane = "PrEECoG_Emargement.pdf";
+        try {
+            $exporter->getMpdf()->SetTitle($filemane);
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0, $e);
+        }
+        $exporter->export($filemane);
+        exit;
+    }
+
     /** INSCRIT ********************************************************************************************/
 
     public function ajouterAgentAction()
@@ -203,7 +266,11 @@ class FormationInstanceController extends AbstractActionController {
             $form->setData($data);
 
             if ($form->isValid()) {
+                $inscrit->setListe($instance->getListeDisponible());
                 $this->getFormationInstanceInscritService()->create($inscrit);
+
+                $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE)?"principale":"complémentaire";
+                $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en <strong>liste ".$texte."</strong>.");
             }
         }
 
@@ -219,14 +286,23 @@ class FormationInstanceController extends AbstractActionController {
     public function historiserAgentAction()
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $inscrit->setListe(null);
         $this->getFormationInstanceInscritService()->historise($inscrit);
+
+        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être retiré&middot;e des listes.");
+
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
     public function restaurerAgentAction()
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        $this->getFormationInstanceInscritService()->restore($inscrit);
+        $liste = $inscrit->getInstance()->getListeDisponible();
+
+        if ($liste !== null) {
+            $inscrit->setListe($liste);
+            $this->getFormationInstanceInscritService()->restore($inscrit);
+        }
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
@@ -252,6 +328,30 @@ class FormationInstanceController extends AbstractActionController {
             ]);
         }
         return $vm;
+    }
+
+    public function envoyerListePrincipaleAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+
+        $inscrit->setListe(FormationInstanceInscrit::PRINCIPALE);
+        $this->getFormationInstanceInscritService()->update($inscrit);
+
+        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en liste principale.");
+
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
+    }
+
+    public function envoyerListeComplementaireAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+
+        $inscrit->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
+        $this->getFormationInstanceInscritService()->update($inscrit);
+
+        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en liste complémentaire.");
+
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
 }

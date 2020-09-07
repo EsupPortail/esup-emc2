@@ -18,6 +18,10 @@ use Application\Form\FormationGroupe\FormationGroupeForm;
 use Application\Form\FormationGroupe\FormationGroupeFormFactory;
 use Application\Form\FormationGroupe\FormationGroupeHydrator;
 use Application\Form\FormationGroupe\FormationGroupeHydratorFactory;
+use Application\Form\FormationInstance\FormationInstanceForm;
+use Application\Form\FormationInstance\FormationInstanceFormFactory;
+use Application\Form\FormationInstance\FormationInstanceHydrator;
+use Application\Form\FormationInstance\FormationInstanceHydratorFactory;
 use Application\Form\FormationJournee\FormationJourneeForm;
 use Application\Form\FormationJournee\FormationJourneeFormFactory;
 use Application\Form\FormationJournee\FormationJourneeHydrator;
@@ -138,6 +142,8 @@ return [
                 [
                     'controller' => FormationInstanceController::class,
                     'action' => [
+                        'modifier-informations',
+
                         'ajouter-journee',
                         'modifier-journee',
                         'historiser-journee',
@@ -148,6 +154,10 @@ return [
                         'historiser-agent',
                         'restaurer-agent',
                         'supprimer-agent',
+                        'envoyer-liste-principale',
+                        'envoyer-liste-complementaire',
+
+                        'export-emargement',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INSTANCE_MODIFIER,
@@ -257,6 +267,16 @@ return [
                             ],
                         ],
                     ],
+                    'modifier-informations' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-informations/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'modifier-informations',
+                            ],
+                        ],
+                    ],
                     'ajouter-journee' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -307,6 +327,16 @@ return [
                             ],
                         ],
                     ],
+                    'export-emargement' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/export-emargement/:journee',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'export-emargement',
+                            ],
+                        ],
+                    ],
                     'ajouter-agent' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -344,6 +374,26 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'supprimer-agent',
+                            ],
+                        ],
+                    ],
+                    'envoyer-liste-principale' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/envoyer-liste-principale/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'envoyer-liste-principale',
+                            ],
+                        ],
+                    ],
+                    'envoyer-liste-complementaire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/envoyer-liste-complementaire/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'envoyer-liste-complementaire',
                             ],
                         ],
                     ],
@@ -600,6 +650,7 @@ return [
             AjouterFormationForm::class => AjouterFormationFormFactory::class,
             FormationForm::class => FormationFormFactory::class,
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
+            FormationInstanceForm::class => FormationInstanceFormFactory::class,
             FormationJourneeForm::class => FormationJourneeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
@@ -613,6 +664,7 @@ return [
             AjouterFormationHydrator::class => AjouterFormationHydratorFactory::class,
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
+            FormationInstanceHydrator::class => FormationInstanceHydratorFactory::class,
             FormationJourneeHydrator::class => FormationJourneeHydratorFactory::class,
         ],
     ],

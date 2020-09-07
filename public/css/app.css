@@ -405,6 +405,10 @@ a.action {
     text-indent: 0em;
     margin: 1px;
 }
+
+div.pull-right a.action {
+    margin-right: 1rem;
+}
 button.action {
     width: 20em;
     text-indent: 0em;

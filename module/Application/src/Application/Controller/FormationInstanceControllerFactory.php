@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Form\FormationInstance\FormationInstanceForm;
 use Application\Form\FormationJournee\FormationJourneeForm;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Formation\FormationService;
@@ -9,6 +10,7 @@ use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceJourneeService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Interop\Container\ContainerInterface;
+use Zend\View\Renderer\PhpRenderer;
 
 class FormationInstanceControllerFactory {
 
@@ -30,18 +32,25 @@ class FormationInstanceControllerFactory {
         $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
 
         /**
+         * @var FormationInstanceForm $formationInstanceForm
          * @var FormationJourneeForm $formationJourneeForm
-         * @var SelectionAgentForm $selectionAgentForm;
+         * @var SelectionAgentForm $selectionAgentForm
          */
+        $formationInstanceForm = $container->get('FormElementManager')->get(FormationInstanceForm::class);
         $formationJourneeForm = $container->get('FormElementManager')->get(FormationJourneeForm::class);
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
 
+        /* @var PhpRenderer $renderer  */
+        $renderer = $container->get('ViewRenderer');
+
         /** @var FormationInstanceController $controller */
         $controller = new FormationInstanceController();
+        $controller->setRenderer($renderer);
         $controller->setFormationService($formationService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
+        $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setFormationJourneeForm($formationJourneeForm);
         $controller->setSelectionAgentForm($selectionAgentForm);
         return $controller;

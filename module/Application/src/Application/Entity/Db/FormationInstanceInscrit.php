@@ -9,12 +9,17 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface {
     use HistoriqueAwareTrait;
 
+    const PRINCIPALE = 'principale';
+    const COMPLEMENTAIRE = 'complementaire';
+
     /** @var integer */
     private $id;
     /** @var FormationInstance */
     private $instance;
     /** @var Agent */
     private $agent;
+    /** @var string */
+    private $liste;
 
     /**
      * @return int
@@ -57,6 +62,24 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     public function setAgent($agent)
     {
         $this->agent = $agent;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListe()
+    {
+        return $this->liste;
+    }
+
+    /**
+     * @param string $liste
+     * @return FormationInstanceInscrit
+     */
+    public function setListe($liste)
+    {
+        $this->liste = $liste;
         return $this;
     }
 
