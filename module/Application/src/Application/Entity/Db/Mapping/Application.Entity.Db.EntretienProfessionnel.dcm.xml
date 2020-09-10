@@ -21,6 +21,9 @@
         <many-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="formulaireInstance">
             <join-column name="formulaire_instance" referenced-column-name="id"/>
         </many-to-one>
+        <many-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="formationInstance">
+            <join-column name="formation_instance" referenced-column-name="id"/>
+        </many-to-one>
 
         <field name="dateEntretien"     type="datetime"                 column="date_entretien"     nullable="false"/>
 
