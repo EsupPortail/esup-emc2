@@ -8,11 +8,9 @@ use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceService {
-    use EntityManagerAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
