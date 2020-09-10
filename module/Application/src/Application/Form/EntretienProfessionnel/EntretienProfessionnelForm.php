@@ -6,9 +6,10 @@ use Application\Entity\Db\EntretienProfessionnel;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use DateInterval;
 use DateTime;
-use UnicaenApp\Form\Element\Date;
+//use UnicaenApp\Form\Element\Date;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Date;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -96,6 +97,7 @@ class EntretienProfessionnelForm extends Form {
             'name' => 'date_entretien',
             'options' => [
                 'label' => "Date de l'entretien* :",
+                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'date_entretien',
