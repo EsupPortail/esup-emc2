@@ -93,7 +93,7 @@ class EntretienProfessionnelForm extends Form {
 
         //Date        (initialisée à la date du jour)
         $this->add([
-            'type' => Date::class,
+            'type' => \Zend\Form\Element\DateTime::class,
             'name' => 'date_entretien',
             'options' => [
                 'label' => "Date de l'entretien* :",
