@@ -4,8 +4,10 @@
  * @var string $title
  * @var string $text
  * @var string $action
+ * @var boolean $refus
  */
 
+$refusable = ($refus === null OR $refus === true)
 ?>
 
 <p class="lead">
@@ -18,12 +20,16 @@
                 <input type="hidden" name="reponse" value="oui">
                 <input type="submit" name="reponse" class="btn btn-success action" value="Valider">
             </form>
-        </td><td>
-            <form method="post" action="<?php echo $action; ?>">
-                <input type="hidden" name="reponse" value="non">
-                <input type="submit" name="reponse" class="btn btn-danger action"  value="Refuser">
-            </form>
-        </td></tr>
+        </td>
+        <?php if ($refusable) : ?>
+            <td>
+                <form method="post" action="<?php echo $action; ?>">
+                    <input type="hidden" name="reponse" value="non">
+                    <input type="submit" name="reponse" class="btn btn-danger action"  value="Refuser">
+                </form>
+            </td>
+        <?php endif; ?>
+    </tr>
 </table>
 
 <script>

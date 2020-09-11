@@ -316,6 +316,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 'title' => "Validation de l'entretien",
                 'text' => "Validation de l'entretien",
                 'action' => $this->url()->fromRoute('entretien-professionnel/valider-element', ["type" => $type, "entretien" => $entityId], [], true),
+                'refus' => false,
             ]);
         }
         return $vm;
@@ -479,6 +480,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getEntretienProfessionnelObservationService()->create($observation);
+                $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getResponsable()->getEmail()]);
             }
         }
 
