@@ -298,6 +298,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
                         $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
+                        $this->getMailingService()->sendMailType("COMMUNICATION_AGENT_OBSERVATIONS", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
                         break;
                     case 'DRH' :
                         $entretien->setValidationDRH($validation);
