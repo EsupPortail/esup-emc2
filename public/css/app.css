@@ -64,7 +64,6 @@ span.id_unkown{
     position:absolute;
     top : 5px;
     left :5px;
-
 }
 
 div#navbar.production {
@@ -76,12 +75,6 @@ span.TODO {
     background-color: #fff77e;
     font-weight: bold;
     /*animation: blinker 2s linear infinite;*/
-}
-
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
 }
 
 div.modal div.modal-header {
@@ -105,180 +98,6 @@ div.modal div.modal-footer {
 h1 strong {
     font-weight: 500;
     color: #31708f;
-}
-
-/** ICON **************************************************************************************************************/
-
-span.icon:before {
-    font-family: "Font Awesome 5 Free";
-    display: inline-block;
-    padding-right: 3px;
-    vertical-align: middle;
-    font-weight: 900;
-}
-
-span.icon.retour:before {
-    content: "\f104";
-}
-
-span.icon.voir:before {
-    content: "\f06e";
-}
-
-span.icon.pdf:before {
-    content: "\f1c1";
-}
-
-span.icon.ajouter:before {
-    content: "\f0fe";
-}
-
-span.icon.editer:before {
-    content: "\f303";
-}
-
-span.icon.historiser:before {
-    content: "\f1f8";
-}
-
-span.icon.restaurer:before {
-    content: "\f829";
-}
-
-span.icon.detruire:before {
-    content: "\f00d";
-}
-
-span.icon.monter:before {
-    content: "\f062";
-}
-
-span.icon.descendre:before {
-    content: "\f063";
-}
-
-span.icon.synchoniser:before {
-    content: "\f021";
-}
-
-span.icon.information:before {
-    content: "\f621";
-}
-
-span.icon.ajouter-user:before {
-    content: "\f234";
-}
-
-span.icon.retirer-user:before {
-    content: "\f503";
-}
-
-span.icon.listing:before {
-    content: "\f0ae";
-}
-
-span.icon.selectionner:before {
-    content: "\f65e";
-}
-
-span.icon.entretiens:before {
-    content: "\f51c";
-}
-
-span.icon.fichiers:before {
-    content: "\f07c";
-}
-
-span.icon.donnees:before {
-    content: "\f2c2";
-}
-
-span.icon.power:before {
-    content: "\f011";
-}
-
-span.icon.plus:before {
-    content: "\f067";
-}
-
-span.icon.minus:before {
-    content: "\f068";
-}
-
-span.icon.batiment:before {
-    content: "\f1ad";
-}
-
-span.icon.formation:before {
-    content: "\f51b";
-}
-
-span.icon.effacer:before {
-    content: "\f12d";
-}
-
-span.icon.exporter:before {
-    content: "\f6dd ";
-}
-
-span.icon.ok:before {
-    content: "\f00c ";
-}
-
-span.icon.ko:before {
-    content: "\f00d ";
-}
-
-span.icon.attention:before {
-    content: "\f071 ";
-}
-
-span.icon.question:before {
-    content: "\f059 ";
-}
-
-span.icon.cloner:before {
-    content: "\f24d ";
-}
-
-span.icon.competence:before {
-    content: "\f02b ";
-}
-
-span.icon.application:before {
-    content: "\f109 ";
-}
-
-span.icon.formation:before {
-    content: "\f51c ";
-}
-
-span.icon.activite:before {
-    content: "\f1b2 ";
-}
-
-span.icon.fiche-metier:before {
-    content: "\f1b3 ";
-}
-
-span.icon.agent:before {
-    content: "\f007 ";
-}
-
-span.icon.verification:before {
-    content: "\f0a3 ";
-}
-
-span.icon.toggle-on:before {
-    content: "\f205";
-}
-
-span.icon.toogle-off:before {
-    content: "\f007";
-}
-
-div.survol:hover {
-    background-color: lightgoldenrodyellow;
 }
 
 /** AUTRE *************************************************************************************************************/
@@ -326,25 +145,19 @@ div.main-with-tab {
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     padding: 2rem;
-    /*margin: 5px;*/
 }
 
-div.main h2 {
-    /**text-decoration: underline;**/
-}
 div.jumbotron#preecog {
     background-color: white;
 }
 
 p {
     text-align: justify;
-//text-indent: 2em;
 }
 
 p.noindent {
     text-indent: 0em;
 }
-
 
 div.panel h2 {
     font-weight: bold;
@@ -370,26 +183,6 @@ div.panel h4 {
     padding-left: 15px;
     text-decoration: underline lightblue;
 }
-
-/*.panel-info {*/
-/*    border: 2px #123456 solid;*/
-/*    border-radius: 5px 5px 0px 0px;*/
-/*}*/
-
-/*.panel-info > .panel-heading {*/
-/*    background-image: none;*/
-/*    background-color: lightblue;*/
-/*    color: #123456;*/
-/*    border-bottom: 2px #123456 solid;*/
-/*    border-radius: 5px 5px 0px 0px;*/
-/*}*/
-
-/*.panel-info > .panel-body {*/
-/*    background-image: none;*/
-/*    background-color: #EEFFFF;*/
-/*    color: black;*/
-/*    border-radius: 0;*/
-/*}*/
 
 dl.dl-horizontal dt {
     width:25%;
@@ -471,7 +264,6 @@ div.activite h3 {
     color: #123456;
     border-radius: 5px 5px 0px 0px;
 }
-
 
 .modal-dialog {
     width: 1000px;
@@ -569,7 +361,6 @@ span.badge.structure {
 
 span.historise {
     color: gray;
-    /*text-decoration: line-through;*/
 }
 
 span.todo {
@@ -606,7 +397,6 @@ span.probleme {
 
 tr.historise td {
     color:lightslategray;
-    /*text-decoration: line-through;*/
 }
 
 th.cell-action {
@@ -619,44 +409,14 @@ span.ferme {
     font-variant-position: super;
     font-weight: bold;
 }
+
 /** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- */
 
 .tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}
 
-
-
-
-
 span.date {
     font-weight: normal;
     color: navy;
-}
-
-/** Highlighting ******************************************************************************************************/
-
-span.highlight {
-    font-family: monospace;
-    font-weight: bold;
-}
-
-span.highlight.campagne {
-    color: darkgreen;
-}
-
-span.highlight.agent {
-    color: darkblue;
-}
-
-span.highlight.structure {
-    color: darkslategray;
-}
-
-span.highlight.user {
-    color: purple;
-}
-
-span.highlight.metier {
-    color: darkorange;
 }
 
 table.parcours-de-formation {
