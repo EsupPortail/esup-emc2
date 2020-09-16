@@ -92,7 +92,11 @@ class EntretienProfessionnelController extends AbstractActionController
 
         /** @var EntretienProfessionnelForm $form */
         $form = $this->getEntretienProfessionnelForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
+        if ($campagne !== null) {
+            $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
+        } else {
+            $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', [], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
+        }
         $form->bind($entretien);
 
         if ($structure !== null) {
@@ -107,8 +111,10 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $instance = $this->getFormulaireInstanceService()->createInstance('ENTRETIEN_PROFESSIONNEL');
-                $entretien->setFormulaireInstance($instance);
+                $entretien_instance = $this->getFormulaireInstanceService()->createInstance('ENTRETIEN_PROFESSIONNEL');
+                $formation_instance = $this->getFormulaireInstanceService()->createInstance('FORMATION');
+                $entretien->setFormulaireInstance($entretien_instance);
+                $entretien->setFormationInstance($formation_instance);
                 $this->getEntretienProfessionnelService()->create($entretien);
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
                 $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
@@ -177,14 +183,14 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         return new ViewModel([
-            'title' => 'Entretien professionnel ' . $entretien->getCampagne()->getAnnee() . ' de ' . $entretien->getAgent()->getDenomination(),
-            'entretien' => $entretien,
-            'validationAgent' => $validationAgent,
-            'validationResponsable' => $validationResponsable,
+            'title'                     => 'Entretien professionnel ' . $entretien->getCampagne()->getAnnee() . ' de ' . $entretien->getAgent()->getDenomination(),
+            'entretien'                 => $entretien,
+            'validationAgent'           => $validationAgent,
+            'validationResponsable'     => $validationResponsable,
 
-            'agent' => $agent,
-            'fichespostes' => $fichespostes,
-            'fichesmetiers' => $fichesmetiers
+            'agent'                     => $agent,
+            'fichespostes'              => $fichespostes,
+            'fichesmetiers'             => $fichesmetiers
         ]);
     }
 
@@ -296,6 +302,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
                         $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
+                        $this->getMailingService()->sendMailType("COMMUNICATION_AGENT_OBSERVATIONS", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
                         break;
                     case 'DRH' :
                         $entretien->setValidationDRH($validation);
@@ -314,6 +321,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 'title' => "Validation de l'entretien",
                 'text' => "Validation de l'entretien",
                 'action' => $this->url()->fromRoute('entretien-professionnel/valider-element', ["type" => $type, "entretien" => $entityId], [], true),
+                'refus' => false,
             ]);
         }
         return $vm;
@@ -477,6 +485,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getEntretienProfessionnelObservationService()->create($observation);
+                $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getResponsable()->getEmail()]);
             }
         }
 

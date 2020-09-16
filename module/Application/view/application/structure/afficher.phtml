@@ -72,15 +72,14 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <li role="informations">
                     <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz">
-                        Informations
-                        <strong><?php echo $structure->getLibelleCourt(); ?></strong>
+                        Fiches de poste
                     </a>
                 </li>
 
                 <?php foreach ($campagnes as $campagne) : ?>
                     <li role="campagne_<?php echo $campagne->getId(); ?>">
                         <a href="#campagne_<?php echo $campagne->getId(); ?>" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab" data-toggle="tabz">
-                            Campagne
+                            Entretien professionnel
                             <strong><?php echo $campagne->getAnnee(); ?></strong>
                         </a>
                     </li>

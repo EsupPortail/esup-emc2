@@ -1,11 +1,12 @@
-/** Icons used for actions ********************************************************************************************/
+/** ICON **************************************************************************************************************/
+
 span.icon:before {
     font-family: "Font Awesome 5 Free";
     display: inline-block;
     padding-right: 3px;
     vertical-align: middle;
     font-weight: 900;
-    font-size:large;
+    font-size: large;
 }
 
 span.icon.retour:before {
@@ -24,24 +25,8 @@ span.icon.pdf:before {
     content: "\f1c1";
 }
 
-span.icon.csv:before {
-    content: "\f6dd";
-}
-
-span.icon.code:before {
-    content: "\f1c9";
-}
-
 span.icon.ajouter:before {
     content: "\f0fe";
-}
-
-span.icon.retirer:before {
-    content: "\f146";
-}
-
-span.icon.ajouter-plusieurs:before {
-    content: "\f067";
 }
 
 span.icon.editer:before {
@@ -68,12 +53,44 @@ span.icon.descendre:before {
     content: "\f063";
 }
 
-span.icon.valider:before {
-    content: "\f00c";
+span.icon.synchoniser:before {
+    content: "\f021";
 }
 
-span.icon.affecter:before {
-    content: "\f055";
+span.icon.information:before {
+    content: "\f621";
+}
+
+span.icon.ajouter-user:before {
+    content: "\f234";
+}
+
+span.icon.retirer-user:before {
+    content: "\f503";
+}
+
+span.icon.listing:before {
+    content: "\f0ae";
+}
+
+span.icon.selectionner:before {
+    content: "\f65e";
+}
+
+span.icon.entretiens:before {
+    content: "\f51c";
+}
+
+span.icon.fichiers:before {
+    content: "\f07c";
+}
+
+span.icon.donnees:before {
+    content: "\f2c2";
+}
+
+span.icon.power:before {
+    content: "\f011";
 }
 
 span.icon.plus:before {
@@ -86,6 +103,102 @@ span.icon.minus:before {
 
 span.icon.batiment:before {
     content: "\f1ad";
+}
+
+span.icon.formation:before {
+    content: "\f51b";
+}
+
+span.icon.effacer:before {
+    content: "\f12d";
+}
+
+span.icon.exporter:before {
+    content: "\f6dd ";
+}
+
+span.icon.ok:before {
+    content: "\f00c ";
+}
+
+span.icon.ko:before {
+    content: "\f00d ";
+}
+
+span.icon.attention:before {
+    content: "\f071 ";
+}
+
+span.icon.question:before {
+    content: "\f059 ";
+}
+
+span.icon.cloner:before {
+    content: "\f24d ";
+}
+
+span.icon.competence:before {
+    content: "\f02b ";
+}
+
+span.icon.application:before {
+    content: "\f109 ";
+}
+
+span.icon.formation:before {
+    content: "\f51c ";
+}
+
+span.icon.activite:before {
+    content: "\f1b2 ";
+}
+
+span.icon.fiche-metier:before {
+    content: "\f1b3 ";
+}
+
+span.icon.agent:before {
+    content: "\f007 ";
+}
+
+span.icon.verification:before {
+    content: "\f0a3 ";
+}
+
+span.icon.toggle-on:before {
+    content: "\f205";
+}
+
+span.icon.toogle-off:before {
+    content: "\f007";
+}
+
+div.survol:hover {
+    background-color: lightgoldenrodyellow;
+}
+
+span.icon.csv:before {
+    content: "\f6dd";
+}
+
+span.icon.code:before {
+    content: "\f1c9";
+}
+
+span.icon.retirer:before {
+    content: "\f146";
+}
+
+span.icon.ajouter-plusieurs:before {
+    content: "\f067";
+}
+
+span.icon.valider:before {
+    content: "\f00c";
+}
+
+span.icon.affecter:before {
+    content: "\f055";
 }
 
 span.icon.etudiant:before {
@@ -104,28 +217,12 @@ span.icon.notifier:before {
     content: "\f0e0";
 }
 
-span.icon.ok:before {
-    content: "\f00c ";
-}
-
-span.icon.ko:before {
-    content: "\f00d ";
-}
-
-span.icon.listing:before {
-    content: "\f03a ";
-}
-
 span.icon.gerer:before {
     content: "\f013 ";
 }
 
 span.icon.rejouer:before {
     content: "\f03d ";
-}
-
-span.icon.question:before {
-    content: "\f059 ";
 }
 
 span.icon.validation-do:before {

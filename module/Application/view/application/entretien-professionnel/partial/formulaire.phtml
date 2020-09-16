@@ -25,13 +25,15 @@ $now = new DateTime();
 
 <h3 class="categorie"> Missions du poste </h3>
 
-<ul>
-<?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
-    <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
-            <?php echo $ficheTypeExterne->getFicheType()->getMissionsPrincipales(); ?>
-    </li>
-<?php endforeach; ?>
-</ul>
+<?php if ($fichePoste !== null) : ?>
+    <ul>
+    <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
+        <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
+                <?php echo $ficheTypeExterne->getFicheType()->getMissionsPrincipales(); ?>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
 
 <br/>
 <br/>
@@ -93,6 +95,6 @@ $now = new DateTime();
     <?php endif; ?>
 <?php else : ?>
     <div class="alert alert-danger">
-        Vous ne pouvez vous le formulaire d'entretien professionnel.
+        Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
     </div>
 <?php endif; ?>

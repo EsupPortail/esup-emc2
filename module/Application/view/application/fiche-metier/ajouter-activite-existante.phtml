@@ -1,15 +1,14 @@
 <?php
 
+use Application\Form\FicheMetier\ActiviteExistanteForm;
+
 /**
  * @see \Application\Controller\FicheMetierController::ajouterActiviteExistanteAction()
- * @var $form
+ * @var ActiviteExistanteForm $form
+ * @var array $options
  */
+
 ?>
-
-<!--<h1 class="page-header">-->
-<!--    Ajout d'une activité existante-->
-<!--</h1>-->
-
 
 <div>
     <?php echo $this->form()->openTag($form); ?>
@@ -41,10 +40,8 @@
             if (text.length > 0) {
                 $("div#" + text).show();
             } else {
-
                 $("div#none").show();
             }
-
         });
     });
 

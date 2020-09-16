@@ -444,73 +444,13 @@ $this->headTitle("Index des compétences");
     let page ;
     let id = 'competence_3';
 
-    <?php foreach ($types as $type) : ?>
-        let table_<?php echo $type->getId(); ?> = $('#competence_<?php echo $type->getId(); ?>').DataTable();
-    <?php endforeach; ?>
-
-
-    //$(document).ready(function() {
-    //    let table_ = $('#' + id).DataTable();
-    //    // let searchParams = new URLSearchParams(window.location.search);
-    //    let searchParams = window.location.search.split('#')[0];
-    //    searchParams = new URLSearchParams(searchParams);
-    //    console.log(searchParams);
-    //    let search = searchParams.get('search')
-    //    let page = searchParams.get('page')
-    //    if (/** search !== undefined && search !== "undefined" && */ search !== null && search !== "null") {
-    //        table_.search(search);
-    //    }
-    //    if (/** page !== undefined && page !== "undefined" && */ page !== null && page !== "null") {
-    //        table_.page(parseInt(page));
-    //    }
-    //    table_.draw(false);
-    //    loaded = true;
-    //});
-    //
-    <?php //foreach ($types as $type) : ?>
-    //    $('#competence_<?php //echo $type->getId(); ?>//').on('page.dt', function () {
-    //        if (loaded === true) {
-    //            let table_<?php //echo $type->getId(); ?>//  = $('#competence_<?php //echo $type->getId(); ?>//').DataTable();
-    //            page   = table_<?php //echo $type->getId(); ?>//.page();
-    //            console.log('#competence_<?php //echo $type->getId(); ?>// ' + " " + page);
-    //        }
-    //    });
-    //
-    //    $('#competence_<?php //echo $type->getId(); ?>//').on('search.dt', function () {
-    //       if (loaded === true) {
-    //            let table_<?php //echo $type->getId(); ?>// = $('#competence_<?php //echo $type->getId(); ?>//').DataTable();
-    //            search = table_<?php //echo $type->getId(); ?>//.search();
-    //            console.log('#competence_<?php //echo $type->getId(); ?>// ' + " " + search);
-    //       }
-    //    });
-    <?php //endforeach; ?>
-    //
-    //$(window).bind('beforeunload', function() {
-    //
-    //    //onglets
-    //    let hash = $(location).attr('hash');
-    //    let name = hash.substr(1);
-    //    //parametres du tableau
-    //    let params = '';
-    //    if (search !== null && search !== undefined) {
-    //        params += "search=" + search;
-    //    }
-    //    if (page !== null && page !== undefined) {
-    //        if (params !== '') params += "&";
-    //        params += "page=" + page;
-    //    }
-    //    // if (params !== '') {
-    //    //     params = "?" + params;
-    //    // }
-    //    if (hash !== '') {
-    //        params += "" + hash;
-    //    }
-    //    history.replaceState({}, null, '?' + params);
-    //
-    //});
 
 
     $(function() {
+        <?php foreach ($types as $type) : ?>
+            let table_<?php echo $type->getId(); ?> = $('#competence_<?php echo $type->getId(); ?>').DataTable();
+        <?php endforeach; ?>
+
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
         if (name === undefined || name === "") name = "Connaissances";

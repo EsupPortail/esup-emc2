@@ -1,0 +1,26 @@
+/** Highlighting ******************************************************************************************************/
+
+span.highlight {
+    font-family: monospace;
+    font-weight: bold;
+}
+
+span.highlight.campagne {
+    color: darkgreen;
+}
+
+span.highlight.agent {
+    color: darkblue;
+}
+
+span.highlight.structure {
+    color: darkslategray;
+}
+
+span.highlight.user {
+    color: purple;
+}
+
+span.highlight.metier {
+    color: darkorange;
+}

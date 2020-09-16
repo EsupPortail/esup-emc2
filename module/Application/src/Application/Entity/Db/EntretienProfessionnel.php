@@ -32,6 +32,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private $dateEntretien;
     /** @var FormulaireInstance */
     private $formulaireInstance;
+    /** @var FormulaireInstance */
+    private $formationInstance;
 
     /** @var ArrayCollection (Observation) */
     private $observations;
@@ -148,6 +150,24 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function setFormulaireInstance($formulaireInstance)
     {
         $this->formulaireInstance = $formulaireInstance;
+        return $this;
+    }
+
+    /**
+     * @return FormulaireInstance
+     */
+    public function getFormationInstance()
+    {
+        return $this->formationInstance;
+    }
+
+    /**
+     * @param FormulaireInstance $formationInstance
+     * @return EntretienProfessionnel
+     */
+    public function setFormationInstance($formationInstance)
+    {
+        $this->formationInstance = $formationInstance;
         return $this;
     }
 

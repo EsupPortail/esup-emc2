@@ -290,7 +290,8 @@ return [
             '050_bootstrap-theme' => '',
             '110_' => 'vendor/DataTables-1.10.18/datatables.min.css',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
-            '999_' => 'css/icon.css',
+            '998_' => 'css/icon.css',
+            '999_' => 'css/highlight.css',
         ],
         'images' => [
             '100_' => 'img/PrEECoG.svg',
