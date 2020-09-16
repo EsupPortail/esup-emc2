@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Categorie;
 use Application\Entity\Db\Formation;
+use Application\Entity\Db\FormationGroupe;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\FormationPrivileges;
@@ -82,12 +83,24 @@ $canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPriv
     </div>
 
     <?php
+        $groupes = [];
+        foreach ($formations as $formation) {
+            $groupe = $formation->getGroupe();
+            if ($groupe !== null) $groupes[$groupe->getId()] = $groupe;
+        }
+
         $dictionnaire = [];
+        usort($groupes, function (FormationGroupe $a, FormationGroupe $b) {return $a->getOrdre() > $b->getOrdre();});
+        foreach ($groupes as $groupe) {
+            $dictionnaire[$groupe->getLibelle()] = [];
+        }
+
+
         foreach ($formations as $formation) {
             $groupe = ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"ZZZ";
             $dictionnaire[$groupe][] = $formation;
         }
-        ksort($dictionnaire);
+//        ksort($dictionnaire);
     ?>
 
     <table style="width:90%;">
