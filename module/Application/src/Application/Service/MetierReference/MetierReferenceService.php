@@ -9,7 +9,8 @@ use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class MetierReferenceService {
+class MetierReferenceService
+{
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -73,8 +74,8 @@ class MetierReferenceService {
     {
         $qb = $this->getEntityManager()->getRepository(MetierReference::class)->createQueryBuilder('reference')
             ->addSelect('metier')->join('reference.metier', 'metier')
-            ->addSelect('referentiel')->join('reference.referentiel', 'referentiel')
-        ;
+            ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
+            ->addSelect('referentiel')->join('reference.referentiel', 'referentiel');
 
         return $qb;
     }
@@ -112,17 +113,16 @@ class MetierReferenceService {
      * @param integer $id
      * @return MetierReference
      */
-    public function getMetierReference($id)
+    public function getMetierReference(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('reference.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs MetierReference partagent le même id [".$id."]",0, $e);
+            throw new RuntimeException("Plusieurs MetierReference partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -132,7 +132,7 @@ class MetierReferenceService {
      * @param string $param
      * @return MetierReference
      */
-    public function getRequestedMetierReference($controller, $param = "reference")
+    public function getRequestedMetierReference(AbstractActionController $controller, string $param = "reference")
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getMetierReference($id);
