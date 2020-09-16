@@ -92,7 +92,11 @@ class EntretienProfessionnelController extends AbstractActionController
 
         /** @var EntretienProfessionnelForm $form */
         $form = $this->getEntretienProfessionnelForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
+        if ($campagne !== null) {
+            $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
+        } else {
+            $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', [], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
+        }
         $form->bind($entretien);
 
         if ($structure !== null) {
