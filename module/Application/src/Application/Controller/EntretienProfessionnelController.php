@@ -183,14 +183,14 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         return new ViewModel([
-            'title' => 'Entretien professionnel ' . $entretien->getCampagne()->getAnnee() . ' de ' . $entretien->getAgent()->getDenomination(),
-            'entretien' => $entretien,
-            'validationAgent' => $validationAgent,
-            'validationResponsable' => $validationResponsable,
+            'title'                     => 'Entretien professionnel ' . $entretien->getCampagne()->getAnnee() . ' de ' . $entretien->getAgent()->getDenomination(),
+            'entretien'                 => $entretien,
+            'validationAgent'           => $validationAgent,
+            'validationResponsable'     => $validationResponsable,
 
-            'agent' => $agent,
-            'fichespostes' => $fichespostes,
-            'fichesmetiers' => $fichesmetiers
+            'agent'                     => $agent,
+            'fichespostes'              => $fichespostes,
+            'fichesmetiers'             => $fichesmetiers
         ]);
     }
 

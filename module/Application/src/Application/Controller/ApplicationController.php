@@ -25,7 +25,7 @@ class ApplicationController  extends AbstractActionController {
     {
         $groupeId = $this->params()->fromQuery('groupe');
         /**
-         * @var Application[] $activites
+         * @var Application[] $applications
          * @var ApplicationGroupe[] $groupes
          */
 
