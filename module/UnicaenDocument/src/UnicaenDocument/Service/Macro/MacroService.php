@@ -149,7 +149,7 @@ class MacroService {
      * @param array $variables
      * @return string
      */
-    public function getTexte($code, $variables)
+    public function getTexte(string $code, array $variables)
     {
         $macro = $this->getMacroByCode($code);
 

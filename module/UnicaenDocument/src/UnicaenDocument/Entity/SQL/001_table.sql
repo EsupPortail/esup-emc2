@@ -31,14 +31,16 @@ create unique index unicaen_document_macro_code_uindex
 
 -- TABLE DES CONTENUS
 
-create table unicaen_content_content
+create table unicaen_document_content
 (
 	id serial not null
 		constraint unicaen_content_content_pk
 			primary key,
 	code varchar(256) not null,
 	description text,
-	docuement_content text not null,
+	document_type varchar(256) not null,
+	document_complement text not null,
+	document_content text not null,
 	histo_creation timestamp not null,
 	histo_createur_id integer not null
 		constraint unicaen_content_content_user_id_fk
@@ -54,8 +56,10 @@ create table unicaen_content_content
 );
 
 create unique index unicaen_content_content_id_uindex
-	on unicaen_content_content (id);
+	on unicaen_document_content (id);
 
 create unique index unicaen_content_content_code_uindex
-	on unicaen_content_content (code);
+	on unicaen_document_content (code);
+
+
 
