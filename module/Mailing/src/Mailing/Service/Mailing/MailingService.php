@@ -311,6 +311,12 @@ class MailingService
             case 'VAR[ENTRETIEN#date]' :
                 $entretien = $variables['entretien'];
                 return $entretien->getDateEntretien()->format('d/m/Y');
+            case 'VAR[ENTRETIEN#heure]' :
+                $entretien = $variables['entretien'];
+                return $entretien->getDateEntretien()->format('H:i');
+            case 'VAR[ENTRETIEN#lieu]' :
+                $entretien = $variables['entretien'];
+                return $entretien->getLieu();
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

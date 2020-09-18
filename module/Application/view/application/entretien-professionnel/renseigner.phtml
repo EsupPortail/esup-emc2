@@ -21,6 +21,7 @@ $ficheposte = $agent->getFichePosteActif();
 $this->headTitle('Modification de l\'entretien professionnel');
 ?>
 
+<span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
 <h1 class="page-header">
     Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
     <?php echo $entretien->getAgent()->getPrenom(); ?>

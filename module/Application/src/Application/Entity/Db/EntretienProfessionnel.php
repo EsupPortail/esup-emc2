@@ -30,6 +30,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private $campagne;
     /** @var DateTime */
     private $dateEntretien;
+    /** @var string */
+    private $lieu;
     /** @var FormulaireInstance */
     private $formulaireInstance;
     /** @var FormulaireInstance */
@@ -132,6 +134,24 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function setDateEntretien($dateEntretien)
     {
         $this->dateEntretien = $dateEntretien;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLieu()
+    {
+        return $this->lieu;
+    }
+
+    /**
+     * @param string $lieu
+     * @return EntretienProfessionnel
+     */
+    public function setLieu($lieu)
+    {
+        $this->lieu = $lieu;
         return $this;
     }
 
