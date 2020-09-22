@@ -431,7 +431,8 @@ table.parcours-de-formation th {
 }
 
 table.parcours-de-formation th.titre {
-    background: linear-gradient(to right, #d9edf7, white);
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
     color: #3c6c8b;
     /*border-top-left-radius:5px;*/
 }
@@ -467,7 +468,8 @@ table.applications th {
 }
 
 table.applications th.titre {
-    background: linear-gradient(to right, #d9edf7, white);
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
     color: #3c6c8b;
     /*border-top-left-radius:5px;*/
 }
@@ -485,7 +487,8 @@ table.competences th {
 }
 
 table.competences th.titre {
-    background: linear-gradient(to right, #d9edf7, white);
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
     color: #3c6c8b;
     /*border-top-left-radius:5px;*/
 }
@@ -503,7 +506,8 @@ table.formations th {
 }
 
 table.formations th.titre {
-    background: linear-gradient(to right, #d9edf7, white);
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
     color: #3c6c8b;
     /*border-top-left-radius:5px;*/
 }

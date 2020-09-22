@@ -63,11 +63,11 @@ foreach ($cCompetences as $item) {
 <div class="row" style="margin: 1rem;">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <?php foreach ($dictionnaires as $key => $items) : ?>
-            <h4> <?php echo $key; ?> </h4>
-            <ul>
+        <table class="competences">
+            <?php foreach ($dictionnaires as $key => $items) : ?>
+                <tr><th class="titre"> <?php echo $key; ?></th></tr>
                 <?php foreach ($items as $item) : ?>
-                    <li>
+                    <tr><td>
                         <?php echo $item["object"]->getLibelle(); ?>
                         <?php foreach ($item["raison"] as $raison) : ?>
                             <?php if ($raison instanceof  FicheMetier) : ?>
@@ -81,9 +81,9 @@ foreach ($cCompetences as $item) {
                                 </span>
                             <?php endif; ?>
                         <?php endforeach; ?>
-                    </li>
+                        </td></tr>
                 <?php endforeach; ?>
-            </ul>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </table>
     </div>
 </div>
