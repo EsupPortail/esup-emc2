@@ -30,11 +30,7 @@ ksort($formationArray);
 ?>
 
 <h4>
-    <?php if ($reference !== null) : ?>
-        <?php echo $reference->getLibelle(); ?>
-    <?php else : ?>
         <?php echo $parcours->getLibelle(); ?>
-    <?php endif; ?>
 </h4>
 
 <?php if ($asListe) : ?>
@@ -69,13 +65,14 @@ ksort($formationArray);
             <?php if ($groupe !== $nogroup) : ?>
                 <?php /** @var FormationGroupe $groupe */ $groupe = $formationSubarray[0]->getGroupe(); ?>
                 <tr>
-                    <th colspan="2" style="background-color: <?php echo $groupe->getCouleur(); ?>;">
+                    <th class="titre" colspan="2">
                         <?php echo $groupe->getLibelle(); ?>
                     </th>
+
                 </tr>
             <?php else : ?>
                 <tr>
-                    <th colspan="2" style="background-color: gray;">
+                    <th class="titre" colspan="2">
                         Sans groupe ...
                     </th>
                 </tr>

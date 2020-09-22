@@ -64,7 +64,7 @@ ksort($dictionnaire);
                 </div>
             </div>
         <?php endif; ?>
-        <table class="parcours-de-formation" id="formations">
+        <table class="formations" id="formations">
             <tbody>
             <?php foreach ($dictionnaire as $key => $liste) : ?>
                 <?php usort($liste, function(AgentFormation $a, AgentFormation $b) {return $a->getFormation()->getLibelle() > $b->getFormation()->getLibelle();}); ?>
@@ -80,11 +80,13 @@ ksort($dictionnaire);
                 <tr>
                     <?php if ($key !== $noGroupe) : ?>
                         <?php $groupe = $liste[0]->getFormation()->getGroupe(); ?>
-                        <th colspan="4" style="background: <?php echo $groupe->getCouleur(); ?>;" <?php if ($allHisto) echo 'class="historise"'; ?>>
+                        <th colspan="4" class="titre <?php if ($allHisto) echo 'historise'; ?>">
                             <?php echo $groupe->getLibelle(); ?>
                         </th>
                     <?php else :?>
-                        <th colspan="4" style="background: gray;" <?php if ($allHisto) echo 'class="historise"'; ?>> Sans groupe ...</th>
+                        <th colspan="4" class="titre <?php if ($allHisto) echo 'historise'; ?>">
+                            Sans groupe ...
+                        </th>
                     <?php endif; ?>
                 </tr>
                 <?php foreach ($liste as $agentFormation) : ?>
