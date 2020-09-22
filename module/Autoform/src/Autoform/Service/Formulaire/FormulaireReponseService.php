@@ -295,6 +295,14 @@ class FormulaireReponseService {
                 }
                 return null;
                 break;
+            case Champ::TYPE_FORMATION :
+                $text = trim($data['text_'.$champ->getId()]);
+                $select = trim($data['select_'.$champ->getId()]);
+                if ($text !== "") {
+                    return $text . "|" . $select;
+                }
+                return null;
+                break;
             default:
                 return null;
                 break;

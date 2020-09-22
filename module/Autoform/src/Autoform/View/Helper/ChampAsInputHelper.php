@@ -69,6 +69,10 @@ class ChampAsInputHelper extends AbstractHelper
                 $texte .= $view->partial('input/periode', ['champ' => $champ, 'reponse' => $reponse]);
                 break;
 
+            case Champ::TYPE_FORMATION :
+                $texte .= $view->partial('input/formation', ['champ' => $champ, 'reponse' => $reponse]);
+                break;
+
             case Champ::TYPE_MULTIPLE :
                 $texte .= $view->partial('input/multiple', ['champ' => $champ, 'reponse' => $reponse]);
                 break;

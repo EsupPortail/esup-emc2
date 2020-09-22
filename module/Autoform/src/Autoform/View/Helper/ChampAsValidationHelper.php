@@ -71,7 +71,8 @@ class ChampAsValidationHelper extends AbstractHelper
             case Champ::TYPE_SELECT :
             case Champ::TYPE_ANNEE :
             case Champ::TYPE_PERIODE :
-                $texte .= $champ->getLibelle(). ' : ';
+            case Champ::TYPE_FORMATION :
+        $texte .= $champ->getLibelle(). ' : ';
                 if ($data !== 'null') {
                     $texte .= $data;
                 }

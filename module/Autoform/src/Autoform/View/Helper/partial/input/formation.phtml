@@ -1,0 +1,38 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $reponse
+ */
+
+use Autoform\Entity\Db\Champ;
+
+$periode = ["Année entière", "Premier semestre", "Second semestre"];
+$split = explode("|",$reponse);
+$text = (count($split) === 2)?$split[0]:"";
+$select = (count($split) === 2)?$split[1]:"";
+?>
+
+
+<div class="form-group row">
+    <label for="textarea_<?php echo $champ->getId(); ?>" class="col-sm-2 control-label">
+        <?php echo $champ->getLibelle();?>&nbsp;:
+    </label>
+    <div class="col-sm-10">
+        <div class="col-sm-5">
+            Intitulé <input type="text" name="text_<?php echo $champ->getId(); ?>" value="<?php echo $text; ?>"/>
+        </div>
+        <div class="col-sm-5">
+            Période <select class='periode' name="select_<?php echo $champ->getId(); ?>">
+                <option value="null"></option>
+                    <?php foreach ($periode as $item) : ?>
+                        <option value="<?php echo $item; ?>"
+                        <?php if ($item === $select)  : ?>
+                            selected
+                        <?php endif;?>>
+                    <?php echo $item; ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>

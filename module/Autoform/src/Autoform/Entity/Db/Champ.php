@@ -14,6 +14,7 @@ class Champ {
     const TYPE_CHECKBOX     = "Checkbox";
     const TYPE_SELECT       = "Select";
     const TYPE_PERIODE      = "Periode";
+    const TYPE_FORMATION    = "Formation";
     const TYPE_ANNEE        = "Annee";
     const TYPE_NOMBRE       = "Number";
     const TYPE_MULTIPLE     = "Multiple";
