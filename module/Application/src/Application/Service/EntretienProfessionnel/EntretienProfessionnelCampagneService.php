@@ -156,4 +156,25 @@ class EntretienProfessionnelCampagneService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /**
+     * @param DateTime|null $date
+     * @return EntretienProfessionnelCampagne
+     */
+    public function getLastCampagne($date = null)
+    {
+        if ($date === null) $date = $this->getDateTime();
+        $qb = $this->createQueryBuilder()
+            ->andWhere('campagne.dateFin < :date')
+            ->setParameter('date', $date)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $last = null;
+        /** @var EntretienProfessionnelCampagne $item */
+        foreach ($result as $item) {
+            if ($last === null OR $item->getAnnee() > $last->getAnnee()) $last = $item;
+        }
+        return $item;
+    }
 }

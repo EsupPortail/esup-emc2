@@ -93,6 +93,7 @@ class StructureController extends AbstractActionController {
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
         /** Campagne */
+        $last = $this->getEntretienProfessionnelCampagneService()->getLastCampagne();
         $campagnes = $this->getEntretienProfessionnelCampagneService()->getCampagnesActives();
         $entretiens = [];
         foreach ($campagnes as $campagne) {
@@ -112,6 +113,7 @@ class StructureController extends AbstractActionController {
             'agents' => $agents,
             'postes' => $postes,
 
+            'last' => $last,
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
 
