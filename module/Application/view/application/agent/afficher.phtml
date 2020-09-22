@@ -20,6 +20,7 @@ $canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFI
 $canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
 $canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
 $canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+$canInfoSource  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_INFO_SOURCE));
 
 $droits = [
     'afficher'        =>      $canVoir,
@@ -83,24 +84,26 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                 </dd>
         </div>
         <div class="col-md-4">
-            <!-- Information générale "application" -->
-            <dl>
-                <dt> Identifiant sources </dt>
-                <dd>
-                    OCTOPUS - <?php echo $agent->getId(); ?> <br/>
-                    HARPEGE - <?php echo $agent->getHarpId(); ?>
-                <dt> Compte associé </dt>
-                <dd>
-                    <?php if($agent->getUtilisateur()) : ?>
-                        <?php echo $agent->getUtilisateur()->getUsername(); ?>
-                    <?php else: ?>
-                        <span class="probleme">
-                            <span class="icon attention"></span>
-                            <em> Aucun compte lié à l'agent </em>
-                        </span>
-                    <?php endif; ?>
-                </dd>
-            </dl>
+            <?php if ($canInfoSource) : ?>
+                <!-- Information générale "application" -->
+                <dl>
+                    <dt> Identifiant sources </dt>
+                    <dd>
+                        OCTOPUS - <?php echo $agent->getId(); ?> <br/>
+                        HARPEGE - <?php echo $agent->getHarpId(); ?>
+                    <dt> Compte associé </dt>
+                    <dd>
+                        <?php if($agent->getUtilisateur()) : ?>
+                            <?php echo $agent->getUtilisateur()->getUsername(); ?>
+                        <?php else: ?>
+                            <span class="probleme">
+                                <span class="icon attention"></span>
+                                <em> Aucun compte lié à l'agent </em>
+                            </span>
+                        <?php endif; ?>
+                    </dd>
+                </dl>
+            <?php endif; ?>
         </div>
     </div>
 

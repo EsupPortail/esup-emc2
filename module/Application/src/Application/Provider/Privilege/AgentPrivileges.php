@@ -19,4 +19,6 @@ class AgentPrivileges extends Privileges
     const AGENT_ELEMENT_DETRUIRE            = 'agent-agent_element_detruire';
     const AGENT_ELEMENT_VALIDER             = 'agent-agent_element_valider';
     const AGENT_ELEMENT_AJOUTER_EPRO        = 'agent-agent_element_ajouter_epro';
+
+    const AGENT_INFO_SOURCE = 'agent-agent_info_source';
 }
