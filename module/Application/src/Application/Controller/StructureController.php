@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Structure;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
+use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -96,10 +97,6 @@ class StructureController extends AbstractActionController {
         $last = $this->getEntretienProfessionnelCampagneService()->getLastCampagne();
         $campagnes = $this->getEntretienProfessionnelCampagneService()->getCampagnesActives();
         $entretiens = [];
-        foreach ($campagnes as $campagne) {
-            //TODO something
-            $a=1;
-        }
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -152,6 +149,7 @@ class StructureController extends AbstractActionController {
     public function ajouterGestionnaireAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        /** @var AjouterGestionnaireForm $form */
         $form = $this->getAjouterGestionnaireForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
         /** @var SearchAndSelect $element */
@@ -166,6 +164,11 @@ class StructureController extends AbstractActionController {
             $gestionnaire = $this->getUserService()->getUtilisateur($data['gestionnaire']['id']);
             $structure = $this->getStructureService()->getStructure($data['structure']['id']);
             if ($gestionnaire !== null AND $structure !== null) {
+                if (!$gestionnaire->hasRole(RoleConstant::GESTIONNAIRE)) {
+                    $gestionnaireRole = $this->getRoleService()->getRoleByCode(RoleConstant::GESTIONNAIRE);
+                    $gestionnaire->addRole($gestionnaireRole);
+                    $this->getUserService()->update($gestionnaire);
+                }
                 $this->getStructureService()->addGestionnaire($structure, $gestionnaire);
                 $this->getStructureService()->update($structure);
             }
