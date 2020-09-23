@@ -362,7 +362,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
         $agent = $entretien->getAgent()->getDenomination();
         $date = $entretien->getDateEntretien()->format('Ymd');
-        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $agent) . '_' . $date . '.pdf';
+        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $agent) . '_' . $date . '.pdf';
         try {
             $exporter->getMpdf()->SetTitle("Entretien professionnel de " . $agent . " du " . $entretien->getDateEntretien()->format("d/m/Y"));
         } catch (MpdfException $e) {

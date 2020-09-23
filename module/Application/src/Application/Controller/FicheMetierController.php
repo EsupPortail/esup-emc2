@@ -131,7 +131,7 @@ class FicheMetierController extends AbstractActionController
         ]);
 
         $metier = $fiche->getMetier();
-        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) . '.pdf';
+        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) . '.pdf';
         try {
             $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $fiche->getId());
         } catch (MpdfException $e) {
@@ -147,7 +147,7 @@ class FicheMetierController extends AbstractActionController
 
         $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
         $exporter->setVars([]);
-        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') . "_fiches_metiers.pdf";
+        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_fiches_metiers.pdf";
         $exporter->exportAll($fiches, $filemane);
         exit;
     }
