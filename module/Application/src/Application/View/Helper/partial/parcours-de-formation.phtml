@@ -2,7 +2,7 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Categorie;
-use Application\Entity\Db\FormationGroupe;use Application\Entity\Db\Metier;
+use Application\Entity\Db\Formation;use Application\Entity\Db\FormationGroupe;use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 
 /**
@@ -25,7 +25,12 @@ foreach ($parcours->getFormations() as $formation) {
     $formationArray[$groupe][] = $formation;
 }
 
-ksort($formationArray);
+usort($formationArray,
+    function($a, $b) {
+        $ordre_a = ($a[0]->getGroupe())?$a[0]->getGroupe()->getOrdre():9999;
+        $ordre_b = ($b[0]->getGroupe())?$b[0]->getGroupe()->getOrdre():9999;
+        return $ordre_a > $ordre_b;
+});
 
 ?>
 
@@ -66,7 +71,7 @@ ksort($formationArray);
                 <?php /** @var FormationGroupe $groupe */ $groupe = $formationSubarray[0]->getGroupe(); ?>
                 <tr>
                     <th class="titre" colspan="2">
-                        <?php echo $groupe->getLibelle(); ?>
+                        <?php echo ($groupe !== null)?$groupe->getLibelle():"Sans groupe ..."; ?>
                     </th>
 
                 </tr>
