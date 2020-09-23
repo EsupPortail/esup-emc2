@@ -25,7 +25,7 @@ return [
          */
         'app_infos' => [
             'nom'     => "EMC2",
-            'desc'    => "Emploi Mobilité Compétence Carrière",
+            'desc'    => "Emploi Mobilité Carrière Compétences",
             'version' => "0.4.9",
             'date'    => "13/12/2019",
             'contact' => ['mail' => "dsi.applications@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],
