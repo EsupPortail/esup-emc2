@@ -317,6 +317,9 @@ class MailingService
             case 'VAR[ENTRETIEN#lieu]' :
                 $entretien = $variables['entretien'];
                 return $entretien->getLieu();
+            case 'VAR[ENTRETIEN#lien_accepter]' :
+                $entretien = $variables['entretien'];
+                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien' => $entretien->getId(), 'token' => $entretien->getToken()], [], true).'">Acceptation de l\'entretien professionnel</a>';
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

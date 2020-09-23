@@ -46,6 +46,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private $validationResponsable;
     /** @var ValidationInstance */
     private $validationDRH;
+    /** @var string */
+    private $token;
+    /** @var DateTime */
+    private $acceptation;
 
 
     /**
@@ -330,5 +334,41 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      */
     public function hasValidationDRH() {
         return ($this->validationDRH AND $this->validationDRH->estNonHistorise());
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     * @return EntretienProfessionnel
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getAcceptation()
+    {
+        return $this->acceptation;
+    }
+
+    /**
+     * @param DateTime|null $acceptation
+     * @return EntretienProfessionnel
+     */
+    public function setAcceptation($acceptation)
+    {
+        $this->acceptation = $acceptation;
+        return $this;
     }
 }

@@ -372,6 +372,23 @@ class EntretienProfessionnelController extends AbstractActionController
         exit;
     }
 
+    public function accepterEntretienAction() {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien-professionnel');
+        $token = $this->params()->fromRoute('token');
+
+        if ($entretien !== null AND $entretien->getToken() === $token) {
+            $entretien->setToken(null);
+            $entretien->setAcceptation($this->getDateTime());
+            $this->getEntretienProfessionnelService()->update($entretien);
+            $this->getMailingService()->sendMailType("ENTRETIEN_ACCEPTER_AGENT", ['entretien' => $entretien, 'user' => $entretien->getResponsable()]);
+        }
+
+        return new ViewModel([
+            'entretien' => $entretien,
+            'token' => $token,
+        ]);
+    }
+
     /** CAMPAGNE ******************************************************************************************************/
 
     public function ajouterCampagneAction()
