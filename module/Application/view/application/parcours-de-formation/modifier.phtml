@@ -103,11 +103,11 @@ $canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPriv
 //        ksort($dictionnaire);
     ?>
 
-    <table style="width:90%;">
+    <table class="parcours-de-formation" style="width:90%;">
     <?php foreach ($dictionnaire as $groupe => $gformations) : ?>
         <?php usort($gformations, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();}); ?>
         <?php $init = $gformations[0]; ?>
-        <tr> <th colspan="2" style="padding:1rem; background:<?php echo ($groupe === "ZZZ")?"lightgray":$init->getGroupe()->getCouleur(); ?>">
+        <tr> <th colspan="2" class="titre">
             <?php echo ($groupe === "ZZZ")?"Sans groupe ...":$groupe; ?>
         </th> </tr>
         <?php foreach ($gformations as $formation) : ?>
