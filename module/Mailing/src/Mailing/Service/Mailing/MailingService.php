@@ -253,7 +253,7 @@ class MailingService
     private function replaceMacros($texteInitial, $variables)
     {
         $matches = [];
-        preg_match_all('/VAR\[[a-z,A-Z,0-9,#]*\]/', $texteInitial, $matches);
+        preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);
 
         $patterns = array_unique($matches[0]);
         $replacements = [];
@@ -319,7 +319,7 @@ class MailingService
                 return $entretien->getLieu();
             case 'VAR[ENTRETIEN#lien_accepter]' :
                 $entretien = $variables['entretien'];
-                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien' => $entretien->getId(), 'token' => $entretien->getToken()], [], true).'">Acceptation de l\'entretien professionnel</a>';
+                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true).'">Acceptation de l\'entretien professionnel</a>';
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

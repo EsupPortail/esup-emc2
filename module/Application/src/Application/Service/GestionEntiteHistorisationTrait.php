@@ -21,6 +21,7 @@ trait GestionEntiteHistorisationTrait {
     public function createFromTrait(HistoriqueAwareInterface $object)
     {
         $user = $this->getUserService()->getConnectedUser();
+        if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
         $date = $this->getDateTime();
 
         $object->setHistoCreation($date);
@@ -45,6 +46,7 @@ trait GestionEntiteHistorisationTrait {
     public function updateFromTrait(HistoriqueAwareInterface $object)
     {
         $user = $this->getUserService()->getConnectedUser();
+        if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
         $date = $this->getDateTime();
 
         $object->setHistoModification($date);
@@ -66,6 +68,7 @@ trait GestionEntiteHistorisationTrait {
     public function historiserFromTrait(HistoriqueAwareInterface $object)
     {
         $user = $this->getUserService()->getConnectedUser();
+        if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
         $date = $this->getDateTime();
 
         $object->setHistoDestruction($date);
@@ -104,7 +107,6 @@ trait GestionEntiteHistorisationTrait {
      */
     public function deleteFromTrait(HistoriqueAwareInterface $object)
     {
-
         try {
             $this->getEntityManager()->remove($object);
             $this->getEntityManager()->flush($object);
