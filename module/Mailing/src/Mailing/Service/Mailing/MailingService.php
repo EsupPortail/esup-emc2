@@ -284,11 +284,11 @@ class MailingService
                 $date = $this->getDateTime()->format('d/m/Y');
                 return $date;
             /** APPLICATION *******************************************************************************************/
-            case 'VAR[PREECOG#nom]' :
-                $lien = '<strong>PrECoG</strong>';
+            case 'VAR[EMC2#nom]' :
+                $lien = '<strong>EMC2</strong>';
                 return $lien;
-            case 'VAR[PREECOG#lien]' :
-                $lien = '<a href="' . 'https://preecog.unicaen.fr' . '">PrEECoG</a>';
+            case 'VAR[EMC2#lien]' :
+                $lien = '<a href="' . 'https://preecog.unicaen.fr' . '">EMC2</a>';
                 return $lien;
             /** CAMPAGNE **********************************************************************************************/
             case 'VAR[CAMPAGNE#annee]' :
