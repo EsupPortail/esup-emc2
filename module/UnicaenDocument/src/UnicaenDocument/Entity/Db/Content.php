@@ -27,7 +27,7 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
@@ -36,7 +36,7 @@ class Content implements HistoriqueAwareInterface {
      * @param int $id
      * @return Content
      */
-    public function setId(int $id): Content
+    public function setId(int $id)
     {
         $this->id = $id;
         return $this;
@@ -45,7 +45,7 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getCode(): string
+    public function getCode()
     {
         return $this->code;
     }
@@ -54,7 +54,7 @@ class Content implements HistoriqueAwareInterface {
      * @param string $code
      * @return Content
      */
-    public function setCode(string $code): Content
+    public function setCode(string $code)
     {
         $this->code = $code;
         return $this;
@@ -63,7 +63,7 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description;
     }
@@ -72,7 +72,7 @@ class Content implements HistoriqueAwareInterface {
      * @param string $description
      * @return Content
      */
-    public function setDescription(string $description): Content
+    public function setDescription(string $description)
     {
         $this->description = $description;
         return $this;
@@ -81,7 +81,7 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getType(): string
+    public function getType()
     {
         return $this->type;
     }
@@ -90,7 +90,7 @@ class Content implements HistoriqueAwareInterface {
      * @param string $type
      * @return Content
      */
-    public function setType(string $type): Content
+    public function setType(string $type)
     {
         $this->type = $type;
         return $this;
@@ -99,7 +99,7 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getComplement(): string
+    public function getComplement()
     {
         return $this->complement;
     }
@@ -108,7 +108,7 @@ class Content implements HistoriqueAwareInterface {
      * @param string $complement
      * @return Content
      */
-    public function setComplement(string $complement): Content
+    public function setComplement(string $complement)
     {
         $this->complement = $complement;
         return $this;
@@ -117,7 +117,7 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getContent(): string
+    public function getContent()
     {
         return $this->content;
     }
@@ -126,7 +126,7 @@ class Content implements HistoriqueAwareInterface {
      * @param string $content
      * @return Content
      */
-    public function setContent(string $content): Content
+    public function setContent(string $content)
     {
         $this->content = $content;
         return $this;

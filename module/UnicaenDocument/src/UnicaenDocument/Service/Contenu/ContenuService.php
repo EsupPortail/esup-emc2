@@ -147,5 +147,23 @@ class ContenuService {
 
     /** TRAITEMENTS DES MACROS ****************************************************************************************/
 
+    /**
+     * @param string $texteInitial
+     * @param array $variables
+     * @return string
+     */
+    private function replaceMacros($texteInitial, $variables)
+    {
+        $matches = [];
+        preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);
 
+        $patterns = array_unique($matches[0]);
+        $replacements = [];
+        foreach ($patterns as $pattern) {
+            $replacements[] = $this->getMacroService()->getTexte($pattern, $variables);
+        }
+        $text = str_replace($patterns, $replacements, $texteInitial);
+
+        return $text;
+    }
 }

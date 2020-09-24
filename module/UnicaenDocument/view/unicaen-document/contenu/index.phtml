@@ -2,8 +2,12 @@
 
 /**
  * @see \UnicaenDocument\Controller\ContenuController::indexAction()
+ * @var Content[] $contenus
  */
 
+use UnicaenDocument\Entity\Db\Content;
+
+$this->headTitle("Index des contenus");
 ?>
 
 <h1 class="page-header">
@@ -11,5 +15,58 @@
 </h1>
 
 <div class="main">
-    ...
+
+    <a href="<?php echo $this->url('contenu/contenu/ajouter', [], [], true); ?>"
+       class="btn btn-primary action ajax-modal" data-event="modification">
+        <span class="icon ajouter"></span>
+        Ajouter un contenu
+    </a>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Code </th>
+                <th> Type </th>
+                <th> Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($contenus as $contenu) : ?>
+                <tr>
+                    <td>
+                        <?php echo $contenu->getCode(); ?>
+                        <?php if ($contenu->getDescription() !== null) : ?>
+                            <span class="icon information" title="<?php echo $contenu->getDescription(); ?>"></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php echo $contenu->getType(); ?>
+                    </td>
+                    <td>
+                        <a href="<?php echo $this->url('contenu/contenu/afficher', ['contenu' => $contenu->getId()], [], true); ?>"
+                           class="ajax-modal"
+                        >
+                            <span class="icon voir"></span></a>
+                        <a href="<?php echo $this->url('contenu/contenu/modifier', ['contenu' => $contenu->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon editer"></span></a>
+                        <?php if ($contenu->estNonHistorise()) : ?>
+                            <a href="<?php echo $this->url('contenu/contenu/historiser', ['contenu' => $contenu->getId()], [], true); ?>"
+                            >
+                                <span class="icon historiser"></span></a>
+                        <?php else : ?>
+                            <a href="<?php echo $this->url('contenu/contenu/restaurer', ['contenu' => $contenu->getId()], [], true); ?>"
+                            >
+                                <span class="icon restaurer"></span></a>
+                        <?php endif; ?>
+                        <a href="<?php echo $this->url('contenu/contenu/detruire', ['contenu' => $contenu->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon detruire"></span></a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>

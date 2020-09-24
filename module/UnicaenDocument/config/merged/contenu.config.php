@@ -2,11 +2,16 @@
 
 use UnicaenDocument\Controller\ContenuController;
 use UnicaenDocument\Controller\ContenuControllerFactory;
+use UnicaenDocument\Form\Contenu\ContenuForm;
+use UnicaenDocument\Form\Contenu\ContenuFormFactory;
+use UnicaenDocument\Form\Contenu\ContenuHydrator;
+use UnicaenDocument\Form\Contenu\ContenuHydratorFactory;
 use UnicaenDocument\Provider\Privilege\DocumentcontentPrivileges;
 use UnicaenDocument\Service\Contenu\ContenuService;
 use UnicaenDocument\Service\Contenu\ContenuServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -16,6 +21,7 @@ return [
                     'controller' => ContenuController::class,
                     'action' => [
                         'index',
+                        'afficher',
                     ],
                     'privileges' => [
                         DocumentcontentPrivileges::DOCUMENTCONTENU_INDEX,
@@ -98,69 +104,69 @@ return [
                                 'action' => 'index',
                             ],
                         ],
-//                        'may_terminate' => true,
-//                        'child_routes' => [
-//                            'generer-json' => [
-//                                'type' => Literal::class,
-//                                'options' => [
-//                                    'route' => '/generer-json',
-//                                    'defaults' => [
-//                                        'controller' => MacroController::class,
-//                                        'action' => 'generer-json',
-//                                    ],
-//                                ],
-//                            ],
-//                            'ajouter' => [
-//                                'type' => Literal::class,
-//                                'options' => [
-//                                    'route' => '/ajouter',
-//                                    'defaults' => [
-//                                        'controller' => MacroController::class,
-//                                        'action' => 'ajouter',
-//                                    ],
-//                                ],
-//                            ],
-//                            'modifier' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/modifier/:macro',
-//                                    'defaults' => [
-//                                        'controller' => MacroController::class,
-//                                        'action' => 'modifier',
-//                                    ],
-//                                ],
-//                            ],
-//                            'historiser' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/historiser/:macro',
-//                                    'defaults' => [
-//                                        'controller' => MacroController::class,
-//                                        'action' => 'historiser',
-//                                    ],
-//                                ],
-//                            ],
-//                            'restaurer' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/restaurer/:macro',
-//                                    'defaults' => [
-//                                        'controller' => MacroController::class,
-//                                        'action' => 'restaurer',
-//                                    ],
-//                                ],
-//                            ],
-//                            'supprimer' => [
-//                                'type' => Segment::class,
-//                                'options' => [
-//                                    'route' => '/supprimer/:macro',
-//                                    'defaults' => [
-//                                        'controller' => MacroController::class,
-//                                        'action' => 'supprimer',
-//                                    ],
-//                                ],
-//                            ],
-//                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'afficher' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/afficher/:contenu',
+                                    'defaults' => [
+                                        'controller' => ContenuController::class,
+                                        'action' => 'afficher',
+                                    ],
+                                ],
+                            ],
+                            'ajouter' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/ajouter',
+                                    'defaults' => [
+                                        'controller' => ContenuController::class,
+                                        'action' => 'ajouter',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/modifier/:contenu',
+                                    'defaults' => [
+                                        'controller' => ContenuController::class,
+                                        'action' => 'modifier',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/restaurer/:contenu',
+                                    'defaults' => [
+                                        'controller' => ContenuController::class,
+                                        'action' => 'restaurer',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/historiser/:contenu',
+                                    'defaults' => [
+                                        'controller' => ContenuController::class,
+                                        'action' => 'historiser',
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/detruire/:contenu',
+                                    'defaults' => [
+                                        'controller' => ContenuController::class,
+                                        'action' => 'detruire',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -174,12 +180,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-//            MacroForm::class => MacroFormFactory::class,
+            ContenuForm::class => ContenuFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-//            MacroHydrator::class => MacroHydratorFactory::class,
+            ContenuHydrator::class => ContenuHydratorFactory::class,
         ],
     ],
     'controllers'     => [
