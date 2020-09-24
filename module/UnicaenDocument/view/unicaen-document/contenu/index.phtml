@@ -8,11 +8,11 @@
 use UnicaenDocument\Entity\Db\Content;
 use UnicaenDocument\Provider\Privilege\DocumentcontentPrivileges;
 
-$canAjouter  = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_AJOUTER));
-$canAfficher  = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_INDEX));
-$canModifier = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_MODIFIER));
+$canAjouter    = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_AJOUTER));
+$canAfficher   = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_INDEX));
+$canModifier   = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_MODIFIER));
 $canHistoriser = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_HISTORISER));
-$canDetruire = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_SUPPRIMER));
+$canDetruire   = $this->isAllowed(DocumentcontentPrivileges::getResourceId(DocumentcontentPrivileges::DOCUMENTCONTENU_SUPPRIMER));
 
 $this->headTitle("Index des contenus");
 ?>

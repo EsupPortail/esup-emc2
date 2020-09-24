@@ -166,7 +166,7 @@ class StructureController extends AbstractActionController {
             if ($gestionnaire !== null AND $structure !== null) {
                 if (!$gestionnaire->hasRole(RoleConstant::GESTIONNAIRE)) {
                     $gestionnaireRole = $this->getRoleService()->getRoleByCode(RoleConstant::GESTIONNAIRE);
-                    $gestionnaire->addRole($gestionnaireRole);
+                    if (!$gestionnaire->hasRole($gestionnaireRole)) $gestionnaire->addRole($gestionnaireRole);
                     $this->getUserService()->update($gestionnaire);
                 }
                 $this->getStructureService()->addGestionnaire($structure, $gestionnaire);
