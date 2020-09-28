@@ -7,6 +7,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
+use Application\Form\EntityFormManagmentTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
@@ -58,6 +59,8 @@ class FicheMetierController extends AbstractActionController
     use SelectionFormationFormAwareTrait;
 
     use ConfigurationServiceAwareTrait;
+
+    use EntityFormManagmentTrait;
 
     private $renderer;
 
@@ -247,15 +250,11 @@ class FicheMetierController extends AbstractActionController
         $form = $this->getLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-            }
+            $this->updateFromForm($request, $form, $this->getFicheMetierService());
         }
 
         $vm = new ViewModel();
@@ -462,11 +461,7 @@ class FicheMetierController extends AbstractActionController
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-            }
+            $this->updateFromForm($request, $form, $this->getFicheMetierService());
         }
 
         $vm = new ViewModel();
