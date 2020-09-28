@@ -82,6 +82,8 @@ return [
                     'action' => [
                         'ajouter-gestionnaire',
                         'retirer-gestionnaire',
+                        'ajouter-responsable',
+                        'retirer-responsable',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
                     'assertion'  => StructureAssertion::class,
@@ -167,6 +169,30 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'retirer-gestionnaire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'ajouter-responsable' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-responsable/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'ajouter-responsable',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'retirer-responsable' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-responsable/:structure/:responsable',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'retirer-responsable',
                             ],
                         ],
                         'may_terminate' => true,

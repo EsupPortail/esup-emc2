@@ -36,6 +36,17 @@ class AgentAssertion extends AbstractAssertion {
                 if ($isGestionnaire) break;
             }
         }
+        $isResponsable = false;
+        if ($role->getRoleId === RoleConstant::RESPONSABLE) {
+            $structures = [];
+            foreach ($entity->getGrades() as $grade) {
+                $structures[] = $grade->getStructure();
+            }
+            foreach ($structures as $structure) {
+                $isResponsable = $this->getStructureService()->isResponsable($structure, $user);
+                if ($isResponsable) break;
+            }
+        }
 
         switch($privilege) {
             case AgentPrivileges::AGENT_ELEMENT_VOIR:
@@ -48,6 +59,8 @@ class AgentAssertion extends AbstractAssertion {
                         return ($entity->getUtilisateur() === $user);
                     case RoleConstant::GESTIONNAIRE:
                         return $isGestionnaire;
+                    case RoleConstant::RESPONSABLE:
+                        return $isResponsable;
                 }
                 return false;
             case AgentPrivileges::AGENT_ELEMENT_AJOUTER:
@@ -61,6 +74,8 @@ class AgentAssertion extends AbstractAssertion {
                         return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
                     case RoleConstant::GESTIONNAIRE:
                             return $isGestionnaire;
+                    case RoleConstant::RESPONSABLE:
+                        return $isResponsable;
                 }
                 return false;
             case AgentPrivileges::AGENT_ELEMENT_DETRUIRE:
@@ -78,6 +93,8 @@ class AgentAssertion extends AbstractAssertion {
                         return true;
                     case RoleConstant::GESTIONNAIRE:
                         return $isGestionnaire;
+                    case RoleConstant::RESPONSABLE:
+                        return $isResponsable;
                 }
                 return false;
         }

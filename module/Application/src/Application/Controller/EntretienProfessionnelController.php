@@ -302,12 +302,12 @@ class EntretienProfessionnelController extends AbstractActionController
                         break;
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
-                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
-                        $this->getMailingService()->sendMailType("COMMUNICATION_AGENT_OBSERVATIONS", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getUtilisateur()->getEmail()]);
+                        $this->getMailingService()->sendMailType("COMMUNICATION_AGENT_OBSERVATIONS", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getUtilisateur()->getEmail()]);
                         break;
                     case 'DRH' :
                         $entretien->setValidationDRH($validation);
-                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getResponsable()->getEmail()]);
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
                         break;
                 }
                 $this->getEntretienProfessionnelService()->update($entretien);
@@ -503,7 +503,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getEntretienProfessionnelObservationService()->create($observation);
-                $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getResponsable()->getEmail()]);
+                $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
             }
         }
 

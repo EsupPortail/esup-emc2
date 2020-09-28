@@ -68,6 +68,38 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
 
     <div class="col-md-6">
         <h2>
+            Responsables
+            <span class="badge"><?php echo count($structure->getResponsables()); ?></span>
+            <?php if ($canEditerGestionnaire) : ?>
+                <a
+                    <?php /** @see \Application\Controller\StructureController::ajouterResponsableAction() */ ?>
+                        href="<?php echo $this->url('structure/ajouter-responsable', ['structure' => $structure->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                >
+                    <span class="icon editer" data-toggle="tooltip" data-html="true"
+                          title="Ajouter un&middot;e reposanble à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                    </span></a>
+            <?php endif; ?>
+        </h2>
+        <ul>
+            <?php foreach ($structure->getResponsables() as $responsable) : ?>
+                <li>
+                    <?php echo $responsable->getDisplayName(); ?>
+                    <?php if ($canEditerGestionnaire) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\StructureController::retirerResponsableAction() */ ?>
+                                href="<?php echo $this->url('structure/retirer-responsable', ['structure' => $structure->getId(), 'responsable' => $responsable->getId()], [], true); ?>"
+                        >
+                            <span class="icon detruire"  data-toggle="tooltip" data-html="true"
+                                  title="Supprimer la reponsabilité de structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='highlight user'><?php echo $responsable->getDisplayName(); ?></span>">
+                            </span></a>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h2>
             Gestionnaires
             <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
             <?php if ($canEditerGestionnaire) : ?>
