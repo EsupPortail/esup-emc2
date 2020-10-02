@@ -166,4 +166,25 @@ class ContenuService {
 
         return $text;
     }
+
+    /**
+     * @param Content $contenu
+     * @param array $variables
+     * @return string
+     */
+    public function generateComplement($contenu, $variables)
+    {
+        return $this->replaceMacros($contenu->getComplement(), $variables);
+    }
+
+    /**
+     * @param Content $contenu
+     * @param array $variables
+     * @return string
+     */
+    public function generateContenu($contenu, $variables)
+    {
+        return $this->replaceMacros($contenu->getContent(), $variables);
+    }
+
 }
