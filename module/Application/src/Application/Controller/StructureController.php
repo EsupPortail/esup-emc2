@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Structure;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
+use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -93,12 +94,9 @@ class StructureController extends AbstractActionController {
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
         /** Campagne */
+        $last = $this->getEntretienProfessionnelCampagneService()->getLastCampagne();
         $campagnes = $this->getEntretienProfessionnelCampagneService()->getCampagnesActives();
         $entretiens = [];
-        foreach ($campagnes as $campagne) {
-            //TODO something
-            $a=1;
-        }
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -112,6 +110,7 @@ class StructureController extends AbstractActionController {
             'agents' => $agents,
             'postes' => $postes,
 
+            'last' => $last,
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
 
@@ -147,9 +146,12 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
+    /** GESTION DES RESPONSABLES ET GESTIONNAIRES *******************************************************************/
+
     public function ajouterGestionnaireAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        /** @var AjouterGestionnaireForm $form */
         $form = $this->getAjouterGestionnaireForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
         /** @var SearchAndSelect $element */
@@ -164,7 +166,12 @@ class StructureController extends AbstractActionController {
             $gestionnaire = $this->getUserService()->getUtilisateur($data['gestionnaire']['id']);
             $structure = $this->getStructureService()->getStructure($data['structure']['id']);
             if ($gestionnaire !== null AND $structure !== null) {
-                $this->getStructureService()->addGestionnaire($structure, $gestionnaire);
+                if (!$gestionnaire->hasRole(RoleConstant::GESTIONNAIRE)) {
+                    $gestionnaireRole = $this->getRoleService()->getRoleByCode(RoleConstant::GESTIONNAIRE);
+                    if (!$gestionnaire->hasRole($gestionnaireRole)) $gestionnaire->addRole($gestionnaireRole);
+                    $this->getUserService()->update($gestionnaire);
+                }
+                $structure->addGestionnaire($gestionnaire);
                 $this->getStructureService()->update($structure);
             }
         }
@@ -183,11 +190,62 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
         $gestionnaire = $this->getUserService()->getUtilisateur($this->params()->fromRoute('gestionnaire'));
 
-        $this->getStructureService()->removeGestionnaire($structure, $gestionnaire);
+        $structure->removeGestionnaire($gestionnaire);
         $this->getStructureService()->update($structure);
 
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
+
+    public function ajouterResponsableAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        /** @var AjouterGestionnaireForm $form */
+        $form = $this->getAjouterGestionnaireForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-responsable', ['structure' => $structure->getId()]));
+        /** @var SearchAndSelect $element */
+        $element = $form->get('structure');
+        /** @see StructureController::rechercherWithStructureMereAction() */
+        $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $responsable = $this->getUserService()->getUtilisateur($data['gestionnaire']['id']);
+            $structure = $this->getStructureService()->getStructure($data['structure']['id']);
+            if ($responsable !== null AND $structure !== null) {
+                if (!$responsable->hasRole(RoleConstant::RESPONSABLE)) {
+                    $responsableRole = $this->getRoleService()->getRoleByCode(RoleConstant::RESPONSABLE);
+                    if (!$responsable->hasRole($responsableRole)) $responsable->addRole($responsableRole);
+                    $this->getUserService()->update($responsable);
+                }
+                $structure->addResponsable($responsable);
+                $this->getStructureService()->update($structure);
+            }
+        }
+
+        $form->get('gestionnaire')->setLabel('Responsable * :');
+        $vm = new ViewModel();
+        $vm->setTemplate("application/default/default-form");
+        $vm->setVariables([
+            'title' => "Ajout d'un&middot;e responsable à une structure",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function retirerResponsableAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $responsable = $this->getUserService()->getUtilisateur($this->params()->fromRoute('responsable'));
+
+        $structure->removeResponsable($responsable);
+        $this->getStructureService()->update($structure);
+
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+    }
+
+    /** RESUME *********************************************************************************************************/
 
     public function toggleResumeMereAction()
     {

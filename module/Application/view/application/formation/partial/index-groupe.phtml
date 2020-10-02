@@ -48,7 +48,7 @@ use Application\Entity\Db\FormationGroupe;
 
 <br/>
 
-<table class="datatable table table-condensed">
+<table class="table table-condensed" id="groupes">
     <thead>
     <tr>
         <th> Badge </th>
@@ -60,7 +60,7 @@ use Application\Entity\Db\FormationGroupe;
     </thead>
     <tbody>
     <?php foreach ($groupes as $groupe) : ?>
-        <tr <?php if ($groupe->estHistorise()) echo "class='historise'"; ?>>
+        <tr id="<?php echo $groupe->getId(); ?>"  class="<?php if ($groupe->estHistorise()) echo "historise"; ?>">
             <td> <?php echo $this->formationGroupe($groupe); ?> </td>
             <td> <?php echo $groupe->getLibelle(); ?> </td>
             <td> <?php echo count($groupe->getFormations()); ?> </td>
@@ -128,3 +128,38 @@ use Application\Entity\Db\FormationGroupe;
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(function() {
+        //let mode = <?php //echo "'".$mode."'"; ?>//;
+        // console.log(mode);
+        //if (<?php //echo "'".$mode."'"; ?>// === 'modifier-activite') {
+            $('table#groupes tbody').sortable({
+                update: function( event, ui ) {
+                    let ordre = "";
+                    $('table#groupes tbody tr').each(function () {
+                        if (ordre !== "") ordre += "_";
+                        ordre += $(this)[0].id ;
+                    });
+                    // console.log(ordre);
+                    <?php /** @see \Application\Controller\FormationController::updateOrdreGroupeAction() */ ?>
+                    let url = '../formation-groupe/update-ordre-groupe/' + ordre;
+//                    // console.log(url);
+                   $.ajax({
+                       type: "POST",
+                       url: url,
+                       beforeSend:
+                           function () {
+                               $( "table#groupes tbody" ).sortable( "option", "disabled", true );
+                           },
+                       success:
+                           function (retour) {
+                               $( "table#groupes tbody" ).sortable( "option", "disabled", false );
+                           }
+                   });
+                }
+            });
+            $('table#groupes tbody').disableSelection();
+        // }
+    });
+</script>

@@ -771,7 +771,8 @@ class AgentController extends AbstractActionController
     public function rechercherGestionnaireAction()
     {
         if (($term = $this->params()->fromQuery('term'))) {
-            $gestionnaires = $this->getUserService()->findByTermAndRole($term, RoleConstant::GESTIONNAIRE);
+//            $gestionnaires = $this->getUserService()->findByTermAndRole($term, RoleConstant::GESTIONNAIRE);
+            $gestionnaires = $this->getUserService()->findByTerm($term);
             $result = $this->getUserService()->formatUserJSON($gestionnaires);
             return new JsonModel($result);
         }

@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @see \UnicaenDocument\Controller\MacroController::indexAction()
+ * @var Macro[] $macros
+ */
+
+use UnicaenDocument\Entity\Db\Macro;
+use UnicaenDocument\Provider\Privilege\DocumentmacroPrivileges;
+
+$canAjouter = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_AJOUTER));
+$canModifier = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_MODIFIER));
+$canHistoriser = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_HISTORISER));
+$canSupprimer = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_SUPPRIMER));
+
+$this->headTitle("Index des macros");
+?>
+
+<h1 class="page-header">
+    Index des macros
+</h1>
+
+<div class="main">
+
+    <?php if ($canAjouter) : ?>
+        <a href="<?php echo $this->url('contenu/macro/ajouter', [], [], true); ?>" class="btn btn-primary action ajax-modal" data-event="modification">
+            <span class="icon ajouter"></span>
+            Ajouter une macro
+        </a>
+    <?php endif; ?>
+
+    <a href="<?php echo $this->url('contenu/macro/generer-json', [], [], true); ?>" class="btn btn-primary action ajax-modal">
+        <span class="icon code"></span>
+        Génrer le JSON des macros
+    </a>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th> Code </th>
+                <th> Variable </th>
+                <th> Méthode </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($macros as $macro) : ?>
+                <tr <?php if ($macro->estHistorise()) echo 'class="historise"'; ?> >
+                    <td>
+                        <?php echo $macro->getCode(); ?>
+                        <?php if ($macro->getDescription() !== null) : ?>
+                            <span class="icon information" data-toggle="tooltip" data-html="true" title="<?php echo $macro->getDescription(); ?>"></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php echo $macro->getVariable(); ?>
+                    </td>
+                    <td>
+                        <?php echo $macro->getMethode(); ?>
+                    </td>
+                    <td>
+                        <?php if ($canModifier) : ?>
+                            <a href="<?php echo $this->url('contenu/macro/modifier', ['macro' => $macro->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
+                               title="Modification de la macro <span class='highlight macro'><?php echo $macro->getCode(); ?></span>"
+                            >
+                                <span class="icon editer"></span></a>
+                        <?php endif; ?>
+                        <?php if ($canHistoriser) : ?>
+                            <?php if ($macro->estHistorise()): ?>
+                                <a href="<?php echo $this->url('contenu/macro/restaurer', ['macro' => $macro->getId()], [], true); ?>"
+                                   data-toggle="tooltip" data-html="true"
+                                   title="Restauration de la macro <span class='highlight macro'><?php echo $macro->getCode(); ?></span>"
+                                >
+                                    <span class="icon restaurer"></span></a>
+                            <?php else :?>
+                                <a href="<?php echo $this->url('contenu/macro/historiser', ['macro' => $macro->getId()], [], true); ?>"
+                                   data-toggle="tooltip" data-html="true"
+                                   title="Historiser de la macro <span class='highlight macro'><?php echo $macro->getCode(); ?></span>"
+                                >
+                                    <span class="icon historiser"></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canSupprimer) : ?>
+                            <a href="<?php echo $this->url('contenu/macro/supprimer', ['macro' => $macro->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
+                               title="Suppression de la macro <span class='highlight macro'><?php echo $macro->getCode(); ?></span>"
+                            >
+                                <span class="icon detruire"></span></a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

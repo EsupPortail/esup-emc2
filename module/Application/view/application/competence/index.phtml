@@ -92,10 +92,9 @@ $this->headTitle("Index des compétences");
                     <table id="<?php echo "competence_".$type->getId().""; ?>" class="datatable table table-condensed" data-order='[ 1, "asc" ]'>
                         <thead>
                         <tr>
-                            <th> Libellé </th>
+                            <th style="width:75%;"> Libellé </th>
                             <th> Thème </th>
-                            <th class="modificateur-cell"> Modificateur </th>
-                            <th class="action-cell"> Action </th>
+                            <th style="width:9rem;"> Action </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -103,12 +102,6 @@ $this->headTitle("Index des compétences");
                             <tr>
                                 <td> <?php echo $competence->getLibelle(); ?> </td>
                                 <td> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </td>
-                                <td>
-                                    <small>
-                                        <?php echo $competence->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
-                                        <?php echo $competence->getHistoModificateur()->getDisplayName(); ?>
-                                    </small>
-                                </td>
                                 <td>
                                     <?php if ($canVoir): ?>
                                         <?php /** @see CompetenceController::afficherAction() */?>
@@ -183,10 +176,11 @@ $this->headTitle("Index des compétences");
                 <table class="datatable table table-condensed" data-order='[ 1, "asc" ]'>
                     <thead>
                     <tr>
-                        <th style="width:auto;"> Libellé </th>
+                    <tr>
+                        <th style="width:75%;"> Libellé </th>
                         <th> Thème </th>
-                        <th class="modificateur-cell"> Modificateur </th>
-                        <th class="action-cell"> Action </th>
+                        <th style="width:9rem;"> Action </th>
+                    </tr>
                     </tr>
                     </thead>
                     <tbody>
@@ -194,12 +188,6 @@ $this->headTitle("Index des compétences");
                         <tr>
                             <td> <?php echo $competence->getLibelle(); ?> </td>
                             <td> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </td>
-                            <td>
-                                <small>
-                                    <?php echo $competence->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
-                                    <?php echo $competence->getHistoModificateur()->getDisplayName(); ?>
-                                </small>
-                            </td>
                             <td>
                                 <?php if ($canVoir): ?>
                                     <?php /** @see CompetenceController::afficherAction() */?>
@@ -270,12 +258,11 @@ $this->headTitle("Index des compétences");
                 <table class="datatable table table-condensed">
                     <thead>
                     <tr>
-                        <th> Libellé </th>
+                        <th style="width:66%;"> Libellé </th>
                         <!--            <th> Type </th>-->
                         <th> #Compétence </th>
                         <th> Ordre </th>
-                        <th class="modificateur-cell"> Modificateur </th>
-                        <th class="action-cell"> Action </th>
+                        <th style="width:11rem;"> Action </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -284,12 +271,6 @@ $this->headTitle("Index des compétences");
                             <td> <?php echo $type->getLibelle(); ?> </td>
                             <td> <?php echo count($type->getCompetences()); ?> </td>
                             <td> <?php echo $type->getOrdre(); ?> </td>
-                            <td>
-                                <small>
-                                    <?php echo $type->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
-                                    <?php echo $type->getHistoModificateur()->getDisplayName(); ?> <br/>
-                                </small>
-                            </td>
                             <td>
                                 <?php if ($canVoir) : ?>
                                     <?php /** @see CompetenceController::afficherCompetenceTypeAction() */ ?>
@@ -358,10 +339,9 @@ $this->headTitle("Index des compétences");
                 <table class="datatable table table-condensed">
                     <thead>
                     <tr>
-                        <th style="width:auto;"> Libellé </th>
+                        <th style="width:75%;"> Libellé </th>
                         <th> #Compétence </th>
-                        <th class="modificateur-cell"> Modificateur </th>
-                        <th class="action-cell"> Action </th>
+                        <th style="width:11rem;"> Action </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -369,12 +349,6 @@ $this->headTitle("Index des compétences");
                         <tr>
                             <td> <?php echo $theme->getLibelle(); ?> </td>
                             <td> <?php echo count($theme->getCompetences()); ?> </td>
-                            <td>
-                                <small>
-                                    <?php echo $theme->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
-                                    <?php echo $theme->getHistoModificateur()->getDisplayName(); ?> <br/>
-                                </small>
-                            </td>
                             <td>
                                 <?php if ($canVoir) : ?>
                                     <?php /** @see CompetenceController::afficherCompetenceThemeAction() */ ?>
@@ -443,8 +417,6 @@ $this->headTitle("Index des compétences");
     let search ;
     let page ;
     let id = 'competence_3';
-
-
 
     $(function() {
         <?php foreach ($types as $type) : ?>

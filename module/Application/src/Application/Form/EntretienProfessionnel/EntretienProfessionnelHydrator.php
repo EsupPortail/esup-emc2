@@ -23,8 +23,10 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
         $data = [
             'responsable' => $object->getResponsable(),
             'agent' => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
-            'date_entretien' => $object->getDateEntretien(),
+            'date_entretien'  => ($object->getDateEntretien())?$object->getDateEntretien()->format('d/m/Y'):null,
+            'heure_entretien' => ($object->getDateEntretien())?$object->getDateEntretien()->format('H:i'):null,
             'campagne' => ($object->getCampagne())?$object->getCampagne()->getId():null,
+            'lieu_entretien' => ($object->getLieu())?$object->getLieu():null,
         ];
         return $data;
     }
@@ -38,13 +40,18 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
     {
         $reponsable = $this->getUserService()->getUtilisateur($data['responsable']['id']);
         $agent      = $this->getAgentService()->getAgent($data['agent']['id']);
-        $date       = DateTime::createFromFormat('d/m/Y', $data['date_entretien']);
+        $date_day   = (isset($data['date_entretien']) AND trim($data['date_entretien']) !== "")?trim($data['date_entretien']):null;
+        $date_time  = (isset($data['heure_entretien']) AND trim($data['heure_entretien']) !== "")?trim($data['heure_entretien']):null;
+        $date = ($date_day !== null AND $date_time !== null)?DateTime::createFromFormat("d/m/Y H:i", $date_day." ".$date_time):null;
+
         $campagne   = $this->getEntretienProfessionnelCampagneService()->getEntretienProfessionnelCampagne($data['campagne']);
+        $lieu       = (isset($data['lieu']) AND trim($data['lieu']) !== "")?trim($data['lieu']):null;
 
         $object->setResponsable($reponsable);
         $object->setAgent($agent);
         $object->setDateEntretien($date);
         $object->setCampagne($campagne);
+        $object->setLieu($lieu);
 
         return $object;
     }

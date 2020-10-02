@@ -50,6 +50,9 @@ class ChampAsResultHelper extends AbstractHelper
             case Champ::TYPE_PERIODE :
                 $texte .= $view->partial('result/periode', ['champ' => $champ, 'data' => $data]);
                 break;
+            case Champ::TYPE_FORMATION :
+                $texte .= $view->partial('result/formation', ['champ' => $champ, 'data' => $data]);
+                break;
             case Champ::TYPE_MULTIPLE :
                 $texte .= $view->partial('result/multiple', ['champ' => $champ, 'data' => $data]);
                 break;

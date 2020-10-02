@@ -268,7 +268,7 @@ foreach ($agents as $agent) {
                                 <?php /** @see \Application\Controller\EntretienProfessionnelController::creerAction() */?>
                                 href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
                                 title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
-                                class="ajax-modal" data-event="modification"
+                                class="ajax-modal" data-event="entretien"
                                 data-toggle="tooltip" data-html="true"
                             >
                                 <span class="icon ajouter"></span></a>

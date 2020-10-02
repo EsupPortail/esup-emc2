@@ -434,7 +434,13 @@ table.parcours-de-formation th {
     padding-bottom:0.5rem;
     padding-top:0.5rem;
     padding-left: 2rem;
-    border-bottom: 1px solid #31708f;
+}
+
+table.parcours-de-formation th.titre {
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
+    color: #3c6c8b;
+    /*border-top-left-radius:5px;*/
 }
 
  table.parcours-de-formation td.libelle-cell {
@@ -453,6 +459,63 @@ table.parcours-de-formation td.action-cell {
     /*background: lightblue;*/
     width: 12rem;
     text-align: right;
+}
+
+/** Tableaux des applications******************************************************************************************/
+
+table.applications {
+    width:100%;
+}
+table.applications th {
+    color:white;
+    padding-bottom:0.5rem;
+    padding-top:0.5rem;
+    padding-left: 2rem;
+}
+
+table.applications th.titre {
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
+    color: #3c6c8b;
+    /*border-top-left-radius:5px;*/
+}
+
+/** Tableaux des compétences ******************************************************************************************/
+
+table.competences {
+    width:100%;
+}
+table.competences th {
+    color:white;
+    padding-bottom:0.5rem;
+    padding-top:0.5rem;
+    padding-left: 2rem;
+}
+
+table.competences th.titre {
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
+    color: #3c6c8b;
+    /*border-top-left-radius:5px;*/
+}
+
+/** Tableaux des formations *******************************************************************************************/
+
+table.formations {
+    width:100%;
+}
+table.formations th {
+    color:white;
+    padding-bottom:0.5rem;
+    padding-top:0.5rem;
+    padding-left: 2rem;
+}
+
+table.formations th.titre {
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
+    color: #3c6c8b;
+    /*border-top-left-radius:5px;*/
 }
 
 /** Datatable *****/

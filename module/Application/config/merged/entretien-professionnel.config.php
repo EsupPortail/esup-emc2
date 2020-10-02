@@ -58,6 +58,13 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
+                        'accepter-entretien',
+                    ],
+                    'roles' => [],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'index',
                     ],
                     'privileges' => [
@@ -224,6 +231,17 @@ return [
                     ],
                 ],
                 'child_routes' => [
+                    'accepter-entretien' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/accepter-entretien/:entretien-professionnel/:token',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'accepter-entretien',
+                            ],
+                        ],
+                    ],
                     'creer' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,

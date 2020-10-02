@@ -118,6 +118,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $this->getEntretienProfessionnelService()->create($entretien);
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
                 $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
+                return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true);
             }
         }
 
@@ -301,12 +302,12 @@ class EntretienProfessionnelController extends AbstractActionController
                         break;
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
-                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
-                        $this->getMailingService()->sendMailType("COMMUNICATION_AGENT_OBSERVATIONS", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getAgent()->getUtilisateur()->getEmail()]);
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getUtilisateur()->getEmail()]);
+                        $this->getMailingService()->sendMailType("COMMUNICATION_AGENT_OBSERVATIONS", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getUtilisateur()->getEmail()]);
                         break;
                     case 'DRH' :
                         $entretien->setValidationDRH($validation);
-                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getResponsable()->getEmail()]);
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
                         break;
                 }
                 $this->getEntretienProfessionnelService()->update($entretien);
@@ -361,7 +362,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
         $agent = $entretien->getAgent()->getDenomination();
         $date = $entretien->getDateEntretien()->format('Ymd');
-        $filemane = "PrEECoG_" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $agent) . '_' . $date . '.pdf';
+        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $agent) . '_' . $date . '.pdf';
         try {
             $exporter->getMpdf()->SetTitle("Entretien professionnel de " . $agent . " du " . $entretien->getDateEntretien()->format("d/m/Y"));
         } catch (MpdfException $e) {
@@ -369,6 +370,23 @@ class EntretienProfessionnelController extends AbstractActionController
         }
         $exporter->export($filemane);
         exit;
+    }
+
+    public function accepterEntretienAction() {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien-professionnel');
+        $token = $this->params()->fromRoute('token');
+
+        if ($entretien !== null AND $entretien->getToken() === $token) {
+            $entretien->setToken(null);
+            $entretien->setAcceptation($this->getDateTime());
+            $this->getEntretienProfessionnelService()->update($entretien);
+            $this->getMailingService()->sendMailType("ENTRETIEN_ACCEPTER_AGENT", ['entretien' => $entretien, 'user' => $entretien->getResponsable()]);
+        }
+
+        return new ViewModel([
+            'entretien' => $entretien,
+            'token' => $token,
+        ]);
     }
 
     /** CAMPAGNE ******************************************************************************************************/
@@ -485,7 +503,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getEntretienProfessionnelObservationService()->create($observation);
-                $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.$entretien->getResponsable()->getEmail()]);
+                $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
             }
         }
 

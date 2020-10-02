@@ -276,6 +276,30 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
+    public function updateOrdreGroupeAction()
+    {
+        $ordre = explode("_",$this->params()->fromRoute('ordre'));
+        $sort = [];
+        $position = 1;
+        foreach ($ordre as $item) {
+            $sort[$item] = $position;
+            $position++;
+        }
+
+        $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
+        foreach ($groupes as $groupe) {
+            if (! isset($sort[$groupe->getId()]) AND $groupe->getOrdre() !== null) {
+                $groupe->setOrdre(null);
+                $this->getFormationGroupeService()->update($groupe);
+            }
+            if ($groupe->getOrdre() != $sort[$groupe->getId()]) {
+                $groupe->setOrdre($sort[$groupe->getId()]);
+                $this->getFormationGroupeService()->update($groupe);
+            }
+        }
+
+        return new ViewModel();
+    }
     /** FORMATION THEME ***********************************************************************************************/
 
     public function afficherThemeAction()

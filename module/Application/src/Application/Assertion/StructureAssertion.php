@@ -28,6 +28,10 @@ class StructureAssertion extends AbstractAssertion {
         if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
             $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $user);
         }
+        $isResponsable = false;
+        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+            $isResponsable = $this->getStructureService()->isResponsable($entity, $user);
+        }
 
         switch($privilege) {
 
@@ -39,6 +43,8 @@ class StructureAssertion extends AbstractAssertion {
                         return true;
                     case RoleConstant::GESTIONNAIRE:
                         return $isGestionnaire;
+                    case RoleConstant::RESPONSABLE:
+                        return $isResponsable;
                     default:
                         return false;
                 }
@@ -51,6 +57,8 @@ class StructureAssertion extends AbstractAssertion {
                         return true;
                     case RoleConstant::GESTIONNAIRE:
                         return $isGestionnaire;
+                    case RoleConstant::RESPONSABLE:
+                        return $isResponsable;
                     default:
                         return false;
                 }

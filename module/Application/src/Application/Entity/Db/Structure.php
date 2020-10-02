@@ -45,6 +45,8 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     private $description;
     /** @var ArrayCollection */
     private $gestionnaires;
+    /** @var ArrayCollection */
+    private $responsables;
     /** @var ArrayCollection (Poste) */
     private $postes;
     /** @var ArrayCollection (AgentMissionSpecifique) */
@@ -53,6 +55,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     public function __construct()
     {
         $this->gestionnaires = new ArrayCollection();
+        $this->responsables = new ArrayCollection();
         $this->postes = new ArrayCollection();
         $this->enfants = new ArrayCollection();
     }
@@ -135,6 +138,8 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
         return $this;
     }
 
+    /** GESTIONNAIRES ET RESPONSABLES **************************************************************************/
+
     /**
      * @return User[]
      */
@@ -148,7 +153,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
      * @param User $user
      * @return Structure
      */
-    public function addGestionnaire($user)
+    public function addGestionnaire(User $user)
     {
         $this->gestionnaires->add($user);
         return $this;
@@ -158,11 +163,42 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
      * @param User $user
      * @return Structure
      */
-    public function removeGestionnaire($user)
+    public function removeGestionnaire(User $user)
     {
         $this->gestionnaires->removeElement($user);
         return $this;
     }
+
+    /**
+     * @return User[]
+     */
+    public function getResponsables()
+    {
+        if ($this->responsables === null) return [];
+        return $this->responsables->toArray();
+    }
+
+    /**
+     * @param User $user
+     * @return Structure
+     */
+    public function addResponsable(User $user)
+    {
+        $this->responsables->add($user);
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     * @return Structure
+     */
+    public function removeResponsable(User $user)
+    {
+        $this->responsables->removeElement($user);
+        return $this;
+    }
+
+    /** POSTE ****************************************************************************************************/
 
     /**
      * @return Poste[]

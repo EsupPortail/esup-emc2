@@ -1,0 +1,34 @@
+<?php
+
+use UnicaenDocument\Entity\Db\Content;
+
+/**
+ * @see \UnicaenDocument\Controller\ContenuController::afficherAction()
+ * @var Content $contenu
+ */
+
+?>
+
+<dl class="dl-horizontal">
+    <dt> Code </dt>
+    <dd> <?php echo $contenu->getCode(); ?> </dd>
+    <dt> Type </dt>
+    <dd> <?php echo $contenu->getType(); ?> </dd>
+    <?php if ($contenu->getDescription()) : ?>
+        <dt> Description </dt>
+        <dd> <br/>
+            <div style="border:1px solid black; border-radius: 5px; padding:0.5rem;"><?php echo $contenu->getComplement(); ?>
+                <?php echo $contenu->getDescription(); ?> </div>
+        </dd>
+    <?php endif; ?>
+    <dt> Complément </dt>
+    <dd> <br/>
+        <div style="border:1px solid black; border-radius: 5px; padding:0.5rem;"><?php echo $contenu->getComplement(); ?>
+            <?php echo $contenu->getComplement(); ?> </div>
+    </dd>
+    <dt> Contenu </dt>
+    <dd> <br/>
+        <div style="border:1px solid black; border-radius: 5px; padding:0.5rem;"><?php echo $contenu->getComplement(); ?>
+            <?php echo $contenu->getContent(); ?> </div>
+    </dd>
+</dl>

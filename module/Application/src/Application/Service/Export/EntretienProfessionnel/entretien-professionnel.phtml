@@ -20,19 +20,19 @@ use Autoform\Entity\Db\Champ;
     }
 
     h2 {
-        font-size: 16pt;
-    }
-
-    h3 {
         font-size: 14pt;
     }
 
-    h4 {
+    h3 {
         font-size: 12pt;
     }
 
-    body {
+    h4 {
         font-size: 10pt;
+    }
+
+    body {
+        font-size: 9pt;
     }
 
     div.activite {
@@ -43,54 +43,127 @@ use Autoform\Entity\Db\Champ;
     }
 </style>
 
-<h1>
-    Compte-rendu de l'entretien professionnel
-</h1>
+<table>
+    <tr>
+        <td style="width:45%"> <h1>Entretien professionnel</h1></td>
+        <td style="width:50%; text-align: right">
 
+            <table class="resume">
+                <tr>
+                    <th> Agent </th>
+                    <td> <?php echo $entretien->getAgent()->getDenomination(); ?> </td>
+                </tr>
+                <tr>
+                    <th> Responsable hiérarchique  </th>
+                    <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
+                </tr>
+                <tr>
+                    <th> Date de l'entretien  </th>
+                    <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- AUTOFORM --------------------------------------------------------------------------------------------------------->
+
+<h2> Compte-rendu d'entretien professionnel </h2>
 <?php
+    $categories = $entretien->getFormulaireInstance()->getFormulaire()->getCategories();
+    usort($categories, function (Categorie $a, Categorie $b) { return $a->getOrdre() > $b->getOrdre();});
+
     $responses = $entretien->getFormulaireInstance()->getReponses();
     $reponses = [];
     foreach ($responses as $response) {
         $reponses[$response->getChamp()->getId()] = $response->getReponse();
     }
-
-?>
-
-<!-- GENERALITE ------------------------------------------------------------------------------------------------------->
-<dl>
-    <dt>Agent</dt>
-    <dd> <?php echo $entretien->getAgent()->getDenomination(); ?> </dd>
-    <dt>Responsable de l'entretien</dt>
-    <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>
-    <dt>Date </dt>
-    <dd> <dd> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </dd>
-</dl>
-
-<!-- AUTOFORM --------------------------------------------------------------------------------------------------------->
-<?php
-    $categories = $entretien->getFormulaireInstance()->getFormulaire()->getCategories();
-    usort($categories, function (Categorie $a, Categorie $b) { return $a->getOrdre() > $b->getOrdre();});
 ?>
 
 <?php foreach ($categories as $categorie) : ?>
     <?php if ($categorie->estNonHistorise()) : ?>
-        <h3> <?php echo $categorie->getLibelle();?> </h3>
 
         <?php
-            $champs = $categorie->getChamps();
-            usort($champs, function (Champ $a, Champ $b) { return $a->getOrdre() > $b->getOrdre(); });
+            $asReponse = false;
+            foreach ($categorie->getChamps() as $champ)  {
+                if ($champ->estNonHistorise()) {
+                    if (isset($reponses[$champ->getId()]) AND $reponses[$champ->getId()] !== null) {
+                        $asReponse = true; break;
+                    }
+                }
+            }
         ?>
 
-        <ul>
-        <?php foreach ($champs as $champ) : ?>
-            <?php if ($champ->estNonHistorise()) : ?>
-                <?php if (isset($reponses[$champ->getId()]) AND $reponses[$champ->getId()] !== null) : ?>
-                    <?php echo $this->champAsResult()->render($champ, $reponses[$champ->getId()]); ?>
-                <?php endif; ?>
-            <?php endif; ?>
-        <?php endforeach; ?>
-        </ul>
+        <?php if ($asReponse) : ?>
+            <h3> <?php echo $categorie->getLibelle();?> </h3>
 
+            <?php
+                $champs = $categorie->getChamps();
+                usort($champs, function (Champ $a, Champ $b) { return $a->getOrdre() > $b->getOrdre(); });
+            ?>
+
+            <ul>
+            <?php foreach ($champs as $champ) : ?>
+                <?php if ($champ->estNonHistorise()) : ?>
+                    <?php if (isset($reponses[$champ->getId()]) AND $reponses[$champ->getId()] !== null) : ?>
+                        <?php echo $this->champAsResult()->render($champ, $reponses[$champ->getId()]); ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+    <?php endif; ?>
+
+<?php endforeach; ?>
+
+<!-- DEMANDE DE FORMATION-------------------------------------------------------------------------------------------------------->
+
+<h2> Compte-rendu d'évaluation de formation </h2>
+
+<?php
+$categories = $entretien->getFormationInstance()->getFormulaire()->getCategories();
+usort($categories, function (Categorie $a, Categorie $b) { return $a->getOrdre() > $b->getOrdre();});
+
+$responses = $entretien->getFormationInstance()->getReponses();
+$reponses = [];
+foreach ($responses as $response) {
+    $reponses[$response->getChamp()->getId()] = $response->getReponse();
+}
+?>
+
+<?php foreach ($categories as $categorie) : ?>
+    <?php if ($categorie->estNonHistorise()) : ?>
+
+        <?php
+        $asReponse = false;
+        foreach ($categorie->getChamps() as $champ)  {
+            if ($champ->estNonHistorise()) {
+                if (isset($reponses[$champ->getId()]) AND $reponses[$champ->getId()] !== null) {
+                    $asReponse = true; break;
+                }
+            }
+        }
+        ?>
+
+        <?php if ($asReponse) : ?>
+            <h3> <?php echo $categorie->getLibelle();?> </h3>
+
+            <?php
+            $champs = $categorie->getChamps();
+            usort($champs, function (Champ $a, Champ $b) { return $a->getOrdre() > $b->getOrdre(); });
+            ?>
+
+            <ul>
+                <?php foreach ($champs as $champ) : ?>
+                    <?php if ($champ->estNonHistorise()) : ?>
+                        <?php if (isset($reponses[$champ->getId()]) AND $reponses[$champ->getId()] !== null) : ?>
+                            <?php echo $this->champAsResult()->render($champ, $reponses[$champ->getId()]); ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
 
     <?php endif; ?>
 
@@ -102,11 +175,14 @@ use Autoform\Entity\Db\Champ;
 
 <table>
     <tr>
-        <td width="50%">
+        <td width="33%">
             <h3>Validation de l'agent</h3>
         </td>
-        <td width="50%">
-            <h3>Validation du responsable</h3>
+        <td width="33%">
+            <h3>Validation du responsable de l'entretien</h3>
+        </td>
+        <td width="33%">
+            <h3>Validation du responsable de la structure</h3>
         </td>
     </tr>
     <tr>
@@ -115,7 +191,7 @@ use Autoform\Entity\Db\Champ;
                 <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?> <br/>
                 <?php echo $entretien->getValidationAgent()->getHistoModification()->format('d/m/Y'); ?>
             <?php else : ?>
-                L'agent n'a pas encore validé&middot;e l'entretien professionnel.
+                L'agent n'a pas encore validé l'entretien professionnel.
             <?php endif; ?>
         </td>
         <td>
@@ -123,9 +199,35 @@ use Autoform\Entity\Db\Champ;
                 <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?> <br/>
                 <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/Y'); ?>
             <?php else : ?>
-                Le responsable n'a pas encore validé&middot;e l'entretien professionnel.
+                Le responsable de l'entretien professionnel n'a pas encore validé l'entretien professionnel.
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php if ($entretien->getValidationResponsable()) : ?>
+                <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?> <br/>
+                <?php echo $entretien->getValidationDRH()->getHistoModification()->format('d/m/Y'); ?>
+            <?php else : ?>
+                Le responsable de la structure n'a pas encore validé l'entretien professionnel.
             <?php endif; ?>
         </td>
     </tr>
 </table>
 
+<style>
+    table.resume {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    table.resume th {
+        text-align: left;
+        border: 1px solid black;
+        width:48%;
+        font-size: small;
+        background: #faebcc;
+    }
+    table.resume td {
+        text-align: right;
+        border: 1px solid black;
+        width:48%;
+    }
+</style>

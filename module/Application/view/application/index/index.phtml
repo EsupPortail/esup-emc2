@@ -1,14 +1,36 @@
-<div class="jumbotron" id="preecog">
-    <h1>
-        <strong style="color:#19bd81;">Pr</strong>évisionnel des <strong style="color:#19bd81;">e</strong>mplois et des <strong style="color:#19bd81;">co</strong>mpétences
-        :
-        Outil de <strong style="color:#19bd81;">g</strong>estion
-    </h1>
+<?php
 
-    <div class="col-md-4">
-        <img style="width:200px;" src="img/PrEECoG.svg">
+/**
+ * @see \Application\Controller\IndexController::indexAction()
+ * @var User $user
+ * @var Role $role
+ */
+
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\User;
+
+?>
+
+<div class="jumbotron" id="preecog">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                <strong style="color:#19bd81;">E</strong>mploi <br/>
+                &nbsp; <strong style="color:#19bd81;">M</strong>obilité <br/>
+                &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>arrière <br/>
+                &nbsp; &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>ompétences
+
+            </h1>
+        </div>
+        <div class="col-md-6">
+            <center><img src="img/PrEECoG.svg" style="width:200px;"/> </center>
+            <br/>
+            <p class="noindent">EMC2 est un outil permettant la rédaction et la gestion des fiches métiers, fiches de postes, entretiens professionnels, ...</p>
+        </div>
     </div>
-    <p class="noindent">PrECoG est un outil permettant la rédaction et la gestion des fiches métiers</p>
+
+
+
 
     <br/>
     <br/>
@@ -19,7 +41,8 @@
 
     <?php if ($user): ?>
     <p>
-        Vous êtes connecté&middot;e en tant que <strong><?php echo $user->getDisplayName(); ?></strong>.
+        Vous êtes connecté&middot;e en tant que <strong><?php echo $user->getDisplayName(); ?></strong>. <br/>
+        Vous assumez le rôle de <strong><?php echo $role->getLibelle(); ?></strong>.
     </p>
     <?php else: ?>
 

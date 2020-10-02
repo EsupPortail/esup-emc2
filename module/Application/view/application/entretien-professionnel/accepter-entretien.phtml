@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @see \Application\Controller\EntretienProfessionnelController::accepterEntretienAction()
+ * @var EntretienProfessionnel $entretien
+ * @var string $token
+ */
+
+use Application\Entity\Db\EntretienProfessionnel;
+
+?>
+
+<?php if ($entretien === null) : ?>
+    <div class="alert alert-danger">
+        <p> Aucune entretien professionnel de remonté pour le token <?php echo $token; ?> </p>
+        <p>
+            Le problème peut-être lié au fait que :
+            <ul>
+                <li> vous avez déjà accepter votre entretien, </li>
+                <li> l'entretien est déjà passé, </li>
+                <li> l'entretien a été effacé, </li>
+            </ul>
+        </p>
+    </div>
+<?php else : ?>
+    <div class="alert alert-success">
+        <p> Vous venez d'accepter votre entretien professionnel qui se déroule le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </p>
+        <p> Vous pouvez dorénavant commencer à consulter votre fiche de poste et présaisir votre entretien professionnelle en vous connectant à EMC2 : <a href="<?php echo $this->url('home'); ?>">lien</a>. </p>
+    </div>
+<?php endif; ?>

@@ -42,11 +42,11 @@ ksort($groupes);
 
         <tr>
             <?php if ($libelle !== $sansGroupe) : ?>
-            <th style="background:<?php echo $groupe[0]['entite']->getGroupe()->getCouleur(); ?>">
+            <th class="titre">
                 <?php echo $groupe[0]['entite']->getGroupe()->getLibelle(); ?>
             </th>
             <?php else : ?>
-                <th style="background:gray"> Sans groupe ... </th>
+                <th class="titre"> Sans groupe ... </th>
             <?php endif; ?>
         </tr>
 

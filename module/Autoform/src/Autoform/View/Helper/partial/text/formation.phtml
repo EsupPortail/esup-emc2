@@ -1,0 +1,17 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $data
+ */
+
+use Autoform\Entity\Db\Champ;
+
+$split = explode("|",$data);
+$text = (count($split) === 2)?$split[0]:"";
+$select = (count($split) === 2)?$split[1]:"";
+?>
+
+<?php echo $champ->getLibelle(); ?>&nbsp;:
+<?php if ($data !== 'null') : ?>
+    <?php echo $text; ?> sur la période <?php echo $select; ?>
+<?php endif; ?>

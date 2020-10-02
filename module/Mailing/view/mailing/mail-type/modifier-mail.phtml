@@ -15,14 +15,17 @@ use Zend\Form\Form;
 
     let macros = [
         {title: 'Date : aujourd\'hui', description: 'Date du jour (dd/mm/yyyy)', content: 'VAR[DATE#aujourdhui]'},
-        {title: 'PrEECoG : Nom', description: 'Nom de l\'application', content: 'VAR[PREECOG#nom]'},
-        {title: 'PrEECoG : Lien', description: 'Lien vers l\'application', content: 'VAR[PREECOG#lien]'},
+        {title: 'EMC2 : Nom', description: 'Nom de l\'application', content: 'VAR[EMC2#nom]'},
+        {title: 'EMC2 : Lien', description: 'Lien vers l\'application', content: 'VAR[EMC2#lien]'},
         {title: 'Campagne : année', description: 'Année de la campagne d\'entretien professionnel', content: 'VAR[CAMPAGNE#annee]'},
         {title: 'Campagne : début', description: 'Date de début de la campagne d\'entretien professionnel', content: 'VAR[CAMPAGNE#debut]'},
         {title: 'Campagne : fin', description: 'Date de fin de la campagne d\'entretien professionnel', content: 'VAR[CAMPAGNE#fin]'},
         {title: 'Entretien : agent', description: 'Agent passant l\'entretien', content: 'VAR[ENTRETIEN#agent]'},
         {title: 'Entretien : responsable', description: 'Responsable faisant passer l\'entretien', content: 'VAR[ENTRETIEN#responsable]'},
         {title: 'Entretien : date', description: 'Date de l\'entretien', content: 'VAR[ENTRETIEN#date]'},
+        {title: 'Entretien : heure', description: 'Heure de l\'entretien', content: 'VAR[ENTRETIEN#heure]'},
+        {title: 'Entretien : lieu', description: 'Lieu de l\'entretien', content: 'VAR[ENTRETIEN#lieu]'},
+        {title: 'Entretien : lien acceptation', description: 'Lien d\'acceptation de l\'entretien', content: 'VAR[ENTRETIEN#lien_accepter]'},
     ];
 
     $(document).ready(function() {

@@ -124,38 +124,6 @@ class StructureService
     }
 
     /**
-     * @param Structure $structure
-     * @param User $gestionnaire
-     * @return Structure
-     */
-    public function addGestionnaire($structure, $gestionnaire)
-    {
-        $structure->addGestionnaire($gestionnaire);
-        try {
-            $this->getEntityManager()->flush($structure);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
-        }
-        return $structure;
-    }
-
-    /**
-     * @param Structure $structure
-     * @param User $gestionnaire
-     * @return Structure
-     */
-    public function removeGestionnaire($structure, $gestionnaire)
-    {
-        $structure->removeGestionnaire($gestionnaire);
-        try {
-            $this->getEntityManager()->flush($structure);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'inscription en base.", $e);
-        }
-        return $structure;
-    }
-
-    /**
      * @param User $user
      * @param bool $ouverte
      * @return Structure[]
@@ -232,6 +200,18 @@ class StructureService
     {
         if (array_search($user, $structure->getGestionnaires()) !== false) return true;
         if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $user);
+        return false;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param User $user
+     * @return boolean
+     */
+    public function isResponsable(Structure $structure, User $user)
+    {
+        if (array_search($user, $structure->getResponsables()) !== false) return true;
+        if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $user);
         return false;
     }
 

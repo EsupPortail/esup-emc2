@@ -10,6 +10,8 @@ use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
+use Ramsey\Uuid\Uuid;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -29,6 +31,7 @@ class EntretienProfessionnelService {
     public function create($entretien)
     {
         $this->createFromTrait($entretien);
+        $this->generateToken($entretien);
         return $entretien;
     }
 
@@ -150,6 +153,25 @@ class EntretienProfessionnelService {
     }
 
     /**
+     * @param string token
+     * @return EntretienProfessionnel
+     */
+    public function getEntretiensProfessionnelsByToken(string $token)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('entretien.token = :token')
+            ->setParameter('token', $token)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même token [".$token."]", $e);
+        }
+        return $result;
+    }
+
+    /**
      * @param EntretienProfessionnel $entretien
      * @return EntretienProfessionnel
      */
@@ -186,6 +208,25 @@ class EntretienProfessionnelService {
             throw new RuntimeException("Plusieurs entretiens professionnels ont été trouvés pour la campagne [".$campagne->getId()."|".$campagne->getAnnee()."] et l'agent [".$agent->getId()."|".$agent->getDenomination()."]",0,$e);
         }
         return $result;
+    }
+
+    /** FONCTIONS UTILITAIRES *****************************************************************************************/
+
+    /**
+     * @param EntretienProfessionnel $entretien
+     * @return EntretienProfessionnel
+     */
+    public function generateToken(EntretienProfessionnel $entretien)
+    {
+        try {
+            $token = Uuid::uuid4();
+        } catch (Exception $e) {
+            throw new RuntimeException("Erreur rencontrée lors de la génération du UUID.", null, $e);
+        }
+        $entretien->setToken($token);
+        $entretien->setAcceptation(null);
+        $this->update($entretien);
+        return $entretien;
     }
 
     public function recopiePrecedent(EntretienProfessionnel $entretien)

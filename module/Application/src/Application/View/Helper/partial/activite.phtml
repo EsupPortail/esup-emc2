@@ -278,7 +278,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
 <script>
     $(function() {
         let mode = <?php echo "'".$mode."'"; ?>;
-        console.log(mode);
+        // console.log(mode);
         if (<?php echo "'".$mode."'"; ?> === 'modifier-activite') {
             $('ul#descriptions').sortable({
                 update: function( event, ui ) {

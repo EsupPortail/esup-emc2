@@ -80,7 +80,7 @@ class MailingService
         $message->setSubject($sujet);
 
 
-        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application PrEECoG. </i></p>" . $texte;
+        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application EMC2. </i></p>" . $texte;
 
         if ($this->doNotSend) {
             $texte .= "<br/><br/><hr/><br/>";
@@ -253,7 +253,7 @@ class MailingService
     private function replaceMacros($texteInitial, $variables)
     {
         $matches = [];
-        preg_match_all('/VAR\[[a-z,A-Z,0-9,#]*\]/', $texteInitial, $matches);
+        preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);
 
         $patterns = array_unique($matches[0]);
         $replacements = [];
@@ -284,11 +284,11 @@ class MailingService
                 $date = $this->getDateTime()->format('d/m/Y');
                 return $date;
             /** APPLICATION *******************************************************************************************/
-            case 'VAR[PREECOG#nom]' :
-                $lien = '<strong>PrECoG</strong>';
+            case 'VAR[EMC2#nom]' :
+                $lien = '<strong>EMC2</strong>';
                 return $lien;
-            case 'VAR[PREECOG#lien]' :
-                $lien = '<a href="' . 'https://preecog.unicaen.fr' . '">PrEECoG</a>';
+            case 'VAR[EMC2#lien]' :
+                $lien = '<a href="' . 'https://preecog.unicaen.fr' . '">EMC2</a>';
                 return $lien;
             /** CAMPAGNE **********************************************************************************************/
             case 'VAR[CAMPAGNE#annee]' :
@@ -311,6 +311,15 @@ class MailingService
             case 'VAR[ENTRETIEN#date]' :
                 $entretien = $variables['entretien'];
                 return $entretien->getDateEntretien()->format('d/m/Y');
+            case 'VAR[ENTRETIEN#heure]' :
+                $entretien = $variables['entretien'];
+                return $entretien->getDateEntretien()->format('H:i');
+            case 'VAR[ENTRETIEN#lieu]' :
+                $entretien = $variables['entretien'];
+                return $entretien->getLieu();
+            case 'VAR[ENTRETIEN#lien_accepter]' :
+                $entretien = $variables['entretien'];
+                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true).'">Acceptation de l\'entretien professionnel</a>';
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

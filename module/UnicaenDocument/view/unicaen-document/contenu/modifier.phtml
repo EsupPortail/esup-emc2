@@ -1,0 +1,85 @@
+<?php
+
+use UnicaenDocument\Form\Contenu\ContenuForm;
+
+/**
+ * @see \UnicaenDocument\Controller\ContenuController::ajouterAction()
+ * @see \UnicaenDocument\Controller\ContenuController::modifierAction()
+ * @var ContenuForm $form
+ * @var string $macros
+ */
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+
+    $('select').selectpicker();
+
+    <?php echo $form->getMacros(); ?>
+
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.description',
+            toolbar: 'newdocument undo redo | bold italic | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists template',
+            templates: macros,
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    $('textarea#description').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.complement',
+            toolbar: 'newdocument undo redo | template',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists template',
+            templates: macros,
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            body_id: 'complement',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    $('textarea#complement').val(tinymce.get('complement').getContent());
+                });
+            }
+        });
+        tinymce.init({
+            selector: '.contenu',
+            toolbar: 'newdocument undo redo | bold italic | bullist | template',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists template',
+            templates: macros,
+            statusbar: true,
+            browser_spellcheck: true,
+            branding: false,
+            menu: {},
+            body_id: 'contenu',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    $('textarea#contenu').val(tinymce.get('contenu').getContent());
+                });
+            }
+        });
+    });
+</script>

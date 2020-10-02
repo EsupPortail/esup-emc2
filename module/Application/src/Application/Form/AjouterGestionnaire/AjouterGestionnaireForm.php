@@ -43,7 +43,7 @@ class AjouterGestionnaireForm extends Form {
             ->setSelectionRequired(true)
             ->setAttributes([
                 'id' => 'gestionnaire',
-                'placeholder' => "Gestionnaire à ajouter ...",
+                'placeholder' => "Agent à ajouter comme gestionnaire...",
             ]);
         $this->add($gestionnaire);
 

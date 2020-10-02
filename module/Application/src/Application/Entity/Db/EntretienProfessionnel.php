@@ -30,6 +30,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private $campagne;
     /** @var DateTime */
     private $dateEntretien;
+    /** @var string */
+    private $lieu;
     /** @var FormulaireInstance */
     private $formulaireInstance;
     /** @var FormulaireInstance */
@@ -44,6 +46,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private $validationResponsable;
     /** @var ValidationInstance */
     private $validationDRH;
+    /** @var string */
+    private $token;
+    /** @var DateTime */
+    private $acceptation;
 
 
     /**
@@ -132,6 +138,24 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function setDateEntretien($dateEntretien)
     {
         $this->dateEntretien = $dateEntretien;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLieu()
+    {
+        return $this->lieu;
+    }
+
+    /**
+     * @param string $lieu
+     * @return EntretienProfessionnel
+     */
+    public function setLieu($lieu)
+    {
+        $this->lieu = $lieu;
         return $this;
     }
 
@@ -310,5 +334,41 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      */
     public function hasValidationDRH() {
         return ($this->validationDRH AND $this->validationDRH->estNonHistorise());
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     * @return EntretienProfessionnel
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getAcceptation()
+    {
+        return $this->acceptation;
+    }
+
+    /**
+     * @param DateTime|null $acceptation
+     * @return EntretienProfessionnel
+     */
+    public function setAcceptation($acceptation)
+    {
+        $this->acceptation = $acceptation;
+        return $this;
     }
 }

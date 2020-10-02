@@ -24,8 +24,8 @@ return [
          * Informations concernant cette application
          */
         'app_infos' => [
-            'nom'     => "PrECoG",
-            'desc'    => "Prévisionnel des emplois et des compétences : Outil de gestion",
+            'nom'     => "EMC2",
+            'desc'    => "Emploi Mobilité Carrière Compétences",
             'version' => "0.4.9",
             'date'    => "13/12/2019",
             'contact' => ['mail' => "dsi.applications@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],

@@ -89,6 +89,7 @@ return [
                         'editer',
                         'editer-groupe',
                         'editer-theme',
+                        'update-ordre-groupe'
                         'modifier-formation-informations',
                         'ajouter-instance',
                     ],
@@ -492,6 +493,16 @@ return [
                 ],
                 'may_terminate' => false,
                 'child_routes' => [
+                    'update-ordre-groupe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/update-ordre-groupe/:ordre',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'update-ordre-groupe',
+                            ],
+                        ],
+                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [

@@ -11,6 +11,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Date;
 use Zend\Form\Element\Select;
+use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 use Zend\Validator\Callback;
@@ -104,6 +105,31 @@ class EntretienProfessionnelForm extends Form {
             ],
         ]);
 
+        //Heure        (initialisée à la date du jour)
+        $this->add([
+            'type' => \Zend\Form\Element\Time::class,
+            'name' => 'heure_entretien',
+            'options' => [
+                'label' => "Heure de l'entretien* :",
+                'format' => 'H:i',
+            ],
+            'attributes' => [
+                'id' => 'heure_entretien',
+            ],
+        ]);
+
+        //Lieu
+        $this->add([
+            'type' => Text::class,
+            'name' => 'lieu_entretien',
+            'options' => [
+                'label' => "Lieu de l'entretien * :",
+            ],
+            'attributes' => [
+                'id' => 'lieu_entretien',
+            ],
+        ]);
+
         // button
         $this->add([
             'type' => Button::class,
@@ -163,6 +189,8 @@ class EntretienProfessionnelForm extends Form {
                     ],
                 ],
             ],
+            'heure_entretien'          => [ 'required' => true,  ],
+            'lieu_entretien'           => [ 'required' => true,  ],
         ]));
     }
 }
