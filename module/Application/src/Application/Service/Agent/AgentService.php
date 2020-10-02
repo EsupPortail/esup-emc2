@@ -13,6 +13,7 @@ use Application\Entity\Db\Grade;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
@@ -547,6 +548,28 @@ class AgentService {
     {
         $this->deleteFromTrait($agentFormation);
         return $agentFormation;
+    }
+
+    /**
+     * @param Agent $agent
+     * @param string $annee
+     * @return AgentFormation[]
+     */
+    public function getAgentFormationByAgentAndAnnee(Agent $agent, string $annee)
+    {
+        $debut_annee = DateTime::createFromFormat("d/m/Y", "01/09" . explode("/",$annee)[0]);
+        $fin_annee = DateTime::createFromFormat("d/m/Y", "031/08" . explode("/",$annee)[1]);
+
+        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('af')
+            ->andWhere('af.agent', $agent)
+            ->setParameter('agent', $agent)
+            ->andWhere('af.date >= :debut AND af.fin <= :fin')
+            ->setParameter('debut', $debut_annee)
+            ->setParameter('fin', $fin_annee)
+            ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /** MISSION SPECIFIQUE ********************************************************************************************/
