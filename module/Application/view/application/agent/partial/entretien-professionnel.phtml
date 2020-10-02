@@ -8,12 +8,13 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\EntretienProfessionnel;
+use Application\Provider\Privilege\EntretienproPrivileges;
 
 
 $canVoirEntretienPro         = $droits['voir'];
 //$canAjouterEntretienPro      = $droits['ajouter'];
 //$canModifierEntretienPro     = $droits['modifier'];
-$canHistoriserEntretienPro   = $droits['historiser'];
+$canHistoriserEntretienPro   = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_HISTORISER));
 $canDetruireEntretienPro     = $droits['detruire'];
 ?>
 

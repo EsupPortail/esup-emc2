@@ -233,6 +233,9 @@ class StructureService
             foreach ($current->getGestionnaires() as $gestionnaire) {
                 $gestionnaires[$gestionnaire->getId()] = $gestionnaire;
             }
+            foreach ($current->getResponsables() as $responsable) {
+                $gestionnaires[$responsable->getId()] = $responsable;
+            }
             if ($filles) {
                 foreach ($current->getEnfants() as $enfant) {
                     if ($vue[$enfant->getId()] !== true) {
