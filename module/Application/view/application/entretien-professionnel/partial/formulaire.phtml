@@ -19,6 +19,7 @@ $canRenseigner = $canValiderDrh OR $canValiderResponsable OR $canValiderAgent;
 $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
 
 $now = new DateTime();
+$tomorrow = $now->add(new DateInterval('P1D'));
 ?>
 
 <h2> Formulaire d'entretien  </h2>
@@ -82,7 +83,7 @@ $now = new DateTime();
 ?>
 
 <?php if ($canRenseigner) : ?>
-    <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+    <?php if (($entretien->getDateEntretien() <= $tomorrow) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
         <?php
             /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
             $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);

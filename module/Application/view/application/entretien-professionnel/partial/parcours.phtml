@@ -48,6 +48,7 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
 
 $DEBUG = false;
 $now = new DateTime();
+$tomorrow = $now->add(new DateInterval('P1D'));
 ?>
 
 <?php if ($DEBUG) : ?>
@@ -96,7 +97,7 @@ foreach ($reponses as $reponse) {
 ?>
 
 <?php if ($canRenseigner) : ?>
-    <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+    <?php if (($entretien->getDateEntretien() <= $tomorrow) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
         <?php
         /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
         $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
