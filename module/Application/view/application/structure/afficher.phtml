@@ -193,23 +193,5 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
             console.log("fiche-de-poste: " + id);
             window.location.reload();
         });
-
-        $("body").on("entretien", function (event) {
-            let content = event.div.html();
-            let match_regex = content.match(/#[0-9]*/g)[0];
-            let id = match_regex.split('#')[1];
-            event.div.modal('hide');
-            let win = window.open('../../entretien-professionnel/renseigner/' + id + '?structure=' + <?php echo ($structure)?$structure->getId():0; ?>, '_blank');
-            if (win) {
-                //Browser has allowed it to be opened
-                win.focus();
-            } else {
-                //Browser has blocked it
-                alert('Please allow popups for this website');
-            }
-            console.log("entretien pro: " + id);
-            window.location.reload();
-        });
     });
-    // $('select').selectpicker();
 </script>

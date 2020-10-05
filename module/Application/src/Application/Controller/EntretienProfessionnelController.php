@@ -118,7 +118,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $this->getEntretienProfessionnelService()->create($entretien);
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
                 $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
-                return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true);
+                //return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true);
             }
         }
 
