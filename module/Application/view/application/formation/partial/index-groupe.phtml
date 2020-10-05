@@ -51,7 +51,6 @@ use Application\Entity\Db\FormationGroupe;
 <table class="table table-condensed" id="groupes">
     <thead>
     <tr>
-        <th> Badge </th>
         <th> Libellé </th>
         <th> #Formation </th>
         <th> Modification </th>
@@ -61,7 +60,6 @@ use Application\Entity\Db\FormationGroupe;
     <tbody>
     <?php foreach ($groupes as $groupe) : ?>
         <tr id="<?php echo $groupe->getId(); ?>"  class="<?php if ($groupe->estHistorise()) echo "historise"; ?>">
-            <td> <?php echo $this->formationGroupe($groupe); ?> </td>
             <td> <?php echo $groupe->getLibelle(); ?> </td>
             <td> <?php echo count($groupe->getFormations()); ?> </td>
             <td>

@@ -16,7 +16,7 @@ class FormationGroupeHydrator implements HydratorInterface {
         $data = [
             'libelle'   => ($object->getLibelle())?:null,
             'ordre'     => ($object->getOrdre())?:null,
-            'couleur'   => ($object->getCouleur())?:null,
+//            'couleur'   => ($object->getCouleur())?:null,
         ];
         return $data;
     }
@@ -30,7 +30,7 @@ class FormationGroupeHydrator implements HydratorInterface {
     {
         $object->setLibelle((isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null);
         $object->setOrdre((isset($data['ordre']) AND trim($data['ordre']) !== '')?trim($data['ordre']):null);
-        $object->setCouleur((isset($data['couleur']) AND trim($data['couleur']) !== '')?trim($data['couleur']):null);
+//        $object->setCouleur((isset($data['couleur']) AND trim($data['couleur']) !== '')?trim($data['couleur']):null);
         return $object;
     }
 
