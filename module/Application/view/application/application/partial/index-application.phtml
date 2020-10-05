@@ -63,8 +63,8 @@ $canEffacer = $droits['canEffacer'];
         <th> Libelle</th>
         <th> Groupe</th>
         <th> Liens </th>
-        <th> Actif </th>
-        <th> Action </th>
+        <th style="width: 4rem;"> Actif </th>
+        <th style="width: 8rem;"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -73,7 +73,7 @@ $canEffacer = $droits['canEffacer'];
             <td> <?php echo $application->getLibelle(); ?> </td>
             <td>
                 <?php if ($application->getGroupe()) : ?>
-                    <?php echo $this->applicationGroupe($application->getGroupe()); ?>
+                    <?php echo $application->getGroupe()->getLibelle(); ?>
                 <?php endif; ?>
             </td>
             <td> <a href="<?php echo $application->getUrl(); ?>"><?php echo $application->getUrl(); ?></a> </td>
