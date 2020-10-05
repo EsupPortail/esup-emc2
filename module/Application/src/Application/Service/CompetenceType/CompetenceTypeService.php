@@ -10,8 +10,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceTypeService
 {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
@@ -20,7 +18,7 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function create($type)
+    public function create(CompetenceType $type)
     {
         $this->createFromTrait($type);
         return $type;
@@ -30,7 +28,7 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function update($type)
+    public function update(CompetenceType $type)
     {
         $this->updateFromTrait($type);
         return $type;
@@ -40,7 +38,7 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function historise($type)
+    public function historise(CompetenceType $type)
     {
         $this->historiserFromTrait($type);
         return $type;
@@ -50,7 +48,7 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function restore($type)
+    public function restore(CompetenceType $type)
     {
         $this->restoreFromTrait($type);
         return $type;
@@ -60,7 +58,7 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function delete($type)
+    public function delete(CompetenceType $type)
     {
         $this->deleteFromTrait($type);
         return $type;
@@ -102,7 +100,7 @@ class CompetenceTypeService
      * @param integer $id
      * @return CompetenceType
      */
-    public function getCompetenceType($id)
+    public function getCompetenceType(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceType::class)->createQueryBuilder('type')
             ->andWhere('type.id = :id')
@@ -121,7 +119,7 @@ class CompetenceTypeService
      * @param string $paramName
      * @return CompetenceType
      */
-    public function getRequestedCompetenceType($controller, $paramName = 'competence-type')
+    public function getRequestedCompetenceType(AbstractActionController $controller, $paramName = 'competence-type')
     {
         $id = $controller->params()->fromRoute($paramName);
         $type = $this->getCompetenceType($id);

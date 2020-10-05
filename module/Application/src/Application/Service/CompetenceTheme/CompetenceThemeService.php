@@ -9,8 +9,6 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceThemeService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
@@ -19,7 +17,7 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function create($theme)
+    public function create(CompetenceTheme $theme)
     {
         $this->createFromTrait($theme);
         return $theme;
@@ -29,7 +27,7 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function update($theme)
+    public function update(CompetenceTheme $theme)
     {
         $this->updateFromTrait($theme);
         return $theme;
@@ -39,7 +37,7 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function historise($theme)
+    public function historise(CompetenceTheme $theme)
     {
         $this->historiserFromTrait($theme);
         return $theme;
@@ -49,7 +47,7 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function restore($theme)
+    public function restore(CompetenceTheme $theme)
     {
         $this->restoreFromTrait($theme);
         return $theme;
@@ -59,7 +57,7 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function delete($theme)
+    public function delete(CompetenceTheme $theme)
     {
         $this->deleteFromTrait($theme);
         return $theme;
@@ -101,7 +99,7 @@ class CompetenceThemeService {
      * @param integer $id
      * @return CompetenceTheme
      */
-    public function getCompetenceTheme($id)
+    public function getCompetenceTheme(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
             ->andWhere('theme.id = :id')
@@ -120,7 +118,7 @@ class CompetenceThemeService {
      * @param string $paramName
      * @return CompetenceTheme
      */
-    public function getRequestedCompetenceTheme($controller, $paramName = 'competence-theme')
+    public function getRequestedCompetenceTheme(AbstractActionController $controller, $paramName = 'competence-theme')
     {
         $id = $controller->params()->fromRoute($paramName);
         $theme = $this->getCompetenceTheme($id);
