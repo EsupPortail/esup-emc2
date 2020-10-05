@@ -72,6 +72,7 @@ class AgentController extends AbstractActionController
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
+        $responsables = $this->getAgentService()->getClosestResponsablesByAgent($agent);
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
@@ -79,6 +80,7 @@ class AgentController extends AbstractActionController
             'role'  => $role,
             'user'  => $user,
             'entretiens' => $entretiens,
+            'responsables' => $responsables,
         ]);
     }
 

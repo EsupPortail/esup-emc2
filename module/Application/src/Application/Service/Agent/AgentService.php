@@ -247,7 +247,6 @@ class AgentService {
         }
         $result1 = $qb1->getQuery()->getResult();
 
-
         //TODO ! faire la jointure ...
         $result = [];
         /** @var Agent $agent */
