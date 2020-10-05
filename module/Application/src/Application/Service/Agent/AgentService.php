@@ -297,6 +297,26 @@ class AgentService {
         return $result;
     }
 
+    /**
+     * @param Agent $agent
+     * @return User[]|null
+     */
+    public function getClosestResponsablesByAgent(Agent $agent) {
+        $affectationPrincipale = $agent->getAffectationPrincipale();
+        if ($affectationPrincipale === null) return null;
+
+        $structure = $affectationPrincipale->getStructure();
+        if ($structure === null) return null;
+
+        while ($structure !== null) {
+            $responsables = $structure->getResponsables();
+            if ($responsables !== []) return $responsables;
+            $structure = $structure->getParent();
+        }
+
+        return null;
+    }
+
     /** AgentApplication **********************************************************************************************/
 
     /**
@@ -567,22 +587,28 @@ class AgentService {
 
     /**
      * @param Agent $agent
-     * @return User[]|null
+     * @param string $annee
+     * @return AgentFormation[]
      */
-    public function getClosestResponsablesByAgent(Agent $agent) {
-        $affectationPrincipale = $agent->getAffectationPrincipale();
-        if ($affectationPrincipale === null) return null;
+    public function getFormationsSuiviesByAnnee(Agent $agent, string $annee)
+    {
+        $debut = DateTime::createFromFormat("d/m/Y","01/09/" .explode("/", $annee)[0]);
+        $fin   = DateTime::createFromFormat("d/m/Y","31/08/" .explode("/", $annee)[1]);
 
-        $structure = $affectationPrincipale->getStructure();
-        if ($structure === null) return null;
+        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('af')
+            ->addSelect('validation')->leftJoin('af.validation', 'validation')
+            ->addSelect('agent')->leftJoin('af.agent', 'agent')
+            ->addSelect('formation')->leftJoin('af.formation', 'formation')
+            ->andWhere('af.agent = :agent')
+            ->andWhere('af.date >= :debut AND af.date <= :fin')
+            ->andWhere('af.validation IS NOT NULL')
+            ->andWhere('validation.valeur IS NULL')
+            ->setParameter('agent', $agent)
+            ->setParameter('debut', $debut)
+            ->setParameter('fin', $fin)
+        ;
 
-        while ($structure !== null) {
-            $responsables = $structure->getResponsables();
-            if ($responsables !== []) return $responsables;
-            $structure = $structure->getParent();
-        }
-
-        return null;
+        return $qb->getQuery()->getResult();
     }
 
     /** MISSION SPECIFIQUE ********************************************************************************************/

@@ -2,8 +2,10 @@
 
 /**
  * @var EntretienProfessionnel $entretien
+ * @var AgentFormation[] $formations
  */
 
+use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\EntretienProfessionnel;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
@@ -169,6 +171,21 @@ foreach ($responses as $response) {
     <?php endif; ?>
 
 <?php endforeach; ?>
+
+<!-- FORMATIONS SUIVIES ----------------------------------------------------------------------------------------------->
+
+<h2> Formations suivies lors de l'année de l'entretien professionnel </h2>
+
+<?php if (!empty($formations)) : ?>
+<ul>
+    <?php foreach ($formations as $formation) : ?>
+        <li><?php echo $formation->getFormation()->getLibelle(); ?> -  <?php echo $formation->getDate()->format('d/m/Y'); ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php else :  ?>
+    Aucune formation
+<?php endif; ?>
+
 
 <!-- VALIDATION-------------------------------------------------------------------------------------------------------->
 

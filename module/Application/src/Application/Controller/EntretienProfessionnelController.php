@@ -357,10 +357,12 @@ class EntretienProfessionnelController extends AbstractActionController
     public function exporterAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
 
         $exporter = new EntretienProfessionnelPdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'entretien' => $entretien,
+            'formations' => $formations,
         ]);
 
         $agent = $entretien->getAgent()->getDenomination();
