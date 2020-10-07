@@ -12,6 +12,12 @@ class ExporterService extends PdfExporter {
     use ContenuServiceAwareTrait;
 
     private $vars;
+    private $renderer;
+
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function setVars(array $vars)
     {
@@ -23,9 +29,11 @@ class ExporterService extends PdfExporter {
 
     public function __construct(PhpRenderer $renderer = null, $format = 'A4', $orientationPaysage = false, $defaultFontSize = 10)
     {
+        if ($renderer === null) $renderer = $this->renderer;
         parent::__construct($renderer, $format, $orientationPaysage, $defaultFontSize);
         $resolver = $renderer->resolver();
         $resolver->attach(new TemplatePathStack(['script_paths' => [__DIR__]]));
+//        $resolver->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
     }
 
     /**
@@ -51,7 +59,7 @@ class ExporterService extends PdfExporter {
         $titre      = $this->getContenuService()->generateTitre($contenu,$this->vars);
 
         $this->vars['script'] = $content;
-        $this->addBodyScript('generated.phtml', false, $this->vars);
+        $this->addBodyHtml($content, false, $this->vars);
 
         $this->getMpdf()->SetTopMargin(25);
         $this->getMpdf()->SetTitle($titre);
