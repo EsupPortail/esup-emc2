@@ -234,4 +234,38 @@ class FormationInstance implements HistoriqueAwareInterface {
         }
         return false;
     }
+
+    /** Fonctions pour les macros **********************************************************************************/
+
+    public function getListeJournees()
+    {
+        /** @var FormationInstanceJournee[] $journees */
+        $journees = $this->getJournees();
+        //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a > $b;});
+
+        $text  = "";
+        $text .= "<table style='width:100%;'>";
+        $text .= "<thead>";
+        $text .= "<tr style='border-bottom:1px solid black;'>";
+        $text .= "<th>Date  </th>";
+        $text .= "<th>de  </th>";
+        $text .= "<th>à  </th>";
+        $text .= "<th>Lieu  </th>";
+        $text .= "</tr>";
+        $text .= "</thead>";
+        $text .= "<tbody>";
+        foreach($journees as $journee) {
+            $text .= "<tr>";
+            $text .= "<td>".$journee->getJour()."</td>";
+            $text .= "<td>".$journee->getDebut()."</td>";
+            $text .= "<td>".$journee->getFin()."</td>";
+            $text .= "<td>".$journee->getLieu()."</td>";
+            $text .= "</tr>";
+        }
+        $text .= "</tbody>";
+        $text .= "</table>";
+
+        return $text;
+
+    }
 }
