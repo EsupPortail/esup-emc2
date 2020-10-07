@@ -9,6 +9,8 @@ use UnicaenDocument\Form\Contenu\ContenuHydratorFactory;
 use UnicaenDocument\Provider\Privilege\DocumentcontentPrivileges;
 use UnicaenDocument\Service\Contenu\ContenuService;
 use UnicaenDocument\Service\Contenu\ContenuServiceFactory;
+use UnicaenDocument\Service\Exporter\ExporterService;
+use UnicaenDocument\Service\Exporter\ExporterServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -176,6 +178,7 @@ return [
     'service_manager' => [
         'factories' => [
             ContenuService::class => ContenuServiceFactory::class,
+            ExporterService::class => ExporterServiceFactory::class,
         ],
     ],
     'form_elements' => [

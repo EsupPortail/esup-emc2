@@ -65,7 +65,8 @@ use UnicaenDocument\Form\Contenu\ContenuForm;
         });
         tinymce.init({
             selector: '.contenu',
-            toolbar: 'newdocument undo redo | bold italic | bullist | template',
+            toolbar: 'newdocument undo redo | bold italic | bullist | alignjustify alignleft alignright aligncenter | formatselect template',
+            block_formats: 'Normal=p;Titre 1=h1;Titre 2=h2;Titre 3=h3',
             resize: true,
             language: 'fr_FR',
             plugins: 'lists template',
