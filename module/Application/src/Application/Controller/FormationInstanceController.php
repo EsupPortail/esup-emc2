@@ -15,6 +15,8 @@ use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTr
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenDocument\Service\Contenu\ContenuServiceAwareTrait;
+use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -30,6 +32,7 @@ class FormationInstanceController extends AbstractActionController {
     use FormationInstanceFormAwareTrait;
     use FormationJourneeFormAwareTrait;
     use SelectionAgentFormAwareTrait;
+    use ExporterServiceAwareTrait;
 
     private $renderer;
 
@@ -371,6 +374,22 @@ class FormationInstanceController extends AbstractActionController {
         $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en liste complémentaire.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
+    }
+
+    /**
+     * @throws MpdfException
+     */
+    public function genererConvocationAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+
+        $this->getExporterService()->setVars([
+            'type' => 'FORMATION_CONVOCATION',
+            'agent' => $inscrit->getAgent(),
+            'instance' => $inscrit->getInstance(),
+        ]);
+        $this->getExporterService()->export('export.pdf');
+        exit;
     }
 
 }

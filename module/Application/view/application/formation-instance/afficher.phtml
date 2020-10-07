@@ -218,7 +218,10 @@ $historises = $instance->getListeHistorisee();
                            data-toggle="tooltip" data-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
                         >
                             <span class="icon agent"></span></a>
-                        <span class="icon pdf"></span>
+                        <?php /** @see \Application\Controller\FormationInstanceController::genererConvocationAction() */?>
+                        <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            data-toogle="tooltip" data-html="true" title="Générer la convocation">
+                            <span class="icon pdf"></span></a>
                         <?php if (! $complementaireComplete) : ?>
                             <?php /** @see \Application\Controller\FormationInstanceController::envoyerListeComplementaireAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"

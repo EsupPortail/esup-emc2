@@ -89,7 +89,7 @@ return [
                         'editer',
                         'editer-groupe',
                         'editer-theme',
-                        'update-ordre-groupe'
+                        'update-ordre-groupe',
                         'modifier-formation-informations',
                         'ajouter-instance',
                     ],
@@ -126,6 +126,7 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'afficher',
+                        'generer-convocation',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INSTANCE_AFFICHER,
@@ -236,6 +237,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'generer-convocation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-convocation/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'generer-convocation',
                             ],
                         ],
                     ],

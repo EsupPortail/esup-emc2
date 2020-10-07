@@ -10,6 +10,7 @@ use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceJourneeService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Interop\Container\ContainerInterface;
+use UnicaenDocument\Service\Exporter\ExporterService;
 use Zend\View\Renderer\PhpRenderer;
 
 class FormationInstanceControllerFactory {
@@ -25,11 +26,13 @@ class FormationInstanceControllerFactory {
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var FormationInstanceJourneeService $formationInstanceJourneeService
+         * @var ExporterService $exporterService
          */
         $formationService = $container->get(FormationService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
+        $exporterService = $container->get(ExporterService::class);
 
         /**
          * @var FormationInstanceForm $formationInstanceForm
@@ -50,6 +53,7 @@ class FormationInstanceControllerFactory {
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
+        $controller->setExporterService($exporterService);
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setFormationJourneeForm($formationJourneeForm);
         $controller->setSelectionAgentForm($selectionAgentForm);

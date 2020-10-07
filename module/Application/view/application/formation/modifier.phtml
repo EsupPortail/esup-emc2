@@ -41,7 +41,7 @@ $instances = $formation->getInstances();
                 </dd>
                 <dt>Groupe</dt>
                 <dd>
-                    <?php echo ($formation->getGroupe())?$this->formationGroupe($formation->getGroupe()):"Non renseigné"; ?>
+                    <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Non renseigné"; ?>
                 </dd>
                 <dt>Lien</dt>
                 <dd>
@@ -132,7 +132,7 @@ $instances = $formation->getInstances();
                             <span class="icon voir"></span></a>
                     <?php endif; ?>
                     <?php if ($canAfficherInstance) : ?>
-                        <span class="icon pdf"></span>
+                            <span class="icon pdf"></span>
                     <?php endif; ?>
                     <?php if ($canHistoriserInstance) : ?>
                         <?php if ($instance->estNonHistorise()) : ?>
