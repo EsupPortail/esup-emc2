@@ -386,6 +386,7 @@ class FormationInstanceController extends AbstractActionController {
         $this->getExporterService()->setVars([
             'type' => 'FORMATION_CONVOCATION',
             'agent' => $inscrit->getAgent(),
+            'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
         ]);
         $this->getExporterService()->export('export.pdf');
