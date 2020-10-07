@@ -118,7 +118,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $this->getEntretienProfessionnelService()->create($entretien);
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
                 $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()->getUtilisateur()]);
-                return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true);
+                //return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true);
             }
         }
 
@@ -298,7 +298,10 @@ class EntretienProfessionnelController extends AbstractActionController
                 switch ($type) {
                     case 'Agent' :
                         $entretien->setValidationAgent($validation);
-                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => 'zzz'.'DRH@unicaen.fr']);
+                        $responsables = $this->getAgentService()->getClosestResponsablesByAgent($entretien->getAgent());
+                        $array = [];
+                        foreach ($responsables as $responsable) $array[] = $responsable->getEmail();
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $array]);
                         break;
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
@@ -354,10 +357,12 @@ class EntretienProfessionnelController extends AbstractActionController
     public function exporterAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
 
         $exporter = new EntretienProfessionnelPdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'entretien' => $entretien,
+            'formations' => $formations,
         ]);
 
         $agent = $entretien->getAgent()->getDenomination();

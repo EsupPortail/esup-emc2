@@ -101,13 +101,8 @@ class FormationGroupeService {
      * @return array
      */
     public function optionify(FormationGroupe $groupe) {
-        $res = $this->renderer->formationGroupe($groupe);
-
         $this_option = [
             'value' =>  $groupe->getId(),
-            'attributes' => [
-                'data-content' => $res . "&nbsp;&nbsp;&nbsp;&nbsp;".$groupe->getLibelle(),
-            ],
             'label' => $groupe->getLibelle(),
         ];
         return $this_option;

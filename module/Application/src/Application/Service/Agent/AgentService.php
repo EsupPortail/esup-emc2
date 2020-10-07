@@ -13,6 +13,7 @@ use Application\Entity\Db\Grade;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
@@ -20,20 +21,16 @@ use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentService {
-//    use DateTimeAwareTrait;
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
     use StructureServiceAwareTrait;
 
-
-    /** GESTION DES ENTITÉS *******************************************************************************************/
+    /** AGENT *********************************************************************************************************/
 
     /**
      * @param Agent $agent
      * @return Agent
      */
-    public function update($agent)
+    public function update(Agent $agent)
     {
         try {
             $this->getEntityManager()->flush($agent);
@@ -42,8 +39,6 @@ class AgentService {
         }
         return $agent;
     }
-
-    /** REQUETES ******************************************************************************************************/
 
     public function createQueryBuilder()
     {
@@ -100,10 +95,10 @@ class AgentService {
     }
 
     /**
-     * @param string $order
+     * @param string|null $order
      * @return Agent[]
      */
-    public function getAgents($order = null)
+    public function getAgents(?string $order = null)
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
         ;
@@ -119,11 +114,11 @@ class AgentService {
     }
 
     /**
-     * @param string $term
-     * @param Structure[] $structures
+     * @param string|null $term
+     * @param Structure[]|null $structures
      * @return Agent[]
      */
-    public function getAgentsByTerm($term, $structures = null)
+    public function getAgentsByTerm(?string $term, ?array $structures = null)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
@@ -150,7 +145,7 @@ class AgentService {
      * @param integer $id
      * @return Agent
      */
-    public function getAgent($id)
+    public function getAgent(int $id)
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -171,7 +166,7 @@ class AgentService {
      * @param string $paramName
      * @return Agent
      */
-    public function getRequestedAgent($controller, $paramName = 'agent')
+    public function getRequestedAgent(AbstractActionController $controller, $paramName = 'agent')
     {
         $id = $controller->params()->fromRoute($paramName);
         $agent = $this->getAgent($id);
@@ -200,7 +195,7 @@ class AgentService {
      * @param int $supannId
      * @return Agent
      */
-    public function getAgentBySupannId($supannId)
+    public function getAgentBySupannId(int $supannId)
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.harpId = :supannId')
@@ -215,11 +210,11 @@ class AgentService {
     }
 
     /**
-     * @param Structure $structure
+     * @param Structure|null $structure
      * @param boolean $sousstructure
      * @return Agent[]
      */
-    public function getAgentsSansFichePosteByStructure($structure = null, $sousstructure = false)
+    public function getAgentsSansFichePosteByStructure(?Structure $structure = null, bool $sousstructure = false)
     {
         $today = $this->getDateTime();
 
@@ -252,7 +247,6 @@ class AgentService {
         }
         $result1 = $qb1->getQuery()->getResult();
 
-
         //TODO ! faire la jointure ...
         $result = [];
         /** @var Agent $agent */
@@ -267,7 +261,7 @@ class AgentService {
      * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsByStructures($structures)
+    public function getAgentsByStructures(array $structures)
     {
         $today = $this->getDateTime();
 
@@ -303,13 +297,33 @@ class AgentService {
         return $result;
     }
 
+    /**
+     * @param Agent $agent
+     * @return User[]|null
+     */
+    public function getClosestResponsablesByAgent(Agent $agent) {
+        $affectationPrincipale = $agent->getAffectationPrincipale();
+        if ($affectationPrincipale === null) return null;
+
+        $structure = $affectationPrincipale->getStructure();
+        if ($structure === null) return null;
+
+        while ($structure !== null) {
+            $responsables = $structure->getResponsables();
+            if ($responsables !== []) return $responsables;
+            $structure = $structure->getParent();
+        }
+
+        return null;
+    }
+
     /** AgentApplication **********************************************************************************************/
 
     /**
      * @param integer $id
      * @return AgentApplication
      */
-    public function getAgentApplication($id)
+    public function getAgentApplication(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(AgentApplication::class)->createQueryBuilder('agentapplication')
             ->andWhere('agentapplication.id = :id')
@@ -328,7 +342,7 @@ class AgentService {
      * @param string $paramName
      * @return AgentApplication
      */
-    public function getRequestedAgenApplication($controller, $paramName = 'agent-application')
+    public function getRequestedAgenApplication(AbstractActionController $controller, $paramName = 'agent-application')
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getAgentApplication($id);
@@ -391,7 +405,7 @@ class AgentService {
      * @param integer $id
      * @return AgentCompetence
      */
-    public function getAgentCompetence($id)
+    public function getAgentCompetence(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(AgentCompetence::class)->createQueryBuilder('competence')
             ->andWhere('competence.id = :id')
@@ -410,7 +424,7 @@ class AgentService {
      * @param string $paramName
      * @return AgentCompetence
      */
-    public function getRequestedAgentCompetence($controller, $paramName = 'agent-competence')
+    public function getRequestedAgentCompetence(AbstractActionController $controller, $paramName = 'agent-competence')
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getAgentCompetence($id);
@@ -421,7 +435,7 @@ class AgentService {
      * @param AgentCompetence $competence
      * @return AgentCompetence
      */
-    public function createAgentCompetence($competence)
+    public function createAgentCompetence(AgentCompetence $competence)
     {
         $this->createFromTrait($competence);
         return $competence;
@@ -431,7 +445,7 @@ class AgentService {
      * @param AgentCompetence $competence
      * @return AgentCompetence
      */
-    public function updateAgentCompetence($competence)
+    public function updateAgentCompetence(AgentCompetence $competence)
     {
         $this->updateFromTrait($competence);
         return $competence;
@@ -473,7 +487,7 @@ class AgentService {
      * @param integer $id
      * @return AgentFormation
      */
-    public function getAgentFormation($id)
+    public function getAgentFormation(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('formation')
             ->andWhere('formation.id = :id')
@@ -492,7 +506,7 @@ class AgentService {
      * @param string $paramName
      * @return AgentFormation
      */
-    public function getRequestedAgentFormation($controller, $paramName = 'agent-formation')
+    public function getRequestedAgentFormation(AbstractActionController $controller, $paramName = 'agent-formation')
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getAgentFormation($id);
@@ -549,13 +563,61 @@ class AgentService {
         return $agentFormation;
     }
 
+    /**
+     * @param Agent $agent
+     * @param string $annee
+     * @return AgentFormation[]
+     */
+    public function getAgentFormationByAgentAndAnnee(Agent $agent, string $annee)
+    {
+        $debut_annee = DateTime::createFromFormat("d/m/Y", "01/09" . explode("/",$annee)[0]);
+        $fin_annee = DateTime::createFromFormat("d/m/Y", "031/08" . explode("/",$annee)[1]);
+
+        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('af')
+            ->andWhere('af.agent', $agent)
+            ->setParameter('agent', $agent)
+            ->andWhere('af.date >= :debut AND af.fin <= :fin')
+            ->setParameter('debut', $debut_annee)
+            ->setParameter('fin', $fin_annee)
+            ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Agent $agent
+     * @param string $annee
+     * @return AgentFormation[]
+     */
+    public function getFormationsSuiviesByAnnee(Agent $agent, string $annee)
+    {
+        $debut = DateTime::createFromFormat("d/m/Y","01/09/" .explode("/", $annee)[0]);
+        $fin   = DateTime::createFromFormat("d/m/Y","31/08/" .explode("/", $annee)[1]);
+
+        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('af')
+            ->addSelect('validation')->leftJoin('af.validation', 'validation')
+            ->addSelect('agent')->leftJoin('af.agent', 'agent')
+            ->addSelect('formation')->leftJoin('af.formation', 'formation')
+            ->andWhere('af.agent = :agent')
+            ->andWhere('af.date >= :debut AND af.date <= :fin')
+            ->andWhere('af.validation IS NOT NULL')
+            ->andWhere('validation.valeur IS NULL')
+            ->setParameter('agent', $agent)
+            ->setParameter('debut', $debut)
+            ->setParameter('fin', $fin)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
     /** MISSION SPECIFIQUE ********************************************************************************************/
 
     /**
      * @param integer $id
      * @return AgentMissionSpecifique
      */
-    public function getAgentMissionSpecifique($id)
+    public function getAgentMissionSpecifique(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(AgentMissionSpecifique::class)->createQueryBuilder('mission')
             ->andWhere('mission.id = :id')
@@ -574,7 +636,7 @@ class AgentService {
      * @param string $paramName
      * @return AgentMissionSpecifique
      */
-    public function getRequestedAgentMissionSpecifique($controller, $paramName = 'agent-mission-specifique')
+    public function getRequestedAgentMissionSpecifique(AbstractActionController $controller, $paramName = 'agent-mission-specifique')
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getAgentMissionSpecifique($id);

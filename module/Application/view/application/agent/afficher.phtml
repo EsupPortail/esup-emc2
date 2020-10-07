@@ -12,6 +12,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var EntretienProfessionnel[] $entretiens
  * @var User    $user
  * @var Role    $role
+ * @var User[]  $responsables
  */
 
 $canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
@@ -100,6 +101,22 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                                 <span class="icon attention"></span>
                                 <em> Aucun compte lié à l'agent </em>
                             </span>
+                        <?php endif; ?>
+                    </dd>
+                    <dt> Responsables hiérarchiques</dt>
+                    <dd>
+                        <?php if ($responsables !== null AND !empty($responsables)) : ?>
+                            <ul>
+                                <?php foreach ($responsables as $responsable) : ?>
+                                    <li> <?php echo $responsable->getDisplayName(); ?> </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else : ?>
+                            <span class="probleme">
+                                <span class="icon attention"></span>
+                                <em> Aucun responsable de remonté </em>
+                            </span>
+
                         <?php endif; ?>
                     </dd>
                 </dl>

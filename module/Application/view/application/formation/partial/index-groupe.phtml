@@ -39,38 +39,40 @@ use Application\Entity\Db\FormationGroupe;
 <br/>
 
 <div class="alert alert-info">
-    Les groupes de formation permettent de rassembler les formations par ensemble notamment dans :
-    <ul>
-        <li> les parcours de formation des catégories; </li>
-        <li> les parcours de formation des métiers. </li>
-    </ul>
+    <small>
+    <ol>
+        <li>
+            Les groupes de formation permettent de rassembler les formations par ensemble notamment dans :
+            <ul>
+                <li> les parcours de formation des catégories; </li>
+                <li> les parcours de formation des métiers. </li>
+            </ul>
+        </li>
+        <li> Il est possible de modifier l'ordre d'affichage des groupes :
+            <ul>
+                <li> en éditant directement le groupe;</li>
+                <li> en effectant un drag &amp; drop.</li>
+            </ul>
+        </li>
+    </ol>
+    </small>
 </div>
 
 <br/>
 
-<table class="table table-condensed" id="groupes">
+<table class="datatable table table-condensed" id="groupes">
     <thead>
     <tr>
-        <th> Badge </th>
         <th> Libellé </th>
-        <th> #Formation </th>
-        <th> Modification </th>
-        <th> Action </th>
+        <th style="width: 12rem;"> #Formation </th>
+        <th style="width: 12rem;"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($groupes as $groupe) : ?>
         <tr id="<?php echo $groupe->getId(); ?>"  class="<?php if ($groupe->estHistorise()) echo "historise"; ?>">
-            <td> <?php echo $this->formationGroupe($groupe); ?> </td>
             <td> <?php echo $groupe->getLibelle(); ?> </td>
             <td> <?php echo count($groupe->getFormations()); ?> </td>
-            <td>
-                <small>
-                    <?php echo $groupe->getHistoModification()->format('d/m/Y à H:i'); ?>
-                    <br/>
-                    <?php echo $groupe->getHistoModificateur()->getDisplayName(); ?>
-                </small>
-            </td>
             <td>
                 <?php if ($canAfficher) : ?>
                     <a  <?php /** @see FormationController::afficherGroupeAction() */ ?>

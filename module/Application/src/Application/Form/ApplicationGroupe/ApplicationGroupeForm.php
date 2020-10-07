@@ -36,16 +36,16 @@ class ApplicationGroupeForm extends Form {
             ],
         ]);
         //couleur
-        $this->add([
-            'type' => Color::class,
-            'name' => 'couleur',
-            'options' => [
-                'label' => "Couleur :",
-            ],
-            'attributes' => [
-                'id' => 'couleur',
-            ],
-        ]);
+//        $this->add([
+//            'type' => Color::class,
+//            'name' => 'couleur',
+//            'options' => [
+//                'label' => "Couleur :",
+//            ],
+//            'attributes' => [
+//                'id' => 'couleur',
+//            ],
+//        ]);
         //bouton
         $this->add([
             'type' => Button::class,
@@ -65,7 +65,7 @@ class ApplicationGroupeForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'   => [ 'required' => true, ],
             'ordre'     => [ 'required' => false, ],
-            'couleur'   => [ 'required' => false, ],
+//            'couleur'   => [ 'required' => false, ],
         ]));
     }
 }

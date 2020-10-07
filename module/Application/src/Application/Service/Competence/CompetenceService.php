@@ -11,18 +11,16 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
     use CompetenceThemeServiceAwareTrait;
 
-    /** GESTION DE L'ENTITÉ *******************************************************************************************/
+    /** COMPETENCES : ENTITY ******************************************************************************************/
 
     /**
      * @param Competence $competence
      * @return Competence
      */
-    public function create($competence)
+    public function create(Competence $competence)
     {
         $this->createFromTrait($competence);
         return $competence;
@@ -32,7 +30,7 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function update($competence)
+    public function update(Competence $competence)
     {
        $this->updateFromTrait($competence);
         return $competence;
@@ -42,7 +40,7 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function historise($competence)
+    public function historise(Competence $competence)
     {
         $this->updateFromTrait($competence);
         return $competence;
@@ -52,7 +50,7 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function restore($competence)
+    public function restore(Competence $competence)
     {
        $this->restoreFromTrait($competence);
         return $competence;
@@ -62,13 +60,13 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function delete($competence)
+    public function delete(Competence $competence)
     {
         $this->deleteFromTrait($competence);
         return $competence;
     }
 
-    /** REQUETES ******************************************************************************************************/
+    /** COMPETENCES : REQUETAGE ***************************************************************************************/
 
     /**
      * @return QueryBuilder
@@ -118,7 +116,7 @@ class CompetenceService {
      * @param integer $id
      * @return Competence
      */
-    public function getCompetence($id)
+    public function getCompetence(int $id)
     {
         $qb = $this->createQueryBuilderForCompetence()
             ->andWhere('competence.id = :id')
@@ -137,7 +135,7 @@ class CompetenceService {
      * @param string $paramName
      * @return Competence
      */
-    public function getRequestedCompetence($controller, $paramName = 'competence')
+    public function getRequestedCompetence(AbstractActionController $controller, $paramName = 'competence')
     {
         $id = $controller->params()->fromRoute($paramName);
         $competence = $this->getCompetence($id);

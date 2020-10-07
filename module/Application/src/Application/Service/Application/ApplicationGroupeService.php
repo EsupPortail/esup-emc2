@@ -101,13 +101,8 @@ class ApplicationGroupeService {
      * @return array
      */
     public function optionify(ApplicationGroupe $groupe) {
-        $res = $this->renderer->applicationGroupe($groupe);
-
         $this_option = [
             'value' =>  $groupe->getId(),
-            'attributes' => [
-                'data-content' => $res . "&nbsp;&nbsp;&nbsp;&nbsp;".$groupe->getLibelle(),
-            ],
             'label' => $groupe->getLibelle(),
         ];
         return $this_option;
@@ -131,7 +126,7 @@ class ApplicationGroupeService {
      * @param integer $id
      * @return ApplicationGroupe
      */
-    public function getApplicationGroupe($id)
+    public function getApplicationGroupe(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('groupe.id = :id')
@@ -150,7 +145,7 @@ class ApplicationGroupeService {
      * @param string $param
      * @return ApplicationGroupe
      */
-    public function getRequestedApplicationGroupe($controller, $param = 'application-groupe')
+    public function getRequestedApplicationGroupe(AbstractActionController $controller, $param = 'application-groupe')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getApplicationGroupe($id);

@@ -692,7 +692,6 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'formationGroupe' => FormationGroupeViewHelper::class,
         ],
     ],
 ];

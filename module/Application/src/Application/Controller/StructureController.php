@@ -291,6 +291,7 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
         $users = $this->getStructureService()->getGestionnairesByStructure($structure);
+
         $selected = [];
 
         $term = $this->params()->fromQuery('term');

@@ -26,7 +26,7 @@ $canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDE
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
-$canRenseigner = $canValiderDrh OR $canValiderResponsable OR $canValiderAgent;
+$canRenseigner = ($canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
 
 $droits = [
     'afficher' => $canVoir,
@@ -48,6 +48,7 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
 
 $DEBUG = false;
 $now = new DateTime();
+$dayAfter = $entretien->getDateEntretien()->add(new DateInterval('P1D'));
 ?>
 
 <?php if ($DEBUG) : ?>
@@ -96,7 +97,7 @@ foreach ($reponses as $reponse) {
 ?>
 
 <?php if ($canRenseigner) : ?>
-    <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+    <?php if (($dayAfter >= $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
         <?php
         /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
         $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);

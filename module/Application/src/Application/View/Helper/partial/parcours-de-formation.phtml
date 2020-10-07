@@ -41,7 +41,7 @@ usort($formationArray,
 <?php if ($asListe) : ?>
     <?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
         <?php if ($groupe !== $nogroup) : ?>
-            <?php echo $this->formationGroupe($formationSubarray[0]->getGroupe()); ?>
+            <?php echo $formationSubarray[0]->getGroupe()->getLibelle(); ?>
         <?php else: ?>
             <span class="badge">Sans groupe ...</span>
         <?php endif; ?>

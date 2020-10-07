@@ -187,4 +187,14 @@ class ContenuService {
         return $this->replaceMacros($contenu->getContent(), $variables);
     }
 
+    /**
+     * @param Content $contenu
+     * @param array $variables
+     * @return string
+     */
+    public function generateTitre($contenu, $variables)
+    {
+        return $this->replaceMacros($contenu->getComplement(), $variables);
+    }
+
 }
