@@ -151,6 +151,8 @@ class MacroService {
      */
     public function getTexte(string $code, array $variables)
     {
+        $code = str_replace('VAR[','', $code);
+        $code = str_replace(']','', $code);
         $macro = $this->getMacroByCode($code);
 
         if ($macro !== null) {
