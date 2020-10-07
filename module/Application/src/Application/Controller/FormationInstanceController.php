@@ -393,4 +393,21 @@ class FormationInstanceController extends AbstractActionController {
         exit;
     }
 
+    /**
+     * @throws MpdfException
+     */
+    public function genererAttestationAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+
+        $this->getExporterService()->setVars([
+            'type' => 'FORMATION_ATTESTATION',
+            'agent' => $inscrit->getAgent(),
+            'formation' => $inscrit->getInstance()->getFormation(),
+            'instance' => $inscrit->getInstance(),
+        ]);
+        $this->getExporterService()->export('export.pdf');
+        exit;
+    }
+
 }

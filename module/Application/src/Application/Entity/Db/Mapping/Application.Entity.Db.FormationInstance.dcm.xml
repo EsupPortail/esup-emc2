@@ -12,6 +12,7 @@
 
         <field name="nbPlacePrincipale"         type="integer"                  column="nb_place_principale"         nullable="false"/>
         <field name="nbPlaceComplementaire"     type="integer"                  column="nb_place_complementaire"     nullable="false"/>
+        <field name="lieu"                      type="string" length="256"      column="lieu"                        nullable="false"/>
         <field name="complement"                type="string" length="4096"     column="complement"                  nullable="true"/>
 
         <one-to-many field="journees" target-entity="Application\Entity\Db\FormationInstanceJournee" mapped-by="instance"/>

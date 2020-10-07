@@ -4,6 +4,7 @@ namespace Application\Form\FormationInstance;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
+use Zend\Form\Element\Text;
 use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -49,6 +50,17 @@ class FormationInstanceForm extends Form {
                 'id' => 'complementaire',
             ],
         ]);
+        /** taille liste complementaire */
+        $this->add([
+            'type' => Text::class,
+            'name' => 'lieu',
+            'options' => [
+                'label' => "Lieu de la formation * :",
+            ],
+            'attributes' => [
+                'id' => 'lieu',
+            ],
+        ]);
         //button
         $this->add([
             'type' => Button::class,
@@ -69,6 +81,7 @@ class FormationInstanceForm extends Form {
             'description'               => [ 'required' => false, ],
             'principale'                => [ 'required' => true,  ],
             'complementaire'            => [ 'required' => true,  ],
+            'lieu'                      => [ 'required' => true,  ],
         ]));
     }
 }

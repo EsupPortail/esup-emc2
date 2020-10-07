@@ -127,6 +127,7 @@ return [
                     'action' => [
                         'afficher',
                         'generer-convocation',
+                        'generer-attestation',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INSTANCE_AFFICHER,
@@ -247,6 +248,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'generer-convocation',
+                            ],
+                        ],
+                    ],
+                    'generer-attestation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-attestation/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'generer-attestation',
                             ],
                         ],
                     ],

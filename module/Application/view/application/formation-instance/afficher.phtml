@@ -70,6 +70,8 @@ $historises = $instance->getListeHistorisee();
                 <dd> <?php echo $instance->getNbPlacePrincipale(); ?> </dd>
                 <dt> Taille liste complémentaire</dt>
                 <dd> <?php echo $instance->getNbPlaceComplementaire(); ?> </dd>
+                <dt> Lieu</dt>
+                <dd> <?php echo $instance->getLieu(); ?> </dd>
             </dl>
         </div>
         <?php if ($canInformation) : ?>
@@ -199,10 +201,10 @@ $historises = $instance->getListeHistorisee();
     <table id="agents" class="datatable table table-condensed">
         <thead>
         <tr>
-            <th style="width:50rem;"> Dénomination </th>
+            <th style="width:40rem;"> Dénomination </th>
             <th> Affection principale </th>
             <th style="width:13rem;"> Date d'ajout </th>
-            <th style="width:13rem;"> Action </th>
+            <th style="width:15rem;"> Action </th>
         </tr>
         </thead>
         <tbody>
@@ -221,7 +223,11 @@ $historises = $instance->getListeHistorisee();
                         <?php /** @see \Application\Controller\FormationInstanceController::genererConvocationAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscrit->getId()], [], true); ?>"
                             data-toogle="tooltip" data-html="true" title="Générer la convocation">
-                            <span class="icon pdf"></span></a>
+                            <span class="icon pdf"></span><span class="lettrine">C</span></a>
+                        <?php /** @see \Application\Controller\FormationInstanceController::genererAttestationAction() */?>
+                        <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            data-toogle="tooltip" data-html="true" title="Générer la convocation">
+                            <span class="icon pdf"></span><span class="lettrine">A</span></a>
                         <?php if (! $complementaireComplete) : ?>
                             <?php /** @see \Application\Controller\FormationInstanceController::envoyerListeComplementaireAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
@@ -365,3 +371,13 @@ $historises = $instance->getListeHistorisee();
         });
     });
 </script>
+
+<style>
+    span.lettrine {
+        position:relative;
+        left:-0.75rem;
+        top:1rem;
+        font-weight:bolder;
+        text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+    }
+</style>

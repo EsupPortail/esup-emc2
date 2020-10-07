@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
@@ -20,6 +21,8 @@ class FormationInstance implements HistoriqueAwareInterface {
     private $nbPlacePrincipale;
     /** @var integer */
     private $nbPlaceComplementaire;
+    /** @var string */
+    private $lieu;
 
     /** @var ArrayCollection (FormationInstanceJournee) */
     private $journees;
@@ -105,6 +108,24 @@ class FormationInstance implements HistoriqueAwareInterface {
     public function setNbPlaceComplementaire(int $nbPlaceComplementaire)
     {
         $this->nbPlaceComplementaire = $nbPlaceComplementaire;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLieu(): string
+    {
+        return $this->lieu;
+    }
+
+    /**
+     * @param string $lieu
+     * @return FormationInstance
+     */
+    public function setLieu(string $lieu): FormationInstance
+    {
+        $this->lieu = $lieu;
         return $this;
     }
 
@@ -237,6 +258,11 @@ class FormationInstance implements HistoriqueAwareInterface {
 
     /** Fonctions pour les macros **********************************************************************************/
 
+    public function getInstanceCode()
+    {
+        return $this->getFormation()->getId()."/".$this->getId();
+    }
+
     public function getListeJournees()
     {
         /** @var FormationInstanceJournee[] $journees */
@@ -266,6 +292,24 @@ class FormationInstance implements HistoriqueAwareInterface {
         $text .= "</table>";
 
         return $text;
+    }
 
+    public function getDuree()
+    {
+        $sum = DateTime::createFromFormat('d/m/Y H:i','01/01/1970 00:00');
+        /** @var FormationInstanceJournee[] $journees */
+        $journees = array_filter($this->journees->toArray(), function (FormationInstanceJournee $a) { return $a->estNonHistorise(); });
+        foreach ($journees as $journee) {
+            $debut = DateTime::createFromFormat('d/m/Y H:i',$journee->getJour()." ".$journee->getDebut());
+            $fin = DateTime::createFromFormat('d/m/Y H:i',$journee->getJour()." ".$journee->getFin());
+            $duree = $fin->diff($debut);
+            $sum->add($duree);
+        }
+
+        $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i','01/01/1970 00:00'));
+        $heures = ($result->d * 24 + $result->h);
+        $minutes = ($result->i);
+        $text = $heures . " heures " . (($minutes !== 0)?($minutes." minutes"):"");
+        return $text;
     }
 }
