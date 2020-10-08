@@ -233,7 +233,7 @@ $historises = $instance->getListeHistorisee();
                             <span class="icon pdf"></span><span class="lettrine">C</span></a>
                         <?php /** @see \Application\Controller\FormationInstanceController::genererAttestationAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                            data-toogle="tooltip" data-html="true" title="Générer la convocation">
+                            data-toogle="tooltip" data-html="true" title="Générer l'attestation">
                             <span class="icon pdf"></span><span class="lettrine">A</span></a>
                         <?php if (! $complementaireComplete) : ?>
                             <?php /** @see \Application\Controller\FormationInstanceController::envoyerListeComplementaireAction() */?>
