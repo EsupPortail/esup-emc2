@@ -119,7 +119,7 @@ class ContenuController extends AbstractActionController {
             $vm->setVariables([
                 'title' => "Suppression du contenu [" . $contenu->getCode() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('contenu/detruire', ["contenu" => $contenu->getId()], [], true),
+                'action' => $this->url()->fromRoute('contenu/contenu/detruire', ["contenu" => $contenu->getId()], [], true),
             ]);
         }
         return $vm;

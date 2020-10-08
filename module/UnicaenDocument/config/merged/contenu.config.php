@@ -60,7 +60,7 @@ return [
                 [
                     'controller' => ContenuController::class,
                     'action' => [
-                        'supprimer',
+                        'detruire',
                     ],
                     'privileges' => [
                         DocumentcontentPrivileges::DOCUMENTCONTENU_SUPPRIMER,
