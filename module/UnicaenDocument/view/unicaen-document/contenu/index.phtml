@@ -41,7 +41,7 @@ $this->headTitle("Index des contenus");
         </thead>
         <tbody>
             <?php foreach ($contenus as $contenu) : ?>
-                <tr>
+                <tr class="<?php if ($contenu->estHistorise()) echo 'historise '; ?>">
                     <td>
                         <?php echo $contenu->getCode(); ?>
                         <?php if ($contenu->getDescription() !== null) : ?>
@@ -87,3 +87,12 @@ $this->headTitle("Index des contenus");
         </tbody>
     </table>
 </div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
