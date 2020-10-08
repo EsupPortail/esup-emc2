@@ -1,0 +1,200 @@
+<?php
+
+/**
+ * @see \Application\Controller\FormationInstanceController::renseignerPresencesAction()
+ * @var FormationInstance $instance
+ * @var FormationInstancePresence[][] $presences
+ */
+
+use Application\Entity\Db\FormationInstance;
+use Application\Entity\Db\FormationInstanceInscrit;use Application\Entity\Db\FormationInstanceJournee;
+use Application\Entity\Db\FormationInstancePresence;
+
+/** @var FormationInstanceJournee[] $journees */
+$journees = $instance->getJournees();
+/** @var FormationInstanceInscrit[] $inscrits */
+$inscrits = $instance->getListePrincipale();
+?>
+
+<h1 class="page-header">
+    Renseigner les présences pour la formation <br>
+    <em> <?php echo $instance->getInstanceCode(); ?> <?php echo $instance->getFormation()->getLibelle(); ?> </em>
+</h1>
+
+<div class="main">
+    <div class="row">
+        <div class="col-md-8">
+            <h2> Instance de la formation </h2>
+        </div>
+        <div class="pull-right">
+            <a      href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
+                    class="btn btn-info action">
+                <span class="icon retour"></span>
+                Retour à l'instance de la formation
+            </a>
+            <br/>
+            <a      href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
+                    class="btn btn-info action">
+                <span class="icon retour-double"></span>
+                Retour à la formation associée
+            </a>
+        </div>
+    </div>
+
+    <dl class="dl-horizontal">
+        <dt> Intitulé de la formation</dt>
+        <dd> <?php echo $instance->getFormation()->getLibelle(); ?></dd>
+        <dt> Code de l'action</dt>
+        <dd> <?php echo $instance->getInstanceCode(); ?></dd>
+        <dt> Période</dt>
+        <dd> <?php echo $instance->getDebut(); ?> &rightarrow; <?php echo $instance->getFin(); ?></dd>
+        <dt> Liste principale </dt>
+        <dd> <?php echo count($instance->getListePrincipale());?>/<?php echo $instance->getNbPlacePrincipale(); ?> </dd>
+    </dl>
+
+    <center>
+    <table class="presence">
+        <tr>
+            <td class="separateur"></td>
+            <?php foreach ($journees as $journee) : ?>
+                <td class="journee"> <?php echo $journee->getJour()?> <br/>  <?php echo $journee->getDebut()?> &rightarrow; <?php echo $journee->getFin()?> </td>
+            <?php endforeach; ?>
+        </tr>
+        <?php foreach ($inscrits as $inscrit) : ?>
+        <tr>
+            <td class="inscrit">
+                <div class="row">
+                    <div class="col-md-9">
+                            <strong><?php echo $inscrit->getAgent()->getDenomination(); ?></strong> <br/>
+                            <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleCourt():"Non renseigné"; ?>
+                    </div>
+                    <div class="pull-right" style="padding-right: 1rem;">
+                            <span class="all_toggle icon ok" id="on_<?php echo $inscrit->getId(); ?>"></span>
+                            <span class="all_toggle icon detruire" id="off_<?php echo $inscrit->getId(); ?>"></span>
+                    </div>
+                </div>
+            </td>
+            <?php foreach ($journees as $journee) : ?>
+                <td class="reponse" id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
+                    <?php if ($presences[$journee->getId()][$inscrit->getId()] && $presences[$journee->getId()][$inscrit->getId()]->isPresent()) : ?>
+                        <span class="icon ok" style="color:darkgreen;" title="Présent"></span>
+                    <?php else : ?>
+                        <span class="icon detruire" style="color:darkred;" title="Non présent"></span>
+                    <?php endif; ?>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    </center>
+</div>
+
+<style>
+    table.presence {
+        /*border : 1px solid black;*/
+    }
+
+    table.presence tr td {
+        border : 1px solid black;
+    }
+
+    table.presence tr td.separateur{
+        border : 0;
+    }
+    table.presence tr td.journee{
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        padding-top:.5rem;
+        padding-bottom:1rem;
+        background: #1b6d85;
+        color:white;
+        min-width: 3rem;
+    }
+
+    table.presence tr td.inscrit{
+        padding-left:.5rem;
+        padding-right:1rem;
+        background: #1b6d85;
+        color:white;
+    }
+
+    table.presence tr td.reponse {
+        vertical-align: center;
+        text-align: center;
+        min-width: 3rem;
+        min-height: 3rem;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    let journees = [
+        <?php
+            $array = array_map(function(FormationInstanceJournee $a) {return $a->getId();}, $journees);
+            echo implode(",", $array);
+            ?>
+    ];
+    $(function() {
+        $("td.reponse").on("click", function () {
+            let id = $(this).attr('id');
+            let split = id.split("_");
+            let inscrit = split[1];
+            let journee = split[0];
+            // console.log('inscrit: ' + inscrit);
+            // console.log('journee: ' + journee);
+
+            var url = "../toggle-presence/" + journee + "/" + inscrit;
+            $.ajax({
+                type: "POST",
+                url : url,
+                beforeSend:
+                    function () {
+                        document.getElementById(id).innerHTML = "<i class='fas fa-hourglass' style='color:#1b6d85;'></i>";
+                    },
+                success:
+                    function(retour){
+                        // console.log(retour);
+                        let texte = "";
+                        if (retour == 1) texte = "<span class='icon ok' style='color:darkgreen;'></span>";
+                        else texte = "<span class='icon detruire' style='color:darkred;'></span>";
+                        document.getElementById(id).innerHTML = texte;
+                    }
+            });
+        });
+
+        $("span.all_toggle").on("click", function () {
+            let id = $(this).attr('id');
+            let split = id.split("_");
+            let inscrit = split[1];
+            let mode = split[0];
+            console.log('mode: ' + mode);
+            console.log('inscrit: ' + inscrit);
+
+            var url = "../toggle-presences/" + mode + "/" + inscrit;
+            $.ajax({
+                type: "POST",
+                url : url,
+                beforeSend:
+                    function () {
+                        $.each(journees, function(index, journee) {
+                            // console.log(inscrit);
+                            // console.log(journee);
+                            document.getElementById(journee + "_" + inscrit).innerHTML = "<i class='fas fa-hourglass' style='color:#1b6d85;'></i>";
+                        });
+                    },
+                success:
+                    function(retour){
+                        // console.log(retour);
+                        let texte = "";
+                        $.each(journees, function(index, journee) {
+                            // console.log(inscrit);
+                            // console.log(journee);
+                            if (mode == 'on') texte = "<span class='icon ok' style='color:darkgreen;'></span>";
+                            else texte = "<span class='icon detruire' style='color:darkred;'></span>";
+                            document.getElementById(journee + "_" + inscrit).innerHTML = texte;
+                        });
+                    }
+            });
+        });
+    });
+</script>

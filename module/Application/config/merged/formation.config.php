@@ -40,9 +40,10 @@ use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceJourneeService;
 use Application\Service\FormationInstance\FormationInstanceJourneeServiceFactory;
+use Application\Service\FormationInstance\FormationInstancePresenceService;
+use Application\Service\FormationInstance\FormationInstancePresenceServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Application\Service\FormationInstance\FormationInstanceServiceFactory;
-use Application\View\Helper\FormationGroupeViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -146,6 +147,9 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'modifier-informations',
+                        'renseigner-presences',
+                        'toggle-presence',
+                        'toggle-presences',
 
                         'ajouter-journee',
                         'modifier-journee',
@@ -298,6 +302,36 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'modifier-informations',
+                            ],
+                        ],
+                    ],
+                    'renseigner-presences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/renseigner-presences/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'renseigner-presences',
+                            ],
+                        ],
+                    ],
+                    'toggle-presence' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/toggle-presence/:journee/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'toggle-presence',
+                            ],
+                        ],
+                    ],
+                    'toggle-presences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/toggle-presences/:mode/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'toggle-presences',
                             ],
                         ],
                     ],
@@ -679,6 +713,7 @@ return [
             FormationInstanceService::class => FormationInstanceServiceFactory::class,
             FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
             FormationInstanceJourneeService::class => FormationInstanceJourneeServiceFactory::class,
+            FormationInstancePresenceService::class => FormationInstancePresenceServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
         ],
@@ -702,7 +737,6 @@ return [
     'hydrators' => [
         'invokables' => [
             SelectionFormationHydrator::class => SelectionFormationHydrator::class,
-//            FormationGroupeHydrator::class => FormationGroupeHydrator::class,
         ],
         'factories' => [
             AjouterFormationHydrator::class => AjouterFormationHydratorFactory::class,

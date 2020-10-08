@@ -82,6 +82,13 @@ $historises = $instance->getListeHistorisee();
                     <span class="icon editer"></span>
                     Modifier les informations de l'instance
                 </a>
+                <br/>
+                <?php /** @see \Application\Controller\FormationInstanceController::renseignerPresencesAction() */ ?>
+                <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['formation-instance' => $instance->getId()], [], true); ?>"
+                   class="btn btn-primary action">
+                    <span class="icon ok"></span>
+                    Renseigner les présences
+                </a>
             </div>
         <?php endif; ?>
     </div>
@@ -136,7 +143,7 @@ $historises = $instance->getListeHistorisee();
                         <?php /** @see \Application\Controller\FormationInstanceController::exportEmargementAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
                                 data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la journée de formation">
-                            <span class="icon pdf"></span></a>
+                            <span class="icon pdf"></span><span class="lettrine">E</span></a>
                         <?php /** @see \Application\Controller\FormationInstanceController::modifierJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"

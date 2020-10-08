@@ -8,6 +8,7 @@ use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Formation\FormationService;
 use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceJourneeService;
+use Application\Service\FormationInstance\FormationInstancePresenceService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Interop\Container\ContainerInterface;
 use UnicaenDocument\Service\Exporter\ExporterService;
@@ -26,12 +27,14 @@ class FormationInstanceControllerFactory {
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var FormationInstanceJourneeService $formationInstanceJourneeService
+         * @var FormationInstancePresenceService $formationInstancePresenceService
          * @var ExporterService $exporterService
          */
         $formationService = $container->get(FormationService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
+        $formationInstancePresenceService = $container->get(FormationInstancePresenceService::class);
         $exporterService = $container->get(ExporterService::class);
 
         /**
@@ -53,6 +56,7 @@ class FormationInstanceControllerFactory {
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
+        $controller->setFormationInstancePresenceService($formationInstancePresenceService);
         $controller->setExporterService($exporterService);
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setFormationJourneeForm($formationJourneeForm);
