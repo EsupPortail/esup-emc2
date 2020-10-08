@@ -145,7 +145,7 @@ class AgentService {
      * @param integer $id
      * @return Agent
      */
-    public function getAgent(int $id)
+    public function getAgent(?int $id)
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()

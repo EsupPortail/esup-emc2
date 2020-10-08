@@ -51,7 +51,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @var DateTime */
     private $acceptation;
 
-
     /**
      * @return int
      */
@@ -69,10 +68,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return EntretienProfessionnel
      */
-    public function setAgent($agent)
+    public function setAgent(?Agent $agent)
     {
         $this->agent = $agent;
         return $this;
@@ -87,10 +86,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param User $responsable
+     * @param User|null $responsable
      * @return EntretienProfessionnel
      */
-    public function setResponsable($responsable)
+    public function setResponsable(?User $responsable)
     {
         $this->responsable = $responsable;
         return $this;
@@ -114,10 +113,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param EntretienProfessionnelCampagne $campagne
+     * @param EntretienProfessionnelCampagne|null $campagne
      * @return EntretienProfessionnel
      */
-    public function setCampagne($campagne)
+    public function setCampagne(?EntretienProfessionnelCampagne $campagne)
     {
         $this->campagne = $campagne;
         return $this;
@@ -132,10 +131,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param DateTime $dateEntretien
+     * @param DateTime|null $dateEntretien
      * @return EntretienProfessionnel
      */
-    public function setDateEntretien($dateEntretien)
+    public function setDateEntretien(?DateTime $dateEntretien)
     {
         $this->dateEntretien = $dateEntretien;
         return $this;
@@ -150,10 +149,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param string $lieu
+     * @param string|null $lieu
      * @return EntretienProfessionnel
      */
-    public function setLieu($lieu)
+    public function setLieu(?string $lieu)
     {
         $this->lieu = $lieu;
         return $this;
@@ -168,10 +167,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param FormulaireInstance $formulaireInstance
+     * @param FormulaireInstance|null $formulaireInstance
      * @return EntretienProfessionnel
      */
-    public function setFormulaireInstance($formulaireInstance)
+    public function setFormulaireInstance(?FormulaireInstance $formulaireInstance)
     {
         $this->formulaireInstance = $formulaireInstance;
         return $this;
@@ -186,10 +185,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param FormulaireInstance $formationInstance
+     * @param FormulaireInstance|null $formationInstance
      * @return EntretienProfessionnel
      */
-    public function setFormationInstance($formationInstance)
+    public function setFormationInstance(?FormulaireInstance $formationInstance)
     {
         $this->formationInstance = $formationInstance;
         return $this;
@@ -206,29 +205,29 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param EntretienProfessionnelObservation $observation
+     * @param EntretienProfessionnelObservation|null $observation
      * @return boolean
      */
-    public function hasObservation($observation)
+    public function hasObservation(?EntretienProfessionnelObservation $observation)
     {
         return $this->observations->contains($observation);
     }
 
     /**
-     * @param EntretienProfessionnelObservation $observation
+     * @param EntretienProfessionnelObservation|null $observation
      * @return EntretienProfessionnel
      */
-    public function addObservation(EntretienProfessionnelObservation $observation)
+    public function addObservation(?EntretienProfessionnelObservation $observation)
     {
         if ($this->hasObservation($observation)) $this->observations->add($observation);
         return $this;
     }
 
     /**
-     * @param EntretienProfessionnelObservation $observation
+     * @param EntretienProfessionnelObservation|null $observation
      * @return EntretienProfessionnel
      */
-    public function removeObservation(EntretienProfessionnelObservation $observation)
+    public function removeObservation(?EntretienProfessionnelObservation $observation)
     {
         $this->observations->removeElement($observation);
         return $this;
