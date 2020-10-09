@@ -22,6 +22,10 @@ use Application\Form\FormationInstance\FormationInstanceForm;
 use Application\Form\FormationInstance\FormationInstanceFormFactory;
 use Application\Form\FormationInstance\FormationInstanceHydrator;
 use Application\Form\FormationInstance\FormationInstanceHydratorFactory;
+use Application\Form\FormationInstanceFrais\FormationInstanceFraisForm;
+use Application\Form\FormationInstanceFrais\FormationInstanceFraisFormFactory;
+use Application\Form\FormationInstanceFrais\FormationInstanceFraisHydrator;
+use Application\Form\FormationInstanceFrais\FormationInstanceFraisHydratorFactory;
 use Application\Form\FormationJournee\FormationJourneeForm;
 use Application\Form\FormationJournee\FormationJourneeFormFactory;
 use Application\Form\FormationJournee\FormationJourneeHydrator;
@@ -36,6 +40,8 @@ use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
+use Application\Service\FormationInstance\FormationInstanceFraisService;
+use Application\Service\FormationInstance\FormationInstanceFraisServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceJourneeService;
@@ -146,6 +152,7 @@ return [
                     'action' => [
                         'modifier-informations',
                         'renseigner-presences',
+                        'renseigner-frais',
                         'toggle-presence',
                         'toggle-presences',
 
@@ -260,6 +267,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'generer-attestation',
+                            ],
+                        ],
+                    ],
+                    'renseigner-frais' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/renseigner-frais/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'renseigner-frais',
                             ],
                         ],
                     ],
@@ -702,6 +719,7 @@ return [
             FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
             FormationInstanceJourneeService::class => FormationInstanceJourneeServiceFactory::class,
             FormationInstancePresenceService::class => FormationInstancePresenceServiceFactory::class,
+            FormationInstanceFraisService::class => FormationInstanceFraisServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
         ],
@@ -718,6 +736,7 @@ return [
             FormationForm::class => FormationFormFactory::class,
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
             FormationInstanceForm::class => FormationInstanceFormFactory::class,
+            FormationInstanceFraisForm::class => FormationInstanceFraisFormFactory::class,
             FormationJourneeForm::class => FormationJourneeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
@@ -731,6 +750,7 @@ return [
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
             FormationInstanceHydrator::class => FormationInstanceHydratorFactory::class,
+            FormationInstanceFraisHydrator::class => FormationInstanceFraisHydratorFactory::class,
             FormationJourneeHydrator::class => FormationJourneeHydratorFactory::class,
         ],
     ],

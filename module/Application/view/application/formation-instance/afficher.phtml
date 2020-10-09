@@ -235,6 +235,12 @@ $historises = $instance->getListeHistorisee();
                         <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscrit->getId()], [], true); ?>"
                             data-toogle="tooltip" data-html="true" title="Générer l'attestation">
                             <span class="icon pdf"></span><span class="lettrine">A</span></a>
+                        <?php /** @see \Application\Controller\FormationInstanceController::renseignerFraisAction() */?>
+                        <a href="<?php echo $this->url('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                           data-toggle="tooltip" data-html="true" title="Saissir les frais de missions pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"
+                        >
+                            <span class="icon euro"></span></a>
                         <?php if (! $complementaireComplete) : ?>
                             <?php /** @see \Application\Controller\FormationInstanceController::envoyerListeComplementaireAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
@@ -378,13 +384,3 @@ $historises = $instance->getListeHistorisee();
         });
     });
 </script>
-
-<style>
-    span.lettrine {
-        position:relative;
-        left:-0.75rem;
-        top:1rem;
-        font-weight:bolder;
-        text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
-    }
-</style>

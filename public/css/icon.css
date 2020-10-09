@@ -244,3 +244,7 @@ span.icon.televerser:before {
 span.icon.fiche-poste:before {
     content: "\f1c4";
 }
+
+span.icon.euro:before {
+    content: "\f153";
+}

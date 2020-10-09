@@ -3,14 +3,17 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\FormationInstance;
+use Application\Entity\Db\FormationInstanceFrais;
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
 use Application\Entity\Db\FormationInstancePresence;
 use Application\Form\FormationInstance\FormationInstanceFormAwareTrait;
+use Application\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;
 use Application\Form\FormationJournee\FormationJourneeFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Export\Formation\Emargement\EmargementPdfExporter;
 use Application\Service\Formation\FormationServiceAwareTrait;
+use Application\Service\FormationInstance\FormationInstanceFraisServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstancePresenceAwareTrait;
@@ -30,9 +33,11 @@ class FormationInstanceController extends AbstractActionController {
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
+    use FormationInstanceFraisServiceAwareTrait;
     use FormationInstancePresenceAwareTrait;
     use FormationInstanceFormAwareTrait;
     use FormationJourneeFormAwareTrait;
+    use FormationInstanceFraisFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use ExporterServiceAwareTrait;
 
@@ -410,6 +415,40 @@ class FormationInstanceController extends AbstractActionController {
         ]);
         $this->getExporterService()->export('export.pdf');
         exit;
+    }
+
+    /** FRIAS DE FORMATION ********************************************************************************************/
+
+    public function renseignerFraisAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        if ($inscrit->getFrais() === null) {
+            $frais = new FormationInstanceFrais();
+            $frais->setInscrit($inscrit);
+            $this->getFormationInstanceFraisService()->create($frais);
+        }
+        $frais = $inscrit->getFrais();
+
+        $form = $this->getFormationInstanceFraisForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true));
+        $form->bind($frais);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationInstanceFraisService()->update($frais);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Saisie des frais de ".$inscrit->getAgent()->getDenomination(),
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
     /** PRESENCE AU FORMATION *****************************************************************************************/

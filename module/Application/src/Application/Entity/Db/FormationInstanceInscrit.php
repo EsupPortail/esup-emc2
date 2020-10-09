@@ -20,6 +20,8 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $agent;
     /** @var string */
     private $liste;
+    /** @var FormationInstanceFrais */
+    private $frais;
 
     /**
      * @return int
@@ -82,5 +84,25 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $this->liste = $liste;
         return $this;
     }
+
+
+    /**
+     * @return FormationInstanceFrais|null
+     */
+    public function getFrais(): ?FormationInstanceFrais
+    {
+        return $this->frais;
+    }
+
+    /**
+     * @param FormationInstanceFrais|null $frais
+     * @return FormationInstanceInscrit
+     */
+    public function setFrais(?FormationInstanceFrais $frais): FormationInstanceInscrit
+    {
+        $this->frais = $frais;
+        return $this;
+    }
+
 
 }
