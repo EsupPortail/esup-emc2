@@ -10,7 +10,6 @@ use Application\Entity\Db\Formation;
 $canAfficher = $droits['afficher'];
 $canAjouter = $droits['ajouter'];
 $canAjouterInstance = $droits['ajouter'];
-$canEditer = $droits['editer'];
 $canHistoriser = $droits['historiser'];
 $canDetruire = $droits['detruire'];
 
@@ -64,17 +63,10 @@ usort($formations, function(Formation $a, Formation $b) {
             <td>
                 <?php if ($canAfficher) : ?>
                     <a
-                        <?php /** @see FormationController::afficherAction() */ ?>
-                        href="<?php echo $this->url('formation/afficher', ['formation' => $formation->getId()], [], true); ?>"
-                    >
-                        <span class="icon voir" title="Afficher la formation"></span></a>
-                <?php endif; ?>
-                <?php if ($canEditer) : ?>
-                    <a
                         <?php /** @see FormationController::editerAction() */ ?>
                         href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
                     >
-                        <span class="icon editer" title="Modifier la formation"></span></a>
+                        <span class="icon voir" title="Afficher la formation"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($formation->estNonHistorise()) : ?>

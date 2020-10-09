@@ -64,8 +64,6 @@ return [
                 [
                     'controller' => FormationController::class,
                     'action' => [
-                        'afficher',
-
                         'afficher-groupe',
                         'afficher-theme',
                     ],
@@ -639,16 +637,6 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action'     => 'ajouter',
-                            ],
-                        ],
-                    ],
-                    'afficher' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher/:formation',
-                            'defaults' => [
-                                'controller' => FormationController::class,
-                                'action'     => 'afficher',
                             ],
                         ],
                     ],

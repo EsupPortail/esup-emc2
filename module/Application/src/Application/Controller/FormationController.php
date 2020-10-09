@@ -41,16 +41,7 @@ class FormationController extends AbstractActionController
         ]);
     }
 
-    /** FOMRATION *****************************************************************************************************/
-
-    public function afficherAction()
-    {
-        $formation = $this->getFormationService()->getRequestedFormation($this);
-        return new ViewModel([
-            'title' => 'Affichage de la formation [' . $formation->getLibelle() . ']',
-            'formation' => $formation,
-        ]);
-    }
+    /** FORMATION *****************************************************************************************************/
 
     public function ajouterAction()
     {
