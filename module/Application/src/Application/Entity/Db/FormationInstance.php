@@ -10,6 +10,10 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 class FormationInstance implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
+    const TYPE_INTERNE      = "formation interne";
+    const TYPE_EXTERNE      = "formation externe";
+    const TYPE_REGIONALE    = "formation régionale";
+
     /** @var integer */
     private $id;
     /** @var Formation */
@@ -23,6 +27,8 @@ class FormationInstance implements HistoriqueAwareInterface {
     private $nbPlaceComplementaire;
     /** @var string */
     private $lieu;
+    /** @var string */
+    private $type;
 
     /** @var ArrayCollection (FormationInstanceJournee) */
     private $journees;
@@ -126,6 +132,24 @@ class FormationInstance implements HistoriqueAwareInterface {
     public function setLieu(string $lieu): FormationInstance
     {
         $this->lieu = $lieu;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string|null $type
+     * @return FormationInstance
+     */
+    public function setType(?string $type): FormationInstance
+    {
+        $this->type = $type;
         return $this;
     }
 

@@ -18,6 +18,7 @@ class FormationInstanceHydrator implements HydratorInterface {
             'principale'      => ($object->getNbPlacePrincipale())?:0,
             'complementaire'  => ($object->getNbPlaceComplementaire())?:0,
             'lieu'            => ($object->getLieu())?:null,
+            'type'            => ($object->getType())?:null,
         ];
         return $data;
     }
@@ -33,11 +34,13 @@ class FormationInstanceHydrator implements HydratorInterface {
         $principale      = (isset($data['principale']))?((int) $data['principale']):0;
         $complementaire  = (isset($data['complementaire']))?((int) $data['complementaire']):0;
         $lieu            = (isset($data['lieu']) AND trim($data['lieu']) !== "")?trim($data['lieu']):null;
+        $type            = (isset($data['type']) AND trim($data['type']) !== "")?trim($data['type']):null;
 
         $object->setComplement($description);
         $object->setNbPlacePrincipale($principale);
         $object->setNbPlaceComplementaire($complementaire);
         $object->setLieu($lieu);
+        $object->setType($type);
 
         return $object;
     }

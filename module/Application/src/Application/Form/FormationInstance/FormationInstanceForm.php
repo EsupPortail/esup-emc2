@@ -2,8 +2,10 @@
 
 namespace Application\Form\FormationInstance;
 
+use Application\Entity\Db\FormationInstance;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
+use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
@@ -52,6 +54,23 @@ class FormationInstanceForm extends Form {
         ]);
         /** taille liste complementaire */
         $this->add([
+            'type' => Select::class,
+            'name' => 'type',
+            'options' => [
+                'label' => "Type de formation :",
+                'empty_option' => "Sélectionner un type ...",
+                'value_options' => [
+                    FormationInstance::TYPE_INTERNE => 'Formation interne',
+                    FormationInstance::TYPE_EXTERNE => 'Formation externe',
+                    FormationInstance::TYPE_REGIONALE => 'Formation régionale',
+                ],
+            ],
+            'attributes' => [
+                'id' => 'type',
+            ],
+        ]);
+        /** taille liste complementaire */
+        $this->add([
             'type' => Text::class,
             'name' => 'lieu',
             'options' => [
@@ -82,6 +101,7 @@ class FormationInstanceForm extends Form {
             'principale'                => [ 'required' => true,  ],
             'complementaire'            => [ 'required' => true,  ],
             'lieu'                      => [ 'required' => true,  ],
+            'type'                      => [ 'required' => true,  ],
         ]));
     }
 }

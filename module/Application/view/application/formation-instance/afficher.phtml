@@ -72,6 +72,8 @@ $historises = $instance->getListeHistorisee();
                 <dd> <?php echo $instance->getNbPlaceComplementaire(); ?> </dd>
                 <dt> Lieu</dt>
                 <dd> <?php echo ($instance->getLieu())?:"Non communiqué"; ?> </dd>
+                <dt> Type</dt>
+                <dd> <?php echo ($instance->getType())?:"Non communiqué"; ?> </dd>
             </dl>
         </div>
         <?php if ($canInformation) : ?>
