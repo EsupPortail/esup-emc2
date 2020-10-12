@@ -5,7 +5,6 @@ namespace Application\Form\FormationInstanceFrais;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
-use Zend\I18n\Validator\IsFloat;
 use Zend\InputFilter\Factory;
 use Zend\Validator\Regex;
 
