@@ -46,10 +46,10 @@ class FormationInstance implements HistoriqueAwareInterface {
     }
 
     /**
-     * @param Formation $formation
+     * @param Formation|null $formation
      * @return FormationInstance
      */
-    public function setFormation($formation)
+    public function setFormation(?Formation $formation)
     {
         $this->formation = $formation;
         return $this;
@@ -64,10 +64,10 @@ class FormationInstance implements HistoriqueAwareInterface {
     }
 
     /**
-     * @param string $complement
+     * @param string|null $complement
      * @return FormationInstance
      */
-    public function setComplement($complement)
+    public function setComplement(?string $complement)
     {
         $this->complement = $complement;
         return $this;
@@ -112,9 +112,9 @@ class FormationInstance implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLieu(): string
+    public function getLieu(): ?string
     {
         return $this->lieu;
     }
