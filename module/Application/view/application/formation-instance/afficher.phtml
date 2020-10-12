@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationInstance;
+use Application\Entity\Db\FormationInstanceFormateur;
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
 use Application\Provider\Privilege\FormationPrivileges;
@@ -11,6 +12,7 @@ use Application\Provider\Privilege\FormationPrivileges;
  */
 
 $canInformation = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
+$canFormateur   = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
 $canJournee     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
 $canInscrit     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
 
@@ -20,6 +22,9 @@ $formation = $instance->getFormation();
 $journees = $instance->getJournees();
 /** @var FormationInstanceInscrit[] $inscrits */
 $inscrits = $instance->getInscrits();
+/** @var FormationInstanceFormateur[] $formateurs */
+$formateurs = $instance->getFormateurs();
+usort($formateurs, function (FormationInstanceFormateur $a, FormationInstanceFormateur $b){ return ($a->getNom()." ".$a->getPrenom()) > ($b->getNom()." ".$b->getPrenom());});
 
 $principales = $instance->getListePrincipale();
 $complementaires = $instance->getListeComplementaire();
@@ -95,6 +100,64 @@ $historises = $instance->getListeHistorisee();
         <?php endif; ?>
     </div>
 
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Formateurs <span class="badge"><?php echo count($formateurs); ?></span> </h3>
+        </div>
+        <div class="pull-right">
+            <?php if ($canFormateur) : ?>
+                <?php /** @see \Application\Controller\FormationInstanceController::ajouterFormateurAction() */?>
+                <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()],[], true); ?>"
+                   class="action btn btn-primary ajax-modal" data-event="modification"
+               >
+                    <span class="icon ajouter"></span>
+                    Ajouter un formateur
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <table id="formateurs" class="datatable table table-condensed">
+        <thead>
+        <tr>
+            <th> Dénomination </th>
+            <th> Structure d'attachement </th>
+            <th> Volume </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($formateurs as $formateur) : ?>
+            <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
+                <td> <?php echo $formateur->getPrenom(); ?> <?php echo $formateur->getNom(); ?> </td>
+                <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
+                <td> <?php echo ($formateur->getVolume())?:"Non renseigné"; ?> </td>
+                <td>
+                    <?php if ($canFormateur) : ?>
+                        <a href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon editer"></span></a>
+                        <?php if ($formateur->estNonHistorise()) : ?>
+                            <a href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
+                            <span class="icon historiser"></span></a>
+                        <?php else : ?>
+                            <a href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
+                                <span class="icon restaurer"></span></a>
+                        <?php endif; ?>
+                        <a href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php if ($canJournee) : ?>
+        <strong>Volume horaire sommé :</strong> <?php echo $instance->getVolumeHoraireSomme(); ?> heures.
+    <?php endif; ?>
     <div class="row">
         <div class="col-md-8">
             <h3>

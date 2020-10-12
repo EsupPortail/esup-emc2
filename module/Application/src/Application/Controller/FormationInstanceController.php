@@ -3,16 +3,19 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\FormationInstance;
+use Application\Entity\Db\FormationInstanceFormateur;
 use Application\Entity\Db\FormationInstanceFrais;
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
 use Application\Entity\Db\FormationInstancePresence;
 use Application\Form\FormationInstance\FormationInstanceFormAwareTrait;
+use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurFormAwareTrait;
 use Application\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;
 use Application\Form\FormationJournee\FormationJourneeFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Export\Formation\Emargement\EmargementPdfExporter;
 use Application\Service\Formation\FormationServiceAwareTrait;
+use Application\Service\FormationInstance\FormationInstanceFormateurServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceFraisServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
@@ -33,10 +36,12 @@ class FormationInstanceController extends AbstractActionController {
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
+    use FormationInstanceFormateurServiceAwareTrait;
     use FormationInstanceFraisServiceAwareTrait;
     use FormationInstancePresenceAwareTrait;
     use FormationInstanceFormAwareTrait;
     use FormationJourneeFormAwareTrait;
+    use FormationInstanceFormateurFormAwareTrait;
     use FormationInstanceFraisFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use ExporterServiceAwareTrait;
@@ -143,6 +148,100 @@ class FormationInstanceController extends AbstractActionController {
             'title' => "Modification des informations de l'instance",
             'form' => $form,
         ]);
+        return $vm;
+    }
+
+    /** FORMATEUR ******************************************************************************************/
+
+    public function ajouterFormateurAction()
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+
+        $formateur = new FormationInstanceFormateur();
+        $formateur->setInstance($instance);
+
+        $form = $this->getFormationInstanceFormateurForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()], [], true));
+        $form->bind($formateur);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationInstanceFormateurService()->create($formateur);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'un formateur de formation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierFormateurAction() {
+        $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
+
+        $form = $this->getFormationInstanceFormateurForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()], [], true));
+        $form->bind($formateur);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationInstanceFormateurService()->update($formateur);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modification d'un formateur de formation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserFormateurAction()
+    {
+        $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
+        $this->getFormationInstanceFormateurService()->historise($formateur);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $formateur->getInstance()->getId()], [], true);
+    }
+
+    public function restaurerFormateurAction()
+    {
+        $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
+        $this->getFormationInstanceFormateurService()->restore($formateur);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $formateur->getInstance()->getId()], [], true);
+    }
+
+    public function supprimerFormateurAction()
+    {
+        $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFormationInstanceFormateurService()->delete($formateur);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($formateur !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du formateur de formation du [" . $formateur->getPrenom() . " ". $formateur->getNom() . "]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('formation-instance/supprimer-formateur', ["formateur" => $formateur->getId()], [], true),
+            ]);
+        }
         return $vm;
     }
 

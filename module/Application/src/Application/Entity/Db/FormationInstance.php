@@ -166,6 +166,19 @@ class FormationInstance implements HistoriqueAwareInterface {
         return $this->formateurs->toArray();
     }
 
+    /**
+     * @return float
+     */
+    public function getVolumeHoraireSomme()
+    {
+        $somme = 0;
+        /** @var FormationInstanceFormateur $formateur */
+        foreach ($this->formateurs as $formateur) {
+            if ($formateur->estNonHistorise() AND $formateur->getVolume()) $somme += $formateur->getVolume();
+        }
+        return $somme;
+    }
+
     /** JOURNEE *******************************************************************************************************/
 
     public function getJournees()
