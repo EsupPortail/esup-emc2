@@ -28,7 +28,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
 
         $isResponsable = false;
-        if ($role->getRoleId === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();

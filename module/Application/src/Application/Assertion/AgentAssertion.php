@@ -26,7 +26,7 @@ class AgentAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
 
         $isGestionnaire = false;
-        if ($role->getRoleId === RoleConstant::GESTIONNAIRE) {
+        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();
@@ -37,7 +37,7 @@ class AgentAssertion extends AbstractAssertion {
             }
         }
         $isResponsable = false;
-        if ($role->getRoleId === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();
