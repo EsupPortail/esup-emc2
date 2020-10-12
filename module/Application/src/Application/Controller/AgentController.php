@@ -748,10 +748,12 @@ class AgentController extends AbstractActionController
         $result = [];
         /** @var Agent[] $agents */
         foreach ($agents as $agent) {
+            $structure = ($agent->getAffectationPrincipale())?($agent->getAffectationPrincipale()->getStructure()):null;
+            $extra = ($structure)?$structure->getLibelleCourt():"Affectation inconnue";
             $result[] = array(
                 'id'    => $agent->getId(),
                 'label' => $agent->getDenomination(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>"."OCTOPUS"."</span>",
+                'extra' => "<span class='badge' style='background-color: slategray;'>".$extra."</span>",
             );
         }
         usort($result, function($a, $b) {

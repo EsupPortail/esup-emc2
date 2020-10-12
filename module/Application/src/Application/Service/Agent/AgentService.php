@@ -140,9 +140,8 @@ class AgentService {
         return $result;
     }
 
-
     /**
-     * @param integer $id
+     * @param integer|null $id
      * @return Agent
      */
     public function getAgent(?int $id)
