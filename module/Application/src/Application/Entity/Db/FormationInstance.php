@@ -313,6 +313,35 @@ class FormationInstance implements HistoriqueAwareInterface {
         return $this->getFormation()->getId()."/".$this->getId();
     }
 
+    public function getListeFormateurs()
+    {
+        /** @var FormationInstanceFormateur[] $formateurs */
+        $formateurs = $this->getFormateurs();
+        usort($formateurs, function (FormationInstanceFormateur $a, FormationInstanceFormateur $b){ return ($a->getNom()." ".$a->getPrenom()) > ($b->getNom()." ".$b->getPrenom());});
+
+        $text  ="";
+        $text .= "<table style='width:100%;'>";
+        $text .= "<thead>";
+        $text .= "<tr style='border-bottom:1px solid black;'>";
+        $text .= "<th>Dénomination  </th>";
+        $text .= "<th>Structure de rattachement  </th>";
+        $text .= "<th>Volume  </th>";
+        $text .= "</tr>";
+        $text .= "</thead>";
+        $text .= "<tbody>";
+        foreach ($formateurs as $formateur) {
+            $text .= "<tr>";
+            $text .= "<td>".$formateur->getPrenom()." ".$formateur->getNom()."</td>";
+            $text .= "<td>".$formateur->getAttachement()."</td>";
+            $text .= "<td>".(($formateur->getVolume())?:"N.C.")."</td>";
+            $text .= "</tr>";
+        }
+        $text .= "</tbody>";
+        $text .= "</table>";
+
+        return $text;
+    }
+
     public function getListeJournees()
     {
         /** @var FormationInstanceJournee[] $journees */
@@ -336,6 +365,36 @@ class FormationInstance implements HistoriqueAwareInterface {
             $text .= "<td>".$journee->getDebut()."</td>";
             $text .= "<td>".$journee->getFin()."</td>";
             $text .= "<td>".$journee->getLieu()."</td>";
+            $text .= "</tr>";
+        }
+        $text .= "</tbody>";
+        $text .= "</table>";
+
+        return $text;
+    }
+
+    public function getListeComplementaireAgents()
+    {
+        /** @var FormationInstanceInscrit[] $inscrits */
+        $inscrits = $this->getListeComplementaire();
+        $inscrits = array_filter($inscrits, function(FormationInstanceInscrit $a) { return $a->estNonHistorise();});
+        usort($inscrits, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b){ return ($a->getAgent()->getNomUsuel()." ".$a->getAgent()->getPrenom()) > ($b->getAgent()->getNomUsuel()." ".$b->getAgent()->getPrenom());});
+
+        $text  = "";
+        $text .= "<table style='width:100%;'>";
+        $text .= "<thead>";
+        $text .= "<tr style='border-bottom:1px solid black;'>";
+        $text .= "<th>Dénomination  </th>";
+        $text .= "<th>Affectation principale  </th>";
+        $text .= "<th>Adresse électronique  </th>";
+        $text .= "</tr>";
+        $text .= "</thead>";
+        $text .= "<tbody>";
+        foreach($inscrits as $inscrit) {
+            $text .= "<tr>";
+            $text .= "<td>".$inscrit->getAgent()->getNomUsuel()." ".$inscrit->getAgent()->getPrenom()."</td>";
+            $text .= "<td>".(($inscrit->getAgent()->getAffectationPrincipale() AND $inscrit->getAgent()->getAffectationPrincipale()->getStructure())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"N.C.")."</td>";
+            $text .= "<td>".(($inscrit->getAgent()->getUtilisateur())?$inscrit->getAgent()->getUtilisateur()->getEmail():"N.C.")."</td>";
             $text .= "</tr>";
         }
         $text .= "</tbody>";
