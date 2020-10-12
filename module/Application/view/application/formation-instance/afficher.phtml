@@ -29,6 +29,8 @@ usort($formateurs, function (FormationInstanceFormateur $a, FormationInstanceFor
 $principales = $instance->getListePrincipale();
 $complementaires = $instance->getListeComplementaire();
 $historises = $instance->getListeHistorisee();
+
+$this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());
 ?>
 
 <h1 class="page-header">
