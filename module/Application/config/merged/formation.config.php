@@ -22,6 +22,10 @@ use Application\Form\FormationInstance\FormationInstanceForm;
 use Application\Form\FormationInstance\FormationInstanceFormFactory;
 use Application\Form\FormationInstance\FormationInstanceHydrator;
 use Application\Form\FormationInstance\FormationInstanceHydratorFactory;
+use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurForm;
+use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurFormFactory;
+use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurHydrator;
+use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurHydratorFactory;
 use Application\Form\FormationInstanceFrais\FormationInstanceFraisForm;
 use Application\Form\FormationInstanceFrais\FormationInstanceFraisFormFactory;
 use Application\Form\FormationInstanceFrais\FormationInstanceFraisHydrator;
@@ -40,6 +44,8 @@ use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
+use Application\Service\FormationInstance\FormationInstanceFormateurService;
+use Application\Service\FormationInstance\FormationInstanceFormateurServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceFraisService;
 use Application\Service\FormationInstance\FormationInstanceFraisServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceInscritService;
@@ -161,6 +167,12 @@ return [
                         'historiser-journee',
                         'restaurer-journee',
                         'supprimer-journee',
+
+                        'ajouter-formateur',
+                        'modifier-formateur',
+                        'historiser-formateur',
+                        'restaurer-formateur',
+                        'supprimer-formateur',
 
                         'ajouter-agent',
                         'historiser-agent',
@@ -397,6 +409,56 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'supprimer-journee',
+                            ],
+                        ],
+                    ],
+                    'ajouter-formateur' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-formateur/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'ajouter-formateur',
+                            ],
+                        ],
+                    ],
+                    'modifier-formateur' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-formateur/:formateur',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'modifier-formateur',
+                            ],
+                        ],
+                    ],
+                    'historiser-formateur' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-journee/:formateur',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'historiser-formateur',
+                            ],
+                        ],
+                    ],
+                    'restaurer-formateur' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-formateur/:formateur',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'restaurer-formateur',
+                            ],
+                        ],
+                    ],
+                    'supprimer-formateur' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-formateur/:formateur',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'supprimer-formateur',
                             ],
                         ],
                     ],
@@ -719,6 +781,7 @@ return [
             FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
             FormationInstanceJourneeService::class => FormationInstanceJourneeServiceFactory::class,
             FormationInstancePresenceService::class => FormationInstancePresenceServiceFactory::class,
+            FormationInstanceFormateurService::class => FormationInstanceFormateurServiceFactory::class,
             FormationInstanceFraisService::class => FormationInstanceFraisServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
@@ -736,6 +799,7 @@ return [
             FormationForm::class => FormationFormFactory::class,
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
             FormationInstanceForm::class => FormationInstanceFormFactory::class,
+            FormationInstanceFormateurForm::class => FormationInstanceFormateurFormFactory::class,
             FormationInstanceFraisForm::class => FormationInstanceFraisFormFactory::class,
             FormationJourneeForm::class => FormationJourneeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
@@ -750,6 +814,7 @@ return [
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
             FormationInstanceHydrator::class => FormationInstanceHydratorFactory::class,
+            FormationInstanceFormateurHydrator::class => FormationInstanceFormateurHydratorFactory::class,
             FormationInstanceFraisHydrator::class => FormationInstanceFraisHydratorFactory::class,
             FormationJourneeHydrator::class => FormationJourneeHydratorFactory::class,
         ],

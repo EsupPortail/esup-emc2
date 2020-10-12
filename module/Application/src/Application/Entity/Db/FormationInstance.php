@@ -34,6 +34,8 @@ class FormationInstance implements HistoriqueAwareInterface {
     private $journees;
     /** @var ArrayCollection (FormationInstanceInscrit) */
     private $inscrits;
+    /** @var ArrayCollection (FormationInstanceFormateur) */
+    private $formateurs;
 
     /**
      * @return int
@@ -151,6 +153,17 @@ class FormationInstance implements HistoriqueAwareInterface {
     {
         $this->type = $type;
         return $this;
+    }
+
+    /** FORMATEURS ****************************************************************************************************/
+
+    /**
+     * @return FormationInstanceFormateur[]|null
+     */
+    public function getFormateurs() : ?array
+    {
+        if ($this->formateurs === null) return null;
+        return $this->formateurs->toArray();
     }
 
     /** JOURNEE *******************************************************************************************************/

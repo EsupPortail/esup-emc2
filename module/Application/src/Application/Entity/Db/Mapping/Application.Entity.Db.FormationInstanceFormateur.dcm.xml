@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\FormationInstance" table="formation_instance">
+    <entity name="Application\Entity\Db\FormationInstanceFormateur" table="formation_instance_formateur">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Application\Entity\Db\Formation"  field="formation">
-            <join-column name="formation_id" referenced-column-name="id"/>
+        <many-to-one target-entity="Application\Entity\Db\FormationInstance"  field="instance">
+            <join-column name="instance_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <field name="nbPlacePrincipale"         type="integer"                  column="nb_place_principale"         nullable="false"/>
-        <field name="nbPlaceComplementaire"     type="integer"                  column="nb_place_complementaire"     nullable="false"/>
-        <field name="lieu"                      type="string" length="256"      column="lieu"                        nullable="true"/>
-        <field name="type"                      type="string" length="256"      column="type"                        nullable="true"/>
-        <field name="complement"                type="string" length="4096"     column="complement"                  nullable="true"/>
-
-        <one-to-many field="journees"   target-entity="Application\Entity\Db\FormationInstanceJournee"    mapped-by="instance"/>
-        <one-to-many field="inscrits"   target-entity="Application\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>
-        <one-to-many field="formateurs" target-entity="Application\Entity\Db\FormationInstanceFormateur"  mapped-by="instance"/>
+        <field name="prenom"              column="prenom"           type="string"  length="256"    nullable="false"/>
+        <field name="nom"                 column="nom"              type="string"  length="256"    nullable="false"/>
+        <field name="attachement"         column="attachement"      type="string"  length="1024"   nullable="true"/>
+        <field name="volume"              column="volume"           type="float"                   nullable="true"/>
+        <field name="montant"             column="montant"          type="float"                   nullable="true"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
