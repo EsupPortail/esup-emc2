@@ -64,6 +64,12 @@ class StructureController extends AbstractActionController {
             usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
             $selecteur = $structures;
         }
+        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+            $user = $this->getUserService()->getConnectedUser();
+            $structures = $this->getStructureService()->getStructuresByResponsable($user);
+            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
+            $selecteur = $structures;
+        }
         if ($role->getRoleId() === RoleConstant::ADMIN_TECH OR $role->getRoleId() === RoleConstant::ADMIN_FONC OR $role->getRoleId() === RoleConstant::OBSERVATEUR) {
             $unicaen = $this->getStructureService()->getStructure(1);
             $structures = $this->getStructureService()->getSousStructures($unicaen, true);
@@ -193,6 +199,12 @@ class StructureController extends AbstractActionController {
         $structure->removeGestionnaire($gestionnaire);
         $this->getStructureService()->update($structure);
 
+        $structures = $this->getStructureService()->getStructuresByGestionnaire($gestionnaire);
+        if (empty($structures)) {
+            $role = $this->getRoleService()->getRoleByCode(RoleConstant::GESTIONNAIRE);
+            $this->getUserService()->removeRole($gestionnaire, $role);
+        }
+
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
 
@@ -241,6 +253,13 @@ class StructureController extends AbstractActionController {
 
         $structure->removeResponsable($responsable);
         $this->getStructureService()->update($structure);
+
+        $structures = $this->getStructureService()->getStructuresByResponsable($responsable);
+        if (empty($structures)) {
+            $role = $this->getRoleService()->getRoleByCode(RoleConstant::RESPONSABLE);
+            $this->getUserService()->removeRole($responsable, $role);
+        }
+
 
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }

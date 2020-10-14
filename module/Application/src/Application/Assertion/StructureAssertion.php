@@ -29,7 +29,7 @@ class StructureAssertion extends AbstractAssertion {
             $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $user);
         }
         $isResponsable = false;
-        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
             $isResponsable = $this->getStructureService()->isResponsable($entity, $user);
         }
 
