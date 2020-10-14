@@ -31,9 +31,9 @@ class Action implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCode(): string
+    public function getCode(): ?string
     {
         return $this->code;
     }
@@ -49,9 +49,9 @@ class Action implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return ActionType
+     * @return ActionType|null
      */
-    public function getType(): ActionType
+    public function getType(): ?ActionType
     {
         return $this->type;
     }
@@ -67,9 +67,9 @@ class Action implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLibelle(): string
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
@@ -85,9 +85,9 @@ class Action implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return Etat
+     * @return Etat|null
      */
-    public function getEtat(): Etat
+    public function getEtat(): ?Etat
     {
         return $this->etat;
     }
@@ -103,9 +103,9 @@ class Action implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getPosition(): int
+    public function getPosition(): ?int
     {
         return $this->position;
     }

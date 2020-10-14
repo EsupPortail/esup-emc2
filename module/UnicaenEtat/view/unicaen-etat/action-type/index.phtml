@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @see \UnicaenEtat\Controller\ActionTypeController::indexAction()
+ * @var ActionType[] $actionTypes
+ */
+
+use UnicaenEtat\Entity\Db\ActionType;
+
+?>
+<h1 class="page-header">
+    Index des types d'action
+</h1>
+
+<div class="main">
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Action Type <span class="badge"><?php echo count($actionTypes); ?></span></h2>
+        </div>
+        <div class="pull-right">
+            <?php /** @see \UnicaenEtat\Controller\IndexController::indexAction() */ ?>
+            <a href="<?php echo $this->url('unicaen-etat', [], [], true); ?>"
+               class="btn btn-info action">
+                <span class="icon retour"></span>
+                Retour à l'index du module
+            </a>
+            <br/>
+            <?php /** @see \UnicaenEtat\Controller\ActionTypeController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('unicaen-etat/action-type/ajouter', [], [], true); ?>"
+               class="btn btn-primary action ajax-modal" data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter un type d'action
+            </a>
+        </div>
+    </div>
+
+    <br/>
+
+    <table id="etat-type" class="datatable table table-condensed">
+        <thead>
+        <tr>
+            <th>Badge</th>
+            <th>Code</th>
+            <th>Libelle</th>
+            <th style="width: 8rem;">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($actionTypes as $actionType) : ?>
+            <tr class="<?php if ($actionType->estHistorise()) echo "historise"; ?>">
+                <td> <?php echo $this->etattype($actionType); ?> </td>
+                <td> <?php echo $actionType->getCode(); ?> </td>
+                <td> <?php echo $actionType->getLibelle(); ?> </td>
+                <td>
+                    <?php /** @see \UnicaenEtat\Controller\ActionTypeController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('unicaen-etat/action-type/modifier', ['action-type' => $actionType->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon editer"></span></a>
+                    <?php if ($actionType->estNonHistorise()) : ?>
+                        <?php /** @see \UnicaenEtat\Controller\ActionTypeController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('unicaen-etat/action-type/historiser', ['action-type' => $actionType->getId()], [], true); ?>">
+                            <span class="icon historiser"></span></a>
+                    <?php else: ?>
+                        <?php /** @see \UnicaenEtat\Controller\ActionTypeController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('unicaen-etat/action-type/restaurer', ['action-type' => $actionType->getId()], [], true); ?>">
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                    <?php /** @see \UnicaenEtat\Controller\ActionTypeController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('unicaen-etat/action-type/supprimer', ['action-type' => $actionType->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon detruire"></span></a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

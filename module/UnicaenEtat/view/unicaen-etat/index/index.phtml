@@ -8,10 +8,11 @@
 </h1>
 
 <div class="main">
+    <h2> États </h2>
 
     <div class="row">
         <div class="col-md-8">
-            <h2> Gestion des états </h2>
+            <h3> Gestion des états </h3>
             Liste des états gérer par le module
         </div>
         <div class="pull-right">
@@ -26,7 +27,7 @@
 
     <div class="row">
         <div class="col-md-8">
-            <h2> Gestion des types d'état </h2>
+            <h3> Gestion des types d'état </h3>
             Les types d'état permettant de trier ceux-ci en catégorie
         </div>
         <div class="pull-right">
@@ -39,11 +40,35 @@
         </div>
     </div>
 
+    <h2>Action</h2>
+
     <div class="row">
-        Gestion des actions ...
+        <div class="col-md-8">
+            <h3> Gestion des états </h3>
+            Liste des états gérer par le module
+        </div>
+        <div class="pull-right">
+            <br/>
+            <?php /** @see \UnicaenEtat\Controller\ActionController::indexAction() */?>
+            <a href="<?php echo $this->url('unicaen-etat/action', [], [], true); ?>"
+               class="btn btn-primary action">
+                Gestion des actions
+            </a>
+        </div>
     </div>
 
     <div class="row">
-        Gestion des types d'action ...
+        <div class="col-md-8">
+            <h3> Gestion des types d'action </h3>
+            Les types d'action permettant de trier ceux-ci en catégorie
+        </div>
+        <div class="pull-right">
+            <br/>
+            <?php /** @see \UnicaenEtat\Controller\EtatTypeController::indexAction() */?>
+            <a href="<?php echo $this->url('unicaen-etat/action-type', [], [], true); ?>"
+               class="btn btn-primary action">
+                Gestion des types d'action
+            </a>
+        </div>
     </div>
 </div>
