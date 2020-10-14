@@ -71,6 +71,8 @@ $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . 
     <div class="row">
         <div class="col-md-8">
             <dl class="dl-horizontal">
+                <dt> État</dt>
+                <dd>  <?php echo ($instance->getEtat())?$this->etatbadge($instance->getEtat())." ".$instance->getEtat()->getLibelle():"N.C."; ?> </dd>
                 <dt> Compléments </dt>
                 <dd> <?php echo ($instance->getComplement())?:"Aucun complément."; ?></dd>
                 <dt> Taille liste principale</dt>
@@ -308,6 +310,11 @@ $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . 
                            data-toggle="tooltip" data-html="true" title="Saissir les frais de missions pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"
                         >
                             <span class="icon euro"></span></a>
+                        <?php /** @see \Application\Controller\FormationInstanceController::renseignerQuestionnaireAction() */?>
+                        <a href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                           data-toggle="tooltip" data-html="true" title="Saissir du formulaire de retour de formation pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"
+                        >
+                            <span class="icon editer"></span></a>
                         <?php if (! $complementaireComplete) : ?>
                             <?php /** @see \Application\Controller\FormationInstanceController::envoyerListeComplementaireAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"

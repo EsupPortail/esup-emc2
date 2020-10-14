@@ -21,6 +21,7 @@ use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTr
 use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstancePresenceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
@@ -39,6 +40,7 @@ class FormationInstanceController extends AbstractActionController {
     use FormationInstanceFormateurServiceAwareTrait;
     use FormationInstanceFraisServiceAwareTrait;
     use FormationInstancePresenceAwareTrait;
+    use FormulaireInstanceServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
     use FormationJourneeFormAwareTrait;
     use FormationInstanceFormateurFormAwareTrait;
@@ -629,5 +631,21 @@ class FormationInstanceController extends AbstractActionController {
         ]);
         return $vm;
     }
+    
+    /** Question suite à la formation */
 
+    public function renseignerQuestionnaireAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        
+        if ($inscrit->getQuestionnaire() === null) {
+            $questionnaire = $this->getFormulaireInstanceService()->createInstance('QUESTIONNAIRE_FORMATION');
+            $inscrit->setQuestionnaire($questionnaire);
+            $this->getFormationInstanceInscritService()->update($inscrit);
+        }
+
+        return new ViewModel([
+            'inscrit' => $inscrit,
+        ]);
+    }
 }

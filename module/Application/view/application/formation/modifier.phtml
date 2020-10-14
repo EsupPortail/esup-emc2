@@ -101,6 +101,7 @@ $instances = $formation->getInstances();
                 <th> Fin </th>
                 <th> #Jour </th>
                 <th> #Inscrit </th>
+                <th> État </th>
                 <th> Action</th>
             </tr>
         </thead>
@@ -123,6 +124,9 @@ $instances = $formation->getInstances();
                             <span class="label label-success"> Complète</span>
                         <?php endif; ?>
                     <?php endif; ?>
+                </td>
+                <td>
+                    <?php echo ($instance->getEtat())?$this->etatbadge($instance->getEtat()):"N.C."; ?>
                 </td>
                 <td>
                     <?php if ($canAfficherInstance) : ?>

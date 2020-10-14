@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\HasAgentInterface;
+use Autoform\Entity\Db\FormulaireInstance;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -22,6 +23,8 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $liste;
     /** @var FormationInstanceFrais */
     private $frais;
+    /** @var FormulaireInstance */
+    private $questionnaire;
 
     /**
      * @return int
@@ -103,6 +106,25 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $this->frais = $frais;
         return $this;
     }
+
+    /**
+     * @return FormulaireInstance|null
+     */
+    public function getQuestionnaire(): ?FormulaireInstance
+    {
+        return $this->questionnaire;
+    }
+
+    /**
+     * @param FormulaireInstance $questionnaire
+     * @return FormationInstanceInscrit
+     */
+    public function setQuestionnaire(FormulaireInstance $questionnaire): FormationInstanceInscrit
+    {
+        $this->questionnaire = $questionnaire;
+        return $this;
+    }
+
 
 
 }

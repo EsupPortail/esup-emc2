@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -29,6 +30,8 @@ class FormationInstance implements HistoriqueAwareInterface {
     private $lieu;
     /** @var string */
     private $type;
+    /** @var Etat */
+    private $etat;
 
     /** @var ArrayCollection (FormationInstanceJournee) */
     private $journees;
@@ -78,6 +81,24 @@ class FormationInstance implements HistoriqueAwareInterface {
     public function setComplement(?string $complement)
     {
         $this->complement = $complement;
+        return $this;
+    }
+
+    /**
+     * @return Etat|null
+     */
+    public function getEtat(): ?Etat
+    {
+        return $this->etat;
+    }
+
+    /**
+     * @param Etat $etat
+     * @return FormationInstance
+     */
+    public function setEtat(Etat $etat): FormationInstance
+    {
+        $this->etat = $etat;
         return $this;
     }
 
@@ -154,6 +175,7 @@ class FormationInstance implements HistoriqueAwareInterface {
         $this->type = $type;
         return $this;
     }
+
 
     /** FORMATEURS ****************************************************************************************************/
 

@@ -183,6 +183,8 @@ return [
 
                         'export-emargement',
                         'export-tous-emargements',
+
+                        'renseigner-questionnaire',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_INSTANCE_MODIFIER,
@@ -339,6 +341,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'renseigner-presences',
+                            ],
+                        ],
+                    ],
+                    'renseigner-questionnaire' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/renseigner-questionnaire/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'renseigner-questionnaire',
                             ],
                         ],
                     ],

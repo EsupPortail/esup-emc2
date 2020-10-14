@@ -15,6 +15,9 @@
         <field name="lieu"                      type="string" length="256"      column="lieu"                        nullable="true"/>
         <field name="type"                      type="string" length="256"      column="type"                        nullable="true"/>
         <field name="complement"                type="string" length="4096"     column="complement"                  nullable="true"/>
+        <many-to-one target-entity="UnicaenEtat\Entity\Db\Etat"  field="etat">
+            <join-column name="etat_id" referenced-column-name="id"/>
+        </many-to-one>
 
         <one-to-many field="journees"   target-entity="Application\Entity\Db\FormationInstanceJournee"    mapped-by="instance"/>
         <one-to-many field="inscrits"   target-entity="Application\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>

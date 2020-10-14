@@ -1,0 +1,71 @@
+<?php
+
+use Application\Entity\Db\FormationInstanceInscrit;
+
+/**
+ * @see \Application\Controller\FormationInstanceController::renseignerQuestionnaireAction()
+ * @var FormationInstanceInscrit $inscrit
+ */
+
+$instanceLibelle = $inscrit->getInstance()->getInstanceCode() . " ".$inscrit->getInstance()->getFormation()->getLibelle();
+$this->headTitle("Renseignement du formulaire de retour de formation : " . $instanceLibelle);
+
+$canRenseigner = true;
+?>
+
+<h1 class="page-header">
+    Renseignement du formulaire de retour de formation : <?php echo $instanceLibelle; ?>
+</h1>
+
+<div class="main">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Information sur l'agent
+                </div>
+                <div class="panel-body">
+                    ...
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Information sur la formation
+                </div>
+                <div class="panel-body">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<?php
+$instance = $inscrit->getQuestionnaire();
+$formulaire = $instance->getFormulaire();
+$reponses = $instance->getReponses();
+
+/** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+$data = [];
+foreach ($reponses as $reponse) {
+    $data[$reponse->getChamp()->getId()] = $reponse;
+}
+?>
+
+<?php if ($canRenseigner) : ?>
+    <?php
+    /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+    $retour = $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscrit->getId()], ['force_canonical' => false], true);
+    $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+    echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+    ?>
+<?php else : ?>
+    <div class="alert alert-danger">
+        Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
+    </div>
+<?php endif; ?>
+
