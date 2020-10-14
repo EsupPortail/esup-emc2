@@ -511,6 +511,7 @@ class FormationInstanceController extends AbstractActionController {
         $this->getExporterService()->setVars([
             'type' => 'FORMATION_ATTESTATION',
             'agent' => $inscrit->getAgent(),
+            'inscrit' => $inscrit,
             'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
         ]);
