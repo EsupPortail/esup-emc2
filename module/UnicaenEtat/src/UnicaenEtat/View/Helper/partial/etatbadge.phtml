@@ -1,0 +1,14 @@
+<?php
+
+use UnicaenEtat\Entity\Db\Etat;
+
+/**
+ * @var Etat $etat
+ * @var array $options
+ */
+
+?>
+
+<span class="label" title="<?php echo $etat->getLibelle(); ?>" style="background:<?php echo ($etat->getCouleur())?:"gray"; ?>">
+    &nbsp;<i class="<?php echo ($etat->getIcone())?:"fa fa-question-circle"; ?>" aria-hidden="true"></i>&nbsp;
+</span>
