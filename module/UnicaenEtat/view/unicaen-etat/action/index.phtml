@@ -7,6 +7,14 @@
 
 use UnicaenEtat\Entity\Db\Action;
 
+/* DOC POUR PLUS TARD
+$variable = $actions[0];
+$methode = 'setType';
+$params   = [ $actions[0]->getType()];
+
+$variable->{$methode}($params[0]);
+*/
+
 ?>
 <h1 class="page-header">
     Index des actions
@@ -37,7 +45,7 @@ use UnicaenEtat\Entity\Db\Action;
 
     <br/>
 
-    <table id="etat" class="datatable table table-condensed">
+    <table id="etats" class="datatable table table-condensed">
         <thead>
         <tr>
             <th>Badge</th>

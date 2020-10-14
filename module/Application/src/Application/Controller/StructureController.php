@@ -64,6 +64,12 @@ class StructureController extends AbstractActionController {
             usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
             $selecteur = $structures;
         }
+        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+            $user = $this->getUserService()->getConnectedUser();
+            $structures = $this->getStructureService()->getStructuresByResponsable($user);
+            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
+            $selecteur = $structures;
+        }
         if ($role->getRoleId() === RoleConstant::ADMIN_TECH OR $role->getRoleId() === RoleConstant::ADMIN_FONC OR $role->getRoleId() === RoleConstant::OBSERVATEUR) {
             $unicaen = $this->getStructureService()->getStructure(1);
             $structures = $this->getStructureService()->getSousStructures($unicaen, true);

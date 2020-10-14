@@ -9,20 +9,20 @@ use UnicaenEtat\Entity\Db\Etat;
 
 ?>
 
-<span class="label leftpart" title="<?php echo $etat->getLibelle(); ?>">
+<span class="label leftpart<?php echo $etat->getId(); ?>" title="<?php echo $etat->getLibelle(); ?>">
         <i class="<?php echo ($etat->getIcone())?:"fa fa-question-circle"; ?>" aria-hidden="true"></i>
     </span>
-<span class="label rightpart" title="<?php echo $etat->getType()->getLibelle(); ?>">
+<span class="label rightpart<?php echo $etat->getType()->getId(); ?>" title="<?php echo $etat->getType()->getLibelle(); ?>">
         <i class="<?php echo ($etat->getType()->getIcone())?:"fa fa-question-circle"; ?>" aria-hidden="true"></i>
     </span>
 
 <style>
-    .leftpart {
+    .leftpart<?php echo $etat->getId(); ?> {
         background: <?php echo ($etat->getCouleur())?:"#8e7c7c"; ?>;
         position:relative;
         left:0.5rem;
     }
-    .rightpart {
+    .rightpart<?php echo $etat->getType()->getId(); ?> {
         position:relative;
         left:-0.25rem;
         background: linear-gradient(90deg, transparent 2px, <?php echo ($etat->getType()->getCouleur())?:"#7f8e7c"; ?> 0);
