@@ -312,9 +312,9 @@ $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . 
                             <span class="icon euro"></span></a>
                         <?php /** @see \Application\Controller\FormationInstanceController::renseignerQuestionnaireAction() */?>
                         <a href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                           data-toggle="tooltip" data-html="true" title="Saissir du formulaire de retour de formation pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"
+                           data-toggle="tooltip" data-html="true" title="Saissir du formulaire de retour de formation pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
                         >
-                            <span class="icon editer"></span></a>
+                            <span class="icon paragraph"></span><span class="lettrine">?</span></a>
                         <?php if (! $complementaireComplete) : ?>
                             <?php /** @see \Application\Controller\FormationInstanceController::envoyerListeComplementaireAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"

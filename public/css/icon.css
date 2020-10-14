@@ -248,3 +248,7 @@ span.icon.fiche-poste:before {
 span.icon.euro:before {
     content: "\f153";
 }
+
+span.icon.paragraph:before {
+    content: "\f039";
+}

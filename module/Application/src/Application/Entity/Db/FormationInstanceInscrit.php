@@ -4,6 +4,8 @@ namespace Application\Entity\Db;
 
 use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -21,6 +23,8 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $agent;
     /** @var string */
     private $liste;
+    /** @var ArrayCollection (FormationInstancePresence) */
+    private $presences;
     /** @var FormationInstanceFrais */
     private $frais;
     /** @var FormulaireInstance */
@@ -126,5 +130,37 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     }
 
 
+    public function getPresences()
+    {
+        return $this->presences->toArray();
+    }
 
+    public function wasPresent(FormationInstanceJournee $journee)
+    {
+        /** @var FormationInstancePresence $presence */
+        foreach ($this->presences as $presence) {
+            if ($presence->getJournee() === $journee) return $presence->isPresent();
+        }
+        return false;
+    }
+
+    public function getDureePresence()
+    {
+        $sum = DateTime::createFromFormat('d/m/Y H:i','01/01/1970 00:00');
+        /** @var FormationInstancePresence[] $presences */
+        $presences = array_filter($this->presences->toArray(), function (FormationInstancePresence $a) { return $a->estNonHistorise() AND $a->isPresent(); });
+        foreach ($presences as $presence) {
+            $journee = $presence->getJournee();
+            $debut = DateTime::createFromFormat('d/m/Y H:i',$journee->getJour()." ".$journee->getDebut());
+            $fin = DateTime::createFromFormat('d/m/Y H:i',$journee->getJour()." ".$journee->getFin());
+            $duree = $fin->diff($debut);
+            $sum->add($duree);
+        }
+
+        $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i','01/01/1970 00:00'));
+        $heures = ($result->d * 24 + $result->h);
+        $minutes = ($result->i);
+        $text = $heures . " heures " . (($minutes !== 0)?($minutes." minutes"):"");
+        return $text;
+    }
 }
