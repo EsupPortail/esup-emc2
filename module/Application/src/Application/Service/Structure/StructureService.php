@@ -145,6 +145,28 @@ class StructureService
     }
 
     /**
+     * @param User $user
+     * @param bool $ouverte
+     * @return Structure[]
+     */
+    public function getStructuresByResponsable($user, $ouverte = true)
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.responsables', 'responsableSelection')
+            ->addSelect('responsable')->join('structure.responsables', 'responsable')
+            ->andWhere('responsableSelection.id = :userId')
+            ->setParameter('userId', $user->getId())
+            ->orderBy('structure.libelleCourt')
+            ->andWhere("structure.histo IS NULL")
+        ;
+        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
+    /**
      * @param Structure $structure
      * @param boolean $ouverte
      * @return Structure[]

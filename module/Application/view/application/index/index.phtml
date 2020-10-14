@@ -42,11 +42,9 @@ use UnicaenUtilisateur\Entity\Db\User;
     <?php if ($user): ?>
     <p>
         Vous êtes connecté&middot;e en tant que <strong><?php echo $user->getDisplayName(); ?></strong>. <br/>
-        Vous assumez le rôle de <strong><?php echo $role->getLibelle(); ?></strong>.
+        Vous assumez le rôle de <strong><?php echo ($role)?$role->getLibelle():"???"; ?></strong>.
     </p>
     <?php else: ?>
-
-
 
         <a class="btn btn-success btn-large" href="<?php echo $this->url('zfcuser/login') ?>">
             <span class="glyphicon glyphicon-user"></span>
