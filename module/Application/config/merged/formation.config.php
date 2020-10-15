@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\FormationInstanceInscritAssertion;
+use Application\Assertion\FormationInstanceInscritAssertionFactory;
 use Application\Controller\FormationController;
 use Application\Controller\FormationControllerFactory;
 use Application\Controller\FormationInstanceController;
@@ -57,11 +59,31 @@ use Application\Service\FormationInstance\FormationInstancePresenceServiceFactor
 use Application\Service\FormationInstance\FormationInstanceService;
 use Application\Service\FormationInstance\FormationInstanceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'Inscrit' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            FormationPrivileges::FORMATION_INSTANCE_QUESTIONNAIRE_VISUALISER,
+                            FormationPrivileges::FORMATION_INSTANCE_QUESTIONNAIRE_RENSEIGNER,
+                        ],
+                        'resources' => ['Inscrit'],
+                        'assertion' => FormationInstanceInscritAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -797,6 +819,7 @@ return [
             FormationInstanceFraisService::class => FormationInstanceFraisServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
+            FormationInstanceInscritAssertion::class => FormationInstanceInscritAssertionFactory::class,
         ],
     ],
     'controllers'     => [

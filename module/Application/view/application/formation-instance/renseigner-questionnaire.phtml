@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
+use Application\Provider\Privilege\FormationPrivileges;
 
 /**
  * @see \Application\Controller\FormationInstanceController::renseignerQuestionnaireAction()
@@ -14,19 +15,27 @@ $this->headTitle("Renseignement du formulaire de retour de formation : " . $inst
 $agent = $inscrit->getAgent();
 $instancef = $inscrit->getInstance();
 
-$canRenseigner = true;
+$canVoir        = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_INSTANCE_QUESTIONNAIRE_VISUALISER);
+$canRenseigner  = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_INSTANCE_QUESTIONNAIRE_RENSEIGNER);
+
 ?>
 
 <h1 class="page-header">
-    Renseignement du formulaire de retour de formation : <?php echo $instanceLibelle; ?>
+    Formulaire de retour de formation <br/>
+    <strong><?php echo $instanceLibelle; ?> </strong> pour l'agent <strong><?php echo $agent->getDenomination(); ?></strong>
 </h1>
 
 <div class="main">
-    <div class="row">
+    <?php if (!$canVoir AND !$canRenseigner) : ?>
+        <div class="alert alert-danger">
+            Vous n'êtes pas habilité&middot;e à visualiser le formulaire de retour.
+        </div>
+    <?php else : ?>
+        <div class="row">
         <div class="col-md-6">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3>Information sur l'agent</h3>
+                    <h3> Information sur l'agent </h3>
                 </div>
                 <div class="panel-body">
                     <dl class="dl-horizontal">
@@ -93,34 +102,32 @@ $canRenseigner = true;
             </div>
         </div>
     </div>
-</div>
+    <?php endif; ?>
 
-
-<?php
-$instance = $inscrit->getQuestionnaire();
-$formulaire = $instance->getFormulaire();
-$reponses = $instance->getReponses();
-
-/** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
-$data = [];
-foreach ($reponses as $reponse) {
-    $data[$reponse->getChamp()->getId()] = $reponse;
-}
-?>
-
-<?php if ($canRenseigner) : ?>
     <?php
-    /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
-    $retour = $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscrit->getId()], ['force_canonical' => false], true);
-    $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+    $instance = $inscrit->getQuestionnaire();
+    $formulaire = $instance->getFormulaire();
+    $reponses = $instance->getReponses();
 
-    echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+    /** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+    $data = [];
+    foreach ($reponses as $reponse) {
+        $data[$reponse->getChamp()->getId()] = $reponse;
+    }
     ?>
-<?php else : ?>
-    <div class="alert alert-danger">
-        Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
-    </div>
-<?php endif; ?>
+
+    <?php if ($canRenseigner) : ?>
+        <?php
+        /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+        $retour = $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscrit->getId()], ['force_canonical' => false], true);
+        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+        echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+        ?>
+    <?php else : ?>
+        <?php echo $this->instanceAsText()->render($instance); ?>
+    <?php endif; ?>
+</div>
 
 <style>
     table.presence {

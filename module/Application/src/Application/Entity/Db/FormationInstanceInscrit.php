@@ -8,9 +8,15 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface {
+class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, ResourceInterface {
     use HistoriqueAwareTrait;
+
+    public function getResourceId()
+    {
+        return 'Inscrit';
+    }
 
     const PRINCIPALE = 'principale';
     const COMPLEMENTAIRE = 'complementaire';

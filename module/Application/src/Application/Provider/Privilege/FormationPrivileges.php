@@ -18,4 +18,6 @@ class FormationPrivileges extends Privileges
     const FORMATION_INSTANCE_MODIFIER = 'formation-formation_instance_modifier';
     const FORMATION_INSTANCE_HISTORISER = 'formation-formation_instance_historiser';
     const FORMATION_INSTANCE_SUPPRIMER = 'formation-formation_instance_supprimer';
+    const FORMATION_INSTANCE_QUESTIONNAIRE_VISUALISER = 'formation-formation_instance_questionnaire_visualiser';
+    const FORMATION_INSTANCE_QUESTIONNAIRE_RENSEIGNER = 'formation-formation_instance_questionnaire_renseigner';
 }
