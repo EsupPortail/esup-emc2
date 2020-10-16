@@ -8,13 +8,13 @@
 
         <field name="position" column="position" type="integer" nullable="false" />
 
-        <many-to-one target-entity="Application\Entity\Db\FicheMetier" field="fiche">
+        <one-to-one target-entity="Application\Entity\Db\FicheMetier" field="fiche">
             <join-column name="fiche" referenced-column-name="id" />
-        </many-to-one>
+        </one-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\Activite" field="activite">
+        <one-to-one target-entity="Application\Entity\Db\Activite" field="activite">
             <join-column name="activite" referenced-column-name="id" />
-        </many-to-one>
+        </one-to-one>
 
     </entity>
 </doctrine-mapping>
