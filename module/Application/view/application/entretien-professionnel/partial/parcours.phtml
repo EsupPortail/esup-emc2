@@ -37,10 +37,10 @@ $droits = [
     'valider' => $canValider,
 ];
 $options = [];
+$options['mode'] = 'modification';
 $options['modification'] = $canModifier;
 $options['droits'] = $droits;
 $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
-
 
 /** @var AgentApplication $agentApplication */
 /** @var AgentCompetence $agentCompetence */
@@ -129,15 +129,6 @@ foreach ($reponses as $reponse) {
             <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
         <?php endif; ?>
     </div>
-<!--    <div class="col-md-6">-->
-<!--        --><?php //if ($parcours[ParcoursDeFormation::TYPE_METIER] AND !empty($parcours[ParcoursDeFormation::TYPE_METIER])) : ?>
-<!--            --><?php //foreach ($parcours[ParcoursDeFormation::TYPE_METIER] as $metierId => $parcour) : ?>
-<!--                --><?php //echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
-<!--            --><?php //endforeach; ?>
-<!--        --><?php //else: ?>
-<!--            <span class="icon attention">Pas de parcours de formation associé au métier.</span>-->
-<!--        --><?php //endif; ?>
-<!--    </div>-->
 </div>
 
 <h2> Acquis de l'agent </h2>

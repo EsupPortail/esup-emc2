@@ -2,7 +2,8 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Categorie;
-use Application\Entity\Db\Formation;use Application\Entity\Db\FormationGroupe;use Application\Entity\Db\Metier;
+use Application\Entity\Db\FormationGroupe;
+use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 
 /**
@@ -13,11 +14,19 @@ use Application\Entity\Db\ParcoursDeFormation;
  * @var array $option
  */
 
-$asListe = false;
-$asArray=true;
+/** Dans le tableau options, on retrouve une clef 'mode'.
+ *  Si cette clef est omise alors la valeur par défaut "affichage" est utilisée.
+ *  Valeur possible :
+ *  - "affichage" ne fait que l'affichage (aucune interaction possible)
+ *      >> Si un agent est renseigné affiche le "statut" du parcours de formation
+ *  - "création" permet d'ajouter ou de retirer des formations au parcours
+ *  - "modification" permet de valider le suivi d'une formations du parcours
+ *      >> Si un agent est renseigné affiche le "statut" du parcours de formation
+ */
 
-$canModifier = isset($options['modification'])?$options['modification']:false;
+$modesAutorises = ['affichage', 'creation', 'modification'];
 
+/** Tri pour bonne affichage ******************************************************************************************/
 $nogroup = "ZZZZ";
 $formationArray = [];
 foreach ($parcours->getFormations() as $formation) {
@@ -30,68 +39,79 @@ usort($formationArray,
         $ordre_a = ($a[0]->getGroupe())?$a[0]->getGroupe()->getOrdre():9999;
         $ordre_b = ($b[0]->getGroupe())?$b[0]->getGroupe()->getOrdre():9999;
         return $ordre_a > $ordre_b;
-});
-
+    });
 ?>
 
-<h4>
-        <?php echo $parcours->getLibelle(); ?>
-</h4>
+<?php /** Récupération du mode ****************************************************************************************/
+    $mode = (isset($options['mode']))?$options['mode']:"affichage";
+?>
 
-<?php if ($asListe) : ?>
-    <?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
-        <?php if ($groupe !== $nogroup) : ?>
-            <?php echo $formationSubarray[0]->getGroupe()->getLibelle(); ?>
-        <?php else: ?>
-            <span class="badge">Sans groupe ...</span>
-        <?php endif; ?>
-
-        <ul>
-            <?php  foreach($formationSubarray as $formation) : ?>
-                <li>
-                    <?php echo $formation->getLibelle(); ?>
-                    <?php if ($agent !== null) : ?>
-                        <?php $validatedFormation = $agent->hasValidatedFormation($formation); ?>
-                        <?php if ($validatedFormation) : ?>
-                            <span class="icon ok"></span>
-                        <?php else : ?>
-                            <span class="icon question"></span>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endforeach; ?>
+<?php if (array_search($mode, $modesAutorises) === false) : ?>
+<div class="alert alert-danger">
+    Le <strong>mode</strong> [<?php echo $mode; ?>] est non géré par l'aide de vue [ParcoursDeFormationViewHelper].
+</div>
 <?php endif; ?>
 
-<?php if ($asArray) : ?>
+<?php /** Récupération du droit associé à la modification *************************************************************/
+    $canModifier = isset($options['modification'])?$options['modification']:false;
+?>
+
+<?php /** Titre du parcours de formation  *****************************************************************************/ ?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h4> <?php echo $parcours->getLibelle(); ?> </h4>
+    </div>
+    <div class="pull-right">
+        <?php if ($canModifier AND $mode === 'creation') : ?>
+            <?php /** @see \Application\Controller\ParcoursDeFormationController::ajouterFormationAction() */?>
+            <a href="<?php echo $this->url('parcours-de-formation/ajouter-formation', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
+               class="btn btn-primary action ajax-modal" data-event="modification">
+                <span class="icon ajouter"></span>Ajouter des formations </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<br/>
+
+<?php /** Affichage du tableau ****************************************************************************************/ ?>
+
+<div>
     <table class="parcours-de-formation">
         <?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
+
+            <?php /** Barre de groupe de formation  *******************************************************************/ ?>
+
             <?php if ($groupe !== $nogroup) : ?>
                 <?php /** @var FormationGroupe $groupe */ $groupe = $formationSubarray[0]->getGroupe(); ?>
                 <tr>
-                    <th class="titre" colspan="2">
+                    <th class="titre" colspan="3">
                         <?php echo ($groupe !== null)?$groupe->getLibelle():"Sans groupe ..."; ?>
                     </th>
 
                 </tr>
             <?php else : ?>
                 <tr>
-                    <th class="titre" colspan="2">
+                    <th class="titre" colspan="3">
                         Sans groupe ...
                     </th>
                 </tr>
             <?php endif; ?>
 
+            <?php /** Barre de formation ******************************************************************************/ ?>
+
             <?php  foreach($formationSubarray as $formation) : ?>
             <tr>
                 <td class="libelle"> <?php echo $formation->getLibelle(); ?> </td>
                 <td class="formation">
-                    <?php if ($agent !== null) : ?>
-                        <?php $agentFormation = $agent->hasFormation($formation); ?>
+                    <?php if ($mode === 'modification') : ?>
+                        <?php
+                            $agentFormation = ($agent !== null AND $agent->hasFormation($formation)) ? $agent->hasFormation($formation):null;
+                            $agentValidation = ($agentFormation !== null AND $agentFormation->getValidation() !== null) ? $agentFormation->getValidation():null;
+                        ?>
                         <?php if ($agentFormation !== null) : ?>
-                            <?php if ($agentFormation->getValidation()) : ?>
-                                <?php if ($agentFormation->getValidation()->getValeur() === null) : ?>
+                            <?php if ($agentValidation !== null) : ?>
+                                <?php if ($agentValidation->getValeur() === null) : ?>
                                     <span class="icon ok" style="color: darkgreen;"
                                           data-toggle="tooltip" data-html="true"
                                           title="Validée le <?php echo $agentFormation->getValidation()->getHistoModification()->format('d/m/Y'); ?> par <?php echo $agentFormation->getValidation()->getHistoModificateur()->getDisplayName(); ?>"
@@ -136,11 +156,20 @@ usort($formationArray,
                         <?php endif; ?>
                     <?php endif; ?>
                 </td>
+                <td>
+                    <?php if ($canModifier AND $mode === 'creation') : ?>
+                        <?php /** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
+                        <a href="<?php echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formation->getId()], [], true); ?>"
+                        >
+                            <span class="icon detruire" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>
+                        </a>
+                    <?php endif; ?>
+                </td>
             </tr>
             <?php endforeach; ?>
         <?php endforeach; ?>
     </table>
-<?php endif; ?>
+</div>
 
 <style>
     table.parcours-de-formation {
