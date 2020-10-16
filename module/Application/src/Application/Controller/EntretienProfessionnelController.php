@@ -84,7 +84,10 @@ class EntretienProfessionnelController extends AbstractActionController
         // ne pas dupliquer les entretiens (si il existe alors on l'affiche)
         $entretien = null;
         if ($campagne !== null and $agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
-        if ($entretien !== null) return $this->redirect()->toRoute('entretien-professionnel/afficher', ["campagne" => $campagne->getId()], [], true);
+        if ($entretien !== null) {
+            /** @see EntretienProfessionnelController::afficherAction() */
+            return $this->redirect()->toRoute('entretien-professionnel/afficher', ["entretien" => $entretien->getId()], [], true);
+        }
 
         $entretien = new EntretienProfessionnel();
         if ($campagne !== null) $entretien->setCampagne($campagne);
