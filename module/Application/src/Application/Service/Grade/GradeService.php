@@ -35,6 +35,7 @@ class GradeService {
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('grade.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
+                ->andWhere('agent.delete IS NULL')
             ;
         }
 

@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
 use UnicaenApp\Exception\RuntimeException;
@@ -33,6 +34,8 @@ class Agent implements ResourceInterface
     private $harpId;
     /** @var int */
     private $quotite;
+    /** @var DateTime */
+    private $delete;
 
     /** @var ArrayCollection (AgentAffectation) */
     private $affectations;

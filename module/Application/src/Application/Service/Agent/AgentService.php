@@ -6,10 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
-use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Entity\Db\Corps;
-use Application\Entity\Db\Grade;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -90,6 +87,7 @@ class AgentService {
 
 
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
+            ->andWhere('agent.delete IS NULL');
         ;
         return $qb;
     }
@@ -101,6 +99,7 @@ class AgentService {
     public function getAgents(?string $order = null)
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere('agent.delete IS NULL');
         ;
 
         if ($order !== null) {
@@ -235,6 +234,7 @@ class AgentService {
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
             ->orderBy('agent.nomUsuel, agent.prenom')
+            ->andWhere('agent.delete IS NULL');
         ;
         if ($structure !== null && $sousstructure === true) {
             $qb1 = $qb1->andWhere('grade.structure = :structure OR structure.parent = :structure')
@@ -284,6 +284,7 @@ class AgentService {
 
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
             ->addSelect('poste')->leftJoin('ficheposte.poste', 'poste')
+            ->andWhere('agent.delete IS NULL');
         ;
 
         if ($structures !== null) {
@@ -690,17 +691,5 @@ class AgentService {
     {
         $this->deleteFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
-    }
-
-    public function getAgentsWithGrade(Grade $grade) {
-        $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
-            ->addSelect('agent')->join('agentgrade.agent', 'agent')
-            ->addSelect('grade')->join('agentgrade.grade', 'grade')
-            ->andWhere('grade.id = :id')
-            ->setParameter('id', $grade->getId())
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
     }
 }
