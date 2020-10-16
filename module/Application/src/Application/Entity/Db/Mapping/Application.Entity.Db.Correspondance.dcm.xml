@@ -10,5 +10,7 @@
         <field name="libelleLong"   column="lib_long"       type="string"       length="200"  />
         <field name="histo"     type="datetime"                 column="histo"/>
 
+        <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="bap"/>
+
     </entity>
 </doctrine-mapping>

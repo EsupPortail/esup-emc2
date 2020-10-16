@@ -167,16 +167,28 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                     <thead>
                     <tr>
                         <th> Libellé long </th>
-                        <th> Libellé court </th>
                         <th> Catégorie </th>
+                        <th> #Agent/Grade </th>
+                        <th> Action </th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php foreach($correspondances as $correspondance): ?>
                         <tr>
-                            <td> <?php echo $correspondance->getLibelleLong(); ?> </td>
-                            <td> <?php echo $correspondance->getLibelleCourt(); ?> </td>
+                            <td> [<?php echo $correspondance->getLibelleCourt(); ?>] <?php echo $correspondance->getLibelleLong(); ?> </td>
                             <td> <?php echo $correspondance->getCategorie(); ?> </td>
+                            <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
+                            <td>
+                                <?php if ($canAfficher) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\CorpsController::afficherAgentsAvecCorrespondanceAction() */ ?>
+                                            href="<?php echo $this->url('corps/afficher-agents-avec-correspondance', ['correspondance' => $correspondance->getId()], ['fragment' => 'correspondance'], true); ?>"
+                                            class="ajax-modal" data-event="modification"
+                                    >
+                                        <span class="icon voir" data-toggle="tooltip" data-html="true"
+                                              title="Afficher les agents ayant cette correspondance"></span></a>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>

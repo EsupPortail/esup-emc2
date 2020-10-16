@@ -44,6 +44,7 @@ return [
                     'controller' => CorpsController::class,
                     'action' => [
                         'afficher-agents-avec-corps',
+                        'afficher-agents-avec-correspondance',
                         'afficher-agents-avec-grade',
                     ],
                     'privileges' => [
@@ -116,6 +117,17 @@ return [
                             'defaults' => [
                                 'controller' => CorpsController::class,
                                 'action'     => 'afficher-agents-avec-corps',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher-agents-avec-correspondance' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-agents-avec-correspondance/:correspondance',
+                            'defaults' => [
+                                'controller' => CorpsController::class,
+                                'action'     => 'afficher-agents-avec-correspondance',
                             ],
                         ],
                         'may_terminate' => true,

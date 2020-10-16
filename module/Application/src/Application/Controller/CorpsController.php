@@ -79,4 +79,13 @@ class CorpsController extends AbstractActionController {
         ]);
     }
 
+    public function afficherAgentsAvecCorrespondanceAction() {
+        $correspondance = $this->getCorrespondanceService()->getRequestedCorrespondance($this);
+
+        return new ViewModel([
+            'title' => 'Agents ayant la correspondance ['. $correspondance->getLibelleCourt().']',
+            'correspondance' => $correspondance,
+        ]);
+    }
+
 }
