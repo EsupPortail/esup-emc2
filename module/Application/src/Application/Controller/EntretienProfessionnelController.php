@@ -173,8 +173,9 @@ class EntretienProfessionnelController extends AbstractActionController
     public function afficherAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $validationAgent = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ACCEPTER_ENTRETIEN_AGENT', $entretien);
-        $validationResponsable = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ACCEPTER_ENTRETIEN_RESPONSABLE', $entretien);
+        $validationAgent = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ENTRETIEN_AGENT', $entretien);
+        $validationResponsable = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ENTRETIEN_RESPONSABLE', $entretien);
+        $validationDrh = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ENTRETIEN_DRH', $entretien);
 
         $agent = $entretien->getAgent();
         $fichespostes = ($agent) ? $agent->getFiches() : [];
@@ -191,6 +192,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'entretien'                 => $entretien,
             'validationAgent'           => $validationAgent,
             'validationResponsable'     => $validationResponsable,
+            'validationDrh'             => $validationDrh,
 
             'agent'                     => $agent,
             'fichespostes'              => $fichespostes,

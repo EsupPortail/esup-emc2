@@ -66,23 +66,8 @@ use Application\Entity\Db\FichePoste;
             </div>
         </div>
 
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2>Informations complémentaires</h2>
-            </div>
-            <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt> Responsable </dt>
-                    <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>
-                    <dt> Année </dt>
-                    <dd> <?php echo $entretien->getAnnee(); ?> </dd>
-                    <dt> Date </dt>
-                    <dd> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </dd>
-                </dl>
-            </div>
-        </div>
-    </div>
 
+    </div>
     <div class="col-md-6">
         <div class="panel panel-info">
             <div class="panel-heading">
@@ -115,6 +100,69 @@ use Application\Entity\Db\FichePoste;
                         </a>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Informations complémentaires</h2>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt> Responsable </dt>
+                    <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>
+                    <dt> Année </dt>
+                    <dd> <?php echo $entretien->getAnnee(); ?> </dd>
+                    <dt> Date </dt>
+                    <dd> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
+                    <dt> Lieu </dt>
+                    <dd> <?php echo $entretien->getLieu(); ?> </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Validation de l'entretien</h2>
+            </div>
+            <div class="panel-body">
+                <dl>
+                    <dt>Validation initial de l'agent </dt>
+                    <dd><?php echo ($entretien->getToken() === null) ? "Oui" : "Pas encore effectuée"; ?> </dd>
+                    <dt>Validation du responsable hiérarchique </dt>
+                    <dd>
+                        <?php if ($entretien->getValidationResponsable()) : ?>
+                            Faites par <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
+                            le <?php echo $entretien->getValidationResponsable()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                        <?php else : ?>
+                            Non effectuée
+                        <?php endif; ?>
+                    </dd>
+                    <dt>Validation de l'agent </dt>
+                    <dd>
+                        <?php if ($entretien->getValidationAgent()) : ?>
+                            Faites par <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?>
+                            le <?php echo $entretien->getValidationAgent()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                        <?php else : ?>
+                            Non effectuée
+                        <?php endif; ?>
+                    </dd>
+                    <dt>Validation du responsable de structure </dt>
+                    <dd>
+                        <?php if ($entretien->getValidationDRH()) : ?>
+                            Faites par <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?>
+                            le <?php echo $entretien->getValidationDRH()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                        <?php else : ?>
+                            Non effectuée
+                        <?php endif; ?>
+                    </dd>
+                </dl>
             </div>
         </div>
     </div>
