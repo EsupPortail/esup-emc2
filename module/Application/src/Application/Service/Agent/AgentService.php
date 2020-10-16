@@ -703,17 +703,4 @@ class AgentService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
-
-    public function getAgentsWithCorps(Corps $corps) {
-        $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
-            ->addSelect('agent')->join('agentgrade.agent', 'agent')
-            ->addSelect('corps')->join('agentgrade.corps', 'corps')
-            ->andWhere('corps.id = :id')
-            ->setParameter('id', $corps->getId())
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
 }

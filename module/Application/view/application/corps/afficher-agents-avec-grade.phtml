@@ -3,13 +3,16 @@
 /**
  * @see \Application\Controller\CorpsController::afficherAgentsAvecGradeAction();
  * @var Grade $grade
- * @var AgentGrade[] $agents
  */
 
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Grade;
 
 $now = new DateTime();
+
+/** @var  AgentGrade[] $agents */
+$agents = $grade->getAgentGrades();
+usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();});
 ?>
 
 <dl class="dl-horizontal">

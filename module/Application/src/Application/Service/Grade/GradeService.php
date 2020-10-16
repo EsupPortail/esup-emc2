@@ -22,14 +22,22 @@ class GradeService {
     /**
      * @param string $champ
      * @param string $ordre
+     * @param bool $avecAgent
      * @return Grade[]
      */
-    public function getGrades($champ = 'libelleLong', $ordre ='ASC')
+    public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("grade.histo IS NULL")
             ->orderBy('grade.' . $champ, $ordre)
         ;
+
+        if ($avecAgent) {
+            $qb = $qb->addSelect('agentGrade')->join('grade.agentGrades', 'agentGrade')
+                ->addSelect('agent')->join('agentGrade.agent','agent')
+            ;
+        }
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -65,14 +73,21 @@ class GradeService {
 
     /**
      * @param integer $id
+     * @param bool $avecAgent
      * @return Grade
      */
-    public function getGrade($id)
+    public function getGrade(int $id, bool $avecAgent = true)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('grade.id = :id')
             ->setParameter('id', $id)
         ;
+
+        if ($avecAgent) {
+            $qb = $qb->addSelect('agentGrade')->join('grade.agentGrades', 'agentGrade')
+                ->addSelect('agent')->join('agentGrade.agent','agent')
+            ;
+        }
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();

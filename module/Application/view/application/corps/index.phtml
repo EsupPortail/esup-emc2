@@ -85,9 +85,9 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                 <table class="datatable table table-condensed">
                     <thead>
                     <tr>
-                        <th> Libellé long</th>
-                        <th> Libellé court</th>
+                        <th> Libellé</th>
                         <th> Code </th>
+                        <th> #Agent/Grade </th>
                         <th> Catégorie </th>
                         <th> Niveau </th>
                         <th style="width:3rem;"> Action </th>
@@ -96,9 +96,9 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                     <tbody>
                     <?php foreach($corps as $corp): ?>
                         <tr>
-                            <td> <?php echo $corp->getLibelleLong(); ?> </td>
-                            <td> <?php echo $corp->getLibelleCourt(); ?> </td>
+                            <td> [<?php echo $corp->getLibelleCourt(); ?>] <?php echo $corp->getLibelleLong(); ?> </td>
                             <td> <?php echo $corp->getCode(); ?> </td>
+                            <td> <?php echo count($corp->getAgentGrades()); ?> </td>
                             <td> <?php echo $corp->getCategorie(); ?> </td>
                             <td> <?php echo $corp->getNiveau(); ?></td>
                             <td>
@@ -132,18 +132,18 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                 <table class="datatable table table-condensed">
                     <thead>
                     <tr>
-                        <th> Libellé long </th>
-                        <th> Libellé court </th>
+                        <th> Libellé </th>
                         <th> Code </th>
+                        <th> #Agent/Grade </th>
                         <th> Action </th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php foreach($grades as $grade): ?>
                         <tr>
-                            <td> <?php echo $grade->getLibelleLong(); ?> </td>
-                            <td> <?php echo $grade->getLibelleCourt(); ?> </td>
+                            <td> [<?php echo $grade->getLibelleCourt(); ?>] <?php echo $grade->getLibelleLong(); ?> </td>
                             <td> <?php echo $grade->getCode(); ?> </td>
+                            <td> <?php echo count($grade->getAgentGrades()); ?> </td>
                             <td>
                                 <?php if ($canAfficher) : ?>
                                     <a

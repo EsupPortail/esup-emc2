@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Corps
 {
@@ -22,6 +23,9 @@ class Corps
     private $histo;
     /** @var integer */
     private $niveau;
+
+    /** @var ArrayCollection (AgentGrade) */
+    private $agentGrades;
 
     /**
      * @return int
@@ -147,6 +151,14 @@ class Corps
     {
         $this->niveau = $niveau;
         return $this;
+    }
+
+    /**
+     * @return AgentGrade[]
+     */
+    public function getAgentGrades()
+    {
+        return $this->agentGrades->toArray();
     }
 
 

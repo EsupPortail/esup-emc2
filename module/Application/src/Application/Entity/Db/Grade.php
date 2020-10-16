@@ -2,9 +2,8 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\SynchroAwareInterface;
-use Application\Entity\SynchroAwareTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Grade {
     use ImportableAwareTrait;
@@ -19,6 +18,8 @@ class Grade {
     private $code;
     /** @var DateTime */
     private $histo;
+    /** @var ArrayCollection (AgentGrade) */
+    private $agentGrades;
 
     /**
      * @return string
@@ -98,6 +99,14 @@ class Grade {
     {
         $this->histo = $histo;
         return $this;
+    }
+
+    /**
+     * @return AgentGrade[]
+     */
+    public function getAgentGrades()
+    {
+        return $this->agentGrades->toArray();
     }
 
     public function __toString()

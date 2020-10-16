@@ -10,5 +10,6 @@
         <field name="code"          column="code"           type="string"       length="10"   />
         <field name="histo"         column="histo"          type="datetime"                   />
 
+        <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="grade"/>
     </entity>
 </doctrine-mapping>
