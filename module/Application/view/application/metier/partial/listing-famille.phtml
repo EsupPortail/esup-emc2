@@ -37,7 +37,7 @@ $canEffacer        = $droits["effacer"];
     <br/>
 </div>
 <br/>
-<table class="datatable table table-condensed">
+<table id="familles" class="datatable table table-condensed">
     <thead>
     <tr>
         <th> Libelle </th>
@@ -88,3 +88,15 @@ $canEffacer        = $droits["effacer"];
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function() {
+        $('#familles').DataTable( {
+            sorting: false,
+            paging: false,
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+</script>

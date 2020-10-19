@@ -38,8 +38,7 @@ $canEffacer        = $droits["effacer"];
 <table class="datatable table table-condensed">
     <thead>
     <tr>
-        <th> Libelle court</th>
-        <th> Libelle long </th>
+        <th> Libelle </th>
         <th> Préfix </th>
         <th class="cell-action"> Action </th>
     </tr>
@@ -47,8 +46,10 @@ $canEffacer        = $droits["effacer"];
     <tbody>
     <?php foreach ($referentiels as $referentiel) : ?>
         <tr <?php if ($referentiel->estHistorise()) echo 'class="historise"'; ?>>
-            <td> <?php echo $referentiel->getLibelleCourt(); ?> </td>
-            <td> <?php echo $referentiel->getLibelleLong(); ?> </td>
+            <td>
+                [<strong><?php echo $referentiel->getLibelleCourt(); ?></strong>]
+                <?php echo $referentiel->getLibelleLong(); ?>
+            </td>
             <td>
                 <?php if ($referentiel->getPrefix()) : ?>
                     <span class="icon ok" style="color:darkgreen" title="<?php echo $referentiel->getPrefix(); ?>"></span>
