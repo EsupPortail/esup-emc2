@@ -87,5 +87,4 @@ class CorpsController extends AbstractActionController {
             'correspondance' => $correspondance,
         ]);
     }
-
 }

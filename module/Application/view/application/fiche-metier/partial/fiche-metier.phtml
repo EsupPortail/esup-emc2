@@ -22,9 +22,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     <div class="col-md-6">
         <?php if ($canAjouter) : ?>
             <a href="<?php echo $this->url('fiche-metier-type/ajouter', [], [], true); ?>"
-               class="btn btn-primary action ajax-modal"
-               data-event="creation"
-            >
+               class="btn btn-primary action ajax-modal" data-event="creation">
                 <span class="icon ajouter"></span>
                 Ajouter une fiche métier
             </a>

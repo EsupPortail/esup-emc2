@@ -15,7 +15,8 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class CompetenceController extends AbstractActionController {
+class CompetenceController extends AbstractActionController
+{
     use CompetenceServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
@@ -52,7 +53,7 @@ class CompetenceController extends AbstractActionController {
 
         /** @var Request $request */
         $request = $this->getRequest();
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -60,7 +61,7 @@ class CompetenceController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel();
+        $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'une compétence",
@@ -78,7 +79,7 @@ class CompetenceController extends AbstractActionController {
 
         /** @var Request $request */
         $request = $this->getRequest();
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -86,7 +87,7 @@ class CompetenceController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel();
+        $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Modification d'une compétence",
@@ -162,7 +163,7 @@ class CompetenceController extends AbstractActionController {
 
         /** @var Request $request */
         $request = $this->getRequest();
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -170,7 +171,7 @@ class CompetenceController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel();
+        $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'un thème de compétences",
@@ -188,7 +189,7 @@ class CompetenceController extends AbstractActionController {
 
         /** @var Request $request */
         $request = $this->getRequest();
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -196,7 +197,7 @@ class CompetenceController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel();
+        $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Modification d'un thème de compétences",
@@ -254,7 +255,7 @@ class CompetenceController extends AbstractActionController {
 
         /** @var Request $request */
         $request = $this->getRequest();
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -262,7 +263,7 @@ class CompetenceController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel();
+        $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'un type de compétences",
@@ -280,7 +281,7 @@ class CompetenceController extends AbstractActionController {
 
         /** @var Request $request */
         $request = $this->getRequest();
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -288,7 +289,7 @@ class CompetenceController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel();
+        $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Modification d'un type de compétences",
@@ -344,4 +345,3 @@ class CompetenceController extends AbstractActionController {
         return $vm;
     }
 }
-

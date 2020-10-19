@@ -6,7 +6,6 @@ use Application\Form\Agent\AgentForm;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentFormation\AgentFormationForm;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\Formation\FormationService;
@@ -49,14 +48,12 @@ class AgentControllerFactory {
          * @var AgentApplicationForm $agentApplicationForm
          * @var AgentCompetenceForm $agentCompetenceForm
          * @var AgentFormationForm $agentFormationForm
-         * @var AgentMissionSpecifiqueForm $agentMissionSpecifiqueForm
          * @var UploadForm $uploadForm
          */
         $agentForm = $container->get('FormElementManager')->get(AgentForm::class);
         $agentApplicationForm = $container->get('FormElementManager')->get(AgentApplicationForm::class);
         $agentCompetenceForm = $container->get('FormElementManager')->get(AgentCompetenceForm::class);
         $agentFormationForm = $container->get('FormElementManager')->get(AgentFormationForm::class);
-        $agentMissionSpecifiqueForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
         /** @var AgentController $controller */
@@ -76,7 +73,6 @@ class AgentControllerFactory {
         $controller->setAgentApplicationForm($agentApplicationForm);
         $controller->setAgentCompetenceForm($agentCompetenceForm);
         $controller->setAgentFormationForm($agentFormationForm);
-        $controller->setAgentMissionSpecifiqueForm($agentMissionSpecifiqueForm);
         $controller->setUploadForm($uploadForm);
 
         return $controller;

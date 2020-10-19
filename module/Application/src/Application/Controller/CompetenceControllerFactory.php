@@ -10,7 +10,8 @@ use Application\Service\CompetenceTheme\CompetenceThemeService;
 use Application\Service\CompetenceType\CompetenceTypeService;
 use Interop\Container\ContainerInterface;
 
-class CompetenceControllerFactory {
+class CompetenceControllerFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {
@@ -19,17 +20,17 @@ class CompetenceControllerFactory {
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          */
-        $competenceService          = $container->get(CompetenceService::class);
-        $competenceThemeService     = $container->get(CompetenceThemeService::class);
-        $competenceTypeService      = $container->get(CompetenceTypeService::class);
+        $competenceService = $container->get(CompetenceService::class);
+        $competenceThemeService = $container->get(CompetenceThemeService::class);
+        $competenceTypeService = $container->get(CompetenceTypeService::class);
 
         /**
          * @var CompetenceForm $competenceForm
          * @var CompetenceTypeForm $competenceTypeForm
          * @var ModifierLibelleForm $modifierLibelleForm
          */
-        $competenceForm      = $container->get('FormElementManager')->get(CompetenceForm::class);
-        $competenceTypeForm  = $container->get('FormElementManager')->get(CompetenceTypeForm::class);
+        $competenceForm = $container->get('FormElementManager')->get(CompetenceForm::class);
+        $competenceTypeForm = $container->get('FormElementManager')->get(CompetenceTypeForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
 
         /** @var CompetenceController $controller */

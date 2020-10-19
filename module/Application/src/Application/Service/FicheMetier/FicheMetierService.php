@@ -9,6 +9,7 @@ use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
 use Application\Entity\Db\Formation;
+use Application\Form\EntityFormManagmentTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\Formation\FormationServiceAwareTrait;
@@ -21,13 +22,12 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractController;
 
 class FicheMetierService {
-//    use DateTimeAwareTrait;
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use ApplicationServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use FormationServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
+
+    use EntityFormManagmentTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -35,7 +35,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function create($fiche)
+    public function create(FicheMetier $fiche)
     {
         $this->createFromTrait($fiche);
         return $fiche;
@@ -45,7 +45,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function update($fiche)
+    public function update(FicheMetier $fiche)
     {
         $this->updateFromTrait($fiche);
         return $fiche;
@@ -55,7 +55,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function historise($fiche)
+    public function historise(FicheMetier $fiche)
     {
         $this->historiserFromTrait($fiche);
         return $fiche;
@@ -65,7 +65,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function restore($fiche)
+    public function restore(FicheMetier $fiche)
     {
         $this->restoreFromTrait($fiche);
         return $fiche;
@@ -75,7 +75,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function delete($fiche)
+    public function delete(FicheMetier $fiche)
     {
         $this->deleteFromTrait($fiche);
         return $fiche;

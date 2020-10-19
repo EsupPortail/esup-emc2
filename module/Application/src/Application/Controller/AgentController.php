@@ -9,15 +9,12 @@ use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentGrade;
-use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentStatut;
 use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -55,7 +52,6 @@ class AgentController extends AbstractActionController
     use AgentApplicationFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
-    use AgentMissionSpecifiqueFormAwareTrait;
     use UploadFormAwareTrait;
 
     public function indexAction()
@@ -589,8 +585,6 @@ class AgentController extends AbstractActionController
         $form = $this->getUploadForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fichier', ['agent' => $agent->getId()], [], true));
         $form->bind($fichier);
-
-        /** !TODO! lorsque l'on est dans une modal on perd le tableau files ... */
 
         /** @var Request $request */
         $request = $this->getRequest();

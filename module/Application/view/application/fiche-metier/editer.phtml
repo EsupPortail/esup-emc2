@@ -2,11 +2,13 @@
 
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\ParcoursDeFormation;
 
 /**
  * @see FicheMetierController::editerAction()
  * @var FicheMetier $fiche
  * @var array $applications
+ * @var ParcoursDeFormation $parcours
  */
 
 $libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";

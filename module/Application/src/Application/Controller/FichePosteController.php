@@ -187,10 +187,10 @@ class FichePosteController extends AbstractActionController {
 
         /** @var DateTime $date */
         $date = $this->getDateTime();
-        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $date);
-        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $date);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
-        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche, $date);
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
+        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         //parcours de formation
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
@@ -218,10 +218,10 @@ class FichePosteController extends AbstractActionController {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
 
-        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $date);
-        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $date);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $date);
-        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche, $date);
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
+        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         //parcours de formation
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
@@ -575,9 +575,9 @@ class FichePosteController extends AbstractActionController {
     public function exportAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche, $this->getDateTime());
-        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche, $this->getDateTime());
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche, $this->getDateTime());
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
 
         $exporter = new FichePostePdfExporter($this->renderer, 'A4');
         $exporter->setVars([
@@ -596,7 +596,7 @@ class FichePosteController extends AbstractActionController {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
         /** @var array $applications*/
-        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte, $this->getDateTime());
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -629,7 +629,7 @@ class FichePosteController extends AbstractActionController {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
         /** @var array $competences*/
-        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte, $this->getDateTime());
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte);
 
         /** @var Request $request */
         $request = $this->getRequest();
