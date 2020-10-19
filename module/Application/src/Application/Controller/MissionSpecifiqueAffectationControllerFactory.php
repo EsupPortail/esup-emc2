@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
-use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\Structure\StructureService;
@@ -19,7 +18,7 @@ class MissionSpecifiqueAffectationControllerFactory {
     public function __invoke(ContainerInterface $container)
     {
         /**
-         * @var AgentServiceAwareTrait $agentService
+         * @var AgentService $agentService
          * @var MissionSpecifiqueService $missionSpecifiqueService
          * @var StructureService $structureService
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService

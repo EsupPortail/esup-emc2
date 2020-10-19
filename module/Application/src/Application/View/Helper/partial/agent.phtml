@@ -61,8 +61,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     </div>
 </div>
 
-<!-- todo si edition afficher tout de même -->
-<?php if (!empty($agent->getMissionsSpecifiques())) : ?>
+<?php if (!empty($agent->getMissionsSpecifiques()) OR $mode==='edition') : ?>
     <div class="row">
         <div class="col-md-7">
             <h2>
@@ -145,22 +144,22 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                         <?php if ($canHistoriserMission) : ?>
                             <?php if ($mission->estNonHistorise()) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::historiserAgentMissionSpecifiqueAction() */?>
-                                        href="<?php echo $this->url('agent/historiser-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], ["query" => $query], true); ?>"
+                                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::historiserAction() */?>
+                                        href="<?php echo $this->url('mission-specifique/affectation/historiser', ['affectation' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
                                 >
                                     <span class="icon historiser"></span></a>
                             <?php else : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::restaurerAgentMissionSpecifiqueAction() */?>
-                                        href="<?php echo $this->url('agent/restaurer-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], ["query" => $query], true); ?>"
+                                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::restaurerAction() */?>
+                                        href="<?php echo $this->url('mission-specifique/affectation/restaurer', ['affectation' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
                                 >
                                     <span class="icon restaurer"></span></a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if ($canDetruireMission) : ?>
                             <a
-                                <?php /** @see \Application\Controller\AgentController::detruireAgentMissionSpecifiqueAction() */?>
-                                    href="<?php echo $this->url('agent/detruire-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::detruireAction() */?>
+                                    href="<?php echo $this->url('mission-specifique/affectation/detruire', ['affectation' => $mission->getId()], [], true); ?>"
                                     class="ajax-modal"
                                     data-event="modification"
                             >

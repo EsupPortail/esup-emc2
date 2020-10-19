@@ -139,17 +139,6 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'historiser-agent-mission-specifique',
-                        'restaurer-agent-mission-specifique',
-                        'detruire-agent-mission-specifique',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_EFFACER,
-                    ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
                         'historiser-agent-application',
                         'restaurer-agent-application',
                         'historiser-agent-competence',
@@ -263,36 +252,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'modifier-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'historiser-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'historiser-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'restaurer-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'restaurer-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'detruire-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/detruire-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'detruire-agent-mission-specifique',
                             ],
                         ],
                     ],
