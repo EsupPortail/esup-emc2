@@ -4,7 +4,9 @@ namespace UnicaenUtilisateur\Service\Role;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\Db\AbstractRole;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -30,11 +32,23 @@ class RoleService
     }
 
     /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository($this->roleEntityClass)->createQueryBuilder('role')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
      * @return Role[]
      */
     public function getRoles($champ = 'roleId', $ordre = 'ASC')
     {
-        $qb = $this->getEntityManager()->getRepository($this->roleEntityClass)->createQueryBuilder('role')
+        $qb = $this->createQueryBuilder()
             ->orderBy('role.' . $champ, $ordre)
         ;
         $result = $qb->getQuery()->getResult();
@@ -43,11 +57,11 @@ class RoleService
 
     /**
      * @param int $id
-     * @return Role[]
+     * @return Role
      */
-    public function getRole($id)
+    public function getRole(int $id)
     {
-        $qb = $this->getEntityManager()->getRepository($this->roleEntityClass)->createQueryBuilder("role")
+        $qb = $this->createQueryBuilder()
             ->andWhere("role.id = :id")
             ->setParameter("id", $id);
 
@@ -59,9 +73,13 @@ class RoleService
         return $result;
     }
 
-    public function getRoleByCode($code)
+    /**
+     * @param string $code
+     * @return Role
+     */
+    public function getRoleByCode(string $code)
     {
-        $qb = $this->getEntityManager()->getRepository($this->roleEntityClass)->createQueryBuilder('role')
+        $qb = $this->createQueryBuilder()
             ->andWhere('role.roleId = :code')
             ->setParameter('code', $code)
         ;
@@ -85,9 +103,9 @@ class RoleService
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return Role
+     * @return AbstractRole
      */
-    public function getRequestedRole($controller, $paramName = 'role')
+    public function getRequestedRole(AbstractActionController $controller, string $paramName = 'role')
     {
         $id = $controller->params()->fromRoute($paramName);
         $role = $this->getRole($id);
@@ -98,7 +116,7 @@ class RoleService
      * @param Role $role
      * @return Role
      */
-    public function create($role)
+    public function create(Role $role)
     {
         try {
             $this->getEntityManager()->persist($role);
@@ -113,7 +131,7 @@ class RoleService
      * @param Role $role
      * @return Role
      */
-    public function update($role)
+    public function update(Role $role)
     {
         try {
             $this->getEntityManager()->flush($role);
@@ -127,7 +145,7 @@ class RoleService
      * @param Role $role
      * @return Role
      */
-    public function delete($role)
+    public function delete(Role $role)
     {
         try {
             $this->getEntityManager()->remove($role);

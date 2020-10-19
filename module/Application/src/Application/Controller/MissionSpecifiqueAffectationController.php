@@ -23,15 +23,14 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
     public function indexAction()
     {
-        $agentId      = $this->params()->fromQuery('agent');
+        $fromQueries  = $this->params()->fromQuery();
+        $agentId      = $fromQueries['agent'];
+        $structureId  = $fromQueries['structure'];
+        $missionId    = $fromQueries['mission'];
         $agent        = $this->getAgentService()->getAgent($agentId);
-        $structureId  = $this->params()->fromQuery('structure');
         $structure    = $this->getStructureService()->getStructure($structureId);
-        $missionId    = $this->params()->fromQuery('mission');
         $mission      = $this->getMissionSpecifiqueService()->getMissionSpecifique($missionId);
-
         $affectations = $this->getMissionSpecifiqueAffectationService()->getAffectations($agent, $mission, $structure);
-
         $missions    = $this->getMissionSpecifiqueService()->getMisssionsSpecifiquesAsOptions();
 
         return new ViewModel([
@@ -46,14 +45,13 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
     /** AFFECTATION ***************************************************************************************************/
 
-    public function ajouterAction() {
-
+    public function ajouterAction()
+    {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
 
         $affectation = new AgentMissionSpecifique();
         $form = $this->getAgentMissionSpecifiqueForm();
-        if ($structure) var_dump($structure->getId()); else var_dump(null);
         if ($structure === null) {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/ajouter', [], [], true));
         } else {
@@ -161,10 +159,6 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
     public function detruireAction()
     {
         $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
-        $structureId = $this->params()->fromQuery('structure');
-        $structure = $this->getStructureService()->getStructure($structureId);
-        $params = [];
-        if ($structure !== null) $params["structure"] = $structure->getId();
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -180,7 +174,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             $vm->setVariables([
                 'title' => "Suppression de l'affectation de " . $affectation->getAgent()->getDenomination(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('mission-specifique/affectation/detruire', ["affectation" => $affectation->getId()], ["query" => $params], true),
+                'action' => $this->url()->fromRoute('mission-specifique/affectation/detruire', ["affectation" => $affectation->getId()], [], true),
             ]);
         }
         return $vm;
