@@ -10,6 +10,8 @@
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 
+$libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
+$this->headTitle('Affichage de la fiche métier #' . $fiche->getId(). " : " . $libelle);
 ?>
 
 <?php
