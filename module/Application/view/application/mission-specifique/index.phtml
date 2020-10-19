@@ -279,7 +279,7 @@ $this->headTitle("Missions spécifiques");
                                     <?php endif; ?>
 
                                     <?php if ($canHistoriser) : ?>
-                                        <?php if ($type->estNonHistorise()) : ?>
+                                        <?php if ($theme->estNonHistorise()) : ?>
                                             <a
                                                 <?php /** @see \Application\Controller\MissionSpecifiqueController::historiserThemeAction() */?>
                                                     href="<?php echo $this->url('mission-specifique/theme/historiser', ['theme' => $theme->getId()], [], true); ?>"
