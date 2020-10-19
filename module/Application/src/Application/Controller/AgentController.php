@@ -140,69 +140,6 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    /** Gestion des missions spécifiques ******************************************************************************/
-
-    /** !TODO why can't we reused MissionSpecificiqueAffectionController ? */
-    public function ajouterAgentMissionSpecifiqueAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $agentMissionSpecifique = new AgentMissionSpecifique();
-        $agentMissionSpecifique->setAgent($agent);
-
-        /** @var AgentMissionSpecifiqueForm $form */
-        $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-mission-specifique', ['agent' => $agent->getId()], [], true));
-        $form->bind($agentMissionSpecifique);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $agentMissionSpecifique->setAgent($agent);
-                $this->getAgentService()->createAgentMissionSpecifique($agentMissionSpecifique);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une mission spécifique de l'agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    /** !TODO why can't we reused MissionSpecificiqueAffectionController ? */
-    public function modifierAgentMissionSpecifiqueAction()
-    {
-        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
-        $agent = $agentMissionSpecifique->getAgent();
-        $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-mission-specifique', ['agent-mission-specifique' => $agentMissionSpecifique->getId()]));
-        $form->bind($agentMissionSpecifique);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $agentMissionSpecifique->setAgent($agent);
-                $this->getAgentService()->updateAgentMissionSpecifique($agentMissionSpecifique);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'une mission spécifique de l'agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
     /** Gestion des applications***************************************************************************************/
 
     public function ajouterAgentApplicationAction()
@@ -711,7 +648,7 @@ class AgentController extends AbstractActionController
      * @param Agent[] $agents
      * @return array
      */
-    private function formatAgentJSON($agents)
+    private function formatAgentJSON(array $agents)
     {
         $result = [];
         /** @var Agent[] $agents */

@@ -72,10 +72,10 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
         <?php if ($mode === 'edition') : ?>
             <?php if ($canAjouterMission) : ?>
                 <a
-                    <?php /** @see \Application\Controller\AgentController::ajouterAgentMissionSpecifiqueAction() */?>
-                        href="<?php echo $this->url('agent/ajouter-agent-mission-specifique', ['agent' => $agent->getId()], [], true); ?>"
-                        class="ajax-modal btn btn-primary action pull-right"
-                        data-event="modification"
+                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
+                    href="<?php echo $this->url('mission-specifique/affectation/ajouter', [], ['query' => ['agent' => $agent->getId()]], true); ?>"
+                    class="ajax-modal btn btn-primary action pull-right"
+                    data-event="modification"
                 >
                     <span class="icon ajouter"></span>Ajouter une mission spécifique</a>
             <?php endif; ?>
@@ -134,8 +134,8 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                         <?php endif; ?>
                         <?php if ($canModifierMission) : ?>
                             <a
-                                <?php /** @see \Application\Controller\AgentController::modifierAgentMissionSpecifiqueAction() */?>
-                                    href="<?php echo $this->url('agent/modifier-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
+                                    href="<?php echo $this->url('mission-specifique/affectation/modifier', ['affectation' => $mission->getId()], ['query' => ['agent' => $agent->getId()]], true); ?>"
                                     class="ajax-modal"
                                     data-event="modification"
                             >

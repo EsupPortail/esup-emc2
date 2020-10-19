@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
@@ -43,27 +44,44 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         ]);
     }
 
-    /** AFFECTATION ***************************************************************************************************/
+    public function afficherAction() {
+        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
+
+        $vm = new ViewModel();
+        $vm->setVariables([
+            'title' => "Affichage de l'affectation",
+            'affectation' => $affectation,
+        ]);
+        return $vm;
+    }
 
     public function ajouterAction()
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
+        $agentId = $this->params()->fromQuery('agent');
+        $agent = $this->getAgentService()->getAgent($agentId);
 
         $affectation = new AgentMissionSpecifique();
+        /** @var AgentMissionSpecifiqueForm $form */
         $form = $this->getAgentMissionSpecifiqueForm();
+        /** @var SearchAndSelect $agentSS */
+        $agentSS = $form->get('agent');
+
         if ($structure === null) {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/ajouter', [], [], true));
         } else {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
-            /** @var SearchAndSelect $agentSS */
-            $agentSS = $form->get('agent');
-            /** @see AgentController::rechercherWithStructureMereAction() */
-            $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
             /** @var SearchAndSelect $structureSS */
             $structureSS = $form->get('structure');
             /** @see StructureController::rechercherWithStructureMereAction() */
             $structureSS->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+            /** @see AgentController::rechercherWithStructureMereAction() */
+            $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+        }
+        if ($agent !== null) {
+            $affectation->setAgent($agent);
+            $agentSS->setAttribute('readonly', true);
         }
         $form->bind($affectation);
 
@@ -86,36 +104,31 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $vm;
     }
 
-    public function afficherAction() {
-        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
-
-        $vm = new ViewModel();
-        $vm->setVariables([
-            'title' => "Affichage de l'affectation",
-            'affectation' => $affectation,
-        ]);
-        return $vm;
-    }
-
     public function modifierAction()
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
+        $agentId = $this->params()->fromQuery('agent');
+        $agent = $this->getAgentService()->getAgent($agentId);
 
         $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
         $form = $this->getAgentMissionSpecifiqueForm();
+        /** @var SearchAndSelect $agentSS */
+        $agentSS = $form->get('agent');
         if ($structure === null) {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/modifier', [], [], true));
         } else {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/modifier', [], ["query" =>["structure" => $structure->getId()]], true));
-            /** @var SearchAndSelect $agentSS */
-            $agentSS = $form->get('agent');
             /** @see AgentController::rechercherWithStructureMereAction() */
             $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
             /** @var SearchAndSelect $structureSS */
             $structureSS = $form->get('structure');
             /** @see StructureController::rechercherWithStructureMereAction() */
             $structureSS->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+        }
+        if ($agent !== null) {
+            $affectation->setAgent($agent);
+            $agentSS->setAttribute('readonly', true);
         }
         $form->bind($affectation);
 

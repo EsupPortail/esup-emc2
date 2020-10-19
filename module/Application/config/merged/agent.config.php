@@ -104,8 +104,6 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'modifier',
-                        'ajouter-agent-mission-specifique',
-                        'modifier-agent-mission-specifique',
                         'upload-fichier',
                     ],
                     'privileges' => [
@@ -229,29 +227,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'rechercher-gestionnaire',
-                            ],
-                        ],
-                    ],
-
-                    /** Route des AgentMissionSpecifique ********************************************************************/
-
-                    'ajouter-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-agent-mission-specifique/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'ajouter-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'modifier-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier-agent-mission-specifique',
                             ],
                         ],
                     ],
