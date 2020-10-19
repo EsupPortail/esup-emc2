@@ -45,7 +45,7 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
         $date = ($date_day !== null AND $date_time !== null)?DateTime::createFromFormat("d/m/Y H:i", $date_day." ".$date_time):null;
 
         $campagne   = $this->getEntretienProfessionnelCampagneService()->getEntretienProfessionnelCampagne($data['campagne']);
-        $lieu       = (isset($data['lieu']) AND trim($data['lieu']) !== "")?trim($data['lieu']):null;
+        $lieu       = (isset($data['lieu_entretien']) AND trim($data['lieu_entretien']) !== "")?trim($data['lieu_entretien']):null;
 
         $object->setResponsable($reponsable);
         $object->setAgent($agent);
