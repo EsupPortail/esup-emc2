@@ -87,20 +87,36 @@ class AgentService {
 
 
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
-            ->andWhere('agent.delete IS NULL');
+            ->andWhere('agent.delete IS NULL')
         ;
         return $qb;
     }
 
     /**
+     * @param array $temoins
      * @param string|null $order
      * @return Agent[]
      */
-    public function getAgents(?string $order = null)
+    public function getAgents(array $temoins = [], ?string $order = null)
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->andWhere('agent.delete IS NULL');
+            ->andWhere('agent.delete IS NULL')
+
+            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+            ->andWhere('statut.debut <= :NOW')
+            ->andWhere('statut.fin >= :NOW OR statut.fin IS NULL')
+            ->setParameter('NOW', $this->getDateTime())
         ;
+
+        $tmp = [];
+        foreach ($temoins as $temoin => $value) {
+            if ($value) $tmp[] = 'statut.'. $temoin .' = :TRUE';
+        }
+        if (!empty($tmp)) {
+            $qb = $qb->andWhere(implode(" OR ",$tmp))
+                ->setParameter('TRUE', 'O')
+            ;
+        }
 
         if ($order !== null) {
             $qb = $qb->orderBy('agent.' . $order);

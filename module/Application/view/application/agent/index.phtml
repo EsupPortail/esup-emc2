@@ -3,6 +3,7 @@
 /**
  * @see \Application\Controller\AgentController::indexAction()
  * @var Agent[] $agents
+ * @var Boolean[] $filtres
  */
 
 use Application\Entity\Db\Agent;
@@ -31,6 +32,8 @@ $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::
 </div>
 
 <div class="main">
+
+    <?php echo $this->partial('partial/filtre_statut', ['url' => $this->url('agent'), 'filtres' => $filtres]); ?>
 
     <?php if (count($agents) > 0) : ?>
         <table id="agents" class="datatable table table-condensed">
