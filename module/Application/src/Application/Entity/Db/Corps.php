@@ -167,4 +167,17 @@ class Corps
         return $this->getLibelleCourt();
     }
 
+    /**
+     * @return string
+     */
+    public function generateTooltip()
+    {
+        $text  = "";
+        $text .= "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Code : <strong>". $this->getCode() . "</strong>";
+        return $text;
+    }
 }

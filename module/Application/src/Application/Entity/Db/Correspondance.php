@@ -136,5 +136,16 @@ class Correspondance  {
         return $this->getLibelleCourt();
     }
 
+    /**
+     * @return string
+     */
+    public function generateTooltip()
+    {
+        $text  = "";
+        $text .= "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
+        return $text;
+    }
 
 }
