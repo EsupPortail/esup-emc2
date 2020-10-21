@@ -27,8 +27,6 @@ class FicheMetier implements HistoriqueAwareInterface {
     /** @var ArrayCollection */
     private $formations;
 
-
-
     public function __construct()
     {
         $this->activites = new ArrayCollection();
@@ -36,7 +34,6 @@ class FicheMetier implements HistoriqueAwareInterface {
         $this->competences = new ArrayCollection();
         $this->formations = new ArrayCollection();
     }
-
 
     /**
      * @return int
@@ -55,10 +52,10 @@ class FicheMetier implements HistoriqueAwareInterface {
     }
 
     /**
-     * @param Metier $metier
+     * @param Metier|null $metier
      * @return FicheMetier
      */
-    public function setMetier($metier)
+    public function setMetier(?Metier $metier)
     {
         $this->metier = $metier;
         return $this;
@@ -89,9 +86,9 @@ class FicheMetier implements HistoriqueAwareInterface {
     }
 
     /**
-     * @param FicheMetierEtat $etat
+     * @param FicheMetierEtat|null $etat
      */
-    public function setEtat($etat)
+    public function setEtat(?FicheMetierEtat $etat)
     {
         $this->etat = $etat;
     }
@@ -102,7 +99,6 @@ class FicheMetier implements HistoriqueAwareInterface {
     public function getMissionsPrincipales()
     {
         $texte = '<ul>';
-        //return $this->missionsPrincipales;
         $activites = $this->getActivites();
         usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) {return $a->getPosition() > $b->getPosition();});
         foreach ($activites as $activite) {
@@ -129,7 +125,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param FicheMetierTypeActivite $activite
      * @return FicheMetier
      */
-    public function addActivite($activite)
+    public function addActivite(FicheMetierTypeActivite $activite)
     {
         $this->activites->add($activite);
         return $this;
@@ -139,7 +135,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param FicheMetierTypeActivite $activite
      * @return FicheMetier
      */
-    public function removeActivite($activite)
+    public function removeActivite(FicheMetierTypeActivite $activite)
     {
         $this->activites->removeElement($activite);
         return $this;
@@ -159,7 +155,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Application $application
      * @return bool
      */
-    public function hadApplication($application)
+    public function hadApplication(Application $application)
     {
         return $this->applications->contains($application);
     }
@@ -168,7 +164,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Application $application
      * @return FicheMetier
      */
-    public function addApplication($application)
+    public function addApplication(Application $application)
     {
         $this->applications->add($application);
         return $this;
@@ -178,7 +174,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Application $application
      * @return FicheMetier
      */
-    public function removeApplication($application)
+    public function removeApplication(Application $application)
     {
         $this->applications->removeElement($application);
         return $this;
@@ -192,6 +188,7 @@ class FicheMetier implements HistoriqueAwareInterface {
         $this->applications->clear();
         return $this;
     }
+
     /** COMPETENCE ****************************************************************************************************/
 
     /**
@@ -206,7 +203,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Competence $competence
      * @return FicheMetier
      */
-    public function addCompetence($competence)
+    public function addCompetence(Competence $competence)
     {
         $this->competences->add($competence);
         return $this;
@@ -216,7 +213,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Competence $competence
      * @return FicheMetier
      */
-    public function removeCompetence($competence)
+    public function removeCompetence(Competence $competence)
     {
         $this->competences->removeElement($competence);
         return $this;
@@ -226,7 +223,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Competence $competence
      * @return boolean
      */
-    public function hasCompetence($competence)
+    public function hasCompetence(Competence $competence)
     {
         return $this->competences->contains($competence);
     }
@@ -254,7 +251,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Formation $formation
      * @return FicheMetier
      */
-    public function addFormation($formation)
+    public function addFormation(Formation $formation)
     {
         $this->formations->add($formation);
         return $this;
@@ -264,7 +261,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Formation $formation
      * @return FicheMetier
      */
-    public function removeFormation($formation)
+    public function removeFormation(Formation $formation)
     {
         $this->formations->removeElement($formation);
         return $this;
@@ -274,7 +271,7 @@ class FicheMetier implements HistoriqueAwareInterface {
      * @param Formation $formation
      * @return boolean
      */
-    public function hasFormation($formation)
+    public function hasFormation(Formation $formation)
     {
         return $this->formations->contains($formation);
     }
@@ -284,5 +281,15 @@ class FicheMetier implements HistoriqueAwareInterface {
         $this->formations->clear();
     }
 
+    /** FONCTION POUR MACRO *******************************************************************************************/
+
+    /**
+     * @return string
+     */
+    public function getIntitule() {
+        $metier = $this->getMetier();
+        if ($metier === null) return "Aucun métier est associé.";
+        return $metier->getLibelle();
+    }
 
 }
