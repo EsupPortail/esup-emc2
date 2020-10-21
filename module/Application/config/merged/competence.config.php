@@ -22,8 +22,7 @@ use Application\Service\CompetenceTheme\CompetenceThemeService;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceFactory;
 use Application\Service\CompetenceType\CompetenceTypeService;
 use Application\Service\CompetenceType\CompetenceTypeServiceFactory;
-use Application\View\Helper\CompetencesViewHelper;
-use Application\View\Helper\CompetenceViewHelper;
+use Application\View\Helper\CompetenceBlocViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -384,8 +383,7 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'competence' => CompetenceViewHelper::class,
-            'competences' => CompetencesViewHelper::class,
+            'competenceBloc' => CompetenceBlocViewHelper::class,
         ],
     ],
 

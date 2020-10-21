@@ -91,12 +91,14 @@ class FicheMetierController extends AbstractActionController
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche);
 
         return new ViewModel([
             'title' => "Visualisation d'une fiche métier",
             'fiche' => $fiche,
-            'parcours' => $parcours,
+            'competences' => $competences,
             'applications' => $applications,
+            'parcours' => $parcours,
         ]);
     }
 
@@ -147,11 +149,13 @@ class FicheMetierController extends AbstractActionController
         if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche);
 
         return new ViewModel([
             'fiche' => $fiche,
-            'parcours' => $parcours,
+            'competences' => $competences,
             'applications' => $applications,
+            'parcours' => $parcours,
         ]);
     }
 

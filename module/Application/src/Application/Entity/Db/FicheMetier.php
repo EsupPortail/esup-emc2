@@ -115,11 +115,14 @@ class FicheMetier implements HistoriqueAwareInterface {
     /** ACTIVITE ******************************************************************************************************/
 
     /**
+     * Pour simplifier le tri selon la position est fait à ce niveau
      * @return FicheMetierTypeActivite[]
      */
     public function getActivites()
     {
-        return $this->activites->toArray();
+        $activites =  $this->activites->toArray();
+        usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() > $b->getPosition();});
+        return $activites;
     }
 
     /**

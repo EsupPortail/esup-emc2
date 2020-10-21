@@ -402,4 +402,30 @@ class FicheMetierService {
         return $dictionnaire;
     }
 
+    /**
+     * @param FicheMetier $fiche
+     * @param DateTime $date
+     * @return array
+     */
+    public function getCompetencesDictionnaires(FicheMetier $fiche, DateTime $date = null)
+    {
+        $dictionnaire = [];
+
+        foreach ($fiche->getCompetences() as $competence) {
+            $dictionnaire[$competence->getId()]["entite"] = $competence;
+            $dictionnaire[$competence->getId()]["raison"][] = $fiche;
+            $dictionnaire[$competence->getId()]["conserve"] = true;
+        }
+
+        foreach ($fiche->getActivites() as $activite) {
+            foreach ($activite->getActivite()->getApplications() as $competence) {
+                $dictionnaire[$competence->getId()]["entite"] = $competence;
+                $dictionnaire[$competence->getId()]["raison"][] = $activite;
+                $dictionnaire[$competence->getId()]["conserve"] = true;
+            }
+        }
+
+        return $dictionnaire;
+    }
+
 }
