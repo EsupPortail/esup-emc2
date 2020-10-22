@@ -2,8 +2,6 @@
 
 namespace Application\Service\Application;
 
-use Application\Service\Application\ApplicationGroupeService;
-
 trait ApplicationGroupeServiceAwareTrait {
 
     /** @var ApplicationGroupeService */
@@ -12,7 +10,7 @@ trait ApplicationGroupeServiceAwareTrait {
     /**
      * @return ApplicationGroupeService
      */
-    public function getApplicationGroupeService()
+    public function getApplicationGroupeService() : ApplicationGroupeService
     {
         return $this->applicationGroupeService;
     }
@@ -21,7 +19,7 @@ trait ApplicationGroupeServiceAwareTrait {
      * @param ApplicationGroupeService $applicationGroupeService
      * @return ApplicationGroupeService
      */
-    public function setApplicationGroupeService($applicationGroupeService)
+    public function setApplicationGroupeService(ApplicationGroupeService $applicationGroupeService) : ApplicationGroupeService
     {
         $this->applicationGroupeService = $applicationGroupeService;
         return $this->applicationGroupeService;

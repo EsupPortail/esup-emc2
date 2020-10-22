@@ -5,10 +5,8 @@ namespace Application\Service\ApplicationsRetirees;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -72,12 +70,6 @@ class ApplicationsRetireesService {
      */
     public function delete(FicheposteApplicationRetiree $applicationConservee)
     {
-//        $date = $this->getDateTime();
-//        $user = $this->getUserService()->getConnectedUser();
-//
-//        $applicationConservee->setHistoDestruction($date);
-//        $applicationConservee->setHistoDestructeur($user);
-
         try {
             $this->getEntityManager()->remove($applicationConservee);
             $this->getEntityManager()->flush($applicationConservee);

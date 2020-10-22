@@ -20,7 +20,7 @@ class ApplicationService {
      * @param Application $application
      * @return Application
      */
-    public function create($application)
+    public function create(Application $application)
     {
         $application->setActif(true);
         try {
@@ -36,7 +36,7 @@ class ApplicationService {
      * @param Application $application
      * @return Application
      */
-    public function update($application)
+    public function update(Application $application)
     {
         try {
             $this->getEntityManager()->flush($application);
@@ -49,7 +49,7 @@ class ApplicationService {
     /**
      * @param Application $application
      */
-    public function delete($application)
+    public function delete(Application $application)
     {
         try {
             $this->getEntityManager()->remove($application);
@@ -77,7 +77,7 @@ class ApplicationService {
      * @param string $ordre
      * @return Application[]
      */
-    public function getApplications($champ = 'libelle', $ordre='ASC')
+    public function getApplications(string $champ = 'libelle', string $ordre='ASC')
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('application.' . $champ, $ordre)
@@ -92,7 +92,7 @@ class ApplicationService {
      * @param string $ordre
      * @return Application[]
      */
-    public function getApplicationsAsOptions($champ = 'libelle', $ordre='ASC')
+    public function getApplicationsAsOptions(string $champ = 'libelle', string $ordre='ASC')
     {
         $result = $this->getApplications($champ, $ordre);
         $array = [];
@@ -104,10 +104,10 @@ class ApplicationService {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
+     * @param ApplicationGroupe|null $groupe
      * @return Application[]
      */
-    public function getApplicationsGyGroupe($groupe)
+    public function getApplicationsGyGroupe(?ApplicationGroupe $groupe)
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('application.libelle')
@@ -129,9 +129,9 @@ class ApplicationService {
      * @param int $id
      * @return Application
      */
-    public function getApplication($id)
+    public function getApplication(int $id)
     {
-        $qb = $this->getEntityManager()->getRepository(Application::class)->createQueryBuilder('application')
+        $qb = $this->createQueryBuilder()
             ->andWhere('application.id = :id')
             ->setParameter('id', $id)
         ;
@@ -149,7 +149,7 @@ class ApplicationService {
      * @param string paramName
      * @return Application
      */
-    public function getRequestedApplication($controller, $paramName)
+    public function getRequestedApplication(AbstractActionController $controller, $paramName)
     {
         $id = $controller->params()->fromRoute($paramName);
         return $this->getApplication($id);
