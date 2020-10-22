@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
+use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
@@ -163,11 +164,13 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
+        $parcours = $this->getParcoursDeFormationService()->getParcoursDeFormationsByType(ParcoursDeFormation::TYPE_CATEGORIE);
 
         $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'fiche' => $fiche,
             'applications' => $applications,
+            'parcours' => $parcours,
         ]);
 
         $metier = $fiche->getMetier();
