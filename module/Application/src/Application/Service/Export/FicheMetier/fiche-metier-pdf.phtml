@@ -2,12 +2,15 @@
 
 /**
  * @var FicheMetier $fiche
+ * @var ParcoursDeFormation $parcours
  */
 
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FormationGroupe;
+use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\Formation;
 
 $metier = $fiche->getMetier();
@@ -54,9 +57,10 @@ $metier = $fiche->getMetier();
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
     }
+
     div.activite {
-        border-left : 2px solid #123456;
-        border-bottom : 1px solid #123456;
+        border-left: 2px solid #123456;
+        border-bottom: 1px solid #123456;
         padding-left: 1rem;
         margin-bottom: 1rem;
         font-size: 9pt;
@@ -73,6 +77,7 @@ $metier = $fiche->getMetier();
     table.activite th {
         text-align: left;
     }
+
     table.activite td {
         font-size: 9pt;
         /*margin-left: 5rem;*/
@@ -82,8 +87,10 @@ $metier = $fiche->getMetier();
 </style>
 
 <?php
-    $activites = $fiche->getActivites();
-    usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() < $b->getPosition();});
+$activites = $fiche->getActivites();
+usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) {
+    return $a->getPosition() < $b->getPosition();
+});
 ?>
 
 <!-- TITRE ------------------------------------------------------------------------------------------------------------>
@@ -93,26 +100,29 @@ $metier = $fiche->getMetier();
         <h1><?php echo $metier->getLibelle(); ?></h1>
     </div>
     <div style="float:right;width:36%;">
-        <?php $references = $metier->getReferences() ;?>
-            <table class="info-cartouche">
-                <tr>
-                    <th> Catégorie :</th>
-                    <td> <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():"???"; ?> </td>
-                </tr>
-                <tr>
-                    <th> Références : </th>
-                    <?php if ($references and !empty($references)) : ?>
-                        <?php $first = true; ?>
-                        <?php foreach ($references as $reference) : ?>
-                            <?php if (!$first) echo "<tr><th></th>"; ?>
-                            <td>
-                                <?php echo $reference->getTitre(); ?>
-                            </td></tr>
-                            <?php $first = false; ?>
-                        <?php endforeach; ?>
-                        <?php endif; ?>
+        <?php $references = $metier->getReferences(); ?>
+        <table class="info-cartouche">
+            <tr>
+                <th> Catégorie :</th>
+                <td> <?php echo ($metier->getCategorie()) ? $metier->getCategorie()->getCode() : "???"; ?> </td>
+            </tr>
+            <tr>
+                <th> Références :</th>
+                <?php if ($references and !empty($references)) : ?>
+                <?php $first = true; ?>
+                <?php foreach ($references
 
-            </table>
+                as $reference) : ?>
+                <?php if (!$first) echo "<tr><th></th>"; ?>
+                <td>
+                    <?php echo $reference->getTitre(); ?>
+                </td>
+            </tr>
+            <?php $first = false; ?>
+            <?php endforeach; ?>
+            <?php endif; ?>
+
+        </table>
 
     </div>
 </div>
@@ -125,7 +135,7 @@ $metier = $fiche->getMetier();
 
 <?php //echo $fiche->getMissionsPrincipales(); ?>
 
-<?php foreach($activites as $activite) : ?>
+<?php foreach ($activites as $activite) : ?>
     <?php if ($activite->getActivite()->estNonHistorise()) : ?>
 
         <table class="activite">
@@ -134,14 +144,14 @@ $metier = $fiche->getMetier();
             </tr>
             <tr>
                 <td>
-                        <?php foreach ($activite->getActivite()->getDescriptions() as $description) : ?>
-                            &ndash; <?php echo $description->getLibelle(); ?> <br/>
-                        <?php endforeach; ?>
+                    <?php foreach ($activite->getActivite()->getDescriptions() as $description) : ?>
+                        &ndash; <?php echo $description->getLibelle(); ?> <br/>
+                    <?php endforeach; ?>
                 </td>
             </tr>
         </table>
 
-    <?php endif ;?>
+    <?php endif; ?>
 <?php endforeach; ?>
 
 <!-- PARCOURS DE FORMATION -------------------------------------------------------------------------------------------->
@@ -152,14 +162,18 @@ $metier = $fiche->getMetier();
 
 <?php
 $competences = $fiche->getCompetences();
-usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
+usort($competences, function (Competence $a, Competence $b) {
+    return $a->getLibelle() > $b->getLibelle();
+});
 
 $types = [];
-foreach($competences as $competence) {
+foreach ($competences as $competence) {
     $type = $competence->getType();
     $types[$type->getId()] = $type;
 }
-usort($types, function(CompetenceType $a, CompetenceType $b) { return $a->getOrdre() > $b->getOrdre();});
+usort($types, function (CompetenceType $a, CompetenceType $b) {
+    return $a->getOrdre() > $b->getOrdre();
+});
 
 $dictionnaire = [];
 foreach ($types as $type) $dictionnaire[$type->getLibelle()] = [];
@@ -168,7 +182,7 @@ foreach ($competences as $competence) {
 }
 ?>
 
-<?php if (! empty($competences)) : ?>
+<?php if (!empty($competences)) : ?>
     <div class="secondary-block">
         Compétences
     </div>
@@ -197,21 +211,21 @@ $nogroupe = "zzz";
 $dictionnaire = [];
 foreach ($applications as $application) {
     $groupe = $application->getGroupe();
-    $libelle = ($groupe !== null)?$groupe->getLibelle():$nogroupe;
+    $libelle = ($groupe !== null) ? $groupe->getLibelle() : $nogroupe;
     $dictionnaire[$libelle][] = $application;
 }
 ksort($dictionnaire);
 ?>
 
-<?php if (! empty($applications)) : ?>
+<?php if (!empty($applications)) : ?>
     <div class="secondary-block">
         Applications
     </div>
 
-    <?php foreach($dictionnaire as $key => $liste) : ?>
+    <?php foreach ($dictionnaire as $key => $liste) : ?>
         <table class="activite">
             <tr>
-                <th> <?php echo ($key !== $nogroupe)?$key:"Sans groupe ..."; ?> </th>
+                <th> <?php echo ($key !== $nogroupe) ? $key : "Sans groupe ..."; ?> </th>
             </tr>
             <tr>
                 <td>
@@ -225,19 +239,61 @@ ksort($dictionnaire);
 <?php endif; ?>
 
 <?php
-$formations = $fiche->getFormations();
-usort($formations, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+$categorie = $fiche->getMetier()->getCategorie();
+$parcour = null;
+/** @var ParcoursDeFormation $p */
+foreach ($parcours as $p) {
+    if ($p->getReference() === $categorie->getId()) {
+        $parcour = $p;
+        break;
+    }
+}
+
 ?>
 
-<?php if (! empty($formations)) : ?>
+<?php if (empty($parcours)) : ?>
     <div class="secondary-block">
-        Formations
+        Aucun parcours de formation pour la catégorie : <?php echo $categorie->getLibelle(); ?>
     </div>
-    <div class="activite">
-        <ul>
-            <?php foreach ($formations as $formation) : ?>
-                <li> <?php echo $formation->getLibelle(); ?> </li>
-            <?php endforeach; ?>
-        </ul>
+<?php else : ?>
+    <div class="secondary-block">
+        Parcours de formation : <?php echo $parcour->getLibelle(); ?>
     </div>
+
+    <?php
+        $groupes = [];
+        $sans = [];
+        $formations = [];
+        foreach($parcour->getFormations() as $formation) {
+            if ($formation->getGroupe()) {
+                $groupes[$formation->getGroupe()->getId()] = $formation->getGroupe();
+                $formations[$formation->getGroupe()->getId()][] = $formation;
+            } {
+                $sans[] = $formation;
+            }
+        }
+        usort($groupes, function (FormationGroupe $a, FormationGroupe $b) {return $a->getOrdre() > $b->getOrdre();});
+    ?>
+
+    <ul>
+   <?php foreach ($groupes as $groupe) : ?>
+        <li> <?php echo $groupe->getLibelle(); ?>
+            <ul>
+                <?php foreach ($formations[$groupe->getId()] as $formation) : ?>
+                    <li> <?php echo $formation->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+   <?php endforeach; ?>
+        <?php if (! empty($sans)) : ?>
+            <l1> Sans groupe ... </l1>
+            <ul>
+                <?php foreach ($sans as $formation) : ?>
+                    <li> <?php echo $formation->getLibelle(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </ul>
+
 <?php endif; ?>
+
