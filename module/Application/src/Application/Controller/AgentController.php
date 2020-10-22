@@ -10,7 +10,6 @@ use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentStatut;
-use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
@@ -48,7 +47,6 @@ class AgentController extends AbstractActionController
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    use AgentFormAwareTrait;
     use AgentApplicationFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
@@ -108,32 +106,6 @@ class AgentController extends AbstractActionController
             'statuts' => $statuts,
             'grades' => $grades,
         ]);
-    }
-
-    public function modifierAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $form = $this->getAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier', ['agent' => $agent->getId()], [], true));
-        $form->bind($agent);
-
-        /** @var  Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getAgentService()->update($agent);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier l\'agent',
-            'form' => $form,
-        ]);
-        return $vm;
     }
 
     /** Gestion des applications***************************************************************************************/

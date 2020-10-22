@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\AgentQuotite" table="agent_quotite">
+
+        <id name="id" type="string" column="id" />
+
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
+        </many-to-one>
+
+        <field name="debut"     type="datetime"                 column="debut"     nullable="false"/>
+        <field name="fin"       type="datetime"                 column="fin"       nullable="false"/>
+        <field name="quotite"   type="integer"                      column="quotite"   nullable="false"/>
+
+        <!-- DB - IMPORT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="importationCreation"         type="datetime"           column="created_on"     nullable="false"/>
+        <field name="importationModification"     type="datetime"           column="updated_on"     nullable="false"/>
+        <field name="importationHistorisation"    type="datetime"           column="deleted_on"     nullable="false"/>
+
+    </entity>
+</doctrine-mapping>

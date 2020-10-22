@@ -44,13 +44,11 @@ class AgentControllerFactory {
         $structureService = $container->get(StructureService::class);
 
         /**
-         * @var AgentForm $agentForm
          * @var AgentApplicationForm $agentApplicationForm
          * @var AgentCompetenceForm $agentCompetenceForm
          * @var AgentFormationForm $agentFormationForm
          * @var UploadForm $uploadForm
          */
-        $agentForm = $container->get('FormElementManager')->get(AgentForm::class);
         $agentApplicationForm = $container->get('FormElementManager')->get(AgentApplicationForm::class);
         $agentCompetenceForm = $container->get('FormElementManager')->get(AgentCompetenceForm::class);
         $agentFormationForm = $container->get('FormElementManager')->get(AgentFormationForm::class);
@@ -69,7 +67,6 @@ class AgentControllerFactory {
         $controller->setUserService($userService);
         $controller->setStructureService($structureService);
 
-        $controller->setAgentForm($agentForm);
         $controller->setAgentApplicationForm($agentApplicationForm);
         $controller->setAgentCompetenceForm($agentCompetenceForm);
         $controller->setAgentFormationForm($agentFormationForm);

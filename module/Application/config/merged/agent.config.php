@@ -6,10 +6,6 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
-use Application\Form\Agent\AgentForm;
-use Application\Form\Agent\AgentFormFactory;
-use Application\Form\Agent\AgentHydrator;
-use Application\Form\Agent\AgentHydratorFactory;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormFactory;
 use Application\Form\AgentApplication\AgentApplicationHydrator;
@@ -103,7 +99,6 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'modifier',
                         'upload-fichier',
                     ],
                     'privileges' => [
@@ -446,16 +441,6 @@ return [
 
                     /** AUTRE  ****************************************************************************************/
 
-                    'modifier' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier',
-                            ],
-                        ],
-                    ],
                     'upload-fichier' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -523,7 +508,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentForm::class => AgentFormFactory::class,
             AgentApplicationForm::class => AgentApplicationFormFactory::class,
             AgentCompetenceForm::class => AgentCompetenceFormFactory::class,
             AgentFormationForm::class => AgentFormationFormFactory::class,
@@ -531,7 +515,6 @@ return [
     ],
     'hydrators' => [
         'factories' => [
-            AgentHydrator::class => AgentHydratorFactory::class,
             AgentApplicationHydrator::class => AgentApplicationHydratorFactory::class,
             AgentCompetenceHydrator::class => AgentCompetenceHydratorFactory::class,
             AgentFormationHydrator::class => AgentFormationHydratorFactory::class,

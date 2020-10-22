@@ -59,20 +59,10 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                 <dd>
                     <?php echo $agent->getNomUsuel(); ?>
                 </dd>
-                <dt> Quotité travaillée
-                    <?php if ($canModifier): ?>
-                        <a
-                            <?php /** @see \Application\Controller\AgentController::modifierAction() */?>
-                            href="<?php echo $this->url('agent/modifier', ['agent' => $agent->getId()], [], true); ?>"
-                            class="ajax-modal"
-                            data-event="modification"
-                        >
-                            <span class="icon editer" data-toggle="tooltip" title="Modifier la quotité travaillée"></span></a>
-                    <?php endif; ?>
-                </dt>
+                <dt> Quotité travaillée </dt>
                 <dd>
-                    <?php if($agent->getQuotite()) : ?>
-                        <?php echo $agent->getQuotite(); ?>%
+                    <?php if($quotite = $agent->getQuotiteCourante()) : ?>
+                        <?php echo $quotite->getQuotite(); ?>%
                     <?php else: ?>
                         <span class="probleme">
                             <span class="icon attention"></span>

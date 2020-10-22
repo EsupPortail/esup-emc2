@@ -40,6 +40,8 @@ class AgentService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            //quotite de l'agent
+            ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
             //status de l'agent
             ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
             ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')

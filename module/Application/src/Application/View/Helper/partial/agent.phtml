@@ -32,10 +32,13 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     <dd> <?php echo $agent->getNomUsuel(); ?> </dd>
     <dt> Quotité travaillée </dt>
     <dd>
-        <?php if ($agent->getQuotite() !== null) : ?>
-            <?php echo $agent->getQuotite(); ?>%
-        <?php else : ?>
-            <span style="color:darkred; font-style: italic;">Quotité travaillée non renseignée</span>
+        <?php if($quotite = $agent->getQuotiteCourante()) : ?>
+            <?php echo $quotite->getQuotite(); ?>%
+        <?php else: ?>
+            <span class="probleme">
+                            <span class="icon attention"></span>
+                            <em> Aucune quotité de renseignée </em>
+                        </span>
         <?php endif; ?>
     </dd>
 </dl>
