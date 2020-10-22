@@ -11,8 +11,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 class GradeService {
     use EntityManagerAwareTrait;
 
-    /** REQUETAGE *****************************************************************************************************/
-
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade');
@@ -59,11 +57,13 @@ class GradeService {
     }
 
     /**
+     * @param string $champ
+     * @param string $ordre
      * @return array
      */
-    public function getGradesAsOptions()
+    public function getGradesAsOptions($champ = 'libelleLong', $ordre ='ASC')
     {
-        $grades = $this->getGrades();
+        $grades = $this->getGrades($champ, $ordre);
 
         $array = [];
         foreach ($grades as $grade) {
@@ -103,7 +103,7 @@ class GradeService {
      * @param string $param
      * @return Grade
      */
-    public function getRequestedGrade($controller, $param = "grade")
+    public function getRequestedGrade(AbstractActionController $controller, $param = "grade")
     {
         $id = $controller->params()->fromRoute($param);
         $grade = $this->getGrade($id);

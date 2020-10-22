@@ -35,7 +35,8 @@ class CorpsService {
      * @return QueryBuilder
      */
     public function createQueryBuilder() {
-        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps');
+        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+        ;
         return $qb;
     }
 
@@ -58,21 +59,6 @@ class CorpsService {
             ;
         }
 
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Corps[]
-     */
-    public function getCorpsHistorises($champ = 'libelleLong', $ordre = 'ASC') {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('corps.histo IS NOT NULL')
-            ->orderBy('corps.' . $champ, $ordre)
-        ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -115,6 +101,5 @@ class CorpsService {
         $result = $this->getCorp($id);
         return $result;
     }
-
 
 }

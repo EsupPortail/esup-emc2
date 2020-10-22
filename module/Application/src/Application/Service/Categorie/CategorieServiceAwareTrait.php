@@ -10,7 +10,7 @@ trait CategorieServiceAwareTrait {
     /**
      * @return CategorieService
      */
-    public function getCategorieService()
+    public function getCategorieService() : CategorieService
     {
         return $this->categorieService;
     }
@@ -19,7 +19,7 @@ trait CategorieServiceAwareTrait {
      * @param CategorieService $categorieService
      * @return CategorieService
      */
-    public function setCategorieService($categorieService)
+    public function setCategorieService(CategorieService $categorieService) : CategorieService
     {
         $this->categorieService = $categorieService;
         return $this->categorieService;

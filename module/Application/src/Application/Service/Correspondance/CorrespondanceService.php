@@ -45,9 +45,15 @@ class CorrespondanceService {
         return $result;
     }
 
-    public function getCorrespondancesAsOptions()
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @param bool $avecAgent
+     * @return array
+     */
+    public function getCorrespondancesAsOptions(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=false)
     {
-        $correspondances = $this->getCorrespondances();
+        $correspondances = $this->getCorrespondances($champ, $ordre, $avecAgent);
         $options = [];
         foreach($correspondances as $correspondance) {
             $options[$correspondance->getId()] = $correspondance->getCategorie() . " - " . $correspondance->getLibelleLong();
