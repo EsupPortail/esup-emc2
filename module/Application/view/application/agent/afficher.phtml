@@ -64,10 +64,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                     <?php if($quotite = $agent->getQuotiteCourante()) : ?>
                         <?php echo $quotite->getQuotite(); ?>%
                     <?php else: ?>
-                        <span class="probleme">
-                            <span class="icon attention"></span>
-                            <em> Aucune quotité de renseignée </em>
-                        </span>
+                        100%
                     <?php endif; ?>
                 </dd>
         </div>
