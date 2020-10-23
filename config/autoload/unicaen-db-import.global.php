@@ -127,6 +127,24 @@ return [
                 ],
             ],
             [
+                'name' => 'Import_AGENT_QUOTITE',
+                'source' => [
+                    'name'               => 'Quotité travaillé par les agents',
+                    'select'             => 'SELECT ID, INDIVIDU_ID, D_DEBUT, D_FIN, QUOTITE FROM INDIVIDU_QUOTITE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                    //'columns'            => ['AGENT_ID', 'STRUCTURE_ID', 'CORPS_ID', 'GRADE_ID', 'BAP_ID', 'DATE_DEBUT', 'DATE_FIN'],
+                ],
+                'intermediate_table' => 'src_agent_quotite',
+                'destination' => [
+                    'name'               => 'Grade des agents gérés par la DRH',
+                    'table'              => 'agent_quotite',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['agent_id', 'debut', 'fin', 'quotite'],
+                ],
+            ],
+            [
                 'name' => 'Import_STATUT',
                 'source' => [
                     'name'               => 'Statut des agents geres par la DRH',
