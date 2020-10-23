@@ -105,7 +105,7 @@ class AgentQuotite
     {
         $date = $date ? : $this->getDateTime();
         if ($date < $this->getDebut()) return false;
-        if ($this->getFin() !== null and $date < $this->getFin()) return false;
+        if ($this->getFin() !== null and $date > $this->getFin()) return false;
         return true;
     }
 }
