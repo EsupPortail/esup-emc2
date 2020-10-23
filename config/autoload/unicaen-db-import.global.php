@@ -130,7 +130,7 @@ return [
                 'name' => 'Import_AGENT_QUOTITE',
                 'source' => [
                     'name'               => 'Quotité travaillé par les agents',
-                    'select'             => 'SELECT ID, INDIVIDU_ID, D_DEBUT, D_FIN, QUOTITE FROM INDIVIDU_QUOTITE',
+                    'select'             => 'SELECT ID, INDIVIDU_ID AS AGENT_ID, D_DEBUT AS DEBUT, D_FIN AS FIN, QUOTITE FROM INDIVIDU_QUOTITE',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     //'columns'            => ['AGENT_ID', 'STRUCTURE_ID', 'CORPS_ID', 'GRADE_ID', 'BAP_ID', 'DATE_DEBUT', 'DATE_FIN'],
