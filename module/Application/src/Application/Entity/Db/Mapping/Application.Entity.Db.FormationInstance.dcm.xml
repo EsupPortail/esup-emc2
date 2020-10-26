@@ -19,9 +19,9 @@
             <join-column name="etat_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many field="journees"   target-entity="Application\Entity\Db\FormationInstanceJournee"    mapped-by="instance"/>
+        <one-to-many field="journees"   target-entity="Formation\Entity\Db\FormationInstanceJournee"    mapped-by="instance"/>
         <one-to-many field="inscrits"   target-entity="Application\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>
-        <one-to-many field="formateurs" target-entity="Application\Entity\Db\FormationInstanceFormateur"  mapped-by="instance"/>
+        <one-to-many field="formateurs" target-entity="Formation\Entity\Db\FormationInstanceFormateur"    mapped-by="instance"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

@@ -2,11 +2,13 @@
 
 use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationInstance;
-use Application\Entity\Db\FormationInstanceFormateur;
+use Formation\Entity\Db\FormationInstanceFormateur;
 use Application\Entity\Db\FormationInstanceInscrit;
-use Application\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\FormationInstanceJournee;
 use Application\Provider\Privilege\FormationPrivileges;
+use Formation\Provider\Privilege\FormationinstanceformateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
+use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
 /**
@@ -14,8 +16,6 @@ use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
  */
 
 $canInformation = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
-$canFormateur   = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
-$canJournee     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
 $canInscrit     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
 
 /** @var Formation $formation */
@@ -34,10 +34,12 @@ $historises = $instance->getListeHistorisee();
 
 $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());
 
-$canFraisAfficher    = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
-$canFraisModifier    = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER));
-$canPresenceAfficher = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
-$canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
+$canFormateurModifier   = $this->isAllowed(FormationinstanceformateurPrivileges::getResourceId(FormationinstanceformateurPrivileges::FORMATIONINSTANCEFORMATEUR_MODIFIER));
+$canJourneeModifier     = $this->isAllowed(FormationinstancejourneePrivileges::getResourceId(FormationinstancejourneePrivileges::FORMATIONINSTANCEJOURNEE_MODIFIER));
+$canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
+$canFraisModifier       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER));
+$canPresenceAfficher    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
+$canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
 
 ?>
 
@@ -117,7 +119,7 @@ $canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::get
             <h3>Formateurs <span class="badge"><?php echo count($formateurs); ?></span> </h3>
         </div>
         <div class="pull-right">
-            <?php if ($canFormateur) : ?>
+            <?php if ($canFormateurModifier) : ?>
                 <?php /** @see \Application\Controller\FormationInstanceController::ajouterFormateurAction() */?>
                 <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()],[], true); ?>"
                    class="action btn btn-primary ajax-modal" data-event="modification"
@@ -145,7 +147,7 @@ $canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::get
                 <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
                 <td> <?php echo ($formateur->getVolume())?:"Non renseigné"; ?> </td>
                 <td>
-                    <?php if ($canFormateur) : ?>
+                    <?php if ($canFormateurModifier) : ?>
                         <a href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
@@ -167,7 +169,7 @@ $canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::get
         <?php endforeach; ?>
         </tbody>
     </table>
-    <?php if ($canJournee) : ?>
+    <?php if ($canJourneeModifier) : ?>
         <strong>Volume horaire sommé :</strong> <?php echo $instance->getVolumeHoraireSomme(); ?> heures.
     <?php endif; ?>
     <div class="row">
@@ -178,7 +180,7 @@ $canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::get
             </h3>
         </div>
         <div class="pull-right">
-            <?php if ($canJournee): ?>
+            <?php if ($canJourneeModifier): ?>
                 <?php /** @see \Application\Controller\FormationInstanceController::ajouterJourneeAction() */?>
                 <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification">
@@ -216,7 +218,7 @@ $canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::get
                 <td> <?php echo $journee->getFin(); ?> </td>
                 <td> <?php echo $journee->getLieu(); ?></td>
                 <td>
-                    <?php if ($canJournee) : ?>
+                    <?php if ($canJourneeModifier) : ?>
                         <?php /** @see \Application\Controller\FormationInstanceController::exportEmargementAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
                                 data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la journée de formation">
@@ -248,6 +250,7 @@ $canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::get
             <?php endforeach; ?>
         </tbody>
     </table>
+    <strong>Durée de la formation :</strong> <?php echo $instance->getDuree(); ?>.
 
     <div class="row">
         <div class="col-md-8">

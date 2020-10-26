@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\FormationJournee;
+namespace Formation\Form\FormationJournee;
 
-use Application\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\FormationInstanceJournee;
 use Zend\Hydrator\HydratorInterface;
 
 class FormationJourneeHydrator implements HydratorInterface {

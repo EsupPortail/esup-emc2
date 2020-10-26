@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FormationJournee;
+namespace Formation\Form\FormationJournee;
 
 use Interop\Container\ContainerInterface;
 

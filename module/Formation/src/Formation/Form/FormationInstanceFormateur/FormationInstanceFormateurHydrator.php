@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\FormationInstanceFormateur;
+namespace Formation\Form\FormationInstanceFormateur;
 
-use Application\Entity\Db\FormationInstanceFormateur;
+use Formation\Entity\Db\FormationInstanceFormateur;
 use Zend\Hydrator\HydratorInterface;
 
 class FormationInstanceFormateurHydrator implements HydratorInterface {

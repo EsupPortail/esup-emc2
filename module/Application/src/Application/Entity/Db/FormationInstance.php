@@ -4,6 +4,8 @@ namespace Application\Entity\Db;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Formation\Entity\Db\FormationInstanceFormateur;
+use Formation\Entity\Db\FormationInstanceJournee;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;

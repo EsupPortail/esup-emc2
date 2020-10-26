@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstanceFormateur;
 
-use Application\Entity\Db\FormationInstanceFormateur;
+use Formation\Entity\Db\FormationInstanceFormateur;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

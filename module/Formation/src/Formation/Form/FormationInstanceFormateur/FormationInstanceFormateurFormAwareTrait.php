@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FormationInstanceFormateur;
+namespace Formation\Form\FormationInstanceFormateur;
 
 trait FormationInstanceFormateurFormAwareTrait {
 

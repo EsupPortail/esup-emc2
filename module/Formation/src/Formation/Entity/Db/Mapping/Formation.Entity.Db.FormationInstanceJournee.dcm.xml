@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\FormationInstanceFormateur" table="formation_instance_formateur">
+    <entity name="Formation\Entity\Db\FormationInstanceJournee" table="formation_instance_journee">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
@@ -10,11 +10,11 @@
             <join-column name="instance_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <field name="prenom"              column="prenom"           type="string"  length="256"    nullable="false"/>
-        <field name="nom"                 column="nom"              type="string"  length="256"    nullable="false"/>
-        <field name="attachement"         column="attachement"      type="string"  length="1024"   nullable="true"/>
-        <field name="volume"              column="volume"           type="float"                   nullable="true"/>
-        <field name="montant"             column="montant"          type="float"                   nullable="true"/>
+        <field name="jour"              column="jour"           type="string"  length="64"     nullable="false"/>
+        <field name="debut"             column="debut"          type="string"  length="64"     nullable="false"/>
+        <field name="fin"               column="fin"            type="string"  length="64"     nullable="false"/>
+        <field name="lieu"              column="lieu"           type="string"  length="1024"   nullable="false"/>
+        <field name="remarque"          column="remarque"       type="string"  length="4096"   nullable="false"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

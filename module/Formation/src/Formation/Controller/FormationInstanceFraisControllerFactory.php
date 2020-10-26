@@ -3,7 +3,7 @@
 namespace Formation\Controller;
 
 use Application\Service\FormationInstance\FormationInstanceInscritService;
-use Application\Service\FormationInstance\FormationInstanceJourneeService;
+use Formation\Service\FormationInstance\FormationInstanceJourneeService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Formation\Form\FormationInstanceFrais\FormationInstanceFraisForm;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;

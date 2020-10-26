@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstanceJournee;
 
-use Application\Entity\Db\FormationInstanceJournee;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\FormationInstanceJournee;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 

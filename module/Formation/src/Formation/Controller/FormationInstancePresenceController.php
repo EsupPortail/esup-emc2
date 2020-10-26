@@ -3,7 +3,7 @@
 namespace Formation\Controller;
 
 use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
-use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Entity\Db\FormationInstancePresence;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;

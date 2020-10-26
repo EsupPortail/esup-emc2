@@ -4,7 +4,7 @@ namespace Formation\Service\FormationInstancePresence;
 
 use Application\Entity\Db\FormationInstance;
 use Application\Entity\Db\FormationInstanceInscrit;
-use Application\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Entity\Db\FormationInstancePresence;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;

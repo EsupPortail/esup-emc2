@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstanceFormateur;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;

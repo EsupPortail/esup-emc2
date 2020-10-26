@@ -24,14 +24,6 @@ use Application\Form\FormationInstance\FormationInstanceForm;
 use Application\Form\FormationInstance\FormationInstanceFormFactory;
 use Application\Form\FormationInstance\FormationInstanceHydrator;
 use Application\Form\FormationInstance\FormationInstanceHydratorFactory;
-use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurForm;
-use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurFormFactory;
-use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurHydrator;
-use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurHydratorFactory;
-use Application\Form\FormationJournee\FormationJourneeForm;
-use Application\Form\FormationJournee\FormationJourneeFormFactory;
-use Application\Form\FormationJournee\FormationJourneeHydrator;
-use Application\Form\FormationJournee\FormationJourneeHydratorFactory;
 use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Form\SelectionFormation\SelectionFormationFormFactory;
 use Application\Form\SelectionFormation\SelectionFormationHydrator;
@@ -42,12 +34,8 @@ use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
-use Application\Service\FormationInstance\FormationInstanceFormateurService;
-use Application\Service\FormationInstance\FormationInstanceFormateurServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceFactory;
-use Application\Service\FormationInstance\FormationInstanceJourneeService;
-use Application\Service\FormationInstance\FormationInstanceJourneeServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Application\Service\FormationInstance\FormationInstanceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -171,18 +159,6 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'modifier-informations',
-
-                        'ajouter-journee',
-                        'modifier-journee',
-                        'historiser-journee',
-                        'restaurer-journee',
-                        'supprimer-journee',
-
-                        'ajouter-formateur',
-                        'modifier-formateur',
-                        'historiser-formateur',
-                        'restaurer-formateur',
-                        'supprimer-formateur',
 
                         'ajouter-agent',
                         'historiser-agent',
@@ -341,106 +317,6 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'renseigner-questionnaire',
-                            ],
-                        ],
-                    ],
-                    'ajouter-journee' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-journee/:formation-instance',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'ajouter-journee',
-                            ],
-                        ],
-                    ],
-                    'modifier-journee' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-journee/:journee',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'modifier-journee',
-                            ],
-                        ],
-                    ],
-                    'historiser-journee' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-journee/:journee',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'historiser-journee',
-                            ],
-                        ],
-                    ],
-                    'restaurer-journee' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-journee/:journee',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'restaurer-journee',
-                            ],
-                        ],
-                    ],
-                    'supprimer-journee' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer-journee/:journee',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'supprimer-journee',
-                            ],
-                        ],
-                    ],
-                    'ajouter-formateur' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-formateur/:formation-instance',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'ajouter-formateur',
-                            ],
-                        ],
-                    ],
-                    'modifier-formateur' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-formateur/:formateur',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'modifier-formateur',
-                            ],
-                        ],
-                    ],
-                    'historiser-formateur' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-journee/:formateur',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'historiser-formateur',
-                            ],
-                        ],
-                    ],
-                    'restaurer-formateur' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-formateur/:formateur',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'restaurer-formateur',
-                            ],
-                        ],
-                    ],
-                    'supprimer-formateur' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer-formateur/:formateur',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'supprimer-formateur',
                             ],
                         ],
                     ],
@@ -761,8 +637,6 @@ return [
             FormationService::class => FormationServiceFactory::class,
             FormationInstanceService::class => FormationInstanceServiceFactory::class,
             FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
-            FormationInstanceJourneeService::class => FormationInstanceJourneeServiceFactory::class,
-            FormationInstanceFormateurService::class => FormationInstanceFormateurServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
             FormationInstanceInscritAssertion::class => FormationInstanceInscritAssertionFactory::class,
@@ -780,8 +654,6 @@ return [
             FormationForm::class => FormationFormFactory::class,
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
             FormationInstanceForm::class => FormationInstanceFormFactory::class,
-            FormationInstanceFormateurForm::class => FormationInstanceFormateurFormFactory::class,
-            FormationJourneeForm::class => FormationJourneeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
     ],
@@ -794,8 +666,6 @@ return [
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
             FormationInstanceHydrator::class => FormationInstanceHydratorFactory::class,
-            FormationInstanceFormateurHydrator::class => FormationInstanceFormateurHydratorFactory::class,
-            FormationJourneeHydrator::class => FormationJourneeHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

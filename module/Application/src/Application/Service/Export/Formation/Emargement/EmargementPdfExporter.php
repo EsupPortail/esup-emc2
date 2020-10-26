@@ -3,7 +3,7 @@
 namespace Application\Service\Export\Formation\Emargement;
 
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\FormationInstanceJournee;
 use UnicaenApp\Exporter\Pdf as PdfExporter;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplatePathStack;

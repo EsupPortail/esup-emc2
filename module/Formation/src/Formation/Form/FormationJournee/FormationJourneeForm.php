@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FormationJournee;
+namespace Formation\Form\FormationJournee;
 
 use UnicaenApp\Form\Element\Date;
 use Zend\Form\Element\Button;
