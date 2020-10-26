@@ -91,6 +91,7 @@ class FicheMetierService {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
             ->addSelect('domaine')->join('metier.domaines', 'domaine')
+            ->addSelect('famille')->join('domaine.famille', 'famille')
             ->addSelect('etat')->join('ficheMetier.etat', 'etat')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
@@ -119,7 +120,7 @@ class FicheMetierService {
      * @param int $niveau
      * @return FicheMetier[]
      */
-    public function getFichesMetiersWithNiveau($niveau)
+    public function getFichesMetiersWithNiveau(int $niveau)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('metier.niveau IS NULL or metier.niveau >= :niveau')
@@ -134,7 +135,7 @@ class FicheMetierService {
      * @param string $order an attribute use to sort
      * @return FicheMetier[]
      */
-    public function getFichesMetiersValides($order = 'id')
+    public function getFichesMetiersValides(string $order = 'id')
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etat.code = :code')
@@ -150,9 +151,22 @@ class FicheMetierService {
      * @param int $id
      * @return FicheMetier
      */
-    public function getFicheMetier($id)
+    public function getFicheMetier(int $id)
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+        $qb = $this->createQueryBuilder()
+            ->addSelect('fmactivite')->leftJoin('ficheMetier.activites', 'fmactivite')
+            ->addSelect('activite')->leftJoin('fmactivite.activite', 'activite')
+            ->addSelect('aapplication')->leftJoin('activite.applications', 'aapplication')
+            ->addSelect('acompetence')->leftJoin('activite.competences', 'acompetence')
+            ->addSelect('aformation')->leftJoin('activite.formations', 'aformation')
+
+            ->addSelect('application')->leftJoin('ficheMetier.applications', 'application')
+            ->addSelect('agroupe')->leftJoin('application.groupe', 'agroupe')
+
+            ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
+            ->addSelect('ctype')->leftJoin('competence.type', 'ctype')
+
+            ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
             ->setParameter('id', $id)
         ;
@@ -171,7 +185,7 @@ class FicheMetierService {
      * @param bool $notNull
      * @return FicheMetier
      */
-    public function getRequestedFicheMetier($controller, $name = 'fiche', $notNull = false)
+    public function getRequestedFicheMetier(AbstractController $controller, string $name = 'fiche', bool $notNull = false)
     {
         $ficheId = $controller->params()->fromRoute($name);
         $fiche = $this->getFicheMetier($ficheId);
@@ -193,12 +207,9 @@ class FicheMetierService {
      * @param FamilleProfessionnelle $famille
      * @return FicheMetier[]
      */
-    public function getFicheByFamille($famille)
+    public function getFicheByFamille(FamilleProfessionnelle $famille)
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('fiche')
-            ->addSelect('metier')->join('fiche.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaines', 'domaine')
-            ->addSelect('famille')->join('domaine.famille', 'famille')
+        $qb = $this->createQueryBuilder()
             ->andWhere('famille = :famille')
             ->setParameter('famille', $famille)
             ->orderBy('metier.libelle')
@@ -212,12 +223,9 @@ class FicheMetierService {
      * @param Domaine $domaine
      * @return FicheMetier[]
      */
-    public function getFicheByDomaine($domaine)
+    public function getFicheByDomaine(Domaine $domaine)
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('fiche')
-            ->addSelect('metier')->join('fiche.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaines', 'domaine')
-            ->addSelect('famille')->join('domaine.famille', 'famille')
+        $qb = $this->createQueryBuilder()
             ->andWhere('domaine = :domaine')
             ->setParameter('domaine', $domaine)
             ->orderBy('metier.libelle')
@@ -231,7 +239,7 @@ class FicheMetierService {
      * @param int $niveau
      * @return array
      */
-    public function getFichesMetiersAsOptions($niveau =0)
+    public function getFichesMetiersAsOptions(int $niveau =0)
     {
         $fiches = $this->getFichesMetiersWithNiveau($niveau);
         $array = [];
@@ -276,7 +284,7 @@ class FicheMetierService {
      * @param array $data
      * @return FicheMetier
      */
-    public function updateApplications(FicheMetier $fiche, $data)
+    public function updateApplications(FicheMetier $fiche, array $data)
     {
 
         $applicationIds = [];
@@ -311,7 +319,7 @@ class FicheMetierService {
      * @param array $data
      * @return FicheMetier
      */
-    public function updateFormations(FicheMetier $fiche, $data)
+    public function updateFormations(FicheMetier $fiche, array $data)
     {
 
         $formationIds = [];
@@ -346,7 +354,7 @@ class FicheMetierService {
      * @param array $data
      * @return FicheMetier
      */
-    public function updateCompetences(FicheMetier $fiche, $data)
+    public function updateCompetences(FicheMetier $fiche, array $data)
     {
 
         $competenceIds = [];
@@ -378,10 +386,10 @@ class FicheMetierService {
 
     /**
      * @param FicheMetier $fiche
-     * @param DateTime $date
+     * @param DateTime|null $date
      * @return array
      */
-    public function getApplicationsDictionnaires(FicheMetier $fiche, DateTime $date = null)
+    public function getApplicationsDictionnaires(FicheMetier $fiche, ?DateTime $date = null)
     {
         $dictionnaire = [];
 
@@ -404,10 +412,10 @@ class FicheMetierService {
 
     /**
      * @param FicheMetier $fiche
-     * @param DateTime $date
+     * @param DateTime|null $date
      * @return array
      */
-    public function getCompetencesDictionnaires(FicheMetier $fiche, DateTime $date = null)
+    public function getCompetencesDictionnaires(FicheMetier $fiche, ?DateTime $date = null)
     {
         $dictionnaire = [];
 
@@ -418,7 +426,7 @@ class FicheMetierService {
         }
 
         foreach ($fiche->getActivites() as $activite) {
-            foreach ($activite->getActivite()->getApplications() as $competence) {
+            foreach ($activite->getActivite()->getCompetences() as $competence) {
                 $dictionnaire[$competence->getId()]["entite"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $activite;
                 $dictionnaire[$competence->getId()]["conserve"] = true;

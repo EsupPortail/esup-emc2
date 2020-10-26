@@ -30,7 +30,6 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -169,7 +168,6 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-
     public function afficherAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
@@ -185,8 +183,6 @@ class FichePosteController extends AbstractActionController {
         }
         $titre .= '</strong>';
 
-        /** @var DateTime $date */
-        $date = $this->getDateTime();
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
         $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
@@ -211,9 +207,6 @@ class FichePosteController extends AbstractActionController {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
 
-
-        /** @var DateTime $date */
-        $date = $this->getDateTime();
         /** @var FichePoste $fiche */
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
@@ -552,7 +545,7 @@ class FichePosteController extends AbstractActionController {
      * @param array $data
      * @return ViewModel|void
      */
-    private function checkValidite($fiche, $data)
+    private function checkValidite(FichePoste $fiche, array $data)
     {
         $cut = false;
         if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {
