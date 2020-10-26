@@ -4,24 +4,20 @@ namespace Application\Controller;
 
 use Application\Entity\Db\FormationInstance;
 use Application\Entity\Db\FormationInstanceFormateur;
-use Application\Entity\Db\FormationInstanceFrais;
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
-use Application\Entity\Db\FormationInstancePresence;
 use Application\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurFormAwareTrait;
-use Application\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;
 use Application\Form\FormationJournee\FormationJourneeFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Export\Formation\Emargement\EmargementPdfExporter;
 use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceFormateurServiceAwareTrait;
-use Application\Service\FormationInstance\FormationInstanceFraisServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
-use Application\Service\FormationInstance\FormationInstancePresenceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
@@ -38,13 +34,11 @@ class FormationInstanceController extends AbstractActionController {
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
     use FormationInstanceFormateurServiceAwareTrait;
-    use FormationInstanceFraisServiceAwareTrait;
     use FormationInstancePresenceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
     use FormationJourneeFormAwareTrait;
     use FormationInstanceFormateurFormAwareTrait;
-    use FormationInstanceFraisFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use ExporterServiceAwareTrait;
 
@@ -519,120 +513,6 @@ class FormationInstanceController extends AbstractActionController {
         exit;
     }
 
-    /** FRIAS DE FORMATION ********************************************************************************************/
-
-    public function renseignerFraisAction()
-    {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        if ($inscrit->getFrais() === null) {
-            $frais = new FormationInstanceFrais();
-            $frais->setInscrit($inscrit);
-            $this->getFormationInstanceFraisService()->create($frais);
-        }
-        $frais = $inscrit->getFrais();
-
-        $form = $this->getFormationInstanceFraisForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true));
-        $form->bind($frais);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFormationInstanceFraisService()->update($frais);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Saisie des frais de ".$inscrit->getAgent()->getDenomination(),
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    /** PRESENCE AU FORMATION *****************************************************************************************/
-
-    public function renseignerPresencesAction()
-    {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-        $presences = $this->getFormationInstancePresenceService()->getFormationInstancePresenceByInstance($instance);
-
-        $dictionnaire = [];
-        foreach ($presences as $presence) {
-            $dictionnaire[$presence->getJournee()->getId()][$presence->getInscrit()->getId()] = $presence;
-        }
-
-        return new ViewModel([
-            'instance' => $instance,
-            'presences' => $dictionnaire,
-        ]);
-    }
-
-    public function togglePresenceAction()
-    {
-        $journeeId = $this->params()->fromRoute('journee');
-        $journee = $this->getFormationInstanceJourneeService()->getFormationInstanceJournee($journeeId);
-        $inscritId = $this->params()->fromRoute('inscrit');
-        $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscrit($inscritId);
-
-        /** @var  FormationInstancePresence $presence */
-        $presence = $this->getFormationInstancePresenceService()->getFormationInstancePresenceByJourneeAndInscrit($journee, $inscrit);
-        if ($presence === null) {
-            $presence = new FormationInstancePresence();
-            $presence->setJournee($journee);
-            $presence->setInscrit($inscrit);
-            $presence->setPresent(true);
-            $presence->setPresenceType("???");
-            $this->getFormationInstancePresenceService()->create($presence);
-        } else {
-            $presence->setPresent(! $presence->isPresent());
-            $this->getFormationInstancePresenceService()->update($presence);
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/reponse');
-        $vm->setVariables([
-            'reponse' => $presence->isPresent(),
-        ]);
-        return $vm;
-    }
-
-    public function togglePresencesAction()
-    {
-        $mode = $this->params()->fromRoute('mode');
-        $inscritId = $this->params()->fromRoute('inscrit');
-        $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscrit($inscritId);
-
-        $instance = $inscrit->getInstance();
-        $journees = $instance->getJournees();
-
-        /** @var  FormationInstancePresence $presence */
-        foreach ($journees as $journee) {
-            $presence = $this->getFormationInstancePresenceService()->getFormationInstancePresenceByJourneeAndInscrit($journee, $inscrit);
-            if ($presence === null) {
-                $presence = new FormationInstancePresence();
-                $presence->setJournee($journee);
-                $presence->setInscrit($inscrit);
-                $presence->setPresent($mode === 'on');
-                $presence->setPresenceType("???");
-                $this->getFormationInstancePresenceService()->create($presence);
-            } else {
-                $presence->setPresent($mode === 'on');
-                $this->getFormationInstancePresenceService()->update($presence);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/reponse');
-        $vm->setVariables([
-            'reponse' => ($mode === 'on'),
-        ]);
-        return $vm;
-    }
-    
     /** Question suite à la formation */
 
     public function renseignerQuestionnaireAction()

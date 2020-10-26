@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\FormationInstanceFrais;
+namespace Formation\Form\FormationInstanceFrais;
 
 use Interop\Container\ContainerInterface;
 

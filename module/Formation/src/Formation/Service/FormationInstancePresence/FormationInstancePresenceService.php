@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstancePresence;
 
 use Application\Entity\Db\FormationInstance;
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
-use Application\Entity\Db\FormationInstancePresence;
+use Formation\Entity\Db\FormationInstancePresence;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

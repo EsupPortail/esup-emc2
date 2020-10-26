@@ -1,23 +1,28 @@
 <?php
 
 /**
- * @see \Application\Controller\FormationInstanceController::renseignerPresencesAction()
+ * @see \Formation\Controller\FormationInstancePresenceController::renseignerPresencesAction()
  * @var FormationInstance $instance
  * @var FormationInstancePresence[][] $presences
  */
 
 use Application\Entity\Db\FormationInstance;
 use Application\Entity\Db\FormationInstanceInscrit;use Application\Entity\Db\FormationInstanceJournee;
-use Application\Entity\Db\FormationInstancePresence;
+use Formation\Entity\Db\FormationInstancePresence;
+use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
 /** @var FormationInstanceJournee[] $journees */
 $journees = $instance->getJournees();
 /** @var FormationInstanceInscrit[] $inscrits */
 $inscrits = $instance->getListePrincipale();
+
+$canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
+
+$this->headTitle("Présences pour la formation : " . $instance->getInstanceCode() . " " . $instance->getFormation()->getLibelle() );
 ?>
 
 <h1 class="page-header">
-    Renseigner les présences pour la formation <br>
+    Présences pour la formation :
     <em> <?php echo $instance->getInstanceCode(); ?> <?php echo $instance->getFormation()->getLibelle(); ?> </em>
 </h1>
 
@@ -69,13 +74,15 @@ $inscrits = $instance->getListePrincipale();
                             <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleCourt():"Non renseigné"; ?>
                     </div>
                     <div class="pull-right" style="padding-right: 1rem;">
+                        <?php if ($canPresenceModifier) : ?>
                             <span class="all_toggle icon ok" id="on_<?php echo $inscrit->getId(); ?>"           data-toggle="tooltip" data-html="true" title="Passer à présent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
                             <span class="all_toggle icon detruire" id="off_<?php echo $inscrit->getId(); ?>"    data-toggle="tooltip" data-html="true" title="Passer à absent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
+                        <?php endif; ?>
                     </div>
                 </div>
             </td>
             <?php foreach ($journees as $journee) : ?>
-                <td class="reponse" id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
+                <td class="reponse <?php if ($canPresenceModifier) echo "toggle"; ?>" id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
                     <?php if ($presences[$journee->getId()][$inscrit->getId()] && $presences[$journee->getId()][$inscrit->getId()]->isPresent()) : ?>
                         <span class="icon ok" style="color:darkgreen;" title="Présent"></span>
                     <?php else : ?>
@@ -124,6 +131,9 @@ $inscrits = $instance->getListePrincipale();
         text-align: center;
         min-width: 3rem;
         min-height: 3rem;
+    }
+
+    td.toggle {
         cursor: pointer;
     }
 </style>
@@ -136,7 +146,7 @@ $inscrits = $instance->getListePrincipale();
             ?>
     ];
     $(function() {
-        $("td.reponse").on("click", function () {
+        $("td.toggle").on("click", function () {
             let id = $(this).attr('id');
             let split = id.split("_");
             let inscrit = split[1];
@@ -144,7 +154,8 @@ $inscrits = $instance->getListePrincipale();
             // console.log('inscrit: ' + inscrit);
             // console.log('journee: ' + journee);
 
-            var url = "../toggle-presence/" + journee + "/" + inscrit;
+            <?php /** @see \Formation\Controller\FormationInstancePresenceController::togglePresenceAction() */ ?>
+            let url = "../toggle-presence/" + journee + "/" + inscrit;
             $.ajax({
                 type: "POST",
                 url : url,
@@ -171,7 +182,8 @@ $inscrits = $instance->getListePrincipale();
             console.log('mode: ' + mode);
             console.log('inscrit: ' + inscrit);
 
-            var url = "../toggle-presences/" + mode + "/" + inscrit;
+            <?php /** @see \Formation\Controller\FormationInstancePresenceController::togglePresencesAction() */ ?>
+            let url = "../toggle-presences/" + mode + "/" + inscrit;
             $.ajax({
                 type: "POST",
                 url : url,

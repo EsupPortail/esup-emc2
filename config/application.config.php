@@ -37,6 +37,7 @@ $modules = [
     'Autoform',
     'Fichier',
     'Indicateur',
+    'Formation',
     'Application',
 //    'Document',
     'ZendDeveloperTools',

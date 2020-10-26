@@ -28,10 +28,6 @@ use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurForm;
 use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurFormFactory;
 use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurHydrator;
 use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurHydratorFactory;
-use Application\Form\FormationInstanceFrais\FormationInstanceFraisForm;
-use Application\Form\FormationInstanceFrais\FormationInstanceFraisFormFactory;
-use Application\Form\FormationInstanceFrais\FormationInstanceFraisHydrator;
-use Application\Form\FormationInstanceFrais\FormationInstanceFraisHydratorFactory;
 use Application\Form\FormationJournee\FormationJourneeForm;
 use Application\Form\FormationJournee\FormationJourneeFormFactory;
 use Application\Form\FormationJournee\FormationJourneeHydrator;
@@ -48,14 +44,10 @@ use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceFormateurService;
 use Application\Service\FormationInstance\FormationInstanceFormateurServiceFactory;
-use Application\Service\FormationInstance\FormationInstanceFraisService;
-use Application\Service\FormationInstance\FormationInstanceFraisServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceInscritServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceJourneeService;
 use Application\Service\FormationInstance\FormationInstanceJourneeServiceFactory;
-use Application\Service\FormationInstance\FormationInstancePresenceService;
-use Application\Service\FormationInstance\FormationInstancePresenceServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Application\Service\FormationInstance\FormationInstanceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -179,10 +171,6 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'modifier-informations',
-                        'renseigner-presences',
-                        'renseigner-frais',
-                        'toggle-presence',
-                        'toggle-presences',
 
                         'ajouter-journee',
                         'modifier-journee',
@@ -306,16 +294,6 @@ return [
                             ],
                         ],
                     ],
-                    'renseigner-frais' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/renseigner-frais/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'renseigner-frais',
-                            ],
-                        ],
-                    ],
                     'historiser' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -356,16 +334,6 @@ return [
                             ],
                         ],
                     ],
-                    'renseigner-presences' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/renseigner-presences/:formation-instance',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'renseigner-presences',
-                            ],
-                        ],
-                    ],
                     'renseigner-questionnaire' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -373,26 +341,6 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'renseigner-questionnaire',
-                            ],
-                        ],
-                    ],
-                    'toggle-presence' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/toggle-presence/:journee/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'toggle-presence',
-                            ],
-                        ],
-                    ],
-                    'toggle-presences' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/toggle-presences/:mode/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'toggle-presences',
                             ],
                         ],
                     ],
@@ -814,9 +762,7 @@ return [
             FormationInstanceService::class => FormationInstanceServiceFactory::class,
             FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
             FormationInstanceJourneeService::class => FormationInstanceJourneeServiceFactory::class,
-            FormationInstancePresenceService::class => FormationInstancePresenceServiceFactory::class,
             FormationInstanceFormateurService::class => FormationInstanceFormateurServiceFactory::class,
-            FormationInstanceFraisService::class => FormationInstanceFraisServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
             FormationInstanceInscritAssertion::class => FormationInstanceInscritAssertionFactory::class,
@@ -835,7 +781,6 @@ return [
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
             FormationInstanceForm::class => FormationInstanceFormFactory::class,
             FormationInstanceFormateurForm::class => FormationInstanceFormateurFormFactory::class,
-            FormationInstanceFraisForm::class => FormationInstanceFraisFormFactory::class,
             FormationJourneeForm::class => FormationJourneeFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
@@ -850,7 +795,6 @@ return [
             FormationGroupeHydrator::class => FormationGroupeHydratorFactory::class,
             FormationInstanceHydrator::class => FormationInstanceHydratorFactory::class,
             FormationInstanceFormateurHydrator::class => FormationInstanceFormateurHydratorFactory::class,
-            FormationInstanceFraisHydrator::class => FormationInstanceFraisHydratorFactory::class,
             FormationJourneeHydrator::class => FormationJourneeHydratorFactory::class,
         ],
     ],

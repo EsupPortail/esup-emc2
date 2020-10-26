@@ -1,0 +1,54 @@
+<?php
+
+namespace Formation\Controller;
+
+use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
+use Application\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
+use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Entity\Db\FormationInstanceFrais;
+use Formation\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;
+use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+
+class FormationInstanceFraisController extends AbstractActionController {
+    use FormationInstanceServiceAwareTrait;
+    use FormationInstanceInscritServiceAwareTrait;
+    use FormationInstanceJourneeServiceAwareTrait;
+    use FormationInstanceFraisServiceAwareTrait;
+    use FormationInstanceFraisFormAwareTrait;
+
+    /** FRAIS DE FORMATION ********************************************************************************************/
+
+    public function renseignerFraisAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        if ($inscrit->getFrais() === null) {
+            $frais = new FormationInstanceFrais();
+            $frais->setInscrit($inscrit);
+            $this->getFormationInstanceFraisService()->create($frais);
+        }
+        $frais = $inscrit->getFrais();
+
+        $form = $this->getFormationInstanceFraisForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true));
+        $form->bind($frais);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationInstanceFraisService()->update($frais);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Saisie des frais de ".$inscrit->getAgent()->getDenomination(),
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+}

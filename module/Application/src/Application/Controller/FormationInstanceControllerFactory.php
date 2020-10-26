@@ -4,17 +4,15 @@ namespace Application\Controller;
 
 use Application\Form\FormationInstance\FormationInstanceForm;
 use Application\Form\FormationInstanceFormateur\FormationInstanceFormateurForm;
-use Application\Form\FormationInstanceFrais\FormationInstanceFraisForm;
 use Application\Form\FormationJournee\FormationJourneeForm;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Formation\FormationService;
 use Application\Service\FormationInstance\FormationInstanceFormateurService;
-use Application\Service\FormationInstance\FormationInstanceFraisService;
 use Application\Service\FormationInstance\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceJourneeService;
-use Application\Service\FormationInstance\FormationInstancePresenceService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Autoform\Service\Formulaire\FormulaireInstanceService;
+use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
 use Interop\Container\ContainerInterface;
 use UnicaenDocument\Service\Exporter\ExporterService;
 use Zend\View\Renderer\PhpRenderer;
@@ -34,7 +32,6 @@ class FormationInstanceControllerFactory {
          * @var FormationInstanceJourneeService $formationInstanceJourneeService
          * @var FormationInstancePresenceService $formationInstancePresenceService
          * @var FormationInstanceFormateurService $formationInstanceFormateurService
-         * @var FormationInstanceFraisService $formationInstanceFraisService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var ExporterService $exporterService
          */
@@ -44,7 +41,6 @@ class FormationInstanceControllerFactory {
         $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
         $formationInstancePresenceService = $container->get(FormationInstancePresenceService::class);
         $formationInstanceFormateurService = $container->get(FormationInstanceFormateurService::class);
-        $formationInstanceFraisService = $container->get(FormationInstanceFraisService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $exporterService = $container->get(ExporterService::class);
 
@@ -52,13 +48,11 @@ class FormationInstanceControllerFactory {
          * @var FormationInstanceForm $formationInstanceForm
          * @var FormationJourneeForm $formationJourneeForm
          * @var FormationInstanceFormateurForm $formationFormateurForm
-         * @var FormationInstanceFraisForm $formationFraisForm
          * @var SelectionAgentForm $selectionAgentForm
          */
         $formationInstanceForm = $container->get('FormElementManager')->get(FormationInstanceForm::class);
         $formationJourneeForm = $container->get('FormElementManager')->get(FormationJourneeForm::class);
         $formationFormateurForm = $container->get('FormElementManager')->get(FormationInstanceFormateurForm::class);
-        $formationFraisForm = $container->get('FormElementManager')->get(FormationInstanceFraisForm::class);
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
 
         /* @var PhpRenderer $renderer  */
@@ -73,13 +67,11 @@ class FormationInstanceControllerFactory {
         $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
         $controller->setFormationInstancePresenceService($formationInstancePresenceService);
         $controller->setFormationInstanceFormateurService($formationInstanceFormateurService);
-        $controller->setFormationInstanceFraisService($formationInstanceFraisService);
         $controller->setFormulaireInstanceService($formulaireInstanceService);
         $controller->setExporterService($exporterService);
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setFormationJourneeForm($formationJourneeForm);
         $controller->setFormationInstanceFormateurForm($formationFormateurForm);
-        $controller->setFormationInstanceFraisForm($formationFraisForm);
         $controller->setSelectionAgentForm($selectionAgentForm);
         return $controller;
     }

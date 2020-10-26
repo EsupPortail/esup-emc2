@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstanceFrais;
 
 trait FormationInstanceFraisServiceAwareTrait {
 

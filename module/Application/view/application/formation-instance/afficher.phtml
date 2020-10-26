@@ -6,6 +6,8 @@ use Application\Entity\Db\FormationInstanceFormateur;
 use Application\Entity\Db\FormationInstanceInscrit;
 use Application\Entity\Db\FormationInstanceJournee;
 use Application\Provider\Privilege\FormationPrivileges;
+use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
+use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
 /**
  * @var FormationInstance $instance
@@ -31,6 +33,12 @@ $complementaires = $instance->getListeComplementaire();
 $historises = $instance->getListeHistorisee();
 
 $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());
+
+$canFraisAfficher    = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
+$canFraisModifier    = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER));
+$canPresenceAfficher = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
+$canPresenceModifier = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
+
 ?>
 
 <h1 class="page-header">
@@ -98,7 +106,7 @@ $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . 
                 <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['formation-instance' => $instance->getId()], [], true); ?>"
                    class="btn btn-primary action">
                     <span class="icon ok"></span>
-                    Renseigner les présences
+                    <?php echo ($canPresenceModifier)?"Renseigner":"Voir"; ?> les présences
                 </a>
             </div>
         <?php endif; ?>
@@ -304,12 +312,18 @@ $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . 
                         <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscrit->getId()], [], true); ?>"
                             data-toogle="tooltip" data-html="true" title="Générer l'attestation">
                             <span class="icon pdf"></span><span class="lettrine">A</span></a>
-                        <?php /** @see \Application\Controller\FormationInstanceController::renseignerFraisAction() */?>
-                        <a href="<?php echo $this->url('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                           data-toggle="tooltip" data-html="true" title="Saissir les frais de missions pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"
-                        >
-                            <span class="icon euro"></span></a>
+                        <?php if ($canFraisAfficher OR $canFraisModifier) : ?>
+                            <?php if ($canFraisModifier) : ?>
+                                <?php /** @see \Formation\Controller\FormationInstanceFraisController::renseignerFraisAction() */?>
+                                <a href="<?php echo $this->url('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                                    class="ajax-modal" data-event="modification"
+                                >
+                            <?php endif; ?>
+                                <span class="icon euro" data-toggle="tooltip" data-html="true" title="Frais de missions pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"></span>
+                            <?php if ($canFraisModifier) : ?>
+                            </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
                         <?php /** @see \Application\Controller\FormationInstanceController::renseignerQuestionnaireAction() */?>
                         <a href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
                            data-toggle="tooltip" data-html="true" title="Saissir du formulaire de retour de formation pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"

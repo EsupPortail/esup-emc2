@@ -15,8 +15,8 @@
         </many-to-one>
 
         <field name="liste"             type="string" length="64"       column="liste"     nullable="true"/>
-        <one-to-one field="frais" target-entity="Application\Entity\Db\FormationInstanceFrais" mapped-by="inscrit" />
-        <one-to-many field="presences" target-entity="Application\Entity\Db\FormationInstancePresence" mapped-by="inscrit" />
+        <one-to-one field="frais"       target-entity="Formation\Entity\Db\FormationInstanceFrais"      mapped-by="inscrit" />
+        <one-to-many field="presences"  target-entity="Formation\Entity\Db\FormationInstancePresence"   mapped-by="inscrit" />
 
         <one-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="questionnaire">
             <join-column name="questionnaire_id" referenced-column-name="id"/>

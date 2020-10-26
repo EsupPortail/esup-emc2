@@ -1,7 +1,9 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Formation\Entity\Db;
 
+use Application\Entity\Db\FormationInstanceInscrit;
+use Application\Entity\Db\FormationInstanceJournee;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 

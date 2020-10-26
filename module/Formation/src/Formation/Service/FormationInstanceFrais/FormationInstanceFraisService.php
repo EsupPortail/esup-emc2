@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstanceFrais;
 
-use Application\Entity\Db\FormationInstanceFrais;
+use Formation\Entity\Db\FormationInstanceFrais;
 use Application\Service\GestionEntiteHistorisationTrait;
 
 class FormationInstanceFraisService {

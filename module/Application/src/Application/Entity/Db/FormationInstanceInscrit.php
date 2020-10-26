@@ -6,6 +6,7 @@ use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Formation\Entity\Db\FormationInstanceFrais;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
