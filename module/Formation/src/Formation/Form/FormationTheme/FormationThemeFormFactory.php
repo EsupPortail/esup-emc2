@@ -4,7 +4,8 @@ namespace Formation\Form\FormationTheme;
 
 use Interop\Container\ContainerInterface;
 
-class FormationThemeFormFactory {
+class FormationThemeFormFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -12,7 +13,7 @@ class FormationThemeFormFactory {
      */
     public function __invoke(ContainerInterface $container)
     {
-        /** @var FormationThemeHydrator $hydrator  */
+        /** @var FormationThemeHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(FormationThemeHydrator::class);
 
         /** @var FormationThemeForm $form */

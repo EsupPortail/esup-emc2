@@ -8,10 +8,12 @@ use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class SelectionFormationForm extends Form {
+class SelectionFormationForm extends Form
+{
     use FormationServiceAwareTrait;
 
-    public function init() {
+    public function init()
+    {
 
         //select multiple avec groupe
         $this->add([
@@ -24,9 +26,9 @@ class SelectionFormationForm extends Form {
             ],
             'attributes' => [
                 'id' => 'formations',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-                'multiple'          => 'multiple',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
+                'multiple' => 'multiple',
             ],
         ]);
         //button
@@ -46,7 +48,7 @@ class SelectionFormationForm extends Form {
         ]);
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'formations'               => [ 'required' => false,  ],
+            'formations' => ['required' => false,],
         ]));
     }
 }

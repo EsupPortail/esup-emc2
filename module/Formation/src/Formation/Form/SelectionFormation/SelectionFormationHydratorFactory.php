@@ -4,7 +4,8 @@ namespace Formation\Form\SelectionFormation;
 
 use Interop\Container\ContainerInterface;
 
-class SelectionFormationHydratorFactory {
+class SelectionFormationHydratorFactory
+{
 
     /**
      * @param ContainerInterface $container

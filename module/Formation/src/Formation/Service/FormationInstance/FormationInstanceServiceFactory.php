@@ -6,13 +6,14 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationInstanceServiceFactory {
+class FormationInstanceServiceFactory
+{
 
     /**
      * @param ContainerInterface $container
      * @return FormationInstanceService
      */
-    public function __invoke(ContainerInterface  $container)
+    public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager

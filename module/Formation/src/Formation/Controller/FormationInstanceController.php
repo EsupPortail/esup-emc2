@@ -14,8 +14,8 @@ use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
-
-class FormationInstanceController extends AbstractActionController {
+class FormationInstanceController extends AbstractActionController
+{
     use FormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
@@ -23,7 +23,8 @@ class FormationInstanceController extends AbstractActionController {
     use FormationInstanceFormAwareTrait;
 
 
-    public function ajouterAction() {
+    public function ajouterAction()
+    {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
         $instance = new FormationInstance();
@@ -36,7 +37,8 @@ class FormationInstanceController extends AbstractActionController {
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function afficherAction() {
+    public function afficherAction()
+    {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
         return new ViewModel([
@@ -45,7 +47,8 @@ class FormationInstanceController extends AbstractActionController {
         ]);
     }
 
-    public function modifierAction() {
+    public function modifierAction()
+    {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
         return new ViewModel([
@@ -54,21 +57,24 @@ class FormationInstanceController extends AbstractActionController {
         ]);
     }
 
-    public function historiserAction() {
+    public function historiserAction()
+    {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->historise($instance);
 
         return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
     }
 
-    public function restaurerAction() {
+    public function restaurerAction()
+    {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->restore($instance);
 
         return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
     }
 
-    public function supprimerAction() {
+    public function supprimerAction()
+    {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
         /** @var Request $request */
@@ -122,7 +128,7 @@ class FormationInstanceController extends AbstractActionController {
     public function renseignerQuestionnaireAction()
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        
+
         if ($inscrit->getQuestionnaire() === null) {
             $questionnaire = $this->getFormulaireInstanceService()->createInstance('QUESTIONNAIRE_FORMATION');
             $inscrit->setQuestionnaire($questionnaire);

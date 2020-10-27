@@ -8,7 +8,8 @@ use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
 use Interop\Container\ContainerInterface;
 
-class FormationInstancePresenceControllerFactory {
+class FormationInstancePresenceControllerFactory
+{
 
     /**
      * @param ContainerInterface $container

@@ -2,15 +2,16 @@
 
 namespace Formation\Service\FormationGroupe;
 
-use Formation\Entity\Db\FormationGroupe;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\RendererAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\FormationGroupe;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationGroupeService {
+class FormationGroupeService
+{
     use GestionEntiteHistorisationTrait;
     use RendererAwareTrait;
 
@@ -74,8 +75,7 @@ class FormationGroupeService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
-             ->addSelect('formation')->leftJoin('groupe.formations', 'formation')
-            ;
+            ->addSelect('formation')->leftJoin('groupe.formations', 'formation');
         return $qb;
     }
 
@@ -84,7 +84,7 @@ class FormationGroupeService {
      * @param string $ordre
      * @return FormationGroupe[]
      */
-    public function getFormationsGroupes($champ = 'ordre', $ordre='ASC')
+    public function getFormationsGroupes($champ = 'ordre', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.' . $champ, $ordre);
@@ -97,9 +97,10 @@ class FormationGroupeService {
      * @param FormationGroupe $groupe
      * @return array
      */
-    public function optionify(FormationGroupe $groupe) {
+    public function optionify(FormationGroupe $groupe)
+    {
         $this_option = [
-            'value' =>  $groupe->getId(),
+            'value' => $groupe->getId(),
             'label' => $groupe->getLibelle(),
         ];
         return $this_option;
@@ -123,16 +124,15 @@ class FormationGroupeService {
      * @param integer $id
      * @return FormationGroupe
      */
-    public function getFormationGroupe($id)
+    public function getFormationGroupe(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('groupe.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationGroupe paratagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs FormationGroupe paratagent le même id [" . $id . "]");
         }
         return $result;
     }
@@ -142,7 +142,7 @@ class FormationGroupeService {
      * @param string $param
      * @return FormationGroupe
      */
-    public function getRequestedFormationGroupe($controller, $param = 'formation-groupe')
+    public function getRequestedFormationGroupe(AbstractActionController $controller, $param = 'formation-groupe')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationGroupe($id);

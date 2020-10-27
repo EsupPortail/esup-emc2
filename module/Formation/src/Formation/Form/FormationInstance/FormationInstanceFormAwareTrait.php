@@ -2,7 +2,8 @@
 
 namespace Formation\Form\FormationInstance;
 
-trait FormationInstanceFormAwareTrait {
+trait FormationInstanceFormAwareTrait
+{
 
     /** @var FormationInstanceForm */
     private $formationInstanceForm;

@@ -10,12 +10,14 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class FormationInstanceJourneeController extends AbstractActionController {
+class FormationInstanceJourneeController extends AbstractActionController
+{
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
     use FormationJourneeFormAwareTrait;
 
-    public function ajouterJourneeAction() {
+    public function ajouterJourneeAction()
+    {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
         $journee = new FormationInstanceJournee();
@@ -43,7 +45,8 @@ class FormationInstanceJourneeController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierJourneeAction() {
+    public function modifierJourneeAction()
+    {
         $journee = $this->getFormationInstanceJourneeService()->getRequestedFormationInstanceJournee($this);
 
         $form = $this->getFormationJourneeForm();

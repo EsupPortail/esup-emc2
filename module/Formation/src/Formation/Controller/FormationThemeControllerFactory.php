@@ -6,7 +6,8 @@ use Formation\Form\FormationTheme\FormationThemeForm;
 use Formation\Service\FormationTheme\FormationThemeService;
 use Interop\Container\ContainerInterface;
 
-class FormationThemeControllerFactory {
+class FormationThemeControllerFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {

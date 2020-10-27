@@ -10,7 +10,8 @@ use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTr
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class FormationInstancePresenceController extends AbstractActionController {
+class FormationInstancePresenceController extends AbstractActionController
+{
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
@@ -50,7 +51,7 @@ class FormationInstancePresenceController extends AbstractActionController {
             $presence->setPresenceType("???");
             $this->getFormationInstancePresenceService()->create($presence);
         } else {
-            $presence->setPresent(! $presence->isPresent());
+            $presence->setPresent(!$presence->isPresent());
             $this->getFormationInstancePresenceService()->update($presence);
         }
 

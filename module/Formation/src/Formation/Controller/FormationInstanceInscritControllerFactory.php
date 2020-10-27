@@ -7,7 +7,8 @@ use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
 
-class FormationInstanceInscritControllerFactory {
+class FormationInstanceInscritControllerFactory
+{
 
     /**
      * @param ContainerInterface $container

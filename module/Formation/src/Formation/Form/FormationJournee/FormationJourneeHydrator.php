@@ -5,7 +5,8 @@ namespace Formation\Form\FormationJournee;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Zend\Hydrator\HydratorInterface;
 
-class FormationJourneeHydrator implements HydratorInterface {
+class FormationJourneeHydrator implements HydratorInterface
+{
 
     /**
      * @param FormationInstanceJournee $object
@@ -30,10 +31,10 @@ class FormationJourneeHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $jour = (isset($data['jour']))?$data['jour']:null;
-        $debut = (isset($data['debut']))?$data['debut']:null;
-        $fin = (isset($data['fin']))?$data['fin']:null;
-        $lieu = (isset($data['lieu']))?$data['lieu']:null;
+        $jour = (isset($data['jour'])) ? $data['jour'] : null;
+        $debut = (isset($data['debut'])) ? $data['debut'] : null;
+        $fin = (isset($data['fin'])) ? $data['fin'] : null;
+        $lieu = (isset($data['lieu'])) ? $data['lieu'] : null;
 
         $object->setJour($jour);
         $object->setDebut($debut);

@@ -8,7 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Formation implements HistoriqueAwareInterface {
+class Formation implements HistoriqueAwareInterface
+{
     use HistoriqueAwareTrait;
 
     /** @var integer */
@@ -199,15 +200,17 @@ class Formation implements HistoriqueAwareInterface {
     public static function generateOptions(array $formations)
     {
         $themes = [];
-        foreach ($formations as $formation) $themes[($formation->getTheme())?$formation->getTheme()->getLibelle():"Sans thème"][] = $formation;
+        foreach ($formations as $formation) $themes[($formation->getTheme()) ? $formation->getTheme()->getLibelle() : "Sans thème"][] = $formation;
 
         $options = [];
         foreach ($themes as $libelle => $liste) {
             $optionsoptions = [];
-            usort($liste, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+            usort($liste, function (Formation $a, Formation $b) {
+                return $a->getLibelle() > $b->getLibelle();
+            });
             foreach ($liste as $formation) {
                 $optionsoptions[] = [
-                    'value' =>  $formation->getId(),
+                    'value' => $formation->getId(),
                     'label' => $formation->getLibelle(),
                 ];
             }

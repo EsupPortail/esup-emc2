@@ -2,13 +2,14 @@
 
 namespace Formation\Service\FormationTheme;
 
-use Formation\Entity\Db\FormationTheme;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\ORMException;
+use Formation\Entity\Db\FormationTheme;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationThemeService {
+class FormationThemeService
+{
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -37,7 +38,7 @@ class FormationThemeService {
      * @param FormationTheme $theme
      * @return FormationTheme
      */
-    public function historise(FormationTheme$theme)
+    public function historise(FormationTheme $theme)
     {
         $this->historiserFromTrait($theme);
         return $theme;
@@ -74,7 +75,7 @@ class FormationThemeService {
     {
         $qb = $this->getEntityManager()->getRepository(FormationTheme::class)->createQueryBuilder('theme')
             ->addSelect('formation')->leftJoin('theme.formations', 'formation')
-            ->orderBy('theme.'.$champ, $order);
+            ->orderBy('theme.' . $champ, $order);
 
         if ($historiser === false) {
             $qb = $qb->andWhere('theme.histoDestruction IS NULL');
@@ -83,13 +84,15 @@ class FormationThemeService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
     /**
      * @param bool $historiser
      * @param string $champ
      * @param string $order
      * @return array
      */
-    public function getFormationsThemesAsOptions($historiser = false, $champ = 'libelle', $order = 'ASC') {
+    public function getFormationsThemesAsOptions($historiser = false, $champ = 'libelle', $order = 'ASC')
+    {
         $themes = $this->getFormationsThemes($historiser, $champ, $order);
 
         $array = [];
@@ -107,13 +110,12 @@ class FormationThemeService {
     {
         $qb = $this->getEntityManager()->getRepository(FormationTheme::class)->createQueryBuilder('theme')
             ->andWhere('theme.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (ORMException $e) {
-            throw new RuntimeException('Plusieurs FormationTheme partagent le même identifiant ['.$id.'].', $e);
+            throw new RuntimeException('Plusieurs FormationTheme partagent le même identifiant [' . $id . '].', $e);
         }
         return $result;
     }

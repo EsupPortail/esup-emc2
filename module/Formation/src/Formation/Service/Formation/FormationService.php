@@ -2,15 +2,16 @@
 
 namespace Formation\Service\Formation;
 
-use Formation\Entity\Db\Formation;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\Formation;
 use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationService {
+class FormationService
+{
     use GestionEntiteHistorisationTrait;
     use FormationThemeServiceAwareTrait;
 
@@ -81,8 +82,7 @@ class FormationService {
             ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
             ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
             ->addSelect('journee')->leftJoin('finstance.journees', 'journee')
-            ->addSelect('inscrit')->leftJoin('finstance.inscrits', 'inscrit')
-        ;
+            ->addSelect('inscrit')->leftJoin('finstance.inscrits', 'inscrit');
         return $qb;
     }
 
@@ -94,8 +94,7 @@ class FormationService {
     public function getFormations($champ = 'libelle', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('formation.' . $champ, $ordre)
-        ;
+            ->orderBy('formation.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -104,18 +103,17 @@ class FormationService {
      * @param int $id
      * @return Formation
      */
-    public function getFormation($id)
+    public function getFormation(int $id)
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
             ->andWhere('formation.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs formations portent le même identifiant ['.$id.']', $e);
+            throw new RuntimeException('Plusieurs formations portent le même identifiant [' . $id . ']', $e);
         }
         return $result;
     }
@@ -125,7 +123,7 @@ class FormationService {
      * @param string $paramName
      * @return Formation
      */
-    public function getRequestedFormation($controller, $paramName = 'formation')
+    public function getRequestedFormation(AbstractActionController $controller, $paramName = 'formation')
     {
         $id = $controller->params()->fromRoute($paramName);
         $activite = $this->getFormation($id);
@@ -135,7 +133,8 @@ class FormationService {
     /**
      * @return array
      */
-    public function getFormationsAsOptions() {
+    public function getFormationsAsOptions()
+    {
         $formations = $this->getFormations('libelle');
 
         $result = [];
@@ -164,7 +163,7 @@ class FormationService {
                     }
                 }
             }
-            if (! $found ) $result[] = $formation;
+            if (!$found) $result[] = $formation;
         }
 
         return Formation::generateOptions($result);
@@ -188,7 +187,9 @@ class FormationService {
         $options = [];
         foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
-            usort($listing, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+            usort($listing, function (Formation $a, Formation $b) {
+                return $a->getLibelle() > $b->getLibelle();
+            });
 
             foreach ($listing as $formation) {
                 $optionsoptions[$formation->getId()] = $formation->getLibelle();
@@ -218,14 +219,16 @@ class FormationService {
         $options = [];
         foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
-            usort($listing, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
+            usort($listing, function (Formation $a, Formation $b) {
+                return $a->getLibelle() > $b->getLibelle();
+            });
 
             foreach ($listing as $formation) {
                 $optionsoptions[$formation->getId()] = $formation->getLibelle();
             }
 
             $options[] = [
-                'label' => ($clef === "ZZZ")?"Sans groupe":$clef,
+                'label' => ($clef === "ZZZ") ? "Sans groupe" : $clef,
                 'options' => $optionsoptions,
             ];
         }
@@ -238,7 +241,7 @@ class FormationService {
      * @param array $data
      * @return Formation
      */
-    public function updateLibelle(Formation $formation, $data)
+    public function updateLibelle(Formation $formation, array $data)
     {
         /** @var string $libelle */
         $libelle = null;

@@ -2,7 +2,8 @@
 
 namespace Formation\Form\FormationJournee;
 
-trait FormationJourneeFormAwareTrait {
+trait FormationJourneeFormAwareTrait
+{
 
     /** @var FormationJourneeForm */
     private $formationJourneeForm;

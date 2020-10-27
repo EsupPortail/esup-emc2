@@ -5,7 +5,8 @@ namespace Formation\Form\FormationInstance;
 use Formation\Entity\Db\FormationInstance;
 use Zend\Hydrator\HydratorInterface;
 
-class FormationInstanceHydrator implements HydratorInterface {
+class FormationInstanceHydrator implements HydratorInterface
+{
 
     /**
      * @param FormationInstance $object
@@ -14,11 +15,11 @@ class FormationInstanceHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'description'     => ($object->getComplement())?:null,
-            'principale'      => ($object->getNbPlacePrincipale())?:0,
-            'complementaire'  => ($object->getNbPlaceComplementaire())?:0,
-            'lieu'            => ($object->getLieu())?:null,
-            'type'            => ($object->getType())?:null,
+            'description' => ($object->getComplement()) ?: null,
+            'principale' => ($object->getNbPlacePrincipale()) ?: 0,
+            'complementaire' => ($object->getNbPlaceComplementaire()) ?: 0,
+            'lieu' => ($object->getLieu()) ?: null,
+            'type' => ($object->getType()) ?: null,
         ];
         return $data;
     }
@@ -30,11 +31,11 @@ class FormationInstanceHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $description     = (isset($data['description']) AND trim($data['description']) !== "")?trim($data['description']):null;
-        $principale      = (isset($data['principale']))?((int) $data['principale']):0;
-        $complementaire  = (isset($data['complementaire']))?((int) $data['complementaire']):0;
-        $lieu            = (isset($data['lieu']) AND trim($data['lieu']) !== "")?trim($data['lieu']):null;
-        $type            = (isset($data['type']) AND trim($data['type']) !== "")?trim($data['type']):null;
+        $description = (isset($data['description']) and trim($data['description']) !== "") ? trim($data['description']) : null;
+        $principale = (isset($data['principale'])) ? ((int)$data['principale']) : 0;
+        $complementaire = (isset($data['complementaire'])) ? ((int)$data['complementaire']) : 0;
+        $lieu = (isset($data['lieu']) and trim($data['lieu']) !== "") ? trim($data['lieu']) : null;
+        $type = (isset($data['type']) and trim($data['type']) !== "") ? trim($data['type']) : null;
 
         $object->setComplement($description);
         $object->setNbPlacePrincipale($principale);

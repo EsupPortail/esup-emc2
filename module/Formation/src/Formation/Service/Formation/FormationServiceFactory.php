@@ -7,7 +7,8 @@ use Formation\Service\FormationTheme\FormationThemeService;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationServiceFactory {
+class FormationServiceFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {

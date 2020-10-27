@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationInstance;
 
-trait FormationInstanceServiceAwareTrait {
+trait FormationInstanceServiceAwareTrait
+{
 
     /** @var FormationInstanceService */
     private $formationInstanceService;
@@ -19,7 +20,7 @@ trait FormationInstanceServiceAwareTrait {
      * @param FormationInstanceService $service
      * @return FormationInstanceService
      */
-    public function setFormationInstanceService(FormationInstanceService  $service)
+    public function setFormationInstanceService(FormationInstanceService $service)
     {
         $this->formationInstanceService = $service;
         return $this->formationInstanceService;

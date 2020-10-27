@@ -6,7 +6,8 @@ use Application\Entity\Db\Activite;
 use Formation\Entity\Db\Formation;
 use Zend\Hydrator\HydratorInterface;
 
-class SelectionFormationHydrator implements HydratorInterface {
+class SelectionFormationHydrator implements HydratorInterface
+{
 
     /**
      * @param Activite $object
@@ -15,7 +16,9 @@ class SelectionFormationHydrator implements HydratorInterface {
     public function extract($object)
     {
         $formations = $object->getFormations();
-        $formationIds = array_map(function (Formation $f) { return $f->getId();}, $formations);
+        $formationIds = array_map(function (Formation $f) {
+            return $f->getId();
+        }, $formations);
         $data = [
             'formations' => $formationIds,
         ];

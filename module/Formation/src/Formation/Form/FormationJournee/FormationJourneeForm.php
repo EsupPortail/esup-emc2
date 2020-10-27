@@ -4,12 +4,13 @@ namespace Formation\Form\FormationJournee;
 
 use UnicaenApp\Form\Element\Date;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Text;
 use Zend\Form\Element\DateTime as DateTimeElement;
+use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class FormationJourneeForm extends Form {
+class FormationJourneeForm extends Form
+{
 
     public function init()
     {
@@ -64,7 +65,7 @@ class FormationJourneeForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer' ,
+                'label' => '<i class="fas fa-save"></i> Enregistrer',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -77,10 +78,10 @@ class FormationJourneeForm extends Form {
 
         //inputFilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'jour'            => [ 'required' => true, ],
-            'debut'           => [ 'required' => true, ],
-            'fin'             => [ 'required' => true, ],
-            'lieu'            => [ 'required' => true, ],
+            'jour' => ['required' => true,],
+            'debut' => ['required' => true,],
+            'fin' => ['required' => true,],
+            'lieu' => ['required' => true,],
         ]));
     }
 }

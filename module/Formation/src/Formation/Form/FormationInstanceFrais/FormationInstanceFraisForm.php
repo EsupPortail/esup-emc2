@@ -8,7 +8,8 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 use Zend\Validator\Regex;
 
-class FormationInstanceFraisForm extends Form {
+class FormationInstanceFraisForm extends Form
+{
 
     public function init()
     {
@@ -62,7 +63,7 @@ class FormationInstanceFraisForm extends Form {
         ]);
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'repas'              => [
+            'repas' => [
                 'required' => false,
                 'validators' => [
                     [
@@ -77,7 +78,7 @@ class FormationInstanceFraisForm extends Form {
                     ],
                 ],
             ],
-            'hebergement'        => [
+            'hebergement' => [
                 'required' => false,
                 'validators' => [
                     [
@@ -92,7 +93,7 @@ class FormationInstanceFraisForm extends Form {
                     ],
                 ],
             ],
-            'transport'          => [
+            'transport' => [
                 'required' => false,
                 'validators' => [
                     [

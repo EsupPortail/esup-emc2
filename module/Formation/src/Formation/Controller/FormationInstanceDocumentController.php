@@ -12,7 +12,8 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationInstanceDocumentController extends AbstractActionController {
+class FormationInstanceDocumentController extends AbstractActionController
+{
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
@@ -49,11 +50,13 @@ class FormationInstanceDocumentController extends AbstractActionController {
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $journees = $instance->getJournees();
-        $journees = array_filter($journees, function (FormationInstanceJournee $a) { return $a->estNonHistorise();});
+        $journees = array_filter($journees, function (FormationInstanceJournee $a) {
+            return $a->estNonHistorise();
+        });
 
         $exporter = new EmargementPdfExporter($this->renderer, 'A4');
         $exporter->setVars([]);
-        $filemane = "formation_".$instance->getFormation()->getId()."_du_".str_replace("/","-",$instance->getDebut())."_au_".str_replace("/","-",$instance->getFin())."_emargements.pdf";
+        $filemane = "formation_" . $instance->getFormation()->getId() . "_du_" . str_replace("/", "-", $instance->getDebut()) . "_au_" . str_replace("/", "-", $instance->getFin()) . "_emargements.pdf";
         $exporter->exportAll($journees, $filemane);
         exit;
     }

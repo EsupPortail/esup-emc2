@@ -2,7 +2,8 @@
 
 namespace Formation\Form\Formation;
 
-trait FormationFormAwareTrait {
+trait FormationFormAwareTrait
+{
 
     /** @var FormationForm */
     private $formationForm;
@@ -19,7 +20,7 @@ trait FormationFormAwareTrait {
      * @param FormationForm $formationForm
      * @return FormationForm
      */
-    public function setFormationForm($formationForm)
+    public function setFormationForm(FormationForm $formationForm)
     {
         $this->formationForm = $formationForm;
         return $this->formationForm;

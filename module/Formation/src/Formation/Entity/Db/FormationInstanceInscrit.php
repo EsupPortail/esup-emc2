@@ -11,7 +11,8 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, ResourceInterface {
+class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, ResourceInterface
+{
     use HistoriqueAwareTrait;
 
     public function getResourceId()
@@ -57,7 +58,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
      * @param FormationInstance|null $instance
      * @return FormationInstanceInscrit
      */
-    public function setInstance(?FormationInstance $instance) : FormationInstanceInscrit
+    public function setInstance(?FormationInstance $instance): FormationInstanceInscrit
     {
         $this->instance = $instance;
         return $this;
@@ -93,7 +94,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
      * @param string $liste
      * @return FormationInstanceInscrit
      */
-    public function setListe($liste)
+    public function setListe(string $liste)
     {
         $this->liste = $liste;
         return $this;
@@ -153,21 +154,23 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
 
     public function getDureePresence()
     {
-        $sum = DateTime::createFromFormat('d/m/Y H:i','01/01/1970 00:00');
+        $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
         /** @var FormationInstancePresence[] $presences */
-        $presences = array_filter($this->presences->toArray(), function (FormationInstancePresence $a) { return $a->estNonHistorise() AND $a->isPresent(); });
+        $presences = array_filter($this->presences->toArray(), function (FormationInstancePresence $a) {
+            return $a->estNonHistorise() and $a->isPresent();
+        });
         foreach ($presences as $presence) {
             $journee = $presence->getJournee();
-            $debut = DateTime::createFromFormat('d/m/Y H:i',$journee->getJour()." ".$journee->getDebut());
-            $fin = DateTime::createFromFormat('d/m/Y H:i',$journee->getJour()." ".$journee->getFin());
+            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour() . " " . $journee->getDebut());
+            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour() . " " . $journee->getFin());
             $duree = $fin->diff($debut);
             $sum->add($duree);
         }
 
-        $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i','01/01/1970 00:00'));
+        $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));
         $heures = ($result->d * 24 + $result->h);
         $minutes = ($result->i);
-        $text = $heures . " heures " . (($minutes !== 0)?($minutes." minutes"):"");
+        $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
     }
 }

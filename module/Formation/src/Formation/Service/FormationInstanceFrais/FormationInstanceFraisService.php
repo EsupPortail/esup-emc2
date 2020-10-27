@@ -2,10 +2,11 @@
 
 namespace Formation\Service\FormationInstanceFrais;
 
-use Formation\Entity\Db\FormationInstanceFrais;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Formation\Entity\Db\FormationInstanceFrais;
 
-class FormationInstanceFraisService {
+class FormationInstanceFraisService
+{
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES **********************************************************************************/

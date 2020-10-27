@@ -9,7 +9,8 @@ use Interop\Container\ContainerInterface;
 use UnicaenDocument\Service\Exporter\ExporterService;
 use Zend\View\Renderer\PhpRenderer;
 
-class FormationInstanceDocumentControllerFactory {
+class FormationInstanceDocumentControllerFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {
@@ -24,7 +25,7 @@ class FormationInstanceDocumentControllerFactory {
         $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
         $exporterService = $container->get(ExporterService::class);
 
-        /* @var PhpRenderer $renderer  */
+        /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
 
         /** @var FormationInstanceDocumentController $controller */

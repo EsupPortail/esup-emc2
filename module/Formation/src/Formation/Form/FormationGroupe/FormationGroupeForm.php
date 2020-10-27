@@ -8,7 +8,8 @@ use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class FormationGroupeForm extends Form {
+class FormationGroupeForm extends Form
+{
 
     public function init()
     {
@@ -62,8 +63,8 @@ class FormationGroupeForm extends Form {
         ]);
         //input
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle'   => [ 'required' => true, ],
-            'ordre'     => [ 'required' => false, ],
+            'libelle' => ['required' => true,],
+            'ordre' => ['required' => false,],
 //            'couleur'   => [ 'required' => false, ],
         ]));
     }

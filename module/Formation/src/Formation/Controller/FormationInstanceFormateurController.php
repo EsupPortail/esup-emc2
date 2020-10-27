@@ -10,7 +10,8 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class FormationInstanceFormateurController extends AbstractActionController {
+class FormationInstanceFormateurController extends AbstractActionController
+{
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceFormateurServiceAwareTrait;
     use FormationInstanceFormateurFormAwareTrait;
@@ -44,7 +45,8 @@ class FormationInstanceFormateurController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierFormateurAction() {
+    public function modifierFormateurAction()
+    {
         $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
 
         $form = $this->getFormationInstanceFormateurForm();
@@ -99,7 +101,7 @@ class FormationInstanceFormateurController extends AbstractActionController {
         if ($formateur !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du formateur de formation du [" . $formateur->getPrenom() . " ". $formateur->getNom() . "]",
+                'title' => "Suppression du formateur de formation du [" . $formateur->getPrenom() . " " . $formateur->getNom() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('formation-instance/supprimer-formateur', ["formateur" => $formateur->getId()], [], true),
             ]);

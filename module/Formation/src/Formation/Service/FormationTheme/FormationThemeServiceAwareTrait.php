@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationTheme;
 
-trait FormationThemeServiceAwareTrait {
+trait FormationThemeServiceAwareTrait
+{
 
     /** @var FormationThemeService */
     private $formationThemeService;

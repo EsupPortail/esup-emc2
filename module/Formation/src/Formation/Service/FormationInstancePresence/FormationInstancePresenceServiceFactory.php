@@ -6,7 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationInstancePresenceServiceFactory {
+class FormationInstancePresenceServiceFactory
+{
     /**
      * @param ContainerInterface $container
      * @return FormationInstancePresenceService

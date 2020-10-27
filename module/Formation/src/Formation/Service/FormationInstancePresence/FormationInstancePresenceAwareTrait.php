@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationInstancePresence;
 
-trait FormationInstancePresenceAwareTrait {
+trait FormationInstancePresenceAwareTrait
+{
 
     /** @var FormationInstancePresenceService */
     private $formationInstancePresenceService;

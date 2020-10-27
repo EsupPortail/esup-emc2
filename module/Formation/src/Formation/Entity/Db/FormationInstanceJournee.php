@@ -5,7 +5,8 @@ namespace Formation\Entity\Db;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FormationInstanceJournee implements HistoriqueAwareInterface {
+class FormationInstanceJournee implements HistoriqueAwareInterface
+{
     use HistoriqueAwareTrait;
 
     /** @var integer */
@@ -43,7 +44,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface {
      * @param FormationInstance $instance
      * @return FormationInstanceJournee
      */
-    public function setInstance($instance)
+    public function setInstance(FormationInstance $instance)
     {
         $this->instance = $instance;
         return $this;
@@ -61,7 +62,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface {
      * @param string $jour
      * @return FormationInstanceJournee
      */
-    public function setJour($jour)
+    public function setJour(string $jour)
     {
         $this->jour = $jour;
         return $this;
@@ -79,7 +80,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface {
      * @param string $debut
      * @return FormationInstanceJournee
      */
-    public function setDebut($debut)
+    public function setDebut(string $debut)
     {
         $this->debut = $debut;
         return $this;
@@ -97,7 +98,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface {
      * @param string $fin
      * @return FormationInstanceJournee
      */
-    public function setFin($fin)
+    public function setFin(string $fin)
     {
         $this->fin = $fin;
         return $this;
@@ -115,7 +116,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface {
      * @param string $lieu
      * @return FormationInstanceJournee
      */
-    public function setLieu($lieu)
+    public function setLieu(string $lieu)
     {
         $this->lieu = $lieu;
         return $this;
@@ -133,7 +134,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface {
      * @param string $remarque
      * @return FormationInstanceJournee
      */
-    public function setRemarque($remarque)
+    public function setRemarque(string $remarque)
     {
         $this->remarque = $remarque;
         return $this;

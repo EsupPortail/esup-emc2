@@ -2,14 +2,15 @@
 
 namespace Formation\Service\FormationInstanceInscrit;
 
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationInstanceInscritService {
+class FormationInstanceInscritService
+{
     use GestionEntiteHistorisationTrait;
 
     /** GESTION ENTITES ****************************************************************************************/
@@ -76,8 +77,7 @@ class FormationInstanceInscritService {
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->addSelect('finstance')->join('inscrit.instance', 'finstance')
-            ->addSelect('formation')->join('finstance.formation', 'formation')
-            ;
+            ->addSelect('formation')->join('finstance.formation', 'formation');
         return $qb;
     }
 
@@ -86,29 +86,27 @@ class FormationInstanceInscritService {
      * @param string $ordre
      * @return FormationInstanceInscrit
      */
-    public function getFormationsInstancesInscrits($champ = 'id', $ordre = 'ASC') 
+    public function getFormationsInstancesInscrits($champ = 'id', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('inscrit.' . $champ, $ordre)
-        ;
+            ->orderBy('inscrit.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
-    
+
     /**
      * @param integer $id
      * @return FormationInstanceInscrit
      */
     public function getFormationInstanceInscrit(int $id)
     {
-        $qb  = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder()
             ->andWhere('inscrit.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstanceInscrit partagent le même id [".$id."]", 0, $e);
+            throw new RuntimeException("Plusieurs FormationInstanceInscrit partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }

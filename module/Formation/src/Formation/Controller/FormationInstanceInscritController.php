@@ -12,8 +12,8 @@ use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
-
-class FormationInstanceInscritController extends AbstractActionController {
+class FormationInstanceInscritController extends AbstractActionController
+{
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
 
@@ -36,7 +36,7 @@ class FormationInstanceInscritController extends AbstractActionController {
             $form->setData($data);
 
             if ($form->isValid()) {
-                if (! $instance->hasAgent($inscrit->getAgent())) {
+                if (!$instance->hasAgent($inscrit->getAgent())) {
                     $inscrit->setListe($instance->getListeDisponible());
                     $this->getFormationInstanceInscritService()->create($inscrit);
 
@@ -63,7 +63,7 @@ class FormationInstanceInscritController extends AbstractActionController {
         $inscrit->setListe(null);
         $this->getFormationInstanceInscritService()->historise($inscrit);
 
-        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être retiré&middot;e des listes.");
+        $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être retiré&middot;e des listes.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
@@ -111,7 +111,7 @@ class FormationInstanceInscritController extends AbstractActionController {
         $inscrit->setListe(FormationInstanceInscrit::PRINCIPALE);
         $this->getFormationInstanceInscritService()->update($inscrit);
 
-        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en liste principale.");
+        $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en liste principale.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
@@ -123,7 +123,7 @@ class FormationInstanceInscritController extends AbstractActionController {
         $inscrit->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
         $this->getFormationInstanceInscritService()->update($inscrit);
 
-        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en liste complémentaire.");
+        $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en liste complémentaire.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }

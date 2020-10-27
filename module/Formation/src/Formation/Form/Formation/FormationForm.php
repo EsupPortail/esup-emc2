@@ -10,11 +10,13 @@ use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class FormationForm extends Form {
+class FormationForm extends Form
+{
     use FormationGroupeServiceAwareTrait;
     use FormationThemeServiceAwareTrait;
 
-    public function init() {
+    public function init()
+    {
 
         //libelle
         $this->add([
@@ -104,11 +106,11 @@ class FormationForm extends Form {
 
         //filter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle'               => [ 'required' => true,  ],
-            'groupe'                 => [ 'required' => false,  ],
-            'theme'                 => [ 'required' => false,  ],
-            'description'           => [ 'required' => false,  ],
-            'lien'                  => [ 'required' => false,  ],
+            'libelle' => ['required' => true,],
+            'groupe' => ['required' => false,],
+            'theme' => ['required' => false,],
+            'description' => ['required' => false,],
+            'lien' => ['required' => false,],
         ]));
     }
 }

@@ -2,14 +2,15 @@
 
 namespace Formation\Service\FormationInstanceFormateur;
 
-use Formation\Entity\Db\FormationInstanceFormateur;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\FormationInstanceFormateur;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationInstanceFormateurService {
+class FormationInstanceFormateurService
+{
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -72,8 +73,7 @@ class FormationInstanceFormateurService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceFormateur::class)->createQueryBuilder('formateur')
-            ->addSelect('finstance')->join('formateur.instance','finstance')
-        ;
+            ->addSelect('finstance')->join('formateur.instance', 'finstance');
         return $qb;
     }
 
@@ -85,12 +85,11 @@ class FormationInstanceFormateurService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formateur.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstanceFormateur partagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs FormationInstanceFormateur partagent le même id [" . $id . "]");
         }
         return $result;
     }
@@ -100,7 +99,7 @@ class FormationInstanceFormateurService {
      * @param string $param
      * @return FormationInstanceFormateur
      */
-    public function getRequestedFormationInstanceFormateur(AbstractActionController $controller, string $param='formateur')
+    public function getRequestedFormationInstanceFormateur(AbstractActionController $controller, string $param = 'formateur')
     {
         $id = $controller->params()->fromRoute($param);
         return $this->getFormationInstanceFormateur($id);

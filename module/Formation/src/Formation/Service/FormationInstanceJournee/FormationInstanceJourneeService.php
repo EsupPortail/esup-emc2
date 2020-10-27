@@ -9,7 +9,8 @@ use Formation\Entity\Db\FormationInstanceJournee;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationInstanceJourneeService {
+class FormationInstanceJourneeService
+{
     use GestionEntiteHistorisationTrait;
 
     /**  GESTION ENTITY ***********************************************************************************************/
@@ -73,8 +74,7 @@ class FormationInstanceJourneeService {
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceJournee::class)->createQueryBuilder('journee')
             ->addSelect('finstance')->join('journee.instance', 'finstance')
-            ->addSelect('formation')->join('finstance.formation', 'formation')
-        ;
+            ->addSelect('formation')->join('finstance.formation', 'formation');
         return $qb;
     }
 
@@ -86,8 +86,7 @@ class FormationInstanceJourneeService {
     public function getFormationsInstancesJournees($champ = 'id', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('journee.' . $champ, $ordre)
-        ;
+            ->orderBy('journee.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -96,16 +95,15 @@ class FormationInstanceJourneeService {
      * @param integer $id
      * @return FormationInstanceJournee
      */
-    public function getFormationInstanceJournee($id)
+    public function getFormationInstanceJournee(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('journee.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstanceJournee partagent le même id [".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs FormationInstanceJournee partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -115,7 +113,7 @@ class FormationInstanceJourneeService {
      * @param string $param
      * @return FormationInstanceJournee
      */
-    public function getRequestedFormationInstanceJournee($controller, $param = 'journee')
+    public function getRequestedFormationInstanceJournee(AbstractActionController $controller, $param = 'journee')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstanceJournee($id);

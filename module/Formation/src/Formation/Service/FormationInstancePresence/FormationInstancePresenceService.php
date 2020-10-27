@@ -2,17 +2,18 @@
 
 namespace Formation\Service\FormationInstancePresence;
 
+use Application\Service\GestionEntiteHistorisationTrait;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Entity\Db\FormationInstancePresence;
-use Application\Service\GestionEntiteHistorisationTrait;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationInstancePresenceService {
+class FormationInstancePresenceService
+{
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -79,27 +80,25 @@ class FormationInstancePresenceService {
             ->addSelect('finstance')->join('journee.instance', 'finstance')
             ->addSelect('formation')->join('finstance.formation', 'formation')
             ->addSelect('inscrit')->join('presence.inscrit', 'inscrit')
-            ->addSelect('agent')->join('inscrit.agent', 'agent')
-        ;
+            ->addSelect('agent')->join('inscrit.agent', 'agent');
 
         return $qb;
     }
 
     /**
-     * @param integer $id
+     * @param integer|null $id
      * @return FormationInstancePresence
      */
     public function getFormationInstancePresence(?int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('presence.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstancePresence partagent le même id [".$id."].");
+            throw new RuntimeException("Plusieurs FormationInstancePresence partagent le même id [" . $id . "].");
         }
         return $result;
     }
@@ -127,13 +126,12 @@ class FormationInstancePresenceService {
             ->andWhere('presence.inscrit = :inscrit')
             ->setParameter('journee', $journee)
             ->setParameter('inscrit', $inscrit)
-            ->andWhere('presence.histoDestruction IS NULL')
-        ;
+            ->andWhere('presence.histoDestruction IS NULL');
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstancePresence (non historisées) partagent la même journée [".$journee->getId()."] et le même inscrit [".$inscrit->getId()."]");
+            throw new RuntimeException("Plusieurs FormationInstancePresence (non historisées) partagent la même journée [" . $journee->getId() . "] et le même inscrit [" . $inscrit->getId() . "]");
         }
         return $result;
     }
@@ -146,8 +144,7 @@ class FormationInstancePresenceService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('journee.instance = :instance')
-            ->setParameter('instance', $instance)
-        ;
+            ->setParameter('instance', $instance);
 
         return $qb->getQuery()->getResult();
 

@@ -11,7 +11,8 @@ use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class FormationInstanceForm extends Form {
+class FormationInstanceForm extends Form
+{
 
     public function init()
     {
@@ -97,11 +98,11 @@ class FormationInstanceForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'description'               => [ 'required' => false, ],
-            'principale'                => [ 'required' => true,  ],
-            'complementaire'            => [ 'required' => true,  ],
-            'lieu'                      => [ 'required' => true,  ],
-            'type'                      => [ 'required' => true,  ],
+            'description' => ['required' => false,],
+            'principale' => ['required' => true,],
+            'complementaire' => ['required' => true,],
+            'lieu' => ['required' => true,],
+            'type' => ['required' => true,],
         ]));
     }
 }

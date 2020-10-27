@@ -4,7 +4,8 @@ namespace Formation\Form\FormationGroupe;
 
 use Interop\Container\ContainerInterface;
 
-class FormationGroupeHydratorFactory {
+class FormationGroupeHydratorFactory
+{
 
     /**
      * @param ContainerInterface $container

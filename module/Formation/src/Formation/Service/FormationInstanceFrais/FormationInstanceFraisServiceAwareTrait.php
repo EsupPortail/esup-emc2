@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationInstanceFrais;
 
-trait FormationInstanceFraisServiceAwareTrait {
+trait FormationInstanceFraisServiceAwareTrait
+{
 
     /** @var FormationInstanceFraisService */
     private $formationInstanceFraisService;

@@ -9,7 +9,8 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class FormationGroupeController extends AbstractActionController {
+class FormationGroupeController extends AbstractActionController
+{
     use FormationGroupeServiceAwareTrait;
     use FormationGroupeFormAwareTrait;
 
@@ -115,7 +116,7 @@ class FormationGroupeController extends AbstractActionController {
 
     public function updateOrdreGroupeAction()
     {
-        $ordre = explode("_",$this->params()->fromRoute('ordre'));
+        $ordre = explode("_", $this->params()->fromRoute('ordre'));
         $sort = [];
         $position = 1;
         foreach ($ordre as $item) {
@@ -125,7 +126,7 @@ class FormationGroupeController extends AbstractActionController {
 
         $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
         foreach ($groupes as $groupe) {
-            if (! isset($sort[$groupe->getId()]) AND $groupe->getOrdre() !== null) {
+            if (!isset($sort[$groupe->getId()]) and $groupe->getOrdre() !== null) {
                 $groupe->setOrdre(null);
                 $this->getFormationGroupeService()->update($groupe);
             }

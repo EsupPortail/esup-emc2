@@ -6,7 +6,8 @@ use Formation\Form\FormationGroupe\FormationGroupeForm;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Interop\Container\ContainerInterface;
 
-class FormationGroupeControllerFactory {
+class FormationGroupeControllerFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {

@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationGroupe;
 
-trait FormationGroupeServiceAwareTrait {
+trait FormationGroupeServiceAwareTrait
+{
 
     /** @var FormationGroupeService */
     private $formationGroupeService;
@@ -19,7 +20,7 @@ trait FormationGroupeServiceAwareTrait {
      * @param FormationGroupeService $formationGroupeService
      * @return FormationGroupeServiceAwareTrait
      */
-    public function setFormationGroupeService($formationGroupeService)
+    public function setFormationGroupeService(FormationGroupeService $formationGroupeService)
     {
         $this->formationGroupeService = $formationGroupeService;
         return $this;

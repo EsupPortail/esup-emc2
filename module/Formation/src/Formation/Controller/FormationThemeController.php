@@ -9,7 +9,8 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class FormationThemeController extends AbstractActionController {
+class FormationThemeController extends AbstractActionController
+{
     use FormationThemeServiceAwareTrait;
     use FormationThemeFormAwareTrait;
 

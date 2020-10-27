@@ -10,7 +10,8 @@ use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationTheme\FormationThemeService;
 use Interop\Container\ContainerInterface;
 
-class FormationControllerFactory {
+class FormationControllerFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {

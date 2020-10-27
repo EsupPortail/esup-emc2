@@ -6,7 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationInstanceFraisServiceFactory {
+class FormationInstanceFraisServiceFactory
+{
 
     /**
      * @param ContainerInterface $container

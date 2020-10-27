@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationInstanceJournee;
 
-trait FormationInstanceJourneeServiceAwareTrait {
+trait FormationInstanceJourneeServiceAwareTrait
+{
 
     /** @var FormationInstanceJourneeService */
     private $formationInstanceJourneeService;

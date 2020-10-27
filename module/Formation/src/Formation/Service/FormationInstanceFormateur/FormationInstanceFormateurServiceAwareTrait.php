@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationInstanceFormateur;
 
-trait FormationInstanceFormateurServiceAwareTrait {
+trait FormationInstanceFormateurServiceAwareTrait
+{
 
     /** @var FormationInstanceFormateurService */
     private $formationInstanceFormateurService;

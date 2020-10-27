@@ -4,7 +4,8 @@ namespace Formation\Form\FormationJournee;
 
 use Interop\Container\ContainerInterface;
 
-class FormationJourneeFormFactory {
+class FormationJourneeFormFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {

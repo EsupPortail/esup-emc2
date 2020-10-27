@@ -4,7 +4,8 @@ namespace Formation\Form\FormationJournee;
 
 use Interop\Container\ContainerInterface;
 
-class FormationJourneeHydratorFactory {
+class FormationJourneeHydratorFactory
+{
 
     /**
      * @param ContainerInterface $container

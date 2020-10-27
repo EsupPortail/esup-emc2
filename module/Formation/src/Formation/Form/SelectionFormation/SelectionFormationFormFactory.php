@@ -5,7 +5,8 @@ namespace Formation\Form\SelectionFormation;
 use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
-class SelectionFormationFormFactory {
+class SelectionFormationFormFactory
+{
 
     /**
      * @param ContainerInterface $container

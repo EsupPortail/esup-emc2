@@ -2,7 +2,8 @@
 
 namespace Formation\Form\SelectionFormation;
 
-trait SelectionFormationFormAwareTrait {
+trait SelectionFormationFormAwareTrait
+{
 
     /** @var SelectionFormationForm */
     private $selectionFormationForm;

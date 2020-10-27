@@ -2,7 +2,8 @@
 
 namespace Formation\Service\FormationInstanceInscrit;
 
-trait FormationInstanceInscritServiceAwareTrait {
+trait FormationInstanceInscritServiceAwareTrait
+{
 
     /** @var FormationInstanceInscritService */
     private $formationInstanceInscritService;

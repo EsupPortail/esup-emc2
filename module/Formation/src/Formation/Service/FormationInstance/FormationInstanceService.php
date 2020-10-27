@@ -2,15 +2,16 @@
 
 namespace Formation\Service\FormationInstance;
 
-use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstance;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationInstance;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class FormationInstanceService {
+class FormationInstanceService
+{
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -19,7 +20,7 @@ class FormationInstanceService {
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function create(FormationInstance  $instance)
+    public function create(FormationInstance $instance)
     {
         $this->createFromTrait($instance);
         return $instance;
@@ -29,7 +30,7 @@ class FormationInstanceService {
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function update(FormationInstance  $instance)
+    public function update(FormationInstance $instance)
     {
         $this->updateFromTrait($instance);
         return $instance;
@@ -39,7 +40,7 @@ class FormationInstanceService {
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function historise(FormationInstance  $instance)
+    public function historise(FormationInstance $instance)
     {
         $this->historiserFromTrait($instance);
         return $instance;
@@ -49,7 +50,7 @@ class FormationInstanceService {
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function restore(FormationInstance  $instance)
+    public function restore(FormationInstance $instance)
     {
         $this->restoreFromTrait($instance);
         return $instance;
@@ -59,7 +60,7 @@ class FormationInstanceService {
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function delete(FormationInstance  $instance)
+    public function delete(FormationInstance $instance)
     {
         $this->deleteFromTrait($instance);
         return $instance;
@@ -72,14 +73,13 @@ class FormationInstanceService {
      */
     public function createQueryBuilder()
     {
-        $qb= $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
             ->addSelect('formation')->join('Finstance.formation', 'formation')
             ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
             ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
             ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
-            ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
-        ;
+            ->addSelect('structure')->leftJoin('affectation.structure', 'structure');
         return $qb;
     }
 
@@ -91,8 +91,7 @@ class FormationInstanceService {
     public function getFormationsInstances($champ = 'id', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('Finstance.' . $champ, $ordre)
-        ;
+            ->orderBy('Finstance.' . $champ, $ordre);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -110,8 +109,7 @@ class FormationInstanceService {
             ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
             ->andWhere('formation.id = :id')
             ->setParameter('id', $formation->getId())
-            ->orderBy('Finstance.' . $champ, $ordre)
-        ;
+            ->orderBy('Finstance.' . $champ, $ordre);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -121,17 +119,16 @@ class FormationInstanceService {
      * @param integer $id
      * @return FormationInstance
      */
-    public function getFormationInstance($id)
+    public function getFormationInstance(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstance partagent le même id [".$id."]", 0, $e);
+            throw new RuntimeException("Plusieurs FormationInstance partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
@@ -141,7 +138,7 @@ class FormationInstanceService {
      * @param string $param
      * @return FormationInstance
      */
-    public function getRequestedFormationInstance($controller, $param='formation-instance')
+    public function getRequestedFormationInstance(AbstractActionController $controller, $param = 'formation-instance')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstance($id);

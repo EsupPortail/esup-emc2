@@ -5,7 +5,8 @@ namespace Formation\Entity\Db;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FormationInstanceFrais implements HistoriqueAwareInterface {
+class FormationInstanceFrais implements HistoriqueAwareInterface
+{
     use HistoriqueAwareTrait;
 
     /** @var integer */
@@ -104,9 +105,9 @@ class FormationInstanceFrais implements HistoriqueAwareInterface {
      */
     public function afficheFrais()
     {
-        $text  = "<strong> Repas </strong> : " . (($this->getFraisRepas())?:"0.00")." € <br/>";
-        $text .= "<strong> Hébergement </strong> : " . (($this->getFraisHebergement())?:"0.00")." € <br/>";
-        $text .= "<strong> Transport </strong> : " . (($this->getFraisTransport())?:"0.00")." € ";
+        $text = "<strong> Repas </strong> : " . (($this->getFraisRepas()) ?: "0.00") . " € <br/>";
+        $text .= "<strong> Hébergement </strong> : " . (($this->getFraisHebergement()) ?: "0.00") . " € <br/>";
+        $text .= "<strong> Transport </strong> : " . (($this->getFraisTransport()) ?: "0.00") . " € ";
         return $text;
     }
 

@@ -4,7 +4,8 @@ namespace Formation\Form\FormationInstanceFrais;
 
 use Interop\Container\ContainerInterface;
 
-class FormationInstanceFraisFormFactory {
+class FormationInstanceFraisFormFactory
+{
 
     /**
      * @param ContainerInterface $container

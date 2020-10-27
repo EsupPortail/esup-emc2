@@ -6,7 +6,8 @@ use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationTheme\FormationThemeService;
 use Interop\Container\ContainerInterface;
 
-class FormationHydratorFactory {
+class FormationHydratorFactory
+{
 
     public function __invoke(ContainerInterface $container)
     {

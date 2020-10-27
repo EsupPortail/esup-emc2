@@ -2,7 +2,8 @@
 
 namespace Formation\Form\FormationGroupe;
 
-trait FormationGroupeFormAwareTrait {
+trait FormationGroupeFormAwareTrait
+{
 
     /** @var FormationGroupeForm */
     private $formationGroupeForm;

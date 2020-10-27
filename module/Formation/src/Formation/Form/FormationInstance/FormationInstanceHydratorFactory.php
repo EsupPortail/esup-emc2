@@ -4,7 +4,8 @@ namespace Formation\Form\FormationInstance;
 
 use Interop\Container\ContainerInterface;
 
-class FormationInstanceHydratorFactory {
+class FormationInstanceHydratorFactory
+{
 
     /**
      * @param ContainerInterface $container

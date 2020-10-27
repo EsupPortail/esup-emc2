@@ -86,10 +86,10 @@ class FormationInstanceFormateurForm extends Form
 
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'prenom' => [ 'required' => true],
-            'nom'    => [ 'required' => true],
-            'attachement'    => [ 'required' => false],
-            'volume'              => [
+            'prenom' => ['required' => true],
+            'nom' => ['required' => true],
+            'attachement' => ['required' => false],
+            'volume' => [
                 'required' => false,
                 'validators' => [
                     [
@@ -104,7 +104,7 @@ class FormationInstanceFormateurForm extends Form
                     ],
                 ],
             ],
-            'montant'        => [
+            'montant' => [
                 'required' => false,
                 'validators' => [
                     [

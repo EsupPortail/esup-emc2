@@ -2,7 +2,8 @@
 
 namespace Formation\Form\FormationTheme;
 
-trait FormationThemeFormAwareTrait {
+trait FormationThemeFormAwareTrait
+{
 
     /** @var FormationThemeForm */
     private $formationThemeForm;
