@@ -2,10 +2,10 @@
 
 namespace Formation\Controller;
 
+use Formation\Entity\Db\FormationInstancePresence;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
-use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Entity\Db\FormationInstancePresence;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -16,7 +16,6 @@ class FormationInstancePresenceController extends AbstractActionController {
     use FormationInstanceJourneeServiceAwareTrait;
     use FormationInstancePresenceAwareTrait;
 
-    /** PRESENCE AU FORMATION *****************************************************************************************/
 
     public function renseignerPresencesAction()
     {

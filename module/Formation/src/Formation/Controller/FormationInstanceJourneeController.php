@@ -2,9 +2,9 @@
 
 namespace Formation\Controller;
 
-use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Form\FormationJournee\FormationJourneeFormAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -14,8 +14,6 @@ class FormationInstanceJourneeController extends AbstractActionController {
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
     use FormationJourneeFormAwareTrait;
-
-    /** JOURNEE ********************************************************************************************/
 
     public function ajouterJourneeAction() {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);

@@ -12,7 +12,6 @@ use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [

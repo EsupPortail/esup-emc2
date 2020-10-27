@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
+use Formation\Entity\Db\Formation;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;

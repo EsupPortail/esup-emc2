@@ -2,9 +2,9 @@
 
 namespace Formation\Controller;
 
+use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
-use Application\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
 use Interop\Container\ContainerInterface;
 

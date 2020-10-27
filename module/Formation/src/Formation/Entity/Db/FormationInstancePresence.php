@@ -2,8 +2,6 @@
 
 namespace Formation\Entity\Db;
 
-use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 

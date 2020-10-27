@@ -10,23 +10,6 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
-//                [
-//                    'controller' => IndexController::class,
-//                    'action' => [
-//                        'index-administration',
-//                    ],
-//                    'privileges' => [
-//                        MailingPrivileges::MAILING_AFFICHER,
-//                        IndexPrivileges::AFFICHER_INDEX,
-//                        SynchroPrivileges::SYNCHRO_AFFICHER,
-//                        UtilisateurPrivileges::UTILISATEUR_AFFICHER,
-//                        RolePrivileges::ROLE_AFFICHER,
-//                        ValidationPrivileges::AFFICHER,
-//                        ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER,
-//                        PrivilegePrivileges::PRIVILEGE_VOIR,
-//                        ConfigurationPrivileges::CONFIGURATION_AFFICHER,
-//                    ],
-//                ],
             ],
         ],
     ],
@@ -54,37 +37,6 @@ return [
         ],
     ],
 
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-//                    'gestion' => [
-//                        'order' => 400,
-//                        'label' => 'Gestion',
-//                        'title' => "Gestion des fiches, entretiens et des affectations",
-//                        'route' => 'gestion',
-//                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-gestion'),
-//                    ],
-                ],
-            ],
-        ],
-    ],
-
-    'router'          => [
-        'routes' => [
-//            'home'        => [
-//                'type'          => Literal::class,
-//                'may_terminate' => true,
-//                'options' => [
-//                    'route'    => '/',
-//                    'defaults' => [
-//                        'controller' => 'Application\Controller\Index', // <-- change here
-//                        'action'     => 'index',
-//                    ],
-//                ],
-//            ],
-        ],
-    ],
     'service_manager' => [
         'factories' => [
         ],

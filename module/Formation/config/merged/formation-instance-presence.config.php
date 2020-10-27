@@ -2,13 +2,12 @@
 
 namespace Formation;
 
-use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Controller\FormationInstancePresenceController;
 use Formation\Controller\FormationInstancePresenceControllerFactory;
+use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [

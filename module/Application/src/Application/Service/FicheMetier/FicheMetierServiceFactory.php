@@ -4,8 +4,8 @@ namespace Application\Service\FicheMetier;
 
 use Application\Service\Application\ApplicationService;
 use Application\Service\Competence\CompetenceService;
-use Application\Service\Formation\FormationService;
 use Doctrine\ORM\EntityManager;
+use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 

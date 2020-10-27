@@ -2,8 +2,8 @@
 
 namespace Formation\Controller;
 
-use Application\Service\FormationInstance\FormationInstanceService;
 use Formation\Form\FormationInstanceFrais\FormationInstanceFraisForm;
+use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;

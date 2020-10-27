@@ -8,22 +8,19 @@ use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
-use Application\Entity\Db\Formation;
+use Formation\Entity\Db\Formation;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
-use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractController;
 
 class FicheMetierService {
-//    use DateTimeAwareTrait;
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use ApplicationServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use FormationServiceAwareTrait;

@@ -12,7 +12,6 @@ use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [

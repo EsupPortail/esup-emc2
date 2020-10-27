@@ -2,9 +2,9 @@
 
 namespace Formation\Controller;
 
-use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceFormateur;
 use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurFormAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;

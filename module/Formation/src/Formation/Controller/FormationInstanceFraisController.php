@@ -2,12 +2,12 @@
 
 namespace Formation\Controller;
 
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
-use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceFrais;
 use Formation\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -17,8 +17,6 @@ class FormationInstanceFraisController extends AbstractActionController {
     use FormationInstanceJourneeServiceAwareTrait;
     use FormationInstanceFraisServiceAwareTrait;
     use FormationInstanceFraisFormAwareTrait;
-
-    /** FRAIS DE FORMATION ********************************************************************************************/
 
     public function renseignerFraisAction()
     {

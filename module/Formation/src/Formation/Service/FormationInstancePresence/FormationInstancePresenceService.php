@@ -2,7 +2,7 @@
 
 namespace Formation\Service\FormationInstancePresence;
 
-use Application\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Entity\Db\FormationInstancePresence;

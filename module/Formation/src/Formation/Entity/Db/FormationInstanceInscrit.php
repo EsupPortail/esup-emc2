@@ -3,7 +3,6 @@
 namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FormationInstance;
 use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;

@@ -2,8 +2,8 @@
 
 namespace Formation\Controller;
 
-use Application\Service\FormationInstance\FormationInstanceService;
 use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurForm;
+use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurService;
 use Interop\Container\ContainerInterface;
 

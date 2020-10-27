@@ -18,7 +18,7 @@ use Application\Provider\Privilege\CorpsPrivileges;
 use Application\Provider\Privilege\EntretienproPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
-use Application\Provider\Privilege\FormationPrivileges;
+use Formation\Provider\Privilege\FormationPrivileges;
 use Application\Provider\Privilege\MetierPrivileges;
 use Application\Provider\Privilege\MissionspecifiquePrivileges;
 use Application\Provider\Privilege\PostePrivileges;
@@ -72,7 +72,7 @@ return [
                         CompetencePrivileges::COMPETENCE_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
                         MetierPrivileges::METIER_INDEX,
-                        FormationPrivileges::FORMATION_INDEX,
+                        FormationPrivileges::FORMATION_ACCES,
                         ActivitePrivileges::ACTIVITE_AFFICHER,
                         ActivitePrivileges::ACTIVITE_INDEX,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_INDEX,

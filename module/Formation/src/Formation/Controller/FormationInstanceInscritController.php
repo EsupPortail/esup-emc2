@@ -3,8 +3,8 @@
 namespace Formation\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
-use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
