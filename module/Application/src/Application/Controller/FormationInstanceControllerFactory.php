@@ -6,7 +6,7 @@ use Application\Form\FormationInstance\FormationInstanceForm;
 use Formation\Form\FormationJournee\FormationJourneeForm;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Formation\FormationService;
-use Application\Service\FormationInstance\FormationInstanceInscritService;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Autoform\Service\Formulaire\FormulaireInstanceService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;

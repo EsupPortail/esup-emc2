@@ -34,8 +34,6 @@ use Application\Service\Formation\FormationService;
 use Application\Service\Formation\FormationServiceFactory;
 use Application\Service\Formation\FormationThemeService;
 use Application\Service\Formation\FormationThemeServiceFactory;
-use Application\Service\FormationInstance\FormationInstanceInscritService;
-use Application\Service\FormationInstance\FormationInstanceInscritServiceFactory;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Application\Service\FormationInstance\FormationInstanceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -159,13 +157,6 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'modifier-informations',
-
-                        'ajouter-agent',
-                        'historiser-agent',
-                        'restaurer-agent',
-                        'supprimer-agent',
-                        'envoyer-liste-principale',
-                        'envoyer-liste-complementaire',
 
                         'export-emargement',
                         'export-tous-emargements',
@@ -337,66 +328,6 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'export-tous-emargements',
-                            ],
-                        ],
-                    ],
-                    'ajouter-agent' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-agent/:formation-instance',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'ajouter-agent',
-                            ],
-                        ],
-                    ],
-                    'historiser-agent' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-agent/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'historiser-agent',
-                            ],
-                        ],
-                    ],
-                    'restaurer-agent' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-agent/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'restaurer-agent',
-                            ],
-                        ],
-                    ],
-                    'supprimer-agent' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer-agent/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'supprimer-agent',
-                            ],
-                        ],
-                    ],
-                    'envoyer-liste-principale' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/envoyer-liste-principale/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'envoyer-liste-principale',
-                            ],
-                        ],
-                    ],
-                    'envoyer-liste-complementaire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/envoyer-liste-complementaire/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'envoyer-liste-complementaire',
                             ],
                         ],
                     ],
@@ -636,7 +567,6 @@ return [
         'factories' => [
             FormationService::class => FormationServiceFactory::class,
             FormationInstanceService::class => FormationInstanceServiceFactory::class,
-            FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
             FormationGroupeService::class => FormationGroupeServiceFactory::class,
             FormationThemeService::class => FormationThemeServiceFactory::class,
             FormationInstanceInscritAssertion::class => FormationInstanceInscritAssertionFactory::class,

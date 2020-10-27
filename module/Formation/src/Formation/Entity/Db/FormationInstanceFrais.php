@@ -2,7 +2,7 @@
 
 namespace Formation\Entity\Db;
 
-use Application\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 

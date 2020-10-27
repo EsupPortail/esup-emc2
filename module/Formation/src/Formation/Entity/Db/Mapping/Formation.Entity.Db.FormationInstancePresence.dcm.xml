@@ -9,7 +9,7 @@
         <many-to-one target-entity="Formation\Entity\Db\FormationInstanceJournee"  field="journee">
             <join-column name="journee_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\FormationInstanceInscrit"  field="inscrit">
+        <many-to-one target-entity="Formation\Entity\Db\FormationInstanceInscrit"  field="inscrit">
             <join-column name="inscrit_id" referenced-column-name="id"/>
         </many-to-one>
 

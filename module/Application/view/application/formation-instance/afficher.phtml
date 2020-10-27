@@ -3,11 +3,12 @@
 use Application\Entity\Db\Formation;
 use Application\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceFormateur;
-use Application\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Application\Provider\Privilege\FormationPrivileges;
 use Formation\Provider\Privilege\FormationinstanceformateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
+use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
@@ -16,7 +17,7 @@ use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
  */
 
 $canInformation = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
-$canInscrit     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_INSTANCE_MODIFIER));
+
 
 /** @var Formation $formation */
 $formation = $instance->getFormation();
@@ -36,6 +37,7 @@ $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . 
 
 $canFormateurModifier   = $this->isAllowed(FormationinstanceformateurPrivileges::getResourceId(FormationinstanceformateurPrivileges::FORMATIONINSTANCEFORMATEUR_MODIFIER));
 $canJourneeModifier     = $this->isAllowed(FormationinstancejourneePrivileges::getResourceId(FormationinstancejourneePrivileges::FORMATIONINSTANCEJOURNEE_MODIFIER));
+$canInscritModifier     = $this->isAllowed(FormationinstanceinscritPrivileges::getResourceId(FormationinstanceinscritPrivileges::FORMATIONINSTANCEINSCRIT_MODIFIER));
 $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
 $canFraisModifier       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER));
 $canPresenceAfficher    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
@@ -181,7 +183,7 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
         </div>
         <div class="pull-right">
             <?php if ($canJourneeModifier): ?>
-                <?php /** @see \Application\Controller\FormationInstanceController::ajouterJourneeAction() */?>
+                <?php /** @see \Formation\Controller\FormationInstanceJourneeController::ajouterJourneeAction() */?>
                 <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification">
                     <span class="icon ajouter"></span>
@@ -258,10 +260,11 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
             </h3>
         </div>
 
-        <?php if ($canInscrit AND (count($principales) < $instance->getNbPlacePrincipale() OR count($complementaires) < $instance->getNbPlaceComplementaire())) : ?>
+        <?php if ($canInscritModifier AND (count($principales) < $instance->getNbPlacePrincipale() OR count($complementaires) < $instance->getNbPlaceComplementaire())) : ?>
             <div class="pull-right">
                 <br/>
-                <a      href="<?php echo $this->url('formation-instance/ajouter-agent', ['formation-instance' => $instance->getId()], [], true); ?>"
+                <a      <?php /**  @see \Formation\Controller\FormationInstanceInscritController::ajouterAgentAction() */ ?>
+                        href="<?php echo $this->url('formation-instance/ajouter-agent', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification">
                     <span class="icon ajouter"></span>
                     Ajouter un agent
@@ -301,7 +304,7 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                 <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
                 <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
                 <td>
-                    <?php if ($canInscrit) : ?>
+                    <?php if ($canInscritModifier) : ?>
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                         <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
                            data-toggle="tooltip" data-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
@@ -333,20 +336,20 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                         >
                             <span class="icon paragraph"></span><span class="lettrine">?</span></a>
                         <?php if (! $complementaireComplete) : ?>
-                            <?php /** @see \Application\Controller\FormationInstanceController::envoyerListeComplementaireAction() */?>
+                            <?php /** @see \Formation\Controller\FormationInstanceInscritController::envoyerListeComplementaireAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
                             data-toggle="tooltip" data-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> en liste complémentaire."
                         >
                             <span class="icon descendre"></span></a>
                         <?php endif; ?>
                         <?php if ($inscrit->estNonHistorise()) : ?>
-                            <?php /** @see \Application\Controller\FormationInstanceController::historiserAgentAction() */?>
+                            <?php /** @see \Formation\Controller\FormationInstanceInscritController::historiserAgentAction() */?>
                             <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
                                 data-toggle="tooltip" data-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation"
                             >
                                 <span class="icon historiser"></span></a>
                         <?php endif; ?>
-                        <?php /** @see \Application\Controller\FormationInstanceController::supprimerAgentAction() */?>
+                        <?php /** @see \Formation\Controller\FormationInstanceInscritController::supprimerAgentAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                             data-toggle="tooltip" data-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
@@ -382,7 +385,7 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                 <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
                 <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
                 <td>
-                    <?php if ($canInscrit) : ?>
+                    <?php if ($canInscritModifier) : ?>
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                         <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
                            data-toggle="tooltip" data-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
@@ -390,13 +393,13 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                             <span class="icon agent"></span></a>
                         <span class="icon pdf"></span>
                         <?php if ($inscrit->estNonHistorise()) : ?>
-                            <?php /** @see \Application\Controller\FormationInstanceController::historiserAgentAction() */?>
+                            <?php /** @see \Formation\Controller\FormationInstanceInscritController::historiserAgentAction() */?>
                             <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
                                 data-toggle="tooltip" data-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation">
                                 <span class="icon historiser"></span></a>
                         <?php endif; ?>
                         <?php if (! $principaleComplete) : ?>
-                            <?php /** @see \Application\Controller\FormationInstanceController::envoyerListePrincipaleAction() */?>
+                            <?php /** @see \Formation\Controller\FormationInstanceInscritController::envoyerListePrincipaleAction() */?>
                             <a  href="<?php echo $this->url('formation-instance/envoyer-liste-principale', ['inscrit' => $inscrit->getId()], [], true); ?>"
                                 data-toggle="tooltip" data-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> en liste principale."
                             >
@@ -436,7 +439,7 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                 <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
                 <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
                 <td>
-                    <?php if ($canInscrit) : ?>
+                    <?php if ($canInscritModifier) : ?>
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                         <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
                            data-toggle="tooltip" data-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
@@ -444,13 +447,13 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                             <span class="icon agent"></span></a>
                         <span class="icon pdf"></span>
                         <?php if ($liste !== null) : ?>
-                            <?php /** @see \Application\Controller\FormationInstanceController::restaurerAction() */?>
+                            <?php /** @see \Formation\Controller\FormationInstanceInscritController::restaurerAction() */?>
                             <a  href="<?php echo $this->url('formation-instance/restaurer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
                                 data-toggle="tooltip" data-html="true" title="Restaurer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> dans la formation."
                             >
                                 <span class="icon restaurer"></span></a>
                         <?php endif; ?>
-                        <?php /** @see \Application\Controller\FormationInstanceController::supprimerAgentAction() */?>
+                        <?php /** @see \Formation\Controller\FormationInstanceInscritController::supprimerAgentAction() */?>
                         <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                             data-toggle="tooltip" data-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."

@@ -2,8 +2,8 @@
 
 namespace Formation\Controller;
 
-use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceJourneeServiceAwareTrait;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceFrais;
 use Formation\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;

@@ -2,11 +2,11 @@
 
 namespace Formation\Controller;
 
-use Application\Service\FormationInstance\FormationInstanceInscritService;
-use Formation\Service\FormationInstance\FormationInstanceJourneeService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Formation\Form\FormationInstanceFrais\FormationInstanceFraisForm;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Interop\Container\ContainerInterface;
 
 class FormationInstanceFraisControllerFactory {

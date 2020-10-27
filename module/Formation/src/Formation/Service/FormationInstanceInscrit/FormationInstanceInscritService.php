@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstanceInscrit;
 
-use Application\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -99,7 +99,7 @@ class FormationInstanceInscritService {
      * @param integer $id
      * @return FormationInstanceInscrit
      */
-    public function getFormationInstanceInscrit($id)
+    public function getFormationInstanceInscrit(int $id)
     {
         $qb  = $this->createQueryBuilder()
             ->andWhere('inscrit.id = :id')
@@ -118,7 +118,7 @@ class FormationInstanceInscritService {
      * @param string $param
      * @return FormationInstanceInscrit
      */
-    public function getRequestedFormationInstanceInscrit($controller, $param = 'inscrit')
+    public function getRequestedFormationInstanceInscrit(AbstractActionController $controller, $param = 'inscrit')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstanceInscrit($id);

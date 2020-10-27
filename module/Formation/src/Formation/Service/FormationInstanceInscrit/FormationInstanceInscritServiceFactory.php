@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\FormationInstance;
+namespace Formation\Service\FormationInstanceInscrit;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
@@ -10,7 +10,7 @@ class FormationInstanceInscritServiceFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return FormationInstanceJourneeService
+     * @return FormationInstanceInscritService
      */
     public function __invoke(ContainerInterface $container)
     {

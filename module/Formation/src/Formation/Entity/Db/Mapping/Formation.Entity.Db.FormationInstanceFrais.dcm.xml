@@ -6,7 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <one-to-one target-entity="Application\Entity\Db\FormationInstanceInscrit"  field="inscrit">
+        <one-to-one target-entity="Formation\Entity\Db\FormationInstanceInscrit"  field="inscrit">
             <join-column name="inscrit_id" referenced-column-name="id"/>
         </one-to-one>
 

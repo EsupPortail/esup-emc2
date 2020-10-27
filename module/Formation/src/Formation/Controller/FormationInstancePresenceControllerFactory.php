@@ -2,8 +2,8 @@
 
 namespace Formation\Controller;
 
-use Application\Service\FormationInstance\FormationInstanceInscritService;
-use Formation\Service\FormationInstance\FormationInstanceJourneeService;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Application\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
 use Interop\Container\ContainerInterface;

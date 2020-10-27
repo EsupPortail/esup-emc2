@@ -1,12 +1,13 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Formation\Entity\Db;
 
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FormationInstance;
 use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Formation\Entity\Db\FormationInstanceFrais;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -54,10 +55,10 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     }
 
     /**
-     * @param FormationInstance $instance
+     * @param FormationInstance|null $instance
      * @return FormationInstanceInscrit
      */
-    public function setInstance($instance)
+    public function setInstance(?FormationInstance $instance) : FormationInstanceInscrit
     {
         $this->instance = $instance;
         return $this;
@@ -72,7 +73,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return FormationInstanceInscrit
      */
     public function setAgent($agent)

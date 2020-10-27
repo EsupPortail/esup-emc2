@@ -3,14 +3,13 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\FormationInstance;
-use Application\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Application\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Form\FormationJournee\FormationJourneeFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Export\Formation\Emargement\EmargementPdfExporter;
 use Application\Service\Formation\FormationServiceAwareTrait;
-use Application\Service\FormationInstance\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Application\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurServiceAwareTrait;
@@ -175,117 +174,6 @@ class FormationInstanceController extends AbstractActionController {
         $filemane = "formation_".$instance->getFormation()->getId()."_du_".str_replace("/","-",$instance->getDebut())."_au_".str_replace("/","-",$instance->getFin())."_emargements.pdf";
         $exporter->exportAll($journees, $filemane);
         exit;
-    }
-
-    /** INSCRIT ********************************************************************************************/
-
-    public function ajouterAgentAction()
-    {
-        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-
-        $inscrit = new FormationInstanceInscrit();
-        $inscrit->setInstance($instance);
-
-        $form = $this->getSelectionAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-agent', ['formulaire-instance' => $instance->getId()], [], true));
-        $form->bind($inscrit);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-
-            if ($form->isValid()) {
-                if (! $instance->hasAgent($inscrit->getAgent())) {
-                    $inscrit->setListe($instance->getListeDisponible());
-                    $this->getFormationInstanceInscritService()->create($inscrit);
-
-                    $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
-                    $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en <strong>liste " . $texte . "</strong>.");
-                } else {
-                    $this->flashMessenger()->addErrorMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> est déjà inscrit&middot;e à l'instance de formation.");
-                }
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'un agent pour l'instance de formation",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserAgentAction()
-    {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        $inscrit->setListe(null);
-        $this->getFormationInstanceInscritService()->historise($inscrit);
-
-        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être retiré&middot;e des listes.");
-
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
-    }
-
-    public function restaurerAgentAction()
-    {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        $liste = $inscrit->getInstance()->getListeDisponible();
-
-        if ($liste !== null) {
-            $inscrit->setListe($liste);
-            $this->getFormationInstanceInscritService()->restore($inscrit);
-        }
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
-    }
-
-    public function supprimerAgentAction()
-    {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getFormationInstanceInscritService()->delete($inscrit);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($inscrit !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de l'inscription de [" . $inscrit->getAgent()->getDenomination() . "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('formation-instance/supprimer-agent', ["inscrit" => $inscrit->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
-    public function envoyerListePrincipaleAction()
-    {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-
-        $inscrit->setListe(FormationInstanceInscrit::PRINCIPALE);
-        $this->getFormationInstanceInscritService()->update($inscrit);
-
-        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en liste principale.");
-
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
-    }
-
-    public function envoyerListeComplementaireAction()
-    {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-
-        $inscrit->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
-        $this->getFormationInstanceInscritService()->update($inscrit);
-
-        $this->flashMessenger()->addSuccessMessage("L'agent <strong>". $inscrit->getAgent()->getDenomination() ."</strong> vient d'être ajouté&middot;e en liste complémentaire.");
-
-        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Application\Assertion;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FormationPrivileges;
 use Application\Service\Structure\StructureServiceAwareTrait;
