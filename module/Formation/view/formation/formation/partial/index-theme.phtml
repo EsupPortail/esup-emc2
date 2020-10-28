@@ -61,7 +61,7 @@ $canDetruire = $droits['detruire'];
             </td>
             <td>
                 <?php if ($canAfficher) : ?>
-                    <a  <?php /** @see FormationController::afficherThemeAction() */ ?>
+                    <a  <?php /** @see FormationThemeController::afficherThemeAction() */ ?>
                         href="<?php  echo $this->url('formation-theme/afficher', ['formation-theme' => $theme->getId()], [], true); ?>"
                         class="ajax-modal">
                         <span class="icon voir" title="Afficher le thème"></span></a>

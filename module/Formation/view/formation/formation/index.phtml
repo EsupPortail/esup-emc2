@@ -37,15 +37,15 @@ $droits = [
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="formation">
-            <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz" >
+        <li>
+            <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz">
                 Formations &nbsp;
                 <span class="badge">
                     <?php echo count($formations); ?>
                 </span>
             </a>
         </li>
-        <li role="groupe">
+        <li>
             <a href="#groupe" aria-controls="groupe" role="tab" data-toggle="tabz">
                 Groupes &nbsp;
                 <span class="badge">
@@ -53,7 +53,7 @@ $droits = [
                 </span>
             </a>
         </li>
-        <li role="theme">
+        <li>
             <a href="#theme" aria-controls="theme" role="tab" data-toggle="tabz">
                 Thèmes &nbsp;
                 <span class="badge">
@@ -82,22 +82,21 @@ $droits = [
     </div>
 </div>
 
-    <script>
-        $(function() {
-            let hash = $(location).attr('hash');
-            let name = hash.substr(1);
-            if (name === undefined || name === "") name = "formation";
+<script>
+    $(function () {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "formation";
 
-            $('a[aria-controls=' + name + ']').tab('show');
+        $('a[aria-controls=' + name + ']').tab('show');
 
-            $('.nav-tabs a').click(function (e) {
-                // No e.preventDefault() here
-                $(this).tab('show');
-            });
-
-            $("body").on("modification", function (event) {
-                event.div.modal('hide');
-                window.location.reload();
-            });
+        $('.nav-tabs a').click(function () {
+            $(this).tab('show');
         });
-    </script>
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

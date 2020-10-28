@@ -38,28 +38,6 @@ use Formation\Entity\Db\FormationGroupe;
 
 <br/>
 
-<div class="alert alert-info">
-    <small>
-    <ol>
-        <li>
-            Les groupes de formation permettent de rassembler les formations par ensemble notamment dans :
-            <ul>
-                <li> les parcours de formation des catégories; </li>
-                <li> les parcours de formation des métiers. </li>
-            </ul>
-        </li>
-        <li> Il est possible de modifier l'ordre d'affichage des groupes :
-            <ul>
-                <li> en éditant directement le groupe;</li>
-                <li> en effectant un drag &amp; drop.</li>
-            </ul>
-        </li>
-    </ol>
-    </small>
-</div>
-
-<br/>
-
 <table class="datatable table table-condensed" id="groupes">
     <thead>
     <tr>
@@ -133,8 +111,6 @@ use Formation\Entity\Db\FormationGroupe;
 
 <script>
     $(function() {
-        //let mode = <?php //echo "'".$mode."'"; ?>//;
-        // console.log(mode);
         //if (<?php //echo "'".$mode."'"; ?>// === 'modifier-activite') {
             $('table#groupes tbody').sortable({
                 update: function( event, ui ) {
@@ -143,10 +119,8 @@ use Formation\Entity\Db\FormationGroupe;
                         if (ordre !== "") ordre += "_";
                         ordre += $(this)[0].id ;
                     });
-                    // console.log(ordre);
                     <?php /** @see FormationGroupeController::updateOrdreGroupeAction() */ ?>
                     let url = '../formation-groupe/update-ordre-groupe/' + ordre;
-//                    // console.log(url);
                    $.ajax({
                        type: "POST",
                        url: url,
@@ -155,7 +129,7 @@ use Formation\Entity\Db\FormationGroupe;
                                $( "table#groupes tbody" ).sortable( "option", "disabled", true );
                            },
                        success:
-                           function (retour) {
+                           function () {
                                $( "table#groupes tbody" ).sortable( "option", "disabled", false );
                            }
                    });

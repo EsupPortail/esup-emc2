@@ -2,11 +2,9 @@
 
 namespace Formation\Controller;
 
-use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
-use Formation\Form\FormationGroupe\FormationGroupeFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
@@ -22,14 +20,13 @@ class FormationController extends AbstractActionController
     use ParcoursDeFormationServiceAwareTrait;
 
     use FormationFormAwareTrait;
-    use FormationGroupeFormAwareTrait;
-    use ModifierLibelleFormAwareTrait;
 
     public function indexAction()
     {
         $formations = $this->getFormationService()->getFormations('libelle');
         $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
         $themes = $this->getFormationThemeService()->getFormationsThemes();
+
         return new ViewModel([
             'formations' => $formations,
             'groupes' => $groupes,

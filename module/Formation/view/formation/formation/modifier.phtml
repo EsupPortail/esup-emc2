@@ -6,6 +6,7 @@ use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 
 /**
+ * @see FormationController::editerAction()
  * @var Formation $formation
  * @var string $mode
  */
@@ -18,10 +19,12 @@ $canSupprimerInstance       = $this->isAllowed(FormationinstancePrivileges::getR
 
 /** @var FormationInstance[] $instances */
 $instances = $formation->getInstances();
+
+$this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLibelle());
 ?>
 
 <h1 class="page-header">
-    Formation #<?php echo $formation->getId(); ?>
+    Formation <?php echo $formation->getId(); ?> - <?php echo $formation->getLibelle(); ?>
 </h1>
 
 <div class="main">
@@ -61,7 +64,7 @@ $instances = $formation->getInstances();
                 </a>
             <?php endif; ?>
             <br/>
-            <?php /** @see \Application\Controller\FormationController::indexAction() */ ?>
+            <?php /** @see FormationController::indexAction() */ ?>
             <a      href="<?php echo $this->url('formation', [], ['fragment' => "formation"], true); ?>"
                     class="btn btn-info action">
                 <span class="icon retour"></span>

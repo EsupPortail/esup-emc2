@@ -2,9 +2,7 @@
 
 namespace Formation\Controller;
 
-use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Formation\Form\Formation\FormationForm;
-use Formation\Form\FormationGroupe\FormationGroupeForm;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationTheme\FormationThemeService;
@@ -26,12 +24,8 @@ class FormationControllerFactory
 
         /**
          * @var FormationForm $formationForm
-         * @var FormationGroupeForm $formationGroupeForm
-         * @var ModifierLibelleForm $modifierLibelleForm
          */
         $formationForm = $container->get('FormElementManager')->get(FormationForm::class);
-        $formationGroupeForm = $container->get('FormElementManager')->get(FormationGroupeForm::class);
-        $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
 
         /** @var FormationController $controller */
         $controller = new FormationController();
@@ -39,8 +33,6 @@ class FormationControllerFactory
         $controller->setFormationGroupeService($formationGroupeService);
         $controller->setFormationThemeService($formationThemeService);
         $controller->setFormationForm($formationForm);
-        $controller->setFormationGroupeForm($formationGroupeForm);
-        $controller->setModifierLibelleForm($modifierLibelleForm);
         return $controller;
     }
 

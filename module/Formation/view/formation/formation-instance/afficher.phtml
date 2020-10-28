@@ -13,6 +13,7 @@ use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
 /**
+ * @see FormationInstanceController::afficherAction()
  * @var FormationInstance $instance
  */
 
@@ -55,13 +56,15 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
             <h2> Formation </h2>
         </div>
         <div class="pull-right">
-            <a      href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
+            <a      <?php /** @see FormationController::editerAction() */ ?>
+                    href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
                     class="btn btn-info action">
                 <span class="icon retour"></span>
                 Retour à la formation associée
             </a>
             <br/>
-            <a      href="<?php echo $this->url('formation', [], [], true); ?>"
+            <a      <?php /** @see FormationController::indexAction() */ ?>
+                    href="<?php echo $this->url('formation', [], [], true); ?>"
                     class="btn btn-info action">
                 <span class="icon retour-double"></span>
                 Retour à l'index des formations
@@ -187,14 +190,14 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
         </div>
         <div class="pull-right">
             <?php if ($canJourneeModifier): ?>
-                <?php /** @see \Formation\Controller\FormationInstanceJourneeController::ajouterJourneeAction() */?>
+                <?php /** @see FormationInstanceJourneeController::ajouterJourneeAction() */?>
                 <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification">
                     <span class="icon ajouter"></span>
                     Ajouter une journée de formation
                 </a>
             <br/>
-                <?php /** @see \Formation\Controller\FormationInstanceDocumentController::exportTousEmargementsAction() */?>
+                <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */?>
                 <a      href="<?php echo $this->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action" target="_blank">
                     <span class="icon pdf"></span>

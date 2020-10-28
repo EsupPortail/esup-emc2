@@ -33,13 +33,15 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             <h2> Instance de la formation </h2>
         </div>
         <div class="pull-right">
-            <a      href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
+            <a      <?php /** @see FormationInstanceController::afficherAction() */?>
+                    href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
                     class="btn btn-info action">
                 <span class="icon retour"></span>
                 Retour à l'instance de la formation
             </a>
             <br/>
-            <a      href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
+            <a      <?php /** @see FormationController::editerAction() */?>
+                    href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
                     class="btn btn-info action">
                 <span class="icon retour-double"></span>
                 Retour à la formation associée
@@ -155,7 +157,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             // console.log('inscrit: ' + inscrit);
             // console.log('journee: ' + journee);
 
-            <?php /** @see \Formation\Controller\FormationInstancePresenceController::togglePresenceAction() */ ?>
+            <?php /** @see FormationInstancePresenceController::togglePresenceAction() */ ?>
             let url = "../toggle-presence/" + journee + "/" + inscrit;
             $.ajax({
                 type: "POST",
@@ -183,7 +185,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             console.log('mode: ' + mode);
             console.log('inscrit: ' + inscrit);
 
-            <?php /** @see \Formation\Controller\FormationInstancePresenceController::togglePresencesAction() */ ?>
+            <?php /** @see FormationInstancePresenceController::togglePresencesAction() */ ?>
             let url = "../toggle-presences/" + mode + "/" + inscrit;
             $.ajax({
                 type: "POST",
