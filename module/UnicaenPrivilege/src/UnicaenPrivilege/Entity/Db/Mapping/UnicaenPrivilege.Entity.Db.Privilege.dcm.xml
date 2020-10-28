@@ -15,7 +15,7 @@
     </many-to-one>
 
     <many-to-many field="role" target-entity="UnicaenUtilisateur\Entity\Db\Role" inversed-by="privilege" fetch="LAZY">
-      <join-table name="role_privilege">
+      <join-table name="unicaen_utilisateur_privilege_linker">
         <join-columns>
           <join-column name="privilege_id" referenced-column-name="id"/>
         </join-columns>

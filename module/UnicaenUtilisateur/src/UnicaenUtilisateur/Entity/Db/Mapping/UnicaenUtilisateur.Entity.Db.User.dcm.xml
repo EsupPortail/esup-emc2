@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="UnicaenUtilisateur\Entity\Db\User" table="`user`">
+  <entity name="UnicaenUtilisateur\Entity\Db\User" table="unicaen_utilisateur_user">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
@@ -12,7 +12,7 @@
     <field name="state"         type="boolean"                  column="state"          nullable="false"/>
 
     <many-to-many field="roles" target-entity="UnicaenUtilisateur\Entity\Db\Role" inversed-by="users" fetch="LAZY">
-      <join-table name="user_role_linker">
+      <join-table name="unicaen_utilisateur_role_linker">
         <join-columns>
           <join-column name="user_id" referenced-column-name="id"/>
         </join-columns>
