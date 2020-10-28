@@ -2,11 +2,17 @@
 
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\ParcoursDeFormation;
 
 /**
  * @see FicheMetierController::editerAction()
  * @var FicheMetier $fiche
+ * @var array $competences
  * @var array $applications
+ * @var ParcoursDeFormation $parcours
  */
 
-echo $this->ficheMetier($fiche, null, ['mode' => 'edition-fiche-metier', 'applications' => $applications, 'parcours' => $parcours]);
+$libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
+$this->headTitle('Modification de la fiche métier #' . $fiche->getId(). " : " . $libelle);
+
+echo $this->ficheMetier($fiche, null, ['mode' => 'edition-fiche-metier', 'competences' => $competences, 'applications' => $applications, 'parcours' => $parcours]);

@@ -64,23 +64,27 @@ class CorpsController extends AbstractActionController {
 
     public function afficherAgentsAvecCorpsAction() {
         $corps = $this->getCorpsService()->getRequestedCorps($this);
-        $agents = $this->getAgentService()->getAgentsWithCorps($corps);
 
         return new ViewModel([
             'title' => 'Agents ayant le corps ['. $corps->getLibelleCourt().']',
             'corps' => $corps,
-            'agents' => $agents,
         ]);
     }
     public function afficherAgentsAvecGradeAction() {
         $grade = $this->getGradeService()->getRequestedGrade($this);
-        $agents = $this->getAgentService()->getAgentsWithGrade($grade);
 
         return new ViewModel([
             'title' => 'Agents ayant le grade ['. $grade->getLibelleCourt().']',
             'grade' => $grade,
-            'agents' => $agents,
         ]);
     }
 
+    public function afficherAgentsAvecCorrespondanceAction() {
+        $correspondance = $this->getCorrespondanceService()->getRequestedCorrespondance($this);
+
+        return new ViewModel([
+            'title' => 'Agents ayant la correspondance ['. $correspondance->getLibelleCourt().']',
+            'correspondance' => $correspondance,
+        ]);
+    }
 }

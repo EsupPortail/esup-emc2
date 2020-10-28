@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @var Grade[] $grades
+ * @var bool $canAfficher
+ * @var bool $canModifier
+ */
+
+use Application\Entity\Db\Grade;
+
+?>
+
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th style="width:70%;"> Libellé </th>
+        <th> #Agent/Grade </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($grades as $grade): ?>
+        <tr>
+            <td>
+                <span
+                    title="<?php echo $grade->generateTooltip(); ?>"
+                    data-toggle="tooltip" data-html="true"
+                >
+                <?php echo $grade->getLibelleLong(); ?>
+                </span>
+            </td>
+            <td> <?php echo count($grade->getAgentGrades()); ?> </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\CorpsController::afficherAgentsAvecGradeAction() */ ?>
+                        href="<?php echo $this->url('corps/afficher-agents-avec-grade', ['grade' => $grade->getId()], ['fragment' => 'corps'], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                                        <span class="icon voir" data-toggle="tooltip" data-html="true"
+                                              title="Afficher les agents ayant ce grade"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

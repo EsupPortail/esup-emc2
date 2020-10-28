@@ -10,7 +10,7 @@ trait CorrespondanceServiceAwareTrait {
     /**
      * @return CorrespondanceService
      */
-    public function getCorrespondanceService()
+    public function getCorrespondanceService() : CorrespondanceService
     {
         return $this->correspondanceService;
     }
@@ -19,7 +19,7 @@ trait CorrespondanceServiceAwareTrait {
      * @param CorrespondanceService $correspondanceService
      * @return CorrespondanceService
      */
-    public function setCorrespondanceService($correspondanceService)
+    public function setCorrespondanceService(CorrespondanceService $correspondanceService) : CorrespondanceService
     {
         $this->correspondanceService = $correspondanceService;
         return $this->correspondanceService;

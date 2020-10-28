@@ -60,6 +60,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'ajouter',
+//                        'ajouter-terminer',
                         'ajouter-avec-metier',
                     ],
                     'privileges' => [
@@ -209,6 +210,17 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+//                    'ajouter-terminer' => [
+//                        'type'  => Segment::class,
+//                        'options' => [
+//                            'route'    => '/ajouter-terminer/:fiche',
+//                            'defaults' => [
+//                                'controller' => FicheMetierController::class,
+//                                'action'     => 'ajouter-terminer',
+//                            ],
+//                        ],
+//                        'may_terminate' => true,
+//                    ],
                     'ajouter-avec-metier' => [
                         'type'  => Segment::class,
                         'options' => [

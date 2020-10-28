@@ -6,10 +6,6 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
-use Application\Form\Agent\AgentForm;
-use Application\Form\Agent\AgentFormFactory;
-use Application\Form\Agent\AgentHydrator;
-use Application\Form\Agent\AgentHydratorFactory;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormFactory;
 use Application\Form\AgentApplication\AgentApplicationHydrator;
@@ -107,9 +103,6 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'modifier',
-                        'ajouter-agent-mission-specifique',
-                        'modifier-agent-mission-specifique',
                         'upload-fichier',
                     ],
                     'privileges' => [
@@ -139,17 +132,6 @@ return [
                         AgentPrivileges::AGENT_ELEMENT_MODIFIER,
                     ],
                     'assertion'  => AgentAssertion::class,
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'historiser-agent-mission-specifique',
-                        'restaurer-agent-mission-specifique',
-                        'detruire-agent-mission-specifique',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_EFFACER,
-                    ],
                 ],
                 [
                     'controller' => AgentController::class,
@@ -244,59 +226,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'rechercher-gestionnaire',
-                            ],
-                        ],
-                    ],
-
-                    /** Route des AgentMissionSpecifique ********************************************************************/
-
-                    'ajouter-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-agent-mission-specifique/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'ajouter-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'modifier-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'historiser-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'historiser-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'restaurer-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'restaurer-agent-mission-specifique',
-                            ],
-                        ],
-                    ],
-                    'detruire-agent-mission-specifique' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/detruire-agent-mission-specifique/:agent-mission-specifique',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'detruire-agent-mission-specifique',
                             ],
                         ],
                     ],
@@ -516,16 +445,6 @@ return [
 
                     /** AUTRE  ****************************************************************************************/
 
-                    'modifier' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier',
-                            ],
-                        ],
-                    ],
                     'upload-fichier' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -593,7 +512,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentForm::class => AgentFormFactory::class,
             AgentApplicationForm::class => AgentApplicationFormFactory::class,
             AgentCompetenceForm::class => AgentCompetenceFormFactory::class,
             AgentFormationForm::class => AgentFormationFormFactory::class,
@@ -602,7 +520,6 @@ return [
     ],
     'hydrators' => [
         'factories' => [
-            AgentHydrator::class => AgentHydratorFactory::class,
             AgentApplicationHydrator::class => AgentApplicationHydratorFactory::class,
             AgentCompetenceHydrator::class => AgentCompetenceHydratorFactory::class,
             AgentFormationHydrator::class => AgentFormationHydratorFactory::class,

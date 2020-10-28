@@ -23,34 +23,18 @@ $this->headTitle('Édition de l\'entretien professionnel');
 <?php
 echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
 ?>
+<?php
+$instance = $entretien->getFormulaireInstance();
+$formulaire = $instance->getFormulaire();
+$reponses = $instance->getReponses();
 
-    <div class="affichage-autoform">
-        Chargment des informations provenant du formulaire ...
-    </div>
+/** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+$data = [];
+foreach ($reponses as $reponse) {
+    $data[$reponse->getChamp()->getId()] = $reponse;
+}
 
-<script>
-    //$( document ).ready(function() {
-    var url = <?php
-        /**
-         * @var Autoform\Entity\Db\Formulaire $formulaire
-         * @var string $retour
-         */
-        $formulaire = $entretien->getFormulaireInstance()->getFormulaire();
-        $retour = $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
-        $url = $this->url('autoform/formulaire/afficher-resultat', ['formulaire' => $formulaire->getId(), 'instance' => $entretien->getFormulaireInstance()->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
-        echo "'".$url."'";
-        ?>;
-    console.log(url);
-
-    $.ajax({
-        type: "GET",
-        url: url,
-        success:
-            function (retour) {
-                $("div.affichage-autoform").html(retour);
-            }
-    });
-    //});
-</script>
+echo $this->instanceAsText()->render($instance);
+?>
 
 

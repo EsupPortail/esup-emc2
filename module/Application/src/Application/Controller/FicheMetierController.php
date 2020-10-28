@@ -5,9 +5,9 @@ namespace Application\Controller;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierEtat;
+use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
-use Application\Form\EntityFormManagmentTrait;
 use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
@@ -28,6 +28,7 @@ use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
+use Application\Service\RendererAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -39,6 +40,7 @@ use Zend\View\Model\ViewModel;
 class FicheMetierController extends AbstractActionController
 {
     use DateTimeAwareTrait;
+    use RendererAwareTrait;
 
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
@@ -59,15 +61,6 @@ class FicheMetierController extends AbstractActionController
     use SelectionFormationFormAwareTrait;
 
     use ConfigurationServiceAwareTrait;
-
-    use EntityFormManagmentTrait;
-
-    private $renderer;
-
-    public function setRenderer($renderer)
-    {
-        $this->renderer = $renderer;
-    }
 
     public function indexAction()
     {
@@ -99,14 +92,57 @@ class FicheMetierController extends AbstractActionController
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche);
 
         return new ViewModel([
             'title' => "Visualisation d'une fiche métier",
             'fiche' => $fiche,
-            'parcours' => $parcours,
+            'competences' => $competences,
             'applications' => $applications,
+            'parcours' => $parcours,
         ]);
     }
+
+    public function ajouterAction()
+    {
+        /** @var FicheMetier $fiche */
+        $fiche = new FicheMetier();
+        $fiche->setEtat($this->getFicheMetierEtatService()->getEtatByCode(FicheMetierEtat::CODE_REDACTION));
+
+        /** @var LibelleForm $form */
+        $form = $this->getLibelleForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->create($fiche);
+
+                $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
+                $this->getFicheMetierService()->update($fiche);
+//                return $this->redirect()->toRoute('fiche-metier-type/ajouter-terminer', ['fiche' => $fiche], [], true);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Ajout d\'une fiche metier',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+//    public function ajouterTerminerAction() {
+//        $fiche =$this->getFicheMetierService()->getRequestedFicheMetier($this);
+//
+//        return new ViewModel(['fiche' => $fiche]);
+//    }
+
 
     public function editerAction()
     {
@@ -114,11 +150,13 @@ class FicheMetierController extends AbstractActionController
         if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche);
 
         return new ViewModel([
             'fiche' => $fiche,
-            'parcours' => $parcours,
+            'competences' => $competences,
             'applications' => $applications,
+            'parcours' => $parcours,
         ]);
     }
 
@@ -126,11 +164,13 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
+        $parcours = $this->getParcoursDeFormationService()->getParcoursDeFormationsByType(ParcoursDeFormation::TYPE_CATEGORIE);
 
         $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'fiche' => $fiche,
             'applications' => $applications,
+            'parcours' => $parcours,
         ]);
 
         $metier = $fiche->getMetier();
@@ -197,39 +237,6 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterAction()
-    {
-        /** @var FicheMetier $fiche */
-        $fiche = new FicheMetier();
-        $fiche->setEtat($this->getFicheMetierEtatService()->getEtatByCode(FicheMetierEtat::CODE_REDACTION));
-
-        /** @var LibelleForm $form */
-        $form = $this->getLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [], true));
-        $form->bind($fiche);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->create($fiche);
-
-                $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
-                $this->getFicheMetierService()->update($fiche);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajout d\'une fiche metier',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
     public function ajouterAvecMetierAction()
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
@@ -254,7 +261,7 @@ class FicheMetierController extends AbstractActionController
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $this->updateFromForm($request, $form, $this->getFicheMetierService());
+            $this->getFicheMetierService()->updateFromForm($request, $form, $this->getFicheMetierService());
         }
 
         $vm = new ViewModel();
@@ -461,7 +468,7 @@ class FicheMetierController extends AbstractActionController
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $this->updateFromForm($request, $form, $this->getFicheMetierService());
+            $this->getFicheMetierService()->updateFromForm($request, $form, $this->getFicheMetierService());
         }
 
         $vm = new ViewModel();

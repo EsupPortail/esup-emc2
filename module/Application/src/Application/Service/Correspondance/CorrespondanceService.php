@@ -7,6 +7,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class CorrespondanceService {
     use EntityManagerAwareTrait;
@@ -24,20 +25,35 @@ class CorrespondanceService {
     /**
      * @param string $champ
      * @param string $ordre
+     * @param bool $avecAgent
      * @return Correspondance[]
      */
-    public function getCorrespondances($champ = 'categorie', $ordre = 'ASC') {
+    public function getCorrespondances(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=true) {
         $qb = $this->createQueryBuilder()
             ->andWhere('correspondance.histo IS NULL')
             ->orderBy('correspondance.' . $champ, $ordre)
         ;
+
+        if ($avecAgent) {
+            $qb = $qb->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
+                ->addSelect('agent')->join('agentGrade.agent','agent')
+                ->andWhere('agent.delete IS NULL')
+            ;
+        }
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getCorrespondancesAsOptions()
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @param bool $avecAgent
+     * @return array
+     */
+    public function getCorrespondancesAsOptions(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=false)
     {
-        $correspondances = $this->getCorrespondances();
+        $correspondances = $this->getCorrespondances($champ, $ordre, $avecAgent);
         $options = [];
         foreach($correspondances as $correspondance) {
             $options[$correspondance->getId()] = $correspondance->getCategorie() . " - " . $correspondance->getLibelleLong();
@@ -45,12 +61,24 @@ class CorrespondanceService {
         return $options;
     }
 
-    public function getCorrespondance($id)
+    /**
+     * @param int $id
+     * @param bool $avecAgent
+     * @return Correspondance
+     */
+    public function getCorrespondance(int $id, bool $avecAgent = true)
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('correspondance.id = :id')
+            ->andWhere('correspondance.source_id = :id')
             ->setParameter('id', $id)
         ;
+
+        if ($avecAgent) {
+            $qb = $qb->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
+                ->addSelect('agent')->join('agentGrade.agent','agent')
+                ->andWhere('agent.delete IS NULL')
+            ;
+        }
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -58,5 +86,16 @@ class CorrespondanceService {
             throw new RuntimeException("Plusieurs Correcpondance partagent le même id [".$id."]",0,$e);
         }
         return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $param
+     * @return Correspondance
+     */
+    public function getRequestedCorrespondance(AbstractActionController $controller, string $param = 'correspondance')
+    {
+        $id = $controller->params()->fromRoute($param);
+        return $this->getCorrespondance($id);
     }
 }

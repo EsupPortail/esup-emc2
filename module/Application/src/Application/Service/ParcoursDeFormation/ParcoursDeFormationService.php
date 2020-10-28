@@ -81,6 +81,9 @@ class ParcoursDeFormationService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(ParcoursDeFormation::class)->createQueryBuilder('parcours')
+            ->addSelect('formation')->leftJoin('parcours.formations', 'formation')
+            ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
+        ;
             ;
         return $qb;
     }

@@ -1,23 +1,23 @@
 <?php
 
 /**
- * @see \Application\Controller\CorpsController::afficherAgentsAvecCorpsAction();
- * @var Corps $corps
+ * @see \Application\Controller\CorpsController::afficherAgentsAvecCorrespondanceAction();
+ * @var Correspondance $correspondance
  */
 
 use Application\Entity\Db\AgentGrade;
-use Application\Entity\Db\Corps;
+use Application\Entity\Db\Correspondance;
 
 $now = new DateTime();
 
 /** @var  AgentGrade[] $agents */
-$agents = $corps->getAgentGrades();
+$agents = $correspondance->getAgentGrades();
 usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();});
 ?>
 
 <dl class="dl-horizontal">
-    <dt> Corps </dt>
-    <dd>[#<?php echo $corps->getId(); ?>] <?php echo $corps->getLibelleLong(); ?></dd>
+    <dt> Correspondance </dt>
+    <dd>[#<?php echo $correspondance->getId(); ?>] <?php echo $correspondance->getLibelleLong(); ?></dd>
     <dt> #AgentGrade </dt>
     <dd> <?php echo count($agents); ?></dd>
 </dl>

@@ -157,7 +157,11 @@ $metierLibelle = ($metier)?$metier->getLibelle():null;
             <tr>
                 <th> Quotité travaillée </th>
                 <td>
-                    <span class="manquant"> Information remontant de SIHAM ou renseignable dans l'application </span>
+                    <?php if($quotite = $agent->getQuotiteCourante()) : ?>
+                        <?php echo $quotite->getQuotite(); ?>%
+                    <?php else: ?>
+                        100%
+                    <?php endif; ?>
                 </td>
             </tr>
         </table>

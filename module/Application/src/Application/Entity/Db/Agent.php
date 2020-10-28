@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\Formation;
@@ -32,9 +33,11 @@ class Agent implements ResourceInterface
     private $utilisateur;
     /** @var int */
     private $harpId;
-    /** @var int */
-    private $quotite;
+    /** @var DateTime */
+    private $delete;
 
+    /** @var ArrayCollection (AgentQuotite) */
+    private $quotites;
     /** @var ArrayCollection (AgentAffectation) */
     private $affectations;
     /** @var ArrayCollection (AgentGrade) */
@@ -137,7 +140,7 @@ class Agent implements ResourceInterface
         $affectations = [];
         /** @var AgentAffectation $affectation */
         foreach ($this->affectations as $affectation) {
-            if ($affectation->isActive()) $affectations[] = $affectation;
+            if ($affectation->isActive($date)) $affectations[] = $affectation;
         }
         return $affectations;
     }
@@ -213,39 +216,11 @@ class Agent implements ResourceInterface
     }
 
     /**
-     * @return int
-     */
-    public function getQuotite()
-    {
-        return $this->quotite;
-    }
-
-    /**
-     * @param int $quotite
-     * @return Agent
-     */
-    public function setQuotite($quotite)
-    {
-        $this->quotite = $quotite;
-        return $this;
-    }
-
-    /**
      * @return FichePoste[]
      */
     public function getFiches()
     {
         return $this->fiches->toArray();
-    }
-
-    /**
-     * @param FichePoste $fiche
-     * @return Agent
-     */
-    public function setFiche($fiche)
-    {
-        $this->fiche = $fiche;
-        return $this;
     }
 
     /**
@@ -260,7 +235,7 @@ class Agent implements ResourceInterface
      * @param Fichier $fichier
      * @return Agent
      */
-    public function addFichier($fichier)
+    public function addFichier(Fichier $fichier)
     {
         $this->fichiers->add($fichier);
         return $this;
@@ -270,7 +245,7 @@ class Agent implements ResourceInterface
      * @param Fichier $fichier
      * @return Agent
      */
-    public function removeFichier($fichier)
+    public function removeFichier(Fichier $fichier)
     {
         $this->fichiers->removeElement($fichier);
         return $this;
@@ -280,7 +255,7 @@ class Agent implements ResourceInterface
      * @param string $nature
      * @return Fichier[]
      */
-    public function fetchFiles($nature)
+    public function fetchFiles(string $nature)
     {
         $fichiers = $this->getFichiers();
         $fichiers = array_filter($fichiers, function (Fichier $f) use ($nature) {
@@ -454,6 +429,29 @@ class Agent implements ResourceInterface
             if ($level !== null and $level <= $niveau) $niveau = $level;
         }
         return ($niveau !== 999)?$niveau:null;
+    }
 
+    /** QUOTITES *****************************************************************************************/
+
+    /**
+     * @return AgentQuotite[]
+     */
+    public function getQuotites() {
+        $quotites = $this->quotites->toArray();
+        array_filter($quotites, function (AgentQuotite $q) { return $q->getImportationHistorisation(); });
+        usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDebut() > $b->getDebut();});
+        return $quotites;
+    }
+
+    /**
+     * @param DateTime|null $date
+     * @return AgentQuotite|null
+     */
+    public function getQuotiteCourante(?DateTime $date = null) {
+        /** @var AgentQuotite $quotite */
+        foreach ($this->quotites as $quotite) {
+            if ($quotite->isEnCours($date)) return $quotite;
+        }
+        return null;
     }
 }

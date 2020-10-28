@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Correspondance  {
     use ImportableAwareTrait;
@@ -17,6 +18,8 @@ class Correspondance  {
     private $libelleLong;
     /** @var DateTime */
     private $histo;
+    /** @var ArrayCollection (AgentGrade) */
+    private $agentGrades;
 
     /**
      * @return int
@@ -118,6 +121,14 @@ class Correspondance  {
     }
 
     /**
+     * @return AgentGrade[]
+     */
+    public function getAgentGrades()
+    {
+        return $this->agentGrades->toArray();
+    }
+
+    /**
      * @return string
      */
     public function __toString()
@@ -125,5 +136,16 @@ class Correspondance  {
         return $this->getLibelleCourt();
     }
 
+    /**
+     * @return string
+     */
+    public function generateTooltip()
+    {
+        $text  = "";
+        $text .= "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
+        return $text;
+    }
 
 }

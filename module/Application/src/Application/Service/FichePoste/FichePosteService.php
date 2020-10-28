@@ -22,8 +22,6 @@ use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
     use StructureServiceAwareTrait;
 
@@ -33,7 +31,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function create($fiche)
+    public function create(FichePoste $fiche)
     {
         $this->createFromTrait($fiche);
         return $fiche;
@@ -43,7 +41,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function update($fiche)
+    public function update(FichePoste $fiche)
     {
         $this->updateFromTrait($fiche);
         return $fiche;
@@ -53,7 +51,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function historise($fiche)
+    public function historise(FichePoste $fiche)
     {
         $this->historiserFromTrait($fiche);
         return $fiche;
@@ -63,7 +61,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function restore($fiche)
+    public function restore(FichePoste $fiche)
     {
         $this->restoreFromTrait($fiche);
         return $fiche;
@@ -73,7 +71,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function delete($fiche)
+    public function delete(FichePoste $fiche)
     {
         $this->deleteFromTrait($fiche);
         return $fiche;
@@ -123,12 +121,10 @@ class FichePosteService {
      */
     public function getFichesPostes()
     {
-//        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-//            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
-//            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
-//            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
-//            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
-        $qb = $this->createQueryBuilder()
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+//        $qb = $this->createQueryBuilder()
             ->andWhere('fiche.histoDestruction IS NULL')
             ->orderBy('fiche.id', 'ASC');
 
@@ -140,46 +136,8 @@ class FichePosteService {
      * @param integer $id
      * @return FichePoste
      */
-    public function getFichePoste($id)
+    public function getFichePoste(int $id)
     {
-//        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-//            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
-//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-//            ->addSelect('agentgrade')->leftJoin('agent.grades', 'agentgrade')
-//            ->addSelect('grade')->leftJoin('agentgrade.grade', 'grade')
-//            ->addSelect('corps')->leftJoin('agentgrade.corps', 'corps')
-//            ->addSelect('correspondance')->leftJoin('agentgrade.bap', 'correspondance')
-//
-//            ->addSelect('agentmission')->leftJoin('agent.missionsSpecifiques', 'agentmission')
-//            ->addSelect('mission')->leftJoin('agentmission.mission', 'mission')
-//            ->addSelect('m_structure')->leftJoin('agentmission.structure', 'm_structure')
-//
-//            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
-//            ->addSelect('poste_domaine')        ->leftJoin('poste.domaine', 'poste_domaine')
-//            ->addSelect('poste_structure')      ->leftJoin('poste.structure', 'poste_structure')
-//            ->addSelect('poste_structure_t')    ->leftJoin('poste_structure.type', 'poste_structure_t')
-//            ->addSelect('poste_correspondance') ->leftJoin('poste.correspondance', 'poste_correspondance')
-//            ->addSelect('poste_responsable')    ->leftJoin('poste.rattachementHierarchique', 'poste_responsable')
-//
-//
-//            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
-//            ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
-//            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
-//            ->addSelect('domaine')->leftJoin('metier.domaines', 'domaine')
-////            ->addSelect('fmApplication')->join('fichemetier.applications', 'fmApplication')
-////            ->addSelect('fmCompetence')->join('fichemetier.competences', 'fmCompetence')
-////            ->addSelect('fmFormation')->join('fichemetier.formations', 'fmFormation')
-//            //activite
-//            ->addSelect('ftActivite')->leftJoin('fichemetier.activites', 'ftActivite')
-//            ->addSelect('activite')->leftJoin('ftActivite.activite', 'activite')
-//            ->addSelect('aLibelle')->leftJoin('activite.libelles', 'aLibelle')
-//            ->addSelect('aApplication')->leftJoin('activite.applications', 'aApplication')
-//            ->addSelect('aCompetence')->leftJoin('activite.competences', 'aCompetence')
-//            ->addSelect('aFormation')->leftJoin('activite.formations', 'aFormation')
-//            ->addSelect('aDescription')->leftJoin('activite.descriptions', 'aDescription')
-//
-//            ->addSelect('expertise')->leftJoin('fiche.expertises', 'expertise')
-//            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
         $qb = $this->createQueryBuilder()
             ->andWhere('fiche.id = :id')
             ->setParameter('id', $id)
@@ -199,7 +157,7 @@ class FichePosteService {
      * @param bool $notNull
      * @return FichePoste
      */
-    public function getRequestedFichePoste($controller, $paramName = 'fiche-poste', $notNull = false)
+    public function getRequestedFichePoste(AbstractActionController $controller, string $paramName = 'fiche-poste', bool $notNull = false)
     {
         $id = $controller->params()->fromRoute($paramName);
         $fiche = $this->getFichePoste($id);
@@ -214,7 +172,7 @@ class FichePosteService {
      * @param FicheTypeExterne $ficheTypeExterne
      * @return FicheTypeExterne
      */
-    public function createFicheTypeExterne($ficheTypeExterne)
+    public function createFicheTypeExterne(FicheTypeExterne $ficheTypeExterne)
     {
         try {
             $this->getEntityManager()->persist($ficheTypeExterne);
@@ -244,7 +202,7 @@ class FichePosteService {
      * @param FicheTypeExterne $ficheTypeExterne
      * @return FicheTypeExterne
      */
-    public function updateFicheTypeExterne($ficheTypeExterne)
+    public function updateFicheTypeExterne(FicheTypeExterne $ficheTypeExterne)
     {
         try {
             $this->getEntityManager()->flush($ficheTypeExterne);
@@ -258,7 +216,7 @@ class FichePosteService {
      * @param FicheTypeExterne $ficheTypeExterne
      * @return FicheTypeExterne
      */
-    public function deleteFicheTypeExterne($ficheTypeExterne)
+    public function deleteFicheTypeExterne(FicheTypeExterne $ficheTypeExterne)
     {
         try {
             $this->getEntityManager()->remove($ficheTypeExterne);
@@ -274,7 +232,7 @@ class FichePosteService {
      * @param integer $id
      * @return FicheTypeExterne
      */
-    public function getFicheTypeExterne($id)
+    public function getFicheTypeExterne(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(FicheTypeExterne::class)->createQueryBuilder('externe')
             ->andWhere('externe.id = :id')
@@ -302,11 +260,11 @@ class FichePosteService {
      * @param boolean $sousstructure
      * @return FichePoste[]
      */
-    public function getFichesPostesByStructures($structures = [], $sousstructure = false)
+    public function getFichesPostesByStructures(array $structures = [], bool $sousstructure = true)
     {
         try {
             $today = new DateTime();
-            $noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
+            //$noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
         } catch (Exception $e) {
             throw new RuntimeException("Problème lors de la création des dates");
         }
@@ -334,9 +292,11 @@ class FichePosteService {
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
-        $qb = $qb
-            ->andWhere('statut.structure IN (:structures)')
-            ->setParameter('structures', $structures);
+        if ($sousstructure) {
+            $qb = $qb
+                ->andWhere('statut.structure IN (:structures)')
+                ->setParameter('structures', $structures);
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -345,10 +305,10 @@ class FichePosteService {
     /**
      * @param Structure[] $structures
      * @param boolean $sousstructure
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return FichePoste[]
      */
-    public function getFichesPostesByStructuresAndAgent($structures = [], $sousstructure = false, $agent = null)
+    public function getFichesPostesByStructuresAndAgent(array $structures = [], bool $sousstructure = false, Agent $agent = null)
     {
         $fiches = $this->getFichesPostesByStructures($structures, $sousstructure);
         $niveau = $agent->getMeilleurNiveau();
@@ -371,7 +331,7 @@ class FichePosteService {
      * @param boolean $sousstructure
      * @return FichePoste[]
      */
-    public function getFichesPostesSansAgentByStructure($structure, $sousstructure = false)
+    public function getFichesPostesSansAgentByStructure(Structure $structure, bool $sousstructure = false)
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->addSelect('poste')->join('fiche.poste', 'poste')
@@ -524,10 +484,9 @@ class FichePosteService {
 
     /**
      * @param FichePoste $fiche
-     * @param DateTime $date
      * @return array
      */
-    public function getActivitesDictionnaires(FichePoste $fiche, DateTime $date) {
+    public function getActivitesDictionnaires(FichePoste $fiche) {
 
         $dictionnaire = [];
 
@@ -538,7 +497,7 @@ class FichePosteService {
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getActivite()->getId();
-                $dictionnaire[$id]["object"] = $metierTypeActivite; //TODO voir si pertinent
+                $dictionnaire[$id]["object"] = $metierTypeActivite;
                 $dictionnaire[$id]["conserve"] = (array_search($id, $activitesId) !== false);
             }
         }
@@ -551,7 +510,7 @@ class FichePosteService {
      * @param DateTime $date
      * @return array
      */
-    public function getApplicationsDictionnaires(FichePoste $fiche, DateTime $date)
+    public function getApplicationsDictionnaires(FichePoste $fiche)
     {
         $dictionnaire = [];
 
@@ -604,7 +563,7 @@ class FichePosteService {
      * @param DateTime $date
      * @return array
      */
-    public function getFormationsDictionnaires(FichePoste $fiche, DateTime $date)
+    public function getFormationsDictionnaires(FichePoste $fiche)
     {
         $dictionnaire = [];
 
@@ -652,7 +611,7 @@ class FichePosteService {
      * @param DateTime $date
      * @return array
      */
-    public function getCompetencesDictionnaires(FichePoste $fiche, DateTime $date)
+    public function getCompetencesDictionnaires(FichePoste $fiche)
     {
         $dictionnaire = [];
 

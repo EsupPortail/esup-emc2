@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Corps
 {
@@ -22,6 +23,9 @@ class Corps
     private $histo;
     /** @var integer */
     private $niveau;
+
+    /** @var ArrayCollection (AgentGrade) */
+    private $agentGrades;
 
     /**
      * @return int
@@ -149,10 +153,31 @@ class Corps
         return $this;
     }
 
+    /**
+     * @return AgentGrade[]
+     */
+    public function getAgentGrades()
+    {
+        return $this->agentGrades->toArray();
+    }
+
 
     public function __toString()
     {
         return $this->getLibelleCourt();
     }
 
+    /**
+     * @return string
+     */
+    public function generateTooltip()
+    {
+        $text  = "";
+        $text .= "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Code : <strong>". $this->getCode() . "</strong>";
+        return $text;
+    }
 }

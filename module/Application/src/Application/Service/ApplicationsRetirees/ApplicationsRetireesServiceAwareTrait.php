@@ -10,7 +10,7 @@ trait ApplicationsRetireesServiceAwareTrait {
     /**
      * @return ApplicationsRetireesService
      */
-    public function getApplicationsRetireesService()
+    public function getApplicationsRetireesService() : ApplicationsRetireesService
     {
         return $this->applicationsRetireesService;
     }
@@ -19,7 +19,7 @@ trait ApplicationsRetireesServiceAwareTrait {
      * @param ApplicationsRetireesService $applicationsRetireesService
      * @return ApplicationsRetireesService
      */
-    public function setApplicationsRetireesService($applicationsRetireesService)
+    public function setApplicationsRetireesService(ApplicationsRetireesService $applicationsRetireesService) : ApplicationsRetireesService
     {
         $this->applicationsRetireesService = $applicationsRetireesService;
         return $this->applicationsRetireesService;

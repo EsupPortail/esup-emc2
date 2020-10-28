@@ -18,4 +18,4 @@ foreach ($parcours->getFormations() as $formation) {
 ksort($formationArray);
 ?>
 
-<?php echo $this->parcoursDeFormation($parcours); ?>
+<?php echo $this->parcoursDeFormation($parcours, null, ['mode' => 'affichage']); ?>

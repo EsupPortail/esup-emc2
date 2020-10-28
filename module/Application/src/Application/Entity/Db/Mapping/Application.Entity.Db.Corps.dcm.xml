@@ -12,5 +12,6 @@
         <field name="niveau"        column="niveau"         type="integer"                   />
         <field name="histo"         column="histo"          type="datetime"                  />
 
+        <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="corps"/>
     </entity>
 </doctrine-mapping>

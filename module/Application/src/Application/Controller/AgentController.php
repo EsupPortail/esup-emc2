@@ -9,15 +9,11 @@ use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentGrade;
-use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentStatut;
-use Application\Form\Agent\AgentFormAwareTrait;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -51,48 +47,57 @@ class AgentController extends AbstractActionController
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    use AgentFormAwareTrait;
     use AgentApplicationFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
-    use AgentMissionSpecifiqueFormAwareTrait;
     use UploadFormAwareTrait;
 
+    public function indexAction()
+    {
+        $fromQueries = $this->params()->fromQuery();
+        $filtres = [];
+        $clefs = ['titulaire', 'cdi', 'cdd', 'administratif', 'chercheur', 'enseignant', 'vacataire'];
+        foreach ($clefs as $clef) {
+            if (empty($fromQueries) or $fromQueries[$clef] === 'on') $filtres[$clef] = true;
+        }
 
-    public function indexAction() {
-        $agents = $this->getAgentService()->getAgents();
-        return  new ViewModel([
+        $agents = $this->getAgentService()->getAgents($filtres);
+        return new ViewModel([
             'agents' => $agents,
+            'filtres' => $filtres,
         ]);
     }
 
-    public function afficherAction() {
-
+    public function afficherAction()
+    {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
-        $user = $this->getUserService()->getConnectedUser();
-        $role = $this->getUserService()->getConnectedRole();
         $responsables = $this->getAgentService()->getClosestResponsablesByAgent($agent);
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
-            'role'  => $role,
-            'user'  => $user,
             'entretiens' => $entretiens,
             'responsables' => $responsables,
         ]);
     }
 
-    public function afficherStatutsGradesAction() {
+    public function afficherStatutsGradesAction()
+    {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $affectations = $agent->getAffectations();
-        usort($affectations, function(AgentAffectation $a, AgentAffectation $b) { return $a->getDateDebut() < $b->getDateDebut();});
+        usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
+            return $a->getDateDebut() < $b->getDateDebut();
+        });
         $grades = $agent->getGrades();
-        usort($grades, function(AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut();});
+        usort($grades, function (AgentGrade $a, AgentGrade $b) {
+            return $a->getDateDebut() < $b->getDateDebut();
+        });
         $statuts = $agent->getStatuts();
-        usort($statuts, function(AgentStatut $a, AgentStatut $b) { return $a->getDebut() < $b->getDebut();});
+        usort($statuts, function (AgentStatut $a, AgentStatut $b) {
+            return $a->getDebut() < $b->getDebut();
+        });
 
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
@@ -101,138 +106,6 @@ class AgentController extends AbstractActionController
             'statuts' => $statuts,
             'grades' => $grades,
         ]);
-    }
-
-    public function modifierAction()
-    {
-        $agent   = $this->getAgentService()->getRequestedAgent($this);
-        $form = $this->getAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier', ['agent' => $agent->getId()], [], true));
-        $form->bind($agent);
-
-        /** @var  Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                    $this->getAgentService()->update($agent);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier l\'agent',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    /** Gestion des missions spécifiques ******************************************************************************/
-
-    public function ajouterAgentMissionSpecifiqueAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $agentMissionSpecifique = new AgentMissionSpecifique();
-        $agentMissionSpecifique->setAgent($agent);
-
-        /** @var AgentMissionSpecifiqueForm $form */
-        $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-mission-specifique', [ 'agent' => $agent->getId() ], [], true));
-        $form->bind($agentMissionSpecifique);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $agentMissionSpecifique->setAgent($agent);
-                $this->getAgentService()->createAgentMissionSpecifique($agentMissionSpecifique);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une mission spécifique de l'agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierAgentMissionSpecifiqueAction()
-    {
-        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
-        $agent = $agentMissionSpecifique->getAgent();
-        $form = $this->getAgentMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-mission-specifique', ['agent-mission-specifique' => $agentMissionSpecifique->getId()]));
-        $form->bind($agentMissionSpecifique);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $agentMissionSpecifique->setAgent($agent);
-                $this->getAgentService()->updateAgentMissionSpecifique($agentMissionSpecifique);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'une mission spécifique de l'agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserAgentMissionSpecifiqueAction()
-    {
-        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
-        $this->getAgentService()->historiserAgentMissionSpecifique($agentMissionSpecifique);
-
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMissionSpecifique->getAgent()->getId()], [], true);
-    }
-
-    public function restaurerAgentMissionSpecifiqueAction()
-    {
-        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
-        $this->getAgentService()->restoreAgentMissionSpecifique($agentMissionSpecifique);
-
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMissionSpecifique->getAgent()->getId()], [], true);
-    }
-
-    public function detruireAgentMissionSpecifiqueAction()
-    {
-        $agentMissionSpecifique = $this->getAgentService()->getRequestedAgentMissionSpecifique($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getAgentService()->deleteAgentMissionSpecifique($agentMissionSpecifique);
-            //return $this->redirect()->toRoute('home');
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($agentMissionSpecifique !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de la mission spécifique  de " . $agentMissionSpecifique->getAgent()->getDenomination(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('agent/detruire-agent-mission-specifique', ["agent-mission-specifique" => $agentMissionSpecifique->getId()], [], true),
-            ]);
-        }
-        return $vm;
     }
 
     /** Gestion des applications***************************************************************************************/
@@ -244,7 +117,7 @@ class AgentController extends AbstractActionController
 
         /** @var AgentApplicationForm $form */
         $form = $this->getAgentApplicationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-application', [ 'agent' => $agent->getId() ], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-application', ['agent' => $agent->getId()], [], true));
         $form->bind($agentApplication);
 
         /** @var Request $request */
@@ -374,8 +247,8 @@ class AgentController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-           'title' => "Ajout d'une compétence associée à un agent",
-           'form' => $form,
+            'title' => "Ajout d'une compétence associée à un agent",
+            'form' => $form,
         ]);
         return $vm;
     }
@@ -473,7 +346,7 @@ class AgentController extends AbstractActionController
         $agentFormation->setAgent($agent);
         $agentFormation->setFormation($formation);
         $form = $this->getAgentFormationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-formation', ['agent' => $agent->getId(), 'formation' => ($formation)?$formation->getId():null]));
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-formation', ['agent' => $agent->getId(), 'formation' => ($formation) ? $formation->getId() : null]));
         $form->bind($agentFormation);
 
         /** @var Request $request */
@@ -591,17 +464,17 @@ class AgentController extends AbstractActionController
             case 'AgentApplication' :
                 $entity = $this->getAgentService()->getAgentApplication($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_APPLICATION");
-                $elementText = "l'application [".$entity->getApplication()->getLibelle()."]";
+                $elementText = "l'application [" . $entity->getApplication()->getLibelle() . "]";
                 break;
             case 'AgentCompetence' :
                 $entity = $this->getAgentService()->getAgentCompetence($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_COMPETENCE");
-                $elementText = "la compétence [".$entity->getCompetence()->getLibelle()."]";
+                $elementText = "la compétence [" . $entity->getCompetence()->getLibelle() . "]";
                 break;
             case 'AgentFormation' :
                 $entity = $this->getAgentService()->getAgentFormation($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_FORMATION");
-                $elementText = "la formation [".$entity->getFormation()->getLibelle()."]";
+                $elementText = "la formation [" . $entity->getFormation()->getLibelle() . "]";
                 break;
         }
 
@@ -624,7 +497,7 @@ class AgentController extends AbstractActionController
                 $this->getValidationInstanceService()->create($validation);
             }
 
-            if ($validation !== null AND $entity !== null) {
+            if ($validation !== null and $entity !== null) {
                 $entity->setValidation($validation);
                 switch ($type) {
                     case 'AgentApplication' :
@@ -645,8 +518,8 @@ class AgentController extends AbstractActionController
         if ($entity !== null) {
             $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
             $vm->setVariables([
-                'title' => "Validation de ".$elementText,
-                'text' => "Validation de ".$elementText,
+                'title' => "Validation de " . $elementText,
+                'text' => "Validation de " . $elementText,
                 'action' => $this->url()->fromRoute('agent/valider-element', ["type" => $type, "id" => $entityId], [], true),
             ]);
         }
@@ -666,14 +539,14 @@ class AgentController extends AbstractActionController
         $entity->setValidation(null);
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);
-        } catch(ORMException $e) {
+        } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
         if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $entity->getAgent()->getId()], [], true);
     }
-    
+
     /** Fichier associé à l'agent *************************************************************************************/
 
     public function uploadFichierAction()
@@ -682,10 +555,8 @@ class AgentController extends AbstractActionController
 
         $fichier = new Fichier();
         $form = $this->getUploadForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fichier',['agent' => $agent->getId()] , [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fichier', ['agent' => $agent->getId()], [], true));
         $form->bind($fichier);
-
-        /** !TODO! lorsque l'on est dans une modal on perd le tableau files ... */
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -703,7 +574,7 @@ class AgentController extends AbstractActionController
             return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()]);
         }
 
-        $vm =  new ViewModel();
+        $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => 'Téléverserment d\'un fichier',
@@ -743,20 +614,20 @@ class AgentController extends AbstractActionController
      * @param Agent[] $agents
      * @return array
      */
-    private function formatAgentJSON($agents)
+    private function formatAgentJSON(array $agents)
     {
         $result = [];
         /** @var Agent[] $agents */
         foreach ($agents as $agent) {
-            $structure = ($agent->getAffectationPrincipale())?($agent->getAffectationPrincipale()->getStructure()):null;
-            $extra = ($structure)?$structure->getLibelleCourt():"Affectation inconnue";
+            $structure = ($agent->getAffectationPrincipale()) ? ($agent->getAffectationPrincipale()->getStructure()) : null;
+            $extra = ($structure) ? $structure->getLibelleCourt() : "Affectation inconnue";
             $result[] = array(
-                'id'    => $agent->getId(),
+                'id' => $agent->getId(),
                 'label' => $agent->getDenomination(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>".$extra."</span>",
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
             );
         }
-        usort($result, function($a, $b) {
+        usort($result, function ($a, $b) {
             return strcmp($a['label'], $b['label']);
         });
         return $result;

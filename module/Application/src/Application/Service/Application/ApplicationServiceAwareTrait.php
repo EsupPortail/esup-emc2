@@ -10,7 +10,7 @@ Trait ApplicationServiceAwareTrait {
     /**
      * @return ApplicationService
      */
-    public function getApplicationService()
+    public function getApplicationService() : ApplicationService
     {
         return $this->applicationService;
     }
@@ -19,7 +19,7 @@ Trait ApplicationServiceAwareTrait {
      * @param ApplicationService $applicationService
      * @return ApplicationService
      */
-    public function setApplicationService($applicationService)
+    public function setApplicationService(ApplicationService $applicationService) : ApplicationService
     {
         $this->applicationService = $applicationService;
         return $this->applicationService;

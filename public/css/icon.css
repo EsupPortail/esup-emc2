@@ -252,3 +252,7 @@ span.icon.euro:before {
 span.icon.paragraph:before {
     content: "\f039";
 }
+
+span.icon.filtrer:before {
+    content: "\f0b0";
+}

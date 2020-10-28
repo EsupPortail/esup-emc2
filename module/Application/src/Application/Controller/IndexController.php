@@ -54,7 +54,8 @@ class IndexController extends AbstractActionController
                 case RoleConstant::PERSONNEL :
                     $agent = $this->getAgentService()->getAgentByUser($connectedUser);
                     return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-                    break;
+                case RoleConstant::VALIDATEUR :
+                    return $this->redirect()->toRoute('index-validateur', [], [], true);
                 case RoleConstant::GESTIONNAIRE :
                     $structures = $this->getStructureService()->getStructuresByGestionnaire($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
@@ -62,9 +63,6 @@ class IndexController extends AbstractActionController
                 case RoleConstant::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
-                    break;
-                case RoleConstant::VALIDATEUR :
-                    return $this->redirect()->toRoute('index-validateur', [], [], true);
                     break;
             }
         }

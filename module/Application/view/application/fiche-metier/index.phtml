@@ -120,7 +120,7 @@ $this->headTitle('Index des fiches métiers');
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            window.location.href = 'fiche-metier-type/editer';
+            window.location.reload();
         });
     });
 

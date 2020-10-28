@@ -2,9 +2,8 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\SynchroAwareInterface;
-use Application\Entity\SynchroAwareTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Grade {
     use ImportableAwareTrait;
@@ -19,6 +18,8 @@ class Grade {
     private $code;
     /** @var DateTime */
     private $histo;
+    /** @var ArrayCollection (AgentGrade) */
+    private $agentGrades;
 
     /**
      * @return string
@@ -100,8 +101,30 @@ class Grade {
         return $this;
     }
 
+    /**
+     * @return AgentGrade[]
+     */
+    public function getAgentGrades()
+    {
+        return $this->agentGrades->toArray();
+    }
+
     public function __toString()
     {
         return $this->getLibelleCourt();
+    }
+
+    /**
+     * @return string
+     */
+    public function generateTooltip()
+    {
+        $text  = "";
+        $text .= "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
+        $text .= "<br/>";
+        $text .= "Code : <strong>". $this->getCode() . "</strong>";
+        return $text;
     }
 }

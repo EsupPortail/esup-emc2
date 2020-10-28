@@ -10,7 +10,7 @@ trait GradeServiceAwareTrait {
     /**
      * @return GradeService
      */
-    public function getGradeService()
+    public function getGradeService() : GradeService
     {
         return $this->gradeService;
     }
@@ -19,7 +19,7 @@ trait GradeServiceAwareTrait {
      * @param GradeService $gradeService
      * @return GradeService
      */
-    public function setGradeService($gradeService)
+    public function setGradeService(GradeService $gradeService) : GradeService
     {
         $this->gradeService = $gradeService;
         return $this->gradeService;

@@ -71,14 +71,11 @@ class CompetenceService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilderForCompetence()
+    public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
             ->addSelect('type')->leftJoin('competence.type', 'type')
             ->addSelect('theme')->leftJoin('competence.theme', 'theme')
-            ->addSelect('createur')->join('competence.histoCreateur', 'createur')
-            ->addSelect('modificateur')->join('competence.histoModificateur', 'modificateur')
-            ->addSelect('destructeur')->leftJoin('competence.histoDestructeur', 'destructeur')
         ;
         return $qb;
     }
@@ -90,7 +87,7 @@ class CompetenceService {
      */
     public function getCompetences($champ = 'libelle', $order = 'ASC')
     {
-        $qb = $this->createQueryBuilderForCompetence()
+        $qb = $this->createQueryBuilder()
             ->orderBy('competence.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
@@ -118,7 +115,7 @@ class CompetenceService {
      */
     public function getCompetence(int $id)
     {
-        $qb = $this->createQueryBuilderForCompetence()
+        $qb = $this->createQueryBuilder()
             ->andWhere('competence.id = :id')
             ->setParameter('id', $id)
         ;

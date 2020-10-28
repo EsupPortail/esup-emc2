@@ -84,7 +84,10 @@ class EntretienProfessionnelController extends AbstractActionController
         // ne pas dupliquer les entretiens (si il existe alors on l'affiche)
         $entretien = null;
         if ($campagne !== null and $agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
-        if ($entretien !== null) return $this->redirect()->toRoute('entretien-professionnel/afficher', ["campagne" => $campagne->getId()], [], true);
+        if ($entretien !== null) {
+            /** @see EntretienProfessionnelController::afficherAction() */
+            return $this->redirect()->toRoute('entretien-professionnel/afficher', ["entretien" => $entretien->getId()], [], true);
+        }
 
         $entretien = new EntretienProfessionnel();
         if ($campagne !== null) $entretien->setCampagne($campagne);
@@ -170,8 +173,9 @@ class EntretienProfessionnelController extends AbstractActionController
     public function afficherAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $validationAgent = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ACCEPTER_ENTRETIEN_AGENT', $entretien);
-        $validationResponsable = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ACCEPTER_ENTRETIEN_RESPONSABLE', $entretien);
+        $validationAgent = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ENTRETIEN_AGENT', $entretien);
+        $validationResponsable = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ENTRETIEN_RESPONSABLE', $entretien);
+        $validationDrh = $this->getValidationInstanceService()->getValidationInstanceByCodeAndEntite('ENTRETIEN_DRH', $entretien);
 
         $agent = $entretien->getAgent();
         $fichespostes = ($agent) ? $agent->getFiches() : [];
@@ -188,6 +192,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'entretien'                 => $entretien,
             'validationAgent'           => $validationAgent,
             'validationResponsable'     => $validationResponsable,
+            'validationDrh'             => $validationDrh,
 
             'agent'                     => $agent,
             'fichespostes'              => $fichespostes,

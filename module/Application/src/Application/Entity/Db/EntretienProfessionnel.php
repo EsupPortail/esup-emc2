@@ -237,7 +237,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param EntretienProfessionnelObservation[] $observations
      * @return EntretienProfessionnel
      */
-    public function setObservations($observations)
+    public function setObservations(array $observations)
     {
         $this->observations->clear();
         foreach ($observations as $observation) $this->addObservation($observation);
@@ -274,7 +274,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param ValidationInstance $validationAgent
      * @return EntretienProfessionnel
      */
-    public function setValidationAgent($validationAgent)
+    public function setValidationAgent(ValidationInstance $validationAgent)
     {
         $this->validationAgent = $validationAgent;
         return $this;
@@ -299,7 +299,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param ValidationInstance $validationResponsable
      * @return EntretienProfessionnel
      */
-    public function setValidationResponsable($validationResponsable)
+    public function setValidationResponsable(ValidationInstance $validationResponsable)
     {
         $this->validationResponsable = $validationResponsable;
         return $this;
@@ -323,7 +323,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @param ValidationInstance $validationDRH
      */
-    public function setValidationDRH($validationDRH)
+    public function setValidationDRH(ValidationInstance $validationDRH)
     {
         $this->validationDRH = $validationDRH;
     }
@@ -344,10 +344,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param string $token
+     * @param string|null $token
      * @return EntretienProfessionnel
      */
-    public function setToken($token)
+    public function setToken(?string $token)
     {
         $this->token = $token;
         return $this;
@@ -365,7 +365,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param DateTime|null $acceptation
      * @return EntretienProfessionnel
      */
-    public function setAcceptation($acceptation)
+    public function setAcceptation(?DateTime $acceptation)
     {
         $this->acceptation = $acceptation;
         return $this;

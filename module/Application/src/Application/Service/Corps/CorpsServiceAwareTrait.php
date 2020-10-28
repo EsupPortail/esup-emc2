@@ -10,7 +10,7 @@ trait CorpsServiceAwareTrait {
     /**
      * @return CorpsService
      */
-    public function getCorpsService()
+    public function getCorpsService() : CorpsService
     {
         return $this->corpsService;
     }
@@ -19,7 +19,7 @@ trait CorpsServiceAwareTrait {
      * @param CorpsService $corpsService
      * @return CorpsService
      */
-    public function setCorpsService($corpsService)
+    public function setCorpsService(CorpsService $corpsService) : CorpsService
     {
         $this->corpsService = $corpsService;
         return $this->corpsService;

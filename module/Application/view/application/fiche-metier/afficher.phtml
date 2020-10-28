@@ -3,16 +3,19 @@
 /**
  * @see FicheMetierController::afficherAction()
  * @var FicheMetier $fiche
- * @var ParcoursDeFormation $parcours
+ * @var array $competences
  * @var array $applications
+ * @var ParcoursDeFormation $parcours
  */
 
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 
+$libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
+$this->headTitle('Affichage de la fiche métier #' . $fiche->getId(). " : " . $libelle);
 ?>
 
 <?php
-    echo $this->ficheMetier($fiche, null, ['mode' => 'affichage', 'parcours' => $parcours, 'applications' => $applications]);
+    echo $this->ficheMetier($fiche, null, ['mode' => 'affichage', 'competences' => $competences, 'applications' => $applications, 'parcours' => $parcours]);
 ?>
 

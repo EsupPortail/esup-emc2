@@ -11,8 +11,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class CategorieService
 {
-//    use UserServiceAwareTrait;
-//    use EntityManagerAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -129,7 +127,7 @@ class CategorieService
      * @param string $param
      * @return Categorie
      */
-    public function getRequestedCategorie($controller, $param='categorie')
+    public function getRequestedCategorie(AbstractActionController $controller, $param='categorie')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCategorie($id);
@@ -140,7 +138,7 @@ class CategorieService
      * @param string $code
      * @return Categorie
      */
-    public function getCategorieByCode($code)
+    public function getCategorieByCode(string $code)
     {
         $qb = $this->createQueryBuider()
             ->andWhere('categorie.code = :code')

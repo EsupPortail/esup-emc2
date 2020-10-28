@@ -35,48 +35,53 @@ class CorpsService {
      * @return QueryBuilder
      */
     public function createQueryBuilder() {
-        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps');
+        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+        ;
         return $qb;
     }
 
     /**
      * @param string $champ
      * @param string $ordre
+     * @param boolean $avecAgent
      * @return Corps[]
      */
-    public function getCorps($champ = 'libelleLong', $ordre = 'ASC') {
+    public function getCorps($champ = 'libelleLong', $ordre = 'ASC', $avecAgent = true) {
         $qb = $this->createQueryBuilder()
             ->andWhere('corps.histo IS NULL')
             ->orderBy('corps.' . $champ, $ordre)
         ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Corps[]
-     */
-    public function getCorpsHistorises($champ = 'libelleLong', $ordre = 'ASC') {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('corps.histo IS NOT NULL')
-            ->orderBy('corps.' . $champ, $ordre)
-        ;
+        if ($avecAgent) {
+            $qb = $qb->addSelect('agentGrade')->join('corps.agentGrades', 'agentGrade')
+                     ->addSelect('agent')->join('agentGrade.agent','agent')
+                    ->andWhere('agent.delete IS NULL')
+            ;
+        }
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     /**
      * @param integer $id
+     * @param bool $avecAgent
      * @return Corps
      */
-    public function getCorp($id)
+    public function getCorp(int $id, bool $avecAgent=true)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('corps.id = :id')
             ->setParameter('id', $id)
         ;
+
+        if ($avecAgent) {
+            $qb = $qb->addSelect('agentGrade')->join('corps.agentGrades', 'agentGrade')
+                ->addSelect('agent')->join('agentGrade.agent','agent')
+                ->andWhere('agent.delete IS NULL')
+            ;
+        }
+
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
@@ -90,12 +95,11 @@ class CorpsService {
      * @param string $param
      * @return Corps
      */
-    public function getRequestedCorps($controller, $param = 'corps')
+    public function getRequestedCorps(AbstractActionController $controller, $param = 'corps')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCorp($id);
         return $result;
     }
-
 
 }

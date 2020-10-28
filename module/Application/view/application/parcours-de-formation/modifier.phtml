@@ -15,6 +15,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
 
 $canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
 
+$this->headTitle('Modification du parcours de formation : ' . ($parcours->getLibelle())?:"non défini");
 ?>
 
 <h1 class="page-header">
@@ -66,66 +67,7 @@ $canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPriv
 
     <?php $formations = $parcours->getFormations(); ?>
 
-    <div class="row">
-        <div class="col-md-8">
-            <h3>
-                #Formation : <?php echo count($formations); ?>
-            </h3>
-        </div>
-        <div class="pull-right">
-            <?php if ($canModifier) : ?>
-                <a href="<?php echo $this->url('parcours-de-formation/ajouter-formation', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
-                   class="btn btn-primary action ajax-modal" data-event="modification"
-                >
-                    <span class="icon ajouter"></span>Ajouter des formations </a>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <?php
-        $groupes = [];
-        foreach ($formations as $formation) {
-            $groupe = $formation->getGroupe();
-            if ($groupe !== null) $groupes[$groupe->getId()] = $groupe;
-        }
-
-        $dictionnaire = [];
-        usort($groupes, function (FormationGroupe $a, FormationGroupe $b) {return $a->getOrdre() > $b->getOrdre();});
-        foreach ($groupes as $groupe) {
-            $dictionnaire[$groupe->getLibelle()] = [];
-        }
-
-
-        foreach ($formations as $formation) {
-            $groupe = ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"ZZZ";
-            $dictionnaire[$groupe][] = $formation;
-        }
-//        ksort($dictionnaire);
-    ?>
-
-    <table class="parcours-de-formation" style="width:90%;">
-    <?php foreach ($dictionnaire as $groupe => $gformations) : ?>
-        <?php usort($gformations, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();}); ?>
-        <?php $init = $gformations[0]; ?>
-        <tr> <th colspan="2" class="titre">
-            <?php echo ($groupe === "ZZZ")?"Sans groupe ...":$groupe; ?>
-        </th> </tr>
-        <?php foreach ($gformations as $formation) : ?>
-            <tr>
-                <td> <?php echo $formation->getLibelle(); ?> </td>
-                <td>
-                    <?php if ($canModifier) : ?>
-                        <?php /** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
-                        <a href="<?php echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formation->getId()], [], true); ?>"
-                        >
-                            <span class="icon detruire" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>
-                        </a>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    <?php endforeach; ?>
-    </table>
+    <?php echo $this->parcoursDeFormation($parcours, null, ['mode' => 'creation', 'modification' => $canModifier]); ?>
 
 </div>
 

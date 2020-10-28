@@ -260,7 +260,6 @@ class StructureController extends AbstractActionController {
             $this->getUserService()->removeRole($responsable, $role);
         }
 
-
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
 
@@ -276,6 +275,7 @@ class StructureController extends AbstractActionController {
     }
 
     /** Fonctions de recherche ****************************************************************************************/
+
     public function rechercherAction()
     {
         if (($term = $this->params()->fromQuery('term'))) {
@@ -329,7 +329,7 @@ class StructureController extends AbstractActionController {
      * @param Structure[] $structures
      * @return array
      */
-    private function formatStructureJSON($structures)
+    private function formatStructureJSON(array $structures)
     {
         $result = [];
         foreach ($structures as $structure) {
@@ -349,7 +349,7 @@ class StructureController extends AbstractActionController {
      * @param User[] $users
      * @return array
      */
-    private function formatUtilisateurJSON($users)
+    private function formatUtilisateurJSON(array $users)
     {
         $result = [];
         foreach ($users as $user) {

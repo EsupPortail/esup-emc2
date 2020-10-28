@@ -9,18 +9,16 @@
         <field name="nomUsuel"                 column="nom_usage"           type="string" length="64" />
         <field name="harpId"                   column="harp_id"             type="integer" />
 
+        <one-to-many target-entity="Application\Entity\Db\AgentQuotite" mapped-by="agent" field="quotites"/>
         <one-to-many target-entity="Application\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
         <one-to-many target-entity="Application\Entity\Db\AgentGrade" mapped-by="agent" field="grades"/>
         <one-to-many target-entity="Application\Entity\Db\AgentStatut" mapped-by="agent" field="statuts"/>
-
-        <field name="quotite"                  column="quotite"             type="integer" />
 
         <one-to-one target-entity="UnicaenUtilisateur\Entity\Db\User" field="utilisateur">
             <join-column name="utilisateur_id" referenced-column-name="id" />
         </one-to-one>
 
         <one-to-many target-entity="Application\Entity\Db\FichePoste" mapped-by="agent" field="fiches" />
-
         <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="agent" field="missionsSpecifiques"/>
         <one-to-many target-entity="Application\Entity\Db\AgentApplication" mapped-by="agent" field="applications"/>
         <one-to-many target-entity="Application\Entity\Db\AgentCompetence" mapped-by="agent" field="competences"/>
@@ -38,5 +36,6 @@
             </join-table>
         </many-to-many>
 
+        <field name="delete"                  column="deleted_on"             type="datetime" />
     </entity>
 </doctrine-mapping>

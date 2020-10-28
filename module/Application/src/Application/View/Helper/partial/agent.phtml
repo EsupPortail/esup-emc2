@@ -32,10 +32,10 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     <dd> <?php echo $agent->getNomUsuel(); ?> </dd>
     <dt> Quotité travaillée </dt>
     <dd>
-        <?php if ($agent->getQuotite() !== null) : ?>
-            <?php echo $agent->getQuotite(); ?>%
-        <?php else : ?>
-            <span style="color:darkred; font-style: italic;">Quotité travaillée non renseignée</span>
+        <?php if($quotite = $agent->getQuotiteCourante()) : ?>
+            <?php echo $quotite->getQuotite(); ?>%
+        <?php else: ?>
+            100%
         <?php endif; ?>
     </dd>
 </dl>
@@ -61,8 +61,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     </div>
 </div>
 
-<!-- todo si edition afficher tout de même -->
-<?php if (!empty($agent->getMissionsSpecifiques())) : ?>
+<?php if (!empty($agent->getMissionsSpecifiques()) OR $mode==='edition') : ?>
     <div class="row">
         <div class="col-md-7">
             <h2>
@@ -73,10 +72,10 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
         <?php if ($mode === 'edition') : ?>
             <?php if ($canAjouterMission) : ?>
                 <a
-                    <?php /** @see \Application\Controller\AgentController::ajouterAgentMissionSpecifiqueAction() */?>
-                        href="<?php echo $this->url('agent/ajouter-agent-mission-specifique', ['agent' => $agent->getId()], [], true); ?>"
-                        class="ajax-modal btn btn-primary action pull-right"
-                        data-event="modification"
+                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
+                    href="<?php echo $this->url('mission-specifique/affectation/ajouter', [], ['query' => ['agent' => $agent->getId()]], true); ?>"
+                    class="ajax-modal btn btn-primary action pull-right"
+                    data-event="modification"
                 >
                     <span class="icon ajouter"></span>Ajouter une mission spécifique</a>
             <?php endif; ?>
@@ -135,8 +134,8 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                         <?php endif; ?>
                         <?php if ($canModifierMission) : ?>
                             <a
-                                <?php /** @see \Application\Controller\AgentController::modifierAgentMissionSpecifiqueAction() */?>
-                                    href="<?php echo $this->url('agent/modifier-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
+                                    href="<?php echo $this->url('mission-specifique/affectation/modifier', ['affectation' => $mission->getId()], ['query' => ['agent' => $agent->getId()]], true); ?>"
                                     class="ajax-modal"
                                     data-event="modification"
                             >
@@ -145,22 +144,22 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                         <?php if ($canHistoriserMission) : ?>
                             <?php if ($mission->estNonHistorise()) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::historiserAgentMissionSpecifiqueAction() */?>
-                                        href="<?php echo $this->url('agent/historiser-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], ["query" => $query], true); ?>"
+                                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::historiserAction() */?>
+                                        href="<?php echo $this->url('mission-specifique/affectation/historiser', ['affectation' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
                                 >
                                     <span class="icon historiser"></span></a>
                             <?php else : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::restaurerAgentMissionSpecifiqueAction() */?>
-                                        href="<?php echo $this->url('agent/restaurer-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], ["query" => $query], true); ?>"
+                                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::restaurerAction() */?>
+                                        href="<?php echo $this->url('mission-specifique/affectation/restaurer', ['affectation' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
                                 >
                                     <span class="icon restaurer"></span></a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if ($canDetruireMission) : ?>
                             <a
-                                <?php /** @see \Application\Controller\AgentController::detruireAgentMissionSpecifiqueAction() */?>
-                                    href="<?php echo $this->url('agent/detruire-agent-mission-specifique', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::detruireAction() */?>
+                                    href="<?php echo $this->url('mission-specifique/affectation/detruire', ['affectation' => $mission->getId()], [], true); ?>"
                                     class="ajax-modal"
                                     data-event="modification"
                             >

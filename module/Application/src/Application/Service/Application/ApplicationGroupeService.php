@@ -11,9 +11,6 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ApplicationGroupeService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
-//    use DateTimeAwareTrait;
     use GestionEntiteHistorisationTrait;
     use RendererAwareTrait;
 
