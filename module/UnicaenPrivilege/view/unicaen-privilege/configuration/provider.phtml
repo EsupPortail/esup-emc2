@@ -5,9 +5,13 @@
  */
 
 use UnicaenPrivilege\Entity\Db\CategoriePrivilege;
+use UnicaenPrivilege\Entity\Db\Privilege;
 
 $namespace = ($categorie->getNamespace() ? $categorie->getNamespace() : "<span class='missing-data'>NONE_GIVEN</span>");
 $classname = ucfirst(strtolower($categorie->getCode())) . "Privileges";
+
+$privileges = $categorie->getPrivilege();
+usort($privileges, function(Privilege $a, Privilege $b) { return $a->getOrdre() > $b->getOrdre(); });
 ?>
 
 <h2> Chemin du fichier </h2>
@@ -24,7 +28,7 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class <?php echo $classname ?> extends Privileges
 {
-<?php foreach ($categorie->getPrivilege() as $privilege): ?>
+<?php foreach ($privileges as $privilege): ?>
     const <?php echo strtoupper($privilege->getCode()); ?> = '<?php echo $privilege->getFullCode(); ?>';
 <?php endforeach; ?>
 }

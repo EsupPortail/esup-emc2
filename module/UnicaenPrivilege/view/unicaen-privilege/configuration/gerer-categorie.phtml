@@ -16,6 +16,8 @@ $canEditerCategorie     = $this->isAllowed(PrivilegePrivileges::getResourceId(Pr
 $canAjouterPrivilege    = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_AJOUTER));
 $canEditerPrivilege     = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_MODIFIER));
 $canDetruirePrivilege   = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_SUPPRIMER));
+$canProvider            = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_VOIR));
+
 ?>
 
 <h1 class="page-header">
@@ -24,9 +26,7 @@ $canDetruirePrivilege   = $this->isAllowed(PrivilegePrivileges::getResourceId(Pr
 </h1>
 
 <div class="main">
-
     <div class="row">
-
         <div class="col-md-6">
             <?php if ($canRetour) : ?>
             <?php /** @see ConfigurationController::indexConfigurationCategorieAction()*/ ?>
@@ -51,6 +51,14 @@ $canDetruirePrivilege   = $this->isAllowed(PrivilegePrivileges::getResourceId(Pr
                 Ajouter un privilège
             </a>
             <?php endif;?>
+
+            <?php if ($canProvider) : ?>
+                <?php /** @see ConfigurationController::providerAction() */ ?>
+                <a href="<?php echo $this->url('configuration-categorie/provider', ['categorie' => $categorie->getId()], [], true); ?>" class="btn btn-primary  action ajax-modal">
+                    <span class="icon csv"></span>
+                    Générer le provider
+                </a>
+            <?php endif; ?>
         </div>
 
         <div class="col-md-6">
@@ -112,16 +120,16 @@ $canDetruirePrivilege   = $this->isAllowed(PrivilegePrivileges::getResourceId(Pr
                     ?>
                     <td>
                         <?php if ($value === true) : ?>
-                            <span class="icon ok" style="color:darkgreen"; title="<?php echo " = '".$constant. "'"; ?>"></span>
+                            <span class="icon ok" style="color:darkgreen;" title="<?php echo " = '".$constant. "'"; ?>"></span>
                         <?php else : ?>
-                            <span class="icon ko" style="color:darkred"; title="<?php echo " != '".$constant. "'"; ?>"></span>
+                            <span class="icon ko" style="color:darkred;" title="<?php echo " != '".$constant. "'"; ?>"></span>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if ($content === $privilege->getFullCode()) : ?>
-                            <span class="icon ok" style="color:darkgreen"; title="<?php echo  " =  '" .$privilege->getFullCode(). "'" ?>"></span>
+                            <span class="icon ok" style="color:darkgreen;" title="<?php echo  " =  '" .$privilege->getFullCode(). "'" ?>"></span>
                         <?php else : ?>
-                            <span class="icon ko" style="color:darkred"; title="<?php echo " != '" . $privilege->getFullCode(). "'"; ?>"></span>
+                            <span class="icon ko" style="color:darkred;" title="<?php echo " != '" . $privilege->getFullCode(). "'"; ?>"></span>
                         <?php endif; ?>
                     </td>
                     <td>
