@@ -10,8 +10,6 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DomaineService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -113,7 +111,7 @@ class DomaineService {
      * @param integer $id
      * @return Domaine
      */
-    public function getDomaine($id)
+    public function getDomaine(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('domaine.id = :id')
@@ -132,7 +130,7 @@ class DomaineService {
      * @param string $paramName
      * @return Domaine
      */
-    public function getRequestedDomaine($controller, $paramName = 'domaine')
+    public function getRequestedDomaine(AbstractActionController $controller, $paramName = 'domaine')
     {
         $id = $controller->params()->fromRoute($paramName);
         $domaine = $this->getDomaine($id);

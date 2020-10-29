@@ -23,7 +23,7 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function createDestination($destination)
+    public function createDestination(FonctionDestination $destination)
     {
         $this->createFromTrait($destination);
         return $destination;
@@ -33,7 +33,7 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function updateDestination($destination)
+    public function updateDestination(FonctionDestination $destination)
     {
         $this->updateFromTrait($destination);
         return $destination;
@@ -43,7 +43,7 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function historiseDestination($destination)
+    public function historiseDestination(FonctionDestination $destination)
     {
         $this->historiserFromTrait($destination);
         return $destination;
@@ -53,7 +53,7 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function restoreDestination($destination)
+    public function restoreDestination(FonctionDestination $destination)
     {
         $this->restoreFromTrait($destination);
         return $destination;
@@ -63,7 +63,7 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function deleteDestination($destination)
+    public function deleteDestination(FonctionDestination $destination)
     {
         $this->deleteFromTrait($destination);
         return $destination;
@@ -97,7 +97,7 @@ class FonctionService {
      * @param integer $id
      * @return FonctionDestination
      */
-    public function getDestination($id)
+    public function getDestination(int $id)
     {
         $qb = $this->createQueryBuilderDestination()
             ->andWhere('destination.id = :id')
@@ -116,7 +116,7 @@ class FonctionService {
      * @param string $param
      * @return FonctionDestination
      */
-    public function getResquestedDestrination($controller, $param='destination')
+    public function getResquestedDestrination(AbstractActionController $controller, string $param='destination')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getDestination($id);
@@ -144,7 +144,7 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function createActivite($activite)
+    public function createActivite(FonctionActivite $activite)
     {
         $this->createFromTrait($activite);
         return $activite;
@@ -154,7 +154,7 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function updateActivite($activite)
+    public function updateActivite(FonctionActivite $activite)
     {
         $this->updateFromTrait($activite);
         return $activite;
@@ -164,7 +164,7 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function historiseActivite($activite)
+    public function historiseActivite(FonctionActivite $activite)
     {
         $this->historiserFromTrait($activite);
         return $activite;
@@ -174,7 +174,7 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function restoreActivite($activite)
+    public function restoreActivite(FonctionActivite $activite)
     {
         $this->restoreFromTrait($activite);
         return $activite;
@@ -184,7 +184,7 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function deleteActivite($activite)
+    public function deleteActivite(FonctionActivite $activite)
     {
         $this->deleteFromTrait($activite);
         return $activite;
@@ -218,7 +218,7 @@ class FonctionService {
      * @param integer $id
      * @return FonctionActivite
      */
-    public function getActivite($id)
+    public function getActivite(int $id)
     {
         $qb = $this->createQueryBuilderActivite()
             ->andWhere('activite.id = :id')
@@ -237,7 +237,7 @@ class FonctionService {
      * @param string $param
      * @return FonctionActivite
      */
-    public function getResquestedActivite($controller, $param='activite')
+    public function getResquestedActivite(AbstractActionController $controller, $param='activite')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getActivite($id);
@@ -294,7 +294,7 @@ class FonctionService {
      * @param string $id
      * @return Fonction
      */
-    public function getFonction($id)
+    public function getFonction(string $id)
     {
         $qb = $this->getEntityManager()->getRepository(Fonction::class)->createQueryBuilder('fonction')
             ->addSelect('libelle')->leftJoin('fonction.libelles','libelle')
@@ -315,7 +315,7 @@ class FonctionService {
      * @param string $paramName
      * @return Fonction
      */
-    public function getRequestedFonction($controller, $paramName)
+    public function getRequestedFonction(AbstractActionController $controller, string $paramName)
     {
         $id = $controller->params()->fromRoute($paramName);
         $site = $this->getFonction($id);
@@ -326,7 +326,7 @@ class FonctionService {
      * @param Fonction $fonction
      * @return Fonction
      */
-    public function update($fonction)
+    public function update(Fonction $fonction)
     {
         try {
             $this->getEntityManager()->flush($fonction);

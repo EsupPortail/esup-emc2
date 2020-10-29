@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\FonctionActivite;
 use Application\Form\FonctionActivite\FonctionActiviteForm;
 use Application\Form\FonctionDestination\FonctionDestinationForm;
 use Application\Service\Fonction\FonctionService;

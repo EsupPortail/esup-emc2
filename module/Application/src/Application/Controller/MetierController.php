@@ -566,6 +566,7 @@ class MetierController extends AbstractActionController {
     }
 
     /** CARTOGRAPHIE ***************************************************************************************************/
+    //todo || here this portion of code is almost copied cartographieAction and exportCartographieAction ...............
 
     public function cartographieAction() {
         $metiers = $this->getMetierService()->getMetiers();

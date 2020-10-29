@@ -10,8 +10,6 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class MetierService {
-//    use UserServiceAwareTrait;
-//    use EntityManagerAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** GESTIONS DES ENTITES ******************************************************************************************/
@@ -99,7 +97,7 @@ class MetierService {
      * @param integer $id
      * @return Metier
      */
-    public function getMetier($id)
+    public function getMetier(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('metier.id = :id')
@@ -119,7 +117,7 @@ class MetierService {
      * @param string $paramName
      * @return Metier
      */
-    public function getRequestedMetier($controller, $paramName = 'metier')
+    public function getRequestedMetier(AbstractActionController $controller, $paramName = 'metier')
     {
         $id = $controller->params()->fromRoute($paramName);
         $metier = $this->getMetier($id);

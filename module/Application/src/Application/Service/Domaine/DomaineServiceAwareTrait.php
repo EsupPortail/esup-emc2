@@ -10,7 +10,7 @@ trait DomaineServiceAwareTrait {
     /**
      * @return DomaineService
      */
-    public function getDomaineService()
+    public function getDomaineService() : DomaineService
     {
         return $this->domaineService;
     }
@@ -19,7 +19,7 @@ trait DomaineServiceAwareTrait {
      * @param DomaineService $domaineService
      * @return DomaineService
      */
-    public function setDomaineService($domaineService)
+    public function setDomaineService(DomaineService $domaineService) : DomaineService
     {
         $this->domaineService = $domaineService;
         return $this->domaineService;
