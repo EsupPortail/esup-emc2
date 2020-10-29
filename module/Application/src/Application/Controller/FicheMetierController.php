@@ -30,6 +30,7 @@ use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
@@ -58,6 +59,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionFicheMetieEtatFormAwareTrait;
     use SelectionFormationFormAwareTrait;
     use SelectionEtatFormAwareTrait;
+    use EtatTypeServiceAwareTrait;
 
     use ConfigurationServiceAwareTrait;
 
@@ -74,7 +76,8 @@ class FicheMetierController extends AbstractActionController
             $fichesMetiers = $this->getFicheMetierService()->getFicheByDomaine($domaine);
         }
 
-        $etats = [];
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('FICHE_METIER');
+        $etats = $this->getEtatService()->getEtatsByType($type);
         $metiers = $this->getMetierService()->getMetiers();
 
         return new ViewModel([

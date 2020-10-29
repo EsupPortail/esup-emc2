@@ -1,28 +1,13 @@
 <?php
 
 /**
- * @var FicheMetierEtat[] $etats
+ * @var Etat[] $etats
  */
 
-use Application\Entity\Db\FicheMetierEtat;
-use Application\Provider\Privilege\FicheMetierPrivileges;
+use UnicaenEtat\Entity\Db\Etat;
 
-$canEtat    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_ETAT));
-
-$canAjouterEtat = $canEtat;
-$canModifierEtat = $canEtat;
-$canSupprimerEtat = $canEtat;
 
 ?>
-
-<?php if ($canAjouterEtat === true) : ?>
-    <a <?php /** @see \Application\Controller\FicheMetierController::ajouterEtatAction() */?>
-        href="<?php echo $this->url('fiche-metier-type/etat/ajouter', [], [], true); ?>"
-        class="btn btn-primary action ajax-modal" data-event="modification-etat"
-    >
-        <span class="icon ajouter"></span>Ajouter un état
-    </a>
-<?php endif; ?>
 
 <table id="etats" class="table table-condensed datatable">
     <thead>
@@ -30,35 +15,14 @@ $canSupprimerEtat = $canEtat;
             <th> Badge </th>
             <th> Code </th>
             <th> Description </th>
-            <th> Action </th>
         </tr>
     </thead>
     <tbody>
     <?php foreach ($etats as $etat) : ?>
         <tr>
-            <td> <?php echo $this->ficheMetierEtat($etat); ?> </td>
+            <td> <?php echo $this->etatbadge($etat); ?> </td>
             <td> <?php echo $etat->getCode(); ?> </td>
-            <td> <?php echo $etat->getDescription(); ?> </td>
-            <td>
-                <?php if ($canModifierEtat === true) : ?>
-                    <a
-                            <?php /** @see \Application\Controller\FicheMetierController::modifierEtatAction() */?>
-                            href="<?php echo $this->url('fiche-metier-type/etat/modifier', ['etat' => $etat->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification-etat"
-                    >
-                        <span class="icon editer" title="Modifier l'état" data-toggle="tooltip" data-html="true"></span>
-                    </a>
-                <?php endif; ?>
-                <?php if ($canSupprimerEtat === true AND $etat->getId() !== 0) : ?>
-                    <a
-                        <?php /** @see \Application\Controller\FicheMetierController::supprimerEtatAction() */?>
-                            href="<?php echo $this->url('fiche-metier-type/etat/supprimer', ['etat' => $etat->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="destruction-etat"
-                    >
-                        <span class="icon detruire" title="Détruire l'état" data-toggle="tooltip" data-html="true"></span>
-                    </a>
-                <?php endif; ?>
-            </td>
+            <td> <?php echo $etat->getLibelle(); ?> </td>
         </tr>
     <?php endforeach; ?>
     </tbody>

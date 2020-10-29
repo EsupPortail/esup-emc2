@@ -17,6 +17,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Interop\Container\ContainerInterface;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use Zend\View\Renderer\PhpRenderer;
 
 class FicheMetierControllerFactory {
@@ -27,6 +28,7 @@ class FicheMetierControllerFactory {
          * @var ActiviteService $activiteService
          * @var DomaineService $domaineService
          * @var EtatService $etatService
+         * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var ConfigurationService $configurationService
          * @var MetierService $metierService
@@ -35,6 +37,7 @@ class FicheMetierControllerFactory {
         $activiteService = $container->get(ActiviteService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $configurationService = $container->get(ConfigurationService::class);
         $metierService = $container->get(MetierService::class);
@@ -67,6 +70,7 @@ class FicheMetierControllerFactory {
         $controller->setActiviteService($activiteService);
         $controller->setDomaineService($domaineService);
         $controller->setEtatService($etatService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setConfigurationService($configurationService);
         $controller->setMetierService($metierService);
