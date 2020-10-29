@@ -10,9 +10,8 @@
         <many-to-one target-entity="Application\Entity\Db\Metier" field="metier">
             <join-column name="metier_id" referenced-column-name="id" />
         </many-to-one>
-
-        <many-to-one target-entity="Application\Entity\Db\FicheMetierEtat" field="etat">
-            <join-column name="etat_id" referenced-column-name="id" />
+        <many-to-one target-entity="UnicaenEtat\Entity\Db\Etat"  field="etat">
+            <join-column name="etat_id" referenced-column-name="id"/>
         </many-to-one>
 
         <many-to-many field="applications" target-entity="Application\Entity\Db\Application">

@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierEtat;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
@@ -12,7 +11,6 @@ use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
-use Application\Form\FicheMetierEtat\FicheMetieEtatFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -25,12 +23,13 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Application\Service\FicheMetierEtat\FicheMetierEtatServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
@@ -46,19 +45,19 @@ class FicheMetierController extends AbstractActionController
     use ActiviteServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use FicheMetierEtatServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
+    use EtatServiceAwareTrait;
 
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ActiviteExistanteFormAwareTrait;
-    use FicheMetieEtatFormAwareTrait;
     use LibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionFicheMetieEtatFormAwareTrait;
     use SelectionFormationFormAwareTrait;
+    use SelectionEtatFormAwareTrait;
 
     use ConfigurationServiceAwareTrait;
 
@@ -75,7 +74,7 @@ class FicheMetierController extends AbstractActionController
             $fichesMetiers = $this->getFicheMetierService()->getFicheByDomaine($domaine);
         }
 
-        $etats = $this->getFicheMetierEtatService()->getEtats();
+        $etats = [];
         $metiers = $this->getMetierService()->getMetiers();
 
         return new ViewModel([
@@ -107,7 +106,7 @@ class FicheMetierController extends AbstractActionController
     {
         /** @var FicheMetier $fiche */
         $fiche = new FicheMetier();
-        $fiche->setEtat($this->getFicheMetierEtatService()->getEtatByCode(FicheMetierEtat::CODE_REDACTION));
+        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetier::ETAT_REDACTION));
 
         /** @var LibelleForm $form */
         $form = $this->getLibelleForm();
@@ -240,10 +239,9 @@ class FicheMetierController extends AbstractActionController
     public function ajouterAvecMetierAction()
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
-        $redaction = $this->getFicheMetierEtatService()->getEtatByCode('REDACTION');
         $fiche = new FicheMetier();
         $fiche->setMetier($metier);
-        $fiche->setEtat($redaction);
+        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetier::ETAT_REDACTION));
         $this->getFicheMetierService()->create($fiche);
 
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
@@ -457,106 +455,30 @@ class FicheMetierController extends AbstractActionController
 
     /** GESTION DES ETATS DES FICHES METIERS **************************************************************************/
 
-    public function changerEtatAction()
+    public function changerUEtatAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
-        $form = $this->getSelectionFicheMetierEtatForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true));
+        $form = $this->getSelectionEtatForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-u-etat', ['fiche-metier' => $fiche->getId()], [], true));
         $form->bind($fiche);
+        $form->reinit('FICHE_METIER');
 
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $this->getFicheMetierService()->updateFromForm($request, $form, $this->getFicheMetierService());
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Changement de l'état de la fiche metier [" . $fiche->getMetier()->getLibelle() . "]",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function ajouterEtatAction()
-    {
-        $etat = new FicheMetierEtat();
-
-        $form = $this->getFicheMetierEtatForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/etat/ajouter', [], [], true));
-        $form->bind($etat);
-
-        /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getFicheMetierEtatService()->create($etat);
+                $this->getFicheMetierService()->update($fiche);
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Ajout d'un état",
+            'title' => "Changer l'état de la fiche métier",
             'form' => $form,
         ]);
-        return $vm;
-    }
-
-    public function modifierEtatAction()
-    {
-        $etat = $this->getFicheMetierEtatService()->getRequestedEtat($this);
-
-        $form = $this->getFicheMetierEtatForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/etat/modifier', ['etat' => $etat->getId()], [], true));
-        $form->bind($etat);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierEtatService()->update($etat);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'un état",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function supprimerEtatAction()
-    {
-        $etat = $this->getFicheMetierEtatService()->getRequestedEtat($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") {
-                $this->getFicheMetierEtatService()->delete($etat);
-            }
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($etat !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de l'état [" . $etat->getCode() . "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('fiche-metier-type/etat/supprimer', ["etat" => $etat->getId()], [], true),
-            ]);
-        }
         return $vm;
     }
 

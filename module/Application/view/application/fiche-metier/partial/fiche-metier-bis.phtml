@@ -71,7 +71,7 @@ $canDetruire = true;
                                                 class="ajax-modal" data-event="changer-etat"
                                         >
                                             <?php endif; ?>
-                                            <?php echo $this->ficheMetierEtat($fiche->getEtat()); ?>
+                                            <?php echo $this->etatbadge($fiche->getEtat()); ?>
                                             <?php if ($canEditer) : ?>
                                         </a>
                                     <?php endif; ?>

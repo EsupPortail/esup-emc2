@@ -8,6 +8,10 @@ use UnicaenEtat\Form\Etat\EtatForm;
 use UnicaenEtat\Form\Etat\EtatFormFactory;
 use UnicaenEtat\Form\Etat\EtatHydrator;
 use UnicaenEtat\Form\Etat\EtatHydratorFactory;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormFactory;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatHydrator;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatHydratorFactory;
 use UnicaenEtat\Provider\Privilege\EtatPrivileges;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\Etat\EtatServiceFactory;
@@ -183,11 +187,13 @@ return [
     'form_elements' => [
         'factories' => [
             EtatForm::class => EtatFormFactory::class,
+            SelectionEtatForm::class => SelectionEtatFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => array(
             EtatHydrator::class => EtatHydratorFactory::class,
+            SelectionEtatHydrator::class => SelectionEtatHydratorFactory::class,
         ),
     ],
     'view_helpers' => [

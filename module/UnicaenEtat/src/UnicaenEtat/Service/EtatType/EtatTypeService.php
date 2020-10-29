@@ -132,4 +132,22 @@ class EtatTypeService {
         $id = $controller->params()->fromRoute($param);
         return $this->getEtatType($id);
     }
+
+    /**
+     * @param string $code
+     * @return EtatType
+     */
+    public function getEtatTypeByCode(string $code)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('etype.code = :code')
+            ->setParameter('code', $code)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs EtatType partagent le même code [".$code."]");
+        }
+        return $result;
+    }
 }

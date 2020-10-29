@@ -3,11 +3,18 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface {
+class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface {
     use HistoriqueAwareTrait;
+    use HasEtatTrait;
+
+    const ETAT_REDACTION = 'FICHE_METIER_REDACTION';
+    const ETAT_VALIDE    = 'FICHE_METIER_OK';
+    const ETAT_MASQUE    = 'FICHE_METIER_MASQUEE';
 
     /** @var int */
     private $id;
@@ -15,8 +22,6 @@ class FicheMetier implements HistoriqueAwareInterface {
     private $metier;
     /** @var boolean */
     private $hasExpertise;
-    /** @var FicheMetierEtat */
-    private $etat;
 
     /** @var ArrayCollection */
     private $activites;
@@ -77,23 +82,7 @@ class FicheMetier implements HistoriqueAwareInterface {
         return $this;
     }
 
-    /**
-     * @return FicheMetierEtat
-     */
-    public function getEtat()
-    {
-        return $this->etat;
-    }
-
-    /**
-     * @param FicheMetierEtat|null $etat
-     */
-    public function setEtat(?FicheMetierEtat $etat)
-    {
-        $this->etat = $etat;
-    }
-
-    /**
+     /**
      * @return string
      */
     public function getMissionsPrincipales()

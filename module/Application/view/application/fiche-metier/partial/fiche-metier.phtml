@@ -82,18 +82,17 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
             </td>
             <td>
                 <?php if ($canEditer) : ?>
-                    <a
-                        <?php /** @see \Application\Controller\FicheMetierController::changerEtatAction() */?>
-                            href="<?php echo $this->url('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
-                            title="Changer l'état de la fiche métier"
-                            class="ajax-modal" data-event="changer-etat"
-                    >
-                <?php endif; ?>
-                <?php echo $this->ficheMetierEtat($fiche->getEtat()); ?>
-                <?php if ($canEditer) : ?>
-                    </a>
-                <?php endif; ?>
-
+                <a
+                    <?php /** @see \Application\Controller\FicheMetierController::changerUEtatAction() */?>
+                        href="<?php echo $this->url('fiche-metier-type/changer-u-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                        title="Changer l'état de la fiche métier"
+                        class="ajax-modal" data-event="changer-etat"
+                >
+                    <?php endif; ?>
+                    <?php echo $this->etatbadge($fiche->getEtat()); ?>
+                    <?php if ($canEditer) : ?>
+                </a>
+            <?php endif; ?>
             </td>
             <td>
                 <?php if ($canVoir) : ?>

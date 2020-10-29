@@ -7,7 +7,6 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierEtat;
 use Application\Entity\Db\Formation;
 use Application\Form\EntityFormManagmentTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
@@ -138,8 +137,8 @@ class FicheMetierService {
     public function getFichesMetiersValides(string $order = 'id')
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('etat.code = :code')
-            ->setParameter('code', FicheMetierEtat::CODE_VALIDE)
+            ->andWhere('etat.code = :ucode')
+            ->setParameter('ucode', FicheMetier::ETAT_VALIDE)
             ->orderBy('ficheMetier.', $order)
         ;
 
@@ -252,9 +251,9 @@ class FicheMetierService {
     /**
      * @param FicheMetier $fiche
      * @param Application $application
-     * @param DateTime $date
+     * @param DateTime|null $date
      */
-    public function addApplication(FicheMetier $fiche, Application $application, DateTime $date)
+    public function addApplication(FicheMetier $fiche, Application $application, ?DateTime $date = null)
     {
         $fiche->addApplication($application);
     }
@@ -262,9 +261,9 @@ class FicheMetierService {
     /**
      * @param FicheMetier $fiche
      * @param Competence $competence
-     * @param DateTime $date
+     * @param DateTime|null $date
      */
-    public function addCompetence(FicheMetier $fiche, Competence $competence, DateTime $date)
+    public function addCompetence(FicheMetier $fiche, Competence $competence, ?DateTime $date = null)
     {
         $fiche->addCompetence($competence);
     }
@@ -272,9 +271,9 @@ class FicheMetierService {
     /**
      * @param FicheMetier $fiche
      * @param Formation $formation
-     * @param DateTime $date
+     * @param DateTime|null $date
      */
-    public function addFormation(FicheMetier $fiche, Formation $formation, DateTime $date)
+    public function addFormation(FicheMetier $fiche, Formation $formation, ?DateTime $date = null)
     {
         $fiche->addFormation($formation);
     }
