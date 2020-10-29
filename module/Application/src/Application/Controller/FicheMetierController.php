@@ -15,7 +15,6 @@ use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
-use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetieEtatFormAwareTrait;
 use Application\Form\SelectionFormation\SelectionFormationForm;
 use Application\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -56,7 +55,6 @@ class FicheMetierController extends AbstractActionController
     use LibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
-    use SelectionFicheMetieEtatFormAwareTrait;
     use SelectionFormationFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use EtatTypeServiceAwareTrait;
@@ -458,12 +456,12 @@ class FicheMetierController extends AbstractActionController
 
     /** GESTION DES ETATS DES FICHES METIERS **************************************************************************/
 
-    public function changerUEtatAction()
+    public function changerEtatAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
         $form = $this->getSelectionEtatForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-u-etat', ['fiche-metier' => $fiche->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true));
         $form->bind($fiche);
         $form->reinit('FICHE_METIER');
 

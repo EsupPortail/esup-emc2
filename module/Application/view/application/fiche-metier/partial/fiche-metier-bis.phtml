@@ -65,7 +65,7 @@ $canDetruire = true;
                                 <td>
                                     <?php if ($canEditer) : ?>
                                         <a
-                                            <?php /** @see \Application\Controller\FicheMetierController::changerEtatAction() */?>
+                                            <?php /** @see \Application\Controller\FicheMetierController::changerUEtatAction() */?>
                                                 href="<?php echo $this->url('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                                 title="Changer l'état de la fiche métier"
                                                 class="ajax-modal" data-event="changer-etat"

@@ -10,10 +10,6 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
 use Application\Form\FicheMetier\LibelleHydratorFactory;
-use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatForm;
-use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatFormFactory;
-use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatHydrator;
-use Application\Form\SelectionFicheMetierEtat\SelectionFicheMetierEtatHydratorFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
@@ -74,7 +70,6 @@ return [
 
                         'changer-expertise',
                         'changer-etat',
-                        'changer-u-etat',
                         'modifier-application',
                         'modifier-formation',
                         'gerer-competences',
@@ -337,17 +332,6 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'changer-u-etat' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/changer-u-etat/:fiche-metier',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'changer-u-etat',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'editer-libelle' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -446,13 +430,11 @@ return [
         'factories' => [
             ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
-            SelectionFicheMetierEtatForm::class => SelectionFicheMetierEtatFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             LibelleHydrator::class => LibelleHydratorFactory::class,
-            SelectionFicheMetierEtatHydrator::class => SelectionFicheMetierEtatHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
