@@ -74,7 +74,7 @@ class FicheMetierController extends AbstractActionController
             $fichesMetiers = $this->getFicheMetierService()->getFicheByDomaine($domaine);
         }
 
-        $type = $this->getEtatTypeService()->getEtatTypeByCode('FICHE_METIER');
+        $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetier::TYPE_FICHEMETIER);
         $etats = $this->getEtatService()->getEtatsByType($type);
         $metiers = $this->getMetierService()->getMetiers();
 
@@ -463,7 +463,7 @@ class FicheMetierController extends AbstractActionController
         $form = $this->getSelectionEtatForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true));
         $form->bind($fiche);
-        $form->reinit('FICHE_METIER');
+        $form->reinit(FicheMetier::TYPE_FICHEMETIER);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
