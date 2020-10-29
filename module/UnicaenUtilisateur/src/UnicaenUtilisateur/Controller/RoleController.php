@@ -2,7 +2,10 @@
 
 namespace UnicaenUtilisateur\Controller;
 
+use DateTime;
+use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Form\Role\RoleFormAwareTrait;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use Zend\Http\Request;
@@ -21,6 +24,35 @@ class RoleController extends AbstractActionController {
         return new ViewModel([
             'roles' => $roles,
         ]);
+    }
+
+    public function listingAction()
+    {
+        $role = $this->getRoleService()->getRequestedRole($this);
+        /** @var User[] $users */
+        $users = $role->getUsers()->toArray();
+        usort($users, function (User $a, User $b) { return $a->getDisplayName() > $b->getDisplayName();});
+
+        $headers = [ 'Nom d\'utilisateur', 'Nom affiché', 'Adresse électronique'];
+
+        $records = [];
+        foreach ($users as $user) {
+            $item  = [];
+            $item[]  = $user->getUsername();
+            $item[]  = $user->getDisplayName();
+            $item[]  = $user->getEmail();
+            $records[] = $item;
+        }
+
+        $date = (new DateTime())->format('Ymd-His');
+        $filename="export_utilisateur_".str_replace(' ','-',$role->getRoleId())."_".$date.".csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($headers);
+        $CSV->setData($records);
+        $CSV->setFilename($filename);
+        return $CSV;
     }
 
     public function ajouterAction()

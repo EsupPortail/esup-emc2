@@ -21,6 +21,7 @@ return [
                     'controller' => RoleController::class,
                     'action' => [
                         'index',
+                        'listing',
                     ],
                     'privileges' => [
                         RolePrivileges::ROLE_AFFICHER,
@@ -81,6 +82,16 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'listing' => [
+                        'type'          => Segment::class,
+                        'options'       => [
+                            'route'       => '/listing/:role',
+                            'defaults'    => [
+                                'controller' => RoleController::class,
+                                'action' => 'listing',
+                            ],
+                        ],
+                    ],
                     'ajouter' => [
                         'type'          => Literal::class,
                         'options'       => [

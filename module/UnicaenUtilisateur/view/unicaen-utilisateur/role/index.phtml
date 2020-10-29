@@ -54,6 +54,17 @@ $canEffacer     = $this->isAllowed(RolePrivileges::getResourceId(RolePrivileges:
                     <td> <?php echo $role->getLibelle(); ?></td>
                     <td> <span title="<?php echo implode("\n",$listing); ?>"><?php echo $nbUser; ?> <i class="fas fa-user"></i></span> </td>
                     <td>
+                        <?php if ($canAfficher) : ?>
+                            <a <?php /** @see RoleController::listingAction() */ ?>
+                                    href="<?php echo $this->url('role/listing', ['role' => $role->getId()], [], true); ?>"
+
+                            >
+                                <span class="icon csv" title="Lister les utilisateurs ayant ce rôle"></span>
+                            </a>
+                        <?php else : ?>
+                            <span class="icon csv" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+
                         <?php if ($canModifier) : ?>
                             <a <?php /** @see RoleController::modifierAction() */ ?>
                                href="<?php echo $this->url('role/modifier', ['role' => $role->getId()], [], true); ?>"
