@@ -7,7 +7,7 @@ use Application\Service\Competence\CompetenceService;
 use Application\Service\Formation\FormationService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class ActiviteServiceFactory {
     /**

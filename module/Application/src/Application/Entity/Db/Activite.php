@@ -218,7 +218,7 @@ class Activite implements HistoriqueAwareInterface
         return false;
     }
 
-    /** APPLICATIONS **************************************************************************************************/
+    /** FICHE METIER **************************************************************************************************/
 
     /**
      * @return ArrayCollection (FicheMetier)

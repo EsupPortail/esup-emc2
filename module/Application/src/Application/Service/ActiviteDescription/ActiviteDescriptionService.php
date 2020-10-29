@@ -3,40 +3,23 @@
 namespace Application\Service\ActiviteDescription;
 
 use Application\Entity\Db\ActiviteDescription;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteDescriptionService {
-    use DateTimeAwareTrait;
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
+
     /**
      * @param ActiviteDescription $description
      * @return ActiviteDescription
      */
-    public function create(ActiviteDescription $description)
+    public function create(ActiviteDescription  $description)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $description->setHistoCreation($date);
-        $description->setHistoCreateur($user);
-        $description->setHistoModification($date);
-        $description->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->persist($description);
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregirstrement en base",0, $e);
-        }
+        $this->createFromTrait($description);
         return $description;
     }
 
@@ -46,17 +29,7 @@ class ActiviteDescriptionService {
      */
     public function update(ActiviteDescription $description)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $description->setHistoModification($date);
-        $description->setHistoModificateur($user);
-
-        try {
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregirstrement en base",0, $e);
-        }
+        $this->updateFromTrait($description);
         return $description;
     }
 
@@ -66,17 +39,7 @@ class ActiviteDescriptionService {
      */
     public function historise(ActiviteDescription $description)
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $description->setHistoDestruction($date);
-        $description->setHistoDestructeur($user);
-
-        try {
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregirstrement en base",0, $e);
-        }
+        $this->historiserFromTrait($description);
         return $description;
     }
 
@@ -86,14 +49,7 @@ class ActiviteDescriptionService {
      */
     public function restore(ActiviteDescription $description)
     {
-        $description->setHistoDestruction(null);
-        $description->setHistoDestructeur(null);
-
-        try {
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregirstrement en base",0, $e);
-        }
+        $this->restoreFromTrait($description);
         return $description;
     }
 
@@ -103,28 +59,30 @@ class ActiviteDescriptionService {
      */
     public function delete(ActiviteDescription $description)
     {
-        try {
-            $this->getEntityManager()->remove($description);
-            $this->getEntityManager()->flush($description);
-        } catch(ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregirstrement en base",0, $e);
-        }
+        $this->deleteFromTrait($description);
         return $description;
     }
 
     /** ACCESSEUR *****************************************************************************************************/
 
+    public function createQueryBuilder()
+    {
+        $qb = $this->getEntityManager()->getRepository(ActiviteDescription::class)->createQueryBuilder('description')
+            ->addSelect('activite')->join('description.activite', 'activite')
+        ;
+        return $qb;
+    }
+
     /**
      * @param integer $id
      * @return ActiviteDescription
      */
-    public function getActiviteDescription($id)
+    public function getActiviteDescription(int $id)
     {
-        $qb = $this->getEntityManager()->getRepository(ActiviteDescription::class)->createQueryBuilder('description')
+        $qb = $this->createQueryBuilder()
             ->andWhere('description.id = :id')
             ->setParameter('id', $id)
         ;
-
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
@@ -138,7 +96,7 @@ class ActiviteDescriptionService {
      * @param string $param
      * @return ActiviteDescription
      */
-    public function getRequestedActiviteDescription($controller, $param = 'description')
+    public function getRequestedActiviteDescription(AbstractActionController $controller, $param = 'description')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getActiviteDescription($id);

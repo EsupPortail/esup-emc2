@@ -4,9 +4,10 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\Formation;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class ActiviteFormation {
+class ActiviteFormation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */

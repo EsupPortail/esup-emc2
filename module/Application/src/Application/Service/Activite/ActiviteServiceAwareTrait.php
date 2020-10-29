@@ -11,7 +11,7 @@ trait ActiviteServiceAwareTrait {
     /**
      * @return ActiviteService
      */
-    public function getActiviteService()
+    public function getActiviteService() : ActiviteService
     {
         return $this->activiteService;
     }
@@ -20,7 +20,7 @@ trait ActiviteServiceAwareTrait {
      * @param ActiviteService $activiteService
      * @return ActiviteService
      */
-    public function setActiviteService($activiteService)
+    public function setActiviteService(ActiviteService $activiteService) : ActiviteService
     {
         $this->activiteService = $activiteService;
         return $this->activiteService;

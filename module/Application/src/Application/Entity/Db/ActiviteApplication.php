@@ -2,9 +2,10 @@
 
 namespace Application\Entity\Db;
 
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class ActiviteApplication {
+class ActiviteApplication implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */

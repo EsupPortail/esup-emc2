@@ -20,6 +20,7 @@ class ActiviteExistanteForm extends Form {
             'name' => 'activite',
             'options' => [
                 'label' => "Activité :",
+                'empty_option' => "Choississez une activité ... ",
                 'value_options' => $this->getActiviteService()->getActivitesAsOptions(),
             ],
             'attributes' => [

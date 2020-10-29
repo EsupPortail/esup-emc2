@@ -18,15 +18,15 @@ class Categorie implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCode()
+    public function getCode() : ?string
     {
         return $this->code;
     }
@@ -35,16 +35,16 @@ class Categorie implements HistoriqueAwareInterface {
      * @param string $code
      * @return Categorie
      */
-    public function setCode($code)
+    public function setCode(string $code) : Categorie
     {
         $this->code = $code;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
@@ -53,7 +53,7 @@ class Categorie implements HistoriqueAwareInterface {
      * @param string $libelle
      * @return Categorie
      */
-    public function setLibelle($libelle)
+    public function setLibelle(string $libelle) : Categorie
     {
         $this->libelle = $libelle;
         return $this;

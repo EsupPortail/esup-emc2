@@ -20,9 +20,6 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
-//    use DateTimeAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     use ApplicationServiceAwareTrait;
@@ -115,10 +112,10 @@ class ActiviteService {
     }
 
     /**
-     * @param FicheMetier $ficheMetier
+     * @param FicheMetier|null $ficheMetier
      * @return array
      */
-    public function getActivitesAsOptions($ficheMetier = null)
+    public function getActivitesAsOptions(FicheMetier $ficheMetier = null)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.histoDestruction IS NULL')
@@ -134,7 +131,6 @@ class ActiviteService {
         }
 
         $options = [];
-        $options[null] = "Choississez une activité ... ";
         /** @var Activite $item */
         foreach ($result as $item) {
             $res = array_filter($activites, function (Activite $a) use ($item) {return $a->getId() === $item->getId();});
@@ -146,7 +142,7 @@ class ActiviteService {
      * @param int $id
      * @return Activite mixed
      */
-    public function getActivite($id)
+    public function getActivite(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.id = :id')
@@ -166,7 +162,7 @@ class ActiviteService {
      * @param string $paramName
      * @return Activite
      */
-    public function getRequestedActivite($controller, $paramName = 'activite')
+    public function getRequestedActivite(AbstractActionController $controller, $paramName = 'activite')
     {
         $id = $controller->params()->fromRoute($paramName);
         $activite = $this->getActivite($id);
@@ -174,10 +170,10 @@ class ActiviteService {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return FicheMetierTypeActivite
      */
-    public function getFicheMetierTypeActivite($id)
+    public function getFicheMetierTypeActivite(int $id)
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetierTypeActivite::class)->createQueryBuilder('activite')
             ->andWhere('activite.id = :id')
@@ -196,7 +192,7 @@ class ActiviteService {
      * @param FicheMetier $fiche
      * @return FicheMetierTypeActivite[]
      */
-    public function getActivitesByFicheMetierType($fiche)
+    public function getActivitesByFicheMetierType(FicheMetier $fiche)
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetierTypeActivite::class)->createQueryBuilder('couple')
             ->addSelect('fiche')
@@ -213,9 +209,9 @@ class ActiviteService {
     }
 
     /**
-     * @param FicheMetierTypeActivite$couple
+     * @param FicheMetierTypeActivite $couple
      */
-    public function moveUp($couple) {
+    public function moveUp(FicheMetierTypeActivite $couple) {
         $currentPosition = $couple->getPosition();
         if ($currentPosition !== 1) {
             $activites = $this->getActivitesByFicheMetierType($couple->getFiche());
@@ -240,7 +236,7 @@ class ActiviteService {
     /**
      * @param FicheMetierTypeActivite $couple
      */
-    public function moveDown($couple) {
+    public function moveDown(FicheMetierTypeActivite $couple) {
         $currentPosition = $couple->getPosition();
         $activites = $this->getActivitesByFicheMetierType($couple->getFiche());
 
@@ -263,7 +259,10 @@ class ActiviteService {
         }
     }
 
-    public function compacting($fiche) {
+    /**
+     * @param FicheMetier $fiche
+     */
+    public function compacting(FicheMetier $fiche) {
         $activites = $this->getActivitesByFicheMetierType($fiche);
 
         $position = 1;
@@ -274,7 +273,12 @@ class ActiviteService {
         }
     }
 
-    public function createFicheMetierTypeActivite($fiche, $activite)
+    /**
+     * @param FicheMetier $fiche
+     * @param Activite $activite
+     * @return FicheMetierTypeActivite
+     */
+    public function createFicheMetierTypeActivite(FicheMetier $fiche, Activite $activite)
     {
         $activites = $this->getActivitesByFicheMetierType($fiche);
 
@@ -292,7 +296,11 @@ class ActiviteService {
         return $couple;
     }
 
-    public function updateFicheMetierTypeActivite($couple)
+    /**
+     * @param FicheMetierTypeActivite $couple
+     * @return FicheMetierTypeActivite
+     */
+    public function updateFicheMetierTypeActivite(FicheMetierTypeActivite $couple)
     {
         try {
             $this->getEntityManager()->flush($couple);
@@ -306,9 +314,8 @@ class ActiviteService {
     /**
      * @param FicheMetierTypeActivite $couple
      */
-    public function removeFicheMetierTypeActivite($couple)
+    public function removeFicheMetierTypeActivite(FicheMetierTypeActivite $couple)
     {
-
         try {
             $this->getEntityManager()->remove($couple);
             $this->getEntityManager()->flush($couple);
@@ -324,7 +331,7 @@ class ActiviteService {
      * @param array $data
      * @return Activite
      */
-    public function updateApplications(Activite $activite, $data)
+    public function updateApplications(Activite $activite, array $data)
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = $this->getDateTime();
@@ -334,15 +341,15 @@ class ActiviteService {
 
         /** @var ActiviteApplication $activiteApplication */
         foreach ($activite->getApplicationsCollection() as $activiteApplication) {
-                if (array_search($activiteApplication->getApplication()->getId(), $applicationIds) === false) {
-                    $activiteApplication->setHistoDestructeur($user);
-                    $activiteApplication->setHistoDestruction($date);
-                    try {
-                        $this->getEntityManager()->flush($activiteApplication);
-                    } catch (ORMException $e) {
-                        throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
-                    }
+            if (array_search($activiteApplication->getApplication()->getId(), $applicationIds) === false) {
+                $activiteApplication->setHistoDestructeur($user);
+                $activiteApplication->setHistoDestruction($date);
+                try {
+                    $this->getEntityManager()->flush($activiteApplication);
+                } catch (ORMException $e) {
+                    throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
                 }
+            }
         }
 
         foreach ($applicationIds as $applicationId) {
@@ -372,7 +379,7 @@ class ActiviteService {
      * @param array $data
      * @return Activite
      */
-    public function updateCompetences(Activite $activite, $data)
+    public function updateCompetences(Activite $activite, array $data)
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = $this->getDateTime();
@@ -422,7 +429,7 @@ class ActiviteService {
      * @param array $data
      * @return Activite
      */
-    public function updateFormations(Activite $activite, $data)
+    public function updateFormations(Activite $activite, array $data)
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = $this->getDateTime();
