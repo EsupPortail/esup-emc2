@@ -112,7 +112,11 @@ class Agent implements ResourceInterface
      */
     public function getAffectations()
     {
-        return $this->affectations->toArray();
+        $affectations = $this->affectations->toArray();
+        usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
+            return $a->getDateDebut() < $b->getDateDebut();
+        });
+        return $affectations;
     }
 
     /**
@@ -150,7 +154,11 @@ class Agent implements ResourceInterface
      */
     public function getStatuts()
     {
-        return $this->statuts->toArray();
+        $status = $this->statuts->toArray();
+        usort($statuts, function (AgentStatut $a, AgentStatut $b) {
+            return $a->getDebut() < $b->getDebut();
+        });
+        return $status;
     }
 
     /**
@@ -170,7 +178,11 @@ class Agent implements ResourceInterface
     /** @return AgentGrade[] */
     public function getGrades()
     {
-        return $this->grades->toArray();
+        $grades = $this->grades->toArray();
+        usort($grades, function (AgentGrade $a, AgentGrade $b) {
+            return $a->getDateDebut() < $b->getDateDebut();
+        });
+        return $grades;
     }
 
     /**

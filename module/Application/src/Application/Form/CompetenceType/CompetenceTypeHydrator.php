@@ -3,11 +3,9 @@
 namespace Application\Form\CompetenceType;
 
 use Application\Entity\Db\CompetenceType;
-use Application\Service\Formation\FormationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class CompetenceTypeHydrator implements HydratorInterface {
-    use FormationServiceAwareTrait;
 
     /**
      * @var CompetenceType $object

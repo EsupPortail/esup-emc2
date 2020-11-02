@@ -64,7 +64,6 @@ return [
                         'ajouter-descriptions',
                         'modifier-description',
                         'supprimer-description',
-                        'echanger-ordre-description',
                         'update-ordre-description',
                     ],
                     'privileges' => [
@@ -161,16 +160,6 @@ return [
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'modifier',
-                            ],
-                        ],
-                    ],
-                    'echanger-ordre-description' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/echanger-ordre-description/:description1/:description2',
-                            'defaults' => [
-                                'controller' => ActiviteController::class,
-                                'action'     => 'echanger-ordre-description',
                             ],
                         ],
                     ],

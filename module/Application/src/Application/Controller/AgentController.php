@@ -4,12 +4,9 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
-use Application\Entity\Db\AgentGrade;
-use Application\Entity\Db\AgentStatut;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
@@ -17,13 +14,13 @@ use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use Application\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
@@ -87,17 +84,8 @@ class AgentController extends AbstractActionController
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $affectations = $agent->getAffectations();
-        usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
-            return $a->getDateDebut() < $b->getDateDebut();
-        });
         $grades = $agent->getGrades();
-        usort($grades, function (AgentGrade $a, AgentGrade $b) {
-            return $a->getDateDebut() < $b->getDateDebut();
-        });
         $statuts = $agent->getStatuts();
-        usort($statuts, function (AgentStatut $a, AgentStatut $b) {
-            return $a->getDebut() < $b->getDebut();
-        });
 
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),

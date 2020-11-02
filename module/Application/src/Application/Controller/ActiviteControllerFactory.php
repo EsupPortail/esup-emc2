@@ -7,7 +7,7 @@ use Application\Form\ModifierDescription\ModifierDescriptionForm;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
-use Application\Form\SelectionFormation\SelectionFormationForm;
+use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
 use Interop\Container\ContainerInterface;

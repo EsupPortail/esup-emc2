@@ -98,7 +98,6 @@ class ActiviteController  extends AbstractActionController {
     public function historiserAction()
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
-
         $this->getActiviteService()->historise($activite);
         return $this->redirect()->toRoute('activite');
     }
@@ -106,7 +105,6 @@ class ActiviteController  extends AbstractActionController {
     public function restaurerAction()
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
-
         $this->getActiviteService()->restore($activite);
         return $this->redirect()->toRoute('activite');
     }
@@ -337,22 +335,6 @@ class ActiviteController  extends AbstractActionController {
             'form' => $form,
         ]);
         return $vm;
-    }
-
-    public function echangerOrdreDescriptionAction()
-    {
-        $description1 = $this->getActiviteDescriptionService()->getActiviteDescription($this->params()->fromRoute('description1'));
-        $description2 = $this->getActiviteDescriptionService()->getActiviteDescription($this->params()->fromRoute('description2'));
-
-        $ordre1 = $description1->getOrdre();
-        $ordre2 = $description2->getOrdre();
-
-        $description1->setOrdre($ordre2);
-        $description2->setOrdre($ordre1);
-        $this->getActiviteDescriptionService()->update($description1);
-        $this->getActiviteDescriptionService()->update($description2);
-
-        return new ViewModel();
     }
 
     public function updateOrdreDescriptionAction()

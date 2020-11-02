@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use DateTime;
+use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;

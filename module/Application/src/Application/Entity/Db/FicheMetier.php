@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Formation\Entity\Db\Formation;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
