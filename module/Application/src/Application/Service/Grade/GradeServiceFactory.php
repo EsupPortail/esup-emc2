@@ -5,8 +5,12 @@ namespace Application\Service\Grade;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 
-class GradeServiceFactory {
-
+class GradeServiceFactory
+{
+    /**
+     * @param ContainerInterface $container
+     * @return GradeService
+     */
     public function __invoke(ContainerInterface $container)
     {
         /**

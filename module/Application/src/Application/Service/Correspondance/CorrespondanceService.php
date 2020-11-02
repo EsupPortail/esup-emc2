@@ -12,6 +12,10 @@ use Zend\Mvc\Controller\AbstractActionController;
 class CorrespondanceService {
     use EntityManagerAwareTrait;
 
+    /** GESTION DES ENITIES *******************************************************************************************/
+
+    // les grades sont importés et ne sont pas gérés dans l'application
+
     /** REQUETAGE *****************************************************************************************************/
 
     /**

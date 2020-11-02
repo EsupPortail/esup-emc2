@@ -4,6 +4,7 @@ namespace Application\Service\Grade;
 
 use Application\Entity\Db\Grade;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -11,6 +12,15 @@ use Zend\Mvc\Controller\AbstractActionController;
 class GradeService {
     use EntityManagerAwareTrait;
 
+    /** GESTION DES ENITIES *******************************************************************************************/
+
+    // les grades sont importés et ne sont pas gérés dans l'application
+
+    /** REQUETAGE *****************************************************************************************************/
+
+    /**
+     * @return QueryBuilder
+     */
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade');
@@ -46,7 +56,7 @@ class GradeService {
      * @param string $ordre
      * @return Grade[]
      */
-    public function getGradesHistorises($champ = 'libelleLong', $ordre ='ASC')
+    public function getGradesHistorises(string $champ = 'libelleLong', string $ordre ='ASC')
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("grade.histo IS NOT NULL")
@@ -61,7 +71,7 @@ class GradeService {
      * @param string $ordre
      * @return array
      */
-    public function getGradesAsOptions($champ = 'libelleLong', $ordre ='ASC')
+    public function getGradesAsOptions(string $champ = 'libelleLong', string $ordre ='ASC')
     {
         $grades = $this->getGrades($champ, $ordre);
 
@@ -103,7 +113,7 @@ class GradeService {
      * @param string $param
      * @return Grade
      */
-    public function getRequestedGrade(AbstractActionController $controller, $param = "grade")
+    public function getRequestedGrade(AbstractActionController $controller, string $param = "grade")
     {
         $id = $controller->params()->fromRoute($param);
         $grade = $this->getGrade($id);

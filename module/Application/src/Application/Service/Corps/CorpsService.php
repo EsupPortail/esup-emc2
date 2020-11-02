@@ -95,11 +95,10 @@ class CorpsService {
      * @param string $param
      * @return Corps
      */
-    public function getRequestedCorps(AbstractActionController $controller, $param = 'corps')
+    public function getRequestedCorps(AbstractActionController $controller, string $param = 'corps')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCorp($id);
         return $result;
     }
-
 }
