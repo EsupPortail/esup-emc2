@@ -566,43 +566,9 @@ class MetierController extends AbstractActionController {
     }
 
     /** CARTOGRAPHIE ***************************************************************************************************/
-    //todo || here this portion of code is almost copied cartographieAction and exportCartographieAction ...............
 
     public function cartographieAction() {
-        $metiers = $this->getMetierService()->getMetiers();
-
-        $results = [];
-        foreach($metiers as $metier) {
-
-            $references = [];
-            foreach ($metier->getReferences() as $reference) {
-                $references[] = $reference->getTitre();
-            }
-
-            $domaines = $metier->getDomaines();
-            if (empty($domaines)) $domaines[] = null;
-
-            foreach ($domaines as $domaine) {
-                $famille = ($domaine) ? $domaine->getFamille() : null;
-                $fonction =  ($domaine) ? $domaine->getTypeFonction() : null;
-
-                $entry = [
-                    'metier'     => ($metier) ? $metier->__toString() : "---",
-                    'niveau'     => ($metier) ? $metier->getNiveau() : "---",
-                    'références' => implode("<br/>", $references),
-                    'domaine'    => ($domaine) ? $domaine->__toString() : "---",
-                    'fonction'   => ($fonction) ? $fonction : "---",
-                    'famille'    => ($famille) ? $famille->__toString() : "---",
-                    'nbFiche'    => count($metier->getFichesMetiers()),
-                ];
-                $results[] = $entry;
-            }
-        }
-
-        usort($results, function($a, $b) {
-            if ($a['metier'] !== $b['metier'])  return $a['metier'] > $b['metier'];
-            return $a['domaine'] > $b['domaine'];
-        });
+        $results = $this->getMetierService()->generateCartographyArray();
 
         return new ViewModel([
             'results' => $results,
@@ -610,45 +576,11 @@ class MetierController extends AbstractActionController {
     }
 
     public function exportCartographieAction() {
-        $metiers = $this->getMetierService()->getMetiers();
-
-        $results = [];
-        foreach($metiers as $metier) {
-
-            $references = [];
-            foreach ($metier->getReferences() as $reference) {
-                $references[] = $reference->getTitre();
-            }
-
-            $domaines = $metier->getDomaines();
-            if (empty($domaines)) $domaines[] = null;
-
-            foreach ($domaines as $domaine) {
-                $famille = ($domaine) ? $domaine->getFamille() : null;
-                $fonction =  ($domaine) ? $domaine->getTypeFonction() : null;
-
-                $entry = [
-                    'metier'     => ($metier) ? $metier->__toString() : "---",
-                    'niveau'     => ($metier) ? $metier->getNiveau() : "---",
-                    'références' => implode("\n", $references),
-                    'domaine'    => ($domaine) ? $domaine->__toString() : "---",
-                    'fonction'   => ($fonction) ? $fonction : "---",
-                    'famille'    => ($famille) ? $famille->__toString() : "---",
-                    'nbFiche'    => count($metier->getFichesMetiers()),
-                ];
-                $results[] = $entry;
-            }
-        }
-
-        usort($results, function($a, $b) {
-            if ($a['metier'] !== $b['metier'])  return $a['metier'] > $b['metier'];
-            return $a['domaine'] > $b['domaine'];
-        });
+        $results = $this->getMetierService()->generateCartographyArray();
 
         $headers = [ 'Metier', 'Niveau', 'Références', 'Domaine', 'Fonction', 'Famille', '#Fiche'];
 
         $today = new DateTime();
-
         $result = new CsvModel();
         $result->setDelimiter(';');
         $result->setEnclosure('"');

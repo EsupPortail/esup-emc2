@@ -158,6 +158,48 @@ class MetierService {
         }
         $multi[] = ['label' => 'Sans domaine rattaché', 'options' => $options];
         return $multi;
-
     }
+
+    /** FONCTIONS "METIERS" *******************************************************************************************/
+
+    public function generateCartographyArray()
+    {
+        $metiers = $this->getMetiers();
+
+        $results = [];
+        foreach($metiers as $metier) {
+
+            $references = [];
+            foreach ($metier->getReferences() as $reference) {
+                $references[] = $reference->getTitre();
+            }
+
+            $domaines = $metier->getDomaines();
+            if (empty($domaines)) $domaines[] = null;
+
+            foreach ($domaines as $domaine) {
+                $famille = ($domaine) ? $domaine->getFamille() : null;
+                $fonction =  ($domaine) ? $domaine->getTypeFonction() : null;
+
+                $entry = [
+                    'metier'     => ($metier) ? $metier->__toString() : "---",
+                    'niveau'     => ($metier) ? $metier->getNiveau() : "---",
+                    'références' => implode("<br/>", $references),
+                    'domaine'    => ($domaine) ? $domaine->__toString() : "---",
+                    'fonction'   => ($fonction) ? $fonction : "---",
+                    'famille'    => ($famille) ? $famille->__toString() : "---",
+                    'nbFiche'    => count($metier->getFichesMetiers()),
+                ];
+                $results[] = $entry;
+            }
+        }
+
+        usort($results, function($a, $b) {
+            if ($a['metier'] !== $b['metier'])  return $a['metier'] > $b['metier'];
+            return $a['domaine'] > $b['domaine'];
+        });
+
+        return $results;
+    }
+
 }
