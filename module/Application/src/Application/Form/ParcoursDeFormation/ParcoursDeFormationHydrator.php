@@ -3,7 +3,7 @@
 namespace Application\Form\ParcoursDeFormation;
 
 use Application\Entity\Db\ParcoursDeFormation;
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Fomration\Service\Formation\FormationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ParcoursDeFormationHydrator implements HydratorInterface {

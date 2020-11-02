@@ -8,7 +8,7 @@ use Application\Service\Application\ApplicationService;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\FicheMetier\FicheMetierService;
-use Application\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Autoform\Service\Formulaire\FormulaireService;
 use Interop\Container\ContainerInterface;
 

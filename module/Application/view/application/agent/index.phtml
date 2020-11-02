@@ -11,12 +11,13 @@ use Application\Provider\Privilege\AgentPrivileges;
 
 $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 
+$this->headTitle("Index des agents")
 ?>
 
 <div class="row">
     <div class="col-md-6">
     <h1 class="page-header">
-        Agents
+        Index des agents
         <span class="badge">
                <?php echo count($agents); ?>
            </span>

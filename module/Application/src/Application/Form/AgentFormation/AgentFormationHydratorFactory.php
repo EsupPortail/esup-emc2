@@ -2,7 +2,7 @@
 
 namespace Application\Form\AgentFormation;
 
-use Application\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
 class AgentFormationHydratorFactory

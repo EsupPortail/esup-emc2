@@ -20,7 +20,7 @@ class ModifierLibelleHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'libelle' => strip_tags($object->getLibelle()),
+            'libelle' => html_entity_decode(strip_tags($object->getLibelle())),
         ];
         return $data;
     }

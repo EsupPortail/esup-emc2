@@ -2,17 +2,16 @@
 
 namespace Application\Controller;
 
-use Application\Form\Agent\AgentForm;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentFormation\AgentFormationForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
-use Application\Service\Formation\FormationService;
 use Application\Service\Structure\StructureService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
+use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;

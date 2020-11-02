@@ -3,7 +3,7 @@
 namespace Application\Form\Application;
 
 use Application\Service\Application\ApplicationGroupeService;
-use Application\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
 class ApplicationHydratorFactory {

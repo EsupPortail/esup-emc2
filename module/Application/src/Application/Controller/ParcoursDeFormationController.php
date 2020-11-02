@@ -7,7 +7,7 @@ use Application\Form\AjouterFormation\AjouterFormationFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\ModifierRattachement\ModifierRattachementFormAwareTrait;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationFormAwareTrait;
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;

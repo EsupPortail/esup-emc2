@@ -2,7 +2,7 @@
 
 namespace Application\Form\ParcoursDeFormation;
 
-use Application\Service\Formation\FormationService;
+use Formration\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
 class ParcoursDeFormationHydratorFactory

@@ -2,7 +2,7 @@
 
 namespace Application\Form\AjouterFormation;
 
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;

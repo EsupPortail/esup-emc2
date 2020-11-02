@@ -3,7 +3,7 @@
 namespace Application\Form\ParcoursDeFormation;
 
 use Application\Service\Categorie\CategorieService;
-use Application\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Application\Service\Metier\MetierService;
 use Interop\Container\ContainerInterface;
 

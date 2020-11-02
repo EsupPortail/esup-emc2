@@ -3,7 +3,7 @@
 namespace Application\Form\Application;
 
 use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;

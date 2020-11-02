@@ -13,13 +13,20 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 $applications   = $activite->getApplications();
 $competences    = $activite->getCompetences();
 $formations      = $activite->getFormations();
+
+$action = ($mode === 'modifier-activite')?"Modification":"Affichage";
+$titre = $action . " de la mission ";
+$this->headTitle($titre  . " : " .$activite->getCurrentActiviteLibelle()->getLibelle());
 ?>
 
 <?php if ($mode === 'modifier-activite') : ?>
     <h1 class="page-header">
-        Modification de l'activité
+        <?php echo $titre; ?> <br/>
+        <strong>  <?php echo $activite->getCurrentActiviteLibelle()->getLibelle(); ?> </strong>
     </h1>
 <?php endif; ?>
+
+<div class="main">
 
 <?php echo $this->activite($activite, $mode); ?>
 
@@ -39,7 +46,7 @@ $formations      = $activite->getFormations();
         <li> <?php echo $ficheMetier->getFiche()->getMetier()->getLibelle(); ?> </li>
     <?php endforeach; ?>
 </ul>
-
+</div>
 
 <script>
     $(function() {

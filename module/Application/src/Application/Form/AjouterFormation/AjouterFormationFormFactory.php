@@ -2,7 +2,7 @@
 
 namespace Application\Form\AjouterFormation;
 
-use Application\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
 class AjouterFormationFormFactory {

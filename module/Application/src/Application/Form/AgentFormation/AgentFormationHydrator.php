@@ -3,7 +3,7 @@
 namespace Application\Form\AgentFormation;
 
 use Application\Entity\Db\AgentFormation;
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Hydrator\HydratorInterface;

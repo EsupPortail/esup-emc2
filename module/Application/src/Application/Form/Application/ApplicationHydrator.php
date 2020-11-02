@@ -4,7 +4,7 @@ namespace Application\Form\Application;
 
 use Application\Entity\Db\Application;
 use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ApplicationHydrator implements HydratorInterface {

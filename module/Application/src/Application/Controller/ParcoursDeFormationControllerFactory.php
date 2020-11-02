@@ -6,7 +6,7 @@ use Application\Form\AjouterFormation\AjouterFormationForm;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierRattachement\ModifierRattachementForm;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationForm;
-use Application\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Interop\Container\ContainerInterface;
 

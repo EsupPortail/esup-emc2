@@ -4,7 +4,7 @@ namespace Application\Form\Application;
 
 use Application\Entity\Db\ApplicationGroupe;
 use Application\Service\Application\ApplicationGroupeService;
-use Application\Service\Formation\FormationService;
+use FOrmation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 use Zend\Form\FormElementManager;
 
