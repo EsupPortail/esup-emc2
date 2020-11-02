@@ -5,7 +5,7 @@ namespace Application\Form\Activite;
 use Application\Entity\Db\Activite;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
-use Application\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ActiviteHydrator implements HydratorInterface {

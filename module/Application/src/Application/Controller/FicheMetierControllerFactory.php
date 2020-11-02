@@ -7,7 +7,7 @@ use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
-use Application\Form\SelectionFormation\SelectionFormationForm;
+use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\Domaine\DomaineService;

@@ -4,7 +4,7 @@ namespace Application\Form\Activite;
 
 use Application\Service\Application\ApplicationService;
 use Application\Service\Competence\CompetenceService;
-use Application\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
 class ActiviteHydratorFactory {
