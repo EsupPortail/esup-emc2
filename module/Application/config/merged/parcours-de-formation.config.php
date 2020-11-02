@@ -4,6 +4,10 @@ namespace Application;
 
 use Application\Controller\ParcoursDeFormationController;
 use Application\Controller\ParcoursDeFormationControllerFactory;
+use Application\Form\AjouterFormation\AjouterFormationForm;
+use Application\Form\AjouterFormation\AjouterFormationFormFactory;
+use Application\Form\AjouterFormation\AjouterFormationHydrator;
+use Application\Form\AjouterFormation\AjouterFormationHydratorFactory;
 use Application\Form\ModifierRattachement\ModifierRattachementForm;
 use Application\Form\ModifierRattachement\ModifierRattachementFormFactory;
 use Application\Form\ModifierRattachement\ModifierRattachementHydrator;
@@ -12,7 +16,7 @@ use Application\Form\ParcoursDeFormation\ParcoursDeFormationForm;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationFormFactory;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationHydrator;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationHydratorFactory;
-use Application\Provider\Privilege\FormationPrivileges;
+use Formation\Provider\Privilege\FormationPrivileges;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceFactory;
 use Application\View\Helper\ParcoursDeFormationViewHelperFactory;
@@ -42,7 +46,7 @@ return [
 
                     ],
                     'privileges' => [
-                        FormationPrivileges::FORMATION_INDEX,
+                        FormationPrivileges::FORMATION_ACCES,
                     ],
                 ],
             ],
@@ -215,12 +219,14 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            AjouterFormationForm::class => AjouterFormationFormFactory::class,
             ModifierRattachementForm::class => ModifierRattachementFormFactory::class,
             ParcoursDeFormationForm::class => ParcoursDeFormationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            AjouterFormationHydrator::class => AjouterFormationHydratorFactory::class,
             ModifierRattachementHydrator::class => ModifierRattachementHydratorFactory::class,
             ParcoursDeFormationHydrator::class => ParcoursDeFormationHydratorFactory::class,
         ],

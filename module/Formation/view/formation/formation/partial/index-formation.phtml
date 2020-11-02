@@ -1,0 +1,136 @@
+<?php
+
+/**
+ * @var Formation[] $formations
+ * @var boolean[] $droits
+ */
+
+use Formation\Entity\Db\Formation;
+
+$canAfficher = $droits['afficher'];
+$canAjouter = $droits['ajouter'];
+$canAjouterInstance = $droits['ajouter'];
+$canHistoriser = $droits['historiser'];
+$canDetruire = $droits['detruire'];
+
+usort($formations, function(Formation $a, Formation $b) {
+    $oga = ($a->getGroupe())?$a->getGroupe()->getOrdre():999999;
+    $ogb = ($b->getGroupe())?$b->getGroupe()->getOrdre():999999;
+    return $oga > $ogb;
+});
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Formations
+        </h2>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canAjouter) : ?>
+            <br/>
+
+
+            <a
+                <?php /** @see FormationController::ajouterAction() */ ?>
+                href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter une formation
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<br/>
+
+<table class="datatable" id="formations" style="width:100%;">
+    <thead>
+        <tr>
+            <th> Libellé </th>
+            <th> Groupe </th>
+            <th> Thème </th>
+            <th style="width:12rem;"> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach($formations as $formation) : ?>
+        <tr>
+            <td> <?php echo $formation->getLibelle(); ?> </td>
+            <td> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Sans groupe ..."; ?> </td>
+            <td> <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():""; ?> </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see FormationController::editerAction() */ ?>
+                        href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
+                    >
+                        <span class="icon voir" title="Afficher la formation"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($formation->estNonHistorise()) : ?>
+                        <a
+                            <?php /** @see FormationController::historiserAction() */ ?>
+                            href="<?php echo $this->url('formation/historiser', ['formation' => $formation->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser la formation"></span></a>
+                    <?php else : ?>
+                        <a
+                            <?php /** @see FormationController::restaurerAction() */ ?>
+                            href="<?php echo $this->url('formation/restaurer', ['formation' => $formation->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer la formation"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruire) : ?>
+                    <a
+                        <?php /** @see FormationController::detruireAction() */ ?>
+                        href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire" title="Supprimer la formation"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+        let groupColumn = 1;
+        $('#formations').DataTable({
+            "sorting" : false,
+            "columnDefs": [
+                { "visible": false, "targets": groupColumn }
+            ],
+            // "order": [[ groupColumn, 'asc' ]],
+            "drawCallback": function () {
+                let api = this.api();
+                let rows = api.rows( {page:'current'} ).nodes();
+                let last = null;
+
+                api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                    if ( last !== group ) {
+                        $(rows).eq( i ).before(
+                            '<tr class="group"><td colspan="3"> Groupe : '+group+'</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                } );
+            }
+        } );
+    } );
+</script>
+
+<style>
+    table#formations thead tr th {
+        height: 5rem;
+    }
+    tr.group {
+        background: linear-gradient(to right, lightgrey, white);
+        color: #3c6c8b;
+    }
+</style>

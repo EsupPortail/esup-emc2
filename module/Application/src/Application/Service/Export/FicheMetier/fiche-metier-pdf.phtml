@@ -2,16 +2,15 @@
 
 /**
  * @var FicheMetier $fiche
- * @var ParcoursDeFormation $parcours
+ * @var ParcoursDeFormation[] $parcours
  */
 
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
-use Application\Entity\Db\FormationGroupe;
 use Application\Entity\Db\ParcoursDeFormation;
-use Application\Entity\Db\Formation;
+use Formation\Entity\Db\FormationGroupe;
 
 $metier = $fiche->getMetier();
 ?>

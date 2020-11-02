@@ -198,6 +198,10 @@ a.action {
     text-indent: 0em;
     margin: 1px;
 }
+
+div.pull-right a.action {
+    margin-right: 1rem;
+}
 button.action {
     width: 20em;
     text-indent: 0em;
@@ -397,6 +401,8 @@ span.probleme {
 
 tr.historise td {
     color:lightslategray;
+    background: #d9d9d9;
+    /*text-decoration: line-through;*/
 }
 
 th.cell-action {
@@ -510,6 +516,14 @@ table.formations th.titre {
     background: linear-gradient(to right, lightgrey, white);
     color: #3c6c8b;
     /*border-top-left-radius:5px;*/
+}
+
+span.lettrine {
+    position:relative;
+    left:-0.75rem;
+    top:1rem;
+    font-weight:bolder;
+    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
 /** Datatable *****/

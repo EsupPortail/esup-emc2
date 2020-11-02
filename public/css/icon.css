@@ -13,6 +13,10 @@ span.icon.retour:before {
     content: "\f104";
 }
 
+span.icon.retour-double:before {
+    content: "\f100";
+}
+
 span.icon.voir:before {
     content: "\f06e";
 }
@@ -239,6 +243,14 @@ span.icon.televerser:before {
 
 span.icon.fiche-poste:before {
     content: "\f1c4";
+}
+
+span.icon.euro:before {
+    content: "\f153";
+}
+
+span.icon.paragraph:before {
+    content: "\f039";
 }
 
 span.icon.filtrer:before {

@@ -2,7 +2,7 @@
 
 namespace Application\Form\AjouterFormation;
 
-use Application\Entity\Db\Formation;
+use Formation\Entity\Db\Formation;
 use Zend\Hydrator\HydratorInterface;
 
 class AjouterFormationHydrator implements HydratorInterface {

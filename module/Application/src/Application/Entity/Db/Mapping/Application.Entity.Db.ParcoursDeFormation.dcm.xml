@@ -13,7 +13,7 @@
 
         <!-- les categories -->
 
-        <many-to-many field="formations" target-entity="Application\Entity\Db\Formation" inversed-by="formation" fetch="LAZY">
+        <many-to-many field="formations" target-entity="Formation\Entity\Db\Formation" inversed-by="formation" fetch="LAZY">
             <join-table name="formation_parcours_formation">
                 <join-columns>
                     <join-column name="parcours_id" referenced-column-name="id"/>

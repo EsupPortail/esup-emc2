@@ -7,7 +7,7 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\Formation;
+use Formation\Entity\Db\Formation;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;

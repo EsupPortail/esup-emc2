@@ -3,8 +3,8 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class ActiviteFormation implements HistoriqueAwareInterface {

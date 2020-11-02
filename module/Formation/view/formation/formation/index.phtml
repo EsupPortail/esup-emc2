@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @see FormationController::indexAction()
+ *
+ * @var Formation[] $formations
+ * @var FormationGroupe[] $groupes
+ * @var FormationTheme[] $themes
+ */
+
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationGroupe;
+use Formation\Entity\Db\FormationTheme;
+use Formation\Provider\Privilege\FormationPrivileges;
+
+$canAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+$canAjouter = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AJOUTER));
+$canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+$canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_HISTORISER));
+$canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_SUPPRIMER));
+
+$this->headTitle("Index des formations");
+
+$droits = [
+    'afficher' => $canAfficher,
+    'ajouter' => $canAjouter,
+    'editer' => $canEditer,
+    'historiser' => $canHistoriser,
+    'detruire' => $canDetruire,
+];
+?>
+
+<h1 class="page-header">
+    Index des formations
+</h1>
+
+
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li>
+            <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz">
+                Formations &nbsp;
+                <span class="badge">
+                    <?php echo count($formations); ?>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#groupe" aria-controls="groupe" role="tab" data-toggle="tabz">
+                Groupes &nbsp;
+                <span class="badge">
+                    <?php echo count($groupes); ?>
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#theme" aria-controls="theme" role="tab" data-toggle="tabz">
+                Thèmes &nbsp;
+                <span class="badge">
+                    <?php echo count($themes); ?>
+                </span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="main-with-tab">
+
+        <div class="tab-content">
+
+            <div id="theme" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-theme', ['themes' => $themes, 'droits' => $droits], [], true); ?>
+            </div>
+
+            <div id="groupe" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-groupe', ['groupes' => $groupes, 'droits' => $droits], [], true); ?>
+            </div>
+
+            <div id="formation" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-formation', ['formations' => $formations, 'droits' => $droits], [], true); ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "formation";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function () {
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

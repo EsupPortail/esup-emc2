@@ -26,7 +26,7 @@
             <join-column name="groupe_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-many field="formations" target-entity="Application\Entity\Db\Formation" inversed-by="formation" fetch="LAZY">
+        <many-to-many field="formations" target-entity="Formation\Entity\Db\Formation" inversed-by="formation" fetch="LAZY">
             <join-table name="application_formation">
                 <join-columns>
                     <join-column name="application_id" referenced-column-name="id"/>

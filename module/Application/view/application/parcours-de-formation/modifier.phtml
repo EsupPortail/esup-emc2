@@ -1,9 +1,11 @@
 <?php
 
 use Application\Entity\Db\Categorie;
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationGroupe;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
-use Application\Provider\Privilege\FormationPrivileges;
+use Formation\Provider\Privilege\FormationPrivileges;
 
 /**
  * @see \Application\Controller\ParcoursDeFormationController::modifierAction()
@@ -11,7 +13,7 @@ use Application\Provider\Privilege\FormationPrivileges;
  * @var Categorie|Metier $reference
  */
 
-$canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_EDITER));
+$canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
 
 $this->headTitle('Modification du parcours de formation : ' . ($parcours->getLibelle())?:"non défini");
 ?>

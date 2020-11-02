@@ -14,7 +14,6 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FonctionService {
-    use EntityManagerAwareTrait;
     use GestionEntiteHistorisationTrait;
 
     /** Destinations **************************************************************************************************/

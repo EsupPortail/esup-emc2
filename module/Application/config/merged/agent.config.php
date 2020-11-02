@@ -18,6 +18,10 @@ use Application\Form\AgentFormation\AgentFormationForm;
 use Application\Form\AgentFormation\AgentFormationFormFactory;
 use Application\Form\AgentFormation\AgentFormationHydrator;
 use Application\Form\AgentFormation\AgentFormationHydratorFactory;
+use Application\Form\SelectionAgent\SelectionAgentForm;
+use Application\Form\SelectionAgent\SelectionAgentFormFactory;
+use Application\Form\SelectionAgent\SelectionAgentHydrator;
+use Application\Form\SelectionAgent\SelectionAgentHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
@@ -511,6 +515,7 @@ return [
             AgentApplicationForm::class => AgentApplicationFormFactory::class,
             AgentCompetenceForm::class => AgentCompetenceFormFactory::class,
             AgentFormationForm::class => AgentFormationFormFactory::class,
+            SelectionAgentForm::class => SelectionAgentFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -518,6 +523,7 @@ return [
             AgentApplicationHydrator::class => AgentApplicationHydratorFactory::class,
             AgentCompetenceHydrator::class => AgentCompetenceHydratorFactory::class,
             AgentFormationHydrator::class => AgentFormationHydratorFactory::class,
+            SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
@@ -531,6 +537,5 @@ return [
             'agentGrade' => AgentGradeViewHelper::class,
         ],
     ],
-
 
 ];

@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @var FormationInstanceJournee $journee
+ */
+
+use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\FormationInstanceJournee;
+
+$inscrits = $journee->getInstance()->getListePrincipale();
+$formation = $journee->getInstance()->getFormation();
+?>
+
+<h1>
+    Feuille d'émargement de la formation : <?php echo $formation->getLibelle(); ?>
+</h1>
+<h2>
+    Journée du <?php echo $journee->getJour(); ?> du <?php echo $journee->getDebut(); ?> au <?php echo $journee->getFin(); ?>
+</h2>
+
+
+<table class="emargement">
+    <?php /** @var FormationInstanceInscrit $inscrit */ ?>
+    <?php foreach ($inscrits as $inscrit) : ?>
+        <tr>
+            <td>
+                <strong> <?php echo $inscrit->getAgent()->getDenomination(); ?> </strong> <br/>
+                <?php echo ($inscrit->getAgent()->getAffectationPrincipale() !== null)?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"N.C."; ?>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+
+<style>
+    table.emargement {
+        border: 1px solid black;
+        border-collapse: collapse;
+        width:100%;
+    }
+
+    table.emargement td {
+        border: 1px solid black;
+        width:50%;
+    }
+</style>
