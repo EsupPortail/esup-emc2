@@ -155,4 +155,36 @@ class AgentMissionSpecifique implements HistoriqueAwareInterface {
         if ($this->getDateFin() !== null AND $this->getDateFin() < $date) return false;
         return true;
     }
+
+    /** FONCTIONS DEDIEES AUX AFFICHAGES **************************************************************/
+
+    public function getPeriode()
+    {
+        $texte  = "";
+        if ($this->getDateDebut() !== null AND $this->getDateFin() !== null) {
+            $texte .= "du ";
+            $texte .= $this->getDateDebut()->format('d/m/Y');
+            $texte .= " au ";
+            $texte .= $this->getDateFin()->format('d/m/Y');
+            return $texte;
+        }
+        if ($this->getDateDebut() !== null AND $this->getDateFin() === null) {
+            $texte .= "à partir du ";
+            $texte .= $this->getDateDebut()->format('d/m/Y');
+            return $texte;
+        }
+        return "sur une période non déterminée";
+    }
+
+    public function getDechargeTexte()
+    {
+        $texte  = "";
+        if ($this->getDecharge() !== null) {
+            $texte .= "de ";
+            $texte .= $this->getDecharge();
+            $texte .= " heures";
+            return $texte;
+        }
+        return "aucune";
+    }
 }

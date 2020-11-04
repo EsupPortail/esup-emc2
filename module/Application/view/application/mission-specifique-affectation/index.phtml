@@ -21,6 +21,7 @@ use Application\Provider\Privilege\MissionspecifiquePrivileges;
 $this->headTitle("Affectations de missions spécifiques");
 
 $canVoir        = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
+$canLettre      = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
 $canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AJOUTER));
 $canEditer      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canhistoriser  = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_HISTORISER));
@@ -90,6 +91,16 @@ $query = ['retour' => $this->url(null,[],
                                 <span class="icon voir"  data-toggle="tooltip" data-html="true"
                                       title="Affecter l'affectation"></span></a>
                         <?php endif; ?>
+
+                        <?php if ($canLettre) : ?>
+                            <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
+                            <a href="<?php echo $this->url('mission-specifique/affectation/generer-lettre-type', ['affectation' => $affectation->getId()], [], true); ?>"
+                               target="_blank"
+                            >
+                                <span class="icon pdf"  data-toggle="tooltip" data-html="true"
+                                      title="Générer la lettre type associée l'affectation"></span></a>
+                        <?php endif; ?>
+
 
                         <?php if ($canEditer) : ?>
                             <?php /** @see MissionSpecifiqueAffectationController::modifierAction() */ ?>

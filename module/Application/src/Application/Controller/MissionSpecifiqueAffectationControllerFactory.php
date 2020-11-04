@@ -8,6 +8,7 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use UnicaenDocument\Service\Exporter\ExporterService;
 
 class MissionSpecifiqueAffectationControllerFactory {
 
@@ -19,14 +20,16 @@ class MissionSpecifiqueAffectationControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var ExporterService $exporterService
          * @var MissionSpecifiqueService $missionSpecifiqueService
-         * @var StructureService $structureService
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
+         * @var StructureService $structureService
          */
         $agentService = $container->get(AgentService::class);
+        $exporterService = $container->get(ExporterService::class);
         $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
-        $structureService = $container->get(StructureService::class);
         $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
+        $structureService = $container->get(StructureService::class);
 
         /**
          * @var AgentMissionSpecifiqueForm $agentMissionSpecifiqueForm
@@ -37,9 +40,10 @@ class MissionSpecifiqueAffectationControllerFactory {
         $controller = new MissionSpecifiqueAffectationController();
 
         $controller->setAgentService($agentService);
+        $controller->setExporterService($exporterService);
         $controller->setMissionSpecifiqueService($missionSpecifiqueService);
-        $controller->setStructureService($structureService);
         $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
+        $controller->setStructureService($structureService);
 
         $controller->setAgentMissionSpecifiqueForm($agentMissionSpecifiqueForm);
 

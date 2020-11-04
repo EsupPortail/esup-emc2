@@ -9,13 +9,16 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use Mpdf\MpdfException;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class MissionSpecifiqueAffectationController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use ExporterServiceAwareTrait;
     use MissionSpecifiqueServiceAwareTrait;
     use StructureServiceAwareTrait;
     use MissionSpecifiqueAffectationServiceAwareTrait;
@@ -191,5 +194,23 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             ]);
         }
         return $vm;
+    }
+
+    /**
+     * @throws MpdfException
+     */
+    public function genererLettreTypeAction()
+    {
+        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
+
+        $this->getExporterService()->setVars([
+            'type' => 'MISSION_SPECIFIQUE_LETTRE',
+            'agent' => $affectation->getAgent(),
+            'mission' => $affectation->getMission(),
+            'structure' => $affectation->getStructure(),
+            'affectation' => $affectation,
+        ]);
+        $this->getExporterService()->export('export.pdf');
+        exit;
     }
 }

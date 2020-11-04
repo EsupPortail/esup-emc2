@@ -142,6 +142,15 @@ return [
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_DETRUIRE,
                     ],
                 ],
+                [
+                    'controller' => MissionSpecifiqueAffectationController::class,
+                    'action' => [
+                        'generer-lettre-type',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER,
+                    ],
+                ],
 
             ],
         ],
@@ -464,6 +473,16 @@ return [
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'detruire',
+                                    ],
+                                ],
+                            ],
+                            'generer-lettre-type' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/generer-lettre-type/:affectation',
+                                    'defaults' => [
+                                        'controller' => MissionSpecifiqueAffectationController::class,
+                                        'action'     => 'generer-lettre-type',
                                     ],
                                 ],
                             ],

@@ -84,6 +84,14 @@ $canDetruireMission     = $droits['detruire'];
                     >
                         <span class="icon voir"></span></a>
                 <?php endif; ?>
+                <?php if ($canVoirMission) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique/affectation/generer-lettre-type', ['affectation' => $affectation->getId()], [], true); ?>"
+                       target="_blank"
+                    >
+                        <span class="icon pdf"  data-toggle="tooltip" data-html="true"
+                              title="Générer la lettre type associée l'affectation"></span></a>
+                <?php endif; ?>
                 <?php if ($canModifierMission) : ?>
                     <a
                         <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::modifierAction() */?>
