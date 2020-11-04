@@ -17,11 +17,19 @@ class PrivilegeController extends AbstractActionController {
     public function indexAction()
     {
         $roles = $this->getRoleService()->getRoles();
-        //$roles = $this->getServiceRole()->getRepo()->findAll();
         $privileges = $this->getPrivilegeService()->getPrivilegesWithCategories();
+        $privilegesBis = $this->getPrivilegeService()->getPrivileges();
+        $namespaces = [];
+        foreach ($privilegesBis as $privilege) {
+            $categorie = $privilege->getCategorie();
+            $namespace = $categorie->getNamespace();
+            $namespaces[$namespace][$categorie->getId()] = $categorie;
+        }
+        ksort($namespaces);
         return new ViewModel([
             'roles' => $roles,
             'privileges' => $privileges,
+            'namespaces' => $namespaces,
         ]);
     }
 
@@ -42,8 +50,6 @@ class PrivilegeController extends AbstractActionController {
         return new JsonModel([
             'value' => $value,
         ]);
-        //return $this->redirect()->toRoute("roles", [], ["query" => $queryParams], true);
     }
-
 
 }

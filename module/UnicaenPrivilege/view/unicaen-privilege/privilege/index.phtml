@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * @see \UnicaenPrivilege\Controller\PrivilegeController::indexAction()
  * @var Role[] $roles
  * @var array $privileges
+ * @var array $namespaces
  */
 
 use UnicaenPrivilege\Entity\Db\Privilege;
@@ -41,6 +43,13 @@ $canAffecter = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePriv
 <!--    </a>-->
 </div>
 
+    <?php foreach ($namespaces as $key => $nprivileges) : ?>
+        <?php $key = ($key)?:"Sans_Namespace"; ?>
+        <a class="btn btn-info action toggle" id="<?php echo $key; ?>">
+            <?php echo $key; ?>
+        </a>
+    <?php endforeach; ?>
+
 <div class="row">
 <table class="privilege">
     <thead>
@@ -63,11 +72,11 @@ $canAffecter = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePriv
         <?php $categorieId = 1; ?>
         <?php foreach ($privileges as $libelleCategorie => $privilegesCategorie) : ?>
             <tr>
-                <th id="<?php echo $categorieId; ?>" class="categorie" colspan="<?php echo (1+$nbRoles);?>"> <?php echo $libelleCategorie; ?></th>
+                <th id="<?php echo current($privilegesCategorie)->getCategorie()->getId(); ?>" class="categorie" colspan="<?php echo (1+$nbRoles);?>"> <?php echo $libelleCategorie; ?></th>
             </tr>
                 <?php /** @var Privilege $privilegeCategorie */ ?>
                 <?php foreach ($privilegesCategorie as $privilegeCategorie) : ?>
-                    <tr class="privilege <?php echo $categorieId; ?>">
+                    <tr class="privilege <?php echo $privilegeCategorie->getCategorie()->getId(); ?>">
                         <th class="privilege">
                             <?php echo $privilegeCategorie->getLibelle(); ?>
                         </th>
@@ -138,7 +147,25 @@ $canAffecter = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePriv
 </style>
 
 <script>
-    // $("tr.privilege").hide();
+    let namespaces = {
+        <?php foreach ($namespaces as $namespace => $p) {
+           echo '"';
+           echo ($namespace)?str_replace("\\","\\\\",$namespace):"Sans_Namespace";
+           echo '" : [';
+           echo implode(",",array_map(function($a) { return $a->getId(); }, $p));
+           echo '],';
+        }?>
+    }
+
+    $('a.toggle').click(function() {
+        $("tr.privilege").hide();
+        let namespace = $(this).attr("id");
+        console.log(namespace);
+        console.log(namespaces[namespace]);
+        namespaces[namespace].forEach(function(i) {
+            $("tr."+ i).show();
+        });
+    });
 
     $("th.categorie").click(function(){
         let categorieId = $(this).attr("id");
