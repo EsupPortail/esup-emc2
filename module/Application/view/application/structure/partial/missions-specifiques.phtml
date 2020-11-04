@@ -77,7 +77,7 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                     <?php endif; ?>
                     <?php if ($canVoirAffectation) : ?>
                         <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
-                        <a href="<?php echo $this->url('mission-specifique/affectation/generer-lettre-type', ['affectation' => $affectation->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('mission-specifique/affectation/generer-lettre-type', ['affectation' => $mission->getId()], [], true); ?>"
                            target="_blank"
                         >
                         <span class="icon pdf"  data-toggle="tooltip" data-html="true"
