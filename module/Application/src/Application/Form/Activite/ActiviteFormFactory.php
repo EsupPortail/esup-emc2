@@ -6,7 +6,6 @@ use Application\Service\Application\ApplicationService;
 use Application\Service\Competence\CompetenceService;
 use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
-use Zend\Form\FormElementManager;
 
 class ActiviteFormFactory {
 

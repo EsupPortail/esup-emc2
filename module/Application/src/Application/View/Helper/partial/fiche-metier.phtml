@@ -135,14 +135,13 @@ $mode = $options['mode'];
                 Missions principales
                 <span class="badge"> <?php echo count($activitesRestantes); ?>/<?php echo count($activites); ?> </span>
             </h2>
-
-            <ul>
-                <?php foreach ($activitesRestantes as $activite) : ?>
-                    <li>
-                        <?php echo $activite->getActivite()->getLibelle(); ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+<!--            <ul>-->
+<!--                --><?php //foreach ($activitesRestantes as $activite) : ?>
+<!--                    <li>-->
+<!--                        --><?php //echo $activite->getActivite()->getLibelle(); ?>
+<!--                    </li>-->
+<!--                --><?php //endforeach; ?>
+<!--            </ul>-->
         </div>
         <div class="col-md-4">
             <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>

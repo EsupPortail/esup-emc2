@@ -4,9 +4,11 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Structure;
+use Application\Entity\Db\StructureAgentForce;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
+use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
@@ -15,6 +17,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use Application\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
@@ -31,6 +34,7 @@ class StructureController extends AbstractActionController {
     use PosteServiceAwareTrait;
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use StructureAgentForceServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use EntretienProfessionnelServiceAwareTrait;
@@ -38,6 +42,7 @@ class StructureController extends AbstractActionController {
 
     use AgentMissionSpecifiqueFormAwareTrait;
     use AjouterGestionnaireFormAwareTrait;
+    use SelectionAgentFormAwareTrait;
     use StructureFormAwareTrait;
 
     public function indexAction()
@@ -97,6 +102,10 @@ class StructureController extends AbstractActionController {
         }
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
+
+
+
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
         /** Campagne */
@@ -114,6 +123,7 @@ class StructureController extends AbstractActionController {
             'fichesCompletes' => $fichesCompletes,
             'fichesIncompletes' => $fichesIncompletes,
             'agents' => $agents,
+            'agentsForces' => $agentsForces,
             'postes' => $postes,
 
             'last' => $last,
@@ -363,6 +373,62 @@ class StructureController extends AbstractActionController {
             return strcmp($a['label'], $b['label']);
         });
         return $result;
+    }
+
+    /** AGENTS FORCES *************************************************************************************************/
+
+    public function ajouterManuellementAgentAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $structureAgentForce = new StructureAgentForce();
+        $structureAgentForce->setStructure($structure);
+
+        $form = $this->getSelectionAgentForm();
+        $form->setAttribute('action',$this->url()->fromRoute('structure/ajouter-manuellement-agent', ['structure' => $structure->getId()], [], true));
+        $form->bind($structureAgentForce);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getStructureAgentForceService()->create($structureAgentForce);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Forcer manuellement l'ajout d'un agent",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function retirerManuellementAgentAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $structureAgentForce = $this->getStructureAgentForceService()->getStructureAgentForceByStructureAndAgent($structure, $agent);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getStructureAgentForceService()->delete($structureAgentForce);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($structureAgentForce !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Retirer [".$structureAgentForce->getAgent()->getDenomination()."] de la structure [" . $structureAgentForce->getStructure()->getLibelleCourt() . "]",
+                'text' => "Le retrait est définitif, êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('structure/retirer-manuellement-agent', ["structure" => $structure->getId(), "agent" => $agent->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     /** AUTRE FONCTIONS */

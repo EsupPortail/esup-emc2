@@ -52,12 +52,16 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     /** @var ArrayCollection (AgentMissionSpecifique) */
     private $missions;
 
+    /** @var ArrayCollection (StructureAgentForce) */
+    private $agentsForces;
+
     public function __construct()
     {
         $this->gestionnaires = new ArrayCollection();
         $this->responsables = new ArrayCollection();
         $this->postes = new ArrayCollection();
         $this->enfants = new ArrayCollection();
+        $this->agentsForces = new ArrayCollection();
     }
 
     /**
@@ -325,6 +329,22 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     {
         $this->repriseResumeMere = $repriseResumeMere;
         return $this;
+    }
+
+    /** AGENTS FORCES *************************************************************************************************/
+
+    /**
+     * @var bool $keepHisto
+     * @return StructureAgentForce[]
+     */
+    public function getAgentsForces(bool $keepHisto = false) : array
+    {
+        $result = $this->agentsForces->toArray();
+        if (! $keepHisto) {
+            $result = array_filter($result, function (StructureAgentForce $a) { return $a->estNonHistorise();});
+        }
+
+        return $result;
     }
 
     /**

@@ -8,6 +8,7 @@
  * @var FichePoste[] $fichespostes
  * @var FicheMetier[] $fichesmetiers
  * @var ParcoursDeFormation $parcours
+ * @var User $connectedUser
  */
 
 use Application\Entity\Db\Agent;
@@ -15,6 +16,7 @@ use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
+use UnicaenUtilisateur\Entity\Db\User;
 
 $ficheposte = $agent->getFichePosteActif();
 
@@ -70,7 +72,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         <div class="tab-content">
 
             <div id="formulaire" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte]); ?>
+                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser]); ?>
             </div>
 
             <div id="parcours" class="tab-pane " role="tabpanel">

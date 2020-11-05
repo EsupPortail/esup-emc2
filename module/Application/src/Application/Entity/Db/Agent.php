@@ -61,6 +61,8 @@ class Agent implements ResourceInterface
     /** @var ArrayCollection (AgentFormation) */
     private $formations;
 
+    /** @var ArrayCollection (StructureAgentForce) */
+    private $structuresForcees;
 
     public function __construct()
     {
@@ -70,6 +72,7 @@ class Agent implements ResourceInterface
         $this->fichiers = new ArrayCollection();
         $this->competences = new ArrayCollection();
         $this->grades = new ArrayCollection();
+        $this->structuresForcees = new ArrayCollection();
     }
 
     /** Éléments importés (octopus) : pas besoins de setters **********************************************************/
@@ -465,5 +468,20 @@ class Agent implements ResourceInterface
             if ($quotite->isEnCours($date)) return $quotite;
         }
         return null;
+    }
+
+    /** STRUCTURE AGENT FORCE *****************************************************************************************/
+
+    /**
+     * @param bool $keepHisto
+     * @return StructureAgentForce[]
+     */
+    public function getStructuresForcees(bool $keepHisto = false) : array
+    {
+        $structureAgentForces = $this->structuresForcees->toArray();
+        if (! $keepHisto) {
+            $structureAgentForces = array_filter($structureAgentForces, function (StructureAgentForce $a) { return $a->estNonHistorise();});
+        }
+        return $structureAgentForces;
     }
 }

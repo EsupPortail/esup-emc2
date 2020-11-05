@@ -223,7 +223,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
             'agent' => $agent,
             'fichespostes' => $fichespostes,
-            'fichesmetiers' => $fichesmetiers
+            'fichesmetiers' => $fichesmetiers,
+            'connectedUser' => $this->getUserService()->getConnectedUser(),
         ]);
     }
 

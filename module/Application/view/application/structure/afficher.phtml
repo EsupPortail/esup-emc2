@@ -10,6 +10,7 @@
  * @var FichePoste[] $fichesIncompletes
  * @var Poste[] $postes
  * @var Agent[] $agents
+ * @var Agent[] $agentsForces
  *
  * @var EntretienProfessionnelCampagne $last
  * @var EntretienProfessionnelCampagne[] $campagnes
@@ -115,19 +116,47 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                     <?php echo $this->partial('partial/fiches-postes', ['fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
 
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>
+                                Agents
+                                <span class="badge"><?php echo count($agents); ?></span>
+                            </h2>
+                        </div>
+                    </div>
+
                     <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
-                    <?php //echo $this->partial('partial/postes', ['postes' => $postes]); ?>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>
+                                Agents forcés
+                                <span class="badge"><?php echo count($agentsForces); ?></span>
+                            </h2>
+                        </div>
+                        <div class="pull-right">
+                            <?php /** @see \Application\Controller\StructureController::ajouterManuellementAgentAction(); */ ?>
+                            <a class="btn btn-primary action ajax-modal" data-event="modification"
+                               href="<?php echo $this->url("structure/ajouter-manuellement-agent", ["structure" => $structure->getId()], [], true); ?>"
+                            >
+                                <span class="icon ajouter-user"></span> Ajouter manuellement un agent
+                            </a>
+                        </div>
+                    </div>
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true]]); ?>
                 </div>
 
                 <!-- Campagne ------------------------------------------------------------------------------------->
+                <?php $allAgents = array_merge($agents, $agentsForces); ?>
+
                 <?php if ($last !== null) : ?>
                     <div id="campagne_<?php echo $last->getId(); ?>" class="tab-pane " role="tabpanel">
-                        <?php echo $this->partial('partial/campagne', ['campagne' => $last, 'structure' => $structure, 'agents' => $agents]); ?>
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $last, 'structure' => $structure, 'agents' => $allAgents]); ?>
                     </div>
                 <?php endif; ?>
                 <?php foreach ($campagnes as $campagne) : ?>
                     <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane " role="tabpanel">
-                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $agents]); ?>
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $allAgents]); ?>
                     </div>
                 <?php endforeach; ?>
 

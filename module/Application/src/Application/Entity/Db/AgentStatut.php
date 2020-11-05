@@ -120,18 +120,18 @@ class AgentStatut {
     }
 
     /**
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent()
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return AgentStatut
      */
-    public function setAgent($agent)
+    public function setAgent(?Agent $agent)
     {
         $this->agent = $agent;
         return $this;

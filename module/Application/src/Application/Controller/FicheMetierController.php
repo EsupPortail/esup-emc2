@@ -199,7 +199,6 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $this->getFicheMetierService()->historise($fiche);
-
         return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
@@ -207,7 +206,6 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $this->getFicheMetierService()->restore($fiche);
-
         return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 

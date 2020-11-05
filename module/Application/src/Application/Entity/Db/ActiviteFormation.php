@@ -2,7 +2,6 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\Db\Activite;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;

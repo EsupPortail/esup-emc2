@@ -3,6 +3,7 @@
 /**
  * @var Structure $structure
  * @var Agent[] $agents
+ * @var array $options
  */
 
 use Application\Entity\Db\Agent;
@@ -10,6 +11,7 @@ use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Application\Provider\Privilege\StructurePrivileges;
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
@@ -17,15 +19,11 @@ $canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResource
 $canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 $canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
 $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
+$canRetirerAgentForce       = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
+
+$isForce = (isset($options['force']) AND $options['force'] === true);
 
 ?>
-
-<h2>
-    Agents
-    <span class="badge">
-                    <?php echo count($agents); ?>
-                </span>
-</h2>
 
 <table class="datatable table table-condensed">
     <thead>
@@ -162,6 +160,15 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
                                title="Modifier la fiche de poste"></span></a>
                     <?php endif; ?>
 
+                <?php endif; ?>
+
+                <?php if ($isForce AND $canRetirerAgentForce) : ?>
+                    <?php /** @see \Application\Controller\StructureController::retirerManuellementAgentAction() */ ?>
+                    <a  class="ajax-modal" data-event="modification"
+                        href="<?php echo $this->url('structure/retirer-manuellement-agent', [ 'structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
+                    >
+                        <span class="icon retirer-user"></span>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>

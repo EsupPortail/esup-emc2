@@ -33,9 +33,9 @@ class ActiviteLibelle implements HistoriqueAwareInterface {
 
     /**
      * @param Activite $activite
-     * @return ActiviteDescription
+     * @return ActiviteLibelle
      */
-    public function setActivite($activite)
+    public function setActivite(Activite $activite)
     {
         $this->activite = $activite;
         return $this;
@@ -51,9 +51,9 @@ class ActiviteLibelle implements HistoriqueAwareInterface {
 
     /**
      * @param string $libelle
-     * @return ActiviteDescription
+     * @return ActiviteLibelle
      */
-    public function setLibelle($libelle)
+    public function setLibelle(string $libelle)
     {
         $this->libelle = $libelle;
         return $this;

@@ -2,8 +2,10 @@
 
 namespace Application\Entity;
 
+use Application\Entity\Db\Agent;
+
 interface HasAgentInterface {
 
     public function getAgent();
-    public function setAgent($agent);
+    public function setAgent(?Agent $agent);
 }

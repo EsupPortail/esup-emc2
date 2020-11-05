@@ -2,8 +2,6 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\SynchroAwareInterface;
-use Application\Entity\SynchroAwareTrait;
 
 class StructureType  {
 

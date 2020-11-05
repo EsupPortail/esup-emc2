@@ -6,7 +6,6 @@ use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;

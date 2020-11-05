@@ -14,6 +14,8 @@ use Application\Form\Structure\StructureHydrator;
 use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\Structure\StructureService;
 use Application\Service\Structure\StructureServiceFactory;
+use Application\Service\StructureAgentForce\StructureAgentForceService;
+use Application\Service\StructureAgentForce\StructureAgentForceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
@@ -84,6 +86,16 @@ return [
                         'retirer-gestionnaire',
                         'ajouter-responsable',
                         'retirer-responsable',
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
+                    'assertion'  => StructureAssertion::class,
+
+                ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
+                        'ajouter-manuellement-agent',
+                        'retirer-manuellement-agent',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
                     'assertion'  => StructureAssertion::class,
@@ -198,6 +210,30 @@ return [
                         'may_terminate' => true,
                         'child_routes' => [],
                     ],
+                    'ajouter-manuellement-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-manuellement-agent/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'ajouter-manuellement-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'retirer-manuellement-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-manuellement-agent/:structure/:agent',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'retirer-manuellement-agent',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
                     'editer-description' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -265,6 +301,7 @@ return [
         'factories' => [
             StructureAssertion::class => StructureAssertionFactory::class,
             StructureService::class => StructureServiceFactory::class,
+            StructureAgentForceService::class => StructureAgentForceServiceFactory::class,
         ],
     ],
     'controllers'     => [

@@ -4,9 +4,8 @@ namespace Application\Form\Application;
 
 use Application\Entity\Db\ApplicationGroupe;
 use Application\Service\Application\ApplicationGroupeService;
-use FOrmation\Service\Formation\FormationService;
+use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
-use Zend\Form\FormElementManager;
 
 class ApplicationFormFactory {
 
