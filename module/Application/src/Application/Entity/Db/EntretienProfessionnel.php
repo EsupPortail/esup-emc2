@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +13,7 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface {
     use HistoriqueAwareTrait;
 
     public function getResourceId()
@@ -60,9 +61,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent()
+    public function getAgent() : null
     {
         return $this->agent;
     }
@@ -71,7 +72,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param Agent|null $agent
      * @return EntretienProfessionnel
      */
-    public function setAgent(?Agent $agent)
+    public function setAgent(?Agent $agent) : EntretienProfessionnel
     {
         $this->agent = $agent;
         return $this;

@@ -5,7 +5,11 @@ namespace Application\Entity\Db;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 
-class AgentAffectation {
+/**
+ * Données synchronisées depuis Octopus :
+ * - pas de setter sur les données ainsi remontées
+ */
+class AgentAffectation{
     use DateTimeAwareTrait;
 
     /** @var integer */

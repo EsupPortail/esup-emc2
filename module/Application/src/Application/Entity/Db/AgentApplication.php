@@ -2,12 +2,14 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\HasAgentInterface;
+use Application\Entity\HasApplicationInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 
-class AgentApplication implements ValidableInterface, HistoriqueAwareInterface {
+class AgentApplication implements ValidableInterface, HistoriqueAwareInterface, HasAgentInterface, HasApplicationInterface {
     use HistoriqueAwareTrait;
     use ValidableAwareTrait;
 
@@ -31,36 +33,36 @@ class AgentApplication implements ValidableInterface, HistoriqueAwareInterface {
     }
 
     /**
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent()
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return AgentApplication
      */
-    public function setAgent($agent)
+    public function setAgent(?Agent $agent) : AgentApplication
     {
         $this->agent = $agent;
         return $this;
     }
 
     /**
-     * @return Application
+     * @return Application|null
      */
-    public function getApplication()
+    public function getApplication() : ?Application
     {
         return $this->application;
     }
 
     /**
-     * @param Application $application
+     * @param Application|null $application
      * @return AgentApplication
      */
-    public function setApplication($application)
+    public function setApplication(?Application $application) : AgentApplication
     {
         $this->application = $application;
         return $this;
@@ -78,7 +80,7 @@ class AgentApplication implements ValidableInterface, HistoriqueAwareInterface {
      * @param string $type
      * @return AgentApplication
      */
-    public function setType($type)
+    public function setType(string $type)
     {
         $this->type = $type;
         return $this;
@@ -96,7 +98,7 @@ class AgentApplication implements ValidableInterface, HistoriqueAwareInterface {
      * @param int $annee
      * @return AgentApplication
      */
-    public function setAnnee($annee)
+    public function setAnnee(int $annee)
     {
         $this->annee = $annee;
         return $this;

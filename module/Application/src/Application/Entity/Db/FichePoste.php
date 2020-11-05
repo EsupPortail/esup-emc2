@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\HasAgentInterface;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +11,7 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
+class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface {
     use HistoriqueAwareTrait;
     use DateTimeAwareTrait
         ;
@@ -75,18 +76,18 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface {
     }
 
     /**
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent()
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return FichePoste
      */
-    public function setAgent($agent)
+    public function setAgent(?Agent $agent) : FichePoste
     {
         $this->agent = $agent;
         return $this;

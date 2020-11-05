@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\HasAgentInterface;
 use DateTime;
 use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
@@ -9,7 +10,7 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 
-class AgentFormation implements ValidableInterface, HistoriqueAwareInterface {
+class AgentFormation implements ValidableInterface, HistoriqueAwareInterface, HasAgentInterface {
     use HistoriqueAwareTrait;
     use ValidableAwareTrait;
 
@@ -31,18 +32,18 @@ class AgentFormation implements ValidableInterface, HistoriqueAwareInterface {
     }
 
     /**
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent()
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return AgentFormation
      */
-    public function setAgent($agent)
+    public function setAgent(?Agent $agent) : AgentFormation
     {
         $this->agent = $agent;
         return $this;

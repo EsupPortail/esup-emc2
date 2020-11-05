@@ -6,6 +6,10 @@ use DateTime;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 
+/**
+ * Données synchronisées depuis Octopus :
+ * - pas de setter sur les données ainsi remontées
+ */
 class AgentStatut {
     /** @var string */
     private $id;

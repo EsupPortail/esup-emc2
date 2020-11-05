@@ -4,6 +4,10 @@ namespace Application\Entity\Db;
 
 use DateTime;
 
+/**
+ * Données synchronisées depuis Octopus :
+ * - pas de setter sur les données ainsi remontées
+ */
 class AgentGrade {
     /** @var string */
     private $id;

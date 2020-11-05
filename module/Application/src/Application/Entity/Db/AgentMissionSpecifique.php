@@ -2,12 +2,13 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\HasAgentInterface;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class AgentMissionSpecifique implements HistoriqueAwareInterface {
+class AgentMissionSpecifique implements HistoriqueAwareInterface, HasAgentInterface {
     use HistoriqueAwareTrait;
     use DateTimeAwareTrait;
 
@@ -35,18 +36,18 @@ class AgentMissionSpecifique implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent()
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return AgentMissionSpecifique
      */
-    public function setAgent($agent)
+    public function setAgent(?Agent $agent) : AgentMissionSpecifique
     {
         $this->agent = $agent;
         return $this;

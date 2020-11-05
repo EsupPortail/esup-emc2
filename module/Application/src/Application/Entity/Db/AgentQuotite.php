@@ -5,6 +5,10 @@ namespace Application\Entity\Db;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 
+/**
+ * Données synchronisées depuis Octopus :
+ * - pas de setter sur les données ainsi remontées
+ */
 class AgentQuotite
 {
     use ImportableAwareTrait;
