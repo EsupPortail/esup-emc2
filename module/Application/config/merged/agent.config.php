@@ -91,7 +91,7 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'afficher-statuts-grades',
-                        'afficher-agent-application',
+                        'afficher-application',
                         'afficher-agent-competence',
                         'afficher-agent-formation',
                     ],
@@ -112,7 +112,7 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'ajouter-agent-application',
+                        'ajouter-application',
                         'ajouter-agent-competence',
                         'ajouter-agent-formation',
                     ],
@@ -124,7 +124,7 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'modifier-agent-application',
+                        'modifier-application',
                         'modifier-agent-competence',
                         'modifier-agent-formation',
                     ],
@@ -136,8 +136,8 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'historiser-agent-application',
-                        'restaurer-agent-application',
+                        'historiser-application',
+                        'restaurer-application',
                         'historiser-agent-competence',
                         'restaurer-agent-competence',
                         'historiser-agent-formation',
@@ -153,7 +153,7 @@ return [
                     'action' => [
                         'detruire-agent-formation',
                         'detruire-agent-competence',
-                        'detruire-agent-application',
+                        'detruire-application',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_DETRUIRE,
@@ -242,53 +242,53 @@ return [
                             ],
                         ],
                     ],
-                    'afficher-agent-application' => [
+                    'afficher-application' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/afficher-agent-application/:agent-application',
+                            'route'    => '/afficher-application/:agent/:application-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'afficher-agent-application',
+                                'action'     => 'afficher-application',
                             ],
                         ],
                     ],
-                    'modifier-agent-application' => [
+                    'modifier-application' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-agent-application/:agent-application',
+                            'route'    => '/modifier-application/:agent/:application-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'modifier-agent-application',
+                                'action'     => 'modifier-application',
                             ],
                         ],
                     ],
-                    'historiser-agent-application' => [
+                    'historiser-application' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/historiser-agent-application/:agent-application',
+                            'route'    => '/historiser-application/:agent/:application-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'historiser-agent-application',
+                                'action'     => 'historiser-application',
                             ],
                         ],
                     ],
-                    'restaurer-agent-application' => [
+                    'restaurer-application' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer-agent-application/:agent-application',
+                            'route'    => '/restaurer-application/:agent/:application-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'restaurer-agent-application',
+                                'action'     => 'restaurer-application',
                             ],
                         ],
                     ],
-                    'detruire-agent-application' => [
+                    'detruire-application' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/detruire-agent-application/:agent-application',
+                            'route'    => '/detruire-application/:agent/:application-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'detruire-agent-application',
+                                'action'     => 'detruire-application',
                             ],
                         ],
                     ],

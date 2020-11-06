@@ -204,14 +204,14 @@ foreach ($competences as $competence) {
 <?php endif; ?>
 
 <?php
-$applications = $fiche->getApplications();
+$applications = $fiche->getApplicationListe();
 
 $nogroupe = "zzz";
 $dictionnaire = [];
-foreach ($applications as $application) {
-    $groupe = $application->getGroupe();
+foreach ($applications as $applicationElement) {
+    $groupe = $applicationElement->getApplication()->getGroupe();
     $libelle = ($groupe !== null) ? $groupe->getLibelle() : $nogroupe;
-    $dictionnaire[$libelle][] = $application;
+    $dictionnaire[$libelle][] = $applicationElement->getApplication();
 }
 ksort($dictionnaire);
 ?>

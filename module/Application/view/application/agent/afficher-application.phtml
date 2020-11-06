@@ -1,30 +1,40 @@
 <?php
 
 /**
- * @see AgentController::afficherAgentApplicationAction()
- * @var AgentApplication $agentApplication
+ * @see AgentController::afficherApplicationAction()
+ * @var ApplicationElement $applicationElement
+ * @var Agent $agent
  */
-use Application\Entity\Db\AgentApplication;
 
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\ApplicationElement;
+
+$type = null;
+$annee = null;
+if ($applicationElement->getCommentaire() !== null) {
+    $split = explode(" - ", $applicationElement->getCommentaire());
+    $type = $split[1];
+    $annee = $split[0];
+}
 ?>
 
 <div class="row">
     <div class="col-md-6">
         <dl>
             <dt> Agent </dt>
-            <dd> <?php echo $agentApplication->getAgent()->getDenomination(); ?></dd>
+            <dd> <?php echo $agent->getDenomination(); ?></dd>
             <dt> Application </dt>
-            <dd> <?php echo $agentApplication->getApplication()->getLibelle(); ?></dd>
+            <dd> <?php echo $applicationElement->getApplication()->getLibelle(); ?></dd>
             <dt> Type de formation </dt>
-            <dd> <?php echo $agentApplication->getType(); ?></dd>
+            <dd> <?php echo ($type)?:"Non renseigné"; ?></dd>
             <dt> Année de formation </dt>
-            <dd> <?php echo ($agentApplication->getAnnee())?:"Non renseignée"; ?></dd>
+            <dd> <?php echo ($annee)?:"Non renseignée"; ?></dd>
             <dt> Validation </dt>
             <dd>
-                <?php if ($agentApplication->getValidation() === null) : ?>
+                <?php if ($applicationElement->getValidation() === null) : ?>
                     Aucune validation
                 <?php else: ?>
-                    <?php $validation = $agentApplication->getValidation(); ?>
+                    <?php $validation = $applicationElement->getValidation(); ?>
                     <?php if ($validation->getValeur() === null) : ?>
                         <span
                             style="color:darkgreen;"
@@ -47,19 +57,19 @@ use Application\Entity\Db\AgentApplication;
         <dl>
             <dt> Dernière modification </dt>
             <dd>
-                <?php echo $agentApplication->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+                <?php echo $applicationElement->getHistoModification()->format('d/m/Y à H:i:s'); ?>
                 <br/>
-                <?php echo $agentApplication->getHistoModificateur()->getDisplayName(); ?>
+                <?php echo $applicationElement->getHistoModificateur()->getDisplayName(); ?>
             </dd>
         </dl>
 
-        <?php if ($agentApplication->estHistorise()) : ?>
+        <?php if ($applicationElement->estHistorise()) : ?>
             <dl>
                 <dt> Historisée </dt>
                 <dd>
-                    <?php echo $agentApplication->getHistoDestruction()->format('d/m/Y à H:i:s'); ?>
+                    <?php echo $applicationElement->getHistoDestruction()->format('d/m/Y à H:i:s'); ?>
                     <br/>
-                    <?php echo $agentApplication->getHistoDestructeur()->getDisplayName(); ?>
+                    <?php echo $applicationElement->getHistoDestructeur()->getDisplayName(); ?>
                 </dd>
             </dl>
         <?php endif; ?>

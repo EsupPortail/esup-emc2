@@ -20,6 +20,10 @@ use Application\Service\Application\ApplicationGroupeService;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
 use Application\Service\Application\ApplicationGroupeServiceFactory;
+use Application\Service\ApplicationElement\ApplicationElementService;
+use Application\Service\ApplicationElement\ApplicationElementServiceFactory;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceFactory;
 use Application\View\Helper\ApplicationBlocViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -249,7 +253,9 @@ return [
         ],
         'factories' => [
             ApplicationService::class => ApplicationServiceFactory::class,
+            ApplicationElementService::class => ApplicationElementServiceFactory::class,
             ApplicationGroupeService::class => ApplicationGroupeServiceFactory::class,
+            HasApplicationCollectionService::class => HasApplicationCollectionServiceFactory::class,
         ],
     ],
     'controllers' => [

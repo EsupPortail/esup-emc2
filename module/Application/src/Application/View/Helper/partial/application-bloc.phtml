@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierTypeActivite;
 
 /**
  * @var array $applications
@@ -65,11 +66,17 @@ ksort($groupes);
                                     $label = "F";
                                     $class = 'fiche-metier';
                                     break;
-                                case $raison instanceof Activite :
+                                case $raison instanceof FicheMetierTypeActivite :
                                     $ac = $raison;
-                                    $text = $ac->getLibelle();
+                                    $text = $ac->getActivite()->getLibelle();
                                     $label = "A";
                                     $class = 'activite';
+                                    break;
+                                default :
+                                    $text = "Provenance inconnue";
+                                    $label = "?";
+                                    $class = 'inconnue';
+
                             }
                             ?>
                             <span class="<?php echo $class; ?>" title="<?php echo $text; ?>"><?php echo $label; ?></span>

@@ -7,6 +7,7 @@ use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Configuration\ConfigurationService;
@@ -30,6 +31,7 @@ class FicheMetierControllerFactory {
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
+         * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var ConfigurationService $configurationService
          * @var MetierService $metierService
          * @var ParcoursDeFormationService $parcoursService
@@ -39,6 +41,7 @@ class FicheMetierControllerFactory {
         $etatService = $container->get(EtatService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $configurationService = $container->get(ConfigurationService::class);
         $metierService = $container->get(MetierService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
@@ -72,6 +75,7 @@ class FicheMetierControllerFactory {
         $controller->setEtatService($etatService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
         $controller->setConfigurationService($configurationService);
         $controller->setMetierService($metierService);
         $controller->setParcoursDeFormationService($parcoursService);

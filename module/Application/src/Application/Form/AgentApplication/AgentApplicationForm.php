@@ -23,7 +23,7 @@ class AgentApplicationForm extends Form {
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'empty_option' => "Sélectionner une compétence ... ",
+                'empty_option' => "Sélectionner une application ... ",
                 'value_options' => $this->getApplicationService()->getApplicationsAsOptions(),
             ],
             'attributes' => [

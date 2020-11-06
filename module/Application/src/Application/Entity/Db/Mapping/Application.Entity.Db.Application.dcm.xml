@@ -11,16 +11,16 @@
         <field name="url"               type="string"   length="128"      column="url"                    nullable="false"  />
         <field name="actif"             type="boolean"                    column="actif"                  nullable="false"  />
 
-        <many-to-many field="activites" target-entity="Application\Entity\Db\Activite" inversed-by="activite" fetch="LAZY">
-            <join-table name="activite_application">
-                <join-columns>
-                    <join-column name="application_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="activite_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
+<!--        <many-to-many field="activites" target-entity="Application\Entity\Db\Activite" inversed-by="activite" fetch="LAZY">-->
+<!--            <join-table name="activite_application">-->
+<!--                <join-columns>-->
+<!--                    <join-column name="application_id" referenced-column-name="id"/>-->
+<!--                </join-columns>-->
+<!--                <inverse-join-columns>-->
+<!--                    <join-column name="activite_id" referenced-column-name="id"/>-->
+<!--                </inverse-join-columns>-->
+<!--            </join-table>-->
+<!--        </many-to-many>-->
 
         <many-to-one target-entity="Application\Entity\Db\ApplicationGroupe"  field="groupe">
             <join-column name="groupe_id" referenced-column-name="id"/>

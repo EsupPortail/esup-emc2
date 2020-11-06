@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,11 +14,12 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Agent implements ResourceInterface
+class Agent implements HasApplicationCollectionInterface, ResourceInterface
 {
     use ImportableAwareTrait;
     use AgentServiceAwareTrait;
     use DateTimeAwareTrait;
+    use HasApplicationCollectionTrait;
 
     public function getResourceId()
     {
@@ -54,8 +57,6 @@ class Agent implements ResourceInterface
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
-    /** @var ArrayCollection (AgentApplication) */
-    private $applications;
     /** @var ArrayCollection (AgentCompetence) */
     private $competences;
     /** @var ArrayCollection (AgentFormation) */
@@ -321,20 +322,6 @@ class Agent implements ResourceInterface
     }
 
     /** APPLICATIONS, COMPETENCES ET FORMATIONS ***********************************************************************/
-
-    /**
-     * @param bool $include_historisees
-     * @return AgentApplication[]
-     */
-    public function getApplications($include_historisees = false)
-    {
-        $applications = [];
-        /** @var AgentApplication $application */
-        foreach ($this->applications as $application) {
-            if ($include_historisees OR $application->estNonHistorise()) $applications[] = $application;
-        }
-        return $applications;
-    }
 
     /**
      * @param bool $include_historisees

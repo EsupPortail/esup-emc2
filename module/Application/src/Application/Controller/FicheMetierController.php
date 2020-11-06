@@ -15,6 +15,7 @@ use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -45,6 +46,7 @@ class FicheMetierController extends AbstractActionController
     use ActiviteServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use HasApplicationCollectionServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use EtatServiceAwareTrait;
@@ -377,7 +379,7 @@ class FicheMetierController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $this->getFicheMetierService()->updateApplications($fiche, $data);
+            $this->getHasApplicationCollectionService()->updateApplications($fiche, $data);
         }
 
         $vm = new ViewModel();

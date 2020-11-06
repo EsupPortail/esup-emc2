@@ -4,16 +4,19 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
+use Application\Entity\Db\ApplicationElement;
 use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
+use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
@@ -34,8 +37,10 @@ use Zend\View\Model\ViewModel;
 class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
-    use ApplicationServiceAwareTrait;
+//    use ApplicationServiceAwareTrait;
+    use ApplicationElementServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use HasApplicationCollectionServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
@@ -47,6 +52,7 @@ class AgentController extends AbstractActionController
     use AgentApplicationFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
+    use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
 
     public function indexAction()
@@ -101,12 +107,12 @@ class AgentController extends AbstractActionController
     public function ajouterAgentApplicationAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
-        $agentApplication = new AgentApplication();
+        $applicationElement = new ApplicationElement();
 
         /** @var AgentApplicationForm $form */
         $form = $this->getAgentApplicationForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-application', ['agent' => $agent->getId()], [], true));
-        $form->bind($agentApplication);
+        $form->bind($applicationElement);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -114,8 +120,7 @@ class AgentController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $agentApplication->setAgent($agent);
-                $this->getAgentService()->createAgentApplication($agentApplication);
+                $this->getHasApplicationCollectionService()->addApplication($agent, $applicationElement);
             }
         }
 
@@ -128,21 +133,25 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    public function afficherAgentApplicationAction()
+    public function afficherApplicationAction()
     {
-        $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
+        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
         return new ViewModel([
             'title' => "Affichage d'une application maîtrisée par un agent",
-            'agentApplication' => $applicationAgent,
+            'applicationElement' => $applicationElement,
+            'agent' => $agent,
         ]);
     }
 
-    public function modifierAgentApplicationAction()
+    public function modifierApplicationAction()
     {
-        $agenApplication = $this->getAgentService()->getRequestedAgenApplication($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
         $form = $this->getAgentApplicationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-application', ['agent-application' => $agenApplication->getId()]));
-        $form->bind($agenApplication);
+        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-application', ['agent' => $agent->getId(), 'application-element' => $applicationElement->getId()]));
+        $form->bind($applicationElement);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -150,7 +159,7 @@ class AgentController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getAgentService()->updateAgentApplication($agenApplication);
+                $this->getApplicationElementService()->update($applicationElement);
             }
         }
 
@@ -163,48 +172,51 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAgentApplicationAction()
+    public function historiserApplicationAction()
     {
         $retour = $this->params()->fromQuery('retour');
 
-        $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
-        $this->getAgentService()->historiserAgentApplication($applicationAgent);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
+        $this->getApplicationElementService()->historise($applicationElement);
 
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $applicationAgent->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
     }
 
-    public function restaurerAgentApplicationAction()
+    public function restaurerApplicationAction()
     {
         $retour = $this->params()->fromQuery('retour');
 
-        $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
-        $this->getAgentService()->restoreAgentApplication($applicationAgent);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
+        $this->getApplicationElementService()->restore($applicationElement);
 
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $applicationAgent->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
     }
 
-    public function detruireAgentApplicationAction()
+    public function detruireApplicationAction()
     {
-        $applicationAgent = $this->getAgentService()->getRequestedAgenApplication($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getAgentService()->deleteAgentApplication($applicationAgent);
-            //return $this->redirect()->toRoute('home');
+            //la cascade doit gérer l'affaire
+            if ($data["reponse"] === "oui") $this->getApplicationElementService()->delete($applicationElement);
             exit();
         }
 
         $vm = new ViewModel();
-        if ($applicationAgent !== null) {
+        if ($applicationElement !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de l'application  de " . $applicationAgent->getAgent()->getDenomination(),
+                'title' => "Suppression de l'application  de " . $applicationElement->getApplication()->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('agent/detruire-agent-application', ["agent-application" => $applicationAgent->getId()], [], true),
+                'action' => $this->url()->fromRoute('agent/detruire-application', ["agent" => $agent->getId(), "application-element" => $applicationElement->getId()], [], true),
             ]);
         }
         return $vm;
@@ -450,7 +462,7 @@ class AgentController extends AbstractActionController
         $elementText = null;
         switch ($type) {
             case 'AgentApplication' :
-                $entity = $this->getAgentService()->getAgentApplication($entityId);
+                $entity = $this->getApplicationElementService()->getApplicationElement($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_APPLICATION");
                 $elementText = "l'application [" . $entity->getApplication()->getLibelle() . "]";
                 break;
@@ -489,7 +501,7 @@ class AgentController extends AbstractActionController
                 $entity->setValidation($validation);
                 switch ($type) {
                     case 'AgentApplication' :
-                        $this->getAgentService()->updateAgentApplication($entity);
+                        $this->getApplicationElementService()->update($entity);
                         break;
                     case 'AgentCompetence' :
                         $this->getAgentService()->updateAgentCompetence($entity);

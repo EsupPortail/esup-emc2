@@ -2,7 +2,7 @@
 
 namespace Application\Form\AgentApplication;
 
-use Application\Entity\Db\AgentApplication;
+use Application\Entity\Db\ApplicationElement;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
@@ -10,33 +10,42 @@ class AgentApplicationHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
 
     /**
-     * @param AgentApplication $object
+     * @param ApplicationElement $object
      * @return array
      */
     public function extract($object)
     {
+        $commentaires = $object->getCommentaire();
+        $type = null;
+        $annee = null;
+        if ($commentaires !== null) {
+            $split = explode(" - ",$commentaires);
+            $type = $split[1];
+            $annee = $split[0];
+        }
+
         $data = [
-            'application' => ($object->getApplication())?$object->getApplication()->getId():null,
-            'type' => ($object->getType())?$object->getType():null,
-            'annee' => ($object->getAnnee())?$object->getAnnee():null,
+            'application'   => ($object->getApplication())?$object->getApplication()->getId():null,
+            'type'          => $type,
+            'annee'         => $annee,
         ];
         return $data;
     }
 
     /**
      * @param array $data
-     * @param AgentApplication $object
-     * @return AgentApplication
+     * @param ApplicationElement $object
+     * @return ApplicationElement
      */
     public function hydrate(array $data, $object)
     {
         $application = isset($data['application'])?$this->getApplicationService()->getApplication($data['application']):null;
         $type = isset($data['type'])?$data['type']:"Auto-formation";
         $annee= (isset($data['annee']) AND $data['annee'] !== "")? ((int) $data['annee']):null;
+        $commentaire = $annee . " - " . $type;
 
         $object->setApplication($application);
-        $object->setType($type);
-        $object->setAnnee($annee);
+        $object->setCommentaire($commentaire);
 
         return $object;
     }

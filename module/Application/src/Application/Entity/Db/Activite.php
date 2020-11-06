@@ -2,14 +2,17 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Activite implements HistoriqueAwareInterface
+class Activite implements HistoriqueAwareInterface, HasApplicationCollectionInterface
 {
     use HistoriqueAwareTrait;
+    use HasApplicationCollectionTrait;
 
     /** @var int */
     private $id;
@@ -17,8 +20,6 @@ class Activite implements HistoriqueAwareInterface
     private $libelles;
     /** @var ArrayCollection */
     private $descriptions;
-    /** @var ArrayCollection */
-    private $applications;
     /** @var ArrayCollection */
     private $competences;
     /** @var ArrayCollection */
@@ -109,42 +110,6 @@ class Activite implements HistoriqueAwareInterface
     {
         $this->descriptions->clear();
         return $this;
-    }
-
-    /** APPLICATIONS **************************************************************************************************/
-
-    /**
-     * @return ArrayCollection (ActiviteApplication)
-     */
-    public function getApplicationsCollection()
-    {
-        return $this->applications;
-    }
-
-    /**
-     * @return Application[]
-     */
-    public function getApplications()
-    {
-        $applications = [];
-        /** @var ActiviteApplication $activiteApplication */
-        foreach ($this->applications as $activiteApplication) {
-            if ($activiteApplication->estNonHistorise()) $applications[] = $activiteApplication->getApplication();
-        }
-        return $applications;
-    }
-
-    /**
-     * @param Application $application
-     * @return boolean
-     */
-    public function hasApplication(Application $application)
-    {
-        /** @var ActiviteApplication $activiteApplication */
-        foreach ($this->applications as $activiteApplication) {
-            if ($activiteApplication->estNonHistorise() AND $activiteApplication->getApplication() === $application) return true;
-        }
-        return false;
     }
 
     /** COMPETENCES ***************************************************************************************************/

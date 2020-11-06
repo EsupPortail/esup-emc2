@@ -7,6 +7,7 @@ use Application\Form\ModifierDescription\ModifierDescriptionForm;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
@@ -19,9 +20,11 @@ class ActiviteControllerFactory {
         /**
          * @var ActiviteService $activiteService
          * @var ActiviteDescriptionService $activiteDescriptionService
+         * @var HasApplicationCollectionService $hasApplicationCollectionService
          */
         $activiteService = $container->get(ActiviteService::class);
         $activiteDescriptionService = $container->get(ActiviteDescriptionService::class);
+        $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
 
         /**
          * @var ActiviteForm                $activiteForm
@@ -42,6 +45,7 @@ class ActiviteControllerFactory {
         $controller = new ActiviteController();
         $controller->setActiviteService($activiteService);
         $controller->setActiviteDescriptionService($activiteDescriptionService);
+        $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
         $controller->setActiviteForm($activiteForm);
         $controller->setModifierDescriptionForm($modifierDescriptionForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);

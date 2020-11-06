@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
@@ -9,9 +11,10 @@ use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface {
+class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasApplicationCollectionInterface {
     use HistoriqueAwareTrait;
     use HasEtatTrait;
+    use HasApplicationCollectionTrait;
 
     const TYPE_FICHEMETIER = 'FICHE_METIER';
     const ETAT_REDACTION = 'FICHE_METIER_REDACTION';
@@ -27,8 +30,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface {
 
     /** @var ArrayCollection */
     private $activites;
-    /** @var ArrayCollection */
-    private $applications;
     /** @var ArrayCollection */
     private $competences;
     /** @var ArrayCollection */
@@ -133,23 +134,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface {
     }
 
     /** APPLICATION ***************************************************************************************************/
-
-    /**
-     * @return Application[]
-     */
-    public function getApplications()
-    {
-        return $this->applications->toArray();
-    }
-
-    /**
-     * @param Application $application
-     * @return bool
-     */
-    public function hadApplication(Application $application)
-    {
-        return $this->applications->contains($application);
-    }
 
     /**
      * @param Application $application

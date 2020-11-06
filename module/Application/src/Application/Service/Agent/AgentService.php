@@ -3,7 +3,6 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentMissionSpecifique;
@@ -333,88 +332,6 @@ class AgentService {
         }
 
         return null;
-    }
-
-    /** AgentApplication **********************************************************************************************/
-
-    /**
-     * @param integer $id
-     * @return AgentApplication
-     */
-    public function getAgentApplication(int $id)
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentApplication::class)->createQueryBuilder('agentapplication')
-            ->andWhere('agentapplication.id = :id')
-            ->setParameter('id', $id)
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Plusieurs AgentApplication partagent le même identifiant [". $id ."].", $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return AgentApplication
-     */
-    public function getRequestedAgenApplication(AbstractActionController $controller, $paramName = 'agent-application')
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $result = $this->getAgentApplication($id);
-        return $result;
-    }
-
-    /**
-     * @param AgentApplication $agentApplication
-     * @return AgentApplication
-     */
-    public function createAgentApplication(AgentApplication $agentApplication)
-    {
-        $this->createFromTrait($agentApplication);
-        return $agentApplication;
-    }
-
-    /**
-     * @param AgentApplication $agentApplication
-     * @return AgentApplication
-     */
-    public function updateAgentApplication(AgentApplication $agentApplication)
-    {
-        $this->updateFromTrait($agentApplication);
-        return $agentApplication;
-    }
-
-    /**
-     * @param AgentApplication $agentApplication
-     * @return mixed
-     */
-    public function historiserAgentApplication(AgentApplication $agentApplication)
-    {
-        $this->historiserFromTrait($agentApplication);
-        return $agentApplication;
-    }
-
-    /**
-     * @param AgentApplication $agentApplication
-     * @return AgentApplication
-     */
-    public function restoreAgentApplication(AgentApplication $agentApplication)
-    {
-        $this->restoreFromTrait($agentApplication);
-        return $agentApplication;
-    }
-
-    /**
-     * @param AgentApplication $agentApplication
-     * @return AgentApplication
-     */
-    public function deleteAgentApplication(AgentApplication $agentApplication)
-    {
-        $this->deleteFromTrait($agentApplication);
-        return $agentApplication;
     }
 
     /** AgentCompetence ***********************************************************************************************/

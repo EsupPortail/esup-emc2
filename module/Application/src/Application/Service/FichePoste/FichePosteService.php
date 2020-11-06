@@ -370,7 +370,8 @@ class FichePosteService {
             if ($fichemetiertype->getFicheType() === $fichemetier) {
 
                 //provenant de la fiche metier
-                foreach ($fichemetier->getApplications() as $application) {
+                foreach ($fichemetier->getApplicationListe() as $applicationElement) {
+                    $application = $applicationElement->getApplication();
                     if (!isset($applications[$application->getId()])) {
                         $applications[$application->getId()] = [
                             'entity' => $application,
@@ -386,7 +387,8 @@ class FichePosteService {
                 $keptActivites = explode(";", $fichemetiertype->getActivites());
                 foreach ($fichemetier->getActivites() as $activite) {
                     if (array_search($activite->getId(), $keptActivites) !== false) {
-                        foreach ($activite->getActivite()->getApplications() as $application) {
+                        foreach ($activite->getActivite()->getApplicationListe() as $applicationElement) {
+                            $application = $applicationElement->getApplication();
                             if (!isset($applications[$application->getId()])) {
                                 $applications[$application->getId()] = [
                                     'entity' => $application,
@@ -535,7 +537,8 @@ class FichePosteService {
         }
 
         foreach ($fichesMetiers as $ficheMetier) {
-            foreach ($ficheMetier->getApplications() as $application) {
+            foreach ($ficheMetier->getApplicationListe() as $applicationElement) {
+                $application = $applicationElement->getApplication;
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $ficheMetier;
                 $dictionnaire[$application->getId()]["conserve"] = true;
@@ -543,7 +546,8 @@ class FichePosteService {
         }
 
         foreach ($activites as $activite) {
-            foreach ($activite->getApplications() as $application) {
+            foreach ($activite->getApplicationListe() as $applicationElement) {
+                $application = $applicationElement->getApplication;
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $activite;
                 $dictionnaire[$application->getId()]["conserve"] = true;

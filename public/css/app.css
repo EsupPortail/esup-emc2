@@ -322,6 +322,13 @@ span.activite {
     cursor: help;
     font-variant-position: super;
 }
+span.inconnue {
+    font-weight: bolder;
+    color: gray;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
 
 div.panel div.main {
 

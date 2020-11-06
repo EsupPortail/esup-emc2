@@ -63,7 +63,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return Agent|null
      */
-    public function getAgent() : null
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }

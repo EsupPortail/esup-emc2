@@ -3,6 +3,7 @@
 namespace Application\Service\FicheMetier;
 
 use Application\Entity\Db\Application;
+use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
@@ -155,12 +156,16 @@ class FicheMetierService {
         $qb = $this->createQueryBuilder()
             ->addSelect('fmactivite')->leftJoin('ficheMetier.activites', 'fmactivite')
             ->addSelect('activite')->leftJoin('fmactivite.activite', 'activite')
-            ->addSelect('aapplication')->leftJoin('activite.applications', 'aapplication')
             ->addSelect('acompetence')->leftJoin('activite.competences', 'acompetence')
             ->addSelect('aformation')->leftJoin('activite.formations', 'aformation')
 
-            ->addSelect('application')->leftJoin('ficheMetier.applications', 'application')
-            ->addSelect('agroupe')->leftJoin('application.groupe', 'agroupe')
+            //APPLICATIONS - fiche et activités associées
+            ->addSelect('activite_applicationelement')->leftJoin('activite.applications', 'activite_applicationelement')
+            ->addSelect('activite_application')->leftJoin('activite_applicationelement.application', 'activite_application')
+            ->addSelect('activite_application_groupe')->leftJoin('activite_application.groupe', 'activite_application_groupe')
+            ->addSelect('fiche_applicationelement')->leftJoin('ficheMetier.applications', 'fiche_applicationelement')
+            ->addSelect('fiche_application')->leftJoin('fiche_applicationelement.application', 'fiche_application')
+            ->addSelect('fiche_application_groupe')->leftJoin('fiche_application.groupe', 'fiche_application_groupe')
 
             ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
             ->addSelect('ctype')->leftJoin('competence.type', 'ctype')
@@ -283,41 +288,6 @@ class FicheMetierService {
      * @param array $data
      * @return FicheMetier
      */
-    public function updateApplications(FicheMetier $fiche, array $data)
-    {
-
-        $applicationIds = [];
-        if (isset($data['applications'])) $applicationIds = $data['applications'];
-
-        foreach ($applicationIds as $applicationId) {
-            $application = $this->getApplicationService()->getApplication($applicationId);
-            if (!$fiche->hadApplication($application)) {
-                $fiche->addApplication($application);
-            }
-        }
-
-        $applications = $fiche->getApplications();
-        /** @var Application $application */
-        foreach ($applications as $application) {
-            if (array_search($application->getId(), $applicationIds) === false) {
-                $fiche->removeApplication($application);
-            }
-        }
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
-        }
-
-        return $fiche;
-    }
-
-    /**
-     * @param FicheMetier $fiche
-     * @param array $data
-     * @return FicheMetier
-     */
     public function updateFormations(FicheMetier $fiche, array $data)
     {
 
@@ -392,14 +362,16 @@ class FicheMetierService {
     {
         $dictionnaire = [];
 
-        foreach ($fiche->getApplications() as $application) {
+        foreach ($fiche->getApplicationListe() as $applicationElement) {
+                $application = $applicationElement->getApplication();
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $fiche;
                 $dictionnaire[$application->getId()]["conserve"] = true;
         }
 
         foreach ($fiche->getActivites() as $activite) {
-            foreach ($activite->getActivite()->getApplications() as $application) {
+            foreach ($activite->getActivite()->getApplicationListe() as $applicationElement) {
+                $application = $applicationElement->getApplication();
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $activite;
                 $dictionnaire[$application->getId()]["conserve"] = true;

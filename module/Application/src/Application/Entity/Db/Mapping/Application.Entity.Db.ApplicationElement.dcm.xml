@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\AgentApplication" table="agent_application">
+    <entity name="Application\Entity\Db\ApplicationElement" table="application_element">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
-            <join-column name="agent_id" referenced-column-name="c_individu"/>
-        </many-to-one>
         <many-to-one target-entity="Application\Entity\Db\Application"  field="application">
             <join-column name="application_id" referenced-column-name="id"/>
         </many-to-one>
-        <field name="type"                    column="type"             type="string" length="64"/>
-        <field name="annee"                   column="annee"            type="integer"/>
-
+        <field name="commentaire"     type="string" length="4096"       column="commentaire"     nullable="true"/>
         <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validation">
             <join-column name="validation_id" referenced-column-name="id" />
         </one-to-one>
 
-        <!-- HISTORISATION  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
@@ -32,5 +27,6 @@
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="id"/>
         </many-to-one>
+
     </entity>
 </doctrine-mapping>
