@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\AgentApplication;
+namespace Application\Form\ApplicationElement;
 
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -9,7 +9,7 @@ use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class AgentApplicationForm extends Form {
+class ApplicationElementForm extends Form {
     use ApplicationServiceAwareTrait;
 
     public function init()

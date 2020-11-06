@@ -2,9 +2,9 @@
 
 namespace Application\Controller;
 
-use Application\Form\AgentApplication\AgentApplicationForm;
 use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentFormation\AgentFormationForm;
+use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
@@ -49,12 +49,12 @@ class AgentControllerFactory {
         $structureService = $container->get(StructureService::class);
 
         /**
-         * @var AgentApplicationForm $agentApplicationForm
+         * @var ApplicationElementForm $applicationElementForm
          * @var AgentCompetenceForm $agentCompetenceForm
          * @var AgentFormationForm $agentFormationForm
          * @var UploadForm $uploadForm
          */
-        $agentApplicationForm = $container->get('FormElementManager')->get(AgentApplicationForm::class);
+        $applicationElementForm = $container->get('FormElementManager')->get(ApplicationElementForm::class);
         $agentCompetenceForm = $container->get('FormElementManager')->get(AgentCompetenceForm::class);
         $agentFormationForm = $container->get('FormElementManager')->get(AgentFormationForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
@@ -74,7 +74,7 @@ class AgentControllerFactory {
         $controller->setUserService($userService);
         $controller->setStructureService($structureService);
 
-        $controller->setAgentApplicationForm($agentApplicationForm);
+        $controller->setApplicationElementForm($applicationElementForm);
         $controller->setAgentCompetenceForm($agentCompetenceForm);
         $controller->setAgentFormationForm($agentFormationForm);
         $controller->setUploadForm($uploadForm);

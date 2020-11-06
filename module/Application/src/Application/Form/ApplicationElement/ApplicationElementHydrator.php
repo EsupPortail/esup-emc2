@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Form\AgentApplication;
+namespace Application\Form\ApplicationElement;
 
 use Application\Entity\Db\ApplicationElement;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
-class AgentApplicationHydrator implements HydratorInterface {
+class ApplicationElementHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
 
     /**

@@ -7,13 +7,12 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\ApplicationElement;
-use Application\Form\AgentApplication\AgentApplicationForm;
-use Application\Form\AgentApplication\AgentApplicationFormAwareTrait;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
+use Application\Form\ApplicationElement\ApplicationElementForm;
+use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
@@ -37,7 +36,6 @@ use Zend\View\Model\ViewModel;
 class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
-//    use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
@@ -49,7 +47,7 @@ class AgentController extends AbstractActionController
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    use AgentApplicationFormAwareTrait;
+    use ApplicationElementFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -104,14 +102,14 @@ class AgentController extends AbstractActionController
 
     /** Gestion des applications***************************************************************************************/
 
-    public function ajouterAgentApplicationAction()
+    public function ajouterApplicationAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $applicationElement = new ApplicationElement();
 
-        /** @var AgentApplicationForm $form */
-        $form = $this->getAgentApplicationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-application', ['agent' => $agent->getId()], [], true));
+        /** @var ApplicationElementForm $form */
+        $form = $this->getApplicationElementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-application', ['agent' => $agent->getId()], [], true));
         $form->bind($applicationElement);
 
         /** @var Request $request */
@@ -149,7 +147,8 @@ class AgentController extends AbstractActionController
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-        $form = $this->getAgentApplicationForm();
+
+        $form = $this->getApplicationElementForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-application', ['agent' => $agent->getId(), 'application-element' => $applicationElement->getId()]));
         $form->bind($applicationElement);
 
@@ -526,6 +525,9 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
+    //TODO non retour retour semble merder
+
+    //TODO fix that ...
     public function revoquerElementAction()
     {
         $retour = $this->params()->fromQuery('retour');
@@ -533,8 +535,7 @@ class AgentController extends AbstractActionController
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
         $this->getValidationInstanceService()->historise($validation);
 
-        /** TODO c'est vraiment crado (faire mieux ...) */
-        /** @var AgentApplication $entity */
+        /** @var ApplicationElement $entity */
         $entity = $this->getValidationInstanceService()->getEntity($validation);
         $entity->setValidation(null);
         try {

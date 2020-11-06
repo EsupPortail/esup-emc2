@@ -1,15 +1,15 @@
 <?php
 
-namespace Application\Form\AgentApplication;
+namespace Application\Form\ApplicationElement;
 
 use Application\Service\Application\ApplicationService;
 use Interop\Container\ContainerInterface;
 
-class AgentApplicationHydratorFactory {
+class ApplicationElementHydratorFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return AgentApplicationHydrator
+     * @return ApplicationElementHydrator
      */
     public function __invoke(ContainerInterface $container)
     {
@@ -18,8 +18,8 @@ class AgentApplicationHydratorFactory {
          */
         $applicationService = $container->get(ApplicationService::class);
 
-        /** @var AgentApplicationHydrator $hydrator */
-        $hydrator = new AgentApplicationHydrator();
+        /** @var ApplicationElementHydrator $hydrator */
+        $hydrator = new ApplicationElementHydrator();
         $hydrator->setApplicationService($applicationService);
         return $hydrator;
     }

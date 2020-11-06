@@ -1,7 +1,6 @@
 <?php
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentApplication;
 use Application\Entity\Db\ApplicationElement;
 
 /**
@@ -28,8 +27,8 @@ $retour         = (isset($options['retour'])) ? $options['retour'] : null;
         <br/>
         <?php if ($canAjouter) : ?>
             <a
-                <?php /** @see \Application\Controller\AgentController::ajouterAgentApplicationAction() */?>
-                href="<?php echo $this->url('agent/ajouter-agent-application', ['agent' => $agent->getId()], [], true); ?>"
+                <?php /** @see \Application\Controller\AgentController::ajouterApplicationAction() */?>
+                href="<?php echo $this->url('agent/ajouter-application', ['agent' => $agent->getId()], [], true); ?>"
                 class="ajax-modal btn btn-primary action"
                 data-event="modification"
             >

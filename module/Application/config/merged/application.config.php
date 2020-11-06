@@ -8,6 +8,10 @@ use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormFactory;
 use Application\Form\Application\ApplicationHydrator;
 use Application\Form\Application\ApplicationHydratorFactory;
+use Application\Form\ApplicationElement\ApplicationElementForm;
+use Application\Form\ApplicationElement\ApplicationElementFormFactory;
+use Application\Form\ApplicationElement\ApplicationElementHydrator;
+use Application\Form\ApplicationElement\ApplicationElementHydratorFactory;
 use Application\Form\ApplicationGroupe\ApplicationGroupeForm;
 use Application\Form\ApplicationGroupe\ApplicationGroupeFormFactory;
 use Application\Form\ApplicationGroupe\ApplicationGroupeHydrator;
@@ -267,6 +271,7 @@ return [
         'factories' => [
             ApplicationForm::class => ApplicationFormFactory::class,
             ApplicationGroupeForm::class => ApplicationGroupeFormFactory::class,
+            ApplicationElementForm::class => ApplicationElementFormFactory::class,
             SelectionApplicationForm::class => SelectionApplicationFormFactory::class,
         ],
     ],
@@ -277,7 +282,8 @@ return [
         'factories' => [
             ApplicationHydrator::class => ApplicationHydratorFactory::class,
             ApplicationGroupeHydrator::class => ApplicationGroupeHydratorFactory::class,
-        ]
+            ApplicationElementHydrator::class => ApplicationElementHydratorFactory::class,
+        ],
     ],
     'view_helpers' => [
         'invokables' => [

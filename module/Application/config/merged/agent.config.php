@@ -6,10 +6,6 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
-use Application\Form\AgentApplication\AgentApplicationForm;
-use Application\Form\AgentApplication\AgentApplicationFormFactory;
-use Application\Form\AgentApplication\AgentApplicationHydrator;
-use Application\Form\AgentApplication\AgentApplicationHydratorFactory;
 use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentCompetence\AgentCompetenceFormFactory;
 use Application\Form\AgentCompetence\AgentCompetenceHydrator;
@@ -230,15 +226,15 @@ return [
                         ],
                     ],
 
-                    /** Route des AgentApplication ********************************************************************/
+                    /** Routes de gestion des applications*************************************************************/
 
-                    'ajouter-agent-application' => [
+                    'ajouter-application' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-agent-application/:agent',
+                            'route'    => '/ajouter-application/:agent',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'ajouter-agent-application',
+                                'action'     => 'ajouter-application',
                             ],
                         ],
                     ],
@@ -512,7 +508,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentApplicationForm::class => AgentApplicationFormFactory::class,
             AgentCompetenceForm::class => AgentCompetenceFormFactory::class,
             AgentFormationForm::class => AgentFormationFormFactory::class,
             SelectionAgentForm::class => SelectionAgentFormFactory::class,
@@ -520,7 +515,6 @@ return [
     ],
     'hydrators' => [
         'factories' => [
-            AgentApplicationHydrator::class => AgentApplicationHydratorFactory::class,
             AgentCompetenceHydrator::class => AgentCompetenceHydratorFactory::class,
             AgentFormationHydrator::class => AgentFormationHydratorFactory::class,
             SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
