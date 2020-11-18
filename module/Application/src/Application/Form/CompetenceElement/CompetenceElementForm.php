@@ -82,7 +82,7 @@ class CompetenceElementForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'application'   => [ 'required' => true, ],
+            'competence'   => [ 'required' => true, ],
             'niveau'          => [ 'required' => true, ],
             'annee'         => [ 'required' => false, ],
         ]));

@@ -19,7 +19,7 @@ trait CompetenceElementFormAwareTrait {
      * @param CompetenceElementForm $competenceElementForm
      * @return CompetenceElementForm
      */
-    public function setApplicationElementForm(CompetenceElementForm $competenceElementForm) : CompetenceElementForm
+    public function setCompetenceElementForm(CompetenceElementForm $competenceElementForm) : CompetenceElementForm
     {
         $this->competenceElementForm = $competenceElementForm;
         return $this->competenceElementForm;

@@ -80,7 +80,7 @@ class HasCompetenceCollectionService
      * @param CompetenceElement $competenceElement
      * @return HasCompetenceCollectionInterface
      */
-    public function addApplication(HasCompetenceCollectionInterface $object, CompetenceElement $competenceElement)
+    public function addCompetence(HasCompetenceCollectionInterface $object, CompetenceElement $competenceElement)
     {
         $this->getCompetenceElementService()->create($competenceElement);
         $object->getCompetenceCollection()->add($competenceElement);
@@ -93,7 +93,7 @@ class HasCompetenceCollectionService
      * @param CompetenceElement $competenceElement
      * @return HasCompetenceCollectionInterface
      */
-    public function deleteApplication(HasCompetenceCollectionInterface $object, CompetenceElement $competenceElement)
+    public function deleteCompetence(HasCompetenceCollectionInterface $object, CompetenceElement $competenceElement)
     {
         $object->getCompetenceCollection()->removeElement($competenceElement);
         $this->updateObject($object);

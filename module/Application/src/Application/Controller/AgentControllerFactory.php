@@ -5,10 +5,13 @@ namespace Application\Controller;
 use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentFormation\AgentFormationForm;
 use Application\Form\ApplicationElement\ApplicationElementForm;
+use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\ApplicationElement\ApplicationElementService;
+use Application\Service\CompetenceElement\CompetenceElementService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use Application\Service\Structure\StructureService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
@@ -26,10 +29,13 @@ class AgentControllerFactory {
         /**
          * @var AgentService $agentService
          * @var ApplicationElementService $applicationElementService
+         * @var HasApplicationCollectionService $hasApplicationCollectionService
+         * @var CompetenceElementService $competenceElementService
+         * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var EntretienProfessionnelService $entretienService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
-         * @var HasApplicationCollectionService $hasApplicationCollectionService
+
          * @var NatureService $natureService
          * @var FichierService $fichierService
          * @var FormationService $formationService
@@ -38,10 +44,12 @@ class AgentControllerFactory {
          */
         $agentService = $container->get(AgentService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
+        $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
+        $competenceElementService = $container->get(CompetenceElementService::class);
+        $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
-        $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $natureService = $container->get(NatureService::class);
         $fichierService = $container->get(FichierService::class);
         $formationService = $container->get(FormationService::class);
@@ -50,11 +58,13 @@ class AgentControllerFactory {
 
         /**
          * @var ApplicationElementForm $applicationElementForm
+         * @var CompetenceElementForm $competenceElementForm
          * @var AgentCompetenceForm $agentCompetenceForm
          * @var AgentFormationForm $agentFormationForm
          * @var UploadForm $uploadForm
          */
         $applicationElementForm = $container->get('FormElementManager')->get(ApplicationElementForm::class);
+        $competenceElementForm = $container->get('FormElementManager')->get(CompetenceElementForm::class);
         $agentCompetenceForm = $container->get('FormElementManager')->get(AgentCompetenceForm::class);
         $agentFormationForm = $container->get('FormElementManager')->get(AgentFormationForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
@@ -64,8 +74,10 @@ class AgentControllerFactory {
 
         $controller->setAgentService($agentService);
         $controller->setApplicationElementService($applicationElementService);
-        $controller->setEntretienProfessionnelService($entretienService);
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
+        $controller->setCompetenceElementService($competenceElementService);
+        $controller->setHasCompetenceCollectionService($hasCompetenceCollectionService);
+        $controller->setEntretienProfessionnelService($entretienService);
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
         $controller->setNatureService($natureService);
@@ -75,6 +87,7 @@ class AgentControllerFactory {
         $controller->setStructureService($structureService);
 
         $controller->setApplicationElementForm($applicationElementForm);
+        $controller->setCompetenceElementForm($competenceElementForm);
         $controller->setAgentCompetenceForm($agentCompetenceForm);
         $controller->setAgentFormationForm($agentFormationForm);
         $controller->setUploadForm($uploadForm);

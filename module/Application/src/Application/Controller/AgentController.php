@@ -4,18 +4,22 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\ApplicationElement;
+use Application\Entity\Db\CompetenceElement;
 use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
+use Application\Form\CompetenceElement\CompetenceElementForm;
+use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
@@ -37,8 +41,11 @@ class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
-    use EntretienProfessionnelServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
+    use HasCompetenceCollectionServiceAwareTrait;
+
+    use EntretienProfessionnelServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
@@ -48,6 +55,7 @@ class AgentController extends AbstractActionController
     use UserServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
+    use CompetenceElementFormAwareTrait;
     use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -223,15 +231,15 @@ class AgentController extends AbstractActionController
 
     /** Gestion des compétences ***************************************************************************************/
 
-    public function ajouterAgentCompetenceAction()
+    public function ajouterCompetenceAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        $competenceElement = new CompetenceElement();
 
-        $competence = new AgentCompetence();
-        $competence->setAgent($agent);
-        $form = $this->getAgentCompetenceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-competence', ['agent' => $agent->getId()]));
-        $form->bind($competence);
+        /** @var CompetenceElementForm $form */
+        $form = $this->getCompetenceElementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-competence', ['agent' => $agent->getId()], [], true));
+        $form->bind($competenceElement);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -239,34 +247,39 @@ class AgentController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getAgentService()->createAgentCompetence($competence);
+                $this->getHasCompetenceCollectionService()->addCompetence($agent, $competenceElement);
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Ajout d'une compétence associée à un agent",
+            'title' => "Ajout d'une application maîtrisée par l'agent",
             'form' => $form,
         ]);
         return $vm;
     }
 
-    public function afficherAgentCompetenceAction()
+    public function afficherCompetenceAction()
     {
-        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
+        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
         return new ViewModel([
-            'title' => "Affichage d'une compétence",
-            'agentCompetence' => $competence,
+            'title' => "Affichage d'une compétence maîtrisée par un agent",
+            'competenceElement' => $competenceElement,
+            'agent' => $agent,
         ]);
     }
 
-    public function modifierAgentCompetenceAction()
+    public function modifierCompetenceAction()
     {
-        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
-        $form = $this->getAgentCompetenceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-competence', ['agent-competence' => $competence->getId()]));
-        $form->bind($competence);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+
+        $form = $this->getCompetenceElementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-competence', ['agent' => $agent->getId(), 'competence-element' => $competenceElement->getId()]));
+        $form->bind($competenceElement);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -274,61 +287,64 @@ class AgentController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getAgentService()->updateAgentCompetence($competence);
+                $this->getCompetenceElementService()->update($competenceElement);
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Modification d'une compétence associée à un agent",
+            'title' => "Modification d'une compétence maîtrisée par un agent",
             'form' => $form,
         ]);
         return $vm;
     }
 
-    public function historiserAgentCompetenceAction()
+    public function historiserCompetenceAction()
     {
         $retour = $this->params()->fromQuery('retour');
 
-        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
-        $this->getAgentService()->historiserAgentCompetence($competence);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+        $this->getCompetenceElementService()->historise($competenceElement);
 
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $competence->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
     }
 
-    public function restaurerAgentCompetenceAction()
+    public function restaurerCompetenceAction()
     {
         $retour = $this->params()->fromQuery('retour');
 
-        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
-        $this->getAgentService()->restoreAgentCompetence($competence);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+        $this->getCompetenceElementService()->restore($competenceElement);
 
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $competence->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
     }
 
-    public function detruireAgentCompetenceAction()
+    public function detruireCompetenceAction()
     {
-        $competence = $this->getAgentService()->getRequestedAgentCompetence($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getAgentService()->deleteAgentCompetence($competence);
-            //return $this->redirect()->toRoute('home');
+            //la cascade doit gérer l'affaire
+            if ($data["reponse"] === "oui") $this->getCompetenceElementService()->delete($competenceElement);
             exit();
         }
 
         $vm = new ViewModel();
-        if ($competence !== null) {
+        if ($competenceElement !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la compétence  de " . $competence->getAgent()->getDenomination(),
+                'title' => "Suppression de la compétence  de " . $competenceElement->getCompetence()->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('agent/detruire-agent-competence', ["agent-competence" => $competence->getId()], [], true),
+                'action' => $this->url()->fromRoute('agent/detruire-competence', ["agent" => $agent->getId(), "competence-element" => $competenceElement->getId()], [], true),
             ]);
         }
         return $vm;

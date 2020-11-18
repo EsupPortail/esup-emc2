@@ -3,7 +3,9 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
+use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,12 +16,13 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Agent implements HasApplicationCollectionInterface, ResourceInterface
+class Agent implements HasApplicationCollectionInterface, HasCompetenceCollectionInterface, ResourceInterface
 {
     use ImportableAwareTrait;
     use AgentServiceAwareTrait;
     use DateTimeAwareTrait;
     use HasApplicationCollectionTrait;
+    use HasCompetenceCollectionTrait;
 
     public function getResourceId()
     {
@@ -57,8 +60,6 @@ class Agent implements HasApplicationCollectionInterface, ResourceInterface
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
-    /** @var ArrayCollection (AgentCompetence) */
-    private $competences;
     /** @var ArrayCollection (AgentFormation) */
     private $formations;
 
@@ -71,7 +72,6 @@ class Agent implements HasApplicationCollectionInterface, ResourceInterface
         $this->statuts = new ArrayCollection();
         $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
-        $this->competences = new ArrayCollection();
         $this->grades = new ArrayCollection();
         $this->structuresForcees = new ArrayCollection();
     }
@@ -324,27 +324,13 @@ class Agent implements HasApplicationCollectionInterface, ResourceInterface
     /** APPLICATIONS, COMPETENCES ET FORMATIONS ***********************************************************************/
 
     /**
-     * @param bool $include_historisees
-     * @return AgentCompetence[]
-     */
-    public function getCompetences($include_historisees = false)
-    {
-        $competences = [];
-        /** @var AgentCompetence $competence */
-        foreach ($this->competences as $competence) {
-            if ($include_historisees OR $competence->estNonHistorise()) $competences[] = $competence;
-        }
-        return $competences;
-    }
-
-    /**
-     * @param bool $include_historisees
-     * @return AgentFormation[]
+     * @param false $include_historisees
+     * @return array
      */
     public function getFormations($include_historisees = false)
     {
         $formations = [];
-        /** @var AgentCompetence $formation */
+        /** @var AgentFormation $formation */
         foreach ($this->formations as $formation) {
             if ($include_historisees OR $formation->estNonHistorise()) $formations[] = $formation;
         }

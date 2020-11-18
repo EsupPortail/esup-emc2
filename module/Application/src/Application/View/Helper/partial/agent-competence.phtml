@@ -1,7 +1,7 @@
 <?php
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentCompetence;
+use Application\Entity\Db\CompetenceElement;
 
 /**
  * @see \Application\View\Helper\AgentCompetenceViewHelper
@@ -27,8 +27,8 @@ $retour         = (isset($options['retour'])) ? $options['retour'] : null;
         <br/>
         <?php if ($canAjouter) : ?>
             <a
-                <?php /** @see \Application\Controller\AgentController::ajouterAgentCompetenceAction() */?>
-                    href="<?php echo $this->url('agent/ajouter-agent-competence', ['agent' => $agent->getId()], [], true); ?>"
+                <?php /** @see \Application\Controller\AgentController::ajouterCompetenceAction() */?>
+                    href="<?php echo $this->url('agent/ajouter-competence', ['agent' => $agent->getId()], [], true); ?>"
                     class="ajax-modal btn btn-primary action"
                     data-event="modification"
             >
@@ -42,11 +42,11 @@ $retour         = (isset($options['retour'])) ? $options['retour'] : null;
 <?php
 $noGroupe = "ZZZZ";
 $dictionnaire = [];
-foreach ($agent->getCompetences(true) as $agentCompetence) {
-    $competence = $agentCompetence->getCompetence();
+foreach ($agent->getCompetenceListe(true) as $competementElement) {
+    $competence = $competementElement->getCompetence();
     $groupe = $competence->getType();
     $libelle = ($groupe)?$groupe->getLibelle():$noGroupe;
-    $dictionnaire[$libelle][] = $agentCompetence;
+    $dictionnaire[$libelle][] = $competementElement;
 }
 ksort($dictionnaire);
 ?>
@@ -66,11 +66,11 @@ ksort($dictionnaire);
         <table class="competences" id="competences">
             <tbody>
             <?php foreach ($dictionnaire as $key => $liste) : ?>
-                <?php usort($liste, function(AgentCompetence $a, AgentCompetence $b) {return $a->getCompetence()->getLibelle() > $b->getCompetence()->getLibelle();}); ?>
+                <?php usort($liste, function(CompetenceElement $a, CompetenceElement $b) {return $a->getCompetence()->getLibelle() > $b->getCompetence()->getLibelle();}); ?>
                 <?php
                 $allHisto = true;
-                foreach ($liste as $agentCompetence) {
-                    if ($agentCompetence->estNonHistorise()) {
+                foreach ($liste as $competenceElement) {
+                    if ($competenceElement->estNonHistorise()) {
                         $allHisto = false;
                         break;
                     }
@@ -88,13 +88,13 @@ ksort($dictionnaire);
                         </th>
                     <?php endif; ?>
                 </tr>
-                <?php foreach ($liste as $agentCompetence) : ?>
-                    <tr <?php if ($agentCompetence->estHistorise()) echo 'class="historise"'; ?>>
-                        <td class="libelle-cell"> <?php echo $agentCompetence->getCompetence()->getLibelle(); ?> </td>
-                        <td class="info-cell"> <?php echo $agentCompetence->getNiveau() ?> </td>
+                <?php foreach ($liste as $competenceElement) : ?>
+                    <tr <?php if ($competenceElement->estHistorise()) echo 'class="historise"'; ?>>
+                        <td class="libelle-cell"> <?php echo $competenceElement->getCompetence()->getLibelle(); ?> </td>
+                        <td class="info-cell"> <?php echo $competenceElement->getCommentaire() ?> </td>
                         <td class="validation-cell">
-                            <?php if ($agentCompetence->getValidation()) : ?>
-                            <?php $validation = $agentCompetence->getValidation(); ?>
+                            <?php if ($competenceElement->getValidation()) : ?>
+                            <?php $validation = $competenceElement->getValidation(); ?>
                             <?php if ($validation->getValeur() === null) : ?>
                                 <span
                                         style="color:darkgreen;"
@@ -116,40 +116,40 @@ ksort($dictionnaire);
                         <td class="action-cell">
                             <?php if ($canVoir) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::afficherAgentCompetenceAction() */?>
-                                        href="<?php echo $this->url('agent/afficher-agent-competence', ['agent-competence' => $agentCompetence->getId()], [], true); ?>"
+                                    <?php /** @see \Application\Controller\AgentController::afficherCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/afficher-competence', ['competence-element' => $competenceElement->getId(), 'agent' => $agent->getId()], [], true); ?>"
                                         class="ajax-modal"
                                 >
                                     <span class="icon voir" title="Afficher une compétence liées à l'agent"></span></a>
                             <?php endif; ?>
                             <?php if ($canModifier) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::modifierAgentCompetenceAction() */?>
-                                        href="<?php echo $this->url('agent/modifier-agent-competence', ['agent-competence' => $agentCompetence->getId()], [], true); ?>"
+                                    <?php /** @see \Application\Controller\AgentController::modifierCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/modifier-competence', ['competence-element' => $competenceElement->getId(), 'agent' => $agent->getId()], [], true); ?>"
                                         class="ajax-modal"
                                         data-event="modification"
                                 >
                                     <span class="icon editer" title="Modifier une compétence liées à l'agent"></span></a>
                             <?php endif; ?>
                             <?php if ($canHistoriser) : ?>
-                                <?php if ($agentCompetence->estNonHistorise()) : ?>
+                                <?php if ($competenceElement->estNonHistorise()) : ?>
                                     <a
-                                        <?php /** @see \Application\Controller\AgentController::historiserAgentCompetenceAction() */?>
-                                            href="<?php echo $this->url('agent/historiser-agent-competence', ['agent-competence' => $agentCompetence->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                        <?php /** @see \Application\Controller\AgentController::historiserCompetenceAction() */?>
+                                            href="<?php echo $this->url('agent/historiser-competence', ['competence-element' => $competenceElement->getId(), 'agent' => $agent->getId()], ['query' => ['retour' => $retour]], true); ?>"
                                     >
                                         <span class="icon historiser" title="Historiser une compétence liées à l'agent"></span></a>
                                 <?php else: ?>
                                     <a
-                                        <?php /** @see \Application\Controller\AgentController::restaurerAgentCompetenceAction() */?>
-                                            href="<?php echo $this->url('agent/restaurer-agent-competence', ['agent-competence' => $agentCompetence->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                        <?php /** @see \Application\Controller\AgentController::restaurerCompetenceAction() */?>
+                                            href="<?php echo $this->url('agent/restaurer-competence', ['competence-element' => $competenceElement->getId(), 'agent' => $agent->getId()], ['query' => ['retour' => $retour]], true); ?>"
                                     >
                                         <span class="icon restaurer" title="Restaurer une compétence liées à l'agent"></span></a>
                                 <?php endif; ?>
                             <?php endif; ?>
                             <?php if ($canDetruire) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\AgentController::detruireAgentCompetenceAction() */?>
-                                        href="<?php echo $this->url('agent/detruire-agent-competence', ['agent-competence' => $agentCompetence->getId()], [], true); ?>"
+                                    <?php /** @see \Application\Controller\AgentController::detruireCompetenceAction() */?>
+                                        href="<?php echo $this->url('agent/detruire-competence', ['competence-element' => $competenceElement->getId(), 'agent' => $agent->getId()], [], true); ?>"
                                         class="ajax-modal"
                                         data-event="modification"
                                 >
@@ -157,10 +157,10 @@ ksort($dictionnaire);
                                 </a>
                             <?php endif; ?>
                             <?php if ($canValider) : ?>
-                                <?php if ($agentCompetence->getValidation() === null) : ?>
+                                <?php if ($competenceElement->getValidation() === null) : ?>
                                     <a
                                         <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentCompetence", 'id' => $agentCompetence->getId()], [], true); ?>"
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentCompetence", 'id' => $competenceElement->getId()], [], true); ?>"
                                             class="ajax-modal"
                                             data-event="modification"
                                     >
@@ -168,7 +168,7 @@ ksort($dictionnaire);
                                 <?php else: ?>
                                     <a
                                         <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
-                                            href="<?php echo $this->url('agent/revoquer-element', ['validation' => $agentCompetence->getValidation()->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                            href="<?php echo $this->url('agent/revoquer-element', ['validation' => $competenceElement->getValidation()->getId()], ['query' => ['retour' => $retour]], true); ?>"
                                     >
                                         <span class="icon validation-undo" title="Dévalider la compétence"></span></a>
                                 <?php endif; ?>

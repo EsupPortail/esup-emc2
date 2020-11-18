@@ -11,6 +11,7 @@ use Application\Form\Competence\CompetenceHydratorFactory;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Form\CompetenceElement\CompetenceElementFormFactory;
 use Application\Form\CompetenceElement\CompetenceElementHydrator;
+use Application\Form\CompetenceElement\CompetenceElementHydratorFactory;
 use Application\Form\CompetenceType\CompetenceTypeForm;
 use Application\Form\CompetenceType\CompetenceTypeFormFactory;
 use Application\Form\CompetenceType\CompetenceTypeHydrator;
@@ -413,7 +414,7 @@ return [
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
-            CompetenceElementHydrator::class => CompetenceHydratorFactory::class,
+            CompetenceElementHydrator::class => CompetenceElementHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

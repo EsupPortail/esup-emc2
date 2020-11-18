@@ -1,28 +1,40 @@
 <?php
 
 /**
- * @see AgentController::afficherAgentCompetenceAction()
- * @var AgentCompetence $agentCompetence
+ * @see AgentController::afficherCompetenceAction()
+ * @var CompetenceElement $competenceElement
+ * @var Agent $agent
  */
-use Application\Entity\Db\AgentCompetence;
 
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\CompetenceElement;
+
+$type = null;
+$annee = null;
+if ($competenceElement->getCommentaire() !== null) {
+    $split = explode(" - ", $competenceElement->getCommentaire());
+    $niveau = $split[1];
+    $annee = $split[0];
+}
 ?>
 
 <div class="row">
     <div class="col-md-6">
         <dl>
             <dt> Agent </dt>
-            <dd> <?php echo $agentCompetence->getAgent()->getDenomination(); ?></dd>
+            <dd> <?php echo $agent->getDenomination(); ?></dd>
             <dt> Application </dt>
-            <dd> <?php echo $agentCompetence->getCompetence()->getLibelle(); ?></dd>
+            <dd> <?php echo $competenceElement->getCompetence()->getLibelle(); ?></dd>
             <dt> Niveau de formation </dt>
-            <dd> <?php echo $agentCompetence->getNiveau(); ?></dd>
+            <dd> <?php echo ($niveau)?:"Non renseigné"; ?></dd>
+            <dt> Année de formation </dt>
+            <dd> <?php echo ($annee)?:"Non renseignée"; ?></dd>
             <dt> Validation </dt>
             <dd>
-                <?php if ($agentCompetence->getValidation() === null) : ?>
+                <?php if ($competenceElement->getValidation() === null) : ?>
                     Aucune validation
                 <?php else: ?>
-                    <?php $validation = $agentCompetence->getValidation(); ?>
+                    <?php $validation = $competenceElement->getValidation(); ?>
                     <?php if ($validation->getValeur() === null) : ?>
                         <span
                             style="color:darkgreen;"
@@ -45,19 +57,19 @@ use Application\Entity\Db\AgentCompetence;
         <dl>
             <dt> Dernière modification </dt>
             <dd>
-                <?php echo $agentCompetence->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+                <?php echo $competenceElement->getHistoModification()->format('d/m/Y à H:i:s'); ?>
                 <br/>
-                <?php echo $agentCompetence->getHistoModificateur()->getDisplayName(); ?>
+                <?php echo $competenceElement->getHistoModificateur()->getDisplayName(); ?>
             </dd>
         </dl>
 
-        <?php if ($agentCompetence->estHistorise()) : ?>
+        <?php if ($competenceElement->estHistorise()) : ?>
             <dl>
                 <dt> Historisée </dt>
                 <dd>
-                    <?php echo $agentCompetence->getHistoDestruction()->format('d/m/Y à H:i:s'); ?>
+                    <?php echo $competenceElement->getHistoDestruction()->format('d/m/Y à H:i:s'); ?>
                     <br/>
-                    <?php echo $agentCompetence->getHistoDestructeur()->getDisplayName(); ?>
+                    <?php echo $competenceElement->getHistoDestructeur()->getDisplayName(); ?>
                 </dd>
             </dl>
         <?php endif; ?>
