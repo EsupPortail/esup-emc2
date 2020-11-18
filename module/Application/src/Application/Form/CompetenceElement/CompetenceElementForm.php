@@ -1,22 +1,22 @@
 <?php
 
-namespace Application\Form\ApplicationElement;
+namespace Application\Form\CompetenceElement;
 
-use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class ApplicationElementForm extends Form {
-    use ApplicationServiceAwareTrait;
+class CompetenceElementForm extends Form {
+    use CompetenceServiceAwareTrait;
 
     public function init()
     {
         //competence
         $this->add([
-            'name' => 'application',
+            'name' => 'competence',
             'type' => Select::class,
             'options' => [
                 'label' => 'Application * : ',
@@ -24,32 +24,32 @@ class ApplicationElementForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner une application ... ",
-                'value_options' => $this->getApplicationService()->getApplicationsAsOptions(),
+                'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [
-                'id'                => 'application',
+                'id'                => 'competence',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ]
         ]);
         //niveau
         $this->add([
-            'name' => 'type',
+            'name' => 'niveau',
             'type' => Select::class,
             'options' => [
-                'label' => 'Type de formation * : ',
+                'label' => 'Niveau * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'empty_option' => "Sélectionner un type de formation ... ",
+                'empty_option' => "Sélectionner un niveau ... ",
                 'value_options' => [
-                    'Autoformation'          => "Autoformation",
-                    'Formation externe'       => "Formation externe",
-                    'Formation interne'       => "Formation interne",
+                    'Débutant'          => "Débutant",
+                    'Intermédiaire'       => "Intermédiaire",
+                    'Expert'       => "Expert",
                 ],
             ],
             'attributes' => [
-                'id'                => 'type',
+                'id'                => 'niveau',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ]
@@ -83,7 +83,7 @@ class ApplicationElementForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'application'   => [ 'required' => true, ],
-            'type'          => [ 'required' => true, ],
+            'niveau'          => [ 'required' => true, ],
             'annee'         => [ 'required' => false, ],
         ]));
     }

@@ -72,7 +72,7 @@ class ApplicationElementService {
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(ApplicationElement::class)->createQueryBuilder('applicationelement')
-//            ->addSelect('application')->join('applicationelement.application', 'element')
+            ->addSelect('application')->join('applicationelement.application', 'application')
 ;
         return $qb;
     }

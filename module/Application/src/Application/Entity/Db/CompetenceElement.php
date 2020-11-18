@@ -7,14 +7,14 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 
-class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface {
+class CompetenceElement implements HistoriqueAwareInterface, ValidableInterface {
     use HistoriqueAwareTrait;
     use ValidableAwareTrait;
 
     /** @var integer */
     private $id;
-    /** @var Application */
-    private $application;
+    /** @var Competence */
+    private $competence;
     /** @var string */
     private $commentaire;
 
@@ -27,20 +27,20 @@ class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface
     }
 
     /**
-     * @return Application|null
+     * @return Competence|null
      */
-    public function getApplication(): ?Application
+    public function getCompetence(): ?Competence
     {
-        return $this->application;
+        return $this->competence;
     }
 
     /**
-     * @param Application|null $application
-     * @return ApplicationElement
+     * @param Competence|null $competence
+     * @return CompetenceElement
      */
-    public function setApplication(?Application $application): ApplicationElement
+    public function setCompetence(?Competence $competence): CompetenceElement
     {
-        $this->application = $application;
+        $this->competence = $competence;
         return $this;
     }
 
@@ -54,9 +54,9 @@ class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface
 
     /**
      * @param string|null $commentaire
-     * @return ApplicationElement
+     * @return CompetenceElement
      */
-    public function setCommentaire(?string $commentaire): ApplicationElement
+    public function setCommentaire(?string $commentaire): CompetenceElement
     {
         $this->commentaire = $commentaire;
         return $this;

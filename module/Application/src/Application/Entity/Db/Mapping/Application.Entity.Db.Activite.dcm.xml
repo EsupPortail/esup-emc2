@@ -8,7 +8,6 @@
 
         <one-to-many field="libelles" target-entity="Application\Entity\Db\ActiviteLibelle" mapped-by="activite"/>
         <one-to-many field="descriptions" target-entity="Application\Entity\Db\ActiviteDescription" mapped-by="activite"/>
-        <one-to-many field="competences"  target-entity="Application\Entity\Db\ActiviteCompetence"  mapped-by="activite"/>
         <one-to-many field="formations"   target-entity="Application\Entity\Db\ActiviteFormation"   mapped-by="activite"/>
 
         <one-to-many target-entity="Application\Entity\Db\FicheMetierTypeActivite" mapped-by="activite" field="fiches"/>
@@ -20,6 +19,16 @@
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="application_element_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="competences" target-entity="Application\Entity\Db\CompetenceElement">
+            <join-table name="activite_competence">
+                <join-columns>
+                    <join-column name="activite_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="competence_element_id" referenced-column-name="id" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>

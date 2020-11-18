@@ -18,7 +18,7 @@ class FormationInstanceFraisForm extends Form
             'type' => Text::class,
             'name' => 'repas',
             'options' => [
-                'label' => "Fais de repas :",
+                'label' => "Frais de repas :",
             ],
             'attributes' => [
                 'id' => 'repas',
@@ -29,7 +29,7 @@ class FormationInstanceFraisForm extends Form
             'type' => Text::class,
             'name' => 'hebergement',
             'options' => [
-                'label' => "Fais d'hébergement :",
+                'label' => "Frais d'hébergement :",
             ],
             'attributes' => [
                 'id' => 'hebergement',
@@ -40,7 +40,7 @@ class FormationInstanceFraisForm extends Form
             'type' => Text::class,
             'name' => 'transport',
             'options' => [
-                'label' => "Fais de transport :",
+                'label' => "Frais de transport :",
             ],
             'attributes' => [
                 'id' => 'transport',

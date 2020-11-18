@@ -331,7 +331,7 @@ class ActiviteService {
      * @param array $data
      * @return Activite
      */
-    public function updateCompetences(Activite $activite, array $data)
+    public function updateCompetences(Activite $activite, $data)
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = $this->getDateTime();
@@ -340,7 +340,7 @@ class ActiviteService {
         if (isset($data['competences'])) $competenceIds = $data['competences'];
 
         /** @var ActiviteCompetence $activiteCompetence */
-        foreach ($activite->getCompetencesCollection() as $activiteCompetence) {
+        foreach ($activite->getCompetenceCollection() as $activiteCompetence) {
             if ($activiteCompetence->estNonHistorise()) {
                 if (array_search($activiteCompetence->getCompetence()->getId(), $competenceIds) === false) {
                     $activiteCompetence->setHistoDestructeur($user);

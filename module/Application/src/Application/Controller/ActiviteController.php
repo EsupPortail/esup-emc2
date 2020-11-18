@@ -11,6 +11,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
@@ -23,6 +24,7 @@ class ActiviteController  extends AbstractActionController {
     use ActiviteServiceAwareTrait;
     use ActiviteDescriptionServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
+    use HasCompetenceCollectionServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ModifierDescriptionFormAwareTrait;
@@ -302,8 +304,7 @@ class ActiviteController  extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $this->getActiviteService()->updateCompetences($activite, $data);
-            exit();
+            $this->getHasCompetenceCollectionService()->updateCompetences($activite, $data);
         }
 
         $vm = new ViewModel();

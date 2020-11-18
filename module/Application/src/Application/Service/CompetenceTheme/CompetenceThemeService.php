@@ -125,5 +125,24 @@ class CompetenceThemeService {
         return $theme;
     }
 
+    /**
+     * @param string $libelle
+     * @return CompetenceTheme|null
+     */
+    public function getCompetenceThemeByLibelle(string $libelle) : ?CompetenceTheme
+    {
+        $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
+            ->andWhere('theme.libelle = :libelle')
+            ->setParameter('libelle', $libelle)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException('Plusieurs CompetenceTheme partagent le même libellé ['.$libelle.']');
+        }
+        return $result;
+    }
+
 
 }

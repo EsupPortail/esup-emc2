@@ -7,8 +7,10 @@
         </id>
 
         <field name="libelle"           type="string" length="255"      column="libelle"                nullable="false"/>
-        <field name="precision"         type="string" length="255"      column="precision"              nullable="false"/>
         <field name="description"       type="string" length="2047"     column="description"            nullable="false"/>
+        <field name="source"            type="string" length="256"      column="source"                 nullable="true"/>
+        <field name="idSource"          type="integer"                  column="id_source"              nullable="true"/>
+
         <many-to-one target-entity="Application\Entity\Db\CompetenceType"  field="type">
             <join-column name="type_id" referenced-column-name="id"/>
         </many-to-one>
@@ -16,27 +18,27 @@
             <join-column name="theme_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-many field="fiches" target-entity="Application\Entity\Db\FicheMetier" inversed-by="fiche" fetch="LAZY">
-            <join-table name="fichemetier_competence">
-                <join-columns>
-                    <join-column name="competence_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="fiche_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
+<!--        <many-to-many field="fiches" target-entity="Application\Entity\Db\FicheMetier" inversed-by="fiche" fetch="LAZY">-->
+<!--            <join-table name="fichemetier_competence">-->
+<!--                <join-columns>-->
+<!--                    <join-column name="competence_id" referenced-column-name="id"/>-->
+<!--                </join-columns>-->
+<!--                <inverse-join-columns>-->
+<!--                    <join-column name="fiche_id" referenced-column-name="id"/>-->
+<!--                </inverse-join-columns>-->
+<!--            </join-table>-->
+<!--        </many-to-many>-->
 
-        <many-to-many field="activites" target-entity="Application\Entity\Db\Activite" inversed-by="fiche" fetch="LAZY">
-            <join-table name="activite_competence">
-                <join-columns>
-                    <join-column name="competence_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="activite_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
+<!--        <many-to-many field="activites" target-entity="Application\Entity\Db\Activite" inversed-by="fiche" fetch="LAZY">-->
+<!--            <join-table name="activite_competence">-->
+<!--                <join-columns>-->
+<!--                    <join-column name="competence_id" referenced-column-name="id"/>-->
+<!--                </join-columns>-->
+<!--                <inverse-join-columns>-->
+<!--                    <join-column name="activite_id" referenced-column-name="id"/>-->
+<!--                </inverse-join-columns>-->
+<!--            </join-table>-->
+<!--        </many-to-many>-->
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

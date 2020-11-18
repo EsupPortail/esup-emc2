@@ -3,7 +3,6 @@
 namespace Application\Service\FicheMetier;
 
 use Application\Entity\Db\Application;
-use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
@@ -156,7 +155,6 @@ class FicheMetierService {
         $qb = $this->createQueryBuilder()
             ->addSelect('fmactivite')->leftJoin('ficheMetier.activites', 'fmactivite')
             ->addSelect('activite')->leftJoin('fmactivite.activite', 'activite')
-            ->addSelect('acompetence')->leftJoin('activite.competences', 'acompetence')
             ->addSelect('aformation')->leftJoin('activite.formations', 'aformation')
 
             //APPLICATIONS - fiche et activités associées
@@ -167,8 +165,15 @@ class FicheMetierService {
             ->addSelect('fiche_application')->leftJoin('fiche_applicationelement.application', 'fiche_application')
             ->addSelect('fiche_application_groupe')->leftJoin('fiche_application.groupe', 'fiche_application_groupe')
 
-            ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
-            ->addSelect('ctype')->leftJoin('competence.type', 'ctype')
+            //APPLICATIONS - fiche et activités associées
+            ->addSelect('activite_competenceelement')->leftJoin('activite.competences', 'activite_competenceelement')
+            ->addSelect('activite_competence')->leftJoin('activite_competenceelement.competence', 'activite_competence')
+            ->addSelect('activite_competence_theme')->leftJoin('activite_competence.theme', 'activite_competence_theme')
+            ->addSelect('activite_competence_type')->leftJoin('activite_competence.type', 'activite_competence_type')
+            ->addSelect('fiche_competenceelement')->leftJoin('ficheMetier.competences', 'fiche_competenceelement')
+            ->addSelect('fiche_competence')->leftJoin('fiche_competenceelement.competence', 'fiche_competence')
+            ->addSelect('fiche_competence_theme')->leftJoin('fiche_competence.theme', 'fiche_competence_theme')
+            ->addSelect('fiche_competence_type')->leftJoin('fiche_competence.type', 'fiche_competence_type')
 
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
@@ -390,14 +395,16 @@ class FicheMetierService {
     {
         $dictionnaire = [];
 
-        foreach ($fiche->getCompetences() as $competence) {
+        foreach ($fiche->getCompetenceListe() as $competenceElement) {
+            $competence = $competenceElement->getCompetence();
             $dictionnaire[$competence->getId()]["entite"] = $competence;
             $dictionnaire[$competence->getId()]["raison"][] = $fiche;
             $dictionnaire[$competence->getId()]["conserve"] = true;
         }
 
         foreach ($fiche->getActivites() as $activite) {
-            foreach ($activite->getActivite()->getCompetences() as $competence) {
+            foreach ($activite->getActivite()->getCompetenceListe() as $competenceElement) {
+                $competence = $competenceElement->getCompetence();
                 $dictionnaire[$competence->getId()]["entite"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $activite;
                 $dictionnaire[$competence->getId()]["conserve"] = true;

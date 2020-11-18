@@ -8,6 +8,9 @@ use Application\Form\Competence\CompetenceForm;
 use Application\Form\Competence\CompetenceFormFactory;
 use Application\Form\Competence\CompetenceHydrator;
 use Application\Form\Competence\CompetenceHydratorFactory;
+use Application\Form\CompetenceElement\CompetenceElementForm;
+use Application\Form\CompetenceElement\CompetenceElementFormFactory;
+use Application\Form\CompetenceElement\CompetenceElementHydrator;
 use Application\Form\CompetenceType\CompetenceTypeForm;
 use Application\Form\CompetenceType\CompetenceTypeFormFactory;
 use Application\Form\CompetenceType\CompetenceTypeHydrator;
@@ -18,10 +21,14 @@ use Application\Form\SelectionCompetence\SelectionCompetenceHydrator;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
+use Application\Service\CompetenceElement\CompetenceElementService;
+use Application\Service\CompetenceElement\CompetenceElementServiceFactory;
 use Application\Service\CompetenceTheme\CompetenceThemeService;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceFactory;
 use Application\Service\CompetenceType\CompetenceTypeService;
 use Application\Service\CompetenceType\CompetenceTypeServiceFactory;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceFactory;
 use Application\View\Helper\CompetenceBlocViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -65,6 +72,8 @@ return [
                 [
                     'controller' => CompetenceController::class,
                     'action' => [
+                        'importer',
+                        'substituer',
                         'modifier',
                         'historiser',
                         'restaurer',
@@ -114,6 +123,28 @@ return [
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'importer' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/importer',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'importer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'substituer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/substituer/:competence',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'substituer',
                             ],
                         ],
                         'may_terminate' => true,
@@ -356,6 +387,8 @@ return [
     'service_manager' => [
         'factories' => [
             CompetenceService::class => CompetenceServiceFactory::class,
+            CompetenceElementService::class => CompetenceElementServiceFactory::class,
+            HasCompetenceCollectionService::class => HasCompetenceCollectionServiceFactory::class,
             CompetenceThemeService::class => CompetenceThemeServiceFactory::class,
             CompetenceTypeService::class => CompetenceTypeServiceFactory::class,
         ],
@@ -369,6 +402,7 @@ return [
         'factories' => [
             CompetenceForm::class => CompetenceFormFactory::class,
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
+            CompetenceElementForm::class => CompetenceElementFormFactory::class,
             SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
         ],
     ],
@@ -379,6 +413,7 @@ return [
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
+            CompetenceElementHydrator::class => CompetenceHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

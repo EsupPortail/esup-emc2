@@ -5,6 +5,7 @@ namespace Application\Service\Competence;
 use Application\Entity\Db\Competence;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -179,10 +180,31 @@ class CompetenceService {
         $this_option = [
             'value' =>  $competence->getId(),
             'attributes' => [
-                'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $texte:"",
+                'data-content' => ($competence->getType())?"<span class='badge ".$competence->getType()->getLibelle()."'>".$competence->getType()->getLibelle()."</span> &nbsp;". $texte . " " . (($competence->getSource())?"<span class='label' style='background: darkslategrey;'>" . $competence->getSource() . " - " . $competence->getIdSource(). "</span>":""):"",
             ],
             'label' => $texte,
         ];
         return $this_option;
+    }
+
+    /**
+     * @param string $source
+     * @param integer $id
+     * @return Competence|null
+     */
+    public function getCompetenceByIdSource(string $source, int $id) : ?Competence
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('competence.source = :source')
+            ->setParameter('source', $source)
+            ->andWhere('competence.idSource = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs compétences partagent le même id source [".$source."-".$id."]");
+        }
+        return $result;
     }
 }

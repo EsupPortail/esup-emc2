@@ -545,7 +545,7 @@ class FichePosteController extends AbstractActionController {
      * @param array $data
      * @return ViewModel|void
      */
-    private function checkValidite(FichePoste $fiche, array $data)
+    private function checkValidite(FichePoste $fiche, $data)
     {
         $cut = false;
         if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {

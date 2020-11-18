@@ -16,6 +16,7 @@ use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -47,6 +48,7 @@ class FicheMetierController extends AbstractActionController
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
+    use HasCompetenceCollectionServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use EtatServiceAwareTrait;
@@ -391,6 +393,31 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
+    public function gererCompetencesAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
+
+        /** @var SelectionCompetenceForm $form */
+        $form = $this->getSelectionCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/gerer-competences', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /**  @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $this->getHasCompetenceCollectionService()->updateCompetences($fiche, $data);
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Gestion des compétences de la fiche métier " . $fiche->getMetier()->getLibelle(),
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
     public function modifierFormationAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
@@ -416,30 +443,6 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function gererCompetencesAction()
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
-
-        /** @var SelectionCompetenceForm $form */
-        $form = $this->getSelectionCompetenceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/gerer-competences', ['fiche' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        /**  @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $this->getFicheMetierService()->updateCompetences($fiche, $data);
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Gestion des compétences de la fiche métier " . $fiche->getMetier()->getLibelle(),
-            'form' => $form,
-        ]);
-        return $vm;
-    }
 
     public function changerExpertiseAction()
     {

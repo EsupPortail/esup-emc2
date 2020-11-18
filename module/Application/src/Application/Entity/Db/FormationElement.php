@@ -2,19 +2,20 @@
 
 namespace Application\Entity\Db;
 
+use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 
-class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface {
+class FormationElement implements HistoriqueAwareInterface, ValidableInterface {
     use HistoriqueAwareTrait;
     use ValidableAwareTrait;
 
     /** @var integer */
     private $id;
-    /** @var Application */
-    private $application;
+    /** @var Formation */
+    private $formation;
     /** @var string */
     private $commentaire;
 
@@ -27,20 +28,20 @@ class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface
     }
 
     /**
-     * @return Application|null
+     * @return Formation|null
      */
-    public function getApplication(): ?Application
+    public function getFormation(): ?Formation
     {
-        return $this->application;
+        return $this->formation;
     }
 
     /**
-     * @param Application|null $application
-     * @return ApplicationElement
+     * @param Formation|null $formation
+     * @return FormationElement
      */
-    public function setApplication(?Application $application): ApplicationElement
+    public function setFormation(?Formation $formation): FormationElement
     {
-        $this->application = $application;
+        $this->formation = $formation;
         return $this;
     }
 
@@ -54,9 +55,9 @@ class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface
 
     /**
      * @param string|null $commentaire
-     * @return ApplicationElement
+     * @return FormationElement
      */
-    public function setCommentaire(?string $commentaire): ApplicationElement
+    public function setCommentaire(?string $commentaire): FormationElement
     {
         $this->commentaire = $commentaire;
         return $this;

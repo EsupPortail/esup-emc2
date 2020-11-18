@@ -8,6 +8,7 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Configuration\ConfigurationService;
@@ -32,6 +33,7 @@ class FicheMetierControllerFactory {
          * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var HasApplicationCollectionService $hasApplicationCollectionService
+         * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var ConfigurationService $configurationService
          * @var MetierService $metierService
          * @var ParcoursDeFormationService $parcoursService
@@ -42,6 +44,7 @@ class FicheMetierControllerFactory {
         $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
+        $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $configurationService = $container->get(ConfigurationService::class);
         $metierService = $container->get(MetierService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
@@ -76,6 +79,7 @@ class FicheMetierControllerFactory {
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
+        $controller->setHasCompetenceCollectionService($hasCompetenceCollectionService);
         $controller->setConfigurationService($configurationService);
         $controller->setMetierService($metierService);
         $controller->setParcoursDeFormationService($parcoursService);

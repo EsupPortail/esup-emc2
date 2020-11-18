@@ -18,11 +18,16 @@ use Application\Entity\Db\Competence;
     <dd> <?php echo ($competence->getType())?$competence->getType()->getLibelle():"Aucun"; ?> </dd>
     <dt> Thème </dt>
     <dd> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </dd>
-    <dt> Précision </dt>
-    <dd> <?php echo $competence->getPrecision(); ?> </dd>
     <dt> Description </dt>
     <dd> <?php echo $competence->getDescription(); ?> </dd>
-
+    <dt> Source </dt>
+    <dd>
+        <?php if ($competence->getSource() !== null) : ?>
+            <?php echo $competence->getSource(); ?> - <?php echo $competence->getIdSource(); ?>
+        <?php else : ?>
+            Aucune source de renseignée
+        <?php endif; ?>
+    </dd>
     <dt> Modificateur </dt>
     <dd> <?php echo $competence->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $competence->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
 

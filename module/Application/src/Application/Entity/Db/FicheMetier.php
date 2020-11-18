@@ -3,7 +3,9 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
+use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
@@ -11,10 +13,12 @@ use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasApplicationCollectionInterface {
+class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface {
     use HistoriqueAwareTrait;
     use HasEtatTrait;
     use HasApplicationCollectionTrait;
+    use HasCompetenceCollectionTrait;
 
     const TYPE_FICHEMETIER = 'FICHE_METIER';
     const ETAT_REDACTION = 'FICHE_METIER_REDACTION';
@@ -30,8 +34,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasAppl
 
     /** @var ArrayCollection */
     private $activites;
-    /** @var ArrayCollection */
-    private $competences;
     /** @var ArrayCollection */
     private $formations;
 
@@ -167,14 +169,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasAppl
     /** COMPETENCE ****************************************************************************************************/
 
     /**
-     * @return Competence[]
-     */
-    public function getCompetences()
-    {
-        return $this->competences->toArray();
-    }
-
-    /**
      * @param Competence $competence
      * @return FicheMetier
      */
@@ -192,15 +186,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasAppl
     {
         $this->competences->removeElement($competence);
         return $this;
-    }
-
-    /**
-     * @param Competence $competence
-     * @return boolean
-     */
-    public function hasCompetence(Competence $competence)
-    {
-        return $this->competences->contains($competence);
     }
 
     /**

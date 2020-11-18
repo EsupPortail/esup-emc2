@@ -5,6 +5,7 @@ use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\ApplicationElement;
+use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
@@ -36,8 +37,9 @@ $ficheposte  = (isset($options['ficheposte'])) ?   $ficheposte  = $options['fich
 $fichemetier = (isset($options['fichemetier'])) ?  $fichemetier = $options['fichemetier'] : null;
 $retirees    = (isset($options['retirees'])) ?     $retirees    = $options['retirees'] : null;
 
-$competences   = $activite->getCompetences();
-$nbCompetence  = count($competences);
+$competencesListe   = $activite->getCompetenceListe();
+usort($competencesListe, function (CompetenceElement $a, CompetenceElement $b) { return $a->getCompetence()->getLibelle() > $b->getCompetence()->getLibelle();});
+$nbCompetence  = count($competencesListe);
 $applicationsListe  = $activite->getApplicationListe();
 usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) { return $a->getApplication()->getLibelle() > $b->getApplication()->getLibelle();});
 $nbApplication = count($applicationsListe);
@@ -206,10 +208,10 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
             </h4>
 
             <ul>
-                <?php foreach ($competences as $competence) : ?>
-                <li>
-                    <?php echo $competence->getLibelle(); ?>
-                </li>
+                <?php foreach ($competencesListe as $competenceElement) : ?>
+                    <li title="<?php if ($competenceElement->getCommentaire()) echo $competenceElement->getCommentaire(); ?>">
+                        <?php echo $competenceElement->getCompetence()->getLibelle(); ?>
+                    </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>

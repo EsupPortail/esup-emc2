@@ -3,16 +3,20 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
+use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Activite implements HistoriqueAwareInterface, HasApplicationCollectionInterface
+class Activite implements HistoriqueAwareInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
 {
     use HistoriqueAwareTrait;
     use HasApplicationCollectionTrait;
+    use HasCompetenceCollectionTrait;
 
     /** @var int */
     private $id;
@@ -20,8 +24,6 @@ class Activite implements HistoriqueAwareInterface, HasApplicationCollectionInte
     private $libelles;
     /** @var ArrayCollection */
     private $descriptions;
-    /** @var ArrayCollection */
-    private $competences;
     /** @var ArrayCollection */
     private $formations;
     /** @var ArrayCollection (FicheMetier) */
@@ -112,15 +114,8 @@ class Activite implements HistoriqueAwareInterface, HasApplicationCollectionInte
         return $this;
     }
 
-    /** COMPETENCES ***************************************************************************************************/
-
-    /**
-     * @return ArrayCollection (ActiviteCompetence)
-     */
-    public function getCompetencesCollection()
-    {
-        return $this->competences;
-    }
+    /** APPLICATIONS - VOIR HasApplicationCollectionTrait *************************************************************/
+    /** COMPETENCES - VOIR HasCompetenceCollectionTrait ***************************************************************/
 
     /**
      * @return Competence[]
@@ -133,19 +128,6 @@ class Activite implements HistoriqueAwareInterface, HasApplicationCollectionInte
             if ($activiteCompetence->estNonHistorise()) $competences[] = $activiteCompetence->getCompetence();
         }
         return $competences;
-    }
-
-    /**
-     * @param Competence $competence
-     * @return boolean
-     */
-    public function hasCompetence(Competence $competence)
-    {
-        /** @var ActiviteCompetence $activiteCompetence */
-        foreach ($this->competences as $activiteCompetence) {
-            if ($activiteCompetence->estNonHistorise() AND $activiteCompetence->getCompetence() === $competence) return true;
-        }
-        return false;
     }
 
     /** FORMATIONS ****************************************************************************************************/
