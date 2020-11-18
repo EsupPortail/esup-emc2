@@ -538,7 +538,7 @@ class FichePosteService {
 
         foreach ($fichesMetiers as $ficheMetier) {
             foreach ($ficheMetier->getApplicationListe() as $applicationElement) {
-                $application = $applicationElement->getApplication;
+                $application = $applicationElement->getApplication();
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $ficheMetier;
                 $dictionnaire[$application->getId()]["conserve"] = true;
@@ -547,7 +547,7 @@ class FichePosteService {
 
         foreach ($activites as $activite) {
             foreach ($activite->getApplicationListe() as $applicationElement) {
-                $application = $applicationElement->getApplication;
+                $application = $applicationElement->getApplication();
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $activite;
                 $dictionnaire[$application->getId()]["conserve"] = true;
@@ -640,7 +640,8 @@ class FichePosteService {
         }
 
         foreach ($fichesMetiers as $ficheMetier) {
-            foreach ($ficheMetier->getCompetences() as $competence) {
+            foreach ($ficheMetier->getCompetenceListe() as $competenceElement) {
+                $competence = $competenceElement->getCompetence();
                 $dictionnaire[$competence->getId()]["object"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $ficheMetier;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
@@ -648,7 +649,8 @@ class FichePosteService {
         }
 
         foreach ($activites as $activite) {
-            foreach ($activite->getCompetences() as $competence) {
+            foreach ($activite->getCompetenceListe() as $competenceElement) {
+                $competence = $competenceElement->getCompetence();
                 $dictionnaire[$competence->getId()]["object"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $activite;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
