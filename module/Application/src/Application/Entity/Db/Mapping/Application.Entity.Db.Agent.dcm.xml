@@ -31,8 +31,17 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+        <many-to-many field="competences" target-entity="Application\Entity\Db\CompetenceElement">
+            <join-table name="agent_competence">
+                <join-columns>
+                    <join-column name="agent_id" referenced-column-name="c_individu" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="competence_element_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
-        <one-to-many target-entity="Application\Entity\Db\AgentCompetence" mapped-by="agent" field="competences"/>
         <one-to-many target-entity="Application\Entity\Db\AgentFormation" mapped-by="agent" field="formations"/>
         <one-to-many target-entity="Application\Entity\Db\EntretienProfessionnel" mapped-by="agent" field="entretiens"/>
         <one-to-many target-entity="Application\Entity\Db\StructureAgentForce" mapped-by="agent" field="structuresForcees"/>
