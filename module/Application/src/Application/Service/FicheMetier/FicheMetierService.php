@@ -259,26 +259,7 @@ class FicheMetierService {
     }
 
     /**
-     * @param FicheMetier $fiche
-     * @param Application $application
-     * @param DateTime|null $date
-     */
-    public function addApplication(FicheMetier $fiche, Application $application, ?DateTime $date = null)
-    {
-        $fiche->addApplication($application);
-    }
-
-    /**
-     * @param FicheMetier $fiche
-     * @param Competence $competence
-     * @param DateTime|null $date
-     */
-    public function addCompetence(FicheMetier $fiche, Competence $competence, ?DateTime $date = null)
-    {
-        $fiche->addCompetence($competence);
-    }
-
-    /**
+     * //TODO remove that after implementing FormationElement
      * @param FicheMetier $fiche
      * @param Formation $formation
      * @param DateTime|null $date

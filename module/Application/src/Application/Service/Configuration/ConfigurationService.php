@@ -3,24 +3,30 @@
 namespace Application\Service\Configuration;
 
 use Application\Entity\Db\Application;
+use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Entity\Db\FicheMetier;
-use Formation\Entity\Db\Formation;
+use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
+use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Formation\Entity\Db\Formation;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ConfigurationService {
-//    use DateTimeAwareTrait;
-//    use UserServiceAwareTrait;
-//    use EntityManagerAwareTrait;
     use FicheMetierServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
-
+    use ApplicationElementServiceAwareTrait;
+    use HasApplicationCollectionServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
+    use HasCompetenceCollectionServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -123,15 +129,23 @@ class ConfigurationService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function addDefaultToFicheMetier($fiche)
+    public function addDefaultToFicheMetier(FicheMetier $fiche) : FicheMetier
     {
         $ajouts = $this->getConfigurationsFicheMetier();
 
         foreach ($ajouts as $ajout) {
-            if ($ajout->getEntityType() === Application::class AND !$fiche->hasApplication($ajout->getEntity()))
-                $this->getFicheMetierService()->addApplication($fiche, $ajout->getEntity(), $fiche->getHistoCreation());
-            if ($ajout->getEntityType() === Competence::class  AND !$fiche->hasCompetence($ajout->getEntity()))
-                $this->getFicheMetierService()->addCompetence($fiche, $ajout->getEntity(), $fiche->getHistoCreation());
+            if ($ajout->getEntityType() === Application::class AND !$fiche->hasApplication($ajout->getEntity())) {
+                $applicationElement = new ApplicationElement();
+                $applicationElement->setApplication($ajout->getEntity());
+                $this->getApplicationElementService()->create($applicationElement);
+                $this->getHasApplicationCollectionService()->addApplication($fiche,$applicationElement);
+            }
+            if ($ajout->getEntityType() === Competence::class  AND !$fiche->hasCompetence($ajout->getEntity())) {
+                $competenceElement = new CompetenceElement();
+                $competenceElement->setCompetence($ajout->getEntity());
+                $this->getCompetenceElementService()->create($competenceElement);
+                $this->getHasCompetenceCollectionService()->addCompetence($fiche,$competenceElement);
+            }
             if ($ajout->getEntityType() === Formation::class   AND !$fiche->hasFormation($ajout->getEntity()))
                 $this->getFicheMetierService()->addFormation($fiche, $ajout->getEntity(), $fiche->getHistoCreation());
         }

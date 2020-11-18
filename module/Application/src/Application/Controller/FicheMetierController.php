@@ -125,7 +125,6 @@ class FicheMetierController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheMetierService()->create($fiche);
-
                 $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
                 $this->getFicheMetierService()->update($fiche);
 //                return $this->redirect()->toRoute('fiche-metier-type/ajouter-terminer', ['fiche' => $fiche], [], true);

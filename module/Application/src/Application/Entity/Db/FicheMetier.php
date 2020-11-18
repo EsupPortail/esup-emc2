@@ -135,68 +135,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
         return $this;
     }
 
-    /** APPLICATION ***************************************************************************************************/
-
-    /**
-     * @param Application $application
-     * @return FicheMetier
-     */
-    public function addApplication(Application $application)
-    {
-        $this->applications->add($application);
-        return $this;
-    }
-
-    /**
-     * @param Application $application
-     * @return FicheMetier
-     */
-    public function removeApplication(Application $application)
-    {
-        $this->applications->removeElement($application);
-        return $this;
-    }
-
-    /**
-     * @return FicheMetier
-     */
-    public function clearApplications()
-    {
-        $this->applications->clear();
-        return $this;
-    }
-
-    /** COMPETENCE ****************************************************************************************************/
-
-    /**
-     * @param Competence $competence
-     * @return FicheMetier
-     */
-    public function addCompetence(Competence $competence)
-    {
-        $this->competences->add($competence);
-        return $this;
-    }
-
-    /**
-     * @param Competence $competence
-     * @return FicheMetier
-     */
-    public function removeCompetence(Competence $competence)
-    {
-        $this->competences->removeElement($competence);
-        return $this;
-    }
-
-    /**
-     * @return FicheMetier
-     */
-    public function clearCompetences()
-    {
-        $this->competences->clear();
-        return $this;
-    }
-
     /** FORMATION *****************************************************************************************************/
 
     /**
