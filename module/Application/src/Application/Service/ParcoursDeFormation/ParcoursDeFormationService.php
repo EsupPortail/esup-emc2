@@ -7,11 +7,14 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
+use Application\Entity\Db\ParcoursDeFormationFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\Formation;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -82,7 +85,8 @@ class ParcoursDeFormationService {
     {
         $qb = $this->getEntityManager()->getRepository(ParcoursDeFormation::class)->createQueryBuilder('parcours')
             ->addSelect('formation')->leftJoin('parcours.formations', 'formation')
-            ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
+            ->addSelect('formationf')->leftJoin('formation.formation', 'formationf')
+            ->addSelect('groupe')->leftJoin('formationf.groupe', 'groupe')
         ;
             ;
         return $qb;
@@ -225,5 +229,84 @@ class ParcoursDeFormationService {
             $this->generateParcoursArrayFromFicheMetier($ficheMetier, $array);
         }
         return $array;
+    }
+
+    /** PARCOURS DE FORMATION FORMATION ********************************************************************/
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $param
+     * @return ParcoursDeFormationFormation
+     */
+    public function getRequestedParcoursDeFormationFormation(AbstractActionController $controller, $param = 'parcours-de-formation-formation')
+    {
+        $id = $controller->params()->fromRoute($param);
+
+        $qb = $this->getEntityManager()->getRepository(ParcoursDeFormationFormation::class)->createQueryBuilder('pdff')
+            ->addSelect('parcours')->join('pdff.parcours', 'parcours')
+            ->addSelect('formation')->join('pdff.formation', 'formation')
+            ->addSelect('groupe')->join('formation.groupe', 'groupe')
+            ->andWhere('pdff.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs ParcoursDeFormationFormation partagent le même id [".$id."]");
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param ParcoursDeFormation $parcours
+     * @param Formation $formation
+     * @return ParcoursDeFormationFormation
+     */
+    public function addFormation(ParcoursDeFormation $parcours, Formation $formation)
+    {
+        foreach ($parcours->getFormations() as $pdff) {
+            if ($pdff->getFormation() === $formation) return $pdff;
+        }
+
+        $date = $this->getDateTime();
+        $user = $this->getUserService()->getConnectedUser();
+        $pdff = new ParcoursDeFormationFormation();
+        $pdff->setParcours($parcours);
+        $pdff->setFormation($formation);
+        $pdff->setHistoCreation($date);
+        $pdff->setHistoCreateur($user);
+        $pdff->setOrdre(ParcoursDeFormationFormation::DEFAULT_POSITION);
+
+        try {
+            $this->getEntityManager()->persist($pdff);
+            $this->getEntityManager()->flush($pdff);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement du ParcoursDeFormationFormation", 0, $e);
+        }
+
+        return $pdff;
+    }
+
+    public function removeFormation(ParcoursDeFormationFormation $pdff)
+    {
+        try {
+            $this->getEntityManager()->remove($pdff);
+            $this->getEntityManager()->flush($pdff);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement du ParcoursDeFormationFormation", 0, $e);
+        }
+        return $pdff;
+    }
+
+    public function updateParcoursDeFormationFormation(ParcoursDeFormationFormation $pdff)
+    {
+        try {
+            $this->getEntityManager()->flush($pdff);
+        } catch(ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement du ParcoursDeFormationFormation", 0, $e);
+        }
+        return $pdff;
     }
 }

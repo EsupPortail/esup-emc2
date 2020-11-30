@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\ParcoursDeFormation;
+use Application\Entity\Db\ParcoursDeFormationFormation;
 use Application\Form\AjouterFormation\AjouterFormationFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\ModifierRattachement\ModifierRattachementFormAwareTrait;
@@ -168,6 +169,8 @@ class ParcoursDeFormationController extends AbstractActionController
         return $vm;
     }
 
+    /** GESTION DES FORMATIONS *****************************************************************************/
+
     public function ajouterFormationAction()
     {
         $parcours = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormation($this);
@@ -182,9 +185,9 @@ class ParcoursDeFormationController extends AbstractActionController
             if (isset($data['formation'])) {
                 foreach ($data['formation'] as $id) {
                     $formation = $this->getFormationService()->getFormation($id);
-                    $parcours->addFormation($formation);
+                    $this->getParcoursDeFormationService()->addFormation($parcours, $formation);
                 }
-                $this->parcoursDeFormationService->update($parcours);
+                $this->getParcoursDeFormationService()->update($parcours);
             }
         }
 
@@ -200,13 +203,68 @@ class ParcoursDeFormationController extends AbstractActionController
     public function retirerFormationAction()
     {
         $parcours = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormation($this);
-        $formation = $this->getFormationService()->getRequestedFormation($this);
+        $formation = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormationFormation($this, 'formation');
 
-        $parcours->removeFormation($formation);
+        $this->getParcoursDeFormationService()->removeFormation($formation);
         $this->getParcoursDeFormationService()->update($parcours);
 
         return $this->redirect()->toRoute('parcours-de-formation/modifier', ['parcours-de-formation' => $parcours->getId()], [], true);
     }
+
+    public function bougerFormationAction()
+    {
+        $pdff = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormationFormation($this, 'formation');
+        $direction = $this->params()->fromRoute('direction');
+
+        $parcours = $pdff->getParcours();
+        $formations = $parcours->getFormations();
+
+        $liste = [];
+        foreach ($formations as $pdffInstance) {
+            if ($pdffInstance->getFormation()->getGroupe() === $pdff->getFormation()->getGroupe()) {
+                $liste[] = $pdffInstance;
+            }
+        }
+
+        $a=1;
+
+        usort($liste, function (ParcoursDeFormationFormation $a, ParcoursDeFormationFormation $b) { return $a->getOrdre() > $b->getOrdre();});
+
+        $a=2;
+
+        $position = 1;
+        foreach ($liste as $item) $item->setOrdre($position++);
+
+        $a=3;
+
+        if ($direction === 'up') {
+            $old = null;
+            $current = null;
+            foreach ($liste as $item) if ($item->getId() === ($pdff->getId())) $current = $item;
+            foreach ($liste as $item) if ($item->getOrdre() === ($current->getOrdre() - 1)) $old = $item;
+            if ($old !== null) {
+                $old->setOrdre($current->getOrdre());
+                $current->setOrdre($current->getOrdre() - 1);
+            }
+        }
+
+        if ($direction === 'down') {
+            $old = null;
+            $current = null;
+            foreach ($liste as $item) if ($item->getId() === ($pdff->getId())) $current = $item;
+            foreach ($liste as $item) if ($item->getOrdre() === ($current->getOrdre() + 1)) $old = $item;
+            if ($old !== null) {
+                $old->setOrdre($current->getOrdre());
+                $current->setOrdre($current->getOrdre() + 1);
+            }
+        }
+
+        foreach ($liste as $item) $this->getParcoursDeFormationService()->updateParcoursDeFormationFormation($item);
+
+        return $this->redirect()->toRoute('parcours-de-formation/modifier', ['parcours-de-formation' => $parcours->getId()], [], true);
+    }
+
+    /** AUTRE */
 
     private function getFragment(ParcoursDeFormation $parcours)
     {

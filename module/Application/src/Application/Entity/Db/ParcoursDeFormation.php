@@ -112,7 +112,7 @@ class ParcoursDeFormation implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return Formation[]
+     * @return ParcoursDeFormationFormation[]
      */
     public function getFormations()
     {

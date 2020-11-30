@@ -56,10 +56,10 @@ class FormationGroupe implements HistoriqueAwareInterface
     }
 
     /**
-     * @param string $couleur
+     * @param string|null $couleur
      * @return FormationGroupe
      */
-    public function setCouleur(string $couleur)
+    public function setCouleur(?string $couleur)
     {
         $this->couleur = $couleur;
         return $this;
@@ -74,10 +74,10 @@ class FormationGroupe implements HistoriqueAwareInterface
     }
 
     /**
-     * @param string $ordre
+     * @param string|null $ordre
      * @return FormationGroupe
      */
-    public function setOrdre(string $ordre)
+    public function setOrdre(?string $ordre)
     {
         $this->ordre = $ordre;
         return $this;

@@ -43,6 +43,7 @@ return [
                         'modifier-rattachement',
                         'ajouter-formation',
                         'retirer-formation',
+                        'bouger-formation',
 
                     ],
                     'privileges' => [
@@ -165,6 +166,17 @@ return [
                             'defaults' => [
                                 'controller' => ParcoursDeFormationController::class,
                                 'action'     => 'retirer-formation',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'bouger-formation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/bouger-formation/:parcours-de-formation/:formation/:direction',
+                            'defaults' => [
+                                'controller' => ParcoursDeFormationController::class,
+                                'action'     => 'bouger-formation',
                             ],
                         ],
                         'may_terminate' => true,
