@@ -11,6 +11,7 @@
  * @var Poste[] $postes
  * @var Agent[] $agents
  * @var Agent[] $agentsForces
+ * @var FicheProfil[] $profils
  *
  * @var EntretienProfessionnelCampagne $last
  * @var EntretienProfessionnelCampagne[] $campagnes
@@ -20,6 +21,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\EntretienProfessionnelCampagne;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheProfil;
 use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
@@ -74,14 +76,14 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <li role="informations">
                     <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz">
-                        Fiches de poste
+                        Fiches de  <br/> poste
                     </a>
                 </li>
 
                 <?php if ($last !== null) : ?>
                     <li role="campagne_<?php echo $last->getId(); ?>">
                         <a href="#campagne_<?php echo $last->getId(); ?>" aria-controls="campagne_<?php echo $last->getId(); ?>" role="tab" data-toggle="tabz">
-                            Entretien professionnel
+                            Entretien professionnel  <br/>
                             <strong><?php echo $last->getAnnee(); ?></strong>
                         </a>
                     </li>
@@ -90,15 +92,23 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <?php foreach ($campagnes as $campagne) : ?>
                     <li role="campagne_<?php echo $campagne->getId(); ?>">
                         <a href="#campagne_<?php echo $campagne->getId(); ?>" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab" data-toggle="tabz">
-                            Entretien professionnel
+                            Entretien professionnel <br/>
                             <strong><?php echo $campagne->getAnnee(); ?></strong>
                         </a>
                     </li>
                 <?php endforeach;?>
 
+                <li role="profil">
+                    <a href="#profil" aria-controls="profil" role="tab" data-toggle="tabz" >
+                        Profil de  <br/>
+                        recrutement
+                    </a>
+                </li>
+
                 <li role="extraction">
                     <a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tabz" >
-                        Extractions
+                        Extractions  <br/>
+                        <span class="todo">TODO</span>
                     </a>
                 </li>
             </ul>
@@ -159,6 +169,11 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                         <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $allAgents]); ?>
                     </div>
                 <?php endforeach; ?>
+
+                <!-- Profil de recrutement ------------------------------->
+                <div id="profil" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils]); ?>
+                </div>
 
                 <!-- Extraction ------------------------------------------------------------------------------------->
                 <div id="extraction" class="tab-pane " role="tabpanel">

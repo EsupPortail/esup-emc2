@@ -3,11 +3,13 @@
 
 /**
  * @var Agent $agent
+ * @var FichePoste $fiche
  * @var array $parcours
  * @var array $options
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 
 ?>
@@ -34,5 +36,7 @@ use Application\Entity\Db\ParcoursDeFormation;
         <?php else: ?>
             <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
         <?php endif; ?>
+
+        <?php echo $this->parcoursApplication($fiche, $agent, $options); ?>
     </div>
 </div>

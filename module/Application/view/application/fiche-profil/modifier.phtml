@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @see \Application\Controller\FicheProfilController::ajouterAction()
+ * @see \Application\Controller\FicheProfilController::modifierAction()
+ * @var string $type (soit 'ajout' ou 'modification')
+ * @var Structure $structure
+ * @var FichePoste[] $fichespostes
+ * @var FicheProfilForm $form
+ */
+
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Structure;
+use Application\Form\FicheProfil\FicheProfilForm;
+
+?>
+
+<h1 class="page-header"> Profil de recrutement </h1>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.tinymce',
+            toolbar: 'removeformat | bold italic underline | bullist numlist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+        });
+    });
+
+    $('select').selectpicker();
+</script>

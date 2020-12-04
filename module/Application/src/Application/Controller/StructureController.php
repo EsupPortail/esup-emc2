@@ -14,6 +14,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -30,6 +31,7 @@ use Zend\View\Model\ViewModel;
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use FichePosteServiceAwareTrait;
+    use FicheProfilServiceAwareTrait;
     use MissionSpecifiqueAffectationServiceAwareTrait;
     use PosteServiceAwareTrait;
     use RoleServiceAwareTrait;
@@ -122,6 +124,7 @@ class StructureController extends AbstractActionController {
             'missions' => $missionsSpecifiques,
             'fichesCompletes' => $fichesCompletes,
             'fichesIncompletes' => $fichesIncompletes,
+            'profils' => $this->getFicheProfilService()->getFichesPostesByStructure($structure),
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'postes' => $postes,

@@ -2,6 +2,7 @@
 
 namespace UnicaenDocument\Service\Exporter;
 
+use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Exporter\Pdf as PdfExporter;
 use UnicaenDocument\Service\Contenu\ContenuServiceAwareTrait;
@@ -41,7 +42,6 @@ class ExporterService extends PdfExporter {
      * @param string $destination
      * @param null $memoryLimit
      * @return string
-     * @throws \Mpdf\MpdfException
      */
     public function export($filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null)
     {
@@ -61,8 +61,12 @@ class ExporterService extends PdfExporter {
         $this->vars['script'] = $content;
         $this->addBodyHtml($content, false, $this->vars);
 
-        $this->getMpdf()->SetTopMargin(25);
-        $this->getMpdf()->SetTitle($titre);
-        return PdfExporter::export($complement, $destination, $memoryLimit);
+        try {
+            $this->getMpdf()->SetTopMargin(25);
+            $this->getMpdf()->SetTitle($titre);
+            return PdfExporter::export($complement, $destination, $memoryLimit);
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenue avec l'exportation PDF", 0, $e);
+        }
     }
 }

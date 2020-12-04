@@ -16,10 +16,11 @@ use Application\Form\ParcoursDeFormation\ParcoursDeFormationForm;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationFormFactory;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationHydrator;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationHydratorFactory;
-use Formation\Provider\Privilege\FormationPrivileges;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceFactory;
+use Application\View\Helper\ParcoursApplicationViewHelperFactory;
 use Application\View\Helper\ParcoursDeFormationViewHelperFactory;
+use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -246,6 +247,7 @@ return [
     'view_helpers' => [
         'factories' => [
             'parcoursDeFormation'  => ParcoursDeFormationViewHelperFactory::class,
+            'parcoursApplication'  => ParcoursApplicationViewHelperFactory::class,
         ],
     ],
 

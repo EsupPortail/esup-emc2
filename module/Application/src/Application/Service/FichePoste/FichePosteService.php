@@ -704,4 +704,16 @@ class FichePosteService {
             throw new RuntimeException("Un problème est survenu lors de l'enregistrement de la répartition.",0,$e);
         }
     }
+
+    public function getFichesPostesByStructuresAsOptions(array $structures, bool $soustructure)
+    {
+        $fichespostes = $this->getFichesPostesByStructures($structures, $soustructure);
+        $options = [];
+        foreach ($fichespostes as $ficheposte) {
+            $label = $ficheposte->getLibelleMetierPrincipal();
+            if ($ficheposte->getAgent() !== null) $label .= " (".$ficheposte->getAgent()->getDenomination().")";
+            $options[$ficheposte->getId()] = $label;
+        }
+        return $options;
+    }
 }

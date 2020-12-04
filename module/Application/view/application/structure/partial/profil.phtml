@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * @var Structure $structure
+ * @var FicheProfil[] $profils
+ */
+
+use Application\Entity\Db\FicheProfil;
+use Application\Entity\Db\Structure;
+use Application\Provider\Privilege\FicheprofilPrivileges;
+
+$profils_encours = [];
+$profils_historiques = [];
+foreach ($profils as $profil) {
+    if ($profil->estEnCours()) {
+        $profils_encours[] = $profil;
+    } else {
+        $profils_historiques[] = $profil;
+    }
+}
+
+$canExporter = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_EXPORTER));
+$canModifier = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_MODIFIER));
+$canHistoriser = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_HISTORISER));
+$canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_SUPPRIMER));
+
+?>
+
+<?php /** @see \Application\Controller\FicheProfilController::ajouterAction() */ ?>
+<a class="btn btn-primary action"
+   href="<?php echo $this->url('fiche-profil/ajouter', ['structure' => $structure->getId()], [], true); ?>"
+>
+    <span class="icon ajouter"> Ajouter un profil de recrutement</span>
+</a>
+
+<h2>
+    Profil de recutement (en cours)
+    <span class="badge">
+        <?php echo count($profils_encours); ?>
+    </span>
+</h2>
+
+    <table class="datatable table table-condensed">
+        <thead>
+            <tr>
+                <th style="width: 45%;"> Fiche de poste </th>
+                <th> Structure </th>
+                <th style="width: 15rem;"> Fin de dépôt </th>
+                <th style="width: 10rem;"> Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($profils_encours as $profil) : ?>
+            <tr>
+                <td> <?php echo $profil->getFichePoste()->getLibelleMetierPrincipal(); ?> </td>
+                <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
+                <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
+                <td>
+                    <?php if ($canExporter) : ?>
+                        <?php /** @see \Application\Controller\FicheProfilController::exporterAction() */?>
+                        <a href="<?php echo $this->url('fiche-profil/exporter', ['fiche-profil' => $profil->getId()], [], true); ?>">
+                            <span class="icon pdf" title="Exportation en PDF" data-toggle="tooltip" data-html="true"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canModifier) : ?>
+                        <?php /** @see \Application\Controller\FicheProfilController::modifier() */?>
+                        <a href="<?php echo $this->url('fiche-profil/modifier', ['fiche-profil' => $profil->getId()], [], true); ?>">
+                            <span class="icon editer" title="Modifier le profil de recrutement" data-toggle="tooltip" data-html="true"></span></a>
+                    <?php endif; ?>
+                    <span class="icon historiser"></span>
+                    <span class="icon detruire"></span>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<h2>
+    Profil de recutement (historique)
+    <span class="badge">
+        <?php echo count($profils_historiques); ?>
+    </span>
+</h2>
+
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th style="width: 45%;"> Fiche de poste </th>
+        <th> Structure </th>
+        <th style="width: 15rem;"> Fin de dépôt </th>
+        <th style="width: 10rem;"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($profils_historiques as $profil) : ?>
+        <tr>
+            <td> <?php echo $profil->getFichePoste()->getLibelleMetierPrincipal(); ?> </td>
+            <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
+            <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
+            <td>
+                <?php if ($canExporter) : ?>
+                    <?php /** @see \Application\Controller\FicheProfilController::exporterAction() */?>
+                    <a href="<?php echo $this->url('fiche-profil/exporter', ['fiche-profil' => $profil->getId()], [], true); ?>">
+                        <span class="icon pdf" title="Exportation en PDF" data-toggle="tooltip" data-html="true"></span></a>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <span class="icon editer" style="color:whitesmoke"></span>
+                <?php endif; ?>
+                <span class="icon historiser"></span>
+                <span class="icon detruire"></span>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
