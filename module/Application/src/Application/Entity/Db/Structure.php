@@ -121,12 +121,13 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     }
 
     /**
+     * @param bool $avecReprise
      * @return string
      */
-    public function getDescription()
+    public function getDescription(bool $avecReprise = true)
     {
         $text = "";
-        if ($this->getRepriseResumeMere() AND $this->parent !== null) {
+        if ($avecReprise === true AND $this->getRepriseResumeMere() AND $this->parent !== null) {
             $text .= $this->parent->getDescription() . "<br/>";
         }
         return $text . $this->description ;

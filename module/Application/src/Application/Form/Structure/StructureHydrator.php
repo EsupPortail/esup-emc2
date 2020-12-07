@@ -14,7 +14,7 @@ class StructureHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'description' => $object->getDescription(),
+            'description' => $object->getDescription(false),
         ];
         return $data;
     }
