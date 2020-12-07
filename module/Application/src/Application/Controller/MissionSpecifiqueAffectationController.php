@@ -31,9 +31,9 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $agentId      = $fromQueries['agent'];
         $structureId  = $fromQueries['structure'];
         $missionId    = $fromQueries['mission'];
-        $agent        = $this->getAgentService()->getAgent($agentId);
-        $structure    = $this->getStructureService()->getStructure($structureId);
-        $mission      = $this->getMissionSpecifiqueService()->getMissionSpecifique($missionId);
+        $agent        = ($agentId !== '')?$this->getAgentService()->getAgent($agentId):null;
+        $structure    = ($structureId !== '')?$this->getStructureService()->getStructure($structureId):null;
+        $mission      = ($missionId !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($missionId):null;
         $affectations = $this->getMissionSpecifiqueAffectationService()->getAffectations($agent, $mission, $structure);
         $missions    = $this->getMissionSpecifiqueService()->getMisssionsSpecifiquesAsOptions();
 
