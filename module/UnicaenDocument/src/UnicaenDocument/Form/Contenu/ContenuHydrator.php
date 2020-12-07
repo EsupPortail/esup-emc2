@@ -34,7 +34,7 @@ class ContenuHydrator implements HydratorInterface {
         $code = (isset($data['code']) AND trim($data['code']) !== "")?trim($data['code']):null;
         $type = (isset($data['type']) AND trim($data['type']) !== "")?trim($data['type']):null;
         $description = (isset($data['description']) AND trim($data['description']) !== "")?trim($data['description']):null;
-        $complement = (isset($data['complement']) AND trim($data['complement']) !== "")?trim($data['complement']):null;
+        $complement = (isset($data['complement']) AND trim($data['complement']) !== "")?strip_tags(trim($data['complement'])):null;
         $contenu = (isset($data['contenu']) AND trim($data['contenu']) !== "")?trim($data['contenu']):null;
 
         $object->setCode($code);

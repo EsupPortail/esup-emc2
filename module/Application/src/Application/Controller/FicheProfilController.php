@@ -8,6 +8,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -97,5 +98,43 @@ class FicheProfilController extends AbstractActionController {
         ]);
         $this->getExporterService()->export('export.pdf');
         exit;
+    }
+
+    public function historiserAction()
+    {
+        $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
+        $this->getFicheProfilService()->historise($ficheprofil);
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $ficheprofil->getStructure()->getId()], ['fragment' => 'profil'], true);
+    }
+
+    public function restaurerAction()
+    {
+        $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
+        $this->getFicheProfilService()->restore($ficheprofil);
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $ficheprofil->getStructure()->getId()], ['fragment' => 'profil'], true);
+    }
+
+    public function supprimerAction()
+    {
+        $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFicheProfilService()->delete($ficheprofil);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($ficheprofil !== null) {
+            $vm->setTemplate('unicaen-utilisateur/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du profil de recrutement",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('fiche-profil/supprimer', ["fiche-profil" => $ficheprofil->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 }

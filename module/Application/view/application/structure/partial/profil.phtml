@@ -51,7 +51,7 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
         </thead>
         <tbody>
         <?php foreach ($profils_encours as $profil) : ?>
-            <tr>
+            <tr <?php if ($profil->estHistorise()) echo "class='historise'"; ?>>
                 <td> <?php echo $profil->getFichePoste()->getLibelleMetierPrincipal(); ?> </td>
                 <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
                 <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
@@ -62,12 +62,28 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
                             <span class="icon pdf" title="Exportation en PDF" data-toggle="tooltip" data-html="true"></span></a>
                     <?php endif; ?>
                     <?php if ($canModifier) : ?>
-                        <?php /** @see \Application\Controller\FicheProfilController::modifier() */?>
+                        <?php /** @see \Application\Controller\FicheProfilController::modifierAction() */?>
                         <a href="<?php echo $this->url('fiche-profil/modifier', ['fiche-profil' => $profil->getId()], [], true); ?>">
                             <span class="icon editer" title="Modifier le profil de recrutement" data-toggle="tooltip" data-html="true"></span></a>
                     <?php endif; ?>
-                    <span class="icon historiser"></span>
-                    <span class="icon detruire"></span>
+                    <?php if ($canHistoriser) : ?>
+                        <?php if ($profil->estNonHistorise()) : ?>
+                            <?php /** @see \Application\Controller\FicheProfilController::historiserAction() */?>
+                            <a href="<?php echo $this->url('fiche-profil/historiser', ['fiche-profil' => $profil->getId()], [], true); ?>">
+                                <span class="icon historiser"></span></a>
+                        <?php else : ?>
+                            <?php /** @see \Application\Controller\FicheProfilController::restaurerAction() */?>
+                            <a href="<?php echo $this->url('fiche-profil/restaurer', ['fiche-profil' => $profil->getId()], [], true); ?>">
+                                <span class="icon restaurer"></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canSupprimer) : ?>
+                        <?php /** @see \Application\Controller\FicheProfilController::supprimerAction() */?>
+                        <a href="<?php echo $this->url('fiche-profil/supprimer', ['fiche-profil' => $profil->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -91,7 +107,7 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
     </thead>
     <tbody>
     <?php foreach ($profils_historiques as $profil) : ?>
-        <tr>
+        <tr <?php if ($profil->estHistorise()) echo "class='historise'"; ?>>
             <td> <?php echo $profil->getFichePoste()->getLibelleMetierPrincipal(); ?> </td>
             <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
             <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
@@ -104,8 +120,24 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
                 <?php if ($canModifier) : ?>
                     <span class="icon editer" style="color:whitesmoke"></span>
                 <?php endif; ?>
-                <span class="icon historiser"></span>
-                <span class="icon detruire"></span>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($profil->estNonHistorise()) : ?>
+                        <?php /** @see \Application\Controller\FicheProfilController::historiserAction() */?>
+                        <a href="<?php echo $this->url('fiche-profil/historiser', ['fiche-profil' => $profil->getId()], [], true); ?>">
+                            <span class="icon historiser"></span></a>
+                    <?php else : ?>
+                        <?php /** @see \Application\Controller\FicheProfilController::restaurerAction() */?>
+                        <a href="<?php echo $this->url('fiche-profil/restaurer', ['fiche-profil' => $profil->getId()], [], true); ?>">
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <?php /** @see \Application\Controller\FicheProfilController::supprimerAction() */?>
+                    <a href="<?php echo $this->url('fiche-profil/supprimer', ['fiche-profil' => $profil->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"></span></a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
