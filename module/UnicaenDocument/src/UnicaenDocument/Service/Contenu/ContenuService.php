@@ -184,7 +184,12 @@ class ContenuService {
      */
     public function generateContenu($contenu, $variables)
     {
-        return $this->replaceMacros($contenu->getContent(), $variables);
+        $texte = "";
+        $texte .= "<style>";
+        $texte .= $contenu->getCss();
+        $texte .= "</style>";
+        $texte .= $this->replaceMacros($contenu->getContent(), $variables);
+        return $texte;
     }
 
     /**

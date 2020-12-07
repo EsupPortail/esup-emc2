@@ -101,6 +101,21 @@ class ContenuForm extends Form {
                 'class' => 'form-control contenu',
             ]
         ]);
+        //css
+        $this->add([
+            'name' => 'css',
+            'type' => 'textarea',
+            'options' => [
+                'label' => 'Feuille de style (CSS) : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+            ],
+            'attributes' => [
+                'id' => 'css',
+                'class' => 'form-control css',
+            ]
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -139,6 +154,7 @@ class ContenuForm extends Form {
             'description' => ['required' => false, ],
             'complement' => ['required' => true, ],
             'contenu' => ['required' => true, ],
+            'css' => ['required' => false, ],
 
         ]));
     }

@@ -23,7 +23,8 @@ class Content implements HistoriqueAwareInterface {
     private $complement;
     /** @var string */
     private $content;
-
+    /** @var string */
+    private $css;
     /**
      * @return int
      */
@@ -131,5 +132,25 @@ class Content implements HistoriqueAwareInterface {
         $this->content = $content;
         return $this;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getCss(): ?string
+    {
+        return $this->css;
+    }
+
+    /**
+     * @param string|null $css
+     * @return Content
+     */
+    public function setCss(?string $css): Content
+    {
+        $this->css = $css;
+        return $this;
+    }
+
+
 
 }

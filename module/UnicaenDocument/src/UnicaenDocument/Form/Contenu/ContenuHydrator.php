@@ -19,6 +19,7 @@ class ContenuHydrator implements HydratorInterface {
             'description' => ($object)?$object->getDescription():null,
             'complement' => ($object)?$object->getComplement():null,
             'contenu' => ($object)?$object->getContent():null,
+            'css' => ($object)?$object->getCss():null,
         ];
 
         return $data;
@@ -36,12 +37,14 @@ class ContenuHydrator implements HydratorInterface {
         $description = (isset($data['description']) AND trim($data['description']) !== "")?trim($data['description']):null;
         $complement = (isset($data['complement']) AND trim($data['complement']) !== "")?strip_tags(trim($data['complement'])):null;
         $contenu = (isset($data['contenu']) AND trim($data['contenu']) !== "")?trim($data['contenu']):null;
+        $css = (isset($data['css']) AND trim($data['css']) !== "")?strip_tags(trim($data['css'])):null;
 
         $object->setCode($code);
         $object->setType($type);
         $object->setDescription($description);
         $object->setComplement($complement);
         $object->setContent($contenu);
+        $object->setCss($css);
 
         return $object;
     }
