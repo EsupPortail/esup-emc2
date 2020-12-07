@@ -30,6 +30,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -52,6 +53,7 @@ class FichePosteController extends AbstractActionController {
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
+    use ExporterServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
 
@@ -282,6 +284,18 @@ class FichePosteController extends AbstractActionController {
         return $vm;
     }
 
+    public function exporterAction()
+    {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
+        $this->getExporterService()->setVars([
+            'type' => 'FICHE_DE_POSTE',
+            'ficheposte' => $ficheposte,
+            'agent' => $ficheposte->getAgent(),
+        ]);
+        $this->getExporterService()->export('export.pdf');
+        exit;
+    }
     /** TITRE *********************************************************************************************************/
 
     public function associerTitreAction()

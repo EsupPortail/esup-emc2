@@ -10,7 +10,8 @@ use Application\Entity\Db\ParcoursDeFormation;
 
 $nogroup = "ZZZZ";
 $formationArray = [];
-foreach ($parcours->getFormations() as $formation) {
+foreach ($parcours->getFormations() as $formationP) {
+    $formation = $formationP->getFormation();
     $groupe = ($formation->getGroupe())?$formation->getGroupe()->getLibelle():$nogroup;
     $formationArray[$groupe][] = $formation;
 }

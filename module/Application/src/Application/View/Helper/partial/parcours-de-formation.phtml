@@ -103,9 +103,10 @@ usort($formationArray,
 
             <?php /** Barre de formation ******************************************************************************/ ?>
 
-            <?php  foreach($formationSubarray as $formation) : ?>
+            <?php  foreach($formationSubarray as $formationP) : ?>
             <tr>
-                <td class="libelle"> <?php echo $formation->getFormation()->getLibelle(); ?> </td>
+                <?php $formation = $formationP->getFormation(); ?>
+                <td class="libelle"> <?php echo $formation->getLibelle(); ?> </td>
                 <td class="formation">
                     <?php if ($mode === 'modification') : ?>
                         <?php

@@ -88,6 +88,7 @@ return [
                     'action' => [
                         'afficher',
                         'export',
+                        'exporter',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_AFFICHER,
                     'assertion'  => FichePosteAssertion::class,
@@ -223,6 +224,17 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'export',
+                            ],
+                        ],
+                    ],
+                    'exporter' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/exporter/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'exporter',
                             ],
                         ],
                     ],
