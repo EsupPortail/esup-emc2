@@ -15,7 +15,7 @@ $canHistoriser  = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 ?>
 
-<?php if ($canAjouter) : ?>
+<?php if (false AND $canAjouter) : ?>
     <a
         <?php /** @see \Application\Controller\EntretienProfessionnelController::creerAction() */ ?>
         href="<?php echo $this->url('entretien-professionnel/creer', [], [], true); ?>"
