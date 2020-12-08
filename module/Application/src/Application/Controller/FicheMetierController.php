@@ -29,6 +29,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait
 use Application\Service\RendererAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -52,6 +53,7 @@ class FicheMetierController extends AbstractActionController
     use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use EtatServiceAwareTrait;
+    use ExporterServiceAwareTrait;
 
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
@@ -165,25 +167,14 @@ class FicheMetierController extends AbstractActionController
 
     public function exporterAction()
     {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
-        $parcours = $this->getParcoursDeFormationService()->getParcoursDeFormationsByType(ParcoursDeFormation::TYPE_CATEGORIE);
-
-        $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
-        $exporter->setVars([
-            'fiche' => $fiche,
-            'applications' => $applications,
-            'parcours' => $parcours,
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
+        $this->getExporterService()->setVars([
+            'type' => 'FICHE_METIER',
+            'fichemetier' => $fichemetier,
+            'metier' => $fichemetier->getMetier(),
+            'parcours' => $this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()),
         ]);
-
-        $metier = $fiche->getMetier();
-        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) . '.pdf';
-        try {
-            $exporter->getMpdf()->SetTitle($metier->getLibelle() . " - " . $fiche->getId());
-        } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est surevenu lors du changement de titre par MPDF.", 0, $e);
-        }
-        $exporter->export($filemane);
+        $this->getExporterService()->export('export.pdf');
         exit;
     }
 

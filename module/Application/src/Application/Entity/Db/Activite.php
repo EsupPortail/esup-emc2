@@ -102,6 +102,7 @@ class Activite implements HistoriqueAwareInterface,
         foreach ($this->descriptions as $activiteDescription) {
             if ($activiteDescription->estNonHistorise()) $descriptions[] = $activiteDescription;
         }
+        usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre()>$b->getOrdre();});
         return $descriptions;
     }
 

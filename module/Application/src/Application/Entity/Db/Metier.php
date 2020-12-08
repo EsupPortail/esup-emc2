@@ -157,4 +157,18 @@ class Metier implements HistoriqueAwareInterface {
         }
         return '<span style="text-align:left;">'.$html.'</span>';
     }
+
+    /** Fonctions pour affichage **************************************************************************************/
+
+    public function getReferencesAffichage()
+    {
+        $texte = "";
+        /** @var MetierReference $reference */
+        foreach ($this->getReferences() as $reference) {
+            $texte .= "<a href='". $reference->getUrl()."'>";
+            $texte .= $reference->getReferentiel()->getLibelleCourt().' - '.$reference->getCode();
+            $texte .= "</a>";
+        }
+        return $texte;
+    }
 }

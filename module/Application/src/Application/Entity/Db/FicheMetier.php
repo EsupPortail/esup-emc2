@@ -190,4 +190,102 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
         return $metier->getLibelle();
     }
 
+    /**
+     * @return string
+     */
+    public function getMissions()
+    {
+        $texte = "";
+        foreach ($this->getActivites() as $activite) {
+            $texte .= "<h3 class='mission-principale'>" . $activite->getActivite()->getLibelle() . "</h3>";
+            /** @var ActiviteDescription[] $descriptions */
+            $descriptions = $activite->getActivite()->getDescriptions();
+            $texte .= "<ul>";
+            foreach ($descriptions as $description) {
+                $texte .= "<li>";
+                $texte .= $description->getLibelle();
+                $texte .= "</li>";
+            }
+            $texte .= "</ul>";
+        }
+        return $texte;
+    }
+
+    public function getCompetences() {
+        $competences = $this->getCompetenceListe();
+
+        $texte = "";
+        $texte .= "<ul>";
+        foreach ($competences as $competence) {
+            $texte .= "<li>";
+            $texte .= $competence->getCompetence()->getLibelle();
+            $texte .= "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function getConnaissances() {
+        $competences = $this->getCompetenceListe();
+
+        $texte = "";
+        $texte .= "<ul>";
+        /** @var CompetenceElement $competence */
+        foreach ($competences as $competence) {
+            if ($competence->getCompetence()->getType()->getId() === CompetenceType::CODE_CONNAISSANCE) {
+                $texte .= "<li>";
+                $texte .= $competence->getCompetence()->getLibelle();
+                $texte .= "</li>";
+            }
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function getCompetencesOperationnelles() {
+        $competences = $this->getCompetenceListe();
+
+        $texte = "";
+        $texte .= "<ul>";
+        /** @var CompetenceElement $competence */
+        foreach ($competences as $competence) {
+            if ($competence->getCompetence()->getType()->getId() === CompetenceType::CODE_OPERATIONNELLE) {
+                $texte .= "<li>";
+                $texte .= $competence->getCompetence()->getLibelle();
+                $texte .= "</li>";
+            }
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+    public function getCompetencesComportementales() {
+        $competences = $this->getCompetenceListe();
+
+        $texte = "";
+        $texte .= "<ul>";
+        /** @var CompetenceElement $competence */
+        foreach ($competences as $competence) {
+            if ($competence->getCompetence()->getType()->getId() === CompetenceType::CODE_COMPORTEMENTALE) {
+                $texte .= "<li>";
+                $texte .= $competence->getCompetence()->getLibelle();
+                $texte .= "</li>";
+            }
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function getApplicationsAffichage() {
+        $applications = $this->getApplicationListe();
+
+        $texte = "";
+        $texte .= "<ul>";
+        /** @var ApplicationElement $applicationElement */
+        foreach ($applications as $applicationElement) {
+            $application = $applicationElement->getApplication();
+            $texte .= "<li>".$application->getLibelle()."</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
 }

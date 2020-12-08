@@ -17,6 +17,7 @@ use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\Metier\MetierService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Interop\Container\ContainerInterface;
+use UnicaenDocument\Service\Exporter\ExporterService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
@@ -31,6 +32,7 @@ class FicheMetierControllerFactory {
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
+         * @var ExporterService $exporterService
          * @var FicheMetierService $ficheMetierService
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
@@ -42,6 +44,7 @@ class FicheMetierControllerFactory {
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
+        $exporterService = $container->get(ExporterService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
@@ -77,6 +80,7 @@ class FicheMetierControllerFactory {
         $controller->setDomaineService($domaineService);
         $controller->setEtatService($etatService);
         $controller->setEtatTypeService($etatTypeService);
+        $controller->setExporterService($exporterService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
         $controller->setHasCompetenceCollectionService($hasCompetenceCollectionService);

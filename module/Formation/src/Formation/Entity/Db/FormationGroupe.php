@@ -29,6 +29,12 @@ class FormationGroupe implements HistoriqueAwareInterface
         return $this->id;
     }
 
+    /** /!\ NB: utilise pour creer le groupe : sans groupe */
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
+
     /**
      * @return string
      */
