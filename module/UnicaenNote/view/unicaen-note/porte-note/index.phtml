@@ -1,0 +1,102 @@
+<?php
+
+use UnicaenNote\Entity\Db\PorteNote;
+use UnicaenNote\Provider\Privilege\PortenotePrivileges;
+
+/**
+ * @see PorteNoteController::indexAction()
+ * @var PorteNote[] $portesnotes
+ */
+
+$this->headTitle("Index des porte-notes");
+
+$canAfficher = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_AFFICHER));
+$canAjouter = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_AJOUTER));
+$canHistoriser = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_HISTORISER));
+$canSupprimer = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_SUPPRIMER));
+
+?>
+
+<h1 class="page-header">
+    Index des porte-notes
+</h1>
+
+<div class="main">
+
+    <?php if ($canAjouter) : ?>
+        <?php /** @see \UnicaenNote\Controller\PorteNoteController::ajouterAction() */?>
+        <a href="<?php echo $this->url('unicaen-note/porte-note/ajouter', [], [], true); ?>"
+           class="btn btn-primary action"
+        >
+            <span class="icon ajouter"></span>
+            Ajouter un porte-notes
+        </a>
+
+        <br/><br/>
+    <?php endif; ?>
+
+    <table class="datatable table table-condensed">
+        <thead>
+        <tr>
+            <th> Id </th>
+            <th> #Note </th>
+            <th> Accorche ?? </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($portesnotes as $portenote) : ?>
+            <tr <?php if ($portenote->estHistorise()) echo "class='historise'"; ?> >
+                <td> <?php echo $portenote->getId(); ?> </td>
+                <td>
+                    <?php echo count($portenote->getNotes()); ?>
+                </td>
+                <td> <?php echo "TODO" ?> </td>
+                <td>
+                    <?php if ($canAfficher): ?>
+                        <?php /** @see \UnicaenNote\Controller\TypeController::afficherAction() */?>
+                        <a href="<?php echo $this->url('unicaen-note/porte-note/afficher', ['porte-note' => $portenote->getId()], [], true); ?>"
+                           class="ajax-modal"
+                           title="Afficher le porte-notes <?php echo $portenote->getId(); ?>" data-toggle="tooltip" data-html="true"
+                        >
+                            <span class="icon voir"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriser): ?>
+                        <?php if ($portenote->estNonHistorise()) : ?>
+                            <?php /** @see \UnicaenNote\Controller\TypeController::historiserAction() */?>
+                            <a href="<?php echo $this->url('unicaen-note/porte-note/historiser', ['porte-note' => $portenote->getId()], [], true); ?>"
+                               title="Historiser le porte-notes <?php echo $portenote->getId(); ?>" data-toggle="tooltip" data-html="true"
+                            >
+                                <span class="icon historiser"></span></a>
+                        <?php else: ?>
+                            <?php /** @see \UnicaenNote\Controller\TypeController::restaurerAction() */?>
+                            <a href="<?php echo $this->url('unicaen-note/porte-note/restaurer', ['porte-note' => $portenote->getId()], [], true); ?>"
+                               title="Restaurer le porte-note <?php echo $portenote->getId(); ?>" data-toggle="tooltip" data-html="true"
+                            >
+                                <span class="icon restaurer"></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canSupprimer): ?>
+                        <?php /** @see \UnicaenNote\Controller\TypeController::supprimerAction() */?>
+                        <a href="<?php echo $this->url('unicaen-note/porte-note/supprimer', ['porte-note' => $portenote->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                           title="Supprimer le porte-note <?php echo $portenote->getId(); ?>" data-toggle="tooltip" data-html="true"
+                        >
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

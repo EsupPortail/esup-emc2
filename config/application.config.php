@@ -33,6 +33,7 @@ $modules = [
     'UnicaenUtilisateur',
     'UnicaenEtat',
     'UnicaenDocument',
+    'UnicaenNote',
     'UnicaenValidation',
     'Autoform',
     'Fichier',
