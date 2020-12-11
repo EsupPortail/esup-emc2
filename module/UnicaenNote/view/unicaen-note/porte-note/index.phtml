@@ -12,6 +12,7 @@ $this->headTitle("Index des porte-notes");
 
 $canAfficher = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_AFFICHER));
 $canAjouter = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_AJOUTER));
+$canModifier = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_MODIFIER));
 $canHistoriser = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_HISTORISER));
 $canSupprimer = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePrivileges::PORTENOTE_SUPPRIMER));
 
@@ -26,7 +27,7 @@ $canSupprimer = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePri
     <?php if ($canAjouter) : ?>
         <?php /** @see \UnicaenNote\Controller\PorteNoteController::ajouterAction() */?>
         <a href="<?php echo $this->url('unicaen-note/porte-note/ajouter', [], [], true); ?>"
-           class="btn btn-primary action"
+           class="btn btn-primary action ajax-modal" data-event="modification"
         >
             <span class="icon ajouter"></span>
             Ajouter un porte-notes
@@ -60,6 +61,14 @@ $canSupprimer = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePri
                            title="Afficher le porte-notes <?php echo $portenote->getId(); ?>" data-toggle="tooltip" data-html="true"
                         >
                             <span class="icon voir"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canModifier): ?>
+                        <?php /** @see \UnicaenNote\Controller\TypeController::modifierAction() */?>
+                        <a href="<?php echo $this->url('unicaen-note/porte-note/modifier', ['porte-note' => $portenote->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                           title="Modifier le porte-notes <?php echo $portenote->getId(); ?>" data-toggle="tooltip" data-html="true"
+                        >
+                            <span class="icon editer"></span></a>
                     <?php endif; ?>
                     <?php if ($canHistoriser): ?>
                         <?php if ($portenote->estNonHistorise()) : ?>

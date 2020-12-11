@@ -4,6 +4,10 @@ namespace Application;
 
 use UnicaenNote\Controller\PorteNoteController;
 use UnicaenNote\Controller\PorteNoteControllerFactory;
+use UnicaenNote\Form\PorteNote\PorteNoteForm;
+use UnicaenNote\Form\PorteNote\PorteNoteFormFactory;
+use UnicaenNote\Form\PorteNote\PorteNoteHydrator;
+use UnicaenNote\Form\PorteNote\PorteNoteHydratorFactory;
 use UnicaenNote\Provider\Privilege\PortenotePrivileges;
 use UnicaenNote\Service\PorteNote\PorteNoteService;
 use UnicaenNote\Service\PorteNote\PorteNoteServiceFactory;
@@ -43,6 +47,16 @@ return [
                     ],
                     'privileges' => [
                         PortenotePrivileges::PORTENOTE_AJOUTER,
+
+                    ],
+                ],
+                [
+                    'controller' => PorteNoteController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        PortenotePrivileges::PORTENOTE_MODIFIER,
 
                     ],
                 ],
@@ -130,6 +144,17 @@ return [
                                 ],
                                 'may_terminate' => true,
                             ],
+                            'modifier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/modifier/:porte-note',
+                                    'defaults' => [
+                                        'controller' => PorteNoteController::class,
+                                        'action' => 'modifier',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
                             'historiser' => [
                                 'type' => Segment::class,
                                 'options' => [
@@ -181,10 +206,14 @@ return [
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            PorteNoteForm::class => PorteNoteFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            PorteNoteHydrator::class => PorteNoteHydratorFactory::class,
+        ],
     ],
     'view_helpers'  => [
         'aliases' => [
