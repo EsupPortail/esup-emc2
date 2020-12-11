@@ -70,6 +70,29 @@ return [
         ],
     ],
 
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'unicaen-note' => [
+                                'pages' => [
+                                    'un-porte' => [
+                                        'label' => 'Porte-note',
+                                        'route' => 'unicaen-note/porte-note',
+                                        'resource' => PrivilegeController::getResourceId(PorteNoteController::class, 'index'),
+                                        'order'    => 10001,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router' => [
         'routes' => [
             'unicaen-note' => [

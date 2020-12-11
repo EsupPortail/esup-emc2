@@ -32,6 +32,27 @@ return [
         ],
     ],
 
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'unicaen-note' => [
+                                'label' => 'Notes et Porte-notes',
+                                'route' => 'unicaen-note',
+                                'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
+                                'order'    => 10002,
+                                'pages' => [
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router'          => [
         'routes' => [
             'unicaen-note' => [
