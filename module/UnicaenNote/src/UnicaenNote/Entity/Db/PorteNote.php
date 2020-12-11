@@ -50,7 +50,11 @@ class PorteNote implements HistoriqueAwareInterface {
     public function getNotes() : array
     {
         $notes = $this->notes->toArray();
-        usort($notes, function (Note $a, Note $b) { return $a->getOrdre() > $b->getOrdre(); });
+        usort($notes, function (Note $a, Note $b) {
+            if ($a->getOrdre() !== $b->getOrdre())
+                return $a->getOrdre() > $b->getOrdre();
+            return $a->getHistoCreation() > $b->getHistoCreation();
+        });
         return $notes;
     }
 
