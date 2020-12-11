@@ -7,6 +7,7 @@ use UnicaenNote\Controller\PorteNoteControllerFactory;
 use UnicaenNote\Provider\Privilege\PortenotePrivileges;
 use UnicaenNote\Service\PorteNote\PorteNoteService;
 use UnicaenNote\Service\PorteNote\PorteNoteServiceFactory;
+use UnicaenNote\View\Helper\PorteNoteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -161,6 +162,15 @@ return [
     ],
     'hydrators' => [
         'factories' => [],
-    ]
+    ],
+    'view_helpers'  => [
+        'aliases' => [
+        ],
+        'factories' => [
+        ],
+        'invokables' => [
+            'portenote' => PorteNoteViewHelper::class,
+        ],
+    ],
 
 ];

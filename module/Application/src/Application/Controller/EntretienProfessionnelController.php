@@ -25,6 +25,7 @@ use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenNote\Service\PorteNote\PorteNoteServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -43,6 +44,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use EntretienProfessionnelObservationServiceAwareTrait;
     use MailingServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
+    use PorteNoteServiceAwareTrait;
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
@@ -61,10 +63,12 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels();
         $campagnes = $this->getEntretienProfessionnelCampagneService()->getEntretiensProfessionnelsCampagnes();
+        $portenote = $this->getPorteNoteService()->getPorteNoteByAccroche('EntretienProfessionnelController::indexAction()');
 
         return new ViewModel([
             'entretiens' => $entretiens,
             'campagnes' => $campagnes,
+            'portenote' => $portenote,
         ]);
     }
 

@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @var Note $note
+ * @var string $mode  ('affichage', ...)
+ * @var array $options
+ */
+
+use UnicaenNote\Entity\Db\Note;
+use UnicaenNote\Provider\Privilege\NotePrivileges;
+
+$canModifier   = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOTE_MODIFIER));
+$canHistoriser = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOTE_HISTORISER));
+$canSupprimer  = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOTE_SUPPRIMER));
+
+?>
+
+<div>
+    <div class="col-md-10 <?php echo $note->getType()->getStyle(); ?>">
+        <?php echo $note->getTexte(); ?>
+    </div>
+    <div class="col-md-2">
+        <?php if ($canModifier) : ?>
+            <a href="<?php echo $this->url('unicaen-note/note/modifier', ['note' => $note->getId()], [], true); ?>"
+               class="ajax-modal" data-event="modification"
+            >
+                <span class="icon editer"></span></a>
+        <?php endif; ?>
+        <?php if ($canHistoriser) : ?>
+            <?php if ($note->estNonHistorise()) : ?>
+                <a href="<?php echo $this->url('unicaen-note/note/historiser', ['note' => $note->getId()], [], true); ?>"
+                   class="zajax-modal" data-event="modification"
+                >
+                    <span class="icon historiser"></span></a>
+            <?php else : ?>
+                <a href="<?php echo $this->url('unicaen-note/note/restaurer', ['note' => $note->getId()], [], true); ?>"
+                   class="zajax-modal" data-event="modification"
+                >
+                    <span class="icon restaurer"></span></a>
+            <?php endif; ?>
+        <?php endif; ?>
+        <?php if ($canSupprimer) : ?>
+            <a href="<?php echo $this->url('unicaen-note/note/supprimer', ['note' => $note->getId()], [], true); ?>"
+               class="ajax-modal" data-event="modification"
+            >
+                <span class="icon detruire"></span></a>
+        <?php endif; ?>
+    </div>
+    <br/>
+</div>

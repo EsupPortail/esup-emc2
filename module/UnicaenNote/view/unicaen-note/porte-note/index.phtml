@@ -51,7 +51,7 @@ $canSupprimer = $this->isAllowed(PortenotePrivileges::getResourceId(PortenotePri
                 <td>
                     <?php echo count($portenote->getNotes()); ?>
                 </td>
-                <td> <?php echo "TODO" ?> </td>
+                <td> <?php echo ($portenote->getAccroche())?:"Aucune"; ?> </td>
                 <td>
                     <?php if ($canAfficher): ?>
                         <?php /** @see \UnicaenNote\Controller\TypeController::afficherAction() */?>

@@ -4,10 +4,12 @@
  * @see \Application\Controller\EntretienProfessionnelController::indexAction()
  * @var EntretienProfessionnelCampagne[] $campagnes
  * @var EntretienProfessionnel[] $entretiens
+ * @var PorteNote $portenote
  */
 
 use Application\Entity\Db\EntretienProfessionnel;
 use Application\Entity\Db\EntretienProfessionnelCampagne;
+use UnicaenNote\Entity\Db\PorteNote;
 
 $this->headTitle('Index des entretiens professionnel');
 
@@ -19,6 +21,7 @@ $this->headTitle('Index des entretiens professionnel');
 
 <div class="main">
 
+    <?php echo $this->portenote($portenote, '', []); ?>
 
     <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">

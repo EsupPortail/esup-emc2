@@ -134,4 +134,22 @@ class PorteNoteService {
         return $result;
     }
 
+    /**
+     * @param string $accroche
+     * @return PorteNote
+     */
+    public function getPorteNoteByAccroche(string $accroche)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('portenote.accroche = :accroche')
+            ->setParameter('accroche', $accroche)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs PorteNote partagent la même accroche [".$accroche."]");
+        }
+        return $result;
+    }
+
 }

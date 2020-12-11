@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @var PorteNote $portenote
+ * @var string $mode  ('affichage', ...)
+ * @var array $options
+ */
+
+use UnicaenNote\Entity\Db\PorteNote;
+use UnicaenNote\Provider\Privilege\NotePrivileges;
+
+$canAjouter = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOTE_AJOUTER));
+?>
+
+<?php if ($portenote !== null) : ?>
+    <div class="row">
+        <?php if ($canAjouter) : ?>
+        <div class="col-md-1" style="text-align: right; padding-right: 1rem;">
+            <a href="<?php echo $this->url('unicaen-note/note/ajouter', ['porte-note' => $portenote->getId()], [], true); ?>"
+               class="ajax-modal" data-event="modification"
+            >
+            <span class="icon ajouter" title="Ajouter une note"
+                  data-toggle="tooltip" data-html="true"
+            ></span></a>
+        </div>
+        <?php endif; ?>
+        <div class="col-md-11">
+            <?php foreach ($portenote->getNotes() as $note) : ?>
+                <?php echo $this->note($note, $mode, $options); ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endif; ?>

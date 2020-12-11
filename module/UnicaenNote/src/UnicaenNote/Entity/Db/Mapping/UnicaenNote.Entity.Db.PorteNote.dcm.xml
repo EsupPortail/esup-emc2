@@ -6,6 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
+        <field name="accroche"             column="accroche"                  type="string"    length="1024"    nullable="true" />
         <one-to-many field="notes" target-entity="UnicaenNote\Entity\Db\Note" mapped-by="portenote"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

@@ -11,6 +11,7 @@ use UnicaenNote\Form\Note\NoteHydratorFactory;
 use UnicaenNote\Provider\Privilege\NotePrivileges;
 use UnicaenNote\Service\Note\NoteService;
 use UnicaenNote\Service\Note\NoteServiceFactory;
+use UnicaenNote\View\Helper\NoteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -191,6 +192,15 @@ return [
         'factories' => [
             NoteHydrator::class => NoteHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers'  => [
+        'aliases' => [
+        ],
+        'factories' => [
+        ],
+        'invokables' => [
+            'note' => NoteViewHelper::class,
+        ],
+    ],
 
 ];

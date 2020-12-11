@@ -12,6 +12,7 @@ use UnicaenEtat\Entity\Db\Etat;
  * @var FicheMetier[] $fiches
  * @var Etat[] $etats
  * @var Metier[] $metiers
+ * @var \UnicaenNote\Entity\Db\PorteNote $portenote
  */
 
 $this->headTitle('Index des fiches métiers');
@@ -60,7 +61,7 @@ $this->headTitle('Index des fiches métiers');
 
              <!-- FAMILLE --------------------------------------------------------------------------------------------->
             <div id="fiche" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect]); ?>
+                <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect, 'portenote' => $portenote]); ?>
             </div>
 
             <!-- FAMILLE ---------------------------------------------------------------------------------------------->

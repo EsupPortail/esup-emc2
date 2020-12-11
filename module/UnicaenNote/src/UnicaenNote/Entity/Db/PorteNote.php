@@ -11,6 +11,8 @@ class PorteNote implements HistoriqueAwareInterface {
 
     /** @var integer */
     private $id;
+    /** @var string */
+    private $accroche;
     /** @var ArrayCollection (Note) */
     private $notes;
 
@@ -20,6 +22,24 @@ class PorteNote implements HistoriqueAwareInterface {
     public function getId() : int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAccroche(): ?string
+    {
+        return $this->accroche;
+    }
+
+    /**
+     * @param string|null $accroche
+     * @return PorteNote
+     */
+    public function setAccroche(?string $accroche): PorteNote
+    {
+        $this->accroche = $accroche;
+        return $this;
     }
 
     /** GESTION DES NOTES *********************************************************************************************/
