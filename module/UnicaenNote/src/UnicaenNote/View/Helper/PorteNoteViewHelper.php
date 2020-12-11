@@ -11,12 +11,12 @@ use Zend\View\Resolver\TemplatePathStack;
 class PorteNoteViewHelper extends AbstractHelper
 {
     /**
-     * @param PorteNote $portenote
+     * @param PorteNote|null $portenote
      * @param string $mode
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(PorteNote $portenote, $mode = 'affichage', $options = [])
+    public function __invoke(?PorteNote $portenote, $mode = 'affichage', $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

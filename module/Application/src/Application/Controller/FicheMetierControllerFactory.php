@@ -21,6 +21,7 @@ use UnicaenDocument\Service\Exporter\ExporterService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenNote\Service\PorteNote\PorteNoteService;
 use Zend\View\Renderer\PhpRenderer;
 
 class FicheMetierControllerFactory {
@@ -39,6 +40,7 @@ class FicheMetierControllerFactory {
          * @var ConfigurationService $configurationService
          * @var MetierService $metierService
          * @var ParcoursDeFormationService $parcoursService
+         * @var PorteNoteService $porteNoteService
          */
         $activiteService = $container->get(ActiviteService::class);
         $domaineService = $container->get(DomaineService::class);
@@ -51,6 +53,7 @@ class FicheMetierControllerFactory {
         $configurationService = $container->get(ConfigurationService::class);
         $metierService = $container->get(MetierService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
+        $porteNoteService = $container->get(PorteNoteService::class);
 
         /**
          * @var LibelleForm $libelleForm
@@ -87,6 +90,7 @@ class FicheMetierControllerFactory {
         $controller->setConfigurationService($configurationService);
         $controller->setMetierService($metierService);
         $controller->setParcoursDeFormationService($parcoursService);
+        $controller->setPorteNoteService($porteNoteService);
 
         $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);
