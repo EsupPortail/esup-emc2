@@ -9,8 +9,10 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\MissionspecifiquePrivileges;
 
 $canVoirMission         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+$canLettre              = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
 $canAjouterMission      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canModifierMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canHistoriserMission   = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
@@ -93,7 +95,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                 <th> Début </th>
                 <th> Fin </th>
                 <th> Volume horaire </th>
-                <?php if ($mode === 'edition') : ?>
+                <?php if ($mode === 'edition' || $mode === 'affichage') : ?>
                     <th class="cell-action"> Action </th>
                 <?php endif; ?>
             </tr>
@@ -122,7 +124,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                         Aucun
                     <?php endif; ?>
                 </td>
-                <?php if ($mode === 'edition') : ?>
+                <?php if ($mode === 'edition' OR $mode === 'affichage') : ?>
                     <td>
                         <?php if ($canVoirMission) : ?>
                             <a
@@ -131,8 +133,16 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                                     class="ajax-modal"
                             >
                                 <span class="icon voir"></span></a>
+                            <?php if ($canLettre AND $mission->estEnCours()) : ?>
+                                <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
+                                <a href="<?php echo $this->url('mission-specifique/affectation/generer-lettre-type', ['affectation' => $mission->getId()], [], true); ?>"
+                                   target="_blank"
+                                >
+                                <span class="icon pdf"  data-toggle="tooltip" data-html="true"
+                                      title="Générer la lettre type associée l'affectation"></span></a>
+                            <?php endif; ?>
                         <?php endif; ?>
-                        <?php if ($canModifierMission) : ?>
+                        <?php if ($mode === 'edition' AND$canModifierMission) : ?>
                             <a
                                 <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
                                     href="<?php echo $this->url('mission-specifique/affectation/modifier', ['affectation' => $mission->getId()], ['query' => ['agent' => $agent->getId()]], true); ?>"
@@ -141,7 +151,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                             >
                                 <span class="icon editer"></span></a>
                         <?php endif; ?>
-                        <?php if ($canHistoriserMission) : ?>
+                        <?php if ($mode === 'edition' AND $canHistoriserMission) : ?>
                             <?php if ($mission->estNonHistorise()) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::historiserAction() */?>
@@ -156,7 +166,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
                                     <span class="icon restaurer"></span></a>
                             <?php endif; ?>
                         <?php endif; ?>
-                        <?php if ($canDetruireMission) : ?>
+                        <?php if ($mode === 'edition' AND $canDetruireMission) : ?>
                             <a
                                 <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::detruireAction() */?>
                                     href="<?php echo $this->url('mission-specifique/affectation/detruire', ['affectation' => $mission->getId()], [], true); ?>"

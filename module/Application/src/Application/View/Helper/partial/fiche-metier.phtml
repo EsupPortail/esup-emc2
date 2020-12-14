@@ -66,7 +66,7 @@ $mode = $options['mode'];
                 <strong> <?php echo $metier->getLibelle(); ?> </strong>
             </h1>
 
-            <?php if ($mode === 'affichage' OR $mode === 'edition-fiche-metier') : ?>
+            <?php if ($mode === 'edition-fiche-metier') : ?>
                 <?php if ($fichemetier->hasExpertise()) : ?>
                     <span class="label" style="background-color: darkgreen;"> Sujet à expertise </span>
                 <?php else: ?>
