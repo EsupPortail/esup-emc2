@@ -12,6 +12,7 @@ use UnicaenNote\Provider\Privilege\PortenotePrivileges;
 use UnicaenNote\Service\PorteNote\PorteNoteService;
 use UnicaenNote\Service\PorteNote\PorteNoteServiceFactory;
 use UnicaenNote\View\Helper\PorteNoteViewHelper;
+use UnicaenNote\View\Helper\PorteNoteViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -217,11 +218,12 @@ return [
     ],
     'view_helpers'  => [
         'aliases' => [
+            'portenote' => PorteNoteViewHelper::class,
         ],
         'factories' => [
+            PorteNoteViewHelper::class => PorteNoteViewHelperFactory::class,
         ],
         'invokables' => [
-            'portenote' => PorteNoteViewHelper::class,
         ],
     ],
 

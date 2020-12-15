@@ -16,6 +16,10 @@ class PorteNote implements HistoriqueAwareInterface {
     /** @var ArrayCollection (Note) */
     private $notes;
 
+    public function __construct() {
+        $this->notes = new ArrayCollection();
+    }
+
     /**
      * @return integer
      */
