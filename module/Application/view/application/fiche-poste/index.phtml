@@ -30,6 +30,9 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
 </h1>
 
 <div class="main">
+
+    <?php echo $this->portenote('FichePosteController::indexAction()', '', []); ?>
+
     <?php if ($canAjouter) : ?>
         <?php /** @see FichePosteController::ajouterAction() */ ?>
         <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>"

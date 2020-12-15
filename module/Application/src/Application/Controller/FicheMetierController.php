@@ -27,13 +27,10 @@ use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
-use Mpdf\MpdfException;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
-use UnicaenNote\Service\PorteNote\PorteNoteServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
@@ -53,7 +50,6 @@ class FicheMetierController extends AbstractActionController
     use HasCompetenceCollectionServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
-    use PorteNoteServiceAwareTrait;
     use EtatServiceAwareTrait;
     use ExporterServiceAwareTrait;
 
@@ -73,7 +69,6 @@ class FicheMetierController extends AbstractActionController
     {
         $domaineId = $this->params()->fromQuery('domaine');
         $domaines = $this->getDomaineService()->getDomaines();
-        $portenote = $this->getPorteNoteService()->getPorteNoteByAccroche('FicheMetierController::indexAction()');
 
         if ($domaineId === null) {
             $domaine = null;
@@ -93,7 +88,6 @@ class FicheMetierController extends AbstractActionController
             'fiches' => $fichesMetiers,
             'etats' => $etats,
             'metiers' => $metiers,
-            'portenote' => $portenote,
         ]);
     }
 
