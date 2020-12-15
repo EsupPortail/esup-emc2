@@ -78,18 +78,18 @@ $this->headTitle("Missions spécifiques");
                     <table class="datatable table table-condensed">
                         <thead>
                         <tr>
+                            <th> Thème </th>
                             <th> Libellé </th>
                             <th> Type </th>
-                            <th> Thème </th>
                             <th class="cell-action"> Action </th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php foreach ($missions as $mission) : ?>
                             <tr <?php if ($mission->estHistorise()) echo "class='historise'"; ?>>
+                                <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans thème</span>"; ?> </td>
                                 <td> <?php echo $mission->getLibelle(); ?> </td>
                                 <td> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans type</span>"; ?> </td>
-                                <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans thème</span>"; ?> </td>
                                 <td>
                                     <?php if ($canVoir) : ?>
                                         <a

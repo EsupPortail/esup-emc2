@@ -87,12 +87,15 @@ class MissionSpecifiqueService {
         ;
         return $qb;
     }
+
     /**
+     * @param string $champ
+     * @param string $ordre
      * @return MissionSpecifique[]
      */
-    public function getMissionsSpecifiques() {
+    public function getMissionsSpecifiques(string $champ = 'theme.libelle', string $ordre='ASC') {
         $qb = $this->createQueryBuilder()
-            ->orderBy('mission.libelle', 'ASC')
+            ->orderBy($champ, $ordre)
         ;
 
         $result = $qb->getQuery()->getResult();
