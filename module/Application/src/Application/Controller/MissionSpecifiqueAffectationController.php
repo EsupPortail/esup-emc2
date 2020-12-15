@@ -35,7 +35,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $structure    = ($structureId !== '')?$this->getStructureService()->getStructure($structureId):null;
         $mission      = ($missionId !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($missionId):null;
         $affectations = $this->getMissionSpecifiqueAffectationService()->getAffectations($agent, $mission, $structure);
-        $missions    = $this->getMissionSpecifiqueService()->getMisssionsSpecifiquesAsOptions();
+        $missions    = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
 
         return new ViewModel([
             'agent' => $agent,

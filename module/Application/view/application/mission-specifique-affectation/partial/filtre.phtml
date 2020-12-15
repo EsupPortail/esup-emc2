@@ -12,6 +12,12 @@ use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\Structure;
 use UnicaenApp\Form\Element\SearchAndSelect;
 
+$groupes = [];
+foreach ($missions as $mission) {
+    $theme = ($mission->getTheme())?$mission->getTheme()->getLibelle():"ZzzZzz";
+    $groupes[$theme][] = $mission;
+}
+
 ?>
 
 <?php
@@ -54,10 +60,14 @@ use UnicaenApp\Form\Element\SearchAndSelect;
             <label for="mission">Mission :</label>
             <select id="mission" name="mission" class="selectpicker show-tick" data-live-search="true">
                 <option value="0"> Toutes les missions </option>
-                <?php foreach($missions as $clef => $label) : ?>
-                    <option value="<?php echo $clef; ?>"
-                        <?php if ($mission && $mission->getId() == $clef) echo " selected" ?>
-                    > <?php echo $label; ?> </option>
+                <?php foreach($groupes as $groupe_clef => $groupe) : ?>
+                    <optgroup label="<?php echo ($groupe_clef !== 'ZzzZzz')?$groupe_clef:"Sans thème"; ?>">
+                        <?php foreach ($groupe as $mission) : ?>
+                            <option value="<?php echo $mission->getId(); ?>"
+                                <?php //if ($mission && $mission->getId() == 0) echo " selected" ?>
+                            > <?php echo $mission->getLibelle(); ?> </option>
+                        <?php endforeach; ?>
+                    </optgroup>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -136,6 +146,6 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
     <?php if($mission !== null) : ?>
         console.log("mais");
-        $("select#mission").val("<?php echo $mission->getId(); ?>");
+        $("select#mission").val(<?php echo $mission->getId(); ?>);
     <?php endif; ?>
 </script>
