@@ -39,15 +39,6 @@ $this->headTitle('Index des fiches métiers');
             </a>
         </li>
 
-        <li role="metier">
-            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz">
-                Fiches métiers &nbsp;
-                <span class="badge">
-                    <?php echo count($metiers); ?>
-                </span>
-            </a>
-        </li>
-
         <li role="etat">
             <a href="#etat" aria-controls="etat" role="tab" data-toggle="tabz">
                 États &nbsp;
@@ -66,11 +57,6 @@ $this->headTitle('Index des fiches métiers');
              <!-- FAMILLE --------------------------------------------------------------------------------------------->
             <div id="fiche" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect, 'portenote' => $portenote]); ?>
-            </div>
-
-            <!-- FAMILLE ---------------------------------------------------------------------------------------------->
-            <div id="metier" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/fiche-metier-bis.phtml', ['metiers' => $metiers, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect]); ?>
             </div>
 
             <!-- DOMAINE ---------------------------------------------------------------------------------------------->
