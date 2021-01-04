@@ -14,6 +14,8 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
 
 <div class="row">
     <div class="col-md-6">
+        <?php echo $this->portenote('StructureController::indexAction()>Description', '', []); ?>
+
         <h2>
             Description
             <?php if ($canEditerDescription) : ?>
