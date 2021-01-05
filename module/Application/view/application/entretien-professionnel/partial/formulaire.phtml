@@ -28,6 +28,8 @@ $dayAfter = $entretien->getDateEntretien()->add(new DateInterval('P1D'));
 
 <h2> Formulaire d'entretien  </h2>
 
+<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formulaire', '', []); ?>
+
 <h3 class="categorie"> Missions du poste </h3>
 
 <?php if ($fichePoste !== null) : ?>

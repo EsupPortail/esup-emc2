@@ -17,6 +17,10 @@ $now = new DateTime();
 $entretien7 = $entretien->getDateEntretien()->add(new DateInterval('P7D'));
 ?>
 
+<h2> Observation lié à l'entretien professionnel</h2>
+
+<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
+
 <div class="alert alert-info">
     <p class="lead">
         Vous avez une semaine après la date de votre entretien professionnel pour exprimer vos observations sur votre entretien ou vos perspectives.

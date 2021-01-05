@@ -36,6 +36,9 @@ $date = new DateTime();
             </div>
         </div>
         <div class="panel-body">
+            <?php if ($mode === 'edition') : ?>
+                <?php echo $this->portenote('FichePosteController::editerAction()>specificite', '', []); ?>
+            <?php endif; ?>
             <?php if ($fiche->getSpecificite() === null) : ?>
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle"></i>

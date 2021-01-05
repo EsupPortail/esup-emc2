@@ -77,6 +77,8 @@ $dayAfter = $entretien->getDateEntretien()->add(new DateInterval('P1D'));
 
 <h2> Compte-rendu d'entretien de formation </h2>
 
+<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formation', '', []); ?>
+
 <?php
 $instance = $entretien->getFormationInstance();
 $formulaire = $instance->getFormulaire();

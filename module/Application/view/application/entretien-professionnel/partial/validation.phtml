@@ -15,6 +15,10 @@ $now = new DateTime();
 $dateOk = ($now > $entretien->getDateEntretien());
 ?>
 
+<h2> Validations </h2>
+
+<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>validations', '', []); ?>
+
 <div>
     <?php if (!$dateOk) : ?>
         <div class="alert alert-info">
