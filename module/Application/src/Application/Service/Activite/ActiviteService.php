@@ -7,6 +7,7 @@ use Application\Entity\Db\ActiviteCompetence;
 use Application\Entity\Db\ActiviteFormation;
 use Application\Entity\Db\ActiviteLibelle;
 use Application\Entity\Db\ApplicationElement;
+use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Service\Application\ApplicationServiceAwareTrait;
@@ -90,9 +91,12 @@ class ActiviteService {
             ->addSelect('destructeur')->leftJoin('activite.histoDestructeur', 'destructeur')
             ->addSelect('libelle')->leftJoin('activite.libelles', 'libelle')
             ->addSelect('description')->leftJoin('activite.descriptions', 'description')
-            ->addSelect('application')->leftJoin('activite.applications', 'application')
-            ->addSelect('competence')->leftJoin('activite.competences', 'competence')
-            ->addSelect('formation')->leftJoin('activite.formations', 'formation')
+            ->addSelect('applicationelement')->leftJoin('activite.applications', 'applicationelement')
+            ->addSelect('application')->leftJoin('applicationelement.application', 'application')
+            ->addSelect('competenceelement')->leftJoin('activite.competences', 'competenceelement')
+            ->addSelect('competence')->leftJoin('competenceelement.competence', 'competence')
+            ->addSelect('formationelement')->leftJoin('activite.formations', 'formationelement')
+            ->addSelect('formation')->leftJoin('formationelement.formation', 'formation')
         ;
         return $qb;
     }
@@ -468,6 +472,19 @@ class ActiviteService {
             }
         }
         return $activite;
+    }
+
+    public function getActivitesbyCompetence(Competence $competence)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('libelle.histoDestruction IS NULL')
+            ->andWhere('competenceelement.competence = :competence')
+            ->setParameter('competence', $competence)
+            ->orderBy('libelle.libelle', 'ASC')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }

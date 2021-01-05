@@ -3,11 +3,15 @@
 /**
  * @see CompetenceController::afficherAction()
  *
+ * @var Activite[] $activites
  * @var Competence $competence
+ * @var FicheMetier[] $fiches
  */
 
 use Application\Controller\CompetenceController;
+use Application\Entity\Db\Activite;
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\FicheMetier;
 
 ?>
 
@@ -34,20 +38,20 @@ use Application\Entity\Db\Competence;
     <dt> Fiches metiers </dt>
     <dd>
         <!-- Nombre de fiches metiers : -->
-        <?php echo count($competence->getFichesMetiers()); ?>
+        <?php echo count($fiches); ?>
         <ul>
-            <?php foreach ($competence->getFichesMetiers() as $fiche) : ?>
-                <li> #<?php echo $fiche->getId(); ?> - <?php echo $fiche->getMetier()->getLibelle(); ?></li>
+            <?php foreach ($fiches as $fiche) : ?>
+                <li> <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)</li>
             <?php endforeach; ?>
         </ul>
     </dd>
     <dt> Activités </dt>
     <dd>
         <!-- Nombre de fiches metiers : -->
-        <?php echo count($competence->getActivites()); ?>
+        <?php echo count($activites); ?>
         <ul>
-            <?php foreach ($competence->getActivites() as $activite) : ?>
-                <li> #<?php echo $activite->getId(); ?> - <?php echo $activite->getLibelle(); ?></li>
+            <?php foreach ($activites as $activite) : ?>
+                <li> <?php echo $activite->getLibelle(); ?> (#<?php echo $activite->getId(); ?>)</li>
             <?php endforeach; ?>
         </ul>
     </dd>

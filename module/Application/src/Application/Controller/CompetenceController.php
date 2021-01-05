@@ -9,20 +9,24 @@ use Application\Form\Competence\CompetenceFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class CompetenceController extends AbstractActionController
 {
+    use ActiviteServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
     use CompetenceTypeFormAwareTrait;
@@ -103,9 +107,13 @@ class CompetenceController extends AbstractActionController
     public function afficherAction()
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+        $activites = $this->getActiviteService()->getActivitesbyCompetence($competence);
+        $fiches = $this->getFicheMetierService()->getFichesMetiersByCompetence($competence);
         return new ViewModel([
             'title' => "Affiche d'une compétence",
             'competence' => $competence,
+            'activites' => $activites,
+            'fiches' => $fiches,
         ]);
     }
 

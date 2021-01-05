@@ -395,4 +395,22 @@ class FicheMetierService {
         return $dictionnaire;
     }
 
+    /**
+     * @param Competence $competence
+     * @return FicheMetier[]
+     */
+    public function getFichesMetiersByCompetence(Competence $competence)
+    {
+        $qb = $this->createQueryBuilder()
+            ->addSelect('fiche_competenceelement')->leftJoin('ficheMetier.competences', 'fiche_competenceelement')
+            ->addSelect('fiche_competence')->leftJoin('fiche_competenceelement.competence', 'fiche_competence')
+            ->andWhere('fiche_competenceelement.competence = :competence')
+            ->setParameter('competence', $competence)
+            ->orderBy('metier.libelle', 'ASC')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
 }
