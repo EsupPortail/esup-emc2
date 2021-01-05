@@ -214,14 +214,16 @@ class ParcoursDeFormationController extends AbstractActionController
     public function bougerFormationAction()
     {
         $pdff = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormationFormation($this, 'formation');
+        $parcours = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormation($this);
         $direction = $this->params()->fromRoute('direction');
 
-        $parcours = $pdff->getParcours();
         $formations = $parcours->getFormations();
 
         $liste = [];
+        $cformation = $pdff->getFormation();
         foreach ($formations as $pdffInstance) {
-            if ($pdffInstance->getFormation()->getGroupe() === $pdff->getFormation()->getGroupe()) {
+            $formation = $pdffInstance->getFormation();
+            if ($formation->getGroupe() === $cformation->getGroupe()) {
                 $liste[] = $pdffInstance;
             }
         }
