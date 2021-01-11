@@ -23,8 +23,8 @@ $canEffacer        = $droits["effacer"];
     <div class="pull-right"><br/>
         <?php if ($canAjouter) : ?>
             <a
-                <?php /** @see \Application\Controller\MetierController::ajouterDomaineAction() */ ?>
-                href="<?php echo $this->url('metier/ajouter-domaine', [], [], true);?>"
+                <?php /** @see \Application\Controller\DomaineController::ajouterAction() */ ?>
+                href="<?php echo $this->url('domaine/ajouter', [], [], true);?>"
                 class="btn btn-primary action ajax-modal"
                 data-event="modification"
             >
@@ -58,8 +58,8 @@ $canEffacer        = $droits["effacer"];
             </td>
             <td>
                 <?php if ($canEditer) : ?>
-                    <a  <?php /** @see \Application\Controller\MetierController::modifierDomaineAction() */ ?>
-                        href="<?php echo $this->url('metier/modifier-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                    <a  <?php /** @see \Application\Controller\DomaineController::modifierAction() */ ?>
+                        href="<?php echo $this->url('domaine/modifier', ['domaine' => $domaine->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"
                     >
@@ -67,20 +67,20 @@ $canEffacer        = $droits["effacer"];
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($domaine->estNonHistorise()) : ?>
-                        <a  <?php /** @see \Application\Controller\MetierController::historiserDomaineAction() */ ?>
-                            href="<?php echo $this->url('metier/historiser-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                        <a  <?php /** @see \Application\Controller\DomaineController::historiserAction() */ ?>
+                            href="<?php echo $this->url('domaine/historiser', ['domaine' => $domaine->getId()], [], true); ?>"
                         >
                             <span class="icon historiser" title="Historiser le domaine"></span></a>
                     <?php else : ?>
-                        <a  <?php /** @see \Application\Controller\MetierController::restaurerDomaineAction() */ ?>
-                            href="<?php echo $this->url('metier/restaurer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                        <a  <?php /** @see \Application\Controller\DomaineController::restaurerAction() */ ?>
+                            href="<?php echo $this->url('domaine/restaurer', ['domaine' => $domaine->getId()], [], true); ?>"
                         >
                             <span class="icon restaurer" title="Restaurer le domaine"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
-                    <a  <?php /** @see \Application\Controller\MetierController::effacerDomaineAction() */ ?>
-                        href="<?php echo $this->url('metier/effacer-domaine', ['domaine' => $domaine->getId()], [], true); ?>"
+                    <a  <?php /** @see \Application\Controller\DomaineController::effacerAction() */ ?>
+                        href="<?php echo $this->url('domaine/effacer', ['domaine' => $domaine->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
                         <span class="icon detruire"  title="Supprimer le domaine"></span></a>

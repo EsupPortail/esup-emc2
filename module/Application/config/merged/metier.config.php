@@ -52,7 +52,6 @@ return [
                 [
                     'controller' => MetierController::class,
                     'action' => [
-                        'ajouter-domaine',
                         'ajouter-famille',
                         'ajouter-metier',
                         'ajouter-reference',
@@ -65,7 +64,6 @@ return [
                 [
                     'controller' => MetierController::class,
                     'action' => [
-                        'modifier-domaine',
                         'modifier-famille',
                         'modifier-metier',
                         'modifier-reference',
@@ -78,12 +76,10 @@ return [
                 [
                     'controller' => MetierController::class,
                     'action' => [
-                        'historiser-domaine',
                         'historiser-famille',
                         'historiser-metier',
                         'historiser-reference',
                         'historiser-referentiel',
-                        'restaurer-domaine',
                         'restaurer-famille',
                         'restaurer-metier',
                         'restaurer-reference',
@@ -96,7 +92,6 @@ return [
                 [
                     'controller' => MetierController::class,
                     'action' => [
-                        'effacer-domaine',
                         'effacer-famille',
                         'effacer-metier',
                         'effacer-reference',
@@ -208,59 +203,6 @@ return [
                             'defaults' => [
                                 'controller' => MetierController::class,
                                 'action'     => 'effacer-famille',
-                            ],
-                        ],
-                    ],
-
-                    /** DOMAINE ***************************************************************************************/
-
-                    'ajouter-domaine' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/ajouter-domaine',
-                            'defaults' => [
-                                'controller' => MetierController::class,
-                                'action'     => 'ajouter-domaine',
-                            ],
-                        ],
-                    ],
-                    'modifier-domaine' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-domaine/:domaine',
-                            'defaults' => [
-                                'controller' => MetierController::class,
-                                'action'     => 'modifier-domaine',
-                            ],
-                        ],
-                    ],
-                    'historiser-domaine' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-domaine/:domaine',
-                            'defaults' => [
-                                'controller' => MetierController::class,
-                                'action'     => 'historiser-domaine',
-                            ],
-                        ],
-                    ],
-                    'restaurer-domaine' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-domaine/:domaine',
-                            'defaults' => [
-                                'controller' => MetierController::class,
-                                'action'     => 'restaurer-domaine',
-                            ],
-                        ],
-                    ],
-                    'effacer-domaine' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/effacer-domaine/:domaine',
-                            'defaults' => [
-                                'controller' => MetierController::class,
-                                'action'     => 'effacer-domaine',
                             ],
                         ],
                     ],
@@ -457,7 +399,6 @@ return [
 
     'service_manager' => [
         'factories' => [
-            DomaineService::class => DomaineServiceFactory::class,
             FamilleProfessionnelleService::class => FamilleProfessionnelleServiceFactory::class,
             MetierReferenceService::class => MetierReferenceServiceFactory::class,
             MetierReferentielService::class => MetierReferentielServiceFactory::class,
@@ -471,7 +412,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            DomaineForm::class => DomaineFormFactory::class,
             MetierForm::class => MetierFormFactory::class,
             MetierReferenceForm::class => MetierReferenceFormFactory::class,
             MetierReferentielForm::class => MetierReferentielFormFactory::class,
@@ -479,7 +419,6 @@ return [
     ],
     'hydrators' => [
         'factories' => [
-            DomaineHydrator::class => DomaineHydratorFactory::class,
             MetierHydrator::class => MetierHydratorFactory::class,
             MetierReferenceHydrator::class => MetierReferenceHydraytorFactory::class,
             MetierReferentielHydrator::class => MetierReferentielHydratorFactory::class,

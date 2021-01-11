@@ -2,20 +2,16 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierReference;
 use Application\Entity\Db\MetierReferentiel;
-use Application\Form\Domaine\DomaineForm;
-use Application\Form\Domaine\DomaineFormAwareTrait;
 use Application\Form\Metier\MetierForm;
 use Application\Form\Metier\MetierFormAwareTrait;
 use Application\Form\MetierReference\MetierReferenceFormAwareTrait;
 use Application\Form\MetierReferentiel\MetierReferentielFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
-use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\MetierReference\MetierReferenceServiceAwareTrait;
@@ -27,13 +23,11 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class MetierController extends AbstractActionController {
-    use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
     use MetierReferenceServiceAwareTrait;
     use MetierReferentielServiceAwareTrait;
 
-    use DomaineFormAwareTrait;
     use MetierFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use MetierReferentielFormAwareTrait;
@@ -154,108 +148,6 @@ class MetierController extends AbstractActionController {
                 'title' => "Suppression de la famille professionnelle" . $famille->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('metier/effacer-famille', ["famille" => $famille->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
-    /** DOMAINE *******************************************************************************************************/
-
-    public function ajouterDomaineAction()
-    {
-        /** @var Domaine $domaine */
-        $domaine = new Domaine();
-
-        /** @var DomaineForm $form */
-        $form = $this->getDomaineForm();
-        $form->setAttribute('action', $this->url()->fromRoute('metier/ajouter-domaine', [], [], true));
-        $form->bind($domaine);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getDomaineService()->create($domaine);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter un domaine',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierDomaineAction()
-    {
-        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
-
-        /** @var DomaineForm $form */
-        $form = $this->getDomaineForm();
-        $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-domaine', ['domaine' => $domaine->getId()], [], true));
-        $form->bind($domaine);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getDomaineService()->update($domaine);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier un domaine',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserDomaineAction()
-    {
-        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
-        if ($domaine !== null) {
-            $this->getDomaineService()->historise($domaine);
-        }
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'domaine'], true);
-    }
-
-    public function restaurerDomaineAction()
-    {
-        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
-        if ($domaine !== null) {
-            $this->getDomaineService()->restore($domaine);
-        }
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'domaine'], true);
-    }
-
-    public function effacerDomaineAction()
-    {
-        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getDomaineService()->delete($domaine);
-            //return $this->redirect()->toRoute('home');
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($domaine !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression du domaine " . $domaine->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('metier/effacer-domaine', ["domaine" => $domaine->getId()], [], true),
             ]);
         }
         return $vm;
