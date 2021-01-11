@@ -134,6 +134,16 @@ class EntretienProfessionnelController extends AbstractActionController
         return $vm;
     }
 
+    public function envoyerConvocationAction()
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        $campagne = $entretien->getCampagne();
+        $agent = $entretien->getAgent();
+        $utilisateur = $agent->getUtilisateur();
+        $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()]);
+        return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
+    }
+
     public function modifierAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);

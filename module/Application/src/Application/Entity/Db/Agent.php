@@ -39,6 +39,10 @@ class Agent implements HasApplicationCollectionInterface, HasCompetenceCollectio
     private $utilisateur;
     /** @var int */
     private $harpId;
+    /** @var string */
+    private $login;
+    /** @var string */
+    private $email;
     /** @var DateTime */
     private $delete;
 
@@ -109,6 +113,42 @@ class Agent implements HasApplicationCollectionInterface, HasCompetenceCollectio
     {
         return ucwords(strtolower($this->getPrenom()), "-") . ' ' . $this->getNomUsuel();
 
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLogin(): ?string
+    {
+        return $this->login;
+    }
+
+    /**
+     * @param string|null $login
+     * @return Agent
+     */
+    public function setLogin(?string $login): Agent
+    {
+        $this->login = $login;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     * @return Agent
+     */
+    public function setEmail(?string $email): Agent
+    {
+        $this->email = $email;
+        return $this;
     }
 
     /**
