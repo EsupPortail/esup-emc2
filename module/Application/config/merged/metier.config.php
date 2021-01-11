@@ -4,10 +4,6 @@ namespace Application;
 
 use Application\Controller\MetierController;
 use Application\Controller\MetierControllerFactory;
-use Application\Form\Domaine\DomaineForm;
-use Application\Form\Domaine\DomaineFormFactory;
-use Application\Form\Domaine\DomaineHydrator;
-use Application\Form\Domaine\DomaineHydratorFactory;
 use Application\Form\Metier\MetierForm;
 use Application\Form\Metier\MetierFormFactory;
 use Application\Form\Metier\MetierHydrator;
@@ -21,8 +17,6 @@ use Application\Form\MetierReferentiel\MetierReferentielFormFactory;
 use Application\Form\MetierReferentiel\MetierReferentielHydrator;
 use Application\Form\MetierReferentiel\MetierReferentielHydratorFactory;
 use Application\Provider\Privilege\MetierPrivileges;
-use Application\Service\Domaine\DomaineService;
-use Application\Service\Domaine\DomaineServiceFactory;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
 use Application\Service\Metier\MetierService;
@@ -105,7 +99,6 @@ return [
                     'controller' => MetierController::class,
                     'action' => [
                         'cartographie',
-                        'export-cartographie',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_CARTOGRAPHIE,
@@ -378,19 +371,6 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes' => [
-                            'export' => [
-                                'type' => Literal::class,
-                                'options' => [
-                                    'route'    => '/export',
-                                    'defaults' => [
-                                        'controller' => MetierController::class,
-                                        'action'     => 'export-cartographie',
-                                    ],
-                                ],
-                                'may_terminate' => true,
-                            ],
-                        ],
                     ],
                 ],
             ],

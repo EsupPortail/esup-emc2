@@ -359,20 +359,4 @@ class MetierController extends AbstractActionController {
             'results' => $results,
         ]);
     }
-
-    public function exportCartographieAction() {
-        $results = $this->getMetierService()->generateCartographyArray();
-
-        $headers = [ 'Metier', 'Niveau', 'Références', 'Domaine', 'Fonction', 'Famille', '#Fiche'];
-
-        $today = new DateTime();
-        $result = new CsvModel();
-        $result->setDelimiter(';');
-        $result->setEnclosure('"');
-        $result->setHeader($headers);
-        $result->setData($results);
-        $result->setFilename('cartographie_metier_'.$today->format('Ymd-His').'.csv');
-
-        return $result;
-    }
 }
