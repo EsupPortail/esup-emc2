@@ -50,32 +50,6 @@ class ParcoursDeFormationController extends AbstractActionController
 
     public function ajouterAction()
     {
-//        $type = $this->params()->fromRoute('type');
-//        $parcours = new ParcoursDeFormation();
-//        $parcours->setType($type);
-//
-//        $form = $this->getParcoursDeFormationForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('parcours-de-formation/ajouter', ['type' => $type], [], true));
-//        $form->bind($parcours);
-//
-//        /** @var Request $request */
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $form->setData($data);
-//            if ($form->isValid()) {
-//                $this->getParcoursDeFormationService()->create($parcours);
-//            }
-//        }
-//
-//        $vm = new ViewModel();
-//        $vm->setTemplate('application/parcours-de-formation/parcours-form');
-//        $vm->setVariables([
-//            'title' => "Ajout d'un parcours de formation",
-//            'form' => $form,
-//        ]);
-//        return $vm;
-
         $parcours = new ParcoursDeFormation();
         $this->getParcoursDeFormationService()->create($parcours);
 
@@ -86,30 +60,6 @@ class ParcoursDeFormationController extends AbstractActionController
     {
         $parcours = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormation($this);
         $reference = $this->getParcoursDeFormationService()->getReference($parcours);
-
-
-
-//        $form = $this->getParcoursDeFormationForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('parcours-de-formation/modifier', ['parcours-de-formation' => $parcours->getId()], [], true));
-//        $form->bind($parcours);
-//
-//        /** @var Request $request */
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $form->setData($data);
-//            if ($form->isValid()) {
-//                $this->getParcoursDeFormationService()->update($parcours);
-//            }
-//        }
-//
-//        $vm = new ViewModel();
-//        $vm->setTemplate('application/parcours-de-formation/parcours-form');
-//        $vm->setVariables([
-//            'title' => "Modification d'un parcours de formation",
-//            'form' => $form,
-//        ]);
-//        return $vm;
 
         return new ViewModel([
             'parcours' => $parcours,
@@ -228,16 +178,10 @@ class ParcoursDeFormationController extends AbstractActionController
             }
         }
 
-        $a=1;
-
         usort($liste, function (ParcoursDeFormationFormation $a, ParcoursDeFormationFormation $b) { return $a->getOrdre() > $b->getOrdre();});
-
-        $a=2;
 
         $position = 1;
         foreach ($liste as $item) $item->setOrdre($position++);
-
-        $a=3;
 
         if ($direction === 'up') {
             $old = null;
@@ -264,16 +208,6 @@ class ParcoursDeFormationController extends AbstractActionController
         foreach ($liste as $item) $this->getParcoursDeFormationService()->updateParcoursDeFormationFormation($item);
 
         return $this->redirect()->toRoute('parcours-de-formation/modifier', ['parcours-de-formation' => $parcours->getId()], [], true);
-    }
-
-    /** AUTRE */
-
-    private function getFragment(ParcoursDeFormation $parcours)
-    {
-        $type = $parcours->getType();
-        if ($type === ParcoursDeFormation::TYPE_METIER) return "metier";
-        if ($type === ParcoursDeFormation::TYPE_CATEGORIE) return "categorie";
-        return "";
     }
 
     public function historiserAction()
@@ -313,5 +247,19 @@ class ParcoursDeFormationController extends AbstractActionController
             ]);
         }
         return $vm;
+    }
+
+    /** AUTRE *********************************************************************************************************/
+
+    /**
+     * @param ParcoursDeFormation $parcours
+     * @return string
+     */
+    private function getFragment(ParcoursDeFormation $parcours)
+    {
+        $type = $parcours->getType();
+        if ($type === ParcoursDeFormation::TYPE_METIER) return "metier";
+        if ($type === ParcoursDeFormation::TYPE_CATEGORIE) return "categorie";
+        return "";
     }
 }

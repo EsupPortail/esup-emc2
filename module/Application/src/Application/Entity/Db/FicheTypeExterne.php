@@ -151,7 +151,7 @@ class FicheTypeExterne {
         $result->setQuotite($this->getQuotite());
         $result->setPrincipale($this->getPrincipale());
         $result->setActivites($this->getActivites());
-        //to do clone la repartition
+        //todo clone la repartition
         return $result;
     }
 

@@ -28,6 +28,7 @@ use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
+use Application\Service\RendererAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
@@ -56,6 +57,7 @@ class FichePosteController extends AbstractActionController {
     use ExporterServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
+    use RendererAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -64,13 +66,6 @@ class FichePosteController extends AbstractActionController {
     use AssocierTitreFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
     use ExpertiseFormAwareTrait;
-
-    private $renderer;
-
-    public function setRenderer($renderer)
-    {
-        $this->renderer = $renderer;
-    }
 
     public function indexAction()
     {
@@ -845,7 +840,6 @@ class FichePosteController extends AbstractActionController {
             'title' => 'Modifier spécificité du poste',
             'form' => $form,
         ]);
-
     }
 
     public function modifierRepartitionAction()
@@ -870,7 +864,5 @@ class FichePosteController extends AbstractActionController {
             'domaines' => $domaines,
             'repartitions' => $repartitions,
         ]);
-
-
     }
 }

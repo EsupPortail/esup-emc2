@@ -391,22 +391,19 @@ class CompetenceController extends AbstractActionController
                     $this->getCompetenceThemeService()->create($theme);
                 }
                 $competence = $this->getCompetenceService()->getCompetenceByIdSource("REFERENS 3", $id);
-                if ($competence === null) {
+                $new_competence = ($competence === null);
+                if ($new_competence) {
                     $competence = new Competence();
-                    $competence->setLibelle($libelle);
-                    if ($definition !== 'Définition en attente' and $definition !== 'Définition non nécessaire') $competence->setDescription($definition); else $competence->setDescription(null);
-                    $competence->setType($types[$registre]);
-                    $competence->setTheme($theme);
-                    $competence->setSource(Competence::SOURCE_REFERENS3);
-                    $competence->setIdSource($id);
+                }
+                $competence->setLibelle($libelle);
+                if ($definition !== 'Définition en attente' and $definition !== 'Définition non nécessaire') $competence->setDescription($definition); else $competence->setDescription(null);
+                $competence->setType($types[$registre]);
+                $competence->setTheme($theme);
+                $competence->setSource(Competence::SOURCE_REFERENS3);
+                $competence->setIdSource($id);
+                if ($new_competence) {
                     $this->getCompetenceService()->create($competence);
                 } else {
-                    $competence->setLibelle($libelle);
-                    if ($definition !== 'Définition en attente' and $definition !== 'Définition non nécessaire') $competence->setDescription($definition); else $competence->setDescription(null);
-                    $competence->setType($types[$registre]);
-                    $competence->setTheme($theme);
-                    $competence->setSource(Competence::SOURCE_REFERENS3);
-                    $competence->setIdSource($id);
                     $this->getCompetenceService()->update($competence);
                 }
             }

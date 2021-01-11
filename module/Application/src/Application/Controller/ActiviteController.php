@@ -115,7 +115,6 @@ class ActiviteController  extends AbstractActionController {
 
     public function detruireAction()
     {
-        /** @var Activite $activite */
         $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
 
         /** @var Request $request */

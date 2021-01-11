@@ -125,7 +125,6 @@ class FicheMetierController extends AbstractActionController
                 $this->getFicheMetierService()->create($fiche);
                 $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
                 $this->getFicheMetierService()->update($fiche);
-//                return $this->redirect()->toRoute('fiche-metier-type/ajouter-terminer', ['fiche' => $fiche], [], true);
             }
         }
 
@@ -137,13 +136,6 @@ class FicheMetierController extends AbstractActionController
         ]);
         return $vm;
     }
-
-//    public function ajouterTerminerAction() {
-//        $fiche =$this->getFicheMetierService()->getRequestedFicheMetier($this);
-//
-//        return new ViewModel(['fiche' => $fiche]);
-//    }
-
 
     public function editerAction()
     {
