@@ -6,7 +6,6 @@ use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteCompetence;
 use Application\Entity\Db\ActiviteFormation;
 use Application\Entity\Db\ActiviteLibelle;
-use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
@@ -332,7 +331,7 @@ class ActiviteService {
 
     /**
      * @param Activite $activite
-     * @param array $data
+     * @param $data
      * @return Activite
      */
     public function updateCompetences(Activite $activite, $data)

@@ -26,7 +26,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function create($mission)
+    public function create(MissionSpecifique $mission)
     {
         $this->createFromTrait($mission);
         return $mission;
@@ -36,7 +36,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function update($mission)
+    public function update(MissionSpecifique $mission)
     {
         $this->updateFromTrait($mission);
         return $mission;
@@ -46,7 +46,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function historise($mission)
+    public function historise(MissionSpecifique $mission)
     {
         $this->historiserFromTrait($mission);
         return $mission;
@@ -56,7 +56,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function restore($mission)
+    public function restore(MissionSpecifique $mission)
     {
         $this->restoreFromTrait($mission);
         return $mission;
@@ -66,7 +66,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function delete($mission)
+    public function delete(MissionSpecifique $mission)
     {
         $this->deleteFromTrait($mission);
         return $mission;
@@ -126,7 +126,7 @@ class MissionSpecifiqueService {
      * @param string $paramName
      * @return MissionSpecifique
      */
-    public function getRequestedMissionSpecifique($controller, $paramName = 'mission')
+    public function getRequestedMissionSpecifique(AbstractActionController $controller, $paramName = 'mission')
     {
         $id = $controller->params()->fromRoute($paramName);
         $mission = $this->getMissionSpecifique($id);
@@ -209,7 +209,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueType $type
      * @return MissionSpecifiqueType
      */
-    public function createType($type)
+    public function createType(MissionSpecifiqueType $type)
     {
         $this->createFromTrait($type);
         return $type;
@@ -219,7 +219,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueType $type
      * @return MissionSpecifiqueType
      */
-    public function updateType($type)
+    public function updateType(MissionSpecifiqueType $type)
     {
         $this->updateFromTrait($type);
         return $type;
@@ -229,7 +229,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueType $type
      * @return MissionSpecifiqueType
      */
-    public function historiseType($type)
+    public function historiseType(MissionSpecifiqueType $type)
     {
         $this->historiserFromTrait($type);
         return $type;
@@ -239,7 +239,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueType $type
      * @return MissionSpecifiqueType
      */
-    public function restoreType($type)
+    public function restoreType(MissionSpecifiqueType $type)
     {
         $this->restoreFromTrait($type);
         return $type;
@@ -249,7 +249,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueType $type
      * @return MissionSpecifiqueType
      */
-    public function deleteType($type)
+    public function deleteType(MissionSpecifiqueType $type)
     {
         $this->deleteFromTrait($type);
         return $type;
@@ -319,7 +319,7 @@ class MissionSpecifiqueService {
      * @param string $paramName
      * @return MissionSpecifiqueType
      */
-    public function getRequestedMissionSpecifiqueType($controller, $paramName = 'type')
+    public function getRequestedMissionSpecifiqueType(AbstractActionController $controller, $paramName = 'type')
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getMissionSpecifiqueType($id);
@@ -334,7 +334,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueTheme $theme
      * @return MissionSpecifiqueTheme
      */
-    public function createTheme($theme)
+    public function createTheme(MissionSpecifiqueTheme $theme)
     {
         $this->createFromTrait($theme);
         return $theme;
@@ -344,7 +344,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueTheme $theme
      * @return MissionSpecifiqueTheme
      */
-    public function updateTheme($theme)
+    public function updateTheme(MissionSpecifiqueTheme $theme)
     {
         $this->updateFromTrait($theme);
         return $theme;
@@ -354,7 +354,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueTheme $theme
      * @return MissionSpecifiqueTheme
      */
-    public function historiseTheme($theme)
+    public function historiseTheme(MissionSpecifiqueTheme $theme)
     {
         $this->historiserFromTrait($theme);
         return $theme;
@@ -364,7 +364,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueTheme $theme
      * @return MissionSpecifiqueTheme
      */
-    public function restoreTheme($theme)
+    public function restoreTheme(MissionSpecifiqueTheme $theme)
     {
         $this->restoreFromTrait($theme);
         return $theme;
@@ -374,7 +374,7 @@ class MissionSpecifiqueService {
      * @param MissionSpecifiqueTheme $theme
      * @return MissionSpecifiqueTheme
      */
-    public function deleteTheme($theme)
+    public function deleteTheme(MissionSpecifiqueTheme $theme)
     {
         $this->deleteFromTrait($theme);
         return $theme;
@@ -443,7 +443,7 @@ class MissionSpecifiqueService {
      * @param string $paramName
      * @return MissionSpecifiqueTheme
      */
-    public function getRequestedMissionSpecifiqueTheme($controller, $paramName = 'theme')
+    public function getRequestedMissionSpecifiqueTheme(AbstractActionController $controller, $paramName = 'theme')
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getMissionSpecifiqueTheme($id);

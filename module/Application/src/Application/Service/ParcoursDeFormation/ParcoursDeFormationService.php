@@ -19,8 +19,6 @@ use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ParcoursDeFormationService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
     use CategorieServiceAwareTrait;
     use MetierServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
@@ -88,7 +86,6 @@ class ParcoursDeFormationService {
             ->addSelect('formationf')->leftJoin('formation.formation', 'formationf')
             ->addSelect('groupe')->leftJoin('formationf.groupe', 'groupe')
         ;
-            ;
         return $qb;
     }
 
@@ -106,10 +103,10 @@ class ParcoursDeFormationService {
     }
 
     /**
-     * @param string $type
+     * @param string|null $type
      * @return ParcoursDeFormation[]
      */
-    public function getParcoursDeFormationsByType($type)
+    public function getParcoursDeFormationsByType(?string $type)
     {
         $qb = $this->createQueryBuilder();
             if ($type !== null) {
@@ -126,7 +123,7 @@ class ParcoursDeFormationService {
      * @param integer $id
      * @return ParcoursDeFormation
      */
-    public function getParcoursDeFormation($id)
+    public function getParcoursDeFormation(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('parcours.id = :id')
@@ -145,7 +142,7 @@ class ParcoursDeFormationService {
      * @param string $param
      * @return ParcoursDeFormation
      */
-    public function getRequestedParcoursDeFormation($controller, $param = 'parcours-de-formation')
+    public function getRequestedParcoursDeFormation(AbstractActionController $controller, $param = 'parcours-de-formation')
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getParcoursDeFormation($id);
@@ -174,7 +171,7 @@ class ParcoursDeFormationService {
      * @param int $reference
      * @return ParcoursDeFormation
      */
-    public function getParcoursDeFormationByTypeAndReference($type, $reference)
+    public function getParcoursDeFormationByTypeAndReference(string $type, int $reference)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("parcours.type = :type")
@@ -196,7 +193,7 @@ class ParcoursDeFormationService {
 
     /**
      * @param FicheMetier $ficheMetier
-     * @param array $array
+     * @param $array
      * @return array
      */
     public function generateParcoursArrayFromFicheMetier(FicheMetier $ficheMetier, &$array = null)
