@@ -2,15 +2,11 @@
 
 namespace Application;
 
-use Application\Controller\DomaineController;
-use Application\Controller\DomaineControllerFactory;
-use Application\Form\Domaine\DomaineForm;
-use Application\Form\Domaine\DomaineFormFactory;
-use Application\Form\Domaine\DomaineHydrator;
-use Application\Form\Domaine\DomaineHydratorFactory;
+use Application\Controller\FamilleProfessionnelleController;
+use Application\Controller\FamilleProfessionnelleControllerFactory;
 use Application\Provider\Privilege\MetierPrivileges;
-use Application\Service\Domaine\DomaineService;
-use Application\Service\Domaine\DomaineServiceFactory;
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -20,7 +16,7 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => DomaineController::class,
+                    'controller' => FamilleProfessionnelleController::class,
                     'action' => [
                         'ajouter',
                     ],
@@ -29,7 +25,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => DomaineController::class,
+                    'controller' => FamilleProfessionnelleController::class,
                     'action' => [
                         'modifier',
                     ],
@@ -38,7 +34,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => DomaineController::class,
+                    'controller' => FamilleProfessionnelleController::class,
                     'action' => [
                         'historiser',
                         'restaurer',
@@ -48,7 +44,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => DomaineController::class,
+                    'controller' => FamilleProfessionnelleController::class,
                     'action' => [
                         'effacer',
                     ],
@@ -62,25 +58,22 @@ return [
 
     'router'          => [
         'routes' => [
-            'domaine' => [
+            'famille-professionnelle' => [
                 'type'  => Literal::class,
                 'options' => [
-                    'route'    => '/domaine',
+                    'route'    => '/famille-professionnelle',
                     'defaults' => [
-                        'controller' => DomaineController::class,
+                        'controller' => FamilleProfessionnelleController::class,
                     ],
                 ],
                 'may_terminate' => false,
                 'child_routes' => [
-
-                    /** DOMAINE ***************************************************************************************/
-
                     'ajouter' => [
                         'type'  => Literal::class,
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
-                                'controller' => DomaineController::class,
+                                'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -88,9 +81,9 @@ return [
                     'modifier' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier/:domaine',
+                            'route'    => '/modifier/:famille-professionnelle',
                             'defaults' => [
-                                'controller' => DomaineController::class,
+                                'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'modifier',
                             ],
                         ],
@@ -98,9 +91,9 @@ return [
                     'historiser' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/historiser/:domaine',
+                            'route'    => '/historiser-famille/:famille-professionnelle',
                             'defaults' => [
-                                'controller' => DomaineController::class,
+                                'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -108,9 +101,9 @@ return [
                     'restaurer' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer/:domaine',
+                            'route'    => '/restaurer-famille/:famille-professionnelle',
                             'defaults' => [
-                                'controller' => DomaineController::class,
+                                'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -118,9 +111,9 @@ return [
                     'effacer' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/effacer/:domaine',
+                            'route'    => '/effacer-famille/:famille-professionnelle',
                             'defaults' => [
-                                'controller' => DomaineController::class,
+                                'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'effacer',
                             ],
                         ],
@@ -132,22 +125,20 @@ return [
 
     'service_manager' => [
         'factories' => [
-            DomaineService::class => DomaineServiceFactory::class,
+            FamilleProfessionnelleService::class => FamilleProfessionnelleServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            DomaineController::class => DomaineControllerFactory::class,
+            FamilleProfessionnelleController::class => FamilleProfessionnelleControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            DomaineForm::class => DomaineFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            DomaineHydrator::class => DomaineHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

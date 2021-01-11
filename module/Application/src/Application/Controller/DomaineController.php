@@ -98,7 +98,6 @@ class DomaineController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getDomaineService()->delete($domaine);
-            //return $this->redirect()->toRoute('home');
             exit();
         }
 

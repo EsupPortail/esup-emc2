@@ -24,8 +24,8 @@ $canEffacer        = $droits["effacer"];
         <br/>
         <?php if ($canAjouter) : ?>
             <a
-                <?php /** @see \Application\Controller\MetierController::ajouterFamilleAction() */?>
-                href="<?php echo $this->url('metier/ajouter-famille', [], [], true);?>"
+                <?php /** @see \Application\Controller\FamilleProfessionnelleController::ajouterAction() */?>
+                href="<?php echo $this->url('famille-professionnelle/ajouter', [], [], true);?>"
                 class="btn btn-primary action ajax-modal"
                 data-event="modification"
             >
@@ -55,8 +55,8 @@ $canEffacer        = $droits["effacer"];
             <td>
                 <?php if ($canEditer) : ?>
                     <a
-                        <?php /** @see \Application\Controller\MetierController::modifierFamilleAction() */?>
-                        href="<?php echo $this->url('metier/modifier-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        <?php /** @see \Application\Controller\FamilleProfessionnelleController::modifierAction() */?>
+                        href="<?php echo $this->url('famille-professionnelle/modifier', ['famille-professionnelle' => $famille->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"
                     >
@@ -64,21 +64,21 @@ $canEffacer        = $droits["effacer"];
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($famille->estNonHistorise()) : ?>
-                        <a  <?php /** @see \Application\Controller\MetierController::historiserFamilleAction() */ ?>
-                            href="<?php echo $this->url('metier/historiser-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        <a  <?php /** @see \Application\Controller\FamilleProfessionnelleController::historiserAction() */ ?>
+                            href="<?php echo $this->url('famille-professionnelle/historiser', ['famille-professionnelle' => $famille->getId()], [], true); ?>"
                         >
                             <span class="icon historiser" title="Historiser la famille professionnelle"></span></a>
                     <?php else : ?>
-                        <a  <?php /** @see \Application\Controller\MetierController::restaurerFamilleAction() */ ?>
-                            href="<?php echo $this->url('metier/restaurer-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        <a  <?php /** @see \Application\Controller\FamilleProfessionnelleController::restaurerAction() */ ?>
+                            href="<?php echo $this->url('famille-professionnelle/restaurer', ['famille-professionnelle' => $famille->getId()], [], true); ?>"
                         >
                             <span class="icon restaurer" title="Restaurer la famille professionnelle"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
                     <a
-                        <?php /** @see \Application\Controller\MetierController::effacerFamilleAction() */?>
-                        href="<?php echo $this->url('metier/effacer-famille', ['famille' => $famille->getId()], [], true); ?>"
+                        <?php /** @see \Application\Controller\FamilleProfessionnelleController::effacerAction() */?>
+                        href="<?php echo $this->url('famille-professionnelle/effacer', ['famille-professionnelle' => $famille->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
                         <span class="icon detruire"  title="Supprimer la famille professionnelle"></span></a>

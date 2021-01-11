@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\MetierReference;
 use Application\Entity\Db\MetierReferentiel;
@@ -10,8 +9,7 @@ use Application\Form\Metier\MetierForm;
 use Application\Form\Metier\MetierFormAwareTrait;
 use Application\Form\MetierReference\MetierReferenceFormAwareTrait;
 use Application\Form\MetierReferentiel\MetierReferentielFormAwareTrait;
-use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\MetierReference\MetierReferenceServiceAwareTrait;
@@ -23,13 +21,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class MetierController extends AbstractActionController {
+    use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
     use MetierReferenceServiceAwareTrait;
     use MetierReferentielServiceAwareTrait;
 
     use MetierFormAwareTrait;
-    use ModifierLibelleFormAwareTrait;
     use MetierReferentielFormAwareTrait;
     use MetierReferenceFormAwareTrait;
 
@@ -46,111 +44,6 @@ class MetierController extends AbstractActionController {
             'domaines' => $domaines,
             'referentiels' => $referentiels,
         ]);
-    }
-
-    /** FAMILLE PROFESSIONNELLE ***************************************************************************************/
-
-    public function ajouterFamilleAction()
-    {
-        $famille = new FamilleProfessionnelle();
-
-        /** @var ModifierLibelleForm $form */
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('metier/ajouter-famille', [], [], true));
-        $form->bind($famille);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFamilleProfessionnelleService()->create($famille);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Ajouter une nouvelle famille de métiers',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierFamilleAction()
-    {
-        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
-
-        /** @var ModifierLibelleForm $form */
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-famille', ['famille' => $famille->getId()], [], true));
-        $form->bind($famille);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFamilleProfessionnelleService()->update($famille);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier une famille de métiers',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserFamilleAction()
-    {
-        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
-
-        if ($famille !== null) {
-            $this->getFamilleProfessionnelleService()->historise($famille);
-        }
-
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'famille'], true);
-    }
-
-    public function restaurerFamilleAction()
-    {
-        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
-
-        if ($famille !== null) {
-            $this->getFamilleProfessionnelleService()->restore($famille);
-        }
-
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'famille'], true);
-    }
-
-    public function effacerFamilleAction()
-    {
-        $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getFamilleProfessionnelleService()->delete($famille);
-            //return $this->redirect()->toRoute('home');
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($famille !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de la famille professionnelle" . $famille->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('metier/effacer-famille', ["famille" => $famille->getId()], [], true),
-            ]);
-        }
-        return $vm;
     }
 
     /** METIER ********************************************************************************************************/

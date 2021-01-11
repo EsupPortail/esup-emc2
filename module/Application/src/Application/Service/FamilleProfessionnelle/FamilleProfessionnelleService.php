@@ -131,7 +131,7 @@ class FamilleProfessionnelleService {
      * @param string $paramName
      * @return FamilleProfessionnelle
      */
-    public function getRequestedFamilleProfessionnelle($controller, $paramName = 'famille')
+    public function getRequestedFamilleProfessionnelle(AbstractActionController $controller, $paramName = 'famille-professionnelle')
     {
         $id = $controller->params()->fromRoute($paramName);
         $famille = $this->getFamilleProfessionnelle($id);
