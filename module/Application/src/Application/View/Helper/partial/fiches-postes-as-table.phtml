@@ -78,6 +78,10 @@ if ($retour)    $query['retour'] = $retour;
                 <td>
                     <?php if ($fiche->getFicheTypeExternePrincipale()) : ?>
                         <?php echo $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle(); ?>
+                        <?php if ($fiche->getLibelle() !== null) : ?>
+                            <br/>
+                            <?php echo $fiche->getLibelle(); ?>
+                        <?php endif; ?>
                     <?php else :?>
                         <span class="probleme">
                            <span class='icon attention'></span>
