@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-use Application\Form\AgentCompetence\AgentCompetenceForm;
 use Application\Form\AgentFormation\AgentFormationForm;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
@@ -65,13 +64,11 @@ class AgentControllerFactory {
         /**
          * @var ApplicationElementForm $applicationElementForm
          * @var CompetenceElementForm $competenceElementForm
-         * @var AgentCompetenceForm $agentCompetenceForm
          * @var AgentFormationForm $agentFormationForm
          * @var UploadForm $uploadForm
          */
         $applicationElementForm = $container->get('FormElementManager')->get(ApplicationElementForm::class);
         $competenceElementForm = $container->get('FormElementManager')->get(CompetenceElementForm::class);
-        $agentCompetenceForm = $container->get('FormElementManager')->get(AgentCompetenceForm::class);
         $agentFormationForm = $container->get('FormElementManager')->get(AgentFormationForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
@@ -96,7 +93,6 @@ class AgentControllerFactory {
 
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);
-        $controller->setAgentCompetenceForm($agentCompetenceForm);
         $controller->setAgentFormationForm($agentFormationForm);
         $controller->setUploadForm($uploadForm);
 

@@ -7,7 +7,6 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\CompetenceElement;
-use Application\Form\AgentCompetence\AgentCompetenceFormAwareTrait;
 use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
@@ -60,7 +59,6 @@ class AgentController extends AbstractActionController
 
     use ApplicationElementFormAwareTrait;
     use CompetenceElementFormAwareTrait;
-    use AgentCompetenceFormAwareTrait;
     use AgentFormationFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
@@ -488,7 +486,7 @@ class AgentController extends AbstractActionController
                 $elementText = "l'application [" . $entity->getApplication()->getLibelle() . "]";
                 break;
             case 'AgentCompetence' :
-                $entity = $this->getAgentService()->getAgentCompetence($entityId);
+                $entity = $this->getCompetenceElementService()->getCompetenceElement($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_COMPETENCE");
                 $elementText = "la compétence [" . $entity->getCompetence()->getLibelle() . "]";
                 break;

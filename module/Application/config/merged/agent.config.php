@@ -6,10 +6,6 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
-use Application\Form\AgentCompetence\AgentCompetenceForm;
-use Application\Form\AgentCompetence\AgentCompetenceFormFactory;
-use Application\Form\AgentCompetence\AgentCompetenceHydrator;
-use Application\Form\AgentCompetence\AgentCompetenceHydratorFactory;
 use Application\Form\AgentFormation\AgentFormationForm;
 use Application\Form\AgentFormation\AgentFormationFormFactory;
 use Application\Form\AgentFormation\AgentFormationHydrator;
@@ -508,14 +504,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentCompetenceForm::class => AgentCompetenceFormFactory::class,
             AgentFormationForm::class => AgentFormationFormFactory::class,
             SelectionAgentForm::class => SelectionAgentFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            AgentCompetenceHydrator::class => AgentCompetenceHydratorFactory::class,
             AgentFormationHydrator::class => AgentFormationHydratorFactory::class,
             SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
         ],

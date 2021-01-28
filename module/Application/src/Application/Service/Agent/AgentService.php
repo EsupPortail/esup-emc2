@@ -3,7 +3,6 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentCompetence;
 use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Structure;
@@ -254,7 +253,7 @@ class AgentService {
             ->setParameter('false', 'N')
             ->orderBy('agent.nomUsuel, agent.prenom')
             ->andWhere('agent.delete IS NULL');
-        ;
+
         if ($structure !== null && $sousstructure === true) {
             $qb1 = $qb1->andWhere('grade.structure = :structure OR structure.parent = :structure')
                      ->setParameter('structure', $structure);
@@ -303,7 +302,7 @@ class AgentService {
 
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
             ->addSelect('poste')->leftJoin('ficheposte.poste', 'poste')
-            ->andWhere('agent.delete IS NULL');
+            ->andWhere('agent.delete IS NULL')
         ;
 
         if ($structures !== null) {
@@ -334,88 +333,6 @@ class AgentService {
         }
 
         return null;
-    }
-
-    /** AgentCompetence ***********************************************************************************************/
-
-    /**
-     * @param integer $id
-     * @return AgentCompetence
-     */
-    public function getAgentCompetence(int $id)
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentCompetence::class)->createQueryBuilder('competence')
-            ->andWhere('competence.id = :id')
-            ->setParameter('id', $id)
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Plusieurs AgentCompetence partagent le même identifiant [". $id ."].", $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return AgentCompetence
-     */
-    public function getRequestedAgentCompetence(AbstractActionController $controller, $paramName = 'agent-competence')
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $result = $this->getAgentCompetence($id);
-        return $result;
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return AgentCompetence
-     */
-    public function createAgentCompetence(AgentCompetence $competence)
-    {
-        $this->createFromTrait($competence);
-        return $competence;
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return AgentCompetence
-     */
-    public function updateAgentCompetence(AgentCompetence $competence)
-    {
-        $this->updateFromTrait($competence);
-        return $competence;
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return AgentCompetence
-     */
-    public function historiserAgentCompetence(AgentCompetence $competence)
-    {
-        $this->historiserFromTrait($competence);
-        return $competence;
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return AgentCompetence
-     */
-    public function restoreAgentCompetence(AgentCompetence $competence)
-    {
-        $this->restoreFromTrait($competence);
-        return $competence;
-    }
-
-    /**
-     * @param AgentCompetence $competence
-     * @return AgentCompetence
-     */
-    public function deleteAgentCompetence(AgentCompetence $competence)
-    {
-        $this->deleteFromTrait($competence);
-        return $competence;
     }
 
     /** AgentFormation ************************************************************************************************/
