@@ -14,8 +14,6 @@ use Application\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwar
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Application\Service\MetierReference\MetierReferenceServiceAwareTrait;
 use Application\Service\MetierReferentiel\MetierReferentielServiceAwareTrait;
-use DateTime;
-use UnicaenApp\View\Model\CsvModel;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -36,7 +34,6 @@ class MetierController extends AbstractActionController {
         $domaines = $this->getDomaineService()->getDomaines();
         $metiers = $this->getMetierService()->getMetiers();
         $referentiels = $this->getMetierReferentielService()->getMetiersReferentiels();
-
 
         return new ViewModel([
             'metiers' => $metiers,
@@ -67,12 +64,11 @@ class MetierController extends AbstractActionController {
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        $vm = new ViewModel([
             'title' => 'Ajouter un nouveau métier',
             'form' => $form,
         ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 
@@ -95,12 +91,11 @@ class MetierController extends AbstractActionController {
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        $vm = new ViewModel([
             'title' => 'Modifier un métier',
             'form' => $form,
         ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 
@@ -136,7 +131,6 @@ class MetierController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getMetierService()->delete($metier);
-            //return $this->redirect()->toRoute('home');
             exit();
         }
 
@@ -181,12 +175,11 @@ class MetierController extends AbstractActionController {
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        $vm = new ViewModel([
             'title' => "Ajout d'un référentiel métier",
             'form' => $form,
         ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 
@@ -207,12 +200,11 @@ class MetierController extends AbstractActionController {
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        $vm = new ViewModel([
             'title' => "Modification d'un référentiel métier",
             'form' => $form,
         ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 
@@ -239,7 +231,6 @@ class MetierController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getMetierReferentielService()->delete($referentiel);
-            //return $this->redirect()->toRoute('home');
             exit();
         }
 
@@ -276,12 +267,11 @@ class MetierController extends AbstractActionController {
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        $vm = new ViewModel([
             'title' => "Ajout d'une référence",
             'form' => $form,
         ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 
@@ -302,12 +292,11 @@ class MetierController extends AbstractActionController {
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        $vm = new ViewModel([
             'title' => "Modification d'une référence métier",
             'form' => $form,
         ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 
@@ -334,7 +323,6 @@ class MetierController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") $this->getMetierReferenceService()->delete($reference);
-            //return $this->redirect()->toRoute('home');
             exit();
         }
 
