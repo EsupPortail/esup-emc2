@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @var Agent $agent
+ * @var array $parcoursArray ('type' => ParcoursDeFormation[])
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\ParcoursDeFormation;
+use Application\Provider\Privilege\AgentPrivileges;
+
+$canValidate = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+?>
+
+<?php if (!empty($parcoursArray[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
+
+<!--    <h3>Parcours de formation de catégories professionnelles </h3>-->
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+    <?php foreach ($parcoursArray[ParcoursDeFormation::TYPE_CATEGORIE] as $parcours) : ?>
+        <?php echo $this->parcoursDeFormation($parcours, $agent, ['mode' => 'modification', 'modification' => $canValidate]); ?>
+    <?php endforeach; ?>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+<?php endif; ?>
+
+<?php if (!empty($parcoursArray[ParcoursDeFormation::TYPE_DOMAINE])) : ?>
+
+<!--    <h3>Parcours de formation de domaines </h3>-->
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+    <?php foreach ($parcoursArray[ParcoursDeFormation::TYPE_DOMAINE] as $parcours) : ?>
+        <?php echo $this->parcoursDeFormation($parcours, $agent, ['mode' => 'modification', 'modification' => $canValidate]); ?>
+    <?php endforeach; ?>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+<?php endif; ?>
+
+<?php if (!empty($parcoursArray[ParcoursDeFormation::TYPE_METIER])) : ?>
+
+<!--    <h3>Parcours de formation de métier </h3>-->
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+    <?php foreach ($parcoursArray[ParcoursDeFormation::TYPE_METIER] as $parcours) : ?>
+        <?php echo $this->parcoursDeFormation($parcours, $agent, ['mode' => 'modification', 'modification' => $canValidate ]); ?>
+    <?php endforeach; ?>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+<?php endif; ?>

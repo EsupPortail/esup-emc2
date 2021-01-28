@@ -25,11 +25,18 @@ class ParcoursDeFormationController extends AbstractActionController
 
     public function indexAction()
     {
+        $result = [];
+        $parcours = $this->getParcoursDeFormationService()->getParcoursDeFormations();
+        foreach ($parcours as $parcour) {
+            $result[($parcour->getType())?:""][] = $parcour;
+        }
+
         $parcoursCategorie = $this->getParcoursDeFormationService()->getParcoursDeFormationsByType(ParcoursDeFormation::TYPE_CATEGORIE);
         $parcoursMetier = $this->getParcoursDeFormationService()->getParcoursDeFormationsByType(ParcoursDeFormation::TYPE_METIER);
         $parcoursVide = $this->getParcoursDeFormationService()->getParcoursDeFormationsByType(null);
 
         return new ViewModel([
+            'parcours' => $result,
             'parcoursCategorie' => $parcoursCategorie,
             'parcoursMetier' => $parcoursMetier,
             'parcoursVide' => $parcoursVide,

@@ -18,6 +18,7 @@ class ModifierRattachementHydrator implements HydratorInterface {
         ];
 
         if ($object->getType() === ParcoursDeFormation::TYPE_CATEGORIE) $data['categorie'] = $object->getReference();
+        if ($object->getType() === ParcoursDeFormation::TYPE_DOMAINE) $data['domaine'] = $object->getReference();
         if ($object->getType() === ParcoursDeFormation::TYPE_METIER) $data['metier'] = $object->getReference();
 
         return $data;
@@ -34,6 +35,7 @@ class ModifierRattachementHydrator implements HydratorInterface {
 
         $reference = null;
         if ($type ===  ParcoursDeFormation::TYPE_CATEGORIE) $reference = $data['categorie'];
+        if ($type ===  ParcoursDeFormation::TYPE_DOMAINE) $reference = $data['domaine'];
         if ($type ===  ParcoursDeFormation::TYPE_METIER) $reference = $data['metier'];
 
         $object->setType($type);

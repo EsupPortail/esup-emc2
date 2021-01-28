@@ -2,6 +2,7 @@
 
 /**
  * @see \Application\Controller\ParcoursDeFormationController::indexAction()
+ * @var array $parcours ( type:string => ParcoursDeFormation[] )
  * @var ParcoursDeFormation[] $parcoursCategorie
  * @var ParcoursDeFormation[] $parcoursMetier
  * @var ParcoursDeFormation[] $parcoursVide
@@ -11,6 +12,12 @@ use Application\Entity\Db\ParcoursDeFormation;
 
 $droits = [];
 
+$typeLabel = [
+        ParcoursDeFormation::TYPE_METIER => 'metier',
+        ParcoursDeFormation::TYPE_DOMAINE => 'domaine',
+        ParcoursDeFormation::TYPE_CATEGORIE => 'categorie',
+        null => 'sans',
+]
 ?>
 
 <h1 class="page-header">
@@ -19,49 +26,29 @@ $droits = [];
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="categorie">
-            <a href="#categorie" aria-controls="categorie" role="tab" data-toggle="tabz" >
-                Parcours de formation <br/>
-                Catégorie &nbsp;
-                <span class="badge">
-                    <?php echo count($parcoursCategorie); ?>
+        <?php foreach($parcours as $type => $listing) : ?>
+            <li>
+                <a href="#<?php echo $typeLabel[$type] ?>" aria-controls="<?php echo $typeLabel[$type]; ?>" role="tab" data-toggle="tabz" >
+                    Parcours de formation <br/>
+                    <?php echo ($type)?:"Sans référence"; ?> &nbsp;
+                    <span class="badge">
+                    <?php echo count($listing); ?>
                 </span>
-            </a>
-        </li>
-        <li role="metier">
-            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz">
-                Parcours de formation <br/>
-                Métier &nbsp;
-                <span class="badge">
-                    <?php echo count($parcoursMetier); ?>
-                </span>
-            </a>
-        </li>
-        <li role="vide">
-            <a href="#vide" aria-controls="vide" role="tab" data-toggle="tabz">
-                Parcours de formation <br/>
-                Sans référence &nbsp;
-                <span class="badge">
-                    <?php echo count($parcoursVide); ?>
-                </span>
-            </a>
-        </li>
+                </a>
+            </li>
+        <?php endforeach; ?>
     </ul>
 
     <div class="main-with-tab">
 
         <div class="tab-content">
 
-            <div id="categorie" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursCategorie, 'type' => ParcoursDeFormation::TYPE_CATEGORIE, 'droits' => $droits], [], true); ?>
-            </div>
-            <div id="metier" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursMetier, 'type' => ParcoursDeFormation::TYPE_METIER, 'droits' => $droits], [], true); ?>
-            </div>
-            <div id="vide" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-parcours', ['parcours' => $parcoursVide, 'type' => null, 'droits' => $droits], [], true); ?>
-            </div>
-
+            <?php foreach ($parcours as $type => $listing) : ?>
+                <?php $typeLibelle = ($type)?:"Sans référence"; ?>
+                <div id="<?php echo $typeLabel[$type]; ?>" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/index-parcours', ['parcours' => $listing, 'type' => $type, 'droits' => $droits], [], true); ?>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>

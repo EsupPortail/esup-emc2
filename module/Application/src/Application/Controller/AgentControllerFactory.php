@@ -8,10 +8,12 @@ use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\ApplicationElement\ApplicationElementService;
+use Application\Service\Categorie\CategorieService;
 use Application\Service\CompetenceElement\CompetenceElementService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\Structure\StructureService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
@@ -30,9 +32,11 @@ class AgentControllerFactory {
          * @var AgentService $agentService
          * @var ApplicationElementService $applicationElementService
          * @var HasApplicationCollectionService $hasApplicationCollectionService
+         * @var CategorieService $categorieService
          * @var CompetenceElementService $competenceElementService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var EntretienProfessionnelService $entretienService
+         * @var ParcoursDeFormationService $parcoursService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
 
@@ -47,7 +51,9 @@ class AgentControllerFactory {
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
+        $categorieService = $container->get(CategorieService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
+        $parcoursService = $container->get(ParcoursDeFormationService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
         $natureService = $container->get(NatureService::class);
@@ -74,6 +80,8 @@ class AgentControllerFactory {
 
         $controller->setAgentService($agentService);
         $controller->setApplicationElementService($applicationElementService);
+        $controller->setCategorieService($categorieService);
+        $controller->setParcoursDeFormationService($parcoursService);
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setHasCompetenceCollectionService($hasCompetenceCollectionService);

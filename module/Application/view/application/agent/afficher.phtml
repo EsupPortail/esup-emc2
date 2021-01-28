@@ -10,6 +10,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var Agent   $agent
  * @var EntretienProfessionnel[] $entretiens
  * @var User[]  $responsables
+ * @var array $parcoursArray
  */
 
 $canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
@@ -145,6 +146,23 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     , []); ?>
 
     <?php echo $this->partial('partial/mission-specifique', ['missions' => $agent->getMissionsSpecifiques(), 'agent' => $agent,  "droits" => $droits], []); ?>
+
+    <!-- Parcours de formation -------------------------------------------------------------------------------------------->
+
+    <h2>
+        Parcours de formation
+    </h2>
+
+    <div class="alert alert-info">
+        <strong><span class="icon attention"></span> Affichage des parcours de formations attachés à votre catégorie, domaines professionnels et métier.</strong> <br/>
+        Il est possible qu'un domaine ou un métier ne possède pas de parcours.
+
+    </div>
+
+    <?php
+    echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true);
+    ?>
+
 
     <h2> Applications, compétences et formations</h2>
 

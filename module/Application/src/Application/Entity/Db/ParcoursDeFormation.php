@@ -12,6 +12,7 @@ class ParcoursDeFormation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     const TYPE_CATEGORIE = 'Catégorie';
+    const TYPE_DOMAINE = 'Domaine';
     const TYPE_METIER    = 'Métier';
 
     /** @var integer */

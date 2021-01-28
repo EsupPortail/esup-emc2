@@ -54,16 +54,18 @@ class AgentService {
             //applications liées à l'agent
             ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
             ->addSelect('application')->leftJoin('agentapplication.application', 'application')
+            ->addSelect('fapplication')->leftJoin('agentapplication.validation', 'fapplication')
             //competences liées à l'agent
             ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
             ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
             ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
             ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
+            ->addSelect('fcompetence')->leftJoin('agentcompetence.validation', 'fcompetence')
             //formations liées à l'agent
             ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
             ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
             ->addSelect('formation_theme')->leftJoin('formation.theme', 'formation_theme')
-
+            ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
             //missions spécifiques
             ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
             ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')

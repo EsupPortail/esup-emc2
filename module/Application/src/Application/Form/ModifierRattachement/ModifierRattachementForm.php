@@ -4,6 +4,7 @@ namespace Application\Form\ModifierRattachement;
 
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -15,6 +16,7 @@ class ModifierRattachementForm extends Form
 {
     use CategorieServiceAwareTrait;
     use MetierServiceAwareTrait;
+    use DomaineServiceAwareTrait;
 
     public function init()
     {
@@ -26,6 +28,7 @@ class ModifierRattachementForm extends Form
                 'empty_option' => "Sélectionner un type de parcours  ...",
                 'value_options' => [
                     ParcoursDeFormation::TYPE_CATEGORIE => ParcoursDeFormation::TYPE_CATEGORIE,
+                    ParcoursDeFormation::TYPE_DOMAINE => ParcoursDeFormation::TYPE_DOMAINE,
                     ParcoursDeFormation::TYPE_METIER => ParcoursDeFormation::TYPE_METIER,
                 ],
             ],
@@ -40,7 +43,7 @@ class ModifierRattachementForm extends Form
             'type' => Select::class,
             'name' => 'categorie',
             'options' => [
-                'label' => "Catégorie (laisser vide si concerne un métier) :",
+                'label' => "Catégorie (laisser vide si concerne un domaine ou un métier) :",
                 'empty_option' => "Sélectionner une catégorie ...",
                 'value_options' => $this->getCategorieService()->getCategorieAsOption(),
             ],
@@ -53,9 +56,24 @@ class ModifierRattachementForm extends Form
 
         $this->add([
             'type' => Select::class,
+            'name' => 'domaine',
+            'options' => [
+                'label' => "Domaine (laisser vide si concerne une catégorie ou un métier) :",
+                'empty_option' => "Sélectionner un domaine ...",
+                'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'Select',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
+
+        $this->add([
+            'type' => Select::class,
             'name' => 'metier',
             'options' => [
-                'label' => "Métier (laisser vide si concerne une catégorie) :",
+                'label' => "Métier (laisser vide si concerne une catégorie ou un domaine) :",
                 'empty_option' => "Sélectionner un métier ...",
                 'value_options' => $this->getMetierService()->getMetiersTypesAsMultiOptions(),
             ],
@@ -102,6 +120,7 @@ class ModifierRattachementForm extends Form
                 ]],
             ],
             'metier'             => [ 'required' => false, ],
+            'domaine'             => [ 'required' => false, ],
             'categorie'          => [ 'required' => false, ],
         ]));
     }

@@ -1,8 +1,7 @@
 <?php
 
 use Application\Entity\Db\Categorie;
-use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationGroupe;
+use Application\Entity\Db\Domaine;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -10,7 +9,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
 /**
  * @see \Application\Controller\ParcoursDeFormationController::modifierAction()
  * @var ParcoursDeFormation $parcours
- * @var Categorie|Metier $reference
+ * @var Categorie|Domaine|Metier $reference
  */
 
 $canModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));

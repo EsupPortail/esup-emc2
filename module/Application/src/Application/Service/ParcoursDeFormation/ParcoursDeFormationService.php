@@ -3,12 +3,14 @@
 namespace Application\Service\ParcoursDeFormation;
 
 use Application\Entity\Db\Categorie;
+use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\ParcoursDeFormationFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
+use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -20,6 +22,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class ParcoursDeFormationService {
     use CategorieServiceAwareTrait;
+    use DomaineServiceAwareTrait;
     use MetierServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
@@ -151,13 +154,17 @@ class ParcoursDeFormationService {
 
     /**
      * @param ParcoursDeFormation $parcours
-     * @return Categorie|Metier
+     * @return Categorie|Domaine|Metier
      */
     public function getReference(ParcoursDeFormation $parcours)
     {
         if ($parcours->getType() === ParcoursDeFormation::TYPE_CATEGORIE) {
             $categorie = $this->getCategorieService()->getCategorie($parcours->getReference());
             return $categorie;
+        }
+        if ($parcours->getType() === ParcoursDeFormation::TYPE_DOMAINE) {
+            $domaine = $this->getDomaineService()->getDomaine($parcours->getReference());
+            return $domaine;
         }
         if ($parcours->getType() === ParcoursDeFormation::TYPE_METIER) {
             $metier = $this->getMetierService()->getMetier($parcours->getReference());
@@ -201,10 +208,17 @@ class ParcoursDeFormationService {
         if ($array === null) $array = [];
         $metier = $ficheMetier->getMetier();
         $categorie = ($metier)?$metier->getCategorie():null;
+        $domaines = ($metier)?$metier->getDomaines():null;
 
         if ($metier !== null) {
             $parcours = $this->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_METIER, $metier->getId());
             if ($parcours !== null) $array[ParcoursDeFormation::TYPE_METIER][$metier->getId()] = $parcours;
+        }
+        if ($domaines !== null) {
+            foreach ($domaines as $domaine) {
+                $parcours = $this->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_DOMAINE, $domaine->getId());
+                if ($parcours !== null) $array[ParcoursDeFormation::TYPE_DOMAINE][$domaine->getId()] = $parcours;
+            }
         }
         if ($categorie !== null) {
             $parcours = $this->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $categorie->getId());

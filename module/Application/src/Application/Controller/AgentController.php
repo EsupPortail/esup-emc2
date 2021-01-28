@@ -16,10 +16,12 @@ use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Fichier\Entity\Db\Fichier;
@@ -51,6 +53,8 @@ class AgentController extends AbstractActionController
     use NatureServiceAwareTrait;
     use FichierServiceAwareTrait;
     use FormationServiceAwareTrait;
+    use CategorieServiceAwareTrait;
+    use ParcoursDeFormationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -82,12 +86,14 @@ class AgentController extends AbstractActionController
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
         $responsables = $this->getAgentService()->getClosestResponsablesByAgent($agent);
+        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
             'entretiens' => $entretiens,
             'responsables' => $responsables,
+            'parcoursArray' => $parcoursArray,
         ]);
     }
 
