@@ -19,6 +19,7 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwa
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Application\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
+use DateTime;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -446,7 +447,7 @@ class StructureController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
 
-        $filename = "strcuture" . ".csv";
+        $filename = "listing_fiche_poste_-_" . str_replace(" ","_",$structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
         $header = ["Agent", "Fiche metier principale", "Complement"];
 
         $result = [];
