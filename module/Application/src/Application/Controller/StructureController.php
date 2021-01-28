@@ -20,6 +20,7 @@ use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Application\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -434,6 +435,44 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
+    /** EXTRACTIONS ***************************************************************************************************/
+
+    /**
+     * Extraction du listing des agents et des fiches de poste associées
+     */
+    public function extractionListingFichePosteAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+
+        $filename = "strcuture" . ".csv";
+        $header = ["Agent", "Fiche metier principale", "Complement"];
+
+        $result = [];
+        foreach ($agents as $agent) {
+            $denomination = $agent->getDenomination();
+            $fiche = "";
+            $complement = "";
+
+            $ficheposte = $agent->getFichePosteActif();
+            if ($ficheposte !== null) {
+                $fiche = $ficheposte->getLibelleMetierPrincipal();
+                $complement = $ficheposte->getLibelle();
+            }
+
+            $result[] = [$denomination, $fiche, $complement];
+        }
+
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($header);
+        $CSV->setData($result);
+        $CSV->setFilename($filename);
+        return $CSV;
+
+    }
     /** AUTRE FONCTIONS */
 
 //    public function grapheAction() {

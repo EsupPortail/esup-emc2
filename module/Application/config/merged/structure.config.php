@@ -49,6 +49,7 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'index',
+                        'extraction-listing-fiche-poste',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_INDEX,
                 ],
@@ -291,6 +292,32 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
+                    ],
+
+                    /** Extraction  */
+                    'extraction' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/extraction',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                            ],
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'listing-fiche-poste' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/listing-fiche-poste/:structure',
+                                    'defaults' => [
+                                        'controller' => StructureController::class,
+                                        'action'     => 'extraction-listing-fiche-poste',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [],
+                            ],
+                        ],
                     ],
                 ],
             ],

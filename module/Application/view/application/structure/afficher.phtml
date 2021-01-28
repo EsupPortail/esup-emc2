@@ -107,8 +107,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <li role="extraction">
                     <a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tabz" >
-                        Extractions  <br/>
-                        <span class="todo">TODO</span>
+                        Extractions  <br/> &nbsp;
                     </a>
                 </li>
             </ul>
@@ -179,8 +178,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <!-- Extraction ------------------------------------------------------------------------------------->
                 <div id="extraction" class="tab-pane " role="tabpanel">
-
-                    À venir
+                    <?php echo $this->partial('partial/extraction', ['structure' => $structure]); ?>
                 </div>
             </div>
         </div>
