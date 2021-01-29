@@ -2,10 +2,9 @@
 
 /**
  * @var EntretienProfessionnel $entretien
- * @var AgentFormation[] $formations
+ * @var FormationElement[] $formations
  */
 
-use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\EntretienProfessionnel;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
@@ -181,7 +180,7 @@ foreach ($responses as $response) {
 <ul>
     <?php /** @var FormationElement $formation */ ?>
     <?php foreach ($formations as $formation) : ?>
-        <li><?php echo $formation->getFormation()->getLibelle(); ?> -  <?php echo $formation->getDate()->format('d/m/Y'); ?></li>
+        <li><?php echo $formation->getFormation()->getLibelle(); ?> -  <?php echo $formation->getCommentaire(); ?></li>
     <?php endforeach; ?>
 </ul>
 <?php else :  ?>
