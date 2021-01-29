@@ -256,7 +256,7 @@ class ParcoursDeFormationService {
         $qb = $this->getEntityManager()->getRepository(ParcoursDeFormationFormation::class)->createQueryBuilder('pdff')
             ->addSelect('parcours')->join('pdff.parcours', 'parcours')
             ->addSelect('formation')->join('pdff.formation', 'formation')
-            ->addSelect('groupe')->join('formation.groupe', 'groupe')
+            ->addSelect('groupe')->leftjoin('formation.groupe', 'groupe')
             ->andWhere('pdff.id = :id')
             ->setParameter('id', $id)
         ;

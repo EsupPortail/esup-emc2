@@ -192,11 +192,12 @@ usort($formationArray,
                             <span class="icon monter" style="color:white;"></span>
                             <span class="icon descendre" style="color:white;"></span>
                         <?php endif; ?>
-                            <?php /** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
-                            <a href="<?php echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formation->getId()], [], true); ?>"
-                            >
-                                <span class="icon detruire" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>
-                            </a>
+
+                        <?php /** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
+                        <a href="<?php echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formationP->getId()], [], true); ?>"
+                        >
+                            <span class="icon detruire" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>
+                        </a>
 
                     <?php endif; ?>
                 </td>

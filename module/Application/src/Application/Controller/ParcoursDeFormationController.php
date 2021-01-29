@@ -163,7 +163,6 @@ class ParcoursDeFormationController extends AbstractActionController
         $formation = $this->getParcoursDeFormationService()->getRequestedParcoursDeFormationFormation($this, 'formation');
 
         $this->getParcoursDeFormationService()->removeFormation($formation);
-        $this->getParcoursDeFormationService()->update($parcours);
 
         return $this->redirect()->toRoute('parcours-de-formation/modifier', ['parcours-de-formation' => $parcours->getId()], [], true);
     }
