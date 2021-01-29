@@ -10,6 +10,10 @@ use Formation\Form\Formation\FormationForm;
 use Formation\Form\Formation\FormationFormFactory;
 use Formation\Form\Formation\FormationHydrator;
 use Formation\Form\Formation\FormationHydratorFactory;
+use Formation\Form\FormationElement\FormationElementForm;
+use Formation\Form\FormationElement\FormationElementFormFactory;
+use Formation\Form\FormationElement\FormationElementHydrator;
+use Formation\Form\FormationElement\FormationElementHydratorFactory;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Formation\Form\SelectionFormation\SelectionFormationFormFactory;
 use Formation\Form\SelectionFormation\SelectionFormationHydrator;
@@ -17,6 +21,10 @@ use Formation\Form\SelectionFormation\SelectionFormationHydratorFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\Formation\FormationServiceFactory;
+use Formation\Service\FormationElement\FormationElementService;
+use Formation\Service\FormationElement\FormationElementServiceFactory;
+use Formation\Service\HasFormationCollection\HasFormationCollectionService;
+use Formation\Service\HasFormationCollection\HasFormationCollectionServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
@@ -198,6 +206,8 @@ return [
         'factories' => [
             FormationInstanceInscritAssertion::class => FormationInstanceInscritAssertionFactory::class,
             FormationService::class => FormationServiceFactory::class,
+            FormationElementService::class => FormationElementServiceFactory::class,
+            HasFormationCollectionService::class => HasFormationCollectionServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -208,12 +218,14 @@ return [
     'form_elements' => [
         'factories' => [
             FormationForm::class => FormationFormFactory::class,
+            FormationElementForm::class => FormationElementFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             FormationHydrator::class => FormationHydratorFactory::class,
+            FormationElementHydrator::class => FormationElementHydratorFactory::class,
             SelectionFormationHydrator::class => SelectionFormationHydratorFactory::class,
         ],
     ]

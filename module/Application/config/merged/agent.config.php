@@ -6,10 +6,6 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
-use Application\Form\AgentFormation\AgentFormationForm;
-use Application\Form\AgentFormation\AgentFormationFormFactory;
-use Application\Form\AgentFormation\AgentFormationHydrator;
-use Application\Form\AgentFormation\AgentFormationHydratorFactory;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Form\SelectionAgent\SelectionAgentFormFactory;
 use Application\Form\SelectionAgent\SelectionAgentHydrator;
@@ -85,7 +81,7 @@ return [
                         'afficher-statuts-grades',
                         'afficher-application',
                         'afficher-competence',
-                        'afficher-agent-formation',
+                        'afficher-formation',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_VOIR,
@@ -106,7 +102,7 @@ return [
                     'action' => [
                         'ajouter-application',
                         'ajouter-competence',
-                        'ajouter-agent-formation',
+                        'ajouter-formation',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_AJOUTER,
@@ -118,7 +114,7 @@ return [
                     'action' => [
                         'modifier-application',
                         'modifier-competence',
-                        'modifier-agent-formation',
+                        'modifier-formation',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_MODIFIER,
@@ -132,8 +128,8 @@ return [
                         'restaurer-application',
                         'historiser-competence',
                         'restaurer-competence',
-                        'historiser-agent-formation',
-                        'restaurer-agent-formation',
+                        'historiser-formation',
+                        'restaurer-formation',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_MODIFIER,
@@ -143,7 +139,7 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
-                        'detruire-agent-formation',
+                        'detruire-formation',
                         'detruire-competence',
                         'detruire-application',
                     ],
@@ -350,63 +346,63 @@ return [
 
                     /** Route des AgentFormation **********************************************************************/
 
-                    'ajouter-agent-formation' => [
+                    'ajouter-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-agent-formation/:agent[/:formation]',
+                            'route'    => '/ajouter-formation/:agent',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'ajouter-agent-formation',
+                                'action'     => 'ajouter-formation',
                             ],
                         ],
                     ],
-                    'afficher-agent-formation' => [
+                    'afficher-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/afficher-agent-formation/:agent-formation',
+                            'route'    => '/afficher-formation/:agent/:formation-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'afficher-agent-formation',
+                                'action'     => 'afficher-formation',
                             ],
                         ],
                     ],
-                    'modifier-agent-formation' => [
+                    'modifier-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-agent-formation/:agent-formation',
+                            'route'    => '/modifier-formation/:agent/:formation-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'modifier-agent-formation',
+                                'action'     => 'modifier-formation',
                             ],
                         ],
                     ],
-                    'historiser-agent-formation' => [
+                    'historiser-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/historiser-agent-formation/:agent-formation',
+                            'route'    => '/historiser-formation/:agent/:formation-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'historiser-agent-formation',
+                                'action'     => 'historiser-formation',
                             ],
                         ],
                     ],
-                    'restaurer-agent-formation' => [
+                    'restaurer-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer-agent-formation/:agent-formation',
+                            'route'    => '/restaurer-formation/:agent/:formation-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'restaurer-agent-formation',
+                                'action'     => 'restaurer-formation',
                             ],
                         ],
                     ],
-                    'detruire-agent-formation' => [
+                    'detruire-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/detruire-agent-formation/:agent-formation',
+                            'route'    => '/detruire-formation/:agent/:formation-element',
                             'defaults' => [
                                 'controller' => AgentController::class,
-                                'action'     => 'detruire-agent-formation',
+                                'action'     => 'detruire-formation',
                             ],
                         ],
                     ],
@@ -504,13 +500,11 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentFormationForm::class => AgentFormationFormFactory::class,
             SelectionAgentForm::class => SelectionAgentFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            AgentFormationHydrator::class => AgentFormationHydratorFactory::class,
             SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
         ],
     ],

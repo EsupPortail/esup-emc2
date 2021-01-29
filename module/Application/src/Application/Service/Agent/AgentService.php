@@ -3,14 +3,13 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Formation\Entity\Db\FormationElement;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -337,132 +336,23 @@ class AgentService {
 
     /** AgentFormation ************************************************************************************************/
 
-    /**
-     * @param integer $id
-     * @return AgentFormation
-     */
-    public function getAgentFormation(int $id)
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('formation')
-            ->andWhere('formation.id = :id')
-            ->setParameter('id', $id)
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Plusieurs AgentFormation partagent le même identifiant [". $id ."].", $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return AgentFormation
-     */
-    public function getRequestedAgentFormation(AbstractActionController $controller, $paramName = 'agent-formation')
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $result = $this->getAgentFormation($id);
-        return $result;
-    }
-
-    /**
-     * @param AgentFormation $agentFormation
-     * @return AgentFormation
-     */
-    public function createAgentFormation(AgentFormation $agentFormation)
-    {
-        $this->createFromTrait($agentFormation);
-        return $agentFormation;
-    }
-
-    /**
-     * @param AgentFormation $agentFormation
-     * @return AgentFormation
-     */
-    public function updateAgentFormation(AgentFormation $agentFormation)
-    {
-        $this->updateFromTrait($agentFormation);
-        return $agentFormation;
-    }
-
-    /**
-     * @param AgentFormation $agentFormation
-     * @return AgentFormation
-     */
-    public function historiserAgentFormation(AgentFormation $agentFormation)
-    {
-       $this->historiserFromTrait($agentFormation);
-        return $agentFormation;
-    }
-
-    /**
-     * @param AgentFormation $agentFormation
-     * @return AgentFormation
-     */
-    public function restoreAgentFormation(AgentFormation $agentFormation)
-    {
-       $this->restoreFromTrait($agentFormation);
-        return $agentFormation;
-    }
-
-    /**
-     * @param AgentFormation $agentFormation
-     * @return AgentFormation
-     */
-    public function deleteAgentFormation(AgentFormation $agentFormation)
-    {
-        $this->deleteFromTrait($agentFormation);
-        return $agentFormation;
-    }
 
     /**
      * @param Agent $agent
      * @param string $annee
-     * @return AgentFormation[]
-     */
-    public function getAgentFormationByAgentAndAnnee(Agent $agent, string $annee)
-    {
-        $debut_annee = DateTime::createFromFormat("d/m/Y", "01/09" . explode("/",$annee)[0]);
-        $fin_annee = DateTime::createFromFormat("d/m/Y", "031/08" . explode("/",$annee)[1]);
-
-        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('af')
-            ->andWhere('af.agent', $agent)
-            ->setParameter('agent', $agent)
-            ->andWhere('af.date >= :debut AND af.fin <= :fin')
-            ->setParameter('debut', $debut_annee)
-            ->setParameter('fin', $fin_annee)
-            ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Agent $agent
-     * @param string $annee
-     * @return AgentFormation[]
+     * @return FormationElement[]
      */
     public function getFormationsSuiviesByAnnee(Agent $agent, string $annee)
     {
-        $debut = DateTime::createFromFormat("d/m/Y","01/09/" .explode("/", $annee)[0]);
-        $fin   = DateTime::createFromFormat("d/m/Y","31/08/" .explode("/", $annee)[1]);
 
-        $qb = $this->getEntityManager()->getRepository(AgentFormation::class)->createQueryBuilder('af')
-            ->addSelect('validation')->leftJoin('af.validation', 'validation')
-            ->addSelect('agent')->leftJoin('af.agent', 'agent')
-            ->addSelect('formation')->leftJoin('af.formation', 'formation')
-            ->andWhere('af.agent = :agent')
-            ->andWhere('af.date >= :debut AND af.date <= :fin')
-            ->andWhere('af.validation IS NOT NULL')
-            ->andWhere('validation.valeur IS NULL')
-            ->setParameter('agent', $agent)
-            ->setParameter('debut', $debut)
-            ->setParameter('fin', $fin)
-        ;
+        $result = [];
+        $formations = $agent->getFormationListe();
+        foreach ($formations as $formation) {
+            $anneeFormation = explode(' - ',$formation->getCommentaire())[0];
+            if ($anneeFormation === $annee) $result[] = $formation;
+        }
 
-        return $qb->getQuery()->getResult();
+        return $result;
     }
 
     /** MISSION SPECIFIQUE ********************************************************************************************/

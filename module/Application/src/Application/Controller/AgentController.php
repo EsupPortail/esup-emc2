@@ -4,10 +4,8 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\CompetenceElement;
-use Application\Form\AgentFormation\AgentFormationFormAwareTrait;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\CompetenceElement\CompetenceElementForm;
@@ -27,7 +25,12 @@ use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
+use Formation\Entity\Db\FormationElement;
+use Formation\Form\FormationElement\FormationElementForm;
+use Formation\Form\FormationElement\FormationElementFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
+use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
@@ -41,10 +44,13 @@ use Zend\View\Model\ViewModel;
 class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+
     use ApplicationElementServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
+    use FormationElementServiceAwareTrait;
+    use HasFormationCollectionServiceAwareTrait;
 
     use EntretienProfessionnelServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
@@ -59,7 +65,7 @@ class AgentController extends AbstractActionController
 
     use ApplicationElementFormAwareTrait;
     use CompetenceElementFormAwareTrait;
-    use AgentFormationFormAwareTrait;
+    use FormationElementFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
 
@@ -354,19 +360,17 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    /** Gestion des formations ****************************************************************************************/
+    /** Gestion des formation ***************************************************************************************/
 
-    public function ajouterAgentFormationAction()
+    public function ajouterFormationAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
-        $formation = $this->getFormationService()->getRequestedFormation($this);
+        $formationElement = new FormationElement();
 
-        $agentFormation = new AgentFormation();
-        $agentFormation->setAgent($agent);
-        $agentFormation->setFormation($formation);
-        $form = $this->getAgentFormationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-agent-formation', ['agent' => $agent->getId(), 'formation' => ($formation) ? $formation->getId() : null]));
-        $form->bind($agentFormation);
+        /** @var FormationElementForm $form */
+        $form = $this->getFormationElementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-formation', ['agent' => $agent->getId()], [], true));
+        $form->bind($formationElement);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -374,34 +378,39 @@ class AgentController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getAgentService()->createAgentFormation($agentFormation);
+                $this->getHasFormationCollectionService()->addFormation($agent, $formationElement);
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Ajout d'une formation associée à un agent",
+            'title' => "Ajout d'une formation suivie par l'agent",
             'form' => $form,
         ]);
         return $vm;
     }
 
-    public function afficherAgentFormationAction()
+    public function afficherFormationAction()
     {
-        $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
+        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
         return new ViewModel([
-            'title' => "Affichage d'une formation",
-            'agentFormation' => $agentFormation,
+            'title' => "Affichage d'une formation suivie par un agent",
+            'formationElement' => $formationElement,
+            'agent' => $agent,
         ]);
     }
 
-    public function modifierAgentFormationAction()
+    public function modifierFormationAction()
     {
-        $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
-        $form = $this->getAgentFormationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-agent-formation', ['agent-formation' => $agentFormation->getId()]));
-        $form->bind($agentFormation);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
+
+        $form = $this->getFormationElementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-formation', ['agent' => $agent->getId(), 'formation-element' => $formationElement->getId()]));
+        $form->bind($formationElement);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -409,61 +418,64 @@ class AgentController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getAgentService()->updateAgentFormation($agentFormation);
+                $this->getFormationElementService()->update($formationElement);
             }
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Modification d'une formation associée à un agent",
+            'title' => "Modification d'une formation suivie par un agent",
             'form' => $form,
         ]);
         return $vm;
     }
 
-    public function historiserAgentFormationAction()
+    public function historiserFormationAction()
     {
         $retour = $this->params()->fromQuery('retour');
 
-        $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
-        $this->getAgentService()->historiserAgentFormation($agentFormation);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
+        $this->getFormationElementService()->historise($formationElement);
 
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentFormation->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
     }
 
-    public function restaurerAgentFormationAction()
+    public function restaurerFormationAction()
     {
         $retour = $this->params()->fromQuery('retour');
 
-        $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
-        $this->getAgentService()->restoreAgentFormation($agentFormation);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
+        $this->getFormationElementService()->restore($formationElement);
 
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentFormation->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
     }
 
-    public function detruireAgentFormationAction()
+    public function detruireFormationAction()
     {
-        $agentFormation = $this->getAgentService()->getRequestedAgentFormation($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getAgentService()->deleteAgentFormation($agentFormation);
-            //return $this->redirect()->toRoute('home');
+            //la cascade doit gérer l'affaire
+            if ($data["reponse"] === "oui") $this->getFormationElementService()->delete($formationElement);
             exit();
         }
 
         $vm = new ViewModel();
-        if ($agentFormation !== null) {
+        if ($formationElement !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la formation  de " . $agentFormation->getAgent()->getDenomination(),
+                'title' => "Suppression de la formation de " . $formationElement->getFormation()->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('agent/detruire-agent-formation', ["agent-formation" => $agentFormation->getId()], [], true),
+                'action' => $this->url()->fromRoute('agent/detruire-formation', ["agent" => $agent->getId(), "formation-element" => $formationElement->getId()], [], true),
             ]);
         }
         return $vm;
@@ -491,7 +503,7 @@ class AgentController extends AbstractActionController
                 $elementText = "la compétence [" . $entity->getCompetence()->getLibelle() . "]";
                 break;
             case 'AgentFormation' :
-                $entity = $this->getAgentService()->getAgentFormation($entityId);
+                $entity = $this->getFormationElementService()->getFormationElement($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_FORMATION");
                 $elementText = "la formation [" . $entity->getFormation()->getLibelle() . "]";
                 break;
@@ -523,10 +535,10 @@ class AgentController extends AbstractActionController
                         $this->getApplicationElementService()->update($entity);
                         break;
                     case 'AgentCompetence' :
-                        $this->getAgentService()->updateAgentCompetence($entity);
+                        $this->getCompetenceElementService()->update($entity);
                         break;
                     case 'AgentFormation' :
-                        $this->getAgentService()->updateAgentFormation($entity);
+                        $this->getFormationElementService()->update($entity);
                         break;
                 }
             }

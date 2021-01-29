@@ -154,7 +154,7 @@ usort($formationArray,
                             <?php if ($canModifier) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\AgentController::ajouterAgentFormationAction() */?>
-                                        href="<?php echo $this->url('agent/ajouter-agent-formation', ['agent' => $agent->getId(), 'formation' => $formation->getId()], [], true); ?>"
+                                        href="<?php echo $this->url('agent/ajouter-formation', ['agent' => $agent->getId(), 'formation' => $formation->getId()], [], true); ?>"
                                         class="ajax-modal"
                                         data-event="modification"
                                 >

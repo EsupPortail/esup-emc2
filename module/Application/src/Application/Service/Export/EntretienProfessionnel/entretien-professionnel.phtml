@@ -9,6 +9,7 @@ use Application\Entity\Db\AgentFormation;
 use Application\Entity\Db\EntretienProfessionnel;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
+use Formation\Entity\Db\FormationElement;
 
 ?>
 
@@ -178,6 +179,7 @@ foreach ($responses as $response) {
 
 <?php if (!empty($formations)) : ?>
 <ul>
+    <?php /** @var FormationElement $formation */ ?>
     <?php foreach ($formations as $formation) : ?>
         <li><?php echo $formation->getFormation()->getLibelle(); ?> -  <?php echo $formation->getDate()->format('d/m/Y'); ?></li>
     <?php endforeach; ?>
@@ -193,13 +195,13 @@ foreach ($responses as $response) {
 
 <table>
     <tr>
-        <td width="33%">
+        <td style="width:33%;">
             <h3>Validation de l'agent</h3>
         </td>
-        <td width="33%">
+        <td style="width:33%;">
             <h3>Validation du responsable de l'entretien</h3>
         </td>
-        <td width="33%">
+        <td style="width:33%;">
             <h3>Validation du responsable de la structure</h3>
         </td>
     </tr>

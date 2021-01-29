@@ -1,16 +1,19 @@
 <?php
 
-namespace Application\Form\AgentFormation;
+namespace Formation\Form\FormationElement;
 
+use DateTime;
 use Formation\Service\Formation\FormationServiceAwareTrait;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Date;
+use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class AgentFormationForm extends Form {
+class FormationElementForm extends Form {
     use FormationServiceAwareTrait;
+    use DateTimeAwareTrait;
 
     public function init()
     {
@@ -24,7 +27,7 @@ class AgentFormationForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner une formation ... ",
-                'value_options' => $this->getFormationService()->getFormationsDisponiblesAsOptions(),
+                'value_options' => $this->getFormationService()->getFormationsGroupesAsGroupOptions(),
             ],
             'attributes' => [
                 'id'                => 'formation',
@@ -32,20 +35,40 @@ class AgentFormationForm extends Form {
                 'data-live-search'  => 'true',
             ]
         ]);
-        //date
+        //niveau
         $this->add([
-            'name' => 'date',
-            'type' => Date::class,
+            'name' => 'niveau',
+            'type' => Select::class,
             'options' => [
-                'label' => 'Date de la formation * : ',
+                'label' => 'Niveau * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'format' => 'd/m/Y',
+                'empty_option' => "Sélectionner un niveau ... ",
+                'value_options' => [
+                    'Débutant'          => "Débutant",
+                    'Intermédiaire'       => "Intermédiaire",
+                    'Expert'       => "Expert",
+                ],
             ],
             'attributes' => [
-                'id'                => 'date',
+                'id'                => 'niveau',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ]
+        ]);
+        //Année
+        $this->add([
+            'type' => Select::class,
+            'name' => 'annee',
+            'options' => [
+                'label' => "Année de la formation :",
+                'empty_value' => 'Sélectionner une année ...',
+                'value_options' => $this->getAnneesScolaires(( (int) (new DateTime())->format('Y')) - 5, ( (int) (new DateTime())->format('Y')) + 5),
+            ],
+            'attributes' => [
+                'id' => 'annee',
+            ],
         ]);
         // button
         $this->add([
@@ -64,12 +87,9 @@ class AgentFormationForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'formation' => [
-                'required' => true,
-            ],
-            'date' => [
-                'required' => true,
-            ],
+            'formation'   => [ 'required' => true, ],
+            'niveau'          => [ 'required' => true, ],
+            'annee'         => [ 'required' => false, ],
         ]));
     }
 }

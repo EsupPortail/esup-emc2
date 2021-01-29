@@ -1,8 +1,7 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Formation\Entity\Db;
 
-use Formation\Entity\Db\Formation;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;

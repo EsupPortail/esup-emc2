@@ -34,4 +34,18 @@ trait DateTimeAwareTrait {
         }
         return $anneeScolaire;
     }
+
+    /**
+     * @param int $anneeDebut
+     * @param int $anneeFin
+     * @return array
+     */
+    public function getAnneesScolaires(int $anneeDebut, int $anneeFin) {
+        $result = [];
+        for ($annee = $anneeDebut ; $annee <= $anneeFin; $annee++) {
+            $string = $annee ."/". ($annee+1);
+            $result[$string] = $string;
+        }
+        return $result;
+    }
 }

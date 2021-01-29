@@ -10,19 +10,21 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fichier\Entity\Db\Fichier;
-use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
+use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Agent implements HasApplicationCollectionInterface, HasCompetenceCollectionInterface, ResourceInterface
+class Agent implements
+    ResourceInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface
 {
     use ImportableAwareTrait;
     use AgentServiceAwareTrait;
     use DateTimeAwareTrait;
-    use HasApplicationCollectionTrait;
-    use HasCompetenceCollectionTrait;
+    use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
 
     public function getResourceId()
     {
@@ -64,8 +66,8 @@ class Agent implements HasApplicationCollectionInterface, HasCompetenceCollectio
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
-    /** @var ArrayCollection (AgentFormation) */
-    private $formations;
+//    /** @var ArrayCollection (AgentFormation) */
+//    private $formations;
 
     /** @var ArrayCollection (StructureAgentForce) */
     private $structuresForcees;
@@ -361,22 +363,6 @@ class Agent implements HasApplicationCollectionInterface, HasCompetenceCollectio
         return $missions;
     }
 
-    /** APPLICATIONS, COMPETENCES ET FORMATIONS ***********************************************************************/
-
-    /**
-     * @param false $include_historisees
-     * @return array
-     */
-    public function getFormations($include_historisees = false)
-    {
-        $formations = [];
-        /** @var AgentFormation $formation */
-        foreach ($this->formations as $formation) {
-            if ($include_historisees OR $formation->estNonHistorise()) $formations[] = $formation;
-        }
-        return $formations;
-    }
-
     /** Postes en cours et Fiche de poste en cours ********************************************************************/
 
     /**
@@ -404,32 +390,6 @@ class Agent implements HasApplicationCollectionInterface, HasCompetenceCollectio
     {
         $fiche = $this->getFichePosteActif();
         return ($fiche) ? $fiche->getPoste() : null;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return AgentFormation
-     */
-    public function hasFormation(Formation $formation)
-    {
-        /** @var AgentFormation $aformation */
-        foreach ($this->formations as $aformation) {
-            if ($aformation->getFormation() === $formation) return $aformation;
-        }
-        return null;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return AgentFormation
-     */
-    public function hasValidatedFormation(Formation $formation)
-    {
-        /** @var AgentFormation $aformation */
-        foreach ($this->formations as $aformation) {
-            if ($aformation->getFormation() === $formation AND $aformation->estValide()) return $aformation;
-        }
-        return null;
     }
 
     public function hasEntretienEnCours() {
