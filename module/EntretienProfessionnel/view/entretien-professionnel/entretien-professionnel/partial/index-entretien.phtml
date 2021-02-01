@@ -40,7 +40,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
     </thead>
     <tbody>
     <?php foreach ($entretiens as $entretien) : ?>
-        <tr>
+        <tr class="<?php echo ($entretien->estHistorise()?"historise":""); ?>">
             <td> <?php echo $entretien->getAnnee(); ?> </td>
             <td>
                 <?php echo $entretien->getAgent()->getPrenom(); ?>
