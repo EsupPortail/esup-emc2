@@ -4,14 +4,16 @@
 /**
  * @var Agent $agent
  * @var FichePoste $fiche
+ * @var string $mode
  * @var array $parcours
  * @var array $options
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\ParcoursDeFormation;
 
+
+$canValidate = false;
 ?>
 
 <div class="row">
@@ -29,14 +31,15 @@ use Application\Entity\Db\ParcoursDeFormation;
 <div class="row" style="margin: 1rem;">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
-            <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
-                <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
-        <?php endif; ?>
+        <?php ksort($parcours); ?>
+        <?php foreach ($parcours as $subparcours) : ?>
+        <?php foreach ($subparcours as $parcours) : ?>
+            <?php echo $this->parcoursDeFormation($parcours, $agent, ['mode' => 'modification', 'modification' => $canValidate]); ?>
+        <?php endforeach; ?>
+        <?php endforeach; ?>
 
-        <?php echo $this->parcoursApplication($fiche, $agent, $options); ?>
+        <?php if($fiche !== null) : ?>
+            <?php echo $this->parcoursApplication($fiche, $agent, $options); ?>
+        <?php endif; ?>
     </div>
 </div>

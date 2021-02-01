@@ -229,13 +229,14 @@ class ParcoursDeFormationService {
     }
 
     /**
-     * @param FichePoste $fichePoste
+     * @param FichePoste|null $fichePoste
      * @return array
      */
-    public function generateParcoursArrayFromFichePoste(FichePoste $fichePoste)
+    public function generateParcoursArrayFromFichePoste(?FichePoste $fichePoste)
     {
         $array = [];
-        foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) {
+        $fichesMetiers = ($fichePoste)?$fichePoste->getFichesMetiers():[];
+        foreach ($fichesMetiers as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $this->generateParcoursArrayFromFicheMetier($ficheMetier, $array);
         }

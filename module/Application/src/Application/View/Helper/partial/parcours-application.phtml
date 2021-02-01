@@ -56,9 +56,11 @@ $formationArray = [];
 
 <?php /** Titre du parcours de formation  *****************************************************************************/ ?>
 
+<div class="parcours-de-formation">
+
 <div class="row">
     <div class="col-md-8">
-        <h4> Parcours de formation aux applications </h4>
+        <h4>Parcours de formation lié aux applications</h4>
     </div>
 <!--    <div class="pull-right">-->
 <!--        --><?php //if ($canModifier AND $mode === 'creation') : ?>
@@ -188,7 +190,18 @@ $formationArray = [];
 <!--    </table>-->
 <!--</div>-->
 
+</div>
+
 <style>
+
+    div.parcours-de-formation {
+        padding-top: 2rem;
+    }
+
+    div.parcours-de-formation h4 {
+        text-decoration: underline;
+    }
+
     table.parcours-de-formation {
         width:95%;
     }

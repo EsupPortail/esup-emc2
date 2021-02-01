@@ -59,6 +59,8 @@ usort($formationArray,
 
 <?php /** Titre du parcours de formation  *****************************************************************************/ ?>
 
+<div class="parcours-de-formation">
+
 <div class="row">
     <div class="col-md-8">
         <h4> <?php echo $parcours->getLibelle(); ?> </h4>
@@ -207,7 +209,17 @@ usort($formationArray,
     </table>
 </div>
 
+</div>
+
 <style>
+    div.parcours-de-formation {
+        padding-top: 2rem;
+    }
+
+    div.parcours-de-formation h4 {
+        text-decoration: underline;
+    }
+
     table.parcours-de-formation {
         width:95%;
     }

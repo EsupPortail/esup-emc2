@@ -2,12 +2,13 @@
 
 /**
  * @var EntretienProfessionnel $entretien
- * @var ParcoursDeFormation $parcours
+ * @var FichePoste $fiche
+ * @var array $parcours
  * @var array $options
  */
 
 use Application\Entity\Db\EntretienProfessionnel;
-use Application\Entity\Db\ParcoursDeFormation;
+use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\EntretienproPrivileges;
 
@@ -111,18 +112,13 @@ foreach ($reponses as $reponse) {
 
 <h2> Parcours d'entrée dans le métier </h2>
 
-<div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-        <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
-            <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
-                <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
-        <?php endif; ?>
-    </div>
-</div>
+<?php ksort($parcours); ?>
+<?php foreach ($parcours as $subparcours) : ?>
+    <?php foreach ($subparcours as $parcours) : ?>
+        <?php echo $this->parcoursDeFormation($parcours, $agent, ['mode' => 'modification', 'modification' => $canValider]); ?>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+<?php echo $this->parcoursApplication($fiche, $agent, $options); ?>
 
 <h2> Acquis de l'agent </h2>
 
