@@ -39,6 +39,7 @@ $modules = [
     'Fichier',
     'Indicateur',
     'Formation',
+    'EntretienProfessionnel',
     'Application',
 //    'Document',
     'ZendDeveloperTools',

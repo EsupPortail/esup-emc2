@@ -13,18 +13,18 @@
  * @var Agent[] $agentsForces
  * @var FicheProfil[] $profils
  *
- * @var EntretienProfessionnelCampagne $last
- * @var EntretienProfessionnelCampagne[] $campagnes
+ * @var Campagne $last
+ * @var Campagne[] $campagnes
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Entity\Db\EntretienProfessionnelCampagne;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheProfil;
 use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
 
 $this->headTitle($structure->getLibelleLong());
 

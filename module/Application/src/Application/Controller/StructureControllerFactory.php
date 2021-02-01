@@ -7,7 +7,6 @@ use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Form\Structure\StructureForm;
 use Application\Service\Agent\AgentService;
-use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneService;
 use Application\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
@@ -15,6 +14,7 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\Poste\PosteService;
 use Application\Service\Structure\StructureService;
 use Application\Service\StructureAgentForce\StructureAgentForceService;
+use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenUtilisateur\Service\User\UserService;
@@ -26,7 +26,7 @@ class StructureControllerFactory {
         /**
          * @var AgentService $agentService
          * @var EntretienProfessionnelService $entretienService
-         * @var EntretienProfessionnelCampagneService $campagneService
+         * @var CampagneService $campagneService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
@@ -38,7 +38,7 @@ class StructureControllerFactory {
          */
         $agentService = $container->get(AgentService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
-        $campagneService = $container->get(EntretienProfessionnelCampagneService::class);
+        $campagneService = $container->get(CampagneService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
@@ -64,7 +64,7 @@ class StructureControllerFactory {
 
         $controller->setAgentService($agentService);
         $controller->setEntretienProfessionnelService($entretienService);
-        $controller->setEntretienProfessionnelCampagneService($campagneService);
+        $controller->setCampagneService($campagneService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);

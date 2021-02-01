@@ -2,17 +2,16 @@
 
 namespace UnicaenValidation\Service\ValidationInstance;
 
-use Application\Entity\Db\EntretienProfessionnel;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\Db\ValidationType;
-use UnicaenValidation\Entity\ValidableInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ValidationInstanceService {
@@ -176,7 +175,7 @@ class ValidationInstanceService {
      * @param string $param
      * @return ValidationInstance
      */
-    public function getRequestedValidationInstance($controller, $param = "validation")
+    public function getRequestedValidationInstance(AbstractActionController $controller, $param = "validation")
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getValidationInstance($id);

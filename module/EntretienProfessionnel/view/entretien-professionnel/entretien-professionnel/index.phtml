@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @see \Application\Controller\EntretienProfessionnelController::indexAction()
+ * @var Campagne[] $campagnes
+ * @var EntretienProfessionnel[] $entretiens
+ */
+
+use Application\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use UnicaenNote\Entity\Db\PorteNote;
+
+$this->headTitle('Index des entretiens professionnel');
+
+?>
+
+<h1 class="page-header">
+    Index des entretiens professionnels
+</h1>
+
+<div class="main">
+
+    <?php echo $this->portenote('EntretienProfessionnelController::indexAction()', '', []); ?>
+
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+
+            <li role="campagne">
+                <a href="#campagne" aria-controls="campagne" role="tab" data-toggle="tabz">
+                    Campagnes
+                    <span class="badge">
+                    <?php echo count($campagnes); ?>
+                </span>
+                </a>
+            </li>
+
+            <li role="entretien">
+                <a href="#entretien" aria-controls="entretien" role="tab" data-toggle="tabz">
+                    Entretiens
+                    <span class="badge">
+                    <?php echo count($entretiens); ?>
+                </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-with-tab">
+
+        <div class="tab-content">
+
+            <!-- CAMPAGNES ------------------------------------------------------------------------------------------------>
+            <div id="campagne" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-campagne', ['campagnes' => $campagnes]); ?>
+            </div>
+
+            <!-- ENTRETIENS ------------------------------------------------------------------------------------------------>
+            <div id="entretien" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-entretien', ['entretiens' => $entretiens]); ?>
+            </div>
+        </div>
+    </div>
+<script>
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "campagne";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+    });
+
+    $("body").on("modification", function (event) {
+        event.div.modal('hide');
+        window.location.reload();
+    });
+</script>

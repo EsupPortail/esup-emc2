@@ -1,13 +1,12 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace EntretienProfessionnel\Entity\Db;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\Observation;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
