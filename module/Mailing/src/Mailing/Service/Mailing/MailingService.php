@@ -2,11 +2,11 @@
 
 namespace Mailing\Service\Mailing;
 
-use Application\Entity\Db\EntretienProfessionnel;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Mailing\Model\Db\Mail;
 use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;

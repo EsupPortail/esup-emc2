@@ -2,7 +2,6 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
-use Application\Entity\Db\EntretienProfessionnel;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;

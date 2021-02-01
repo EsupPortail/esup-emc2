@@ -3,8 +3,8 @@
 namespace EntretienProfessionnel\Assertion;
 
 use Application\Constant\RoleConstant;
-use Application\Entity\Db\EntretienProfessionnel;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenAuthentification\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
