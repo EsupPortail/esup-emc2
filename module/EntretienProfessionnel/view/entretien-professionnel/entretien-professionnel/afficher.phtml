@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::afficherAction()
+ * @var EntretienProfessionnel $entretien
+ * @var Agent $agent
+ * @var FichePoste[] $fichespostes
+ * @var FicheMetier[] $fichesmetiers
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+
+$this->headTitle('Édition de l\'entretien professionnel');
+?>
+
+<h1 class="page-header">
+    Affichage de l'entretien professionnel
+</h1>
+
+<?php
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
+?>
+<?php
+$instance = $entretien->getFormulaireInstance();
+$formulaire = $instance->getFormulaire();
+$reponses = $instance->getReponses();
+
+/** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+$data = [];
+foreach ($reponses as $reponse) {
+    $data[$reponse->getChamp()->getId()] = $reponse;
+}
+
+echo $this->instanceAsText()->render($instance);
+?>
+
+

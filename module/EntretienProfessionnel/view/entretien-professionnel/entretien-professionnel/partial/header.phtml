@@ -1,0 +1,169 @@
+<?php
+
+/**
+ * @var EntretienProfessionnel $entretien
+ * @var Agent $agent
+ * @var FichePoste[] $fichespostes
+ * @var FicheMetier[] $fichesmetiers
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FichePoste;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>À propos de l'agent</h2>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt> Fiche de l'agent </dt>
+                    <dd>
+                        <a
+                            <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
+                            href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                            target="_blank"
+                        >
+                            <?php echo $agent->getDenomination(); ?>
+                        </a>
+                    </dd>
+                    <dt> Fiche(s) de poste</dt>
+                    <dd>
+                        <?php $first = true; foreach ($fichespostes as $ficheposte) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+                                href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                                target="_blank"
+                            >
+                                Fiche de poste #<?php echo $ficheposte->getId();?>
+                                <?php if ($first) $first=false; else echo '<br/>'; ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </dd>
+                    <dt> Fiche(s) métier(s)</dt>
+                    <dd>
+                        <?php $first = true; foreach ($fichesmetiers as $fichemetier) : ?>
+                            <?php if ($first) $first=false; else echo '<br/>'; ?>
+                            <a
+                                <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */ ?>
+                                href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fichemetier->getId()], [], true); ?>"
+                                target="_blank"
+                            >
+                                <?php
+                                    $libelle = "Fiche metier #".$fichemetier->getId();
+                                    if ($fichemetier->getMetier()) $libelle = $fichemetier->getMetier()->getLibelle();
+                                ?>
+                                <?php echo $libelle; ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Documents utiles</h2>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1417615828609&LANGUE=0" target="_blank">
+                            Guide de l'entretien professionnel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.unicaen.fr/intranet/ressources-humaines/biatss/les-outils-de-l-entretien-professionnel-615681.kjsp" target="_blank">
+                            Outils de l'entretien professionnel
+                        </a>
+                    </li><li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461231853773&LANGUE=0" target="_blank">
+                            Grille d'entretien
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461232125307&LANGUE=0" target="_blank">
+                            Compétence
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461232163617&LANGUE=0" target="_blank">
+                            Définitions
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Informations complémentaires</h2>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt> Responsable </dt>
+                    <dd> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </dd>
+                    <dt> Année </dt>
+                    <dd> <?php echo $entretien->getAnnee(); ?> </dd>
+                    <dt> Date </dt>
+                    <dd> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
+                    <dt> Lieu </dt>
+                    <dd> <?php echo $entretien->getLieu(); ?> </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Validation de l'entretien</h2>
+            </div>
+            <div class="panel-body">
+                <dl>
+                    <dt>Validation initial de l'agent </dt>
+                    <dd><?php echo ($entretien->getToken() === null) ? "Oui" : "Pas encore effectuée"; ?> </dd>
+                    <dt>Validation du responsable hiérarchique </dt>
+                    <dd>
+                        <?php if ($entretien->getValidationResponsable()) : ?>
+                            Faites par <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
+                            le <?php echo $entretien->getValidationResponsable()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                        <?php else : ?>
+                            Non effectuée
+                        <?php endif; ?>
+                    </dd>
+                    <dt>Validation de l'agent </dt>
+                    <dd>
+                        <?php if ($entretien->getValidationAgent()) : ?>
+                            Faites par <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?>
+                            le <?php echo $entretien->getValidationAgent()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                        <?php else : ?>
+                            Non effectuée
+                        <?php endif; ?>
+                    </dd>
+                    <dt>Validation du responsable de structure </dt>
+                    <dd>
+                        <?php if ($entretien->getValidationDRH()) : ?>
+                            Faites par <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?>
+                            le <?php echo $entretien->getValidationDRH()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                        <?php else : ?>
+                            Non effectuée
+                        <?php endif; ?>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

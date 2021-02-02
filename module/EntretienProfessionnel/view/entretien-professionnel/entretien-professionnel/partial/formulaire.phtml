@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * @var EntretienProfessionnel $entretien
+ * @var FichePoste $fichePoste
+ * @var User $connectedUser
+ */
+$DEBUG = false;
+
+
+use Application\Entity\Db\FichePoste;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use UnicaenUtilisateur\Entity\Db\User;
+
+$isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser;
+$isConducteur           = $entretien->getResponsable() === $connectedUser;
+$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
+$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
+$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+$canRenseigner          = ($isAgent OR $isConducteur OR $canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
+
+$retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+
+$now = new DateTime();
+$date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
+$sursis = $entretien->getSursisActive();
+if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
+    $date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
+}
+$dayAfter = $date->add(new DateInterval('P1D'));
+?>
+
+<h2> Formulaire d'entretien  </h2>
+
+<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formulaire', '', []); ?>
+
+<h3 class="categorie"> Missions du poste </h3>
+
+<?php if ($fichePoste !== null) : ?>
+    <ul>
+    <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
+        <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
+                <?php echo $ficheTypeExterne->getFicheType()->getMissionsPrincipales(); ?>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+<br/>
+<br/>
+
+<?php if ($DEBUG) : ?>
+    <div class="alert alert-warning">
+        <strong> Débug : </strong> <br/>
+
+        <dl class='dl-horizontal'>
+            <dt> Date de l'entretien dépassé </dt>
+            <dd> <strong><?php echo ($entretien->getDateEntretien() > $now)?"Non dépassé":"Dépassé"; ?></strong> <?php echo $entretien->getDateEntretien()->format('d/m/Y  H:i:s'); ?>
+                    &lt;?&lt; <?php echo $now->format('d/m/Y H:i:s'); ?>
+            </dd>
+            <dt> Validé par le responsable </dt>
+            <dd>
+                <?php if ($entretien->getValidationResponsable() !== null AND $entretien->getValidationResponsable()->estNonHistorise()) : ?>
+                    <strong>Validé</strong>
+                    <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
+                    <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/Y H:i:s') ?>
+                <?php else : ?>
+                    <strong>Non validé</strong> null
+                <?php endif; ?>
+            </dd>
+        </dl>
+
+        <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+            <span class="icon editer"></span> Modification
+        <?php else : ?>
+            <span class="icon voir"></span> Affichage
+        <?php endif; ?>
+        <?php //var_dump(($entretien->getDateEntretien() < $now)); ?>
+        <?php //var_dump(($entretien->getValidationResponsable())); ?>
+    </div>
+<?php endif; ?>
+
+<?php
+    $instance = $entretien->getFormulaireInstance();
+    $formulaire = $instance->getFormulaire();
+    $reponses = $instance->getReponses();
+
+    /** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+    $data = [];
+    foreach ($reponses as $reponse) {
+        $data[$reponse->getChamp()->getId()] = $reponse;
+    }
+?>
+
+<?php if ($canRenseigner) : ?>
+    <?php if (($dayAfter >= $now)  AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+        <?php
+            /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+            $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+            $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+            echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+        ?>
+    <?php else : ?>
+        <?php echo $this->instanceAsText()->render($instance); ?>
+    <?php endif; ?>
+<?php else : ?>
+    <div class="alert alert-danger">
+        Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
+    </div>
+<?php endif; ?>

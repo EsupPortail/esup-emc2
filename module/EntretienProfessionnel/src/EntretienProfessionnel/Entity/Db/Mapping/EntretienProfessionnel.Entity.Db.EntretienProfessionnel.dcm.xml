@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" table="entretien_professionnel">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent" referenced-column-name="c_individu"/>
+        </many-to-one>
+
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="responsable">
+            <join-column name="responsable_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne"  field="campagne">
+            <join-column name="campagne_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <many-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="formulaireInstance">
+            <join-column name="formulaire_instance" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="formationInstance">
+            <join-column name="formation_instance" referenced-column-name="id"/>
+        </many-to-one>
+
+        <field name="dateEntretien"     type="datetime"                 column="date_entretien"     nullable="false"/>
+        <field name="lieu"              type="string" length="4096"     column="lieu"               nullable="false"/>
+        <field name="token"             type="string" length="255"      column="token"              nullable="true"/>
+        <field name="acceptation"       type="datetime"                 column="acceptation"        nullable="true"/>
+
+        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationAgent">
+            <join-column name="validation_agent_id" referenced-column-name="id" />
+        </one-to-one>
+        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationResponsable">
+            <join-column name="validation_responsable_id" referenced-column-name="id" />
+        </one-to-one>
+        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationDRH">
+            <join-column name="validation_drh_id" referenced-column-name="id" />
+        </one-to-one>
+
+        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\Observation"   mapped-by="entretien" field="observations"/>
+        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\Sursis"        mapped-by="entretien" field="sursis"/>
+
+        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="id"/>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

@@ -11,8 +11,6 @@ use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\EntretienProfessionnel\EntretienProfessionnelCampagneServiceAwareTrait;
-use Application\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
@@ -20,6 +18,8 @@ use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Application\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use DateTime;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -42,7 +42,7 @@ class StructureController extends AbstractActionController {
     use UserServiceAwareTrait;
 
     use EntretienProfessionnelServiceAwareTrait;
-    use EntretienProfessionnelCampagneServiceAwareTrait;
+    use CampagneServiceAwareTrait;
 
     use AgentMissionSpecifiqueFormAwareTrait;
     use AjouterGestionnaireFormAwareTrait;
@@ -113,8 +113,8 @@ class StructureController extends AbstractActionController {
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
         /** Campagne */
-        $last = $this->getEntretienProfessionnelCampagneService()->getLastCampagne();
-        $campagnes = $this->getEntretienProfessionnelCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         $entretiens = [];
 
         return new ViewModel([

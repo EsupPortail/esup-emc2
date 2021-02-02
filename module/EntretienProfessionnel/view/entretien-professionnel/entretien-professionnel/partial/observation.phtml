@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * @var EntretienProfessionnel $entretien
+ * @var Observation $observation
+ */
+
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\Observation;
+
+$canAjouterObservation = true;
+$canModifierObservation = true;
+$canHistoriserObservation = true;
+$canDetruireObservation = true;
+
+$now = new DateTime();
+$date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
+$entretien7 = $date->add(new DateInterval('P7D'));
+$sursis = $entretien->getSursisActive();
+if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
+    $entretien7 = $sursis->getSursis()->add(new DateInterval('P7D'));
+}
+
+?>
+
+<h2> Observation lié à l'entretien professionnel</h2>
+
+<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
+
+<div class="alert alert-info">
+    <p class="lead">
+        Vous avez une semaine après la date de votre entretien professionnel pour exprimer vos observations sur votre entretien ou vos perspectives.
+    </p>
+    <p>
+        <span class="icon attention"></span> Si vous n'avez pas d'observation vous pouvez laisser cette partie de l'entretien vide.
+    </p>
+</div>
+
+<?php if ($entretien->hasValidationResponsable()) : ?>
+    <div class="row">
+        <div class="col-md-8">
+            <h2> Observation de l'agent </h2>
+        </div>
+        <div class="pull-right">
+            <br/>
+            <?php if ($observation === null) : ?>
+                <?php if ($canAjouterObservation AND $now <= $entretien7) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\EntretienProfessionnelController::ajouterObservationAction() */ ?>
+                        href="<?php echo $this->url('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                        class="btn btn-primary action ajax-modal" data-event="modification"
+                    >
+                        <span class="icon ajouter"> Ajouter une observation </span>
+                    </a>
+                <?php endif; ?>
+            <?php else : ?>
+                <?php if ($now <= $entretien7) : ?>
+                    <?php if ($canModifierObservation) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierObservationAction() */ ?>
+                                href="<?php echo $this->url('entretien-professionnel/observation/modifier', ['observation' => $observation->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon editer"> </span>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canHistoriserObservation) : ?>
+                        <?php if ($observation->estNonHistorise()) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\EntretienProfessionnelController::historiserObservationAction() */ ?>
+                                    href="<?php echo $this->url('entretien-professionnel/observation/historiser', ['observation' => $observation->getId()], [], true); ?>"
+                                    class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon historiser"> </span>
+                            </a>
+                        <?php else : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\EntretienProfessionnelController::restaurerObservationAction() */ ?>
+                                        href="<?php echo $this->url('entretien-professionnel/observation/restaurer', ['observation' => $observation->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon restaurer"> </span>
+                                </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruireObservation) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\EntretienProfessionnelController::detruireObservationAction() */ ?>
+                            href="<?php echo $this->url('entretien-professionnel/observation/detruire', ['observation' => $observation->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon detruire"> </span>
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+
+    <?php if ($observation === null) : ?>
+
+    <p class="lead">Aucune observation.</p>
+
+    <?php else: ?>
+
+        <dl class="dl-horizontal">
+            <dt> Dernière modification </dt>
+            <dd> <?php echo $observation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $observation->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
+        </dl>
+
+        <h3> Observation sur l'entretien </h3>
+
+        <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
+            <?php echo $observation->getObservationAgentEntretien(); ?>
+        <?php else : ?>
+            Aucune observation
+        <?php endif; ?>
+        <h3> Observation sur les perspectives </h3>
+        <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
+            <?php echo $observation->getObservationAgentPerspective(); ?>
+        <?php else : ?>
+            Aucune observation
+        <?php endif; ?>
+
+    <?php endif; ?>
+<?php else : ?>
+
+<div class="alert alert-warning">
+    <span class="icon information"></span> L'agent ne peut formuler ses observations qu'après la validation de son responsable de l'entretien professionnel.
+</div>
+<?php endif; ?>

@@ -2,11 +2,11 @@
 
 namespace Mailing\Service\Mailing;
 
-use Application\Entity\Db\EntretienProfessionnel;
-use Application\Entity\Db\EntretienProfessionnelCampagne;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Mailing\Model\Db\Mail;
 use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -44,7 +44,7 @@ class MailingService
     /**
      * @param Mail $mail
      */
-    public function reEnvoi($mail)
+    public function reEnvoi(Mail $mail)
     {
         $this->sendMail(explode(",", $mail->getDestinatires()), $mail->getSujet(), $mail->getCorps());
     }
@@ -250,7 +250,7 @@ class MailingService
      * @param array $variables
      * @return string
      */
-    private function replaceMacros($texteInitial, $variables)
+    private function replaceMacros(string $texteInitial, array $variables)
     {
         $matches = [];
         preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);
@@ -273,7 +273,7 @@ class MailingService
     private function getReplacementText($identifier, $variables)
     {
         /**
-         * @var EntretienProfessionnelCampagne $campagne
+         * @var Campagne $campagne
          * @var EntretienProfessionnel $entretien
          */
 

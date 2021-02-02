@@ -9,6 +9,7 @@ use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
