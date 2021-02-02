@@ -256,3 +256,7 @@ span.icon.paragraph:before {
 span.icon.filtrer:before {
     content: "\f0b0";
 }
+
+span.icon.sursis:before {
+    content:"\f017";
+}

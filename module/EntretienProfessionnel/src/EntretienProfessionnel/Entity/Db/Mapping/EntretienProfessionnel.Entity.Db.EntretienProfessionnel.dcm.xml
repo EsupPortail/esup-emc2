@@ -41,6 +41,7 @@
         </one-to-one>
 
         <one-to-many target-entity="EntretienProfessionnel\Entity\Db\Observation"   mapped-by="entretien" field="observations"/>
+        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\Sursis"        mapped-by="entretien" field="sursis"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

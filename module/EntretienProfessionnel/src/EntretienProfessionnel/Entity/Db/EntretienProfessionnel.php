@@ -41,6 +41,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** @var ArrayCollection (Observation) */
     private $observations;
+    /** @var ArrayCollection (Sursis) */
+    private $sursis;
 
     /** @var ValidationInstance */
     private $validationAgent;
@@ -260,6 +262,24 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
             }
         }
         return $observation;
+    }
+
+    /** SURSIS ********************************************************************************************************/
+
+    /**
+     * @return Sursis|null
+     */
+    public function getSursisActive() : ?Sursis
+    {
+        $sursis = null;
+        /** @var Sursis $item */
+        foreach ($this->sursis as $item) {
+            if ($item->estNonHistorise()) {
+                if ($sursis !== null) throw new RuntimeException("Plusieurs sursis actifs pour l'entretien #".$this->id, 0, null);
+                $sursis = $item;
+            }
+        }
+        return $sursis;
     }
 
     /** VALIDATION ****************************************************************************************************/
