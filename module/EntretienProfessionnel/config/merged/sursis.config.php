@@ -124,14 +124,14 @@ return [
                                     ],
                                 ],
                             ],
-                            'detruire' => [
+                            'supprimer' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/detruire/:sursis',
+                                    'route'    => '/supprimer/:sursis',
                                     'defaults' => [
                                         'controller' => SursisController::class,
-                                        'action'     => 'detruire',
+                                        'action'     => 'supprimer',
                                     ],
                                 ],
                             ],

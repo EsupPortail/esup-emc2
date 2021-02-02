@@ -14,7 +14,13 @@ $canHistoriserObservation = true;
 $canDetruireObservation = true;
 
 $now = new DateTime();
-$entretien7 = $entretien->getDateEntretien()->add(new DateInterval('P7D'));
+$date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
+$entretien7 = $date->add(new DateInterval('P7D'));
+$sursis = $entretien->getSursisActive();
+if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
+    $entretien7 = $sursis->getSursis()->add(new DateInterval('P7D'));
+}
+
 ?>
 
 <h2> Observation lié à l'entretien professionnel</h2>

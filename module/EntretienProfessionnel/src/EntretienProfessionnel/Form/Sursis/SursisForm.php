@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Form\Sursis;
 
-use UnicaenApp\Form\Element\Date;
+use Zend\Form\Element\Date;
 use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -17,6 +17,7 @@ class SursisForm extends Form
             'name' => 'date',
             'options' => [
                 'label' => "Fin du sursis * :",
+                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'date',

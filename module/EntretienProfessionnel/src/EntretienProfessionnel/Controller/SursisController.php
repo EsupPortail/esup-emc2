@@ -32,7 +32,7 @@ class SursisController extends AbstractActionController {
         $sursis->setEntretien($entretien);
         
         $form = $this->getSursisForm();
-        $form->setAttribute('action', $this->url()->fromRoute('sursis/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/sursis/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true));
         $form->bind($sursis);
         
         $request = $this->getRequest();
@@ -57,7 +57,7 @@ class SursisController extends AbstractActionController {
         $sursis = $this->getSursisService()->getRequestedSursis($this);
         
         $form = $this->getSursisForm();
-        $form->setAttribute('action', $this->url()->fromRoute('sursis/modifier', ['sursis' => $sursis->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/sursis/modifier', ['sursis' => $sursis->getId()], [], true));
         $form->bind($sursis);
 
         $request = $this->getRequest();
@@ -111,7 +111,7 @@ class SursisController extends AbstractActionController {
             $vm->setVariables([
                 'title' => "Suppression d'un sursis",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('entretien-professionnel/default/supprimer', ["sursis" => $sursis->getId()], [], true),
+                'action' => $this->url()->fromRoute('entretien-professionnel/sursis/supprimer', ["sursis" => $sursis->getId()], [], true),
             ]);
         }
         return $vm;

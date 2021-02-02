@@ -5,6 +5,7 @@ use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 
 /**
  * @var Campagne $campagne
@@ -18,6 +19,10 @@ $canVoirEntretien = $this->isAllowed(EntretienproPrivileges::getResourceId(Entre
 $canModifierEntretien = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER));
 $canHistoriserEntretien = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_HISTORISER));
 $canDetruireEntretien = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
+
+$canSursisAjouter = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_AJOUTER));
+$canSursisModifier = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_MODIFIER));
+$canSursisSupprimer = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_SUPPRIMER));
 
 $complete = [];
 $encours = [];
@@ -149,7 +154,37 @@ foreach ($agents as $agent) {
         <tr>
             <td> <?php echo $entretien->getAgent()->getDenomination(); ?></td>
             <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
-            <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
+            <td>
+                <?php $sursis = $entretien->getSursisActive(); ?>
+                <?php if ($sursis === null) : ?>
+                    <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?>
+                    <?php if ($canSursisAjouter) : ?>
+                        <a      <?php /** @see \EntretienProfessionnel\Controller\SursisController::modifierAction() */ ?>
+                                href="<?php echo $this->url('entretien-professionnel/sursis/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon sursis"></span></a>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <span class="texte-sursis" title="<?php echo $sursis->getDescription(); ?>">
+                        <?php echo $sursis->getSursis()->format('d/m/Y'); ?>
+                    </span>
+                    <?php if ($canSursisModifier) : ?>
+                    <a      <?php /** @see \EntretienProfessionnel\Controller\SursisController::modifierAction() */ ?>
+                            href="<?php echo $this->url('entretien-professionnel/sursis/modifier', ['sursis' => $sursis->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon sursis"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canSursisSupprimer) : ?>
+                        <a      <?php /** @see \EntretienProfessionnel\Controller\SursisController::supprimerAction() */ ?>
+                                href="<?php echo $this->url('entretien-professionnel/sursis/supprimer', ['sursis' => $sursis->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </td>
             <td>
                 <?php if ($entretien->getValidationResponsable() !== null) : ?>
                     <span
@@ -279,6 +314,12 @@ foreach ($agents as $agent) {
         </tbody>
     </table>
 
+<style>
+    span.texte-sursis {
+        color:darkred;
+        font-style: italic;
+    }
+</style>
 <script>
     $(function() {
         $("body").on("entretien", function (event) {

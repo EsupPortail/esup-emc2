@@ -41,7 +41,12 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
 
 $DEBUG = false;
 $now = new DateTime();
-$dayAfter = $entretien->getDateEntretien()->add(new DateInterval('P1D'));
+$date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
+$sursis = $entretien->getSursisActive();
+if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
+    $date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
+}
+$dayAfter = $date->add(new DateInterval('P1D'));
 ?>
 
 <?php if ($DEBUG) : ?>
