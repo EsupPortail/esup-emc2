@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @var EntretienProfessionnel $entretien
+ * @var FormationElement[] $formations
+ */
+
+/**
+ * @var FormationElement $formationElement
+ */
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use Formation\Entity\Db\FormationElement;
+
+$anneeCampagne = $entretien->getCampagne()->getAnnee();
+
+$array = [];
+foreach ($formations as $formation) {
+    if ($formation->estNonHistorise()) {
+        $anneeFormation = explode(" - ", $formation->getCommentaire())[0];
+        if ( $anneeFormation===$anneeCampagne ) {
+            $array[($formation->getFormation()->getGroupe()) ? $formation->getFormation()->getGroupe()->getLibelle() : "Sans groupe"][] = $formation;
+        }
+    }
+}
+ksort($array);
+
+?>
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <table class="formations">
+            <tbody>
+            <?php foreach($array as $groupe => $listing) : ?>
+                <tr>
+                    <th class="titre" colspan="3">
+                        <?php echo $groupe; ?>
+                    </th>
+                </tr>
+                <?php foreach ($listing as $formationElement) : ?>
+                    <tr>
+                        <td class="libelle-cell">
+                            <?php echo $formationElement->getFormation()->getLibelle(); ?>
+                        </td>
+                        <td class="info-cell">
+                            <?php echo $formationElement->getCommentaire(); ?>
+                        </td>
+                        <td class="validation-cell">
+                            <?php $validation = $formationElement->getValidation(); ?>
+                            <?php if ($validation === null ) : ?>
+                                Aucune validation
+                            <?php else : ?>
+                                <?php if ($validation->getValeur() === null) : ?>
+                                    <span class="icon ok" style="color: darkgreen;"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Validée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
+                                    > Validée</span>
+                                <?php else : ?>
+                                    <span class="icon ko" style="color: darkred;"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Refusée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
+                                    >Refusée</span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach;?>
+            <?php endforeach;?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br/>

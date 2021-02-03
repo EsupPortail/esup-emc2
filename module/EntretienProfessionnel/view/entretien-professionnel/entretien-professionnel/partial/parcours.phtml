@@ -84,6 +84,12 @@ $dayAfter = $date->add(new DateInterval('P1D'));
 
 <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formation', '', []); ?>
 
+
+<h3> Formation survie durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
+
+<?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
+
+
 <?php
 $instance = $entretien->getFormationInstance();
 $formulaire = $instance->getFormulaire();
