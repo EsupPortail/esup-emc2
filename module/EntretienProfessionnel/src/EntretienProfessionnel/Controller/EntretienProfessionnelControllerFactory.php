@@ -16,6 +16,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Observation\ObservationService;
 use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
+use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -30,6 +31,7 @@ class EntretienProfessionnelControllerFactory {
          * @var UserService $userService
          * @var ConfigurationService $configurationService
          * @var EntretienProfessionnelService $entretienProfesionnelService
+         * @var EtatService $etatService
          * @var CampagneService $campagneService
          * @var ObservationService $observationService
          * @var FormulaireService $formulaireService
@@ -43,6 +45,7 @@ class EntretienProfessionnelControllerFactory {
         $agentService = $container->get(AgentService::class);
         $userService = $container->get(UserService::class);
         $configurationService = $container->get(ConfigurationService::class);
+        $etatService = $container->get(EtatService::class);
 
         $entretienProfesionnelService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -76,6 +79,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setUserService($userService);
         $controller->setConfigurationService($configurationService);
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);
+        $controller->setEtatService($etatService);
         $controller->setCampagneService($campagneService);
         $controller->setObservationService($observationService);
         $controller->setFormulaireInstanceService($formulaireInstanceService);

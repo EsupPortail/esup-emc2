@@ -7,6 +7,10 @@
 use Autoform\Entity\Db\Champ;
 
 $periode = ["Année entière", "Premier semestre", "Second semestre"];
+if ($champ->getOptions() != "") {
+    $split = explode(";", $champ->getOptions());
+    if (!empty($split)) $periode = $split;
+}
 $split = explode("|",$reponse);
 $text = (count($split) === 2)?$split[0]:"";
 $select = (count($split) === 2)?$split[1]:"";
@@ -22,7 +26,12 @@ $select = (count($split) === 2)?$split[1]:"";
             Intitulé <input type="text" name="text_<?php echo $champ->getId(); ?>" value="<?php echo $text; ?>"/>
         </div>
         <div class="col-sm-5">
-            Période <select class='periode' name="select_<?php echo $champ->getId(); ?>">
+            <?php if ($champ->getTexte() == '') : ?>
+                Période
+            <?php else : ?>
+                <?php echo $champ->getTexte(); ?>
+            <?php endif; ?>
+            <select class='periode' name="select_<?php echo $champ->getId(); ?>">
                 <option value="null"></option>
                     <?php foreach ($periode as $item) : ?>
                         <option value="<?php echo $item; ?>"

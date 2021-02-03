@@ -29,6 +29,9 @@
         <field name="lieu"              type="string" length="4096"     column="lieu"               nullable="false"/>
         <field name="token"             type="string" length="255"      column="token"              nullable="true"/>
         <field name="acceptation"       type="datetime"                 column="acceptation"        nullable="true"/>
+        <many-to-one target-entity="UnicaenEtat\Entity\Db\Etat"  field="etat">
+            <join-column name="etat_id" referenced-column-name="id"/>
+        </many-to-one>
 
         <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationAgent">
             <join-column name="validation_agent_id" referenced-column-name="id" />
