@@ -3,7 +3,7 @@
 namespace UnicaenEtat\View\Helper;
 
 use Application\View\Renderer\PhpRenderer;
-use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenEtat\Entity\Db\Etat;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
 use Zend\View\Resolver\TemplatePathStack;
@@ -11,11 +11,11 @@ use Zend\View\Resolver\TemplatePathStack;
 class EtatBadgeViewHelper extends AbstractHelper
 {
     /**
-     * @param EtatType $etat
+     * @param Etat|null $etat
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($etat, $options = [])
+    public function __invoke(?Etat $etat, $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
