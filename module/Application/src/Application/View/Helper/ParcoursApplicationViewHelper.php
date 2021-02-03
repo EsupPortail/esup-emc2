@@ -4,6 +4,7 @@ namespace Application\View\Helper;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Categorie;
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
@@ -18,12 +19,12 @@ class ParcoursApplicationViewHelper extends AbstractHelper
     use ParcoursDeFormationServiceAwareTrait;
 
     /**
-     * @param FichePoste $fiche
+     * @param $fiche
      * @param Agent $agent
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(FichePoste $fiche, Agent $agent = null, $options = [])
+    public function __invoke($fiche, Agent $agent = null, $options = [])
     {
 
         /** @var PhpRenderer $view */
@@ -31,8 +32,15 @@ class ParcoursApplicationViewHelper extends AbstractHelper
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
         $applications = [];
-        foreach ($fiche->getFichesMetiers() as $fichesMetierType) {
-            foreach ($fichesMetierType->getFicheType()->getApplicationListe() as $application) {
+        if ($fiche instanceof FichePoste) {
+            foreach ($fiche->getFichesMetiers() as $fichesMetierType) {
+                foreach ($fichesMetierType->getFicheType()->getApplicationListe() as $application) {
+                    $applications[$application->getApplication()->getId()] = $application->getApplication();
+                }
+            }
+        }
+        if ($fiche instanceof FicheMetier) {
+            foreach ($fiche->getApplicationListe() as $application) {
                 $applications[$application->getApplication()->getId()] = $application->getApplication();
             }
         }

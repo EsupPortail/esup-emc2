@@ -270,23 +270,31 @@ $mode = $options['mode'];
                 Le parcours de formation n'est pas fourni.
             </div>
         <?php else : ?>
-            <?php $parcours = $options['parcours']['Catégorie']; ?>
             <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h2>
-                        <span class="icon formation"></span>
-                        Parcours de formation
-                </div>
-                <div class="panel-body">
+            <div class="panel-heading">
+                <h2>
+                    <span class="icon formation"></span>
+                    Parcours de formation
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+            <?php
+                $arrays = $options['parcours'];
+                ksort($arrays);
+                foreach ( $arrays as $type => $array) : ?>
+                <?php $parcours = $array; ?>
                     <?php foreach ($parcours as $parcour) : ?>
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-10">
-                                <?php echo $this->parcoursDeFormation($parcour); ?>
-                            </div>
-                        </div>
+                        <?php echo $this->parcoursDeFormation($parcour); ?>
                     <?php endforeach; ?>
+                <?php endforeach; ?>
+
+                    <?php echo $this->parcoursApplication($fichemetier); ?>
+                    </div>
                 </div>
+
+            </div>
             </div>
         <?php endif; ?>
     </div>

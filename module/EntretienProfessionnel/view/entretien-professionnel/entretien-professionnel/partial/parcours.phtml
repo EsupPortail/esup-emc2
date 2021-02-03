@@ -125,14 +125,26 @@ foreach ($reponses as $reponse) {
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <?php if ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] AND !empty($parcours[ParcoursDeFormation::TYPE_CATEGORIE])) : ?>
-            <?php foreach ($parcours[ParcoursDeFormation::TYPE_CATEGORIE] as $categorieId => $parcour) : ?>
+        <?php
+        $arrays = $parcours;
+        ksort($arrays);
+        foreach ( $arrays as $type => $array) : ?>
+            <?php $parcours = $array; ?>
+            <?php foreach ($parcours as $parcour) : ?>
                 <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
             <?php endforeach; ?>
-        <?php else: ?>
-            <span class="icon attention">Pas de parcours de formation associé à la catégorie.</span>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <?php
+            $fiche = $agent->getFichePosteActif();
+            if($fiche !== null) : ?>
+                <?php echo $this->parcoursApplication($fiche, $agent, $options); ?>
         <?php endif; ?>
-        <!-- //todo remettre -->
     </div>
 </div>
 
