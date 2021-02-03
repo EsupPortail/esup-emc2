@@ -26,6 +26,9 @@ ksort($array);
 
 ?>
 
+<?php if (empty($array)) : ?>
+    Aucune formation suivie durant la période de la campagne
+<?php else : ?>
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
@@ -70,5 +73,6 @@ ksort($array);
         </table>
     </div>
 </div>
+<?php endif; ?>
 
 <br/>
