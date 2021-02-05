@@ -8,15 +8,17 @@ use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatInterface {
     use HistoriqueAwareTrait;
+    use HasEtatTrait;
 
     const ETAT_ACCEPTATION                  = 'ENTRETIEN_ACCEPTATION';
     const ETAT_ACCEPTER                     = 'ENTRETIEN_ACCEPTER';
@@ -61,8 +63,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private $token;
     /** @var DateTime */
     private $acceptation;
-    /** @var Etat */
-    private $etat;
 
     /**
      * @return int
@@ -170,25 +170,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->lieu = $lieu;
         return $this;
     }
-
-    /**
-     * @return Etat|null
-     */
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    /**
-     * @param Etat|null $etat
-     * @return EntretienProfessionnel
-     */
-    public function setEtat(?Etat $etat): EntretienProfessionnel
-    {
-        $this->etat = $etat;
-        return $this;
-    }
-
 
     /**
      * @return FormulaireInstance

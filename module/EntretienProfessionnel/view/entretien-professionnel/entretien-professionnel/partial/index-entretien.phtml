@@ -34,7 +34,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
         <th> Agent </th>
         <th> Responsable </th>
         <th> Date </th>
-        <th> Modifée </th>
+        <th> État </th>
         <th> Action </th>
     </tr>
     </thead>
@@ -48,7 +48,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
             </td>
             <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
             <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
-            <td> <?php echo $entretien->getHistoModification()->format('d/m/Y'); ?> </td>
+            <td> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
             <td>
                 <?php if ($canVoir) : ?>
                     <a
