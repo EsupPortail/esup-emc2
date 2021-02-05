@@ -20,11 +20,11 @@ class ParcoursApplicationViewHelper extends AbstractHelper
 
     /**
      * @param $fiche
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($fiche, Agent $agent = null, $options = [])
+    public function __invoke($fiche, ?Agent $agent = null, $options = [])
     {
 
         /** @var PhpRenderer $view */

@@ -23,21 +23,17 @@ use Formation\Entity\Db\Formation;
  */
 
 $modesAutorises = ['affichage', 'creation', 'modification'];
+$nogroup = "Sans Groupe";
 
 /** Tri pour bonne affichage ******************************************************************************************/
-$nogroup = "ZZZZ";
-$formationArray = [];
-//foreach ($parcours->getFormations() as $formation) {
-//    $groupe = ($formation->getFormation()->getGroupe())?$formation->getFormation()->getGroupe()->getLibelle():$nogroup;
-//    $formationArray[$groupe][] = $formation;
-//}
-//
-//usort($formationArray,
-//    function($a, $b) {
-//        $ordre_a = ($a[0]->getFormation()->getGroupe())?$a[0]->getFormation()->getGroupe()->getOrdre():9999;
-//        $ordre_b = ($b[0]->getFormation()->getGroupe())?$b[0]->getFormation()->getGroupe()->getOrdre():9999;
-//        return $ordre_a > $ordre_b;
-//    });
+$applicationsArray = [];
+foreach ($applications as $application) {
+    $groupe = ($application->getGroupe())?$application->getGroupe()->getLibelle():$nogroup;
+    $applicationsArray[$groupe][] = $application;
+}
+
+ksort($applicationsArray);
+
 ?>
 
 <?php /** Récupération du mode ****************************************************************************************/
@@ -76,120 +72,32 @@ $formationArray = [];
 
 <?php /** Affichage du tableau ****************************************************************************************/ ?>
 
-<div>
+    <div>
     <table class="parcours-de-formation">
-        <?php foreach($applications as $id => $application) : ?>
-            <tr>
-                <td class="libelle"> <?php echo $application->getLibelle(); ?> </td>
-            </tr>
+        <?php foreach($applicationsArray as $groupe => $applicationArray) : ?>
+            <?php usort($applicationArray, function ($a, $b) {return $a->getLibelle() > $b->getLibelle();}); ?>
+
+            <?php /** Barre de groupe de formation  *******************************************************************/ ?>
+                <tr>
+                    <th class="titre" colspan="3">
+                        <?php echo $groupe; ?>
+                    </th>
+                </tr>
+
+            <?php /** Barre de formation ******************************************************************************/ ?>
+
+            <?php  foreach($applicationArray as $application) : ?>
+                <tr>
+                    <td class="libelle">
+                        <?php echo $application->getLibelle(); ?>
+                    </td>
+                    <td class="formation"></td>
+                    <td class="action"></td>
+                </tr>
+            <?php endforeach; ?>
         <?php endforeach; ?>
     </table>
 </div>
-<!--        --><?php //foreach ($formationArray as $groupe => $formationSubarray) : ?>
-<!---->
-<!--            --><?php //usort($formationSubarray, function ($a, $b) {return $a->getOrdre() > $b->getOrdre();}); ?>
-<!---->
-<!--            --><?php ///** Barre de groupe de formation  *******************************************************************/ ?>
-<!---->
-<!--            --><?php //if ($groupe !== $nogroup) : ?>
-<!--                --><?php ///** @var FormationGroupe $groupe */ $groupe = $formationSubarray[0]->getFormation()->getGroupe(); ?>
-<!--                <tr>-->
-<!--                    <th class="titre" colspan="3">-->
-<!--                        --><?php //echo ($groupe !== null)?$groupe->getLibelle():"Sans groupe ..."; ?>
-<!--                    </th>-->
-<!---->
-<!--                </tr>-->
-<!--            --><?php //else : ?>
-<!--                <tr>-->
-<!--                    <th class="titre" colspan="3">-->
-<!--                        Sans groupe ...-->
-<!--                    </th>-->
-<!--                </tr>-->
-<!--            --><?php //endif; ?>
-<!---->
-<!--            --><?php ///** Barre de formation ******************************************************************************/ ?>
-<!---->
-<!--            --><?php // foreach($formationSubarray as $formation) : ?>
-<!--            <tr>-->
-<!--                <td class="libelle"> --><?php //echo $formation->getFormation()->getLibelle(); ?><!-- </td>-->
-<!--                <td class="formation">-->
-<!--                    --><?php //if ($mode === 'modification') : ?>
-<!--                        --><?php
-//                            $agentFormation = ($agent !== null AND $agent->hasFormation($formation)) ? $agent->hasFormation($formation):null;
-//                            $agentValidation = ($agentFormation !== null AND $agentFormation->getValidation() !== null) ? $agentFormation->getValidation():null;
-//                        ?>
-<!--                        --><?php //if ($agentFormation !== null) : ?>
-<!--                            --><?php //if ($agentValidation !== null) : ?>
-<!--                                --><?php //if ($agentValidation->getValeur() === null) : ?>
-<!--                                    <span class="icon ok" style="color: darkgreen;"-->
-<!--                                          data-toggle="tooltip" data-html="true"-->
-<!--                                          title="Validée le --><?php //echo $agentFormation->getValidation()->getHistoModification()->format('d/m/Y'); ?><!-- par --><?php //echo $agentFormation->getValidation()->getHistoModificateur()->getDisplayName(); ?><!--"-->
-<!--                                    ></span>-->
-<!--                                --><?php //else : ?>
-<!--                                    <span class="icon ko" style="color: darkred;"-->
-<!--                                          data-toggle="tooltip" data-html="true"-->
-<!--                                          title="Refusée le --><?php //echo $agentFormation->getValidation()->getHistoModification()->format('d/m/Y'); ?><!-- par --><?php //echo $agentFormation->getValidation()->getHistoModificateur()->getDisplayName(); ?><!--"-->
-<!--                                    ></span>-->
-<!--                                --><?php //endif; ?>
-<!--                            --><?php //else : ?>
-<!--                                --><?php //if ($canModifier) : ?>
-<!--                                    <a-->
-<!--                                        --><?php ///** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-<!--                                        href="--><?php //echo $this->url('agent/valider-element', ['type' => "AgentFormation", 'id' => $agentFormation->getId()], [], true); ?><!--"-->
-<!--                                        class="ajax-modal"-->
-<!--                                        data-event="modification"-->
-<!--                                    >-->
-<!--                                --><?php //endif; ?>
-<!--                                <span class="icon question" style="color: cornflowerblue;"-->
-<!--                                      data-toggle="tooltip" data-html="true"-->
-<!--                                      title="Formation en attente de validation"-->
-<!--                                ></span>-->
-<!--                                --><?php //if ($canModifier) : ?>
-<!--                                    </a>-->
-<!--                                --><?php //endif; ?>
-<!--                            --><?php //endif; ?>
-<!--                        --><?php //else : ?>
-<!--                            --><?php //if ($canModifier) : ?>
-<!--                                <a-->
-<!--                                    --><?php ///** @see \Application\Controller\AgentController::ajouterAgentFormationAction() */?>
-<!--                                        href="--><?php //echo $this->url('agent/ajouter-agent-formation', ['agent' => $agent->getId(), 'formation' => $formation->getId()], [], true); ?><!--"-->
-<!--                                        class="ajax-modal"-->
-<!--                                        data-event="modification"-->
-<!--                                >-->
-<!--                                    <span class="icon ajouter"-->
-<!--                                          data-toggle="tooltip" data-html="true"-->
-<!--                                          title="Ajouter une formation"-->
-<!--                                    ></span>-->
-<!--                                </a>-->
-<!--                            --><?php //endif; ?>
-<!--                        --><?php //endif; ?>
-<!--                    --><?php //endif; ?>
-<!--                </td>-->
-<!--                <td>-->
-<!--                    --><?php //if ($canModifier AND $mode === 'creation') : ?>
-<!--                        --><?php ///** @see \Application\Controller\ParcoursDeFormationController::bougerFormationAction() */ ?>
-<!--                        <a href="--><?php //echo $this->url('parcours-de-formation/bouger-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formation->getId(), 'direction' => 'up'], [], true); ?><!--"-->
-<!--                        >-->
-<!--                            <span class="icon monter" data-toogle="tooltip" data-html="true" title="Bouger vers le haut la formation"></span>-->
-<!--                        </a>-->
-<!--                        --><?php ///** @see \Application\Controller\ParcoursDeFormationController::bougerFormationAction() */ ?>
-<!--                        <a href="--><?php //echo $this->url('parcours-de-formation/bouger-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formation->getId(), 'direction' => 'down'], [], true); ?><!--"-->
-<!--                        >-->
-<!--                            <span class="icon descendre" data-toogle="tooltip" data-html="true" title="Bouger vers le bas la formation"></span>-->
-<!--                        </a>-->
-<!--                        --><?php ///** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
-<!--                        <a href="--><?php //echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formation->getId()], [], true); ?><!--"-->
-<!--                        >-->
-<!--                            <span class="icon detruire" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>-->
-<!--                        </a>-->
-<!--                    --><?php //endif; ?>
-<!--                </td>-->
-<!--            </tr>-->
-<!--            --><?php //endforeach; ?>
-<!--        --><?php //endforeach; ?>
-<!--    </table>-->
-<!--</div>-->
-
 </div>
 
 <style>

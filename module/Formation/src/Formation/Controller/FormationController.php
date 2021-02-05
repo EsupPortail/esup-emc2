@@ -101,7 +101,6 @@ class FormationController extends AbstractActionController
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $this->getFormationService()->restore($formation);
         return $this->redirect()->toRoute('formation', [], ['fragment' => 'formation'], true);
-
     }
 
     public function detruireAction()
