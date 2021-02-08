@@ -40,6 +40,7 @@ $modules = [
     'Indicateur',
     'Formation',
     'EntretienProfessionnel',
+    'Metier',
     'Application',
 //    'Document',
     'ZendDeveloperTools',

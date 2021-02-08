@@ -17,7 +17,7 @@ use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\CorpsPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
-use Application\Provider\Privilege\MetierPrivileges;
+use Metier\Provider\Privilege\MetierPrivileges;
 use Application\Provider\Privilege\MissionspecifiquePrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\StructurePrivileges;

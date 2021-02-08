@@ -51,7 +51,7 @@ return [
                         'index',
                         'extraction-listing-fiche-poste',
                     ],
-                    'privileges' => StructurePrivileges::STRUCTURE_INDEX,
+                    'privileges' => StructurePrivileges::STRUCTURE_AFFICHER,
                 ],
                 [
                     'controller' => StructureController::class,

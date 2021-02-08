@@ -5,7 +5,7 @@ namespace Application\Form\Poste;
 use Application\Entity\Db\Poste;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
-use Application\Service\Domaine\DomaineServiceAwareTrait;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 

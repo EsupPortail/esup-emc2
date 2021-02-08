@@ -1,0 +1,132 @@
+<?php
+
+/**
+ * @see \Application\Controller\MetierController::indexAction()
+ * @var FamilleProfessionnelle[] $familles
+ * @var Domaine[] $domaines
+ * @var Metier[] $metiers
+ * @var Referentiel[] $referentiels
+ */
+
+use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Entity\Db\Metier;
+use Metier\Entity\Db\Referentiel;
+use Metier\Provider\Privilege\MetierPrivileges;
+
+$this->headTitle('Métiers, familles professionnelles et domaines');
+
+$canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_CARTOGRAPHIE));
+
+$droits = [
+    "ajouter"       => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AJOUTER)),
+    "editer"        => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER)),
+    "historiser"    => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER)),
+    "effacer"       => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_SUPPRIMER)),
+];
+?>
+
+<h1 class="page-header">
+    Métiers, familles professionnelles et domaines
+</h1>
+
+<?php if ($canCarto) : ?>
+    <a
+            <?php /** @see \Metier\Controller\MetierController::cartographieAction() */?>
+            href="<?php echo $this->url('metier/cartographie', [], [], true); ?>"
+            class="btn btn-primary action"
+        >
+            Aller vers la cartographie
+    </a>
+<?php endif; ?>
+
+<br/>
+<br/>
+
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+
+        <li role="famille">
+            <a href="#famille" aria-controls="famille" role="tab" data-toggle="tabz">
+                Familles professionnelles &nbsp;
+                <span class="badge">
+                    <?php echo count($familles); ?>
+                </span>
+            </a>
+        </li>
+
+        <li role="domaine">
+            <a href="#domaine" aria-controls="domaine" role="tab" data-toggle="tabz">
+                Domaines &nbsp;
+                <span class="badge">
+                    <?php echo count($domaines); ?>
+                </span>
+            </a>
+        </li>
+
+        <li role="metier">
+            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz" >
+                Métiers &nbsp;
+                <span class="badge">
+                    <?php echo count($metiers); ?>
+                </span>
+            </a>
+        </li>
+
+        <li role="referentiel">
+            <a href="#referentiel" aria-controls="referentiel" role="tab" data-toggle="tabz" >
+                Référentiels métiers &nbsp;
+                <span class="badge">
+                    <?php echo count($referentiels); ?>
+                </span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="main-with-tab">
+
+        <div class="tab-content">
+
+            <!-- FAMILLE ---------------------------------------------------------------------------------------------->
+            <div id="famille" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/listing-famille.phtml', ['familles' => $familles, 'droits' => $droits]); ?>
+            </div>
+
+            <!-- DOMAINE ---------------------------------------------------------------------------------------------->
+            <div id="domaine" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/listing-domaine.phtml', ['domaines' => $domaines, 'droits' => $droits]); ?>
+            </div>
+
+            <!-- METIER ----------------------------------------------------------------------------------------------->
+            <div id="metier" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/listing-metier.phtml', ['metiers' => $metiers, 'droits' => $droits]); ?>
+            </div>
+            <!-- REFERENTIEL ----------------------------------------------------------------------------------------------->
+            <div id="referentiel" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/listing-referentiel.phtml', ['referentiels' => $referentiels, 'droits' => $droits]); ?>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "metier";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

@@ -2,10 +2,9 @@
 
 namespace Application\Service\FicheMetier;
 
-use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
-use Application\Entity\Db\Domaine;
-use Application\Entity\Db\FamilleProfessionnelle;
+use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
 use Application\Form\EntityFormManagmentTrait;
 use Formation\Entity\Db\Formation;

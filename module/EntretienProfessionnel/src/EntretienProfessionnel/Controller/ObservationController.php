@@ -39,7 +39,7 @@ class ObservationController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/entretien-professionnel/observation-form');
+        $vm->setTemplate('entretien-professionnel/entretien-professionnel/observation-form');
         $vm->setVariables([
             'title' => "Ajout d'une observation",
             'form' => $form,
@@ -66,7 +66,7 @@ class ObservationController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/entretien-professionnel/observation-form');
+        $vm->setTemplate('entretien-professionnel/entretien-professionnel/observation-form');
         $vm->setVariables([
             'title' => "Modification d'une observation",
             'form' => $form,

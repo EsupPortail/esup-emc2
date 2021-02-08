@@ -6,8 +6,7 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <!--<one-to-many field="metier" target-entity="Application\Entity\Db\Metier" mapped-by="id" />-->
-        <many-to-one target-entity="Application\Entity\Db\Metier" field="metier">
+        <many-to-one target-entity="Metier\Entity\Db\Metier" field="metier">
             <join-column name="metier_id" referenced-column-name="id" />
         </many-to-one>
         <many-to-one target-entity="UnicaenEtat\Entity\Db\Etat"  field="etat">

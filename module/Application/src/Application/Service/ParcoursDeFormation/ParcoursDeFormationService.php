@@ -3,20 +3,20 @@
 namespace Application\Service\ParcoursDeFormation;
 
 use Application\Entity\Db\Categorie;
-use Application\Entity\Db\Domaine;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\ParcoursDeFormationFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
-use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
+use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\Metier;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 

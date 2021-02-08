@@ -19,11 +19,11 @@
         <field name="importationModification"   column="updated_on"         type="datetime"  />
         <field name="importationHistorisation"  column="deleted_on"         type="datetime"  />
 
-        <many-to-one target-entity="Application\Entity\Db\Domaine"  field="domaine">
+        <many-to-one target-entity="Metier\Entity\Db\Domaine"  field="domaine">
             <join-column name="domaine_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many target-entity="Application\Entity\Db\Metier" field="metiers" mapped-by="fonction"/>
+        <one-to-many target-entity="Metier\Entity\Db\Metier" field="metiers" mapped-by="fonction"/>
 
     </entity>
 </doctrine-mapping>

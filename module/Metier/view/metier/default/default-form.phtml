@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @var Form $form
+ */
+
+use Zend\Form\Form;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.type2',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+    });
+
+    $('select').selectpicker();
+</script>
+
+<style>
+    .ui-datepicker{
+        position: absolute;
+        z-index:1050 !important;
+    }
+   /*div.ui-datepicker {*/
+   /*    position: absolute;*/
+   /*     z-index:1050;*/
+   /* }*/
+   /* select.ui-datepicker-year option{*/
+   /* position: absolute;*/
+   /*     z-index:3151 !important;*/
+   /* }*/
+</style>
