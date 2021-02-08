@@ -17,8 +17,8 @@ $poste = $fiche->getPoste();
 /** @var Structure[] $structures */
 $structures = [];
 if ($agent !== null) {
-    foreach ($agent->getGradesActifs() as $agentGrade) {
-        $structure = $agentGrade->getStructure();
+    foreach ($agent->getAffectationsActifs() as $agentAffectation) {
+        $structure = $agentAffectation->getStructure();
         if ($structure !== null) $structures[] = $structure;
     }
 }

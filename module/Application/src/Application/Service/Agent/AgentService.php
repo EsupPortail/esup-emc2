@@ -291,7 +291,7 @@ class AgentService {
             ->andWhere('statut.dispo = :false')
 //            ->andWhere('statut.administratif = :true')
             ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
-            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
+//            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
             ->andWhere('affectation.principale = :true')
             ->setParameter('today', $today)
