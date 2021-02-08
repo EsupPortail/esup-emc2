@@ -3,7 +3,7 @@
 namespace Application\Form\ModifierNiveau;
 
 use Application\Entity\Db\Corps;
-use Application\Entity\Db\Metier;
+use Metier\Entity\Db\Metier;
 use Zend\Hydrator\HydratorInterface;
 
 class ModifierNiveauHydrator implements HydratorInterface {

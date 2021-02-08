@@ -2,7 +2,7 @@
 
 namespace Application\Service\Validation;
 
-use Application\Entity\Db\Domaine;
+use Metier\Entity\Db\Domaine;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ValidationDemande;
 use Application\Entity\Db\ValidationType;

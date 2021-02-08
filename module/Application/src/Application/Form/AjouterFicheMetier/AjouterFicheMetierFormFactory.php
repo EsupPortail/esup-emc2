@@ -2,9 +2,9 @@
 
 namespace Application\Form\AjouterFicheMetier;
 
-use Application\Service\Domaine\DomaineService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
+use Metier\Service\Domaine\DomaineService;
 
 class AjouterFicheMetierFormFactory {
 

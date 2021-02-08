@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Form\Validation\ValidationForm;
 use Application\Form\ValidationDemande\ValidationDemandeForm;
-use Application\Service\Domaine\DomaineService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\Validation\ValidationDemandeService;
 use Application\Service\Validation\ValidationService;
@@ -12,7 +11,10 @@ use Application\Service\Validation\ValidationTypeService;
 use Application\Service\Validation\ValidationValeurService;
 use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
-use UnicaenUtilisateur\Service\User\UserService;;
+use Metier\Service\Domaine\DomaineService;
+use UnicaenUtilisateur\Service\User\UserService;
+
+;
 
 class ValidationControllerFactory {
 

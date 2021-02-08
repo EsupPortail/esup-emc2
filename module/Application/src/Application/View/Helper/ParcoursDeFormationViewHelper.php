@@ -4,7 +4,7 @@ namespace Application\View\Helper;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Categorie;
-use Application\Entity\Db\Metier;
+use Metier\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\View\Renderer\PhpRenderer;

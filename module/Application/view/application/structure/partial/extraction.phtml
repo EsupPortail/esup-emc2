@@ -10,7 +10,9 @@ use Application\Entity\Db\Structure;
 
 <h2>Listing des fiches de postes</h2>
 
-<a href="<?php echo $this->url('structure/extraction/listing-fiche-poste', ['structure' => $structure->getId()], [], true); ?>"
+<a
+        <?php /** @see \Application\Controller\StructureController::extractionListingFichePosteAction() */ ?>
+        href="<?php echo $this->url('structure/extraction/listing-fiche-poste', ['structure' => $structure->getId()], [], true); ?>"
    class="btn btn-primary action"
 >
     <span class="icon csv"></span> Extraire au format CSV

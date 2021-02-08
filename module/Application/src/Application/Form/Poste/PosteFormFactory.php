@@ -5,9 +5,9 @@ namespace Application\Form\Poste;
 use Application\Controller\StructureController;
 use Application\Service\Agent\AgentService;
 use Application\Service\Correspondance\CorrespondanceService;
-use Application\Service\Domaine\DomaineService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Metier\Service\Domaine\DomaineService;
 use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 

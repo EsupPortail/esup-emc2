@@ -4,9 +4,9 @@ namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\MetierReference;
-use Application\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Metier\Entity\Db\MetierReference;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Hidden;

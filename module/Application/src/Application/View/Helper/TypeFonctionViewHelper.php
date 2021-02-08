@@ -2,8 +2,7 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\Domaine;
-use Application\Entity\Db\Poste;
+use Metier\Entity\Db\Domaine;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
