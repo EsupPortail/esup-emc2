@@ -47,8 +47,11 @@ if ($agent !== null) {
     </div>
     <div class="panel-body">
 <!--        <h3> Affectation du poste </h3>-->
-
-        <?php foreach ($structures as $structure) : ?>
+        <?php
+            $structuresListe = [];
+            foreach ($structures as $structure) $structuresListe[$structure->getId()] = $structure;
+        ?>
+        <?php foreach ($structuresListe as $structure) : ?>
             <h4> <?php echo $structure->getLibelleLong(); ?> </h4>
 
             <?php if ($structure->getDescription() !== null) :?>
