@@ -3,7 +3,7 @@
 namespace Application\Form\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
-use Application\Service\Metier\MetierServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class LibelleHydrator implements HydratorInterface {

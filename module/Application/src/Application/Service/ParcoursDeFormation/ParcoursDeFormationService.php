@@ -9,7 +9,7 @@ use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\ParcoursDeFormationFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
-use Application\Service\Metier\MetierServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;

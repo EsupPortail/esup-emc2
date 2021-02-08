@@ -2,7 +2,7 @@
 
 namespace Application\Form\FicheMetier;
 
-use Application\Service\Metier\MetierService;
+use Metier\Service\Metier\MetierService;
 use Interop\Container\ContainerInterface;
 
 class LibelleHydratorFactory {

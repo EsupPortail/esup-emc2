@@ -2,12 +2,13 @@
 
 namespace Application\Form\FicheMetier;
 
-use Application\Service\Metier\MetierServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
-class LibelleForm extends Form {
+class LibelleForm extends Form
+{
     use MetierServiceAwareTrait;
 
     public function init()
@@ -20,13 +21,13 @@ class LibelleForm extends Form {
                 'label' => "Libellé du métier :",
                 'empty_option' => "Sélectionner un metier ...",
                 'value_options' =>
-                    //$this->getOptions(),
+                //$this->getOptions(),
                     $this->getMetierService()->getMetiersTypesAsMultiOptions(),
             ],
             'attributes' => [
                 'id' => 'metier',
                 'class' => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'data-live-search' => 'true',
             ],
         ]);
         // button

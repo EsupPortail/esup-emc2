@@ -8,6 +8,7 @@ use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
+use Metier\Entity\Db\Metier;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;

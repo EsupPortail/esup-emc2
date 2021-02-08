@@ -5,7 +5,7 @@ namespace Application\Form\ParcoursDeFormation;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use Application\Service\Metier\MetierServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;

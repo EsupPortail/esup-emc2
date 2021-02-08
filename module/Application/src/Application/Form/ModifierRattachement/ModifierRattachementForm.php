@@ -4,7 +4,7 @@ namespace Application\Form\ModifierRattachement;
 
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
-use Application\Service\Metier\MetierServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
