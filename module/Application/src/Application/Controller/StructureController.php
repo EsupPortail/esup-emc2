@@ -395,7 +395,9 @@ class StructureController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getStructureAgentForceService()->create($structureAgentForce);
+                if ($this->getStructureAgentForceService()->getStructureAgentForceByStructureAndAgent($structureAgentForce->getStructure(), $structureAgentForce->getAgent()) === null) {
+                    $this->getStructureAgentForceService()->create($structureAgentForce);
+                }
             }
         }
 
