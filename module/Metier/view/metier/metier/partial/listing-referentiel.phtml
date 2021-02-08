@@ -82,7 +82,7 @@ $canEffacer        = $droits["effacer"];
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
                     <a  <?php /** @see \Metier\Controller\ReferentielController::supprimerAction() */ ?>
-                        href="<?php echo $this->url('metier/referentiel/effacer', ['referentiel' => $referentiel->getId()], [], true); ?>"
+                        href="<?php echo $this->url('metier/referentiel/supprimer', ['referentiel' => $referentiel->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
                         <span class="icon detruire"  title="Supprimer le référentiel métier"></span></a>

@@ -76,7 +76,7 @@ return [
                     'referentiel' => [
                         'type'  => Literal::class,
                         'options' => [
-                            'route' => 'referentiel',
+                            'route' => '/referentiel',
                         ],
                         'may_terminate'=> false,
                         'child_routes' => [
@@ -120,13 +120,13 @@ return [
                                     ],
                                 ],
                             ],
-                            'effacer' => [
+                            'supprimer' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/effacer/:referentiel',
+                                    'route'    => '/supprimer/:referentiel',
                                     'defaults' => [
                                         'controller' => ReferentielController::class,
-                                        'action'     => 'effacer',
+                                        'action'     => 'supprimer',
                                     ],
                                 ],
                             ],

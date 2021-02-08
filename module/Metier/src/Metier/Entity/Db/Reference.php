@@ -132,18 +132,18 @@ class Reference implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getPage()
+    public function getPage() : ?int
     {
         return $this->page;
     }
 
     /**
-     * @param int $page
+     * @param int|null $page
      * @return Reference
      */
-    public function setPage(int $page)
+    public function setPage(?int $page) : Reference
     {
         $this->page = $page;
         return $this;

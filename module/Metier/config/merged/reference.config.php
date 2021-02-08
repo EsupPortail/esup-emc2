@@ -19,52 +19,50 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
-                PrivilegeController::class => [
-                    [
-                        'controller' => ReferenceController::class,
-                        'action' => [
-                            'index'
-                        ],
-                        'privileges' => [
-                            ReferencemetierPrivileges::REFERENCE_INDEX
-                        ],
+                [
+                    'controller' => ReferenceController::class,
+                    'action' => [
+                        'index'
                     ],
-                    [
-                        'controller' => ReferenceController::class,
-                        'action' => [
-                            'ajouter',
-                        ],
-                        'privileges' => [
-                            ReferencemetierPrivileges::REFERENCE_AJOUTER
-                        ],
+                    'privileges' => [
+                        ReferencemetierPrivileges::REFERENCE_INDEX
                     ],
-                    [
-                        'controller' => ReferenceController::class,
-                        'action' => [
-                            'modifier',
-                        ],
-                        'privileges' => [
-                            ReferencemetierPrivileges::REFERENCE_MODIFIER
-                        ],
+                ],
+                [
+                    'controller' => ReferenceController::class,
+                    'action' => [
+                        'ajouter',
                     ],
-                    [
-                        'controller' => ReferenceController::class,
-                        'action' => [
-                            'historiser',
-                            'restaurer',
-                        ],
-                        'privileges' => [
-                            ReferencemetierPrivileges::REFERENCE_HISTORISER
-                        ],
+                    'privileges' => [
+                        ReferencemetierPrivileges::REFERENCE_AJOUTER
                     ],
-                    [
-                        'controller' => ReferenceController::class,
-                        'action' => [
-                            'supprimer',
-                        ],
-                        'privileges' => [
-                            ReferencemetierPrivileges::REFERENCE_SUPPRIMER
-                        ],
+                ],
+                [
+                    'controller' => ReferenceController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        ReferencemetierPrivileges::REFERENCE_MODIFIER
+                    ],
+                ],
+                [
+                    'controller' => ReferenceController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        ReferencemetierPrivileges::REFERENCE_HISTORISER
+                    ],
+                ],
+                [
+                    'controller' => ReferenceController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        ReferencemetierPrivileges::REFERENCE_SUPPRIMER
                     ],
                 ],
             ],
@@ -78,7 +76,7 @@ return [
                     'reference' => [
                         'type'  => Literal::class,
                         'options' => [
-                            'route' => 'reference',
+                            'route' => '/reference',
                         ],
                         'may_terminate' => false,
                         'child_routes' => [
