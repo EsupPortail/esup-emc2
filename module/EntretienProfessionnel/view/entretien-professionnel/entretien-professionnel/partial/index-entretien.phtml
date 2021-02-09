@@ -15,16 +15,6 @@ $canHistoriser  = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 ?>
 
-<?php if (false AND $canAjouter) : ?>
-    <a
-        <?php /** @see \Application\Controller\EntretienProfessionnelController::creerAction() */ ?>
-        href="<?php echo $this->url('entretien-professionnel/creer', [], [], true); ?>"
-        class="btn btn-primary action ajax-modal" data-event="modification">
-        <span class="icon ajouter action"></span>
-        Créer un entretien professionnel
-    </a>
-<?php endif; ?>
-
 <h2> Liste des entretiens enregistrés </h2>
 
 <table class="datatable table table-condensed">
@@ -52,7 +42,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
             <td>
                 <?php if ($canVoir) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::afficherAction() */?>
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::afficherAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true) ?>"
                         class="ajax-modal"
                     >
@@ -61,7 +51,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
                 <?php if ($canVoir) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::exporterAction() */?>
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true) ?>"
                     >
                         <span class="icon pdf" title="Exporter l'entretien professionnel"></a>
@@ -69,7 +59,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
                 <?php if ($canModifier) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::renseignerAction() */?>
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
                     >
                         <span class="icon editer" title="Modifier le compte-rendu de l'entretien professionnel"></span></a>
@@ -78,13 +68,13 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
                 <?php if ($canHistoriser) : ?>
                     <?php if ($entretien->estNonHistorise()) : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::historiserAction() */?>
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
                         >
                             <span class="icon historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span></a>
                     <?php else : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::restaurerAction() */?>
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::restaurerAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
                         >
                             <span class="icon restaurer" title="Restaurer le compte-rendu de l'entretien professionnel"></span></a>
@@ -93,7 +83,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
                 <?php if ($canDetruire) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::detruireAction() */?>
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"
@@ -105,4 +95,3 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
     <?php endforeach; ?>
     </tbody>
 </table>
-</div>

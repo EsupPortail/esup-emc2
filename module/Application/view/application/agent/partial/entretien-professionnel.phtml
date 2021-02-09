@@ -43,19 +43,20 @@ $canDetruireEntretienPro     = $droits['detruire'];
             </td>
             <td>
                 <?php if ($canVoirEntretienPro) : ?>
-                    <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::renseignerAction() */?>
+                    <a  <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
                             target="_blank"
                     >
                         <?php if ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise()) : ?>
-                            <span class="icon editer" title="Renseigner l'entretien professionnel"></span></a>
+                            <span class="icon editer" title="Renseigner l'entretien professionnel"></span>
                         <?php else: ?>
-                            <span class="icon voir" title="Voir l'entretien professionnel"></span></a>
+                            <span class="icon voir" title="Voir l'entretien professionnel"></span>
                         <?php endif; ?>
+                    </a>
                 <?php endif; ?>
 
                 <?php if ($canVoirEntretienPro) : ?>
-                    <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::exporterAction() */?>
+                    <a  <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true); ?>"
                             target="_blank"
                     >
@@ -64,19 +65,19 @@ $canDetruireEntretienPro     = $droits['detruire'];
 
                 <?php if ($canHistoriserEntretienPro AND $entretien->getValidationResponsable() === null) : ?>
                     <?php if ($entretien->estNonHistorise()) : ?>
-                        <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::historiserAction() */?>
+                        <a  <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
                         >
                             <span class="icon historiser" title="Historiser l'entretien professionnel'"></span></a>
                     <?php else : ?>
-                        <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::historiserAction() */?>
+                        <a  <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
                         >
                             <span class="icon restaurer" title="Restaurer l'entretien professionnel"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruireEntretienPro) : ?>
-                    <a  <?php /** @see \Application\Controller\EntretienProfessionnelController::detruireAction() */?>
+                    <a  <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */?>
                         href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"

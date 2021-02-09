@@ -46,7 +46,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
             <?php if ($observation === null) : ?>
                 <?php if ($canAjouterObservation AND $now <= $entretien7) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::ajouterObservationAction() */ ?>
+                        <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAction() */ ?>
                         href="<?php echo $this->url('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification"
                     >
@@ -57,7 +57,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
                 <?php if ($now <= $entretien7) : ?>
                     <?php if ($canModifierObservation) : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::modifierObservationAction() */ ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::modifierAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/observation/modifier', ['observation' => $observation->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                         >
@@ -67,7 +67,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
                     <?php if ($canHistoriserObservation) : ?>
                         <?php if ($observation->estNonHistorise()) : ?>
                             <a
-                                <?php /** @see \Application\Controller\EntretienProfessionnelController::historiserObservationAction() */ ?>
+                                <?php /** @see \EntretienProfessionnel\Controller\ObservationController::historiserAction() */ ?>
                                     href="<?php echo $this->url('entretien-professionnel/observation/historiser', ['observation' => $observation->getId()], [], true); ?>"
                                     class="ajax-modal" data-event="modification"
                             >
@@ -75,7 +75,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
                             </a>
                         <?php else : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\EntretienProfessionnelController::restaurerObservationAction() */ ?>
+                                    <?php /** @see \EntretienProfessionnel\Controller\ObservationController::restaurerAction() */ ?>
                                         href="<?php echo $this->url('entretien-professionnel/observation/restaurer', ['observation' => $observation->getId()], [], true); ?>"
                                         class="ajax-modal" data-event="modification"
                                 >
@@ -85,7 +85,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
                     <?php endif; ?>
                     <?php if ($canDetruireObservation) : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::detruireObservationAction() */ ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::detruireAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/observation/detruire', ['observation' => $observation->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >

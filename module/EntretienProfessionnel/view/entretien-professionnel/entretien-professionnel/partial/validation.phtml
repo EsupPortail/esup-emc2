@@ -54,7 +54,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                 <br/>
                 <?php if ($canValiderResponsable && ! $entretien->hasValidationAgent()) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationResponsable()->getId()], [], true); ?>"
                             class="btn btn-danger action"
                     >
@@ -74,7 +74,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                 <br/>
                 <?php if ($dateOk AND $canValiderResponsable) : ?>
                     <a
-                        <?php /** @see \Application\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Responsable'], [], true); ?>"
                             class="btn btn-success action ajax-modal"
                             data-event="modification"
@@ -126,7 +126,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                     <br/>
                     <?php if ($canValiderAgent && ! $entretien->hasValidationDRH()) : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationAgent()->getId()], [], true); ?>"
                                 class="btn btn-danger action"
                         >
@@ -147,7 +147,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                     <br/>
                     <?php if ($dateOk AND $canValiderResponsable) : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Agent'], [], true); ?>"
                                 class="btn btn-success action ajax-modal"
                                 data-event="modification"
@@ -200,7 +200,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                     <br/>
                     <?php if ($canValiderDrh ) : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationDRH()->getId()], [], true); ?>"
                                 class="btn btn-danger action"
                         >
@@ -220,7 +220,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                     <br/>
                     <?php if ($dateOk AND $canValiderResponsable) : ?>
                         <a
-                            <?php /** @see \Application\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'DRH'], [], true); ?>"
                                 class="btn btn-success action ajax-modal"
                                 data-event="modification"
