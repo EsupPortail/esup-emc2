@@ -4,7 +4,6 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 
@@ -50,9 +49,7 @@ foreach ($agents as $agent) {
     }
 }
 
-
 ?>
-
 
 <h2> Informations sur la campagne </h2>
 
@@ -288,6 +285,7 @@ foreach ($agents as $agent) {
         font-style: italic;
     }
 </style>
+
 <script>
     $(function() {
         $("body").on("entretien", function (event) {

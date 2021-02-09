@@ -27,6 +27,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
 
         $displays = [
             'agent' => true,
+            'structure' => true,
             'poste' => false,
             'fiche-principale' => true,
             'modification' => false,

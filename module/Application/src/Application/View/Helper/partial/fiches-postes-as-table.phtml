@@ -29,6 +29,9 @@ if ($retour)    $query['retour'] = $retour;
         <?php if ($displays['agent']) : ?>
             <th> Agent </th>
         <?php endif; ?>
+        <?php if ($displays['structure']) : ?>
+            <th> Structure(s) <span class="icon attention probleme" title="Récupérer depuis l'affectation et non le poste"></span> </th>
+        <?php endif; ?>
         <?php if ($displays['poste']) : ?>
             <th> Poste </th>
         <?php endif; ?>
@@ -54,6 +57,21 @@ if ($retour)    $query['retour'] = $retour;
                         <span class="probleme">
                            <span class='icon attention'></span>
                             Aucun agent
+                        </span>
+                    <?php endif; ?>
+                </td>
+            <?php endif; ?>
+            <?php if ($displays['structure']) : ?>
+                <td>
+                    <?php if ($fiche->getAgent() !== null) : ?>
+                        <?php $structures = $fiche->getAgent()->getStructures(); ?>
+                        <?php foreach ($structures as $structure) : ?>
+                            <?php echo $structure->getLibelleCourt(); ?>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <span class="probleme">
+                           <span class='icon attention'></span>
+                            Aucune structure
                         </span>
                     <?php endif; ?>
                 </td>
