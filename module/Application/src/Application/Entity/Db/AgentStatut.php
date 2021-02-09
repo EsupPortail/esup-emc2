@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
@@ -11,6 +12,8 @@ use UnicaenApp\Exception\RuntimeException;
  * - pas de setter sur les données ainsi remontées
  */
 class AgentStatut {
+    use DbImportableAwareTrait;
+
     /** @var string */
     private $id;
     /** @var string */
@@ -162,16 +165,17 @@ class AgentStatut {
     /**
      * @return DateTime
      */
-    public function getDebut()
+    public function getDateDebut()
     {
         return $this->debut;
     }
 
+
     /**
-     * @param DateTime $debut
+     * @param DateTime|null $debut
      * @return AgentStatut
      */
-    public function setDebut($debut)
+    public function setDateDebut(?DateTime $debut)
     {
         $this->debut = $debut;
         return $this;
@@ -180,16 +184,16 @@ class AgentStatut {
     /**
      * @return DateTime
      */
-    public function getFin()
+    public function getDateFin()
     {
         return $this->fin;
     }
 
     /**
-     * @param DateTime $fin
+     * @param DateTime|null $fin
      * @return AgentStatut
      */
-    public function setFin($fin)
+    public function setDateFin(?DateTime $fin)
     {
         $this->fin = $fin;
         return $this;

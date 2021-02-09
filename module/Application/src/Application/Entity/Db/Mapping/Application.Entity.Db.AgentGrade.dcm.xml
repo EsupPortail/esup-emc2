@@ -27,5 +27,10 @@
         <field name="dateDebut"     type="datetime"                 column="d_debut"     nullable="false"/>
         <field name="dateFin"       type="datetime"                 column="d_fin"       nullable="false"/>
 
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+
     </entity>
 </doctrine-mapping>

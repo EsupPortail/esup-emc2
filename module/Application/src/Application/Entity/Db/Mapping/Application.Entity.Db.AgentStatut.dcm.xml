@@ -34,5 +34,9 @@
         <field name="emerite"       type="string" length="1"            column="t_emerite"                 nullable="true"/>
         <field name="retraite"      type="string" length="1"            column="t_retraite"                nullable="true"/>
 
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
     </entity>
 </doctrine-mapping>

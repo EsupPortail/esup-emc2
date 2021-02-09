@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 
 /**
@@ -9,6 +10,8 @@ use DateTime;
  * - pas de setter sur les données ainsi remontées
  */
 class AgentGrade {
+    use DbImportableAwareTrait;
+
     /** @var string */
     private $id;
     /** @var Agent */

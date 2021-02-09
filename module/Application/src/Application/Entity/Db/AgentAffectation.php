@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 
@@ -9,8 +10,9 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
  * Données synchronisées depuis Octopus :
  * - pas de setter sur les données ainsi remontées
  */
-class AgentAffectation{
+class AgentAffectation {
     use DateTimeAwareTrait;
+    use DbImportableAwareTrait;
 
     /** @var integer */
     private $id;
