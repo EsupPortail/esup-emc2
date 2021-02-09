@@ -96,12 +96,13 @@ trait FichePosteMacroTrait {
         foreach ($result as $groupe => $liste) {
             $texte .= "<li class='rubrique'>";
             $texte .= $groupe;
+            $texte .= "</li>";
             $texte .= "<ul>";
             foreach ($liste as $item) {
                 $texte .= "<li class='element'>".$item->getLibelle()."</li>";
             }
             $texte .= "</ul>";
-            $texte .= "</li>";
+
         }
         $texte .= "</ul>";
         return $texte;
