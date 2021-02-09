@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\MacroContent\StructureMacroTrait;
 use Application\Entity\SynchroAwareInterface;
 use Application\Entity\SynchroAwareTrait;
 use DateTime;
@@ -12,6 +13,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Structure implements ResourceInterface, SynchroAwareInterface {
     use ImportableAwareTrait;
     use SynchroAwareTrait;
+    use StructureMacroTrait;
 
     public function getResourceId()
     {

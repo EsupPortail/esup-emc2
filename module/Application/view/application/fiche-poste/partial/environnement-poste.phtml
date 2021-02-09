@@ -2,7 +2,6 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
@@ -14,15 +13,6 @@ use Application\Provider\Privilege\FichePostePrivileges;
 $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
 
 $poste = $fiche->getPoste();
-/** @var Structure[] $structures */
-$structures = [];
-if ($agent !== null) {
-    foreach ($agent->getAffectationsActifs() as $agentAffectation) {
-        $structure = $agentAffectation->getStructure();
-        if ($structure !== null) $structures[] = $structure;
-    }
-}
-
 ?>
 
 <div class="panel panel-info">
@@ -46,12 +36,8 @@ if ($agent !== null) {
         </div>
     </div>
     <div class="panel-body">
-<!--        <h3> Affectation du poste </h3>-->
-        <?php
-            $structuresListe = [];
-            foreach ($structures as $structure) $structuresListe[$structure->getId()] = $structure;
-        ?>
-        <?php foreach ($structuresListe as $structure) : ?>
+        <?php $structures = $agent->getStructures(); ?>
+        <?php foreach ($structures as $structure) : ?>
             <h4> <?php echo $structure->getLibelleLong(); ?> </h4>
 
             <?php if ($structure->getDescription() !== null) :?>

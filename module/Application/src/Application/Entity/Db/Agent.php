@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Entity\Db\MacroContent\AgentMacroTrait;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -26,6 +27,7 @@ class Agent implements
     use AgentServiceAwareTrait;
     use DateTimeAwareTrait;
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
+    use AgentMacroTrait;
 
     public function getResourceId()
     {
@@ -155,11 +157,23 @@ class Agent implements
     }
 
     /**
+     * @return integer
+     */
+    public function getHarpId()
+    {
+        return $this->harpId;
+    }
+
+
+    /** AFFECTATIONS **************************************************************************************************/
+
+    /**
      * @return AgentAffectation[]
      */
     public function getAffectations()
     {
         $affectations = $this->affectations->toArray();
+        $affectations = array_filter($affectations, function (AgentAffectation $aa) { return !$aa->isDeleted();});
         usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
             return $a->getDateDebut() < $b->getDateDebut();
         });
@@ -173,7 +187,7 @@ class Agent implements
     {
         $structure = null;
         /** @var AgentAffectation $affectation */
-        foreach ($this->affectations as $affectation) {
+        foreach ($this->getAffectations() as $affectation) {
             if ($affectation->isPrincipale() and $affectation->isActive()) {
                 return $affectation;
             }
@@ -190,22 +204,25 @@ class Agent implements
 
         $affectations = [];
         /** @var AgentAffectation $affectation */
-        foreach ($this->affectations as $affectation) {
+        foreach ($this->getAffectations() as $affectation) {
             if ($affectation->isActive($date)) $affectations[] = $affectation;
         }
         return $affectations;
     }
+
+    /** STATUTS *******************************************************************************************************/
 
     /**
      * @return AgentStatut[]
      */
     public function getStatuts()
     {
-        $status = $this->statuts->toArray();
+        $statuts = $this->statuts->toArray();
+        $statuts = array_filter($statuts, function (AgentStatut $as) { return !$as->isDeleted();});
         usort($statuts, function (AgentStatut $a, AgentStatut $b) {
-            return $a->getDebut() < $b->getDebut();
+            return $a->getDateDebut() < $b->getDateDebut();
         });
-        return $status;
+        return $statuts;
     }
 
     /**
@@ -216,16 +233,19 @@ class Agent implements
         $now = $this->getDateTime();
         $statuts = [];
         /** @var AgentStatut $statut */
-        foreach ($this->statuts as $statut) {
-            if ($statut->getFin() === null or $statut->getFin() > $now) $statuts[] = $statut;
+        foreach ($this->getStatuts() as $statut) {
+            if ($statut->getDateFin() === null or $statut->getDateFin() > $now) $statuts[] = $statut;
         }
         return $statuts;
     }
+
+    /** GRADES ********************************************************************************************************/
 
     /** @return AgentGrade[] */
     public function getGrades()
     {
         $grades = $this->grades->toArray();
+        $grades = array_filter($grades, function (AgentGrade $ag) { return !$ag->isDeleted();});
         usort($grades, function (AgentGrade $a, AgentGrade $b) {
             return $a->getDateDebut() < $b->getDateDebut();
         });
@@ -240,18 +260,28 @@ class Agent implements
         $now = $this->getDateTime();
         $grades = [];
         /** @var AgentGrade $grade */
-        foreach ($this->grades as $grade) {
+        foreach ($this->getGrades() as $grade) {
             if ($grade->getDateFin() === null or $grade->getDateFin() > $now) $grades[] = $grade;
         }
         return $grades;
     }
 
+    /** STRUCTURES  ***************************************************************************************************/
+
     /**
-     * @return integer
+     * Les structures d'un agents correspondent à la liste des structures de ses affectations actives.
+     * /!\ une structure peut être répétée
+     * @return Structure[]
      */
-    public function getHarpId()
+    public function getStructures() : array
     {
-        return $this->harpId;
+        $structures = [];
+        $affectations = $this->getAffectationsActifs();
+        foreach ($affectations as $affectation) {
+            $structure = $affectation->getStructure();
+            $structures[$structure->getId()] = $structure;
+        }
+        return $structures;
     }
 
     /** Éléments non importés *****************************************************************************************/

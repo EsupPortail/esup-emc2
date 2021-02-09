@@ -77,7 +77,7 @@ $metierLibelle = ($metier)?$metier->getLibelle():null;
                 <?php
                 $statuts = [];
                 foreach ($agent->getStatuts() as $statut) {
-                    if ($statut->getDebut() <= $now AND ($statut->getFin() === null OR $statut->getFin() > $now)) $statuts[] = $statut;
+                    if ($statut->getDateDebut() <= $now AND ($statut->getDateFin() === null OR $statut->getDateFin() > $now)) $statuts[] = $statut;
                 }
                 ?>
                 <td>
@@ -85,10 +85,10 @@ $metierLibelle = ($metier)?$metier->getLibelle():null;
                         <?php foreach ($statuts as $statut) : ?>
                             <li>
                                 <?php echo $statut->getStructure()->getLibelleLong(); ?>
-                                (Du <?php echo $statut->getDebut()->format('d/m/Y'); ?>
+                                (Du <?php echo $statut->getDateDebut()->format('d/m/Y'); ?>
                                 au
-                                <?php if ($statut->getFin()): ?>
-                                    <?php echo $statut->getFin()->format('d/m/Y'); ?>)
+                                <?php if ($statut->getDateFin()): ?>
+                                    <?php echo $statut->getDateFin()->format('d/m/Y'); ?>)
                                 <?php else : ?>
                                     ---)
                                 <?php endif; ?>

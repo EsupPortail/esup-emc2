@@ -41,8 +41,8 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
     <div>
         <?php if ($displayPeriode) : ?>
             <?php
-                $debut  = ($statut->getDebut())?$statut->getDebut()->format('d/m/Y'):'---';
-                $fin    = ($statut->getFin() && $statut->getFin()->format('d/m/Y') !== '31/12/1999')?$statut->getFin()->format('d/m/Y'):'---';
+                $debut  = ($statut->getDateDebut())?$statut->getDateDebut()->format('d/m/Y'):'---';
+                $fin    = ($statut->getDateFin() && $statut->getDateFin()->format('d/m/Y') !== '31/12/1999')?$statut->getDateFin()->format('d/m/Y'):'---';
             ?>
             <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
         <?php endif; ?>
