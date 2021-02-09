@@ -193,7 +193,7 @@ trait FichePosteMacroTrait {
         foreach ($parcours as $clef => $parcoursArray) {
             foreach ($parcoursArray as $instance) {
                 /** @var ParcoursDeFormation $instance */
-                $texte .= "<span class='parcours-libelle'>" . $instance->getLibelle() . "</span>";
+                $texte .= "<h3>" . $instance->getLibelle() . "</h3>";
 
                 /** Tri pour bonne affichage ******************************************************************************************/
                 $nogroup = "ZZZZ";
