@@ -91,18 +91,17 @@ trait FichePosteMacroTrait {
             $result [$entite->getGroupe()?$entite->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
         }
 
-        $texte = "<h3> Applications </h3>";
+        $texte = "<h3> &nbsp; Applications </h3>";
         $texte .= "<ul>";
         foreach ($result as $groupe => $liste) {
             $texte .= "<li class='rubrique'>";
             $texte .= $groupe;
-            $texte .= "</li>";
             $texte .= "<ul>";
             foreach ($liste as $item) {
                 $texte .= "<li class='element'>".$item->getLibelle()."</li>";
             }
             $texte .= "</ul>";
-
+            $texte .= "</li>";
         }
         $texte .= "</ul>";
         return $texte;
