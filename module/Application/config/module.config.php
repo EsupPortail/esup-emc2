@@ -279,7 +279,6 @@ return [
         'inline_scripts' => [
 //            '100_' => 'js/jquery.ui.datepicker-fr.js',
             '110_' => 'vendor/DataTables-1.10.18/datatables.min.js',
-//            '112_' => 'vendor/font-awesome-5.0.9/fontawesome-all.min.js',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/js/bootstrap-select.min.js',
             '150_' => 'js/tinymce/js/tinymce/tinymce.js',
             '151_' => 'js/form_fiche.js',
@@ -289,6 +288,7 @@ return [
         'stylesheets' => [
             '050_bootstrap-theme' => '',
             '110_' => 'vendor/DataTables-1.10.18/datatables.min.css',
+            '112_' => 'vendor/font-awesome-5.6.1/css/all.min.css',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
             '998_' => 'css/icon.css',
             '999_' => 'css/highlight.css',
