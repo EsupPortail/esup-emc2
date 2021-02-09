@@ -172,6 +172,14 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
+     * @return bool
+     */
+    public function isComplete() : bool
+    {
+        return $this->getEtat()->getCode() === self::ETAT_VALIDATION_HIERARCHIE;
+    }
+
+    /**
      * @return FormulaireInstance
      */
     public function getFormulaireInstance()

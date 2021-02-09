@@ -4,6 +4,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 
@@ -41,8 +42,7 @@ foreach ($agents as $agent) {
     if ($entretien === null) {
         $sans[$agent->getDenomination()] = $agent;
     } else {
-        //todo faire une fonction pour tester la completion
-        if ($entretien->getValidationAgent() and $entretien->getValidationResponsable()) {
+        if ($entretien->isComplete()) {
             $complete[$agent->getDenomination()] = $entretien;
         } else {
             $encours[$agent->getDenomination()] = $entretien;
