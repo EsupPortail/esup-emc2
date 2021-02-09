@@ -16,6 +16,10 @@ trait HasApplicationCollectionTrait {
         return $this->applications;
     }
 
+    /**
+     * @param bool $avecHisto
+     * @return ApplicationElement[]
+     */
     public function getApplicationListe(bool $avecHisto = false) : array
     {
         $applications = [];
@@ -26,6 +30,10 @@ trait HasApplicationCollectionTrait {
         return $applications;
     }
 
+    /**
+     * @param Application $application
+     * @return bool
+     */
     public function hasApplication(Application $application) : bool
     {
         /** @var ApplicationElement $applicationElement */

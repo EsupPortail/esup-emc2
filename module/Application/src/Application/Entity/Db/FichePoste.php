@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\MacroContent\FichePosteMacroTrait;
 use Application\Entity\HasAgentInterface;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -13,8 +14,9 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface {
     use HistoriqueAwareTrait;
-    use DateTimeAwareTrait
-        ;
+    use DateTimeAwareTrait;
+    use FichePosteMacroTrait;
+
     public function getResourceId()
     {
         return 'FichePoste';
@@ -43,6 +45,9 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     private $applicationsRetirees;
     /** @var ArrayCollection (FicheposteCompetenceRetiree) */
     private $competencesRetirees;
+
+    /** @var array */
+    private $dictionnaires;
 
     public function __invoke()
     {
@@ -407,6 +412,16 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         }
         $texte .= "</ul>";
         return $texte;
+    }
+
+    public function addDictionnaire(string $clef, $valeur)
+    {
+        $this->dictionnaires[$clef] = $valeur;
+    }
+
+    public function getDictionnaire(string $clef)
+    {
+        return $this->dictionnaires[$clef];
     }
 
 }

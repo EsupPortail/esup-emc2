@@ -110,14 +110,6 @@ if ($retour)    $query['retour'] = $retour;
                                title="Afficher la fiche de poste"></span></a>
                     <?php endif; ?>
                     <?php if ($canExport) : ?>
-                        <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                           target="_blank"
-                        ><span
-                                    data-toggle="tooltip" data-html="true"
-                                    title="Exporter en PDF la fiche de poste"
-                                    class="icon pdf"></span></a>
-                    <?php endif; ?>
-                    <?php if ($canExport) : ?>
                         <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $fiche->getId()], [], true); ?>"
                            target="_blank"
                         ><span

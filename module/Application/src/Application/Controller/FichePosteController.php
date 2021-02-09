@@ -24,7 +24,6 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\Expertise\ExpertiseServiceAwareTrait;
-use Application\Service\Export\FichePoste\FichePostePdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
@@ -282,11 +281,17 @@ class FichePosteController extends AbstractActionController {
     public function exporterAction()
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $ficheposte->addDictionnaire('applications', $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte));
+        $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
+        $ficheposte->addDictionnaire('formations', $this->getFichePosteService()->getFormationsDictionnaires($ficheposte));
+        $ficheposte->addDictionnaire('parcours', $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($ficheposte));
 
         $this->getExporterService()->setVars([
             'type' => 'FICHE_DE_POSTE',
             'ficheposte' => $ficheposte,
             'agent' => $ficheposte->getAgent(),
+            //todo prendre la structure du poste une fois les postes remontés
+            'structure' => $ficheposte->getAgent()->getAffectationPrincipale()->getStructure(),
         ]);
         $this->getExporterService()->export('export.pdf');
         exit;
@@ -572,24 +577,6 @@ class FichePosteController extends AbstractActionController {
         if ($cut) {
             return (new ViewModel(['title' => 'Informations saisies incorrectes']))->setTemplate('layout/flashMessage');
         }
-    }
-
-    public function exportAction()
-    {
-        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
-        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
-
-        $exporter = new FichePostePdfExporter($this->renderer, 'A4');
-        $exporter->setVars([
-            'fiche' => $fiche,
-            'applications' => $applications,
-            'competences' => $competences,
-            'formations' => $formations,
-        ]);
-        $exporter->export('export.pdf');
-        exit;
     }
 
     /** ApplicationConserveesService **********************************************************************************/
