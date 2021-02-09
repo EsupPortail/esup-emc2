@@ -62,6 +62,8 @@ foreach ($agents as $agent) {
     <dd> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
 </dl>
 
+<?php echo $this->portenote('StructureController::afficherAction()>entretien', '', []); ?>
+
 <h2>
     Entretiens professionnels complétés
     <span class="badge">
@@ -86,11 +88,7 @@ foreach ($agents as $agent) {
             <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
             <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
             <td>
-                <?php if ($entretien->getEtat()) : ?>
-                    <?php echo $this->etatbadge($entretien->getEtat()); ?>
-                <?php else : ?>
-                    ???
-                <?php endif; ?>
+                <?php echo $this->etatbadge($entretien->getEtat()); ?>
             </td>
             <td>
                 <?php if ($canVoirEntretien) : ?>
@@ -167,11 +165,7 @@ foreach ($agents as $agent) {
                 <?php endif; ?>
             </td>
             <td>
-                <?php if ($entretien->getEtat()) : ?>
-                    <?php echo $this->etatbadge($entretien->getEtat()); ?>
-                <?php else : ?>
-                    ???
-                <?php endif; ?>
+                <?php echo $this->etatbadge($entretien->getEtat()); ?>
             </td>
             <td>
                 <?php if ($canVoirEntretien) : ?>

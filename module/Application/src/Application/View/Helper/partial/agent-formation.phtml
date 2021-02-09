@@ -15,6 +15,7 @@ $canModifier    = (isset($options['droits']) AND isset($options['droits']['modif
 $canHistoriser  = (isset($options['droits']) AND isset($options['droits']['historiser']))   ? $options['droits']['historiser']  : false;
 $canDetruire    = (isset($options['droits']) AND isset($options['droits']['detruire']))     ? $options['droits']['detruire']    : false;
 $canValider     = (isset($options['droits']) AND isset($options['droits']['valider']))      ? $options['droits']['valider']     : false;
+$canVoirHistorique     = (isset($options['droits']) AND isset($options['droits']['voirHistorique']))      ? $options['droits']['voirHistorique']     : false;
 
 $retour         = (isset($options['retour'])) ? $options['retour'] : null;
 
@@ -54,8 +55,7 @@ ksort($dictionnaire);
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <?php if ($canModifier) : ?>
-        <!--
+        <?php if ($canVoirHistorique) : ?>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
@@ -63,7 +63,6 @@ ksort($dictionnaire);
                     </label>
                 </div>
             </div>
-            -->
         <?php endif; ?>
         <table class="formations" id="formations">
             <tbody>
