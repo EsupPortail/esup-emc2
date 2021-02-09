@@ -126,7 +126,7 @@ trait FichePosteMacroTrait {
             $result [$entite->getType()?$entite->getType()->getLibelle():"Sans type"][$entite->getId()] = $entite;
         }
         ksort($result);
-        $texte = "<h3> Compétences </h3>";
+        $texte = "<h3> &nbsp; Compétences </h3>";
         $texte .= "<ul>";
         foreach ($result as $groupe => $liste) {
             usort($liste, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
@@ -162,7 +162,7 @@ trait FichePosteMacroTrait {
             $result [$entite->getGroupe()?$entite->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
         }
         ksort($result);
-        $texte = "<h3> Formations </h3>";
+        $texte = "<h3> &nbsp; Formations </h3>";
         $texte .= "<ul>";
         foreach ($result as $groupe => $liste) {
             usort($liste, function (Formation $a, Formation $b) { return $a->getLibelle() > $b->getLibelle();});
@@ -193,7 +193,7 @@ trait FichePosteMacroTrait {
         foreach ($parcours as $clef => $parcoursArray) {
             foreach ($parcoursArray as $instance) {
                 /** @var ParcoursDeFormation $instance */
-                $texte .= "<h3>" . $instance->getLibelle() . "</h3>";
+                $texte .= "<h3> &nbsp; " . $instance->getLibelle() . "</h3>";
 
                 /** Tri pour bonne affichage ******************************************************************************************/
                 $nogroup = "ZZZZ";
