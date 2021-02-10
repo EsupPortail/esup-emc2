@@ -27,65 +27,13 @@ $this->headTitle('Index des fiches métiers');
 
     <?php echo $this->portenote('FicheMetierController::indexAction()', '', []); ?>
 
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
 
-        <li role="fiche">
-            <a href="#fiche" aria-controls="fiche" role="tab" data-toggle="tabz">
-                Fiches métiers &nbsp;
-                <span class="badge">
-                    <?php echo count($fiches); ?>
-                </span>
-            </a>
-        </li>
+    <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect, 'portenote' => $portenote]); ?>
 
-        <li role="etat">
-            <a href="#etat" aria-controls="etat" role="tab" data-toggle="tabz">
-                États &nbsp;
-                <span class="badge">
-                    <?php echo count($etats); ?>
-                </span>
-            </a>
-        </li>
-
-    </ul>
-
-    <div class="main-with-tab">
-
-        <div class="tab-content">
-
-             <!-- FAMILLE --------------------------------------------------------------------------------------------->
-            <div id="fiche" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect, 'portenote' => $portenote]); ?>
-            </div>
-
-            <!-- DOMAINE ---------------------------------------------------------------------------------------------->
-            <div id="etat" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/etat.phtml', ['etats' => $etats]); ?>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 
 
 <script>
-    $(function() {
-        let hash = $(location).attr('hash');
-        console.log(hash);
-        let name = hash.substr(1);
-        console.log(name);
-        if (name === undefined || name === "") name = "fiche";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
-        });
-
-    });
-
     $(document).ready(function() {
         $('#datatable').DataTable( {
             language: {

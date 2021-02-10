@@ -51,14 +51,14 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     <tr>
         <th> Libellé </th>
         <th> Domaine </th>
-        <th> Expertise </th>
-        <th> État </th>
+        <th class="cell-expertise"> Expertise </th>
+        <th class="cell-etat"> État </th>
         <th class="cell-action"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach($fiches as $fiche): ?>
-        <tr>
+        <tr <?php if ($fiche->estHistorise()) echo "class='historise'"; ?> >
             <td>
                 <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
                       data-toggle='tooltip' data-html='true'
@@ -69,18 +69,21 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
             <td>
                 <ul>
                     <?php foreach ($fiche->getMetier()->getDomaines() as $domaine) : ?>
-                        <li> <?php echo $domaine; ?> (<?php echo $domaine->getTypeFonction(); ?>)</li>
+                        <li>
+                            <?php echo $domaine; ?>
+                            <?php echo $this->typefonction($domaine); ?>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             </td>
-            <td>
+            <td class="cell-expertise">
                 <?php if ($fiche->hasExpertise()) : ?>
-                    <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
+                    <span class="icon ok" style="color:darkgreen;"></span>
                 <?php else: ?>
-                    <span class="badge" style="background-color: darkred;">&nbsp;</span>
+                    <span class="icon ko" style="color:darkred;"></span>
                 <?php endif; ?>
             </td>
-            <td>
+            <td class="cell-etat">
                 <?php if ($canEditer) : ?>
                 <a
                     <?php /** @see \Application\Controller\FicheMetierController::changerUEtatAction() */?>
@@ -94,7 +97,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                 </a>
             <?php endif; ?>
             </td>
-            <td>
+            <td class="cell-action">
                 <?php if ($canVoir) : ?>
                     <a
                         <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */?>
@@ -160,3 +163,29 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         });
     });
 </script>
+
+<style>
+
+    th.cell-expertise {
+        width:6rem;
+    }
+    td.cell-expertise {
+        text-align:center;
+    }
+
+    th.cell-etat {
+        width:6rem;
+    }
+    td.cell-etat {
+        text-align:center;
+    }
+
+    th.cell-action {
+        width:10rem;
+    }
+    td.cell-action {
+        text-align: right;
+    }
+
+
+</style>
