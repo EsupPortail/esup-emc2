@@ -12,11 +12,19 @@ use Application\Provider\Privilege\MissionspecifiquePrivileges;
  * @var MissionSpecifiqueTheme[] $themes
  */
 
-$canVoir            = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER);
-$canAjouter         = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AJOUTER);
-$canModifier        = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_MODIFIER);
-$canHistoriser      = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_HISTORISER);
-$canDetruire        = MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_DETRUIRE);
+$canVoir            = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER));
+$canAjouter         = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AJOUTER));
+$canModifier        = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_MODIFIER));
+$canHistoriser      = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_HISTORISER));
+$canDetruire        = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_DETRUIRE));
+
+$droits = [
+    'voir' => $canVoir,
+    'ajouter' => $canAjouter,
+    'modifier' => $canModifier,
+    'historiser' => $canHistoriser,
+    'detruire' => $canDetruire,
+];
 
 $this->headTitle("Missions spécifiques");
 ?>
@@ -56,262 +64,24 @@ $this->headTitle("Missions spécifiques");
                 </a>
             </li>
         </ul>
-
+    </div>
         <div class="main-with-tab">
 
             <div class="tab-content">
 
                 <!-- Mission------------------------------------------------------------------------------------------->
                 <div id="mission" class="tab-pane " role="tabpanel">
-
-                    <?php if ($canAjouter) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\MissionSpecifiqueController::ajouterMissionAction() */?>
-                                href="<?php echo $this->url('mission-specifique/mission/ajouter', [], [], true); ?>"
-                                class="ajax-modal action btn btn-primary" data-event="modification"
-                        >
-                            <span class="icon ajouter"></span>
-                            Ajouter d'une mission spécifique
-                        </a>
-                    <?php endif; ?>
-
-                    <table class="datatable table table-condensed">
-                        <thead>
-                        <tr>
-                            <th> Thème </th>
-                            <th> Libellé </th>
-                            <th> Type </th>
-                            <th class="cell-action"> Action </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($missions as $mission) : ?>
-                            <tr <?php if ($mission->estHistorise()) echo "class='historise'"; ?>>
-                                <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans thème</span>"; ?> </td>
-                                <td> <?php echo $mission->getLibelle(); ?> </td>
-                                <td> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans type</span>"; ?> </td>
-                                <td>
-                                    <?php if ($canVoir) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\MissionSpecifiqueController::afficherMissionAction() */?>
-                                                href="<?php echo $this->url('mission-specifique/mission/afficher', ['mission' => $mission->getId()], [], true); ?>"
-                                                class="ajax-modal">
-                                            <span class="icon voir"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Afficher la mission spécifique"></span></a>
-                                    <?php endif; ?>
-
-                                    <?php if ($canModifier) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\MissionSpecifiqueController::modifierMissionAction() */?>
-                                                href="<?php echo $this->url('mission-specifique/mission/modifier', ['mission' => $mission->getId()], [], true); ?>"
-                                                class="ajax-modal" data-event="modification">
-                                            <span class="icon editer"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Modifier la mission spécifique"></span></a>
-                                    <?php endif; ?>
-
-                                    <?php if ($canHistoriser) : ?>
-                                        <?php if ($mission->estNonHistorise()) : ?>
-                                            <a
-                                                <?php /** @see \Application\Controller\MissionSpecifiqueController::historiserMissionAction() */?>
-                                                    href="<?php echo $this->url('mission-specifique/mission/historiser', ['mission' => $mission->getId()], [], true); ?>"
-                                            >
-                                            <span class="icon historiser"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Historiser la mission spécifique"></span></a>
-                                        <?php else: ?>
-                                            <a
-                                                <?php /** @see \Application\Controller\MissionSpecifiqueController::restaurerMissionAction() */?>
-                                                    href="<?php echo $this->url('mission-specifique/mission/restaurer', ['mission' => $mission->getId()], [], true); ?>"
-                                            >
-                                            <span class="icon restaurer"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Restaurer la mission spécifique"></span></a>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-
-                                    <?php if ($canDetruire) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\MissionSpecifiqueController::detruireMissionAction() */?>
-                                                href="<?php echo $this->url('mission-specifique/mission/detruire', ['mission' => $mission->getId()], [], true); ?>"
-                                                class="ajax-modal" data-event="modification">
-                                            <span class="icon detruire"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Supprimer la mission spécifique"></span></a>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <?php echo $this->partial('partial/index-mission', ['missions' => $missions, 'droits' => $droits]); ?>
                 </div>
 
                 <!-- Type---------------------------------------------------------------------------------------------->
                 <div id="type" class="tab-pane " role="tabpanel">
-
-                    <?php if ($canAjouter) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\MissionSpecifiqueController::ajouterTypeAction() */?>
-                                href="<?php echo $this->url('mission-specifique/type/ajouter', [], [], true); ?>"
-                            class="ajax-modal action btn btn-primary" data-event="modification"
-                           >
-                            <span class="icon ajouter"></span>
-                            Ajouter un type de mission
-                        </a>
-                    <?php endif; ?>
-
-                    <table class="datatable table table-condensed">
-                        <thead>
-                            <tr>
-                                <th> Libellé </th>
-                                <th> #Mission </th>
-                                <th class="cell-action"> Action </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($types as $type) : ?>
-                                <tr <?php if ($type->estHistorise()) echo "class='historise'"; ?>>
-                                    <td> <?php echo $type->getLibelle(); ?> </td>
-                                    <td> <?php echo count($type->getMissions()); ?> </td>
-                                    <td>
-                                        <?php if ($canVoir) : ?>
-                                            <a
-                                                <?php /** @see \Application\Controller\MissionSpecifiqueController::afficherTypeAction() */?>
-                                                href="<?php echo $this->url('mission-specifique/type/afficher', ['type' => $type->getId()], [], true); ?>"
-                                                class="ajax-modal">
-                                            <span class="icon voir"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Afficher le type de mission spécifique"></span></a>
-                                        <?php endif; ?>
-
-                                        <?php if ($canModifier) : ?>
-                                            <a
-                                                <?php /** @see \Application\Controller\MissionSpecifiqueController::modifierTypeAction() */?>
-                                                    href="<?php echo $this->url('mission-specifique/type/modifier', ['type' => $type->getId()], [], true); ?>"
-                                                    class="ajax-modal" data-event="modification">
-                                            <span class="icon editer"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Modifier le type de mission spécifique"></span></a>
-                                        <?php endif; ?>
-
-                                        <?php if ($canHistoriser) : ?>
-                                            <?php if ($type->estNonHistorise()) : ?>
-                                                <a
-                                                    <?php /** @see \Application\Controller\MissionSpecifiqueController::historiserTypeAction() */?>
-                                                        href="<?php echo $this->url('mission-specifique/type/historiser', ['type' => $type->getId()], [], true); ?>"
-                                                        >
-                                            <span class="icon historiser"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Historiser le type de mission spécifique"></span></a>
-                                            <?php else: ?>
-                                                <a
-                                                    <?php /** @see \Application\Controller\MissionSpecifiqueController::restaurerTypeAction() */?>
-                                                        href="<?php echo $this->url('mission-specifique/type/restaurer', ['type' => $type->getId()], [], true); ?>"
-                                                >
-                                            <span class="icon restaurer"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Restaurer le type de mission spécifique"></span></a>
-                                            <?php endif; ?>
-                                        <?php endif; ?>
-
-                                        <?php if ($canDetruire) : ?>
-                                            <a
-                                                <?php /** @see \Application\Controller\MissionSpecifiqueController::detruireTypeAction() */?>
-                                                    href="<?php echo $this->url('mission-specifique/type/detruire', ['type' => $type->getId()], [], true); ?>"
-                                                    class="ajax-modal" data-event="modification">
-                                            <span class="icon detruire"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Supprimer le type de mission spécifique"></span></a>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <?php echo $this->partial('partial/index-type', ['types' => $types, 'droits' => $droits]); ?>
                 </div>
 
                 <!-- Theme--------------------------------------------------------------------------------------------->
                 <div id="theme" class="tab-pane " role="tabpanel">
-                    <?php if ($canAjouter) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\MissionSpecifiqueController::ajouterThemeAction() */?>
-                                href="<?php echo $this->url('mission-specifique/theme/ajouter', [], [], true); ?>"
-                                class="ajax-modal action btn btn-primary" data-event="modification"
-                        >
-                            <span class="icon ajouter"></span>
-                            Ajouter un thème de mission
-                        </a>
-                    <?php endif; ?>
-
-                    <table class="datatable table table-condensed">
-                        <thead>
-                        <tr>
-                            <th> Libellé </th>
-                            <th> #Mission </th>
-                            <th class="cell-action"> Action </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($themes as $theme) : ?>
-                            <tr <?php if ($theme->estHistorise()) echo "class='historise'"; ?>>
-                                <td> <?php echo $theme->getLibelle(); ?> </td>
-                                <td> <?php echo count($theme->getMissions()); ?> </td>
-                                <td>
-                                    <?php if ($canVoir) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\MissionSpecifiqueController::afficherThemeAction() */?>
-                                                href="<?php echo $this->url('mission-specifique/theme/afficher', ['theme' => $theme->getId()], [], true); ?>"
-                                                class="ajax-modal">
-                                            <span class="icon voir"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Afficher le thème de mission spécifique"></span></a>
-                                    <?php endif; ?>
-
-                                    <?php if ($canModifier) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\MissionSpecifiqueController::modifierThemeAction() */?>
-                                                href="<?php echo $this->url('mission-specifique/theme/modifier', ['theme' => $theme->getId()], [], true); ?>"
-                                                class="ajax-modal" data-event="modification">
-                                            <span class="icon editer"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Modifier le thème de mission spécifique"></span></a>
-                                    <?php endif; ?>
-
-                                    <?php if ($canHistoriser) : ?>
-                                        <?php if ($theme->estNonHistorise()) : ?>
-                                            <a
-                                                <?php /** @see \Application\Controller\MissionSpecifiqueController::historiserThemeAction() */?>
-                                                    href="<?php echo $this->url('mission-specifique/theme/historiser', ['theme' => $theme->getId()], [], true); ?>"
-                                            >
-                                            <span class="icon historiser"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Historiser le thème de mission spécifique"></span></a>
-                                        <?php else: ?>
-                                            <a
-                                                <?php /** @see \Application\Controller\MissionSpecifiqueController::restaurerThemeAction() */?>
-                                                    href="<?php echo $this->url('mission-specifique/theme/restaurer', ['theme' => $theme->getId()], [], true); ?>"
-                                            >
-                                            <span class="icon restaurer"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Restaurer le thème de mission spécifique"></span></a>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-
-                                    <?php if ($canDetruire) : ?>
-                                        <a
-                                            <?php /** @see \Application\Controller\MissionSpecifiqueController::detruireThemeAction() */?>
-                                                href="<?php echo $this->url('mission-specifique/theme/detruire', ['theme' => $theme->getId()], [], true); ?>"
-                                                class="ajax-modal" data-event="modification">
-                                            <span class="icon detruire"
-                                                  data-toggle="tooltip" data-html="true"
-                                                  title="Supprimer le thème de mission spécifique"></span></a>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <?php echo $this->partial('partial/index-theme', ['themes' => $themes, 'droits' => $droits]); ?>
                 </div>
 
             </div>

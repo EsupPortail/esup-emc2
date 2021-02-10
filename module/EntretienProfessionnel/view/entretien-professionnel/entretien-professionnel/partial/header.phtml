@@ -18,7 +18,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
     <div class="col-md-6">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2>À propos de l'agent</h2>
+                À propos de l'agent
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
@@ -71,7 +71,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
     <div class="col-md-6">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2>Documents utiles</h2>
+                Documents utiles
             </div>
             <div class="panel-body">
                 <ul>
@@ -109,7 +109,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
     <div class="col-md-6">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2>Informations complémentaires</h2>
+                Informations complémentaires
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
@@ -129,37 +129,40 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
     <div class="col-md-6">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2>Validation de l'entretien</h2>
+                Validation de l'entretien
             </div>
             <div class="panel-body">
-                <dl>
-                    <dt>Validation initial de l'agent </dt>
-                    <dd><?php echo ($entretien->getToken() === null) ? "Oui" : "Pas encore effectuée"; ?> </dd>
-                    <dt>Validation du responsable hiérarchique </dt>
+                <dl class="dl-horizontal">
+                    <dt>Confirmation</dt>
+                    <dd><?php echo ($entretien->getToken() === null) ? '<span class="icon ok" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
+                    <dt>Responsable d'entretien </dt>
                     <dd>
                         <?php if ($entretien->getValidationResponsable()) : ?>
-                            Faites par <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
-                            le <?php echo $entretien->getValidationResponsable()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                            <span class="icon ok" style="color:darkgreen;"></span>
+                            <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
+                            (<?php echo $entretien->getValidationResponsable()->getHistoModification()->format("d/m/Y à H:i"); ?>)
                         <?php else : ?>
-                            Non effectuée
+                            <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
                     </dd>
-                    <dt>Validation de l'agent </dt>
+                    <dt>Agent </dt>
                     <dd>
                         <?php if ($entretien->getValidationAgent()) : ?>
-                            Faites par <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?>
-                            le <?php echo $entretien->getValidationAgent()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                            <span class="icon ok" style="color:darkgreen;"></span>
+                            <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?>
+                            (<?php echo $entretien->getValidationAgent()->getHistoModification()->format("d/m/Y à H:i"); ?>)
                         <?php else : ?>
-                            Non effectuée
+                            <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
                     </dd>
-                    <dt>Validation du responsable de structure </dt>
+                    <dt>Responsable hiérachique </dt>
                     <dd>
                         <?php if ($entretien->getValidationDRH()) : ?>
-                            Faites par <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?>
-                            le <?php echo $entretien->getValidationDRH()->getHistoModification()->format("d/m/Y à H:i"); ?>.
+                            <span class="icon ok" style="color:darkgreen;"></span>
+                            <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?>
+                            (<?php echo $entretien->getValidationDRH()->getHistoModification()->format("d/m/Y à H:i"); ?>)
                         <?php else : ?>
-                            Non effectuée
+                            <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
                     </dd>
                 </dl>

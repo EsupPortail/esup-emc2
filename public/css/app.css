@@ -86,6 +86,36 @@ div.alert-danger {
     background: var(--background-danger);
 }
 
+/** PANEL *************************************************************************************************************/
+
+div.panel-heading {
+    font-size: large;
+    font-weight: bold;
+    font-variant: small-caps;
+    border-radius: 0;
+}
+
+div.panel-body {
+    background: var(--footer-background);
+    border-radius: 0;
+}
+
+div.panel-info {
+    border-color: var(--color-info);
+    border-left: 0.5rem var(--color-info) solid;
+    border-radius: 0;
+}
+
+div.panel-info div.panel-heading {
+    border-color: var(--color-info);
+    color: var(--color-info);
+    background: var(--background-info);
+}
+
+div.panel-info div.panel-body {
+    border-color: var(--color-info);
+}
+
 /** TITRE (A BOUGER ?) ************************************************************************************************/
 
 h1.page-header {
@@ -95,6 +125,15 @@ h1.page-header {
 h1.page-header strong {
     color: var(--color-info);
 }
+
+/** DL ****************************************************************************************************************/
+
+dl.dl-horizontal dt {
+    font-weight: 500;
+    margin-right: 1rem;
+    width: 20rem;
+}
+
 
 /*div.main-with-tab {*/
 /*    background-color: white;*/
