@@ -1,84 +1,8 @@
-span.id_prod{
-    background-color: darkgreen;
-    color: white;
-    border : white 2px solid;
-    border-radius : 5px;
-    padding : 0.5em;
 
-    font-weight:bold;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    text-align: center;
-    width: 10rem;
-
-    position:absolute;
-    top : 5px;
-    left :5px;
-}
-
-span.id_test{
-    background-color: darkblue;
-    border : white 2px solid;
-    border-radius : 5px;
-    padding : 0.5em;
-
-    color: white;
-    font-weight:bold;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    text-align: center;
-    width: 10rem;
-
-    position:absolute;
-    top : 5px;
-    left :5px;
-}
-
-span.id_dev{
-    background-color: darkred;
-    border : white 2px solid;
-    border-radius : 5px;
-    padding : 0.5em;
-
-    color: white;
-    font-weight:bold;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    text-align: center;
-    width: 10rem;
-
-    position:absolute;
-    top : 5px;
-    left :5px;
-}
-
-span.id_unkown{
-    background-color: darkorange;
-    border : white 2px solid;
-    border-radius : 5px;
-    padding : 0.5em;
-
-    color: black;
-    font-weight:bold;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    text-align: center;
-    width: 10rem;
-
-    position:absolute;
-    top : 5px;
-    left :5px;
-}
-
-div#navbar.production {
-    background-image: none;
-    background-color: #68000a;
-}
-
-span.TODO {
-    background-color: #fff77e;
-    font-weight: bold;
-    /*animation: blinker 2s linear infinite;*/
-}
+/** MODAL *************************************************************************************************************/
 
 div.modal div.modal-header {
-    background-color: #337ab7;
+    background-color: var(--header-background);
     color: white;
 }
 
@@ -95,38 +19,13 @@ div.modal div.modal-footer {
     display: none;
 }
 
-h1 strong {
-    font-weight: 500;
-    color: #31708f;
+/** ONGLET TABULATION *************************************************************************************************/
+
+ul.nav-tabs {
+    padding-left: 1rem;
 }
-
-/** AUTRE *************************************************************************************************************/
-
-div.fichier-view-helper {
-    border: 2px black dashed;
-    border-radius: 1rem;
-    padding: 1rem;
-    margin: 1rem;
-}
-
-body {
-    background-color: #eeeeee;
-}
-
-h1 {
-    color: darkgray;
-    font-weight: lighter;
-}
-
-div.main {
-    background-color: white;
-    border-radius: 5px;
-    padding: 15px;
-    margin: 5px;
-}
-
 .nav-tabs li a {
-    background-color: #e9e9e9;
+    background-color: var(--color-light);
     border: 1px solid #ddd;
 }
 
@@ -137,393 +36,397 @@ div.main {
     border-right-color: #286090;
 }
 
-div.main-with-tab {
-    background-color: white;
-    -moz-border-radius-bottomleft: 5px;
-    -moz-border-radius-bottomright: 5px;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    padding: 2rem;
+/** ACTION et autre semantique de lien ********************************************************************************/
+
+.action {
+    width:20rem;
+    margin-right:1rem;
 }
 
-div.jumbotron#preecog {
-    background-color: white;
-}
+/** TITRE (A BOUGER ?) ************************************************************************************************/
 
-p {
-    text-align: justify;
+h1.page-header {
+    padding-left: 1rem;
 }
+/*div.main-with-tab {*/
+/*    background-color: white;*/
+/*    -moz-border-radius-bottomleft: 5px;*/
+/*    -moz-border-radius-bottomright: 5px;*/
+/*    border-left: 1px solid #ddd;*/
+/*    border-right: 1px solid #ddd;*/
+/*    border-bottom: 1px solid #ddd;*/
+/*    padding: 2rem;*/
+/*}*/
 
-p.noindent {
-    text-indent: 0em;
-}
+/*h1 strong {*/
+/*    font-weight: 500;*/
+/*    color: #31708f;*/
+/*}*/
 
-div.panel h2 {
-    font-weight: bold;
-    font-size: x-large;
-    margin: 5px;
-}
+/*!** AUTRE *************************************************************************************************************!*/
 
-div.panel h3 {
-    /*font-weight: bold;*/
-    /*font-size: large;*/
-    /*margin: 5px 0px 5px 5px;*/
-    /*padding: 5px 0px 5px 5px;*/
-    /*background-color: lightblue;*/
-    /*color: #123456;*/
-    /*border-radius: 5px 5px 0px 0px;*/
-}
+/*div.fichier-view-helper {*/
+/*    border: 2px black dashed;*/
+/*    border-radius: 1rem;*/
+/*    padding: 1rem;*/
+/*    margin: 1rem;*/
+/*}*/
 
-div.panel h4 {
-    font-weight: bold;
-    font-size: medium;
-    margin: 5px;
-    padding-top: 5px;
-    padding-left: 15px;
-    text-decoration: underline lightblue;
-}
 
-dl.dl-horizontal dt {
-    width:25%;
-    margin-right: 5px;
-}
 
-dl.dl-horizontal dt:after {
-    content: " : ";
-}
+/*div.jumbotron#preecog {*/
+/*    background-color: white;*/
+/*}*/
 
-a.action {
-    width: 21em;
-    text-indent: 0em;
-    margin: 1px;
-}
+/*p {*/
+/*    text-align: justify;*/
+/*}*/
 
-div.pull-right a.action {
-    margin-right: 1rem;
-}
-button.action {
-    width: 20em;
-    text-indent: 0em;
-    margin: 5px;
-}
+/*p.noindent {*/
+/*    text-indent: 0em;*/
+/*}*/
 
-input.action {
-    width: 20em;
-    text-indent: 0em;
-    margin: 5px;
-}
+/*div.panel h2 {*/
+/*    font-weight: bold;*/
+/*    font-size: x-large;*/
+/*    margin: 5px;*/
+/*}*/
 
-th.action {
-    width: 7em;
-}
+/*div.panel h3 {*/
+/*    !*font-weight: bold;*!*/
+/*    !*font-size: large;*!*/
+/*    !*margin: 5px 0px 5px 5px;*!*/
+/*    !*padding: 5px 0px 5px 5px;*!*/
+/*    !*background-color: lightblue;*!*/
+/*    !*color: #123456;*!*/
+/*    !*border-radius: 5px 5px 0px 0px;*!*/
+/*}*/
 
-a.mini {
-    width: 4em;
-    margin:5px;
-    padding:5px;
-    text-indent: 0em;
-    background-color: #ececec;
-}
+/*div.panel h4 {*/
+/*    font-weight: bold;*/
+/*    font-size: medium;*/
+/*    margin: 5px;*/
+/*    padding-top: 5px;*/
+/*    padding-left: 15px;*/
+/*    text-decoration: underline lightblue;*/
+/*}*/
 
-.pointer:hover {
-    cursor: pointer;
-}
+/*dl.dl-horizontal dt {*/
+/*    width:25%;*/
+/*    margin-right: 5px;*/
+/*}*/
 
-div.preview {
-    /*background-color: #fffee8;*/
-    /*border: 2px solid #ffc681;*/
-    /*border-radius: 5px;*/
-    padding: 2px;
-}
+/*dl.dl-horizontal dt:after {*/
+/*    content: " : ";*/
+/*}*/
 
-span.octopus:after {
-    content: "octopus";
-    color: pink;
-    font-size: x-small;
-}
 
-span.explication {
-    font-family: monospace;
-    font-variant-position: super;
-    font-weight: bold;
-}
+/*th.action {*/
+/*    width: 7em;*/
+/*}*/
 
-span.explication.fiche {
-    color: #000091;
-}
+/*a.mini {*/
+/*    width: 4em;*/
+/*    margin:5px;*/
+/*    padding:5px;*/
+/*    text-indent: 0em;*/
+/*    background-color: #ececec;*/
+/*}*/
 
-span.explication.activite {
-    color: #910000;
-}
+/*.pointer:hover {*/
+/*    cursor: pointer;*/
+/*}*/
 
-/** ACTIVITE *************************************************************************/
+/*div.preview {*/
+/*    !*background-color: #fffee8;*!*/
+/*    !*border: 2px solid #ffc681;*!*/
+/*    !*border-radius: 5px;*!*/
+/*    padding: 2px;*/
+/*}*/
 
-div.activite h3 {
-    font-weight: bold;
-    font-size: large;
-    margin: 5px 0px 5px 5px;
-    padding: 5px 0px 5px 5px;
-    background-color: lightblue;
-    color: #123456;
-    border-radius: 5px 5px 0px 0px;
-}
+/*span.octopus:after {*/
+/*    content: "octopus";*/
+/*    color: pink;*/
+/*    font-size: x-small;*/
+/*}*/
 
-.modal-dialog {
-    width: 1000px;
-    margin: 30px auto;
-}
+/*span.explication {*/
+/*    font-family: monospace;*/
+/*    font-variant-position: super;*/
+/*    font-weight: bold;*/
+/*}*/
 
-/** BADGE STRUCTURE ********************************************************************/
+/*span.explication.fiche {*/
+/*    color: #000091;*/
+/*}*/
 
-span.badge.structure {
-    border-radius: 0.5em;
-}
+/*span.explication.activite {*/
+/*    color: #910000;*/
+/*}*/
 
-span.badge.structure.Servicecentral {
-    background-color: indianred;
-}
-span.badge.structure.Sousstructureadministrative {
-    background-color: indianred;
-}
-span.badge.structure.Servicecommun {
-    background-color: indianred;
-}
+/*!** ACTIVITE *************************************************************************!*/
 
-span.badge.structure.Composante {
-    background-color: #2B6FB6;
-}
-span.badge.structure.Département {
-    background-color: #2B6FB6;
-}
-span.badge.structure.Antenne {
-    background-color: #2B6FB6;
-}
-span.badge.structure.Établissement {
-    background-color: #2B6FB6;
-}
+/*div.activite h3 {*/
+/*    font-weight: bold;*/
+/*    font-size: large;*/
+/*    margin: 5px 0px 5px 5px;*/
+/*    padding: 5px 0px 5px 5px;*/
+/*    background-color: lightblue;*/
+/*    color: #123456;*/
+/*    border-radius: 5px 5px 0px 0px;*/
+/*}*/
 
-span.badge.structure.Structurederecherche {
-    background-color: #3c763d;
-}
+/*.modal-dialog {*/
+/*    width: 1000px;*/
+/*    margin: 30px auto;*/
+/*}*/
 
-span.fiche-metier {
-    font-weight: bolder;
-    color: blue;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
+/*!** BADGE STRUCTURE ********************************************************************!*/
 
-span.activite {
-    font-weight: bolder;
-    color: orangered;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
-span.inconnue {
-    font-weight: bolder;
-    color: gray;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
+/*span.badge.structure {*/
+/*    border-radius: 0.5em;*/
+/*}*/
 
-div.panel div.main {
+/*span.badge.structure.Servicecentral {*/
+/*    background-color: indianred;*/
+/*}*/
+/*span.badge.structure.Sousstructureadministrative {*/
+/*    background-color: indianred;*/
+/*}*/
+/*span.badge.structure.Servicecommun {*/
+/*    background-color: indianred;*/
+/*}*/
 
-    margin: 0px;
-    padding: 0px;
+/*span.badge.structure.Composante {*/
+/*    background-color: #2B6FB6;*/
+/*}*/
+/*span.badge.structure.Département {*/
+/*    background-color: #2B6FB6;*/
+/*}*/
+/*span.badge.structure.Antenne {*/
+/*    background-color: #2B6FB6;*/
+/*}*/
+/*span.badge.structure.Établissement {*/
+/*    background-color: #2B6FB6;*/
+/*}*/
 
-}
+/*span.badge.structure.Structurederecherche {*/
+/*    background-color: #3c763d;*/
+/*}*/
 
-span.Connaissance {
-    background-color: darkgreen;
-    width: 13rem;
-}
-span.Connaissances {
-    background-color: darkgreen;
-    width: 13rem;
-}
-span.Comportementale {
-    background-color: darkred;
-    width: 13rem;
-}
-span.Comportementales {
-    background-color: darkred;
-    width: 13rem;
-}
-span.Opérationnelle {
-    background-color: darkblue;
-    width: 13rem;
-}
-span.Opérationnelles {
-    background-color: darkblue;
-    width: 13rem;
-}
+/*span.fiche-metier {*/
+/*    font-weight: bolder;*/
+/*    color: blue;*/
+/*    font-family: monospace;*/
+/*    cursor: help;*/
+/*    font-variant-position: super;*/
+/*}*/
 
-span.badge.structure {
-    background-color: darkgreen;
-    border-radius: 2px;
-    min-width:18rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
-}
+/*span.activite {*/
+/*    font-weight: bolder;*/
+/*    color: orangered;*/
+/*    font-family: monospace;*/
+/*    cursor: help;*/
+/*    font-variant-position: super;*/
+/*}*/
+/*span.inconnue {*/
+/*    font-weight: bolder;*/
+/*    color: gray;*/
+/*    font-family: monospace;*/
+/*    cursor: help;*/
+/*    font-variant-position: super;*/
+/*}*/
 
-span.historise {
-    color: gray;
-}
+/*div.panel div.main {*/
 
-span.todo {
-    color:darkred;
-    font-weight: bold;
-    background-color:pink;
-    margin-left: .5rem;
-    margin-right: .5rem;
-    padding-left: .5rem;
-    padding-right: .5rem;
-}
+/*    margin: 0px;*/
+/*    padding: 0px;*/
 
-div.validation {
-    border: 1px grey solid;
-    background-color: lightgray;
-    border-radius: 5px;
-    padding: 0.5rem;
-    margin: 0.5rem;
-}
+/*}*/
 
-div.validation-valider {
-    border: 1px darkgreen solid;
-    background-color: lightgreen;
-}
+/*span.Connaissance {*/
+/*    background-color: darkgreen;*/
+/*    width: 13rem;*/
+/*}*/
+/*span.Connaissances {*/
+/*    background-color: darkgreen;*/
+/*    width: 13rem;*/
+/*}*/
+/*span.Comportementale {*/
+/*    background-color: darkred;*/
+/*    width: 13rem;*/
+/*}*/
+/*span.Comportementales {*/
+/*    background-color: darkred;*/
+/*    width: 13rem;*/
+/*}*/
+/*span.Opérationnelle {*/
+/*    background-color: darkblue;*/
+/*    width: 13rem;*/
+/*}*/
+/*span.Opérationnelles {*/
+/*    background-color: darkblue;*/
+/*    width: 13rem;*/
+/*}*/
 
-div.validation-refuser {
-    border: 1px darkred solid;
-    background-color: lightcoral;
-}
+/*span.badge.structure {*/
+/*    background-color: darkgreen;*/
+/*    border-radius: 2px;*/
+/*    min-width:18rem;*/
+/*    padding-left: 3rem;*/
+/*    padding-right: 3rem;*/
+/*}*/
 
-span.probleme {
-    color: darkred;
-}
+/*span.historise {*/
+/*    color: gray;*/
+/*}*/
 
-tr.historise td {
-    color:lightslategray;
-    background: #d9d9d9;
-    /*text-decoration: line-through;*/
-}
+/*span.todo {*/
+/*    color:darkred;*/
+/*    font-weight: bold;*/
+/*    background-color:pink;*/
+/*    margin-left: .5rem;*/
+/*    margin-right: .5rem;*/
+/*    padding-left: .5rem;*/
+/*    padding-right: .5rem;*/
+/*}*/
 
-th.cell-action {
-    width: 13rem;
-}
+/*div.validation {*/
+/*    border: 1px grey solid;*/
+/*    background-color: lightgray;*/
+/*    border-radius: 5px;*/
+/*    padding: 0.5rem;*/
+/*    margin: 0.5rem;*/
+/*}*/
 
-span.ferme {
-    color:darkred;
-    font-variant-caps: small-caps;
-    font-variant-position: super;
-    font-weight: bold;
-}
+/*div.validation-valider {*/
+/*    border: 1px darkgreen solid;*/
+/*    background-color: lightgreen;*/
+/*}*/
 
-/** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- */
+/*div.validation-refuser {*/
+/*    border: 1px darkred solid;*/
+/*    background-color: lightcoral;*/
+/*}*/
 
-.tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}
+/*tr.historise td {*/
+/*    color:lightslategray;*/
+/*    background: #d9d9d9;*/
+/*    !*text-decoration: line-through;*!*/
+/*}*/
 
-span.date {
-    font-weight: normal;
-    color: navy;
-}
+/*th.cell-action {*/
+/*    width: 13rem;*/
+/*}*/
 
-table.parcours-de-formation {
-    width:100%;
-}
+/*span.ferme {*/
+/*    color:darkred;*/
+/*    font-variant-caps: small-caps;*/
+/*    font-variant-position: super;*/
+/*    font-weight: bold;*/
+/*}*/
 
-table.parcours-de-formation th {
-    color:white;
-    padding-bottom:0.5rem;
-    padding-top:0.5rem;
-    padding-left: 2rem;
-}
+/*!** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- *!*/
 
-table.parcours-de-formation th.titre {
-    /*background: linear-gradient(to right, #d9edf7, white);*/
-    background: linear-gradient(to right, lightgrey, white);
-    color: #3c6c8b;
-    /*border-top-left-radius:5px;*/
-}
+/*.tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}*/
 
- table.parcours-de-formation td.libelle-cell {
-     /*background: lightgreen;*/
-     /*width: 20rem;*/
- }
-table.parcours-de-formation td.info-cell {
-    /*background: lightyellow;*/
-    width: 25rem;
-}
-table.parcours-de-formation td.validation-cell {
-    /*background: lightpink;*/
-    width: 15rem;
-}
-table.parcours-de-formation td.action-cell {
-    /*background: lightblue;*/
-    width: 12rem;
-    text-align: right;
-}
+/*span.date {*/
+/*    font-weight: normal;*/
+/*    color: navy;*/
+/*}*/
 
-/** Tableaux des applications******************************************************************************************/
+/*table.parcours-de-formation {*/
+/*    width:100%;*/
+/*}*/
 
-table.applications {
-    width:100%;
-}
-table.applications th {
-    color:white;
-    padding-bottom:0.5rem;
-    padding-top:0.5rem;
-    padding-left: 2rem;
-}
+/*table.parcours-de-formation th {*/
+/*    color:white;*/
+/*    padding-bottom:0.5rem;*/
+/*    padding-top:0.5rem;*/
+/*    padding-left: 2rem;*/
+/*}*/
 
-table.applications th.titre {
-    /*background: linear-gradient(to right, #d9edf7, white);*/
-    background: linear-gradient(to right, lightgrey, white);
-    color: #3c6c8b;
-    /*border-top-left-radius:5px;*/
-}
+/*table.parcours-de-formation th.titre {*/
+/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
+/*    background: linear-gradient(to right, lightgrey, white);*/
+/*    color: #3c6c8b;*/
+/*    !*border-top-left-radius:5px;*!*/
+/*}*/
 
-/** Tableaux des compétences ******************************************************************************************/
+/* table.parcours-de-formation td.libelle-cell {*/
+/*     !*background: lightgreen;*!*/
+/*     !*width: 20rem;*!*/
+/* }*/
+/*table.parcours-de-formation td.info-cell {*/
+/*    !*background: lightyellow;*!*/
+/*    width: 25rem;*/
+/*}*/
+/*table.parcours-de-formation td.validation-cell {*/
+/*    !*background: lightpink;*!*/
+/*    width: 15rem;*/
+/*}*/
+/*table.parcours-de-formation td.action-cell {*/
+/*    !*background: lightblue;*!*/
+/*    width: 12rem;*/
+/*    text-align: right;*/
+/*}*/
 
-table.competences {
-    width:100%;
-}
-table.competences th {
-    color:white;
-    padding-bottom:0.5rem;
-    padding-top:0.5rem;
-    padding-left: 2rem;
-}
+/*!** Tableaux des applications******************************************************************************************!*/
 
-table.competences th.titre {
-    /*background: linear-gradient(to right, #d9edf7, white);*/
-    background: linear-gradient(to right, lightgrey, white);
-    color: #3c6c8b;
-    /*border-top-left-radius:5px;*/
-}
+/*table.applications {*/
+/*    width:100%;*/
+/*}*/
+/*table.applications th {*/
+/*    color:white;*/
+/*    padding-bottom:0.5rem;*/
+/*    padding-top:0.5rem;*/
+/*    padding-left: 2rem;*/
+/*}*/
 
-/** Tableaux des formations *******************************************************************************************/
+/*table.applications th.titre {*/
+/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
+/*    background: linear-gradient(to right, lightgrey, white);*/
+/*    color: #3c6c8b;*/
+/*    !*border-top-left-radius:5px;*!*/
+/*}*/
 
-table.formations {
-    width:100%;
-}
-table.formations th {
-    color:white;
-    padding-bottom:0.5rem;
-    padding-top:0.5rem;
-    padding-left: 2rem;
-}
+/*!** Tableaux des compétences ******************************************************************************************!*/
 
-table.formations th.titre {
-    /*background: linear-gradient(to right, #d9edf7, white);*/
-    background: linear-gradient(to right, lightgrey, white);
-    color: #3c6c8b;
-    /*border-top-left-radius:5px;*/
-}
+/*table.competences {*/
+/*    width:100%;*/
+/*}*/
+/*table.competences th {*/
+/*    color:white;*/
+/*    padding-bottom:0.5rem;*/
+/*    padding-top:0.5rem;*/
+/*    padding-left: 2rem;*/
+/*}*/
+
+/*table.competences th.titre {*/
+/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
+/*    background: linear-gradient(to right, lightgrey, white);*/
+/*    color: #3c6c8b;*/
+/*    !*border-top-left-radius:5px;*!*/
+/*}*/
+
+/*!** Tableaux des formations *******************************************************************************************!*/
+
+/*table.formations {*/
+/*    width:100%;*/
+/*}*/
+/*table.formations th {*/
+/*    color:white;*/
+/*    padding-bottom:0.5rem;*/
+/*    padding-top:0.5rem;*/
+/*    padding-left: 2rem;*/
+/*}*/
+
+/*table.formations th.titre {*/
+/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
+/*    background: linear-gradient(to right, lightgrey, white);*/
+/*    color: #3c6c8b;*/
+/*    !*border-top-left-radius:5px;*!*/
+/*}*/
 
 span.lettrine {
     position:relative;
@@ -533,7 +436,11 @@ span.lettrine {
     text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
-/** Datatable *****/
+span.probleme {
+    color: darkred;
+}
+
+/*** Datatable ******/
 
 table.datatable thead {
     background-color: cornflowerblue;
