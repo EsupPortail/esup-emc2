@@ -1,6 +1,22 @@
+:root {
+    --color-info: #3c6c8b;
+    --background-info: #c2e3ff;
 
+    --color-warning: #8a6d3b ;
+    --background-warning: #e8dcb8;
+
+    --color-danger: darkred ;
+    --background-danger: #d99b9b;
+}
 /** MODAL *************************************************************************************************************/
 
+div.modal div.modal-dialog {
+    width: 80%;
+}
+
+div.modal div.modal-content {
+    width: 100%;
+}
 div.modal div.modal-header {
     background-color: var(--header-background);
     color: white;
@@ -39,8 +55,35 @@ ul.nav-tabs {
 /** ACTION et autre semantique de lien ********************************************************************************/
 
 .action {
-    width:20rem;
-    margin-right:1rem;
+    width:25rem;
+    margin:1rem;
+}
+
+button.btn.dropdown-toggle.btn-default{
+    height: 3.5rem;
+}
+
+/** ALERT *************************************************************************************************************/
+
+div.alert {
+    margin: 1rem;
+}
+div.alert-info {
+    color: var(--color-info);
+    border-color: var(--color-info);
+    background: var(--background-info);
+}
+
+div.alert-warning {
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+    background: var(--background-warning);
+}
+
+div.alert-danger {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+    background: var(--background-danger);
 }
 
 /** TITRE (A BOUGER ?) ************************************************************************************************/
@@ -48,6 +91,11 @@ ul.nav-tabs {
 h1.page-header {
     padding-left: 1rem;
 }
+
+h1.page-header strong {
+    color: var(--color-info);
+}
+
 /*div.main-with-tab {*/
 /*    background-color: white;*/
 /*    -moz-border-radius-bottomleft: 5px;*/
