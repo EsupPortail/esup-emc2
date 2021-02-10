@@ -290,6 +290,7 @@ return [
             '110_' => 'vendor/DataTables-1.10.18/datatables.min.css',
             '112_' => 'vendor/font-awesome-5.15.2/css/all.min.css',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
+            '997_' => 'css/unicaen.css',
             '998_' => 'css/icon.css',
             '999_' => 'css/highlight.css',
         ],
