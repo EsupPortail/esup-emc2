@@ -183,36 +183,11 @@ h1.page-header {
 
 /*!** BADGE STRUCTURE ********************************************************************!*/
 
-/*span.badge.structure {*/
-/*    border-radius: 0.5em;*/
-/*}*/
-
-/*span.badge.structure.Servicecentral {*/
-/*    background-color: indianred;*/
-/*}*/
-/*span.badge.structure.Sousstructureadministrative {*/
-/*    background-color: indianred;*/
-/*}*/
-/*span.badge.structure.Servicecommun {*/
-/*    background-color: indianred;*/
-/*}*/
-
-/*span.badge.structure.Composante {*/
-/*    background-color: #2B6FB6;*/
-/*}*/
-/*span.badge.structure.Département {*/
-/*    background-color: #2B6FB6;*/
-/*}*/
-/*span.badge.structure.Antenne {*/
-/*    background-color: #2B6FB6;*/
-/*}*/
-/*span.badge.structure.Établissement {*/
-/*    background-color: #2B6FB6;*/
-/*}*/
-
-/*span.badge.structure.Structurederecherche {*/
-/*    background-color: #3c763d;*/
-/*}*/
+span.badge.structure {
+    border-radius: 0.25em;
+    width:100%;
+    background:#3c6c8b;
+}
 
 /*span.fiche-metier {*/
 /*    font-weight: bolder;*/
@@ -346,12 +321,12 @@ h1.page-header {
 /*    padding-left: 2rem;*/
 /*}*/
 
-/*table.parcours-de-formation th.titre {*/
-/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
-/*    background: linear-gradient(to right, lightgrey, white);*/
-/*    color: #3c6c8b;*/
-/*    !*border-top-left-radius:5px;*!*/
-/*}*/
+table.parcours-de-formation th.titre {
+    /*background: linear-gradient(to right, #d9edf7, white);*/
+    background: linear-gradient(to right, lightgrey, white);
+    color: #3c6c8b;
+    /*border-top-left-radius:5px;*/
+}
 
 /* table.parcours-de-formation td.libelle-cell {*/
 /*     !*background: lightgreen;*!*/
@@ -443,6 +418,7 @@ span.probleme {
 /*** Datatable ******/
 
 table.datatable thead {
-    background-color: cornflowerblue;
-    border-color: #2e6da4;
+    background-color: var(--color-medium-bis);
+    border-color: var(--color-medium);
+    color: var(--header-color);
 }

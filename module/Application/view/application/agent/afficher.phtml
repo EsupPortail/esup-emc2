@@ -45,13 +45,12 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     <strong><?php echo $agent->getDenomination(); ?></strong>
 </h1>
 
-<div class="main">
+<h2> Informations générales sur l'agent </h2>
 
-    <h2> Informations générales sur l'agent </h2>
 
     <div class="row">
-        <div class="col-md-7">
-            <!-- Information générale "public" -->
+        <div class="col-md-6">
+             Information générale "public"
             <dl>
                 <dt> Prénom </dt>
                 <dd>
@@ -71,9 +70,9 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                 </dd>
             </dl>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <?php if ($canInfoSource) : ?>
-                <!-- Information générale "application" -->
+                 Information générale "application"
                 <dl>
                     <dt> Identifiant sources </dt>
                     <dd>
@@ -112,8 +111,6 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         </div>
     </div>
 
-<!--    <h2> Affectations, Statuts et grades </h2>-->
-
     <div class="row">
         <div class="col-md-3">
             <h2>Affectation(s)</h2>
@@ -134,7 +131,6 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
         <?php endforeach; ?>
         </div>
     </div>
-
     <a
         <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */?>
         href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
@@ -198,7 +194,6 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
     <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
 
-</div>
 
 
 
