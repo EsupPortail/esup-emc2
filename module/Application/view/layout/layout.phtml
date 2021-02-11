@@ -38,6 +38,7 @@ $navigationHelper = $this->navigation('navigation');
                     $version = null;
                     switch(getenv('APPLICATION_ENV')) {
                         case 'production' :
+                            $version = "Outil de GPEC";
                             break;
                         case 'test' :
                             $version = "<span class='version test'>Version de test</span>";
