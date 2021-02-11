@@ -154,7 +154,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
         <?php foreach ($completees as $demande) : ?>
             <tr>
                 <td> <?php echo $demande->getId(); ?> </td>
-                <td> <?php echo $demande->getObject($em)->getMetier()->getLibelle(); ?> </td>
+                <td> <?php echo ($demande->getObject($em)->getMetier())?$demande->getObject($em)->getMetier()->getLibelle():"Aucune métier"; ?> </td>
                 <td>
                     <small>
                         <?php echo $demande->getValidation()->getHistoCreation()->format("d/m/Y à H:i:s"); ?> <br/>
