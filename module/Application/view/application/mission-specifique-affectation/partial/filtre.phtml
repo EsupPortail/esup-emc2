@@ -26,9 +26,14 @@ foreach ($missions as $mission) {
 //    if ($mission !== null) echo $mission->getLibelle();
 ?>
 
-<form method="get" id="filtre" action="<?php echo $this->url(); ?>">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="icon filtrer"></span> Filtre des affections
+    </div>
+    <div class="panel-body">
+        <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php
             $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
             $structureF
@@ -42,7 +47,7 @@ foreach ($missions as $mission) {
             <?php echo $this->formControlGroup($structureF); ?>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php
             $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
             $agentF
@@ -72,19 +77,23 @@ foreach ($missions as $mission) {
             </select>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-md-3">
             <br/>
             <button class="btn btn-primary" id="clear">
                 <span class="icon effacer"></span>
             </button>
+
+            <button class="btn btn-primary" id="filter" style="width:20rem;">
+                <span class="icon filtrer"></span>
+                Filtrer
+            </button>
         </div>
     </div>
 
-    <button class="btn btn-primary action" id="filter">
-        <span class="icon filtrer"></span>
-        Filtrer
-    </button>
+
 </form>
+    </div>
+</div>
 
 <br/>
 <br/>

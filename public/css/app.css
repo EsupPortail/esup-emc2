@@ -1,4 +1,7 @@
 :root {
+    --color-default: #555555;
+    --background-default: #aaaaaa;
+
     --color-info: #3c6c8b;
     --background-info: #c2e3ff;
 
@@ -116,8 +119,31 @@ div.panel-info div.panel-body {
     border-color: var(--color-info);
 }
 
+div.panel-info {
+    border-color: var(--color-default);
+    border-left: 0.5rem var(--color-default) solid;
+    border-radius: 0;
+}
+
+div.panel-info div.panel-heading {
+    border-color: var(--color-default);
+    color: var(--color-default);
+    background: var(--background-default);
+}
+
+div.panel-info div.panel-body {
+    border-color: var(--color-default);
+}
+
 /** TITRE (A BOUGER ?) ************************************************************************************************/
 
+h1.title {
+    /*color:#19bd81;*/
+}
+
+h1.title span {
+    color:white;
+}
 h1.page-header {
     padding-left: 1rem;
 }
