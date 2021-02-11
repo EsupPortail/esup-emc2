@@ -192,7 +192,7 @@ $canAffecter = $this->isAllowed(PrivilegePrivileges::getResourceId(PrivilegePriv
             url : url,
             beforeSend:
                 function () {
-                    document.getElementById(id).innerHTML = "<img style='height:40px;' src='css/loading.gif'/>";
+                    document.getElementById(id).innerHTML = "<span class='glyphicon glyphicon-hourglass text-info'></span>";
                 },
             success:
                 function(retour){
