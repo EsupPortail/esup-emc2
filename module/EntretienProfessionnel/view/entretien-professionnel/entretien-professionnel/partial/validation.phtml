@@ -145,7 +145,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                 </div>
                 <div class="pull-right">
                     <br/>
-                    <?php if ($dateOk AND $canValiderResponsable) : ?>
+                    <?php if ($dateOk AND $canValiderAgent) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Agent'], [], true); ?>"
@@ -163,7 +163,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
 </div>
 
 <div>
-    <h3 class="categorie"> Validation de la direction des ressources humaines </h3>
+    <h3 class="categorie"> Validation du responsable hiérarchique </h3>
 
     <div class="row">
 
@@ -171,7 +171,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
             <div class="col-md-8">
                 <div class="alert alert-warning">
                     <span class="icon attention"></span>
-                    La validation par la direction des ressources humaines n'est possible seulement après celle de l'agent.
+                    La validation par le responsable hiérarchique n'est possible seulement après celle de l'agent.
                 </div>
             </div>
         <?php else : ?>
@@ -180,7 +180,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                     <div class="row">
                         <div class="alert alert-success">
                             <div class="col-md-6">
-                                <strong><u>Validation DRH effectuée.</u></strong>
+                                <strong><u>Validation du responsable hiérarchique effectuée.</u></strong>
 
                             </div>
                             <div class="col-md-6">
@@ -218,7 +218,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                 </div>
                 <div class="pull-right">
                     <br/>
-                    <?php if ($dateOk AND $canValiderResponsable) : ?>
+                    <?php if ($dateOk AND $canValiderDrh) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'DRH'], [], true); ?>"
@@ -226,7 +226,7 @@ $dateOk = ($now > $entretien->getDateEntretien());
                                 data-event="modification"
                         >
                             <span class="icon validation-do"></span>
-                            Validation de la DRH
+                            Validation du responsable hiérarchique
                         </a>
                     <?php endif; ?>
                 </div>
