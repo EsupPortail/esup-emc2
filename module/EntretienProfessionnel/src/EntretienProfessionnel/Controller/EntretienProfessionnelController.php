@@ -309,7 +309,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 switch ($type) {
                     case 'Agent' :
                         $entretien->setValidationAgent($validation);
-                        $responsables = $this->getAgentService()->getClosestResponsablesByAgent($entretien->getAgent());
+                        $responsables = $this->getAgentService()->getResponsablesHierarchiques($entretien->getAgent());
                         $array = [];
                         foreach ($responsables as $responsable) $array[] = $responsable->getEmail();
                         $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $array]);

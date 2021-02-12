@@ -318,18 +318,20 @@ class AgentService {
      * @param Agent $agent
      * @return User[]|null
      */
-    public function getClosestResponsablesByAgent(Agent $agent) {
+    public function getResponsablesHierarchiques(Agent $agent) {
         $affectationPrincipale = $agent->getAffectationPrincipale();
         if ($affectationPrincipale === null) return null;
-
         $structure = $affectationPrincipale->getStructure();
         if ($structure === null) return null;
 
-        while ($structure !== null) {
-            $responsables = $structure->getResponsables();
-            if ($responsables !== []) return $responsables;
+
+        while($structure->getParent() AND $structure->getParent()->getParent()) {
             $structure = $structure->getParent();
         }
+
+        $responsables = $structure->getResponsables();
+        if ($responsables !== []) return $responsables;
+
 
         return null;
     }

@@ -89,7 +89,7 @@ class AgentController extends AbstractActionController
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
-        $responsables = $this->getAgentService()->getClosestResponsablesByAgent($agent);
+        $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
 
         return new ViewModel([
