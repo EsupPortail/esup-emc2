@@ -61,17 +61,22 @@ trait AgentMacroTrait
         /** @var Agent $agent */
         $agent = $this;
         $statuts = $agent->getStatutsActifs();
+        $temoins = [];
         $texte  = "<ul>";
         foreach ($statuts as $statut) {
             $texte .= "<li>";
-            $temoins = [];
             if ($statut->isTitulaire()) $temoins[] = "Titulaire";
             if ($statut->isCdi()) $temoins[] = "C.D.I.";
             if ($statut->isCdd()) $temoins[] = "C.D.D.";
             if (!empty($temoins)) {
-                $texte .= "<br/>";
-                $texte .= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='complement'>";
-                $texte .= "Témoin(s) actif(s) : " . implode(", ",$temoins);
+                $texte .= implode(", ",$temoins);
+                $texte .= " (";
+                if($statut->getDateFin()) {
+                    $texte .= "du " . $statut->getDateDebut()->format('d/m/Y') . " au " . $statut->getDateFin()->format('d/m/Y');
+                } else {
+                    $texte .= "depuis le " . $statut->getDateDebut()->format('d/m/Y');
+                }
+                $texte .= " " . $statut->getStructure()->getLibelleCourt() .")";
                 $texte .= "</span>";
             }
             $texte .= "</li>";
