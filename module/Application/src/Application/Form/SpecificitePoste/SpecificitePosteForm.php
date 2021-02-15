@@ -14,7 +14,7 @@ class SpecificitePosteForm extends Form {
             'name' => 'specificite',
             'type' => 'textarea',
             'options' => [
-                'label' => 'Spécificité du poste : ',
+                'label' => 'Spécificités du poste : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],

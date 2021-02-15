@@ -41,7 +41,7 @@ trait FichePosteMacroTrait {
         $texte  = "";
         if ($specificite !== null) {
             if ($specificite->getSpecificite() !== null and trim($specificite->getSpecificite()) !== '') {
-                $texte .= "<h3> Spécificité du poste </h3>";
+                $texte .= "<h3> Spécificités du poste </h3>";
                 $texte .= trim($specificite->getSpecificite());
             }
             if ($specificite->getEncadrement() !== null and trim($specificite->getEncadrement()) !== '') {

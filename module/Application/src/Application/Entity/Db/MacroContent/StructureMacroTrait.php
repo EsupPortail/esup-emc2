@@ -17,23 +17,25 @@ trait StructureMacroTrait {
     {
         /** @var Structure $structure */
         $structure = $this;
-        $texte = $structure->getDescription($structure->getRepriseResumeMere());
+        $texte = "";
+        if ($structure->getRepriseResumeMere()) {
+            $texte .= $structure->getParent()->toStringDescription();
+        }
+        $texte .= $structure->toStringDenomination();
+        $texte .= $structure->getDescription();
         return $texte;
     }
 
     public function toStringStructureBloc() : string
     {
-        $texte  = "";
-//        $texte .= "<table class='structure-bloc'>";
-//        $texte .= "<tr><th>";
-        $texte .= "<h3>";
-        $texte .= $this->toStringDenomination();
-        $texte .= "</h3>";
-//        $texte .= "</th></tr>";
-//        $texte .= "<tr><td>";
-        $texte .= $this->toStringDescription();
-//        $texte .= "</td></tr>";
-//        $texte .= "</table>";
+        /** @var Structure $structure */
+        $structure = $this;
+        $texte = "";
+        if ($structure->getRepriseResumeMere()) {
+            $texte .= $structure->getParent()->toStringStructureBloc();
+        }
+        $texte .= "<h3>" . $structure->toStringDenomination() . "</h3>";
+        $texte .= $structure->getDescription(false);
         return $texte;
     }
 
