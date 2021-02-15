@@ -246,11 +246,11 @@ class MailingService
     }
 
     /**
-     * @param string $texteInitial
+     * @param string|null $texteInitial
      * @param array $variables
      * @return string
      */
-    private function replaceMacros(string $texteInitial, array $variables)
+    private function replaceMacros(?string $texteInitial, array $variables)
     {
         $matches = [];
         preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);

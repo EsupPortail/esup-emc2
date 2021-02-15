@@ -34,10 +34,10 @@ $dateOk = ($now > $entretien->getDateEntretien());
             <div class="col-md-8">
                 <div class="row">
                     <div class="alert alert-success">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <strong><u>Validation responsable effectuée.</u></strong>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <dl class="dl-horizontal">
                                 <dt> Validateur </dt>
                                 <dd> <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?> </dd>
@@ -105,11 +105,11 @@ $dateOk = ($now > $entretien->getDateEntretien());
                 <div class="col-md-8">
                     <div class="row">
                         <div class="alert alert-success">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <strong><u>Validation agent effectuée.</u></strong>
 
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <dl class="dl-horizontal">
                                     <dt> Validateur </dt>
                                     <dd> <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?> </dd>
@@ -179,11 +179,11 @@ $dateOk = ($now > $entretien->getDateEntretien());
                 <div class="col-md-8">
                     <div class="row">
                         <div class="alert alert-success">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <strong><u>Validation du responsable hiérarchique effectuée.</u></strong>
 
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <dl class="dl-horizontal">
                                     <dt> Validateur </dt>
                                     <dd> <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?> </dd>

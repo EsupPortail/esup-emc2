@@ -2,6 +2,9 @@
     --color-default: #555555;
     --background-default: #aaaaaa;
 
+    --color-success: #318b22;
+    --background-success: #92c197;
+
     --color-info: #3c6c8b;
     --background-info: #c2e3ff;
 
@@ -119,20 +122,36 @@ div.panel-info div.panel-body {
     border-color: var(--color-info);
 }
 
-div.panel-info {
+div.panel-default {
     border-color: var(--color-default);
     border-left: 0.5rem var(--color-default) solid;
     border-radius: 0;
 }
 
-div.panel-info div.panel-heading {
+div.panel-default div.panel-heading {
     border-color: var(--color-default);
     color: var(--color-default);
     background: var(--background-default);
 }
 
-div.panel-info div.panel-body {
+div.panel-default div.panel-body {
     border-color: var(--color-default);
+}
+
+div.panel-success {
+    border-color: var(--color-success);
+    border-left: 0.5rem var(--color-success) solid;
+    border-radius: 0;
+}
+
+div.panel-success div.panel-heading {
+    border-color: var(--color-success);
+    color: var(--color-success);
+    background: var(--background-success);
+}
+
+div.panel-success div.panel-body {
+    border-color: var(--color-success);
 }
 
 /** TITRE (A BOUGER ?) ************************************************************************************************/
