@@ -61,14 +61,14 @@ trait AgentMacroTrait
         /** @var Agent $agent */
         $agent = $this;
         $statuts = $agent->getStatutsActifs();
-        $temoins = [];
         $texte  = "<ul>";
         foreach ($statuts as $statut) {
-            $texte .= "<li>";
+            $temoins = [];
             if ($statut->isTitulaire()) $temoins[] = "Titulaire";
             if ($statut->isCdi()) $temoins[] = "C.D.I.";
             if ($statut->isCdd()) $temoins[] = "C.D.D.";
             if (!empty($temoins)) {
+                $texte .= "<li>";
                 $texte .= implode(", ",$temoins);
                 $texte .= " (";
                 if($statut->getDateFin()) {
@@ -76,10 +76,10 @@ trait AgentMacroTrait
                 } else {
                     $texte .= "depuis le " . $statut->getDateDebut()->format('d/m/Y');
                 }
-                $texte .= " " . $statut->getStructure()->getLibelleCourt() .")";
+                $texte .= " - " . $statut->getStructure()->getLibelleCourt() .")";
                 $texte .= "</span>";
+                $texte .= "</li>";
             }
-            $texte .= "</li>";
         }
         $texte .= "</ul>";
         return $texte;
@@ -96,9 +96,13 @@ trait AgentMacroTrait
         $texte  = "<ul>";
         foreach ($grades as $grade) {
             $texte .= "<li>";
-            $texte .= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='complement'>";
-            $texte .= " BAP:" . $grade->getBap()->getCategorie();
-            $texte .= " Corps:" . $grade->getCorps()->getLibelleLong();
+            $texte .= " Corps:" . $grade->getCorps()->getLibelleLong() . " ".$grade->getBap()->getCategorie();
+            if($grade->getDateFin()) {
+                $texte .= "du " . $grade->getDateDebut()->format('d/m/Y') . " au " . $grade->getDateFin()->format('d/m/Y');
+            } else {
+                $texte .= "depuis le " . $grade->getDateDebut()->format('d/m/Y');
+            }
+            $texte .= " - " . $grade->getStructure()->getLibelleCourt() .")";
             $texte .= "</span>";
             $texte .= "</li>";
         }
