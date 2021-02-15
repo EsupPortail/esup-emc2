@@ -43,7 +43,7 @@ $modules = [
     'Metier',
     'Application',
 //    'Document',
-    'ZendDeveloperTools',
+//    'ZendDeveloperTools',
 
 ];
 

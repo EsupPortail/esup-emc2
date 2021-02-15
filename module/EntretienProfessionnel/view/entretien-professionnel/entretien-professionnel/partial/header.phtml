@@ -138,9 +138,15 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
                     <dt>Responsable d'entretien </dt>
                     <dd>
                         <?php if ($entretien->getValidationResponsable()) : ?>
-                            <span class="icon ok" style="color:darkgreen;"></span>
-                            <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
-                            (<?php echo $entretien->getValidationResponsable()->getHistoModification()->format("d/m/Y à H:i"); ?>)
+                            <div>
+                                <div style="display: inline-block; vertical-align: top;">
+                                    <span class="icon ok" style="color:darkgreen;"></span>
+                                </div>
+                                <div style="display: inline-block;">
+                                    <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
+                                    <br/><?php echo $entretien->getValidationResponsable()->getHistoModification()->format("d/m/Y à H:i"); ?>
+                                </div>
+                            </div>
                         <?php else : ?>
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
@@ -148,9 +154,13 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
                     <dt>Agent </dt>
                     <dd>
                         <?php if ($entretien->getValidationAgent()) : ?>
-                            <span class="icon ok" style="color:darkgreen;"></span>
-                            <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?>
-                            (<?php echo $entretien->getValidationAgent()->getHistoModification()->format("d/m/Y à H:i"); ?>)
+                            <div style="display: inline-block; vertical-align: top;">
+                                <span class="icon ok" style="color:darkgreen;"></span>
+                            </div>
+                            <div style="display: inline-block;">
+                                <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?>
+                                <br/><?php echo $entretien->getValidationAgent()->getHistoModification()->format("d/m/Y à H:i"); ?>
+                            </div>
                         <?php else : ?>
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
@@ -158,9 +168,13 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
                     <dt>Responsable hiérachique </dt>
                     <dd>
                         <?php if ($entretien->getValidationDRH()) : ?>
-                            <span class="icon ok" style="color:darkgreen;"></span>
-                            <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?>
-                            (<?php echo $entretien->getValidationDRH()->getHistoModification()->format("d/m/Y à H:i"); ?>)
+                            <div style="display: inline-block; vertical-align: top;">
+                                <span class="icon ok" style="color:darkgreen;"></span>
+                            </div>
+                            <div style="display: inline-block;">
+                                <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?>
+                                <br/><?php echo $entretien->getValidationDRH()->getHistoModification()->format("d/m/Y à H:i"); ?>
+                            </div>
                         <?php else : ?>
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>

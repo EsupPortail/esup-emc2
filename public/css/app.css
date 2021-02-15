@@ -154,7 +154,27 @@ div.panel-success div.panel-body {
     border-color: var(--color-success);
 }
 
+div.panel a.btn {
+    font-variant: none;
+}
 /** TITRE (A BOUGER ?) ************************************************************************************************/
+
+body {
+    font-size: 10pt;
+}
+
+h1 {
+    font-size: 20pt;
+}
+h2 {
+    font-size: 16pt;
+}
+h3 {
+     font-size: 12pt;
+ }
+h4 {
+    font-size: 11pt;
+}
 
 h1.title {
     /*color:#19bd81;*/
@@ -454,10 +474,17 @@ span.badge.structure {
 /*}*/
 
 table.parcours-de-formation th.titre {
-    /*background: linear-gradient(to right, #d9edf7, white);*/
-    background: linear-gradient(to right, lightgrey, white);
+    background: linear-gradient(to right, lightgrey, whitesmoke);
     color: #3c6c8b;
-    /*border-top-left-radius:5px;*/
+}
+
+table.elements {
+    width:100%;
+}
+
+table.elements th.titre {
+    background: linear-gradient(to right, lightgrey, whitesmoke);
+    color: #3c6c8b;
 }
 
 /* table.parcours-de-formation td.libelle-cell {*/

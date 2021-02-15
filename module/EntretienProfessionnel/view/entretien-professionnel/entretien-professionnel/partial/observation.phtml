@@ -23,7 +23,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
 
 ?>
 
-<h2> Observation lié à l'entretien professionnel</h2>
+<h2> Observations liées à l'entretien professionnel</h2>
 
 <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
 
@@ -39,7 +39,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
 <?php if ($entretien->hasValidationResponsable()) : ?>
     <div class="row">
         <div class="col-md-8">
-            <h2> Observation de l'agent </h2>
+            <h2> Observations de l'agent </h2>
         </div>
         <div class="pull-right">
             <br/>

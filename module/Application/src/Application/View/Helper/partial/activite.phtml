@@ -51,10 +51,10 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
 
 <!-- NOM DE L'ACTVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 <div class="row">
-    <div class="col-md-11" style="background-color:#d9edf7; margin-left: 2rem;">
+    <div class="col-md-11" style="background-color:var(--color-light-bis); margin-left: 2rem; border: 1px gray solid;">
         <div class="row">
             <div class="col-md-8">
-                <h3 style="color:#3c6c8b;">
+                <h3>
                     <?php echo $activite->getLibelle(); ?>
                     <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
                         <a

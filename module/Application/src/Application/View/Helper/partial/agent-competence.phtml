@@ -22,7 +22,7 @@ $retour         = (isset($options['retour'])) ? $options['retour'] : null;
 ?>
 <div class="row">
     <div class="col-md-8" style="border-bottom: 1px solid #31708f">
-        <h3> <span class="icon competence"></span> Compétences liées</h3>
+        <h3> <span class="icon competence"></span> Compétences</h3>
     </div>
     <div class="pull-right">
         <br/>
@@ -64,7 +64,7 @@ ksort($dictionnaire);
                 </div>
             </div>
         <?php endif; ?>
-        <table class="competences" id="competences">
+        <table class="elements" id="competences">
             <tbody>
             <?php foreach ($dictionnaire as $key => $liste) : ?>
                 <?php usort($liste, function(CompetenceElement $a, CompetenceElement $b) {return $a->getCompetence()->getLibelle() > $b->getCompetence()->getLibelle();}); ?>

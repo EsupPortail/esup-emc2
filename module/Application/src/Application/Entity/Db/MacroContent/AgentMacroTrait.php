@@ -64,17 +64,8 @@ trait AgentMacroTrait
         $texte  = "<ul>";
         foreach ($statuts as $statut) {
             $texte .= "<li>";
-            $texte .= $statut->getStructure()->toStringDenomination();
-            $texte .= " (";
-            if($statut->getDateFin()) {
-                $texte .= "du " . $statut->getDateDebut()->format('d/m/Y') . " au " . $statut->getDateFin()->format('d/m/Y');
-            } else {
-                $texte .= "depuis le " . $statut->getDateDebut()->format('d/m/Y');
-            }
-            $texte .= ")";
             $temoins = [];
-            if ($statut->isAdministratif()) $temoins[] = "administratif";
-            if ($statut->isTitulaire()) $temoins[] = "titulaire";
+            if ($statut->isTitulaire()) $temoins[] = "Titulaire";
             if ($statut->isCdi()) $temoins[] = "C.D.I.";
             if ($statut->isCdd()) $temoins[] = "C.D.D.";
             if (!empty($temoins)) {
@@ -100,15 +91,6 @@ trait AgentMacroTrait
         $texte  = "<ul>";
         foreach ($grades as $grade) {
             $texte .= "<li>";
-            $texte .= $grade->getStructure()->toStringDenomination();
-            $texte .= " (";
-            if($grade->getDateFin()) {
-                $texte .= "du " . $grade->getDateDebut()->format('d/m/Y') . " au " . $grade->getDateFin()->format('d/m/Y');
-            } else {
-                $texte .= "depuis le " . $grade->getDateDebut()->format('d/m/Y');
-            }
-            $texte .= ")";
-            $texte .= "<br/>";
             $texte .= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='complement'>";
             $texte .= " BAP:" . $grade->getBap()->getCategorie();
             $texte .= " Corps:" . $grade->getCorps()->getLibelleLong();

@@ -15,7 +15,7 @@ class ObservationForm extends Form {
             'name' => 'obs-entretien',
             'type' => Textarea::class,
             'options' => [
-                'label' => "Observation sur l'entretien : ",
+                'label' => "Observations sur l'entretien : ",
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -29,7 +29,7 @@ class ObservationForm extends Form {
             'name' => 'obs-perspective',
             'type' => Textarea::class,
             'options' => [
-                'label' => "Observation sur les perspectives : ",
+                'label' => "Observations sur les perspectives : ",
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
