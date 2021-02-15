@@ -26,7 +26,7 @@ class MetierHydrator implements HydratorInterface {
         $data = [
             'categorie' => ($object->getCategorie())?$object->getCategorie()->getId():null,
             'domaines' => $domaineIds,
-            'libelle' => $object->getLibelle(),
+            'libelle' => $object->getLibelle(false),
             'libelle_feminin' => $object->getLibelleFeminin(),
             'libelle_masculin' => $object->getLibelleMasculin(),
             'niveau' => $object->getNiveau(),

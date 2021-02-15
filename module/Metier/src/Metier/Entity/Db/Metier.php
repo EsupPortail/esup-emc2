@@ -47,10 +47,12 @@ class Metier implements HistoriqueAwareInterface {
     }
 
     /**
+     * @param bool $inclusif
      * @return string
      */
-    public function getLibelle()
+    public function getLibelle(bool $inclusif = true)
     {
+        if ($inclusif === false) return $this->libelle;
         if ($this->libelleFeminin !== null AND $this->libelleMasculin !== null) {
             $inclusif = MetierService::computeEcritureInclusive($this->getLibelleFeminin(), $this->getLibelleMasculin());
             return $inclusif;
