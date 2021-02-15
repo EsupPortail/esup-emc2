@@ -4,6 +4,7 @@ namespace Metier\Entity\Db;
 
 use Application\Entity\Db\Categorie;
 use Doctrine\Common\Collections\ArrayCollection;
+use Metier\Service\Metier\MetierService;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -14,6 +15,10 @@ class Metier implements HistoriqueAwareInterface {
     private $id;
     /** @var string */
     private $libelle;
+    /** @var string */
+    private $libelleFeminin;
+    /** @var string */
+    private $libelleMasculin;
     /** @var Categorie */
     private $categorie;
     /** @var integer */
@@ -46,6 +51,10 @@ class Metier implements HistoriqueAwareInterface {
      */
     public function getLibelle()
     {
+        if ($this->libelleFeminin !== null AND $this->libelleMasculin !== null) {
+            $inclusif = MetierService::computeEcritureInclusive($this->getLibelleFeminin(), $this->getLibelleMasculin());
+            return $inclusif;
+        }
         return $this->libelle;
     }
 
@@ -56,6 +65,43 @@ class Metier implements HistoriqueAwareInterface {
     {
         $this->libelle = $libelle;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getLibelleFeminin(): ?string
+    {
+        return ($this->libelleFeminin)?:$this->libelle;
+    }
+
+    /**
+     * @param string|null $libelleFeminin
+     * @return Metier
+     */
+    public function setLibelleFeminin(?string $libelleFeminin): Metier
+    {
+        $this->libelleFeminin = $libelleFeminin;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLibelleMasculin(): ?string
+    {
+        return ($this->libelleMasculin)?:$this->libelle;
+    }
+
+    /**
+     * @param string|null $libelleMasculin
+     * @return Metier
+     */
+    public function setLibelleMasculin(?string $libelleMasculin): Metier
+    {
+        $this->libelleMasculin = $libelleMasculin;
+        return $this;
+    }
+
 
     public function __toString()
     {

@@ -38,10 +38,32 @@ class MetierForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle :",
+                'label' => "Libelle par défaut *:",
             ],
             'attributes' => [
                 'id' => 'libelle',
+            ],
+        ]);
+        // libelle
+        $this->add([
+            'type' => Text::class,
+            'name' => 'libelle_feminin',
+            'options' => [
+                'label' => "Libelle féminin :",
+            ],
+            'attributes' => [
+                'id' => 'libelle_feminin',
+            ],
+        ]);
+        // libelle
+        $this->add([
+            'type' => Text::class,
+            'name' => 'libelle_masculin',
+            'options' => [
+                'label' => "Libelle masculin :",
+            ],
+            'attributes' => [
+                'id' => 'libelle_masculin',
             ],
         ]);
         //categorie
@@ -93,8 +115,10 @@ class MetierForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'domaines'          => [ 'required' => true,  ],
             'libelle'           => [ 'required' => true,  ],
-            'categorie'         => [ 'required' => false,  ],
-            'niveau'         => [ 'required' => false,  ],
+            'libelle_feminin'   => [ 'required' => false, ],
+            'libelle_masculin'  => [ 'required' => false, ],
+            'categorie'         => [ 'required' => false, ],
+            'niveau'            => [ 'required' => false, ],
         ]));
     }
 }

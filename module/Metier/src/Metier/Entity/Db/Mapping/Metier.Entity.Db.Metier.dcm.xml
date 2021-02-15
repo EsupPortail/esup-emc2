@@ -6,7 +6,9 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"           type="string"   length="128"      column="libelle"                nullable="false"  />
+        <field name="libelle"           type="string"   length="128"      column="libelle_default"                nullable="false"  />
+        <field name="libelleFeminin"    type="string"   length="128"      column="libelle_feminin"                nullable="false"  />
+        <field name="libelleMasculin"   type="string"   length="128"      column="libelle_masculin"                nullable="false"  />
         <field name="niveau"            type="integer"                    column="niveau"                 nullable="false"  />
 
         <one-to-many target-entity="Metier\Entity\Db\Reference" mapped-by="metier" field="references"/>

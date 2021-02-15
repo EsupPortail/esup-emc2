@@ -209,4 +209,49 @@ class MetierService {
         return $results;
     }
 
+    /** INCLUSIF TEST */
+
+    /**
+     * @param string $feminin
+     * @param string $masculin
+     * @return string|null
+     */
+    public static function computeEcritureInclusive(string $feminin, string $masculin)
+    {
+        $split_inclusif = [];
+        $split_feminin = explode(" ",$feminin);
+        $split_masculin = explode(" ",$masculin);
+
+        if (count($split_feminin) !== count($split_masculin)) return null;
+        $nbElement = count($split_feminin);
+
+        for ($position = 0 ; $position < $nbElement; $position++) {
+            if (! str_contains($split_feminin[$position], $split_masculin[$position])) {
+                $prefixe_commun = "";
+                for ($i = 0 ; $i < min(strlen($split_feminin[$position]),strlen($split_masculin[$position])) ; $i++) {
+                    if ($split_feminin[$position][$i] === $split_masculin[$position][$i]) {
+                        $prefixe_commun .= $split_feminin[$position][$i];
+                    } else {
+                        do {
+                            $prefixe_commun = substr($prefixe_commun, 0, strlen($prefixe_commun) - 1);
+                            $suffixe_feminin = substr($split_feminin[$position], strlen($prefixe_commun));
+                            $suffixe_masculin = substr($split_masculin[$position], strlen($prefixe_commun));
+                        } while ( strlen($suffixe_masculin) <= 2);
+                        $split_inclusif[] = $prefixe_commun . $suffixe_masculin . "&middot;" . $suffixe_feminin;
+                        break;
+                    }
+                }
+            } else {
+                $longueur = strlen($split_masculin[$position]);
+                $suffixe = substr($split_feminin[$position], $longueur);
+                if (strlen($suffixe) !== 0) {
+                    $split_inclusif[] = $split_masculin[$position] . "&middot;" . $suffixe;
+                } else {
+                    $split_inclusif[] = $split_feminin[$position];
+                }
+            }
+        }
+
+        return implode(" ", $split_inclusif);
+    }
 }
