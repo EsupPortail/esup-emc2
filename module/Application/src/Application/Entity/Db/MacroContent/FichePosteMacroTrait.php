@@ -12,6 +12,19 @@ trait FichePosteMacroTrait {
     /**
      * @return string
      */
+    public function toStringFicheMetierPrincipal() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+
+        $texte  = "";
+        $texte .= $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
+        return $texte;
+    }
+
+    /**
+     * @return string
+     */
     public function toStringCompositionFichesMetiers() : string
     {
         /** @var FichePoste $ficheposte */
@@ -21,7 +34,7 @@ trait FichePosteMacroTrait {
         $texte .= "<ul>";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $texte .= "<li>";
-            $texte .= $ficheTypeExterne->getFicheType()->getMetier()->getLibelle();
+            $texte .= $ficheTypeExterne->getFicheType()->getMetier()->getLibelleGenre($ficheposte->getAgent());
             $texte .= " (" .$ficheTypeExterne->getQuotite(). "%)";
             $texte .= "</li>";
         }
@@ -244,7 +257,7 @@ trait FichePosteMacroTrait {
         $texte = "";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
-            $texte .= "<h3>" . $ficheMetier->getMetier()->getLibelle() . "</h3>";
+            $texte .= "<h3>" . $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent()) . "</h3>";
 
             $ids = explode(";",$ficheTypeExterne->getActivites());
             foreach ($ids as $id) {

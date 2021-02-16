@@ -136,7 +136,7 @@ class Agent implements
      */
     public function isHomme() : bool
     {
-        return $this->sexe === 'H';
+        return $this->sexe === 'M';
     }
 
     /**

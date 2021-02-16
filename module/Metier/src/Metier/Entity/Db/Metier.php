@@ -2,6 +2,7 @@
 
 namespace Metier\Entity\Db;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Categorie;
 use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Service\Metier\MetierService;
@@ -231,5 +232,13 @@ class Metier implements HistoriqueAwareInterface {
         }
         $texte .= "</ul>";
         return $texte;
+    }
+
+    public function getLibelleGenre(?Agent $agent)
+    {
+        if ($agent === null) return $this->getLibelle();
+        if ($agent->isHomme() AND $this->libelleMasculin !== null) return $this->getLibelleMasculin();
+        if ($agent->isFemme() AND $this->libelleFeminin !== null) return $this->getLibelleFeminin();
+        return $this->getLibelle();
     }
 }

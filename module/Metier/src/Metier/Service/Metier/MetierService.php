@@ -226,7 +226,7 @@ class MetierService {
         $nbElement = count($split_feminin);
 
         for ($position = 0 ; $position < $nbElement; $position++) {
-            if (strstr($split_feminin[$position], $split_masculin[$position]) === false) {
+            if ($split_feminin[$position] !== "" AND strstr($split_feminin[$position], $split_masculin[$position]) === false) {
                 $prefixe_commun = "";
                 for ($i = 0 ; $i < min(strlen($split_feminin[$position]),strlen($split_masculin[$position])) ; $i++) {
                     if ($split_feminin[$position][$i] === $split_masculin[$position][$i]) {

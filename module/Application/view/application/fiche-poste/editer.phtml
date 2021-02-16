@@ -138,10 +138,10 @@ $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
                 <h2>Fiche de poste composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) métier(s).</h2>
                 <ul>
                     <?php if ($principal) : ?>
-                        <li> <strong> <?php echo $principal->getFicheType()->getMetier() ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
+                        <li> <strong> <?php echo $principal->getFicheType()->getMetier()->getLibelleGenre($agent) ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
                     <?php endif; ?>
                     <?php foreach ($fichesMetiers as $ficheType) : ?>
-                        <li> <?php echo $ficheType->getFicheType()->getMetier(); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
+                        <li> <?php echo $ficheType->getFicheType()->getMetier()->getLibelleGenre($agent); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
                     <?php endforeach; ?>
                 </ul>
                 </div>

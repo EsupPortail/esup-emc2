@@ -8,13 +8,14 @@
 use Application\Entity\Db\FicheTypeExterne;
 
 $fichemetier = $fiche->getFicheType();
+$agent = $fiche->getFichePoste()->getAgent();
 ?>
 
 <div class="panel panel-info">
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-5">
-                <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelle(); ?> </h2>
+                <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelleGenre($agent); ?> </h2>
                 <?php $metier =  $fiche->getFicheType()->getMetier(); ?>
                 <?php if ($metier) : ?>
                     <?php foreach($metier->getReferences() as $reference) : ?>

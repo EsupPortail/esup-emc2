@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureAgentForce;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
@@ -445,6 +446,7 @@ class StructureController extends AbstractActionController {
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
 
         $filename = "listing_fiche_poste_-_" . str_replace(" ","_",$structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
@@ -458,7 +460,7 @@ class StructureController extends AbstractActionController {
 
             $ficheposte = $agent->getFichePosteActif();
             if ($ficheposte !== null) {
-                $fiche = $ficheposte->getLibelleMetierPrincipal();
+                $fiche = $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
                 $complement = $ficheposte->getLibelle();
             }
 

@@ -8,7 +8,7 @@ use Application\Entity\Db\FichePoste;
 
 $ficheprincipale = null;
 if ($ficheposte->getFicheTypeExternePrincipale()) {
-    $ficheprincipale = $ficheposte->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+    $ficheprincipale = $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
 }else {
     $ficheprincipale = "Aucune fiche métier principale";
 }
