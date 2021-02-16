@@ -7,6 +7,7 @@
 
         <field name="prenom"                   column="prenom"              type="string" length="64" />
         <field name="nomUsuel"                 column="nom_usage"           type="string" length="64" />
+        <field name="sexe"                     column="sexe"                type="string" length="1" />
         <field name="harpId"                   column="harp_id"             type="integer" />
         <field name="login"                    column="login"               type="string" length="256" />
         <field name="email"                    column="email"               type="string" length="1024" />

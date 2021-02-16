@@ -40,6 +40,8 @@ class Agent implements
     private $prenom;
     /** @var string */
     private $nomUsuel;
+    /** @var string */
+    private $sexe;
     /** @var User */
     private $utilisateur;
     /** @var int */
@@ -109,6 +111,40 @@ class Agent implements
     public function getNomUsuel()
     {
         return $this->nomUsuel;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSexe() : ?string
+    {
+        return $this->sexe;
+    }
+
+    /**
+     * @param string|null $sexe
+     * @return Agent
+     */
+    public function setSexe(?string $sexe) : Agent
+    {
+        $this->sexe = $sexe;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHomme() : bool
+    {
+        return $this->sexe === 'H';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFemme() : bool
+    {
+        return $this->sexe === 'F';
     }
 
     /**

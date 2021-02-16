@@ -17,6 +17,9 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     use DateTimeAwareTrait;
     use FichePosteMacroTrait;
 
+    const TYPE_DEFAULT  = 'DEFAULT';
+    const TYPE_INCLUSIF = 'INCLUSIF';
+    const TYPE_GENRE    = 'GENRE';
     public function getResourceId()
     {
         return 'FichePoste';
@@ -57,24 +60,24 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         $this->competencesRetirees = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
     /**
-     * @param string $libelle
+     * @param string|null $libelle
      * @return FichePoste
      */
-    public function setLibelle($libelle)
+    public function setLibelle(?string $libelle) : FichePoste
     {
         $this->libelle = $libelle;
         return $this;
@@ -99,18 +102,18 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     }
 
     /**
-     * @return SpecificitePoste
+     * @return SpecificitePoste|null
      */
-    public function getSpecificite()
+    public function getSpecificite() : ?SpecificitePoste
     {
         return $this->specificite;
     }
 
     /**
-     * @param SpecificitePoste $specificite
+     * @param SpecificitePoste|null $specificite
      * @return FichePoste
      */
-    public function setSpecificite($specificite)
+    public function setSpecificite(?SpecificitePoste $specificite) : FichePoste
     {
         $this->specificite = $specificite;
         return $this;
@@ -320,17 +323,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return $dictionnaire;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelleMetierPrincipal()
-    {
-        if ($this->getFicheTypeExternePrincipale()) {
-            return $this->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
-        }
-        return "Non défini";
-    }
-
     public function isComplete()
     {
         if (! $this->getAgent()) return false;
@@ -424,4 +416,25 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return $this->dictionnaires[$clef];
     }
 
+    /**
+     * @param string $type
+     * @return string|null
+     */
+    public function getLibelleMetierPrincipal($type = FichePoste::TYPE_INCLUSIF) : ?string
+    {
+        if ($this->getFicheTypeExternePrincipale() === null) return null;
+        $metier = $this->getFicheTypeExternePrincipale()->getFicheType()->getMetier();
+
+        switch ($type) {
+            case FichePoste::TYPE_INCLUSIF : return $metier->getLibelle(true);
+            case FichePoste::TYPE_GENRE :
+                if ($this->agent !== null)
+                if ($this->agent->isHomme() AND $metier->getLibelleMasculin()) return $metier->getLibelleMasculin();
+                if ($this->agent->isFemme() AND $metier->getLibelleFeminin()) return $metier->getLibelleFeminin();
+                return $metier->getLibelle(true);
+            case FichePoste::TYPE_DEFAULT : return $metier->getLibelle(false);
+        }
+
+        return $metier->getLibelle();
+    }
 }

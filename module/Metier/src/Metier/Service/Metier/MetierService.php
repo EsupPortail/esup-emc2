@@ -237,7 +237,7 @@ class MetierService {
                             $suffixe_feminin = substr($split_feminin[$position], strlen($prefixe_commun));
                             $suffixe_masculin = substr($split_masculin[$position], strlen($prefixe_commun));
                         } while ( strlen($suffixe_masculin) <= 2);
-                        $split_inclusif[] = $prefixe_commun . $suffixe_masculin . "&middot;" . $suffixe_feminin;
+                        $split_inclusif[] = $prefixe_commun . $suffixe_masculin . "·" . $suffixe_feminin;
                         break;
                     }
                 }
@@ -245,7 +245,7 @@ class MetierService {
                 $longueur = strlen($split_masculin[$position]);
                 $suffixe = substr($split_feminin[$position], $longueur);
                 if (strlen($suffixe) !== 0) {
-                    $split_inclusif[] = $split_masculin[$position] . "&middot;" . $suffixe;
+                    $split_inclusif[] = $split_masculin[$position] . "·" . $suffixe;
                 } else {
                     $split_inclusif[] = $split_feminin[$position];
                 }

@@ -95,7 +95,7 @@ if ($retour)    $query['retour'] = $retour;
             <?php if ($displays['fiche-principale']) : ?>
                 <td>
                     <?php if ($fiche->getFicheTypeExternePrincipale()) : ?>
-                        <?php echo $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle(); ?>
+                        <?php echo $fiche->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE); ?>
                         <?php if ($fiche->getLibelle() !== null) : ?>
                             <br/>
                             <?php echo $fiche->getLibelle(); ?>
