@@ -54,7 +54,7 @@ class MailingService
 //        return true;
 
         $message = (new Message())->setEncoding('UTF-8');
-        $message->setFrom('ne-pas-repondre@unicaen.fr', "PrEECoG");
+        $message->setFrom('ne-pas-repondre@unicaen.fr', "EMC2");
         if (!is_array($to)) $to = [$to];
         if ($this->doNotSend) {
             $message->addTo($this->redirectTo);
@@ -73,7 +73,7 @@ class MailingService
         $this->create($mail);
 
 
-        $sujet = '[PrEECoG] ' . $subject;
+        $sujet = '[EMC2] ' . $subject;
         if ($this->doNotSend) {
             $sujet .= ' {REDIR}';
         }
@@ -320,6 +320,9 @@ class MailingService
             case 'VAR[ENTRETIEN#lien_accepter]' :
                 $entretien = $variables['entretien'];
                 return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true).'">Acceptation de l\'entretien professionnel</a>';
+            case 'VAR[ENTRETIEN#lien_entretien]' :
+                $entretien = $variables['entretien'];
+                return '<a href="'.$this->rendererService->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['force_canonical' => true], true).'">Accéder à l\'entretien professionnel</a>';
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

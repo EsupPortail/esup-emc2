@@ -137,7 +137,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
                     <dd><?php echo ($entretien->getToken() === null) ? '<span class="icon ok" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
                     <dt>Responsable d'entretien </dt>
                     <dd>
-                        <?php if ($entretien->getValidationResponsable()) : ?>
+                        <?php if ($entretien->hasValidationResponsable()) : ?>
                             <div>
                                 <div style="display: inline-block; vertical-align: top;">
                                     <span class="icon ok" style="color:darkgreen;"></span>
@@ -153,7 +153,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
                     </dd>
                     <dt>Agent </dt>
                     <dd>
-                        <?php if ($entretien->getValidationAgent()) : ?>
+                        <?php if ($entretien->hasValidationAgent()) : ?>
                             <div style="display: inline-block; vertical-align: top;">
                                 <span class="icon ok" style="color:darkgreen;"></span>
                             </div>
@@ -167,7 +167,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
                     </dd>
                     <dt>Responsable hiérachique </dt>
                     <dd>
-                        <?php if ($entretien->getValidationDRH()) : ?>
+                        <?php if ($entretien->hasValidationDRH()) : ?>
                             <div style="display: inline-block; vertical-align: top;">
                                 <span class="icon ok" style="color:darkgreen;"></span>
                             </div>

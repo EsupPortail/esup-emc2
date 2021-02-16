@@ -310,23 +310,21 @@ class EntretienProfessionnelController extends AbstractActionController
                     case 'Agent' :
                         $entretien->setValidationAgent($validation);
                         $responsables = $this->getAgentService()->getResponsablesHierarchiques($entretien->getAgent());
-                        $array = [];
-                        foreach ($responsables as $responsable) $array[] = $responsable->getEmail();
-                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $array]);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $responsables]);
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
+                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
                         $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getUtilisateur()->getEmail()]);
                         $this->getMailingService()->sendMailType("COMMUNICATION_AGENT_OBSERVATIONS", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getUtilisateur()->getEmail()]);
-                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
                     case 'DRH' :
                         $entretien->setValidationDRH($validation);
-                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));
+                        $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
                 }

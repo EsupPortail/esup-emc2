@@ -22,7 +22,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     const ETAT_ACCEPTATION                  = 'ENTRETIEN_ACCEPTATION';
     const ETAT_ACCEPTER                     = 'ENTRETIEN_ACCEPTER';
-    const ETAT_VALIDATION_RESPONSABLE       = 'ENTRETIEN_VALIDATION_RESPONSABLE ';
+    const ETAT_VALIDATION_RESPONSABLE       = 'ENTRETIEN_VALIDATION_RESPONSABLE';
     const ETAT_VALIDATION_AGENT             = 'ENTRETIEN_VALIDATION_AGENT';
     const ETAT_VALIDATION_HIERARCHIE        = 'ENTRETIEN_VALIDATION_HIERARCHIE';
 
@@ -302,18 +302,18 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** VALIDATION ****************************************************************************************************/
 
     /**
-     * @return ValidationInstance
+     * @return ValidationInstance|null
      */
-    public function getValidationAgent()
+    public function getValidationAgent() : ?ValidationInstance
     {
         return $this->validationAgent;
     }
 
     /**
-     * @param ValidationInstance $validationAgent
+     * @param ValidationInstance|null $validationAgent
      * @return EntretienProfessionnel
      */
-    public function setValidationAgent(ValidationInstance $validationAgent)
+    public function setValidationAgent(?ValidationInstance $validationAgent) : EntretienProfessionnel
     {
         $this->validationAgent = $validationAgent;
         return $this;
@@ -322,23 +322,24 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return bool
      */
-    public function hasValidationAgent() {
+    public function hasValidationAgent() : bool
+    {
         return ($this->validationAgent AND $this->validationAgent->estNonHistorise());
     }
 
     /**
-     * @return ValidationInstance
+     * @return ValidationInstance|null
      */
-    public function getValidationResponsable()
+    public function getValidationResponsable() : ?ValidationInstance
     {
         return $this->validationResponsable;
     }
 
     /**
-     * @param ValidationInstance $validationResponsable
+     * @param ValidationInstance|null $validationResponsable
      * @return EntretienProfessionnel
      */
-    public function setValidationResponsable(ValidationInstance $validationResponsable)
+    public function setValidationResponsable(?ValidationInstance $validationResponsable) : EntretienProfessionnel
     {
         $this->validationResponsable = $validationResponsable;
         return $this;
@@ -347,30 +348,33 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return bool
      */
-    public function hasValidationResponsable() {
+    public function hasValidationResponsable() : bool
+    {
         return ($this->validationResponsable AND $this->validationResponsable->estNonHistorise());
     }
 
     /**
-     * @return ValidationInstance
+     * @return ValidationInstance|null
      */
-    public function getValidationDRH()
+    public function getValidationDRH() : ?ValidationInstance
     {
         return $this->validationDRH;
     }
 
     /**
-     * @param ValidationInstance $validationDRH
+     * @param ValidationInstance|null $validationDRH
+     * @return EntretienProfessionnel
      */
-    public function setValidationDRH(ValidationInstance $validationDRH)
+    public function setValidationDRH(?ValidationInstance $validationDRH) : EntretienProfessionnel
     {
         $this->validationDRH = $validationDRH;
+        return $this;
     }
 
     /**
      * @return bool
      */
-    public function hasValidationDRH() {
+    public function hasValidationDRH() : bool {
         return ($this->validationDRH AND $this->validationDRH->estNonHistorise());
     }
 
