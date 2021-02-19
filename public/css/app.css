@@ -341,28 +341,28 @@ span.badge.structure {
     background:#3c6c8b;
 }
 
-/*span.fiche-metier {*/
-/*    font-weight: bolder;*/
-/*    color: blue;*/
-/*    font-family: monospace;*/
-/*    cursor: help;*/
-/*    font-variant-position: super;*/
-/*}*/
+span.fiche-metier {
+    font-weight: bolder;
+    color: blue;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
 
-/*span.activite {*/
-/*    font-weight: bolder;*/
-/*    color: orangered;*/
-/*    font-family: monospace;*/
-/*    cursor: help;*/
-/*    font-variant-position: super;*/
-/*}*/
-/*span.inconnue {*/
-/*    font-weight: bolder;*/
-/*    color: gray;*/
-/*    font-family: monospace;*/
-/*    cursor: help;*/
-/*    font-variant-position: super;*/
-/*}*/
+span.activite {
+    font-weight: bolder;
+    color: orangered;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
+span.inconnue {
+    font-weight: bolder;
+    color: gray;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
 
 /*div.panel div.main {*/
 
@@ -485,6 +485,7 @@ table.elements {
 table.elements th.titre {
     background: linear-gradient(to right, lightgrey, whitesmoke);
     color: #3c6c8b;
+    padding: 0.5rem;
 }
 
 /* table.parcours-de-formation td.libelle-cell {*/

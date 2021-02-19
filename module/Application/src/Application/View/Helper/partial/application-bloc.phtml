@@ -1,6 +1,5 @@
 <?php
 
-use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 
@@ -38,7 +37,7 @@ ksort($groupes);
 
 ?>
 
-<table class="applications">
+<table class="elements">
     <?php foreach ($groupes as $libelle => $groupe) : ?>
 
         <tr>
@@ -87,33 +86,3 @@ ksort($groupes);
 
     <?php endforeach; ?>
 </table>
-
-<!--        <ul>-->
-<!--            --><?php //foreach ($applications as $id => $bloc) : ?>
-<!--                --><?php //if ($bloc['display'] === true) : ?>
-<!--                    <li>-->
-<!--                        --><?php //echo $bloc['entity']->getLibelle(); ?>
-
-<!--                    </li>-->
-<!--                --><?php //endif; ?>
-<!--            --><?php //endforeach; ?>
-<!--        </ul>-->
-<!--    </div>-->
-<!--</div>-->
-
-<style>
-    table.applications {
-        width:95%;
-    }
-
-    table.applications th {
-        padding: 0.5rem;
-        color: white;
-    }
-    table.applications td.libelle {
-        padding-left: 1rem;
-    }
-    table.applications td.formation {
-        text-align: center;
-    }
-</style>
