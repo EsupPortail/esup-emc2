@@ -126,9 +126,8 @@ $mode = $options['mode'];
     }
 ?>
 <div class="main">
-
+    <?php if ($ficheposte === null) : ?>
     <br/>
-
     <div class="panel panel-info">
         <div class="panel-heading">
             <div class="row">
@@ -159,6 +158,14 @@ $mode = $options['mode'];
             </div>
         </div>
         <div class="panel-body">
+        <?php else : ?>
+            <div>
+                <h2>
+                Missions principales
+                <span class="badge"> <?php echo count($activitesRestantes); ?>/<?php echo count($activites); ?> </span>
+                </h2>
+                <div>
+        <?php endif; ?>
             <?php foreach ($activitesRestantes as $ficheActivite): ?>
                 <?php
                     $retirees = [];
