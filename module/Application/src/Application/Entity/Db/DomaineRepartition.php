@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Metier\Entity\Db\Domaine;
+
 /** QUID historiser cela ? */
 class DomaineRepartition {
 
@@ -49,10 +51,10 @@ class DomaineRepartition {
     }
 
     /**
-     * @param Domaine $domaine
+     * @param Domaine|null $domaine
      * @return DomaineRepartition
      */
-    public function setDomaine($domaine)
+    public function setDomaine(Domaine $domaine)
     {
         $this->domaine = $domaine;
         return $this;

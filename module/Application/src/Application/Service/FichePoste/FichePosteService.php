@@ -474,7 +474,7 @@ class FichePosteService {
             if ($this->getStructureService()->isResponsable($structure, $user)) return true;
         }
         if ($fiche->getAgent()) {
-            foreach ($fiche->getAgent()->getGradesActifs() as $grade) {
+            foreach ($fiche->getAgent()->getAffectationsActifs() as $grade) {
                 $structure = $grade->getStructure();
                 if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
             }
