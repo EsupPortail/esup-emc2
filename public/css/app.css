@@ -575,6 +575,24 @@ span.probleme {
     color: darkred;
 }
 
+.titre-bloc {
+    background-color:var(--color-light-bis);
+    margin-left: 2rem;
+    border: 1px var(--content-color) solid;
+}
+
+.groupe-libelle {
+    background: var(--color-medium);
+    color: #3c6c8b;
+    font-weight: bold;
+    padding: 0.5rem;
+    display: block;
+}
+
+.element-libelle {
+    /*padding-left: 1rem;*/
+    display: block;
+}
 /*** Datatable ******/
 
 table.datatable thead {

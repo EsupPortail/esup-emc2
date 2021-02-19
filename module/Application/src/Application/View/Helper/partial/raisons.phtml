@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @see \Application\View\Helper\RaisonsViewHelper
+ * @var array $raisons
+ * @var array $options
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierTypeActivite;
+
+?>
+
+<?php foreach ($raisons as $raison) : ?>
+    <?php $text = "";
+    switch ($raison) {
+        case $raison instanceof FicheMetier :
+            $fm = $raison;
+            $text = $fm->getMetier()->getLibelle();
+            $label = "F";
+            $class = 'fiche-metier';
+            break;
+        case $raison instanceof FicheMetierTypeActivite :
+            $ac = $raison;
+            $text = $ac->getActivite()->getLibelle();
+            $label = "A";
+            $class = 'activite';
+            break;
+        default :
+            $text = "Provenance inconnue";
+            $label = "?";
+            $class = 'inconnue';
+
+    }
+    ?>
+    <span class="<?php echo $class; ?>" title="<?php echo $text; ?>"><?php echo $label; ?></span>
+<?php endforeach;?>

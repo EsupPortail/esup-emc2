@@ -1,38 +1,17 @@
 <?php
 
-use Application\Entity\Db\Activite;
-use Application\Entity\Db\CompetenceType;
-use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 
 /**
-* @var FichePoste $fiche
-* @var array $competences
-* @var string $mode
-*/
+ * @var FichePoste $fiche
+ * @var array $competences
+ * @var string $mode
+ */
 
 /** @var  array $cCompetences */
 $cCompetences = [];
-$cCompetences = array_filter($competences, function ($a) { return $a["conserve"];});
-
-$types = [];
-foreach ($cCompetences as $item) {
-    $competence = $item["object"];
-    $type = $competence->getType();
-    $types[$type->getLibelle()] = $type;
-}
-
-usort($types, function (CompetenceType $a, CompetenceType $b) { return $a->getOrdre() > $b->getOrdre();});
-
-$dictionnaires = [];
-foreach ($types as $type) {
-    $dictionnaires[$type->getLibelle()] = [];
-}
-
-foreach ($cCompetences as $item) {
-    $competence = $item["object"];
-    $type = $competence->getType()->getLibelle();
-    $dictionnaires[$type][] = $item;
+foreach ($competences as $item) {
+    if ($item["conserve"] === true) $cCompetences[] = $item;
 }
 
 ?>
@@ -40,8 +19,8 @@ foreach ($cCompetences as $item) {
 <div class="row">
     <div class="col-md-10" style="margin-left:5rem;background-color:#d9edf7;">
         <h3 style="color:#3c6c8b;">
-            <span class="icon competence"></span>
-            Compétences
+            <span class="icon application"></span>
+            Competences
             <span class="badge" style="background:#3c6c8b;">
                 <?php echo count($cCompetences); ?>
             </span>
@@ -49,12 +28,12 @@ foreach ($cCompetences as $item) {
     </div>
     <div class="col-md-1" style="background-color:#d9edf7;">
         <h3>
-        <?php if ($mode === 'edition') : ?>
-            <a <?php /** @see \Application\Controller\FichePosteController::selectionnerCompetencesRetireesAction() */ ?>
-                    href="<?php echo $this->url('fiche-poste/selectionner-competences-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                    class="ajax-modal" data-event="modification">
-                <span class="icon listing" title="Sélection des compétences liées à la fiche de poste"></span></a>
-        <?php endif; ?>
+            <?php if ($mode === 'edition') : ?>
+                <a <?php /** @see \Application\Controller\FichePosteController::selectionnerApplicationsRetireesAction() */ ?>
+                        href="<?php echo $this->url('fiche-poste/selectionner-applications-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification">
+                    <span class="icon listing" title="Sélection des applications liées à la fiche de poste"></span></a>
+            <?php endif; ?>
             &nbsp;
         </h3>
     </div>
@@ -63,27 +42,7 @@ foreach ($cCompetences as $item) {
 <div class="row" style="margin: 1rem;">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <table class="competences">
-            <?php foreach ($dictionnaires as $key => $items) : ?>
-                <tr><th class="titre"> <?php echo $key; ?></th></tr>
-                <?php foreach ($items as $item) : ?>
-                    <tr><td>
-                        <?php echo $item["object"]->getLibelle(); ?>
-                        <?php foreach ($item["raison"] as $raison) : ?>
-                            <?php if ($raison instanceof  FicheMetier) : ?>
-                                <span class="fiche-metier" title="<?php echo $raison->getMetier()->getLibelle(); ?>">
-                                    F
-                                </span>
-                            <?php endif; ?>
-                            <?php if ($raison instanceof  Activite) : ?>
-                                <span class="activite" title="<?php echo $raison->getLibelle(); ?>">
-                                    A
-                                </span>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                        </td></tr>
-                <?php endforeach; ?>
-            <?php endforeach; ?>
-        </table>
+        <br/>
+        <?php echo $this->competenceBloc($cCompetences); ?>
     </div>
 </div>

@@ -1,8 +1,6 @@
 <?php
 
 use Application\Entity\Db\Competence;
-use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierTypeActivite;
 
 /**
  * @var array $competences
@@ -39,51 +37,25 @@ ksort($groupes);
 
 ?>
 
-<table class="elements">
+<ul>
     <?php foreach ($groupes as $libelle => $groupe) : ?>
-
-        <tr>
+        <li class="groupe-libelle">
             <?php if ($libelle !== $sansGroupe) : ?>
-            <th class="titre">
                 <?php echo $groupe[0]['entite']->getType()->getLibelle(); ?>
-            </th>
             <?php else : ?>
-                <th class="titre"> Sans groupe ... </th>
+                Sans groupe ...
             <?php endif; ?>
-        </tr>
-
-        <?php usort ($groupe, function($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle();}); ?>
-
-            <?php foreach ($groupe as $item) : ?>
-                <tr>
-                    <td class="libelle">
-                        <?php echo $item['entite']->getLibelle(); ?>
-                        <?php foreach ($item['raison'] as $raison) : ?>
-                            <?php $text = "";
-                            switch ($raison) {
-                                case $raison instanceof FicheMetier :
-                                    $fm = $raison;
-                                    $text = $fm->getMetier()->getLibelle();
-                                    $label = "F";
-                                    $class = 'fiche-metier';
-                                    break;
-                                case $raison instanceof FicheMetierTypeActivite :
-                                    $ac = $raison;
-                                    $text = $ac->getActivite()->getLibelle();
-                                    $label = "A";
-                                    $class = 'activite';
-                                    break;
-                                default :
-                                    $text = "Provenance inconnue";
-                                    $label = "?";
-                                    $class = 'inconnue';
-                            }
-                            ?>
-                            <span class="<?php echo $class; ?>" title="<?php echo $text; ?>"><?php echo $label; ?></span>
-                        <?php endforeach; ?>
-                    </td>
-                </tr>
+        </li>
+        <ul>
+            <?php usort ($groupe, function($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle();}); ?>
+            <?php foreach ($groupe as $competence) : ?>
+                <li class="element-libelle">
+                    <?php echo $competence['entite']->getLibelle(); ?>
+                    <?php echo $this->raisons($competence['raison']); ?>
+                </li>
             <?php endforeach; ?>
-
+        </ul>
     <?php endforeach; ?>
-</table>
+</ul>
+
+

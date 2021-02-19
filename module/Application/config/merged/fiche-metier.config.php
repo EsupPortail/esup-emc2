@@ -16,6 +16,7 @@ use Application\Service\FicheMetier\FicheMetierServiceFactory;
 use Application\View\Helper\FicheMetierEtatViewHelper;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FicheMetierViewHelper;
+use Application\View\Helper\RaisonsViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -443,6 +444,7 @@ return [
             'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
             'ficheMetierEtat' => FicheMetierEtatViewHelper::class,
             'ficheMetier'  => FicheMetierViewHelper::class,
+            'raisons' => RaisonsViewHelper::class,
         ],
     ],
 

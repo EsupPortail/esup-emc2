@@ -37,52 +37,23 @@ ksort($groupes);
 
 ?>
 
-<table class="elements">
-    <?php foreach ($groupes as $libelle => $groupe) : ?>
-
-        <tr>
-            <?php if ($libelle !== $sansGroupe) : ?>
-            <th class="titre">
-                <?php echo $groupe[0]['entite']->getGroupe()->getLibelle(); ?>
-            </th>
-            <?php else : ?>
-                <th class="titre"> Sans groupe ... </th>
-            <?php endif; ?>
-        </tr>
-
-        <?php usort ($groupe, function($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle();}); ?>
-
-            <?php foreach ($groupe as $application) : ?>
-                <tr>
-                    <td class="libelle">
-                        <?php echo $application['entite']->getLibelle(); ?>
-                        <?php foreach ($application['raison'] as $raison) : ?>
-                            <?php $text = "";
-                            switch ($raison) {
-                                case $raison instanceof FicheMetier :
-                                    $fm = $raison;
-                                    $text = $fm->getMetier()->getLibelle();
-                                    $label = "F";
-                                    $class = 'fiche-metier';
-                                    break;
-                                case $raison instanceof FicheMetierTypeActivite :
-                                    $ac = $raison;
-                                    $text = $ac->getActivite()->getLibelle();
-                                    $label = "A";
-                                    $class = 'activite';
-                                    break;
-                                default :
-                                    $text = "Provenance inconnue";
-                                    $label = "?";
-                                    $class = 'inconnue';
-
-                            }
-                            ?>
-                            <span class="<?php echo $class; ?>" title="<?php echo $text; ?>"><?php echo $label; ?></span>
-                        <?php endforeach; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-
+<ul>
+<?php foreach ($groupes as $libelle => $groupe) : ?>
+    <li class="groupe-libelle">
+    <?php if ($libelle !== $sansGroupe) : ?>
+            <?php echo $groupe[0]['entite']->getGroupe()->getLibelle(); ?>
+    <?php else : ?>
+        Sans groupe ...
+    <?php endif; ?>
+    </li>
+    <ul>
+    <?php usort ($groupe, function($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle();}); ?>
+    <?php foreach ($groupe as $application) : ?>
+        <li class="element-libelle">
+            <?php echo $application['entite']->getLibelle(); ?>
+            <?php echo $this->raisons($application['raison']); ?>
+        </li>
     <?php endforeach; ?>
-</table>
+    </ul>
+<?php endforeach; ?>
+</ul>

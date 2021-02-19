@@ -642,7 +642,8 @@ class FichePosteService {
         foreach ($fichesMetiers as $ficheMetier) {
             foreach ($ficheMetier->getCompetenceListe() as $competenceElement) {
                 $competence = $competenceElement->getCompetence();
-                $dictionnaire[$competence->getId()]["object"] = $competence;
+                //$dictionnaire[$competence->getId()]["object"] = $competence;
+                $dictionnaire[$competence->getId()]["entite"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $ficheMetier;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
