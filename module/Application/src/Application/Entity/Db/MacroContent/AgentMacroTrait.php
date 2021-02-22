@@ -96,7 +96,9 @@ trait AgentMacroTrait
         $texte  = "<ul>";
         foreach ($grades as $grade) {
             $texte .= "<li>";
-            $texte .= $grade->getCorps()->getLibelleLong() . " ".($grade->getBap())?$grade->getBap()->getCategorie():"";
+            $grade_libelle = $grade->getCorps()->getLibelleLong();
+            $grade_bap = ($grade->getBap() !== null)?$grade->getBap()->getCategorie():"";
+            $texte .= $grade_libelle . " ". $grade_bap;
             $texte .= " (";
             if($grade->getDateFin()) {
                 $texte .= "du " . $grade->getDateDebut()->format('d/m/Y') . " au " . $grade->getDateFin()->format('d/m/Y');
