@@ -6,6 +6,7 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use Formation\Entity\Db\Formation;
+use Metier\Entity\Db\Reference;
 
 trait FichePosteMacroTrait {
 
@@ -19,6 +20,23 @@ trait FichePosteMacroTrait {
 
         $texte  = "";
         $texte .= $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
+        return $texte;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function toStringLibelleComplementaire() : string
+    {
+        $texte  = "";
+
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        if ($ficheposte->getLibelle() !== null AND trim($ficheposte->getLibelle()) !== '') {
+            $texte .= "<br/>" . trim($ficheposte->getLibelle());
+        }
+
         return $texte;
     }
 
@@ -257,7 +275,18 @@ trait FichePosteMacroTrait {
         $texte = "";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
-            $texte .= "<h3>" . $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent()) . "</h3>";
+            $texte .= "<h3>";
+            $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $references = $ficheMetier->getMetier()->getReferences();
+            if ($references !== null AND !empty($references)) {
+                $texte .= "<br/><small>";
+                /** @var Reference $reference */
+                foreach ($references as $reference) {
+                    $texte .= " <a href='".$reference->getUrl()."'>".$reference->getReferentiel()->getLibelleCourt() . "-" . $reference->getCode()."</a>";
+                }
+                $texte.="</small>";
+            }
+            $texte .= "</h3>";
 
             $ids = explode(";",$ficheTypeExterne->getActivites());
             foreach ($ids as $id) {
