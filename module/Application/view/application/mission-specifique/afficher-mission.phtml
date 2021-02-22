@@ -34,6 +34,16 @@ use Application\Entity\Db\MissionSpecifique;
     </div>
     <div class="col-md-6">
         <dl>
+            <dt>Description</dt>
+            <dd>
+                <?php if ($mission->getDescription() !== null) : ?>
+                    <?php echo $mission->getDescription(); ?>
+                <?php else : ?>
+                    Aucune description
+                <?php endif; ?>
+            </dd>
+        </dl>
+        <dl>
             <dt> Dernière modification </dt>
             <dd>
                 <?php echo $mission->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>

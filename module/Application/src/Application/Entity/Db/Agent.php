@@ -203,6 +203,11 @@ class Agent implements
 
     /** AFFECTATIONS **************************************************************************************************/
 
+    public function isIn(Structure $structure)
+    {
+        return true;
+    }
+
     /**
      * @return AgentAffectation[]
      */

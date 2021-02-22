@@ -56,6 +56,20 @@ class MissionSpecifiqueForm extends Form
                 'data-live-search'  => 'true',
             ],
         ]);
+        // description
+        $this->add([
+            'name' => 'description',
+            'type' => 'textarea',
+            'options' => [
+                'label' => 'Description : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+            ],
+            'attributes' => [
+                'class' => 'type2 form-control',
+            ]
+        ]);
 
         // button
         $this->add([
@@ -77,6 +91,7 @@ class MissionSpecifiqueForm extends Form
             'libelle' => [ 'required' => true, ],
             'type'    => [ 'required' => false, ],
             'theme'   => [ 'required' => false, ],
+            'description'   => [ 'required' => false, ],
         ]));
     }
 

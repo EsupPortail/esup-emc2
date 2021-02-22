@@ -20,6 +20,7 @@ class MissionSpecifiqueHydrator implements HydratorInterface
         $data['libelle'] = $object->getLibelle();
         if ($object->getType()) $data['type'] = $object->getType()->getId();
         if ($object->getTheme()) $data['theme'] = $object->getTheme()->getId();
+        if ($object->getDescription()) $data['description'] = $object->getDescription();
         return $data;
     }
 
@@ -50,6 +51,8 @@ class MissionSpecifiqueHydrator implements HydratorInterface
             $object->setTheme(null);
         }
 
+        $description = (isset($data['description']) AND trim($data['description']) !== '')?trim($data['description']):null;
+        $object->setDescription($description);
         return $object;
     }
 

@@ -17,6 +17,8 @@ class MissionSpecifique implements HistoriqueAwareInterface {
     private $theme;
     /** @var MissionSpecifiqueType */
     private $type;
+    /** @var string */
+    private $description;
     /** @var ArrayCollection */
     private $affectations;
 
@@ -98,9 +100,27 @@ class MissionSpecifique implements HistoriqueAwareInterface {
     }
 
     /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string|null $description
+     * @return MissionSpecifique
+     */
+    public function setDescription(?string $description): MissionSpecifique
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
      * @return AgentMissionSpecifique[]
      */
-    public function getAffectations()
+    public function getAffectations() : array
     {
         return $this->affectations->toArray();
     }
