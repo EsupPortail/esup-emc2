@@ -2,6 +2,7 @@
 
 namespace Formation\Form\FormationJournee;
 
+use DateTime;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Zend\Hydrator\HydratorInterface;
 
@@ -14,7 +15,7 @@ class FormationJourneeHydrator implements HydratorInterface
      */
     public function extract($object)
     {
-        $jour = $object->getJour();
+        $jour = $object->getJour()->format('Y-m-d');
         $data = [
             'jour' => $jour,
             'debut' => $object->getDebut(),
@@ -31,7 +32,7 @@ class FormationJourneeHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
-        $jour = (isset($data['jour'])) ? $data['jour'] : null;
+        $jour = (isset($data['jour'])) ? DateTime::createFromFormat('Y-m-d',$data['jour']) : null;
         $debut = (isset($data['debut'])) ? $data['debut'] : null;
         $fin = (isset($data['fin'])) ? $data['fin'] : null;
         $lieu = (isset($data['lieu'])) ? $data['lieu'] : null;

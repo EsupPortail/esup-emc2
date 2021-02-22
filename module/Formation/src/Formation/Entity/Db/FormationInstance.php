@@ -216,7 +216,7 @@ class FormationInstance implements HistoriqueAwareInterface
         $minimum = null;
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) {
-                $split = explode("/", $journee->getJour());
+                $split = explode("/", $journee->getJour()->format('d/m/Y'));
                 $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
                 if ($minimum === null or $reversed < $minimum) $minimum = $reversed;
             }
@@ -234,7 +234,7 @@ class FormationInstance implements HistoriqueAwareInterface
         /** @var FormationInstanceJournee $journee */
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) {
-                $split = explode("/", $journee->getJour());
+                $split = explode("/", $journee->getJour()->format('d/m/Y'));
                 $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
                 if ($maximum === null or $reversed > $maximum) $maximum = $reversed;
             }
@@ -403,7 +403,7 @@ class FormationInstance implements HistoriqueAwareInterface
         $text .= "<tbody>";
         foreach ($journees as $journee) {
             $text .= "<tr>";
-            $text .= "<td>" . $journee->getJour() . "</td>";
+            $text .= "<td>" . $journee->getJour()->format('d/m/Y') . "</td>";
             $text .= "<td>" . $journee->getDebut() . "</td>";
             $text .= "<td>" . $journee->getFin() . "</td>";
             $text .= "<td>" . $journee->getLieu() . "</td>";
@@ -457,8 +457,8 @@ class FormationInstance implements HistoriqueAwareInterface
             return $a->estNonHistorise();
         });
         foreach ($journees as $journee) {
-            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour() . " " . $journee->getDebut());
-            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour() . " " . $journee->getFin());
+            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
+            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
             $duree = $fin->diff($debut);
             $sum->add($duree);
         }

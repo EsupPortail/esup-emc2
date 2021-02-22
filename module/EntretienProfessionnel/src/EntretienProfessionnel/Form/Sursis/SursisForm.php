@@ -17,10 +17,10 @@ class SursisForm extends Form
             'name' => 'date',
             'options' => [
                 'label' => "Fin du sursis * :",
-                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'date',
+
             ],
         ]);
         //description

@@ -101,7 +101,7 @@ class FormationInstanceJourneeController extends AbstractActionController
         if ($journee !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la journée de formation du [" . $journee->getJour() . "]",
+                'title' => "Suppression de la journée de formation du [" . $journee->getJour()->format('d/m/Y') . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('formation-instance/supprimer-journee', ["journee" => $journee->getId()], [], true),
             ]);

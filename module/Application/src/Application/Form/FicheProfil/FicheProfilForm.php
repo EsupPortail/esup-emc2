@@ -8,7 +8,6 @@ use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Date;
-use Zend\Form\Element\DateTime;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
@@ -73,11 +72,10 @@ class FicheProfilForm extends Form {
         ]);
         //date
         $this->add([
-            'type' => DateTime::class,
+            'type' => Date::class,
             'name' => 'date',
             'options' => [
                 'label' => "Date de fin * :",
-                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'date',

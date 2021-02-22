@@ -2,6 +2,7 @@
 
 namespace Formation\Entity\Db;
 
+use DateTime;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -13,7 +14,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface
     private $id;
     /** @var FormationInstance */
     private $instance;
-    /** @var string */
+    /** @var DateTime */
     private $jour;
     /** @var string */
     private $debut;
@@ -51,7 +52,7 @@ class FormationInstanceJournee implements HistoriqueAwareInterface
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getJour()
     {
@@ -59,10 +60,10 @@ class FormationInstanceJournee implements HistoriqueAwareInterface
     }
 
     /**
-     * @param string $jour
+     * @param DateTime $jour
      * @return FormationInstanceJournee
      */
-    public function setJour(string $jour)
+    public function setJour(DateTime $jour)
     {
         $this->jour = $jour;
         return $this;

@@ -222,7 +222,7 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
         <tbody>
             <?php foreach ($journees as $journee) : ?>
             <tr <?php if ($journee->estHistorise()) echo " class='historise' "; ?>>
-                <td> <?php echo $journee->getJour(); ?> </td>
+                <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> </td>
                 <td> <?php echo $journee->getDebut(); ?> </td>
                 <td> <?php echo $journee->getFin(); ?> </td>
                 <td> <?php echo $journee->getLieu(); ?></td>

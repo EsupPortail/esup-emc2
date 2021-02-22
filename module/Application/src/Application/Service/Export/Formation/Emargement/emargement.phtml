@@ -15,7 +15,7 @@ $formation = $journee->getInstance()->getFormation();
     Feuille d'émargement de la formation : <?php echo $formation->getLibelle(); ?>
 </h1>
 <h2>
-    Journée du <?php echo $journee->getJour(); ?> du <?php echo $journee->getDebut(); ?> au <?php echo $journee->getFin(); ?>
+    Journée du <?php echo $journee->getJour()->format('d/m/Y'); ?> du <?php echo $journee->getDebut(); ?> au <?php echo $journee->getFin(); ?>
 </h2>
 
 

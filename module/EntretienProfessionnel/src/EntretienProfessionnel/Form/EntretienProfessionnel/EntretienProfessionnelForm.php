@@ -8,6 +8,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Date;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Element\Time;
@@ -93,11 +94,10 @@ class EntretienProfessionnelForm extends Form {
 
         //Date        (initialisée à la date du jour)
         $this->add([
-            'type' => \Zend\Form\Element\DateTime::class,
+            'type' => Date::class,
             'name' => 'date_entretien',
             'options' => [
                 'label' => "Date de l'entretien* :",
-                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'date_entretien',
@@ -162,7 +162,7 @@ class EntretienProfessionnelForm extends Form {
                                 /** @var EntretienProfessionnel $entretien */
                                 $entretien = $this->getObject();
                                 $campagne = $entretien->getCampagne();
-                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
+                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
                                 $res =  ($campagne->getDateDebut() <= $date AND $campagne->getDateFin() >= $date);
                                 return $res;
                             },
@@ -179,7 +179,7 @@ class EntretienProfessionnelForm extends Form {
                                 /** @var EntretienProfessionnel $entretien */
                                 $maintenant = new DateTime();
                                 $maintenant = $maintenant->add(new DateInterval('P14D'));
-                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
+                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
                                 $res =  ($maintenant <= $date);
                                 return $res;
                             },

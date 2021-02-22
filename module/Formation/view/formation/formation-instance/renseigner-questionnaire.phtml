@@ -51,7 +51,7 @@ $canRenseigner  = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_QUES
                     <?php /** @var FormationInstanceJournee $journee */?>
                     <?php foreach ($instancef->getJournees() as $journee) : ?>
                         <td class="journee">
-                        <?php echo $journee->getJour(); ?> <br/>
+                        <?php echo $journee->getJour()->format('d/m/Y'); ?> <br/>
                         <?php echo $journee->getDebut(); ?> &rightarrow; <?php echo $journee->getFin(); ?>
                         </td>
                     <?php endforeach; ?>

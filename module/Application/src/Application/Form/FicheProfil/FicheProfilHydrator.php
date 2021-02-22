@@ -22,7 +22,7 @@ class FicheProfilHydrator implements HydratorInterface {
             'structure'     => ($object->getStructure())?$object->getStructure()->getLibelleLong():null,
             'structure_id'     => ($object->getStructure())?$object->getStructure()->getId():null,
             'ficheposte'    => ($object->getFichePoste())?$object->getFichePoste()->getId():null,
-            'date'          => ($object->getDate())?$object->getDate()->format('d/m/Y'):null,
+            'date'          => ($object->getDate())?$object->getDate()->format('Y-m-d'):null,
             'lieu'          => $object->getLieu(),
             'contexte'      => $object->getContexte(),
             'mission'       => $object->getMission(),
@@ -43,7 +43,7 @@ class FicheProfilHydrator implements HydratorInterface {
     {
         $structure = (isset($data['structure_id']))?$this->getStructureService()->getStructure($data['structure_id']):null;
         $ficheposte = (isset($data['ficheposte']))?$this->getFichePosteService()->getFichePoste($data['ficheposte']):null;
-        $date = (isset($data['date']))?DateTime::createFromFormat('d/m/Y', $data['date']):null;
+        $date = (isset($data['date']))?DateTime::createFromFormat('Y-m-d', $data['date']):null;
         $lieu = (isset($data['lieu']) AND trim($data['lieu']) !== '')?trim($data['lieu']):null;
         $contexte = (isset($data['contexte']) AND trim($data['contexte']) !== '')?trim($data['contexte']):null;
         $mission = (isset($data['mission']) AND trim($data['mission']) !== '')?trim($data['mission']):null;

@@ -161,8 +161,8 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         });
         foreach ($presences as $presence) {
             $journee = $presence->getJournee();
-            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour() . " " . $journee->getDebut());
-            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour() . " " . $journee->getFin());
+            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
+            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
             $duree = $fin->diff($debut);
             $sum->add($duree);
         }

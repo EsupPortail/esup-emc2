@@ -65,7 +65,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
         <tr>
             <td class="separateur"></td>
             <?php foreach ($journees as $journee) : ?>
-                <td class="journee"> <?php echo $journee->getJour()?> <br/>  <?php echo $journee->getDebut()?> &rightarrow; <?php echo $journee->getFin()?> </td>
+                <td class="journee"> <?php echo $journee->getJour()->format('d/m/Y')?> <br/>  <?php echo $journee->getDebut()?> &rightarrow; <?php echo $journee->getFin()?> </td>
             <?php endforeach; ?>
         </tr>
         <?php foreach ($inscrits as $inscrit) : ?>

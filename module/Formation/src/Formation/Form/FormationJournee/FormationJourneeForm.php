@@ -2,8 +2,8 @@
 
 namespace Formation\Form\FormationJournee;
 
-use UnicaenApp\Form\Element\Date;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Date;
 use Zend\Form\Element\DateTime as DateTimeElement;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
