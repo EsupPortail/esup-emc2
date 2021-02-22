@@ -52,7 +52,7 @@ $agent = $fiche->getFichePoste()->getAgent();
                         <?php endif; ?>
                     </ul>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <u> Répartition par métier</u>
                     <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
                         <a
@@ -76,16 +76,6 @@ $agent = $fiche->getFichePoste()->getAgent();
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-1">
-                    <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
-                        <a
-                            <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                        >
-                           <span class="icon listing" title="Sélectionner les activités associées"></span></a>
-                    <?php endif; ?>
-                </div>
             </div>
         </div>
     </div>
@@ -93,7 +83,7 @@ $agent = $fiche->getFichePoste()->getAgent();
         <?php
             $options['sans-titre'] = true;
             $options['activite-liste'] = $fiche->getActivites();
-            echo $this->ficheMetier($fiche->getFicheType(), $fiche->getFichePoste(), $options);
+            echo $this->ficheMetier($fiche->getFicheType(), $fiche->getFichePoste(), $fiche, $options);
         ?>
     </div>
 </div>

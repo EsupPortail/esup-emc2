@@ -5,10 +5,12 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
+use Application\Entity\Db\FicheTypeExterne;
 
 /**
  * @var FicheMetier $fichemetier
  * @var FichePoste $ficheposte
+ * @var FicheTypeExterne $ficheexterne
  * @var array $options
  */
 
@@ -160,10 +162,25 @@ $mode = $options['mode'];
         <div class="panel-body">
         <?php else : ?>
             <div>
-                <h2>
-                Missions principales
-                <span class="badge"> <?php echo count($activitesRestantes); ?>/<?php echo count($activites); ?> </span>
-                </h2>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>
+                        Missions principales
+                        <span class="badge"> <?php echo count($activitesRestantes); ?>/<?php echo count($activites); ?> </span>
+                        </h2>
+                    </div>
+                    <div class="pull-right">
+                        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+                            <br/>
+                            <a
+                                <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
+                                    href="<?php echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $ficheposte->getId(), 'fiche-type-externe' => $ficheexterne->getId()], [], true); ?>"
+                                    class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon listing" title="Sélectionner les activités associées"></span></a>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <div>
         <?php endif; ?>
             <?php foreach ($activitesRestantes as $ficheActivite): ?>
