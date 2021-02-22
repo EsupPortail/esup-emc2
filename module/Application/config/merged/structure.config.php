@@ -50,6 +50,7 @@ return [
                     'action' => [
                         'index',
                         'extraction-listing-fiche-poste',
+                        'extraction-listing-mission-specifique',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_AFFICHER,
                 ],
@@ -312,6 +313,18 @@ return [
                                     'defaults' => [
                                         'controller' => StructureController::class,
                                         'action'     => 'extraction-listing-fiche-poste',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes' => [],
+                            ],
+                            'listing-mission-specifique' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/listing-mission-specifique/:structure',
+                                    'defaults' => [
+                                        'controller' => StructureController::class,
+                                        'action'     => 'extraction-listing-mission-specifique',
                                     ],
                                 ],
                                 'may_terminate' => true,

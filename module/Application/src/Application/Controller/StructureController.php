@@ -477,4 +477,38 @@ class StructureController extends AbstractActionController {
 
     }
 
+    /**
+     * Extraction du listing des agents et des fiches de poste associées
+     */
+    public function extractionListingMissionSpecifiqueAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
+        $missionsSpecifiques = $this->getMissionSpecifiqueAffectationService()->getMissionsSpecifiquesByStructures($structures);
+
+
+        $filename = "listing_mission_specifique-_" . str_replace(" ","_",$structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";
+        $header = ["Agent", "Structure", "Mission", "Début de mission", "Fin de mission", "Volume"];
+
+        $result = [];
+        foreach ($missionsSpecifiques as $mission) {
+            $agent = $mission->getAgent()->getDenomination();
+            $structure = $mission->getStructure()->getLibelleLong();
+            $libelle = $mission->getMission()->getLibelle();
+            $debut = ($mission->getDateDebut())?$mission->getDateDebut()->format('d/m/Y'):"";
+            $fin = ($mission->getDateFin())?$mission->getDateFin()->format('d/m/Y'):"";
+            $volume = $mission->getDecharge();
+            $result[] = [$agent, $structure, $libelle, $debut, $fin, $volume];
+        }
+
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($header);
+        $CSV->setData($result);
+        $CSV->setFilename($filename);
+        return $CSV;
+    }
+
 }

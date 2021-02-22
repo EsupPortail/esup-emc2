@@ -79,6 +79,11 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                         Fiches de  <br/> poste
                     </a>
                 </li>
+                <li role="missions">
+                    <a href="#missions" aria-controls="missions" role="tab" data-toggle="tabz">
+                        Missions <br/> spécifiques
+                    </a>
+                </li>
 
                 <?php if ($last !== null) : ?>
                     <li role="campagne_<?php echo $last->getId(); ?>">
@@ -120,9 +125,6 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <!-- Informations ------------------------------------------------------------------------------------->
                 <div id="informations" class="tab-pane " role="tabpanel">
 
-
-                    <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
-
                     <?php echo $this->partial('partial/fiches-postes', ['fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
 
                     <?php echo $this->portenote('StructureController::indexAction()>Agents', '', []); ?>
@@ -157,6 +159,10 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                     <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true]]); ?>
                 </div>
 
+                <!-- Missions spécifique ------------------------------------------------------------------------------------->
+                <div id="missions" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
+                </div>
                 <!-- Campagne ------------------------------------------------------------------------------------->
                 <?php $allAgents = array_merge($agents, $agentsForces); ?>
 

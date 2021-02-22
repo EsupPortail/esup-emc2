@@ -17,3 +17,13 @@ use Application\Entity\Db\Structure;
 >
     <span class="icon csv"></span> Extraire au format CSV
 </a>
+
+<h2>Listing des missions spécifiques</h2>
+
+<a
+    <?php /** @see \Application\Controller\StructureController::extractionListingMissionSpecifiqueAction() */ ?>
+        href="<?php echo $this->url('structure/extraction/listing-mission-specifique', ['structure' => $structure->getId()], [], true); ?>"
+        class="btn btn-primary action"
+>
+    <span class="icon csv"></span> Extraire au format CSV
+</a>
