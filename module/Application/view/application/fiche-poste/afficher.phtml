@@ -33,7 +33,7 @@ $canExport   = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
         <br/>
         <br/>
         <?php if ($canExport) : ?>
-            <a href="<?php echo $this->url('fiche-poste/export', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+            <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $fiche->getId()], [], true); ?>"
                class="btn btn-primary action" target="_blank"
             ><span
                         data-toggle="tooltip" data-html="true"
