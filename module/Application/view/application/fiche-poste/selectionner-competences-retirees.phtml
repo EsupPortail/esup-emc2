@@ -15,7 +15,7 @@ $listings["Opérationnelles"] = [];
 $listings["Comportementales"] = [];
 
 foreach ($competences as $item) {
-    $listings[$item['object']->getType()->getLibelle()][] = $item;
+    $listings[$item['entite']->getType()->getLibelle()][] = $item;
 }
 ?>
 
