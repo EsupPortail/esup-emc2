@@ -14,13 +14,8 @@ $canHistoriserObservation = true;
 $canDetruireObservation = true;
 
 $now = new DateTime();
-$date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
-$entretien7 = $date->add(new DateInterval('P7D'));
-$sursis = $entretien->getSursisActive();
-if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
-    $entretien7 = $sursis->getSursis()->add(new DateInterval('P7D'));
-}
-
+$date = $entretien->getMaxSaisiObservation();
+$res = ($date >= $now);
 ?>
 
 <h2> Observations liées à l'entretien professionnel</h2>
@@ -44,7 +39,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
         <div class="pull-right">
             <br/>
             <?php if ($observation === null) : ?>
-                <?php if ($canAjouterObservation AND $now <= $entretien7) : ?>
+                <?php if ($canAjouterObservation AND $res) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAction() */ ?>
                         href="<?php echo $this->url('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
@@ -54,7 +49,7 @@ if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
                     </a>
                 <?php endif; ?>
             <?php else : ?>
-                <?php if ($now <= $entretien7) : ?>
+                <?php if ($res) : ?>
                     <?php if ($canModifierObservation) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\ObservationController::modifierAction() */ ?>

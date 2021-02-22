@@ -23,15 +23,9 @@ $canRenseigner          = ($isAgent OR $isConducteur OR $canValiderDrh OR $canVa
 $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
 
 $now = new DateTime();
-$date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
-$sursis = DateTime::createFromFormat('d/m/Y', "28/02/2021");
-if ($sursis AND $sursis > $entretien->getDateEntretien()) {
-    $date = DateTime::createFromFormat('d/m/Y à H:i', $sursis->format('d/m/Y à H:i'));
-}
-$dayAfter = $date->add(new DateInterval('P1D'));
+$date = $entretien->getMaxSaisiEntretien();
+$res = ($now <= $date);
 
-$res = ($dayAfter > $now);
-$a=1;
 ?>
 
 <h2> Formulaire d'entretien  </h2>

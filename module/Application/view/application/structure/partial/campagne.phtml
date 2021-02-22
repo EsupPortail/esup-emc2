@@ -134,7 +134,7 @@ foreach ($agents as $agent) {
             <td> <?php echo $entretien->getAgent()->getDenomination(); ?></td>
             <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
             <td>
-                <?php $sursis = $entretien->getSursisActive(); ?>
+                <?php $sursis = $entretien->getSursisActif(); ?>
                 <?php if ($sursis === null) : ?>
                     <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?>
                     <?php if ($canSursisAjouter) : ?>

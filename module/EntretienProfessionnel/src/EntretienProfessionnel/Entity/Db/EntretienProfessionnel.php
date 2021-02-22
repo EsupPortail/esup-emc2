@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Entity\Db;
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Exception\RuntimeException;
@@ -25,6 +26,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     const ETAT_VALIDATION_RESPONSABLE       = 'ENTRETIEN_VALIDATION_RESPONSABLE';
     const ETAT_VALIDATION_AGENT             = 'ENTRETIEN_VALIDATION_AGENT';
     const ETAT_VALIDATION_HIERARCHIE        = 'ENTRETIEN_VALIDATION_HIERARCHIE';
+    const DELAI_OBSERVATION                 = 8;
 
     public function getResourceId()
     {
@@ -286,7 +288,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return Sursis|null
      */
-    public function getSursisActive() : ?Sursis
+    public function getSursisActif() : ?Sursis
     {
         $sursis = null;
         /** @var Sursis $item */
@@ -297,6 +299,36 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
             }
         }
         return $sursis;
+    }
+
+    // Date d'entretien ou Date de sursis si il existe
+
+    /**
+     * @return DateTime
+     */
+    public function getMaxSaisiEntretien() {
+        $sursis = $this->getSursisActif();
+        $date = null;
+        if ($sursis === null) {
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
+        } else {
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $sursis->getSursis()->format('d/m/Y 23:59:59'));
+        }
+        return $date;
+
+    }
+
+    // Max 8 jours après entretien (! au sursis)
+    public function getMaxSaisiObservation() {
+        $sursis = $this->getSursisActif();
+        $date = null;
+        if ($sursis === null) {
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
+        } else {
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $sursis->getSursis()->format('d/m/Y 23:59:59'));
+        }
+        $date->add(new DateInterval('P'. EntretienProfessionnel::DELAI_OBSERVATION . 'D'));
+        return $date;
     }
 
     /** VALIDATION ****************************************************************************************************/

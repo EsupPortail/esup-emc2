@@ -12,6 +12,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
+$sursis = $entretien->getSursisActif();
 ?>
 
 <div class="row">
@@ -119,6 +120,10 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
                     <dd> <?php echo $entretien->getAnnee(); ?> </dd>
                     <dt> Date </dt>
                     <dd> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
+                    <?php if ($sursis !== null) : ?>
+                        <dt> Sursis </dt>
+                        <dd> Jusqu'au <?php echo $sursis->getSursis()->format('d/m/Y'); ?> </dd>
+                    <?php endif; ?>
                     <dt> Lieu </dt>
                     <dd> <?php echo $entretien->getLieu(); ?> </dd>
                 </dl>

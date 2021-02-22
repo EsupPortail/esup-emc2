@@ -40,13 +40,10 @@ $options['droits'] = $droits;
 $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
 
 $DEBUG = false;
+
 $now = new DateTime();
-$date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
-$sursis = $entretien->getSursisActive();
-if ($sursis AND $sursis->getSursis() > $entretien->getDateEntretien()) {
-    $date = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
-}
-$dayAfter = $date->add(new DateInterval('P1D'));
+$date = $entretien->getMaxSaisiEntretien();
+$res = ($now <= $date);
 ?>
 
 <?php if ($DEBUG) : ?>
@@ -103,7 +100,7 @@ foreach ($reponses as $reponse) {
 ?>
 
 <?php if ($canRenseigner) : ?>
-    <?php if (($dayAfter >= $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+    <?php if ($res AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
         <?php
         /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
         $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
@@ -125,15 +122,19 @@ foreach ($reponses as $reponse) {
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <?php
-        $arrays = $parcours;
-        ksort($arrays);
-        foreach ( $arrays as $type => $array) : ?>
-            <?php $parcours = $array; ?>
-            <?php foreach ($parcours as $parcour) : ?>
-                <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
+        <?php if ($parcours !== null AND !empty($parcours)) : ?>
+            <?php
+            $arrays = $parcours;
+            ksort($arrays);
+            foreach ( $arrays as $type => $array) : ?>
+                <?php $parcours = $array; ?>
+                <?php foreach ($parcours as $parcour) : ?>
+                    <?php echo $this->parcoursDeFormation($parcour, $agent, $options); ?>
+                <?php endforeach; ?>
             <?php endforeach; ?>
-        <?php endforeach; ?>
+        <?php else : ?>
+            Aucun parcours de renseigné.
+        <?php endif; ?>
     </div>
 </div>
 
