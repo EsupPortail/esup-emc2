@@ -135,8 +135,8 @@ trait FichePosteMacroTrait {
         $result = [];
         foreach ($competences as $competence) {
             /** @var Competence $entite */
-            $entite = $competence["object"];
-            $result [$entite->getType()?$entite->getType()->getLibelle():"Sans type"][$entite->getId()] = $entite;
+            $entite = $competence["entite"];
+            if ($entite !==  null) $result [$entite->getType()?$entite->getType()->getLibelle():"Sans type"][$entite->getId()] = $entite;
         }
         ksort($result);
         $texte = "<h3> Compétences </h3>";
