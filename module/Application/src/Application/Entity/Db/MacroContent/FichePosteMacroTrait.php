@@ -2,8 +2,6 @@
 
 namespace Application\Entity\Db\MacroContent;
 
-use Application\Entity\Db\Competence;
-use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
@@ -24,7 +22,6 @@ trait FichePosteMacroTrait {
         $texte .= $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
         return $texte;
     }
-
 
     /**
      * @return string
@@ -257,7 +254,7 @@ trait FichePosteMacroTrait {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
         $parcours = $ficheposte->getDictionnaire('parcours');
-
+        ksort($parcours);
         $texte = "";
 
         foreach ($parcours as $clef => $parcoursArray) {
@@ -298,7 +295,6 @@ trait FichePosteMacroTrait {
                 }
             }
         }
-
         return $texte;
     }
 
@@ -347,7 +343,6 @@ trait FichePosteMacroTrait {
                 }
             }
         }
-
         return $texte;
     }
 }

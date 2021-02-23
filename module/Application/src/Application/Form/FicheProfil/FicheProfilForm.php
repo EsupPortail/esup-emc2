@@ -7,6 +7,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Date;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
@@ -30,6 +31,16 @@ class FicheProfilForm extends Form {
 
     public function init()
     {
+        $this->add([
+            'type' => Checkbox::class,
+            'name' => 'vacance_emploi',
+            'options' => [
+                'label' => "Il s'agit d'une vacance d'emploi",
+            ],
+            'attributes' => [
+                'id' => 'vacance_emploi',
+            ],
+        ]);
         //structure (non editable)
         $this->add([
             'type' => Text::class,
@@ -171,12 +182,13 @@ class FicheProfilForm extends Form {
             ],
             'attributes' => [
                 'type' => 'submit',
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-primary action',
             ],
         ]);
 
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
+            'vacance_emploi'          => [ 'required' => true,  ],
             'structure'               => [ 'required' => true,  ],
             'ficheposte'              => [ 'required' => true,  ],
             'date'                    => [ 'required' => true,  ],

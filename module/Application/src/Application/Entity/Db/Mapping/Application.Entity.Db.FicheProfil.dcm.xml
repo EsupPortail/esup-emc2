@@ -6,6 +6,8 @@
             <generator strategy="IDENTITY"/>
         </id>
 
+        <field name="vancanceEmploi"        column="vacance_emploi"         type="boolean"                  nullable="false"/>
+
         <many-to-one field="ficheposte" target-entity="Application\Entity\Db\FichePoste">
             <join-column name="ficheposte_id" referenced-column-name="id" />
         </many-to-one>

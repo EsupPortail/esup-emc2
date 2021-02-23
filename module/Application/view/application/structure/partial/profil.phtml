@@ -45,6 +45,7 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
             <tr>
                 <th style="width: 45%;"> Fiche de poste </th>
                 <th> Structure </th>
+                <th> Vacance d'emploi</th>
                 <th style="width: 15rem;"> Fin de dépôt </th>
                 <th style="width: 10rem;"> Action</th>
             </tr>
@@ -54,6 +55,13 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
             <tr <?php if ($profil->estHistorise()) echo "class='historise'"; ?>>
                 <td> <?php echo $profil->getFichePoste()->getLibelleMetierPrincipal(); ?> </td>
                 <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
+                <td>
+                    <?php if ($profil->isVacanceEmploi()) : ?>
+                        <span class="icon ok" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                    <?php else : ?>
+                        <span class="icon ko" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                    <?php endif; ?>
+                </td>
                 <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
                 <td>
                     <?php if ($canExporter) : ?>
@@ -101,6 +109,7 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
     <tr>
         <th style="width: 45%;"> Fiche de poste </th>
         <th> Structure </th>
+        <th> Vacance d'emploi</th>
         <th style="width: 15rem;"> Fin de dépôt </th>
         <th style="width: 10rem;"> Action</th>
     </tr>
@@ -110,6 +119,13 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
         <tr <?php if ($profil->estHistorise()) echo "class='historise'"; ?>>
             <td> <?php echo $profil->getFichePoste()->getLibelleMetierPrincipal(); ?> </td>
             <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
+            <td>
+                <?php if ($profil->isVacanceEmploi()) : ?>
+                    <span class="icon ok" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                <?php else : ?>
+                    <span class="icon ko" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                <?php endif; ?>
+            </td>
             <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
             <td>
                 <?php if ($canExporter) : ?>

@@ -25,6 +25,7 @@ class FicheProfilController extends AbstractActionController {
         $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures([$structure], true);
 
         $ficheprofil = new FicheProfil();
+        $ficheprofil->setVancanceEmploi(false);
         $ficheprofil->setStructure($structure);
 
         $form = $this->getFicheProfilForm();

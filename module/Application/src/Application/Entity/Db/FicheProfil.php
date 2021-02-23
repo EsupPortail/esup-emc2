@@ -13,6 +13,8 @@ class FicheProfil implements HistoriqueAwareInterface {
 
     /** @var int */
     private $id;
+    /** @var boolean */
+    private $vancanceEmploi;
     /** @var FichePoste */
     private $ficheposte;
     /** @var Structure */
@@ -41,6 +43,26 @@ class FicheProfil implements HistoriqueAwareInterface {
     {
         return $this->id;
     }
+
+    /**
+     * @return bool
+     */
+    public function isVacanceEmploi(): bool
+    {
+        return $this->vancanceEmploi;
+    }
+
+    /**
+     * @param bool $vancanceEmploi
+     * @return FicheProfil
+     */
+    public function setVancanceEmploi(bool $vancanceEmploi): FicheProfil
+    {
+        $this->vancanceEmploi = $vancanceEmploi;
+        return $this;
+    }
+
+
 
     /**
      * @return FichePoste|null
@@ -276,9 +298,16 @@ class FicheProfil implements HistoriqueAwareInterface {
         return $texte;
     }
 
+    public function getVacanceEmploiAffichage()
+    {
+        if (!$this->isVacanceEmploi()) return null;
+        $texte  = "<h2> Vacance d'emploi </h2>";
+        return $texte;
+    }
+
     public function getContratAffichage()
     {
-        if ($this->contrat === null) return null;
+        if ($this->isVacanceEmploi() OR $this->contrat === null) return null;
         $texte  = '<h2> Contrat </h2>';
         $texte .= $this->contrat;
         return $texte;
@@ -286,7 +315,7 @@ class FicheProfil implements HistoriqueAwareInterface {
 
     public function getRenumerationAffichage()
     {
-        if ($this->renumeration === null) return null;
+        if ($this->isVacanceEmploi() OR $this->renumeration === null) return null;
         $texte  = '<h2> Rénumération </h2>';
         $texte .= $this->renumeration;
         return $texte;

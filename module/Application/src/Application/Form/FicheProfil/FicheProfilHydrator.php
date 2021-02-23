@@ -19,8 +19,9 @@ class FicheProfilHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
+            'vacance_emploi'=> ($object->isVacanceEmploi())?1:0,
             'structure'     => ($object->getStructure())?$object->getStructure()->getLibelleLong():null,
-            'structure_id'     => ($object->getStructure())?$object->getStructure()->getId():null,
+            'structure_id'  => ($object->getStructure())?$object->getStructure()->getId():null,
             'ficheposte'    => ($object->getFichePoste())?$object->getFichePoste()->getId():null,
             'date'          => ($object->getDate())?$object->getDate()->format('Y-m-d'):null,
             'lieu'          => $object->getLieu(),
@@ -29,7 +30,7 @@ class FicheProfilHydrator implements HydratorInterface {
             'niveau'        => $object->getNiveau(),
             'contraintes'   => $object->getContraintes(),
             'contrat'       => $object->getContrat(),
-            'remuneration'  => $object->getRenumeration(),
+            'renumeration'  => $object->getRenumeration(),
         ];
         return $data;
     }
@@ -41,6 +42,7 @@ class FicheProfilHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
+        $vacanceEmploi = (isset($data['vacance_emploi']) AND $data['vacance_emploi'] === '1')?true:false;
         $structure = (isset($data['structure_id']))?$this->getStructureService()->getStructure($data['structure_id']):null;
         $ficheposte = (isset($data['ficheposte']))?$this->getFichePosteService()->getFichePoste($data['ficheposte']):null;
         $date = (isset($data['date']))?DateTime::createFromFormat('Y-m-d', $data['date']):null;
@@ -50,8 +52,9 @@ class FicheProfilHydrator implements HydratorInterface {
         $niveau = (isset($data['niveau']) AND trim($data['niveau']) !== '')?trim($data['niveau']):null;
         $contraintes = (isset($data['contraintes']) AND trim($data['contraintes']) !== '')?trim($data['contraintes']):null;
         $contrat = (isset($data['contrat']) AND trim($data['contrat']) !== '')?trim($data['contrat']):null;
-        $remuneration = (isset($data['remuneration']) AND trim($data['remuneration']) !== '')?trim($data['remuneration']):null;
+        $remuneration = (isset($data['renumeration']) AND trim($data['renumeration']) !== '')?trim($data['renumeration']):null;
 
+        $object->setVancanceEmploi($vacanceEmploi);
         $object->setStructure($structure);
         $object->setFichePoste($ficheposte);
         $object->setDate($date);
