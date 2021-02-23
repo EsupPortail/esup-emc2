@@ -2,11 +2,16 @@
 
 /**
  * @var EntretienProfessionnel[] $entretiens
+ * @var Campagne[] $campagnes
+ * @var Etat[] $etats
+ * @var array $params
  */
 
 
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use UnicaenEtat\Entity\Db\Etat;
 
 $canVoir        = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
 $canAjouter     = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AJOUTER));
@@ -15,12 +20,15 @@ $canHistoriser  = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 ?>
 
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => $params], [], true); ?>
+
 <h2> Liste des entretiens enregistrés </h2>
 
 <table class="datatable table table-condensed">
     <thead>
     <tr>
         <th> Année </th>
+        <th> Structure <span class="icon attention" title="Structures déduites de l'affectation et non du poste" style="color:darkred;"></span></th>
         <th> Agent </th>
         <th> Responsable </th>
         <th> Date </th>
@@ -32,6 +40,18 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
     <?php foreach ($entretiens as $entretien) : ?>
         <tr class="<?php echo ($entretien->estHistorise()?"historise":""); ?>">
             <td> <?php echo $entretien->getAnnee(); ?> </td>
+            <td>
+                <?php $affectations = $entretien->getAgent()->getAffectations($entretien->getDateEntretien()); ?>
+                <?php if ($affectations !== null and !empty($affectations)) : ?>
+                    <?php $first = true; ?>
+                    <?php foreach ($affectations as $affectation) : ?>
+                        <?php if (!$first) echo '<br/>'; else $first = false; ?>
+                        <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    Aucune structure
+                <?php endif; ?>
+            </td>
             <td>
                 <?php echo $entretien->getAgent()->getPrenom(); ?>
                 <?php echo $entretien->getAgent()->getNomUsuel(); ?>

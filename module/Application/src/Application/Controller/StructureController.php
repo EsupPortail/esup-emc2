@@ -23,7 +23,6 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
@@ -294,7 +293,7 @@ class StructureController extends AbstractActionController {
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $structures = $this->getStructureService()->getStructuresByTerm($term);
-            $result = $result = $this->formatStructureJSON($structures);
+            $result = $this->getStructureService()->formatStructureJSON($structures);
             return new JsonModel($result);
         }
         exit;
@@ -310,7 +309,7 @@ class StructureController extends AbstractActionController {
         $term = $this->params()->fromQuery('term');
         if ($term) {
             $structures = $this->getStructureService()->getStructuresByTerm($term, $structures);
-            $result = $this->formatStructureJSON($structures);
+            $result = $this->getStructureService()->formatStructureJSON($structures);
             return new JsonModel($result);
         }
         exit;
@@ -333,50 +332,10 @@ class StructureController extends AbstractActionController {
             foreach ($users as $user) {
                 if (strpos(strtolower($user->getDisplayName()), $term) !== false) $selected[] = $user;
             }
-            $result = $this->formatUtilisateurJSON($selected);
+            $result = $this->getUserService()->formatUserJSON($selected);
             return new JsonModel($result);
         }
         exit;
-    }
-
-    /**
-     * @param Structure[] $structures
-     * @return array
-     */
-    private function formatStructureJSON(array $structures)
-    {
-        $result = [];
-        foreach ($structures as $structure) {
-            $result[] = array(
-                'id'    => $structure->getId(),
-                'label' => $structure->getLibelleLong(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>".$structure->getLibelleCourt()."</span>",
-            );
-        }
-        usort($result, function($a, $b) {
-            return strcmp($a['label'], $b['label']);
-        });
-        return $result;
-    }
-
-    /**
-     * @param User[] $users
-     * @return array
-     */
-    private function formatUtilisateurJSON(array $users)
-    {
-        $result = [];
-        foreach ($users as $user) {
-            $result[] = array(
-                'id'    => $user->getId(),
-                'label' => $user->getDisplayName(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>".$user->getEmail()."</span>",
-            );
-        }
-        usort($result, function($a, $b) {
-            return strcmp($a['label'], $b['label']);
-        });
-        return $result;
     }
 
     /** AGENTS FORCES *************************************************************************************************/

@@ -3,6 +3,7 @@
 namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Structure;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
@@ -13,6 +14,8 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Entity\Db\Etat;
+use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelService {
@@ -95,14 +98,114 @@ class EntretienProfessionnelService {
     }
 
     /**
+     * @param Agent|null $agent
+     * @param User|null $responsable
+     * @param Structure|null $structure
+     * @param Campagne|null $campagne
+     * @param Etat|null $etat
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnels() : array
+    public function getEntretiensProfessionnels(?Agent $agent = null, ?User $responsable = null, ?Structure $structure = null, ?Campagne  $campagne = null, ?Etat $etat = null) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.annee, agent.nomUsuel, agent.prenom');
+        if ($agent !== null) {
+            $qb = $qb->andWhere('entretien.agent = :agent')
+                ->setParameter('agent', $agent);
+        }
+        if ($responsable !== null) {
+            $qb = $qb->andWhere('entretien.responsable = :responsable')
+                ->setParameter('responsable', $responsable);
+        }
+        if ($campagne !== null) {
+            $qb = $qb->andWhere('entretien.campagne = :campagne')
+                ->setParameter('campagne', $campagne);
+        }
+        if ($etat !== null) {
+            $qb = $qb->andWhere('entretien.etat = :etat')
+                ->setParameter('etat', $etat);
+        }
+        if ($structure !== null) {
+            $qb = $qb->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+                ->andWhere('affectation.structure = :structure')
+                ->setParameter('structure', $structure)
+                ->andWhere('structure.histo IS NULL')
+                ->andWhere('structure.fermeture IS NULL')
+                ->andWhere('affectation.dateDebut <= entretien.dateEntretien')
+                ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien');
+        }
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @param string $texte
+     * @return User[]
+     */
+    public function findResponsableByTerm(string $texte)
+    {
+            $qb = $this->createQueryBuilder()
+                ->andWhere("LOWER(responsable.displayName) LIKE :critere")
+                ->setParameter("critere", '%'.strtolower($texte).'%');
+            $result = $qb->getQuery()->getResult();
+
+            $responsables = [];
+            /** @var EntretienProfessionnel $item */
+            foreach ($result as $item) {
+                $responsable = $item->getResponsable();
+                $responsables[$responsable->getId()] = $responsable;
+            }
+            return $responsables;
+    }
+
+    /**
+     * @param string $texte
+     * @return Agent[]
+     */
+    public function findAgentByTerm(string $texte)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        $agents = [];
+        /** @var EntretienProfessionnel $item */
+        foreach ($result as $item) {
+            $agent = $item->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+        return $agents;
+    }
+
+    /**
+     * @param string $texte
+     * @return Structure[]
+     */
+    public function findStructureByTerm(string $texte)
+    {
+        $qb = $this->createQueryBuilder()
+            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+            ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+            ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
+            ->setParameter('search', '%'.strtolower($texte).'%')
+            ->andWhere('structure.histo IS NULL')
+            ->andWhere('structure.fermeture IS NULL')
+            ->andWhere('affectation.dateDebut <= entretien.dateEntretien')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $structures = [];
+        /** @var EntretienProfessionnel $item */
+        foreach ($result as $item) {
+            $affections = $item->getAgent()->getAffectations($item->getDateEntretien());
+            foreach ($affections as $affectation) {
+                $structures[$affectation->getStructure()->getId()] = $affectation->getStructure();
+            }
+        }
+        return $structures;
     }
 
     /**

@@ -1,0 +1,178 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenEtat\Entity\Db\Etat;
+
+/**
+ * @var Etat[] $etats;
+ * @var Campagne[] $campagnes
+ *
+ * @var array $params
+ */
+
+?>
+
+
+<?php
+//var_dump($params);
+//var_dump($params['structure']->getLibelleLong());
+?>
+
+<br/>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="icon filtrer"></span>
+        Filtre des entretiens professionnels
+    </div>
+    <div class="panel-body">
+        <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
+            <div class="row">
+                <div class="col-md-3">
+                    <?php
+                    $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
+                    $structureF
+                        ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-structure'))
+                        ->setSelectionRequired(true)
+                        ->setAttributes([
+                            'id' => 'structure-filtre',
+                            'placeholder' => "Nom de la structure ...",
+                        ]);
+                    ?>
+                    <?php echo $this->formControlGroup($structureF); ?>
+                </div>
+
+                <div class="col-md-3">
+                    <?php
+                    $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
+                    $agentF
+                        ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-agent'))
+                        ->setSelectionRequired(true)
+                        ->setAttributes([
+                            'id' => 'agent-filtre',
+                            'placeholder' => "Nom de l'agent ...",
+                        ]);
+                    ?>
+                    <?php echo $this->formControlGroup($agentF); ?>
+
+                </div>
+
+                <div class="col-md-3">
+                    <?php
+                    $agentF = new SearchAndSelect('responsable-filtre', ['label' => "Responsable :"]);
+                    $agentF
+                        ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-responsable'))
+                        ->setSelectionRequired(true)
+                        ->setAttributes([
+                            'id' => 'responsable-filtre',
+                            'placeholder' => "Nom du resposable ...",
+                        ]);
+                    ?>
+                    <?php echo $this->formControlGroup($agentF); ?>
+                </div>
+
+                <div class="col-md-3">
+                    <br/>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon effacer"></span>
+                    </button>
+
+                    <button class="btn btn-primary" id="filter" style="width:20rem;">
+                        <span class="icon filtrer"></span>
+                        Filtrer
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="campagne">Campagne :</label>
+                    <select id="campagne" name="campagne" class="selectpicker show-tick" data-live-search="false">
+                        <option value=""> Toutes les campagnes </option>
+                        <?php foreach($campagnes as $campagne) : ?>
+                            <option
+                                    value="<?php echo $campagne->getId(); ?>"
+                                    <?php if ($campagne->getId() == $params['campagneId']) echo " selected "; ?>
+                            >
+                                <?php echo $campagne->getAnnee(); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="etat">État :</label>
+                    <select id="etat" name="etat" class="selectpicker show-tick" data-live-search="false">
+                        <option value=""> Tous les états </option>
+                        <?php foreach($etats as $etat) : ?>
+                            <option
+                                    value="<?php echo $etat->getId(); ?>"
+                                    data-content="<?php // echo $this->etatbadge($etat); ?> <?php echo $etat->getLibelle(); ?>"
+                                    <?php if ($etat->getId() == $params['etatId']) echo " selected "; ?>
+                            >
+                                <?php echo $etat->getLibelle(); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    div.filter {
+        background-color: white;
+        padding: 0.5rem;
+        margin: 0.5rem;
+        border-radius: 5px;
+    }
+
+    div.filter label {
+        margin-left: .25em;
+    }
+</style>
+
+<script>
+    $("form#filtre").submit(function(e){
+        e.preventDefault();
+    });
+
+    $('button#clear').click(function() {
+        window.location.href = 'entretien-professionnel#entretien';
+    });
+
+    $('button#filter').click(function() {
+        let structureId = $('input[name="structure-filtre[id]').val();
+        let agentId = $('input[name="agent-filtre[id]').val();
+        let responsableId = $('input[name="responsable-filtre[id]').val();
+        let campagneId = $('select#campagne option:selected').val();
+        let etatId = $('select#etat option:selected').val();
+        console.log("structure=" + structureId + " | " + "agent=" + agentId + " | " + "responsable=" + responsableId+ " | " + "campagne=" + campagneId + " | " + "etat=" + etatId);
+
+        let query = "";
+        query += "structure=" + structureId;
+        query += "&agent=" + agentId;
+        query += "&responsable=" + responsableId;
+        query += "&campagne=" + campagneId;
+        query += "&etat=" + etatId;
+        window.location.href = 'entretien-professionnel?'+ query + '#entretien';
+    });
+
+    <?php if ($params['structure'] !== null) :?>
+    $('input[name="structure-filtre[label]').val(" <?php echo $params['structure']->getLibelleLong(); ?> ");
+    $('input[name="structure-filtre[id]').val(<?php echo $params['structure']->getId(); ?>);
+    <?php endif; ?>
+
+    <?php if ($params['agent'] !== null) :?>
+    $('input[name="agent-filtre[label]').val(" <?php echo $params['agent']->getDenomination(); ?> ");
+    $('input[name="agent-filtre[id]').val(<?php echo $params['agent']->getId(); ?>);
+    <?php endif; ?>
+
+    <?php if ($params['responsable'] !== null) :?>
+    $('input[name="responsable-filtre[label]').val(" <?php echo $params['responsable']->getDisplayName(); ?> ");
+    $('input[name="responsable-filtre[id]').val(<?php echo $params['responsable']->getId(); ?>);
+    <?php endif; ?>
+
+</script>

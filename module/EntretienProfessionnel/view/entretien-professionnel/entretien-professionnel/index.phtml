@@ -4,10 +4,14 @@
  * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::indexAction()
  * @var Campagne[] $campagnes
  * @var EntretienProfessionnel[] $entretiens
+ * @var Etat[] $etats
+ *
+ * @var array $params
  */
 
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use UnicaenEtat\Entity\Db\Etat;
 
 $this->headTitle('Index des entretiens professionnel');
 
@@ -51,7 +55,7 @@ $this->headTitle('Index des entretiens professionnel');
 
     <!-- ENTRETIENS ------------------------------------------------------------------------------------------------>
     <div id="entretien" class="tab-pane " role="tabpanel">
-        <?php echo $this->partial('partial/index-entretien', ['entretiens' => $entretiens]); ?>
+        <?php echo $this->partial('partial/index-entretien', ['entretiens' => $entretiens, 'etats' => $etats, 'campagnes' => $campagnes, 'params' => $params]); ?>
     </div>
 </div>
 

@@ -209,12 +209,18 @@ class Agent implements
     }
 
     /**
+     * @param DateTime|null $date
      * @return AgentAffectation[]
      */
-    public function getAffectations()
+    public function getAffectations(?DateTime $date = null)
     {
         $affectations = $this->affectations->toArray();
         $affectations = array_filter($affectations, function (AgentAffectation $aa) { return !$aa->isDeleted();});
+        if ($date !== null) {
+            $affectations = array_filter($affectations, function (AgentAffectation $aa) use ($date) {
+                return (($aa->getDateDebut() <= $date) AND ($aa->getDateFin() === null OR $aa->getDateFin() >= $date));
+            });
+        }
         usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
             return $a->getDateDebut() < $b->getDateDebut();
         });

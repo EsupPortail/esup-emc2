@@ -23,12 +23,14 @@ use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class EntretienProfessionnelController extends AbstractActionController
@@ -38,6 +40,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use ConfigurationServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use ObservationServiceAwareTrait;
     use MailingServiceAwareTrait;
@@ -58,13 +61,67 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function indexAction()
     {
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels();
+        $fromQueries  = $this->params()->fromQuery();
+        $agentId      = $fromQueries['agent'];
+        $responsableId = $fromQueries['responsable'];
+        $structureId  = $fromQueries['structure'];
+        $campagneId   = $fromQueries['campagne'];
+        $etatId       = $fromQueries['etat'];
+        $agent        = ($agentId !== '')?$this->getAgentService()->getAgent($agentId):null;
+        $responsable  = ($responsableId !== '')?$this->getUserService()->getUtilisateur($responsableId):null;
+        $structure    = ($structureId !== '')?$this->getStructureService()->getStructure($structureId):null;
+        $campagne     = ($campagneId !== null AND $campagneId !== '')?$this->getCampagneService()->getCampagne($campagneId):null;
+        $etat         = ($etatId !== null AND  $etatId !== '')?$this->getEtatService()->getEtat($etatId):null;
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels($agent, $responsable, $structure, $campagne, $etat);
+        
         $campagnes = $this->getCampagneService()->getCampagnes();
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('ENTRETIEN_PROFESSIONNEL');
+        $etats = $this->getEtatService()->getEtatsByType($type);
 
         return new ViewModel([
             'entretiens' => $entretiens,
             'campagnes' => $campagnes,
+            'etats' => $etats,
+
+            'params' => [
+                'campagneId' => $campagneId,
+                'etatId' => $etatId,
+                'agent' => $agent,
+                'responsable' => $responsable,
+                'structure' => $structure,
+            ],
         ]);
+    }
+
+    public function rechercherResponsableAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $responsables = $this->getEntretienProfessionnelService()->findResponsableByTerm($term);
+            $result = $this->getUserService()->formatUserJSON($responsables);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherAgentAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $agents = $this->getEntretienProfessionnelService()->findAgentByTerm($term);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherStructureAction()
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $structures = $this->getEntretienProfessionnelService()->findStructureByTerm($term);
+            $result = $this->getStructureService()->formatStructureJSON($structures);
+            return new JsonModel($result);
+        }
+        exit;
     }
 
     /** Gestion des entretiens professionnels *************************************************************************/

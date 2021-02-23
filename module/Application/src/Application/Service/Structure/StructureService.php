@@ -270,4 +270,23 @@ class StructureService
         return $gestionnaires;
     }
 
+    /**
+     * @param Structure[] $structures
+     * @return array
+     */
+    public function formatStructureJSON(array $structures)
+    {
+        $result = [];
+        foreach ($structures as $structure) {
+            $result[] = array(
+                'id'    => $structure->getId(),
+                'label' => $structure->getLibelleLong(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>".$structure->getLibelleCourt()."</span>",
+            );
+        }
+        usort($result, function($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 }

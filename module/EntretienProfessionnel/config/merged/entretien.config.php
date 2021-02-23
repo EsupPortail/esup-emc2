@@ -46,6 +46,9 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'accepter-entretien',
+                        'rechercher-agent',
+                        'rechercher-responsable',
+                        'rechercher-structure',
                     ],
                     'roles' => [],
                 ],
@@ -134,6 +137,39 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'accepter-entretien',
+                            ],
+                        ],
+                    ],
+                    'rechercher-responsable' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-responsable',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'rechercher-responsable',
+                            ],
+                        ],
+                    ],
+                    'rechercher-agent' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-agent',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'rechercher-agent',
+                            ],
+                        ],
+                    ],
+                    'rechercher-structure' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-structure',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'rechercher-structure',
                             ],
                         ],
                     ],

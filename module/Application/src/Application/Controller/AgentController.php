@@ -622,7 +622,7 @@ class AgentController extends AbstractActionController
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $agents = $this->getAgentService()->getAgentsByTerm($term);
-            $result = $this->formatAgentJSON($agents);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
             return new JsonModel($result);
         }
         exit;
@@ -637,33 +637,10 @@ class AgentController extends AbstractActionController
 
         if (($term = $this->params()->fromQuery('term'))) {
             $agents = $this->getAgentService()->getAgentsByTerm($term, $structures);
-            $result = $this->formatAgentJSON($agents);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
             return new JsonModel($result);
         }
         exit;
-    }
-
-    /**
-     * @param Agent[] $agents
-     * @return array
-     */
-    private function formatAgentJSON(array $agents)
-    {
-        $result = [];
-        /** @var Agent[] $agents */
-        foreach ($agents as $agent) {
-            $structure = ($agent->getAffectationPrincipale()) ? ($agent->getAffectationPrincipale()->getStructure()) : null;
-            $extra = ($structure) ? $structure->getLibelleCourt() : "Affectation inconnue";
-            $result[] = array(
-                'id' => $agent->getId(),
-                'label' => $agent->getDenomination(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
-            );
-        }
-        usort($result, function ($a, $b) {
-            return strcmp($a['label'], $b['label']);
-        });
-        return $result;
     }
 
     public function rechercherResponsableAction()
@@ -679,7 +656,6 @@ class AgentController extends AbstractActionController
     public function rechercherGestionnaireAction()
     {
         if (($term = $this->params()->fromQuery('term'))) {
-//            $gestionnaires = $this->getUserService()->findByTermAndRole($term, RoleConstant::GESTIONNAIRE);
             $gestionnaires = $this->getUserService()->findByTerm($term);
             $result = $this->getUserService()->formatUserJSON($gestionnaires);
             return new JsonModel($result);
