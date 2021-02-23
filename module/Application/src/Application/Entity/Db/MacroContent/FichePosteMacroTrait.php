@@ -3,6 +3,8 @@
 namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceElement;
+use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use Formation\Entity\Db\Formation;
@@ -139,39 +141,51 @@ trait FichePosteMacroTrait {
     }
 
     /**
+     * @param int $typeId
      * @return string
      */
-    public function toStringCompetences() : string
+    public function toStringCompetencesByTypes(int $typeId) : string
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
-        $competences = $ficheposte->getDictionnaire('competences');
-        $competences = array_filter($competences, function ($a) { return $a["conserve"] === true;});
 
-        if (empty($competences)) return "";
+        $dictionnaire = $ficheposte->getDictionnaire('competences');
+        $dictionnaire = array_filter($dictionnaire, function ($a) { return $a["conserve"] === true;});
+        $dictionnaire = array_filter($dictionnaire, function ($a) use ($typeId) { return $a["entite"]->getType()->getId() === $typeId;});
+        usort($dictionnaire, function ($a, $b) { return $a["entite"]->getLibelle() > $b["entite"]->getLibelle();});
 
-        $result = [];
-        foreach ($competences as $competence) {
-            /** @var Competence $entite */
-            $entite = $competence["entite"];
-            if ($entite !==  null) $result [$entite->getType()?$entite->getType()->getLibelle():"Sans type"][$entite->getId()] = $entite;
-        }
-        ksort($result);
-        $texte = "<h3> Compétences </h3>";
-        $texte .= "<ul>";
-        foreach ($result as $groupe => $liste) {
-            usort($liste, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
+        $texte = "<ul>";
+        foreach ($dictionnaire as $element) {
             $texte .= "<li>";
-            $texte .= $groupe;
-            $texte .= "<ul>";
-            foreach ($liste as $item) {
-                $texte .= "<li>".$item->getLibelle()."</li>";
-            }
-            $texte .= "</ul>";
+            $texte .= $element["entite"]->getLibelle();
             $texte .= "</li>";
         }
         $texte .= "</ul>";
         return $texte;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringCompetencesConnaissances() : string
+    {
+        return $this->toStringCompetencesByTypes(CompetenceType::CODE_CONNAISSANCE);
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringCompetencesOperationnelles() : string
+    {
+        return $this->toStringCompetencesByTypes(CompetenceType::CODE_OPERATIONNELLE);
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringCompetencesComportementales() : string
+    {
+        return $this->toStringCompetencesByTypes(CompetenceType::CODE_COMPORTEMENTALE);
     }
 
     /**

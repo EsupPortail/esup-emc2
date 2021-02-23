@@ -1,9 +1,11 @@
 <?php
 
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceType;
 
 /**
  * @var array $competences
+ * @var CompetenceType[] $types (n.b. deja ordonnée)
  * @var array $options
  *
  * la sutrcture de application est la suivante :
@@ -38,16 +40,14 @@ ksort($groupes);
 ?>
 
 <ul>
-    <?php foreach ($groupes as $libelle => $groupe) : ?>
+<?php foreach ($types as $type) : ?>
+    <?php $groupe = $groupes[$type->getLibelle()]; ?>
+    <?php if ($groupe !== null AND !empty($groupe)) : ?>
+        <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle(); }); ?>
         <li class="groupe-libelle">
-            <?php if ($libelle !== $sansGroupe) : ?>
-                <?php echo $groupe[0]['entite']->getType()->getLibelle(); ?>
-            <?php else : ?>
-                Sans groupe ...
-            <?php endif; ?>
+            <?php echo $type->getLibelle(); ?>
         </li>
         <ul>
-            <?php usort ($groupe, function($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle();}); ?>
             <?php foreach ($groupe as $competence) : ?>
                 <li class="element-libelle">
                     <?php echo $competence['entite']->getLibelle(); ?>
@@ -55,7 +55,8 @@ ksort($groupes);
                 </li>
             <?php endforeach; ?>
         </ul>
-    <?php endforeach; ?>
+    <?php endif; ?>
+<?php endforeach; ?>
 </ul>
 
 

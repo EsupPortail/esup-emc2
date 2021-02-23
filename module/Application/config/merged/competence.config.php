@@ -31,6 +31,7 @@ use Application\Service\CompetenceType\CompetenceTypeServiceFactory;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceFactory;
 use Application\View\Helper\CompetenceBlocViewHelper;
+use Application\View\Helper\CompetenceBlocViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -418,7 +419,10 @@ return [
         ],
     ],
     'view_helpers' => [
-        'invokables' => [
+        'factories' => [
+            CompetenceBlocViewHelper::class => CompetenceBlocViewHelperFactory::class,
+        ],
+        'aliases' => [
             'competenceBloc' => CompetenceBlocViewHelper::class,
         ],
     ],

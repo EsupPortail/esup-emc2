@@ -226,54 +226,49 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
         return $texte;
     }
 
-    public function getConnaissances() {
+    /**
+     * @param int $typeId
+     * @return string
+     */
+    public function getComptencesByType(int $typeId) : string
+    {
         $competences = $this->getCompetenceListe();
+        $competences = array_map(function (CompetenceElement $c) { return $c->getCompetence();}, $competences);
+        $competences = array_filter($competences, function (Competence $c) use ($typeId) { return $c->getType()->getId() === $typeId;});
+        usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
 
-        $texte = "";
-        $texte .= "<ul>";
-        /** @var CompetenceElement $competence */
+        $texte = "<ul>";
         foreach ($competences as $competence) {
-            if ($competence->getCompetence()->getType()->getId() === CompetenceType::CODE_CONNAISSANCE) {
-                $texte .= "<li>";
-                $texte .= $competence->getCompetence()->getLibelle();
-                $texte .= "</li>";
-            }
+            $texte .= "<li>";
+            $texte .= $competence->getLibelle();
+            $texte .= "</li>";
         }
         $texte .= "</ul>";
         return $texte;
     }
 
-    public function getCompetencesOperationnelles() {
-        $competences = $this->getCompetenceListe();
-
-        $texte = "";
-        $texte .= "<ul>";
-        /** @var CompetenceElement $competence */
-        foreach ($competences as $competence) {
-            if ($competence->getCompetence()->getType()->getId() === CompetenceType::CODE_OPERATIONNELLE) {
-                $texte .= "<li>";
-                $texte .= $competence->getCompetence()->getLibelle();
-                $texte .= "</li>";
-            }
-        }
-        $texte .= "</ul>";
-        return $texte;
+    /**
+     * @return string
+     */
+    public function getConnaissances() : string
+    {
+        return $this->getComptencesByType(CompetenceType::CODE_CONNAISSANCE);
     }
-    public function getCompetencesComportementales() {
-        $competences = $this->getCompetenceListe();
 
-        $texte = "";
-        $texte .= "<ul>";
-        /** @var CompetenceElement $competence */
-        foreach ($competences as $competence) {
-            if ($competence->getCompetence()->getType()->getId() === CompetenceType::CODE_COMPORTEMENTALE) {
-                $texte .= "<li>";
-                $texte .= $competence->getCompetence()->getLibelle();
-                $texte .= "</li>";
-            }
-        }
-        $texte .= "</ul>";
-        return $texte;
+    /**
+     * @return string
+     */
+    public function getCompetencesOperationnelles() : string
+    {
+        return $this->getComptencesByType(CompetenceType::CODE_OPERATIONNELLE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompetencesComportementales() : string
+    {
+        return $this->getComptencesByType(CompetenceType::CODE_COMPORTEMENTALE);
     }
 
     public function getApplicationsAffichage() {
