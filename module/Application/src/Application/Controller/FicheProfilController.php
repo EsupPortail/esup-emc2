@@ -89,11 +89,13 @@ class FicheProfilController extends AbstractActionController {
     public function exporterAction()
     {
         $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
+        $ficheposte = $ficheprofil->getFichePoste();
+        $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
 
         $this->getExporterService()->setVars([
             'type' => 'PROFIL_DE_RECRUTMENT',
             'ficheprofil' => $ficheprofil,
-            'ficheposte' => $ficheprofil->getFichePoste(),
+            'ficheposte' => $ficheposte,
             'structure' => $ficheprofil->getStructure(),
         ]);
         $this->getExporterService()->export('export.pdf');

@@ -349,63 +349,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
     /** Fonction pour les affichages dans les documents ***************************************************************/
 
-    public function getConnaissancesAffichage()
-    {
-        $dictionnaire = [];
-        foreach ($this->getFichesMetiers() as $fiche) {
-            /** @var Competence $competence */
-            foreach ($fiche->getFicheType()->getCompetenceListe() as $competenceElement) {
-                $competence = $competenceElement->getCompetence();
-                if ($competence->getType()->getId() === CompetenceType::CODE_CONNAISSANCE) $dictionnaire[$competence->getId()] = $competence->getLibelle();
-            }
-        }
-
-        $texte = "<ul>";
-        foreach ($dictionnaire as $id => $libelle) {
-            $texte .= "<li>".$libelle."</li>";
-        }
-        $texte .= "</ul>";
-        return $texte;
-    }
-
-    public function getCompetencesOperationnellesAffichage()
-    {
-        $dictionnaire = [];
-        foreach ($this->getFichesMetiers() as $fiche) {
-            /** @var Competence $competence */
-            foreach ($fiche->getFicheType()->getCompetenceListe() as $competenceElement) {
-                $competence = $competenceElement->getCompetence();
-                if ($competence->getType()->getId() === CompetenceType::CODE_OPERATIONNELLE) $dictionnaire[$competence->getId()] = $competence->getLibelle();
-            }
-        }
-
-        $texte = "<ul>";
-        foreach ($dictionnaire as $id => $libelle) {
-            $texte .= "<li>".$libelle."</li>";
-        }
-        $texte .= "</ul>";
-        return $texte;
-    }
-
-    public function getCompetencesComportementalesAffichage()
-    {
-        $dictionnaire = [];
-        foreach ($this->getFichesMetiers() as $fiche) {
-            /** @var Competence $competence */
-            foreach ($fiche->getFicheType()->getCompetenceListe() as $competenceElement) {
-                $competence = $competenceElement->getCompetence();
-                if ($competence->getType()->getId() === CompetenceType::CODE_COMPORTEMENTALE) $dictionnaire[$competence->getId()] = $competence->getLibelle();
-            }
-        }
-
-        $texte = "<ul>";
-        foreach ($dictionnaire as $id => $libelle) {
-            $texte .= "<li>".$libelle."</li>";
-        }
-        $texte .= "</ul>";
-        return $texte;
-    }
-
     public function addDictionnaire(string $clef, $valeur)
     {
         $this->dictionnaires[$clef] = $valeur;

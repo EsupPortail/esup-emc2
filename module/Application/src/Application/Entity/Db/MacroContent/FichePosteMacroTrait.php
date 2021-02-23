@@ -142,15 +142,16 @@ trait FichePosteMacroTrait {
 
     /**
      * @param int $typeId
+     * @param bool $all
      * @return string
      */
-    public function toStringCompetencesByTypes(int $typeId) : string
+    public function toStringCompetencesByTypes(int $typeId, bool $all=false) : string
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
 
         $dictionnaire = $ficheposte->getDictionnaire('competences');
-        $dictionnaire = array_filter($dictionnaire, function ($a) { return $a["conserve"] === true;});
+        if (!$all) $dictionnaire = array_filter($dictionnaire, function ($a) { return $a["conserve"] === true;});
         $dictionnaire = array_filter($dictionnaire, function ($a) use ($typeId) { return $a["entite"]->getType()->getId() === $typeId;});
         usort($dictionnaire, function ($a, $b) { return $a["entite"]->getLibelle() > $b["entite"]->getLibelle();});
 
@@ -175,6 +176,14 @@ trait FichePosteMacroTrait {
     /**
      * @return string
      */
+    public function toStringAllCompetencesConnaissances() : string
+    {
+        return $this->toStringCompetencesByTypes(CompetenceType::CODE_CONNAISSANCE, true);
+    }
+
+    /**
+     * @return string
+     */
     public function toStringCompetencesOperationnelles() : string
     {
         return $this->toStringCompetencesByTypes(CompetenceType::CODE_OPERATIONNELLE);
@@ -183,9 +192,25 @@ trait FichePosteMacroTrait {
     /**
      * @return string
      */
+    public function toStringAllCompetencesOperationnelles() : string
+    {
+        return $this->toStringCompetencesByTypes(CompetenceType::CODE_OPERATIONNELLE, true);
+    }
+
+    /**
+     * @return string
+     */
     public function toStringCompetencesComportementales() : string
     {
         return $this->toStringCompetencesByTypes(CompetenceType::CODE_COMPORTEMENTALE);
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringAllCompetencesComportementales() : string
+    {
+        return $this->toStringCompetencesByTypes(CompetenceType::CODE_COMPORTEMENTALE, true);
     }
 
     /**
