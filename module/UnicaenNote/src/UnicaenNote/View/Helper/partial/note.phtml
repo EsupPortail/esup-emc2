@@ -16,10 +16,12 @@ $canSupprimer  = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::
 ?>
 
 <div class="row">
-    <div class="col-md-9 <?php echo $note->getType()->getStyle(); ?>">
+<!--    <div class="col-md-10 --><?php //echo $note->getType()->getStyle(); ?><!--">-->
+    <div class="<?php echo $note->getType()->getStyle(); ?>" style="width: 95%; display: inline-block;">
         <?php echo $note->getTexte(); ?>
     </div>
-    <div class="col-md-2">
+<!--    <div class="col-md-1">-->
+    <div class="pull-right">
         <?php if ($canModifier) : ?>
             <a href="<?php echo $this->url('unicaen-note/note/modifier', ['note' => $note->getId()], [], true); ?>"
                class="ajax-modal" data-event="modification" title="Modifier la note"
@@ -27,6 +29,7 @@ $canSupprimer  = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::
                 <span class="icon editer"></span></a>
         <?php endif; ?>
         <?php if ($canHistoriser) : ?>
+            <br/>
             <?php if ($note->estNonHistorise()) : ?>
                 <a href="<?php echo $this->url('unicaen-note/note/historiser', ['note' => $note->getId()], [], true); ?>"
                    class="zajax-modal" data-event="modification" title="Historiser la note"
@@ -40,6 +43,7 @@ $canSupprimer  = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::
             <?php endif; ?>
         <?php endif; ?>
         <?php if ($canSupprimer) : ?>
+            <br/>
             <a href="<?php echo $this->url('unicaen-note/note/supprimer', ['note' => $note->getId()], [], true); ?>"
                class="ajax-modal" data-event="modification" title="Supprimer la note"
             >

@@ -15,7 +15,8 @@ $canAjouter = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOT
 <?php if ($portenote !== null) : ?>
     <div class="row">
         <?php if ($canAjouter) : ?>
-        <div class="col-md-1" style="text-align: right; padding-right: 1rem;">
+<!--        <div class="col-md-1" style="text-align: right; padding-right: 1rem;">-->
+        <div>
             <a href="<?php echo $this->url('unicaen-note/note/ajouter', ['porte-note' => $portenote->getId()], [], true); ?>"
                class="ajax-modal" data-event="modification"
             >
@@ -24,7 +25,8 @@ $canAjouter = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOT
             ></span></a>
         </div>
         <?php endif; ?>
-        <div class="col-md-11">
+<!--        <div class="col-md-11">-->
+        <div>
             <?php foreach ($portenote->getNotes() as $note) : ?>
                 <?php echo $this->note($note, $mode, $options); ?>
             <?php endforeach; ?>

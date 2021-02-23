@@ -72,7 +72,9 @@ button.btn.dropdown-toggle.btn-default{
 /** ALERT *************************************************************************************************************/
 
 div.alert {
-    margin: 1rem;
+    margin: 0.1rem;
+    padding: 0.5rem;
+    /*text-align: justify;*/
 }
 div.alert-info {
     color: var(--color-info);
