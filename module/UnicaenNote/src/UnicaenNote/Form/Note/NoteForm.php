@@ -5,6 +5,7 @@ namespace UnicaenNote\Form\Note;
 use UnicaenNote\Service\PorteNote\PorteNoteServiceAwareTrait;
 use UnicaenNote\Service\Type\TypeServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
@@ -17,18 +18,18 @@ class NoteForm extends Form {
     public function init()
     {
         //PORTE NOTE
-        $this->add([
-            'type' => Select::class,
-            'name' => 'porte-note',
-            'options' => [
-                'label' => "Porte-notes *  :",
-                'empty_option' => "Aucun porte-notes",
-                'value_options' => $this->getPorteNoteService()->getPortesNotesAsOptions(),
-            ],
-            'attributes' => [
-                'id' => 'porte-note',
-            ],
-        ]);
+//        $this->add([
+//            'type' => Hidden::class,
+//            'name' => 'porte-note',
+//            'options' => [
+//                'label' => "Porte-notes *  :",
+//                'empty_option' => "Aucun porte-notes",
+//                'value_options' => $this->getPorteNoteService()->getPortesNotesAsOptions(),
+//            ],
+//            'attributes' => [
+//                'id' => 'porte-note',
+//            ],
+//        ]);
         //TYPE
         $this->add([
             'type' => Select::class,
@@ -53,7 +54,7 @@ class NoteForm extends Form {
                 ],
             ],
             'attributes' => [
-                'class' => 'description form-control',
+                'class' => 'type2 form-control',
             ]
         ]);
         //bouton
@@ -73,7 +74,7 @@ class NoteForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'porte-note'    => [ 'required' => true, ],
+//            'porte-note'    => [ 'required' => false, ],
             'type'          => [ 'required' => false, ],
             'description'   => [ 'required' => false, ],
         ]));

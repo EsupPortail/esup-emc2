@@ -18,7 +18,7 @@ class NoteHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'porte-note' => ($object->getPortenote())?$object->getPortenote()->getId():null,
+//            'porte-note' => ($object->getPortenote())?$object->getPortenote()->getId():null,
             'type' => ($object->getType())?$object->getType()->getId():null,
             'description' => ($object->getTexte())?:null,
         ];
@@ -32,11 +32,11 @@ class NoteHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $portenote = (isset($data['porte-note']))?$this->getPorteNoteService()->getPorteNote($data['porte-note']):null;
+//        $portenote = (isset($data['porte-note']))?$this->getPorteNoteService()->getPorteNote($data['porte-note']):null;
         $type = (isset($data['type']))?$this->getTypeService()->getType($data['type']):null;
         $description = (isset($data['description']) AND trim($data['description']) !== "")?trim($data['description']):null;
 
-        $object->setPortenote($portenote);
+//        $object->setPortenote($portenote);
         $object->setType($type);
         $object->setTexte($description);
         return $object;

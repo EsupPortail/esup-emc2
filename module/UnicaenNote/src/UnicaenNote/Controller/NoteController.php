@@ -36,17 +36,19 @@ class NoteController extends AbstractActionController {
     {
         $portenote = $this->getPorteNoteService()->getRequestePorteNote($this);
         $note = new Note();
-        if ($portenote) $note->setPortenote($portenote);
+        if ($portenote) {
+            $note->setPortenote($portenote);
+        }
 
         $form = $this->getNoteForm();
         $form->setAttribute('action', $this->url()->fromRoute('unicaen-note/note/ajouter', ['porte-note' => (($portenote)?$portenote->getId():null)], [], true));
         $form->bind($note);
-        if ($portenote !== null) {
-            $form->get('porte-note')->setAttribute('style','display:none;');
-        }
+//        if ($portenote !== null) {
+//            $form->get('porte-note')->setAttribute('style','display:none;');
+//        }
 
         $request = $this->getRequest();
-        if ($request->getPost()) {
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -70,7 +72,7 @@ class NoteController extends AbstractActionController {
         $form = $this->getNoteForm();
         $form->setAttribute('action', $this->url()->fromRoute('unicaen-note/note/modifier', ['note' => $note->getId()], [], true));
         $form->bind($note);
-        $form->get('porte-note')->setAttribute('style','display:none;');
+        //$form->get('porte-note')->setAttribute('style','display:none;');
 
         $request = $this->getRequest();
         if ($request->getPost()) {
