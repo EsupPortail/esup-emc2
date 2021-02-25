@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @var Form $form
+ */
+
+use Zend\Form\Form;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.type2',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+    });
+    tinymce.init({
+        selector: '.type1',
+        toolbar: 'newdocument undo redo | bold italic | bullist | bullist | highlight',
+        language: 'fr_FR',
+        resize: true,
+        statusbar: true,
+        browser_spellcheck : true,
+        branding: false,
+        menu: {},
+        setup: function (editor) {
+            editor.on("focusout", function () {
+                console.log(tinymce.get('description').getContent());
+                $('textarea').val(tinymce.get('description').getContent());
+            });
+            editor.addButton('highlight', {
+                text: '',
+                icon: 'codesample',
+                title: 'Définition',
+                onclick: function () {
+                    let content =  editor.selection.getContent();
+                    if (content !== '') {
+                        let new_content = "";
+                        let regex = /<abbr title="">.*<\/abbr>/g;
+                        let found = content.match(regex);
+                        if (found) {
+                            new_content = content.replace('</abbr>', '');
+                            new_content = new_content.replace('<abbr title="">', '');
+                        } else {
+                            new_content = '<abbr title="">' + content + '</abbr>';
+                        }
+                        editor.insertContent(new_content);
+                    }
+                }
+            });
+        }
+    });
+
+    $('select').selectpicker();
+</script>
+
+<style>
+    .ui-datepicker{
+        position: absolute;
+        z-index:1050 !important;
+    }
+   /*div.ui-datepicker {*/
+   /*    position: absolute;*/
+   /*     z-index:1050;*/
+   /* }*/
+   /* select.ui-datepicker-year option{*/
+   /* position: absolute;*/
+   /*     z-index:3151 !important;*/
+   /* }*/
+</style>

@@ -366,49 +366,16 @@ span.inconnue {
     font-variant-position: super;
 }
 
-/*div.panel div.main {*/
+tr.historise {
+    background: #b1b1b1;
+}
 
-/*    margin: 0px;*/
-/*    padding: 0px;*/
-
-/*}*/
-
-/*span.Connaissance {*/
-/*    background-color: darkgreen;*/
-/*    width: 13rem;*/
-/*}*/
-/*span.Connaissances {*/
-/*    background-color: darkgreen;*/
-/*    width: 13rem;*/
-/*}*/
-/*span.Comportementale {*/
-/*    background-color: darkred;*/
-/*    width: 13rem;*/
-/*}*/
-/*span.Comportementales {*/
-/*    background-color: darkred;*/
-/*    width: 13rem;*/
-/*}*/
-/*span.Opérationnelle {*/
-/*    background-color: darkblue;*/
-/*    width: 13rem;*/
-/*}*/
-/*span.Opérationnelles {*/
-/*    background-color: darkblue;*/
-/*    width: 13rem;*/
-/*}*/
-
-/*span.badge.structure {*/
-/*    background-color: darkgreen;*/
-/*    border-radius: 2px;*/
-/*    min-width:18rem;*/
-/*    padding-left: 3rem;*/
-/*    padding-right: 3rem;*/
-/*}*/
-
-/*span.historise {*/
-/*    color: gray;*/
-/*}*/
+dt.historise {
+    text-decoration: line-through gray;
+}
+dd.historise {
+    text-decoration: line-through gray;
+}
 
 /*span.todo {*/
 /*    color:darkred;*/
@@ -455,26 +422,6 @@ span.inconnue {
 /*    font-weight: bold;*/
 /*}*/
 
-/*!** CSS associé au entité pour les pretty prints -------------------------------------------------------------------- *!*/
-
-/*.tooltip-inner {background-color: whitesmoke; border: 1px solid black; color: black}*/
-
-/*span.date {*/
-/*    font-weight: normal;*/
-/*    color: navy;*/
-/*}*/
-
-/*table.parcours-de-formation {*/
-/*    width:100%;*/
-/*}*/
-
-/*table.parcours-de-formation th {*/
-/*    color:white;*/
-/*    padding-bottom:0.5rem;*/
-/*    padding-top:0.5rem;*/
-/*    padding-left: 2rem;*/
-/*}*/
-
 table.parcours-de-formation th.titre {
     background: linear-gradient(to right, lightgrey, whitesmoke);
     color: #3c6c8b;
@@ -489,81 +436,6 @@ table.elements th.titre {
     color: #3c6c8b;
     padding: 0.5rem;
 }
-
-/* table.parcours-de-formation td.libelle-cell {*/
-/*     !*background: lightgreen;*!*/
-/*     !*width: 20rem;*!*/
-/* }*/
-/*table.parcours-de-formation td.info-cell {*/
-/*    !*background: lightyellow;*!*/
-/*    width: 25rem;*/
-/*}*/
-/*table.parcours-de-formation td.validation-cell {*/
-/*    !*background: lightpink;*!*/
-/*    width: 15rem;*/
-/*}*/
-/*table.parcours-de-formation td.action-cell {*/
-/*    !*background: lightblue;*!*/
-/*    width: 12rem;*/
-/*    text-align: right;*/
-/*}*/
-
-/*!** Tableaux des applications******************************************************************************************!*/
-
-/*table.applications {*/
-/*    width:100%;*/
-/*}*/
-/*table.applications th {*/
-/*    color:white;*/
-/*    padding-bottom:0.5rem;*/
-/*    padding-top:0.5rem;*/
-/*    padding-left: 2rem;*/
-/*}*/
-
-/*table.applications th.titre {*/
-/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
-/*    background: linear-gradient(to right, lightgrey, white);*/
-/*    color: #3c6c8b;*/
-/*    !*border-top-left-radius:5px;*!*/
-/*}*/
-
-/*!** Tableaux des compétences ******************************************************************************************!*/
-
-/*table.competences {*/
-/*    width:100%;*/
-/*}*/
-/*table.competences th {*/
-/*    color:white;*/
-/*    padding-bottom:0.5rem;*/
-/*    padding-top:0.5rem;*/
-/*    padding-left: 2rem;*/
-/*}*/
-
-/*table.competences th.titre {*/
-/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
-/*    background: linear-gradient(to right, lightgrey, white);*/
-/*    color: #3c6c8b;*/
-/*    !*border-top-left-radius:5px;*!*/
-/*}*/
-
-/*!** Tableaux des formations *******************************************************************************************!*/
-
-/*table.formations {*/
-/*    width:100%;*/
-/*}*/
-/*table.formations th {*/
-/*    color:white;*/
-/*    padding-bottom:0.5rem;*/
-/*    padding-top:0.5rem;*/
-/*    padding-left: 2rem;*/
-/*}*/
-
-/*table.formations th.titre {*/
-/*    !*background: linear-gradient(to right, #d9edf7, white);*!*/
-/*    background: linear-gradient(to right, lightgrey, white);*/
-/*    color: #3c6c8b;*/
-/*    !*border-top-left-radius:5px;*!*/
-/*}*/
 
 span.lettrine {
     position:relative;

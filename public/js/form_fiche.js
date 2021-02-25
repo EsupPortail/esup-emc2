@@ -1,5 +1,36 @@
 $(function () {
-
+    tinymce.init({
+        selector: '.type1',
+        toolbar: 'newdocument undo redo | bold italic | bullist | bullist | highlight',
+        language: 'fr_FR',
+        resize: true,
+        statusbar: true,
+        browser_spellcheck : true,
+        branding: false,
+        menu: {},
+        setup: function (editor) {
+            editor.addButton('highlight', {
+                text: '',
+                icon: 'codesample',
+                title: 'Définition',
+                onclick: function () {
+                    let content =  editor.selection.getContent();
+                    if (content !== '') {
+                        let new_content = "";
+                        let regex = /<abbr title="">.*<\/abbr>/g;
+                        let found = content.match(regex);
+                        if (found) {
+                            new_content = content.replace('</abbr>', '');
+                            new_content = new_content.replace('<abbr title="">', '');
+                        } else {
+                            new_content = '<abbr title="">' + content + '</abbr>';
+                        }
+                        editor.insertContent(new_content);
+                    }
+                }
+            });
+        }
+    });
     tinymce.init({
         selector: '.type2',
         plugins: 'lists',
@@ -10,26 +41,7 @@ $(function () {
         resize: false,
         branding: false,
         menu: {},
-        setup: function (editor) {
-        //     editor.on("a", function () {
-        //         if (this.inError) {
-        //             alertFlash("Le champ n'a PAS ETE enregistré !", 'error', 3000);
-        //             return;
-        //         }
-        //
-        //         var id = this.id;
-        //         var tmce = tinyMCE.get(id);
-        //         var content = tmce.getContent();
-        //         console.log(content);
-        //         var elt = $('#'+id);
-        //
-        //         $.post(elt.data('url'), {contenu: content, type: 'type2'}).done(function (res) {
-        //             console.log(res.displayContent);
-        //             tmce.setContent(res.displayContent);
-        //             alertFlash('Le champ a bien été enregistré', 'success', 1000);
-        //         });
-        //     })
-        }
+        setup: function (editor) {}
     });
 
     $('.info-icon').popover({

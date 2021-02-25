@@ -138,7 +138,7 @@ return [
                         'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-ressources') ,
                     ],
                     'administration' => [
-                        'order' => 1000,
+                        'order' => 1000000,
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',

@@ -1,0 +1,48 @@
+<?php
+
+use UnicaenGlossaire\Entity\Db\Definition;
+
+/**
+ * @see \UnicaenGlossaire\Controller\DefinitionController::afficherAction()
+ * @var Definition $definition
+ */
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl>
+            <dt> Terme </dt>
+            <dd> <?php echo $definition->getTerme(); ?> </dd>
+            <dt> Ecritures alternatives </dt>
+            <dd>
+                <?php if ($definition->getAlternatives() !== null AND $definition->getAlternatives() !== '') : ?>
+                    <?php $split = explode(";", $definition->getAlternatives()); ?>
+                    <ul>
+                    <?php foreach ($split as $item) : ?>
+                        <li><?php echo $item; ?></li>
+                    <?php endforeach;?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt> Définition </dt>
+            <dd> <?php echo $definition->getDefinition(); ?> </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt> Dernière mise à jour </dt>
+            <dd>
+                <?php echo $definition->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+                par <?php echo $definition->getHistoModificateur()->getDisplayName(); ?>
+            </dd>
+            <?php if ($definition->estHistorise()) : ?>
+                <dt> Historisée </dt>
+                <dd>
+                    <?php echo $definition->getHistoDestruction()->format('d/m/Y à H:i:s'); ?>
+                    par <?php echo $definition->getHistoDestructeur()->getDisplayName(); ?>
+                </dd>
+            <?php endif; ?>
+    </div>
+</div>
+

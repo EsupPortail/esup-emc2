@@ -3,7 +3,6 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\CompetenceType;
-use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
