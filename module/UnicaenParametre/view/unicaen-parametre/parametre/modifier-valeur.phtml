@@ -1,0 +1,50 @@
+<?php
+
+
+/**
+ * @see \UnicaenParametre\Controller\ParametreController::modifierValeurAction()
+ * @var Parametre $parametre
+ */
+
+use UnicaenParametre\Entity\Db\Parametre;
+
+$possibles = ($parametre->getValeursPossibles())?explode('|',$parametre->getValeursPossibles()):null;
+$nbElement = ($possibles AND is_array($possibles))?count($possibles):(($possibles)?1:0);
+?>
+
+<form action="<?php echo $this->url('parametre/modifier-valeur', ['categorie' => $parametre->getCategorie()->getId(), 'parametre' => $parametre->getId()], [], true); ?>" method="post">
+
+    <label for="valeur">Ancienne valeur du paramètre :</label>
+    <input type="text" name="valeur" id="valeur" class="form-control" value="<?php echo $parametre->getValeur(); ?>" readonly>
+
+    <label for="valeur">Nouvelle valeur du paramètre : </label>
+    <?php if (empty($possibles)) : ?>
+        <input type="text" name="valeur" id="valeur" class="form-control"/>
+    <?php endif; ?>
+    <?php if ($nbElement > 1) : ?>
+        <select name="valeur" id="valeur" class="form-control">
+            <?php foreach ($possibles as $possible) : ?>
+            <option value="<?php echo $possible; ?>"> <?php echo $possible; ?></option>
+            <?php endforeach; ?>
+        </select>
+    <?php endif; ?>
+    <?php if ($nbElement === 1) : ?>
+        <?php if ($possibles[0] === 'String') : ?>
+            <input type="text" name="valeur" id="valeur" class="form-control" value="" placeholder="Renseignez la nouvelle valeur">
+        <?php endif; ?>
+        <?php if ($possibles[0] === 'Number') : ?>
+            <input type="number" name="valeur" id="valeur" class="form-control" value="" placeholder="Renseignez la nouvelle valeur">
+        <?php endif; ?>
+        <?php if ($possibles[0] === 'Boolean') : ?>
+        <div>
+            <input type="radio" id="true" name="valeur" value="true">
+            <label for="true"><i class="fas fa-check" style="color:darkgreen;"></i> true</label><br>
+            <input type="radio" id="false" name="valeur" value="false">
+            <label for="false"><i class="fas fa-times" style="color:darkred;"></i> false</label><br>
+        </div>
+        <?php endif; ?>
+    <?php endif; ?>
+    <br/>
+    <input type="submit" value="Enregistrer" class="btn btn-primary"/>
+</form>
+

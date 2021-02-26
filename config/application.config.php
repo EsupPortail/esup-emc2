@@ -35,6 +35,7 @@ $modules = [
     'UnicaenDocument',
     'UnicaenNote',
     'UnicaenGlossaire',
+    'UnicaenParametre',
     'UnicaenValidation',
     'Autoform',
     'Fichier',
