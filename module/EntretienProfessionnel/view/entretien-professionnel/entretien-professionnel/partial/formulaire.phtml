@@ -91,7 +91,7 @@ $res = ($now <= $date);
 ?>
 
 <?php if ($canRenseigner) : ?>
-    <?php if (($dayAfter >= $now)  AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+    <?php if ($res  AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
         <?php
             /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
             $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
