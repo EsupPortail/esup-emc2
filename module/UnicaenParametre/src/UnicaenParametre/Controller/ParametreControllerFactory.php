@@ -3,12 +3,16 @@
 namespace UnicaenParametre\Controller;
 
 use Interop\Container\ContainerInterface;
-use UnicaenParametre\Form\Categorie\CategorieForm;
+use UnicaenParametre\Form\Parametre\ParametreForm;
 use UnicaenParametre\Service\Categorie\CategorieService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
-class CategorieControllerFactory {
+class ParametreControllerFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return ParametreController
+     */
     public function __invoke(ContainerInterface $container)
     {
         /**
@@ -19,14 +23,14 @@ class CategorieControllerFactory {
         $parametreService = $container->get(ParametreService::class);
 
         /**
-         * @var CategorieForm $categorieForm
+         * @var ParametreForm $parametreForm
          */
-        $categorieForm = $container->get('FormElementManager')->get(CategorieForm::class);
+        $parametreForm = $container->get('FormElementManager')->get(ParametreForm::class);
 
-        $controller = new CategorieController();
+        $controller = new ParametreController();
         $controller->setCategorieService($categorieService);
         $controller->setParametreService($parametreService);
-        $controller->setCategorieForm($categorieForm);
+        $controller->setParametreForm($parametreForm);
         return $controller;
     }
 }

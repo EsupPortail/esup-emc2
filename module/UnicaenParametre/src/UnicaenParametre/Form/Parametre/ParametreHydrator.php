@@ -17,7 +17,7 @@ class ParametreHydrator implements HydratorInterface {
             'code' => $object->getCode(),
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
-            'valeurs_possibles' => $object->getValeursPossibles(),
+            'possibles' => $object->getValeursPossibles(),
             'ordre' => $object->getOrdre(),
         ];
         return $data;
@@ -33,7 +33,7 @@ class ParametreHydrator implements HydratorInterface {
         $code = (isset($data['code']) and trim($data['code']) !== '')?trim($data['code']):null;
         $libelle = (isset($data['libelle']) and trim($data['libelle']) !== '')?trim($data['libelle']):null;
         $description = (isset($data['description']) and trim($data['description']) !== '')?trim($data['description']):null;
-        $valeurs = (isset($data['valeurs_possibles']) and trim($data['valeurs_possibles']) !== '')?trim($data['valeurs_possibles']):null;
+        $valeurs = (isset($data['possibles']) and trim($data['possibles']) !== '')?trim($data['possibles']):null;
         $ordre = (isset($data['ordre']) and trim($data['ordre']) !== '')?trim($data['ordre']):null;
 
         $object->setCode($code);

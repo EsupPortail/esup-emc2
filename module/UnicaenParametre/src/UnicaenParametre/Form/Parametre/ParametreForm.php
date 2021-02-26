@@ -22,7 +22,7 @@ class ParametreForm extends Form {
             'type' => Text::class,
             'name' => 'code',
             'options' => [
-                'label' => "Code de la privilège : ",
+                'label' => "Code du paramètre : ",
                 'label_attributes' => [
                     'class' => 'required',
                 ],
@@ -120,10 +120,10 @@ class ParametreForm extends Form {
                     'name' => Callback::class,
                     'options' => [
                         'messages' => [
-                            Callback::INVALID_VALUE => "Ce code existe déjà pour cette catégorie",
+                            Callback::INVALID_VALUE => "Ce code existe déjà pour ce paramètre/catégorie",
                         ],
                         'callback' => function ($value, $context = []) {
-                            if($value == $context['old-code']) return true;
+                            if($context['categorie-code'] . "-" . $value ==  $context['old-code']) return true;
                             return ($this->getParametreService()->getParametreByCode($context['categorie-code'], $value) == null);
                         },
                     ],

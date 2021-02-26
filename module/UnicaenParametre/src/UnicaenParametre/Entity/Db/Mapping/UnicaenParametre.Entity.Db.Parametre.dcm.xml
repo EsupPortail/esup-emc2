@@ -13,7 +13,7 @@
         <field name="code"              column="code"                   type="string"    length="1024"    nullable="false" />
         <field name="libelle"           column="libelle"                type="string"    length="1024"    nullable="false" />
         <field name="description"       column="description"            type="string"    length="4096"    nullable="true" />
-        <field name="valeursPossibles"  column="valeurs_possibles"      type="string"    length="4096"    nullable="true" />
+        <field name="valeurs_possibles" column="valeurs_possibles"      type="string"    length="4096"    nullable="true" />
         <field name="valeur"            column="valeur"                 type="string"    length="4096"    nullable="true" />
         <field name="ordre"             column="ordre"                  type="integer"                    nullable="true" />
 
