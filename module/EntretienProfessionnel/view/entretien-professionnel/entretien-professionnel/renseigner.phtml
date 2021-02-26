@@ -72,19 +72,19 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         <div class="tab-content">
 
             <div id="formulaire" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser]); ?>
+                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
             </div>
 
             <div id="parcours" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => true]]); ?>
+                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
             </div>
 
             <div id="avis" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits]); ?>
+                <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>
             </div>
 
             <div id="validation" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/validation', ['entretien' => $entretien]); ?>
+                <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction']); ?>
             </div>
         </div>
     </div>

@@ -3,6 +3,7 @@
 /**
  * @var EntretienProfessionnel $entretien
  * @var Observation $observation
+ * @var string $source
  */
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -15,115 +16,133 @@ $canDetruireObservation = true;
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
-$res = ($date >= $now);
+
+$date_non_depassee = ($date >= $now);
+$has_validation_responsable = $entretien->hasValidationResponsable();
+$has_validation_agent = $entretien->hasValidationAgent();
+
 ?>
 
-<h2> Observations liées à l'entretien professionnel</h2>
+<!-- HEADER DE L'ONGLET ----------------------------------------------------------------------------------------------->
 
-<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
+<h2 class="page-header-tab"> Observations liées à l'entretien professionnel</h2>
 
-<div class="alert alert-info">
-    <p class="lead">
-        Vous avez une semaine après la date de votre entretien professionnel pour exprimer vos observations sur votre entretien ou vos perspectives.
-    </p>
-    <p>
-        <span class="icon attention"></span> Si vous n'avez pas d'observation vous pouvez laisser cette partie de l'entretien vide.
-    </p>
-</div>
+<?php if ($source !== 'afficherAction') : ?>
+    <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
+<?php endif; ?>
 
-<?php if ($entretien->hasValidationResponsable()) : ?>
-    <div class="row">
-        <div class="col-md-8">
-            <h2> Observations de l'agent </h2>
-        </div>
-        <div class="pull-right">
-            <br/>
+<!-- Observation de l'agent : CONTROLE -------------------------------------------------------------------------------->
+
+<div class="row">
+    <div class="col-md-8">
+        <h3> Observations de l'agent </h3>
+    </div>
+    <div class="pull-right">
+        <?php if ($has_validation_responsable AND !$has_validation_agent AND $date_non_depassee) : ?>
             <?php if ($observation === null) : ?>
-                <?php if ($canAjouterObservation AND $res) : ?>
+                <?php if ($canAjouterObservation) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAction() */ ?>
-                        href="<?php echo $this->url('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
-                        class="btn btn-primary action ajax-modal" data-event="modification"
+                            href="<?php echo $this->url('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                            class="btn btn-primary action ajax-modal" data-event="modification"
                     >
                         <span class="icon ajouter"> Ajouter une observation </span>
                     </a>
                 <?php endif; ?>
             <?php else : ?>
-                <?php if ($res) : ?>
-                    <?php if ($canModifierObservation) : ?>
+                <?php if ($canModifierObservation) : ?>
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\ObservationController::modifierAction() */ ?>
+                            href="<?php echo $this->url('entretien-professionnel/observation/modifier', ['observation' => $observation->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon editer"> </span>
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistoriserObservation) : ?>
+                    <?php if ($observation->estNonHistorise()) : ?>
                         <a
-                            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::modifierAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/observation/modifier', ['observation' => $observation->getId()], [], true); ?>"
+                            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::historiserAction() */ ?>
+                                href="<?php echo $this->url('entretien-professionnel/observation/historiser', ['observation' => $observation->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon editer"> </span>
+                            <span class="icon historiser"> </span>
                         </a>
-                    <?php endif; ?>
-                    <?php if ($canHistoriserObservation) : ?>
-                        <?php if ($observation->estNonHistorise()) : ?>
-                            <a
-                                <?php /** @see \EntretienProfessionnel\Controller\ObservationController::historiserAction() */ ?>
-                                    href="<?php echo $this->url('entretien-professionnel/observation/historiser', ['observation' => $observation->getId()], [], true); ?>"
-                                    class="ajax-modal" data-event="modification"
-                            >
-                                <span class="icon historiser"> </span>
-                            </a>
-                        <?php else : ?>
-                                <a
-                                    <?php /** @see \EntretienProfessionnel\Controller\ObservationController::restaurerAction() */ ?>
-                                        href="<?php echo $this->url('entretien-professionnel/observation/restaurer', ['observation' => $observation->getId()], [], true); ?>"
-                                        class="ajax-modal" data-event="modification"
-                                >
-                                    <span class="icon restaurer"> </span>
-                                </a>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                    <?php if ($canDetruireObservation) : ?>
+                    <?php else : ?>
                         <a
-                            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::detruireAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/observation/detruire', ['observation' => $observation->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
+                            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::restaurerAction() */ ?>
+                                href="<?php echo $this->url('entretien-professionnel/observation/restaurer', ['observation' => $observation->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon detruire"> </span>
+                            <span class="icon restaurer"> </span>
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
+                <?php if ($canDetruireObservation) : ?>
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\ObservationController::detruireAction() */ ?>
+                            href="<?php echo $this->url('entretien-professionnel/observation/detruire', ['observation' => $observation->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"> </span>
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- Observation de l'agent : WARNING --------------------------------------------------------------------------------->
+
+<?php if (!$has_validation_responsable) : ?>
+    <?php if ($source === 'renseignerAction') : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>pas_de_validation_responsable', '', []); ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($has_validation_agent) : ?>
+    <?php if ($source === 'renseignerAction') : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>validation_agent', '', []); ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if (!$date_non_depassee) : ?>
+    <?php if ($source === 'renseignerAction') : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>date_incorrecte', '', []); ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<!-- Observation de l'agent : AFFICHAGE ------------------------------------------------------------------------------->
+
+<dl class="dl-horizontal">
+    <dt> Dernière modification </dt>
+    <dd>
+        <?php if ($observation === null) : ?>
+            Aucune observation.
+        <?php else: ?>
+            <?php echo $observation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $observation->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+        <?php endif; ?>
+    </dd>
+</dl>
+
+<?php if ($observation !== null) : ?>
+        <div class="entretien-professionnel-observation">
+            <h3 class="reponse_categorie"> Observation sur l'entretien </h3>
+
+            <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
+                <div class="reponse_textarea">
+                    <?php echo $observation->getObservationAgentEntretien(); ?>
+                </div>
+            <?php else : ?>
+                Aucune observation
+            <?php endif; ?>
+            <h3 class="reponse_categorie"> Observation sur les perspectives </h3>
+            <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
+                <div class="reponse_textarea">
+                    <?php echo $observation->getObservationAgentPerspective(); ?>
+                </div>
+            <?php else : ?>
+                Aucune observation
             <?php endif; ?>
         </div>
-    </div>
-
-    <br/>
-    <br/>
-
-    <?php if ($observation === null) : ?>
-
-    <p class="lead">Aucune observation.</p>
-
-    <?php else: ?>
-
-        <dl class="dl-horizontal">
-            <dt> Dernière modification </dt>
-            <dd> <?php echo $observation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $observation->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
-        </dl>
-
-        <h3> Observation sur l'entretien </h3>
-
-        <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
-            <?php echo $observation->getObservationAgentEntretien(); ?>
-        <?php else : ?>
-            Aucune observation
-        <?php endif; ?>
-        <h3> Observation sur les perspectives </h3>
-        <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
-            <?php echo $observation->getObservationAgentPerspective(); ?>
-        <?php else : ?>
-            Aucune observation
-        <?php endif; ?>
-
-    <?php endif; ?>
-<?php else : ?>
-
-<div class="alert alert-warning">
-    <span class="icon information"></span> L'agent ne peut formuler ses observations qu'après la validation de son responsable de l'entretien professionnel.
-</div>
 <?php endif; ?>

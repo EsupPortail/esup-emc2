@@ -11,9 +11,14 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
 $this->headTitle('Édition de l\'entretien professionnel');
+$ficheposte = $agent->getFichePosteActif();
+
+$droits = [
+        'canVoir' => $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER)),
+];
 ?>
 
 <h1 class="page-header">
@@ -23,18 +28,92 @@ $this->headTitle('Édition de l\'entretien professionnel');
 <?php
 echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
 ?>
-<?php
-$instance = $entretien->getFormulaireInstance();
-$formulaire = $instance->getFormulaire();
-$reponses = $instance->getReponses();
 
-/** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
-$data = [];
-foreach ($reponses as $reponse) {
-    $data[$reponse->getChamp()->getId()] = $reponse;
-}
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
 
-echo $this->instanceAsText()->render($instance);
-?>
+        <li role="formulaire">
+            <a href="#formulaire" aria-controls="formulaire" role="tab" data-toggle="tabz">
+                Compte-rendu <br/> d'entretien professionnel
+            </a>
+        </li>
+
+        <li role="parcours">
+            <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
+                Compte-rendu <br/> d'évaluation de formation &nbsp;
+            </a>
+        </li>
+
+        <li role="avis">
+            <a href="#avis" aria-controls="avis" role="tab" data-toggle="tabz" >
+                Observations <br/> &nbsp;
+            </a>
+        </li>
+    </ul>
+
+    <div class="main-with-tab">
+
+        <div class="tab-content">
+
+            <div id="formulaire" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser]); ?>
+            </div>
+
+            <div id="parcours" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => true]]); ?>
+            </div>
+
+            <div id="avis" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'source' => 'afficherAction']); ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--    --><?php
+//$instance = $entretien->getFormulaireInstance();
+//$formulaire = $instance->getFormulaire();
+//$reponses = $instance->getReponses();
+//
+///** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+//$data = [];
+//foreach ($reponses as $reponse) {
+//    $data[$reponse->getChamp()->getId()] = $reponse;
+//}
+//
+//echo $this->instanceAsText()->render($instance);
+//?>
+
+
+    <script>
+        $(document).ready(function() {
+            $('.datatable').DataTable( {
+                // sorting: false,
+                // paging: false,
+                language: {
+                    url: '/localisation/fr_FR.json'
+                }
+            } );
+        } );
+
+        $(function() {
+            let hash = $(location).attr('hash');
+            let name = hash.substr(1);
+            if (name === undefined || name === "") name = "formulaire";
+
+            $('a[aria-controls=' + name + ']').tab('show');
+
+            $('.nav-tabs a').click(function (e) {
+                // No e.preventDefault() here
+                $(this).tab('show');
+            });
+
+            $("body").on("modification", function (event) {
+                event.div.modal('hide');
+                window.location.reload();
+            });
+        });
+    </script>
 
 

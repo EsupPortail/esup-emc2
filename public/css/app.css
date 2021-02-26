@@ -474,3 +474,47 @@ table.datatable thead {
     border-color: var(--color-medium);
     color: var(--header-color);
 }
+
+/** AUTRES MISE ENFORME ***********************************************************************************************/
+
+.page-header-tab {
+    border-bottom: 1px solid var(--color-info);
+    font-variant: small-caps;
+    color: var(--color-info);
+    padding-left: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 1.5rem;
+}
+
+.reponse_categorie {
+    border-bottom: 1px solid grey;
+    margin-right: 1.5rem;
+    font-variant: small-caps;
+}
+
+.reponse_textarea {
+    border-left: 1px solid grey;
+    background: whitesmoke;
+    padding: 0.5rem 0.5rem 0.5rem 3rem;
+    margin: 0.5rem 1.5rem 0.5rem 1rem;
+}
+
+/** ENTRETIEN PRO *****************************************************************************************************/
+
+div.entretien-professionnel-observation {
+    margin-left: 3rem;
+}
+
+div.information {
+    background: whitesmoke;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    border: 1px lightgrey solid;
+    border-radius: 0.5rem ;
+}
+
+div.information div.description {
+    border-left: 1px lightslategray solid ;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}

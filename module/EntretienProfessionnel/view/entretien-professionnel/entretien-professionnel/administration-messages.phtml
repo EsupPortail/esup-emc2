@@ -1,1 +1,92 @@
-Nothing ...
+<h2 class="page-header-tab">
+    Bulles d'information de l'<strong>index des entretiens professionnel</strong>
+</h2>
+
+<div class="information">
+    <div class="description">
+        Message d'information générale
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::indexAction()', '', []); ?>
+    </div>
+</div>
+
+<h2 class="page-header-tab">
+    Bulles d'information de l'onglet '<strong>Campagnes</strong>'
+</h2>
+
+<div class="information">
+    <div class="description">
+        Message d'information générale
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::campagnes', '', []); ?>
+    </div>
+</div>
+
+<h2 class="page-header-tab">
+    Bulles d'information de l'onglet '<strong>Entretiens</strong>'
+</h2>
+
+<div class="information">
+    <div class="description">
+        Message d'information générale
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::entretiens', '', []); ?>
+    </div>
+</div>
+
+<h2 class="page-header-tab">
+    Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Compte-rendu d'entretien professionnel</strong>'
+</h2>
+
+<h2 class="page-header-tab">
+    Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Compte-rendu d'évaluation de formation</strong>'
+</h2>
+
+<h2 class="page-header-tab">
+    Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Observations</strong>'
+</h2>
+
+<div class="information">
+    <div class="description">
+        Message d'information générale.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
+    </div>
+</div>
+
+
+<div class="information">
+    <div class="description">
+        Message affiché si on essaie de modifier une observation (action: <i>renseigner</i>) et que le responsable d'entretien n'a pas encore validé l'entretien.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>pas_de_validation_responsable', '', []); ?>
+    </div>
+</div>
+
+
+<div class="information">
+    <div class="description">
+        Message affiché si on essaie de modifier une observation (action: <i>renseigner</i>) et que l'agent a déjà validé l'entretien.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>validation_agent', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message affiché si on essaie de modifier une observation (action: <i>renseigner</i>) et que le délai de remise des observations est dépassé.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>date_incorrecte', '', []); ?>
+    </div>
+</div>
+
+<h2 class="page-header-tab">
+    Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Validation</strong>'
+</h2>
