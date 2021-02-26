@@ -4,6 +4,7 @@
  * @var EntretienProfessionnel $entretien
  * @var ParcoursDeFormation $parcours
  * @var array $options
+ * @var string $source
  */
 
 use Application\Entity\Db\ParcoursDeFormation;
@@ -44,43 +45,30 @@ $DEBUG = false;
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 $res = ($now <= $date);
+
+$has_validation_responsable = $entretien->getValidationResponsable();
+$date_depassee = $now > $date;
 ?>
-
-<?php if ($DEBUG) : ?>
-    <div class="alert alert-warning">
-        <strong> Débug : </strong> <br/>
-
-        <dl class='dl-horizontal'>
-            <dt> Date de l'entretien dépassé </dt>
-            <dd> <strong><?php echo ($entretien->getDateEntretien() > $now)?"Non dépassé":"Dépassé"; ?></strong> <?php echo $entretien->getDateEntretien()->format('d/m/Y  H:i:s'); ?>
-                &lt;?&lt; <?php echo $now->format('d/m/Y H:i:s'); ?>
-            </dd>
-            <dt> Validé par le responsable </dt>
-            <dd>
-                <?php if ($entretien->getValidationResponsable() !== null AND $entretien->getValidationResponsable()->estNonHistorise()) : ?>
-                    <strong>Validé</strong>
-                    <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
-                    <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/Y H:i:s') ?>
-                <?php else : ?>
-                    <strong>Non validé</strong> null
-                <?php endif; ?>
-            </dd>
-        </dl>
-
-        <?php if (($entretien->getDateEntretien() > $now) AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
-            <span class="icon editer"></span> Modification
-        <?php else : ?>
-            <span class="icon voir"></span> Affichage
-        <?php endif; ?>
-        <?php //var_dump(($entretien->getDateEntretien() < $now)); ?>
-        <?php //var_dump(($entretien->getValidationResponsable())); ?>
-    </div>
-<?php endif; ?>
 
 <h2 class="page-header-tab"> Compte-rendu d'entretien de formation </h2>
 
 <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formation', '', []); ?>
 
+<!-- Formation de l'agent : WARNING ----------------------------------------------------------------------------------->
+
+<?php if ($has_validation_responsable) : ?>
+    <?php if ($source === 'renseignerAction') : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>validation_responsable', '', []); ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($date_depassee) : ?>
+    <?php if ($source === 'renseignerAction') : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>date_depassee', '', []); ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<!-- Formulaire ------------------------------------------------------------------------------------------------------->
 
 <h3> Formation survie durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
 

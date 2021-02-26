@@ -13,6 +13,9 @@ $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::E
 
 $now = new DateTime();
 $dateOk = ($now > $entretien->getDateEntretien());
+$hasValidationResponsable = $entretien->getValidationResponsable();
+$hasValidationAgent = $entretien->getValidationAgent();
+$hasValidationDRH = $entretien->getValidationDRH();
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>
@@ -20,19 +23,16 @@ $dateOk = ($now > $entretien->getDateEntretien());
 <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>validations', '', []); ?>
 
 <div>
-    <?php if (!$dateOk) : ?>
-        <div class="alert alert-info">
-            <span class="icon attention"></span> Les validations ne seront possible qu'à partir de la date de l'entretien professionnel.<br/>
-            Celui aura lieu le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?>.
-        </div>
-    <?php endif; ?>
-
     <h3 class="categorie"> Validation du responsable de l'entretien professionnel </h3>
 
-    <div class="row">
-        <?php if ($entretien->hasValidationResponsable()) : ?>
+    <?php if (!$dateOk) : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:date_non_atteinte', '', []); ?>
+    <?php endif; ?>
+
+    <?php if ($dateOk) : ?>
+        <div class="row">
             <div class="col-md-8">
-                <div class="row">
+                <?php if ($hasValidationResponsable) : ?>
                     <div class="alert alert-success">
                         <div class="col-md-5">
                             <strong><u>Validation responsable effectuée.</u></strong>
@@ -40,112 +40,88 @@ $dateOk = ($now > $entretien->getDateEntretien());
                         <div class="col-md-7">
                             <dl class="dl-horizontal">
                                 <dt> Validateur </dt>
-                                <dd> <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?> </dd>
+                                <dd> <?php echo $hasValidationResponsable->getHistoModificateur()->getDisplayName(); ?> </dd>
                                 <dt> Date </dt>
-                                <dd> <?php echo $entretien->getValidationResponsable()->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
+                                <dd> <?php echo $hasValidationResponsable->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
                             </dl>
                         </div>
                         <br/>
                         <br/>
                     </div>
-                </div>
-            </div>
-            <div class="pull-right">
-                <br/>
-                <?php if ($canValiderResponsable && ! $entretien->hasValidationAgent()) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationResponsable()->getId()], [], true); ?>"
-                            class="btn btn-danger action"
-                    >
-                        <span class="icon validation-undo"></span>
-                        Révoquer la validation
-                    </a>
                 <?php endif; ?>
             </div>
-        <?php else : ?>
-            <div class="col-md-8">
-                <div class="alert alert-info">
-                    <span class="icon attention"></span>
-                    La validation du responsable de l'entretien professionnel bloque toutes modifications du formulaires d'entretien professionnel et du parcours de l'agent.
-                </div>
-            </div>
             <div class="pull-right">
-                <br/>
-                <?php if ($dateOk AND $canValiderResponsable) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Responsable'], [], true); ?>"
-                            class="btn btn-success action ajax-modal"
-                            data-event="modification"
-                    >
-                        <span class="icon validation-do"></span>
-                        Validation du responsable
-                    </a>
-                <?php endif; ?>
-            </div>
-        <?php endif; ?>
-    </div>
-</div>
-
-<div>
-    <h3 class="categorie"> Validation de l'agent </h3>
-
-    <div class="row">
-
-        <?php if (!$entretien->hasValidationResponsable()) : ?>
-            <div class="col-md-8">
-                <div class="alert alert-warning">
-                    <span class="icon attention"></span>
-                    La validation par l'agent n'est possible seulement après celle du reponsable de l'entretien professionnel.
-                </div>
-            </div>
-        <?php else : ?>
-            <?php if ($entretien->hasValidationAgent()) : ?>
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="alert alert-success">
-                            <div class="col-md-5">
-                                <strong><u>Validation agent effectuée.</u></strong>
-
-                            </div>
-                            <div class="col-md-7">
-                                <dl class="dl-horizontal">
-                                    <dt> Validateur </dt>
-                                    <dd> <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?> </dd>
-                                    <dt> Date </dt>
-                                    <dd> <?php echo $entretien->getValidationAgent()->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
-                                </dl>
-                            </div>
-                            <br/>
-                            <br/>
-                        </div>
-                    </div>
-                </div>
-                <div class="pull-right">
-                    <br/>
-                    <?php if ($canValiderAgent && ! $entretien->hasValidationDRH()) : ?>
+                <?php if ($canValiderResponsable and !$hasValidationAgent) : ?>
+                    <?php if ($hasValidationResponsable) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationAgent()->getId()], [], true); ?>"
+                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $hasValidationResponsable->getId()], [], true); ?>"
                                 class="btn btn-danger action"
                         >
                             <span class="icon validation-undo"></span>
                             Révoquer la validation
                         </a>
+                    <?php else : ?>
+                        <a
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Responsable'], [], true); ?>"
+                                class="btn btn-success action ajax-modal"
+                                data-event="modification"
+                        >
+                            <span class="icon validation-do"></span>
+                            Validation du responsable
+                        </a>
                     <?php endif; ?>
-                </div>
-            <?php else : ?>
-                <div class="col-md-8">
-                    <div class="alert alert-info">
-                        <span class="icon attention"></span>
-                        Après cette validation l'agent ne peut plus donner d'observation sur l'entretien professionnel.
-                        En cas de problème, l'agent possède 15 jours pour faire la demande d'un recours.
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<div>
+    <h3 class="categorie"> Validation de l'agent </h3>
+
+    <?php if (!$hasValidationResponsable) : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:pas_de_validation_responsable', '', []); ?>
+    <?php endif; ?>
+
+    <?php if (!$hasValidationAgent) : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:reclamations', '', []); ?>
+    <?php endif; ?>
+
+    <?php if ($hasValidationResponsable) : ?>
+        <div class="row">
+            <div class="col-md-8">
+                <?php if ($hasValidationAgent) : ?>
+                    <div class="alert alert-success">
+                        <div class="col-md-5">
+                            <strong><u>Validation responsable effectuée.</u></strong>
+                        </div>
+                        <div class="col-md-7">
+                            <dl class="dl-horizontal">
+                                <dt> Validateur </dt>
+                                <dd> <?php echo $hasValidationAgent->getHistoModificateur()->getDisplayName(); ?> </dd>
+                                <dt> Date </dt>
+                                <dd> <?php echo $hasValidationAgent->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
+                            </dl>
+                        </div>
+                        <br/>
+                        <br/>
                     </div>
-                </div>
-                <div class="pull-right">
-                    <br/>
-                    <?php if ($dateOk AND $canValiderAgent) : ?>
+                <?php endif; ?>
+            </div>
+            <div class="pull-right">
+                <?php if ($canValiderAgent and !$hasValidationDRH) : ?>
+                    <?php if ($hasValidationAgent) : ?>
+                        <a
+                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $hasValidationAgent->getId()], [], true); ?>"
+                                class="btn btn-danger action"
+                        >
+                            <span class="icon validation-undo"></span>
+                            Révoquer la validation
+                        </a>
+                    <?php else : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Agent'], [], true); ?>"
@@ -156,69 +132,52 @@ $dateOk = ($now > $entretien->getDateEntretien());
                             Validation de l'agent
                         </a>
                     <?php endif; ?>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
-    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
 
 <div>
     <h3 class="categorie"> Validation du responsable hiérarchique </h3>
 
-    <div class="row">
+    <?php if (!$hasValidationAgent) : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:pas_de_validation_agent', '', []); ?>
+    <?php endif; ?>
 
-        <?php if (!$entretien->hasValidationAgent()) : ?>
+    <?php if ($hasValidationAgent) : ?>
+        <div class="row">
             <div class="col-md-8">
-                <div class="alert alert-warning">
-                    <span class="icon attention"></span>
-                    La validation par le responsable hiérarchique n'est possible seulement après celle de l'agent.
-                </div>
-            </div>
-        <?php else : ?>
-            <?php if ($entretien->hasValidationDRH()) : ?>
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="alert alert-success">
-                            <div class="col-md-5">
-                                <strong><u>Validation du responsable hiérarchique effectuée.</u></strong>
-
-                            </div>
-                            <div class="col-md-7">
-                                <dl class="dl-horizontal">
-                                    <dt> Validateur </dt>
-                                    <dd> <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?> </dd>
-                                    <dt> Date </dt>
-                                    <dd> <?php echo $entretien->getValidationDRH()->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
-                                </dl>
-                            </div>
-                            <br/>
-                            <br/>
+                <?php if ($hasValidationDRH) : ?>
+                    <div class="alert alert-success">
+                        <div class="col-md-5">
+                            <strong><u>Validation responsable hiérarchique.</u></strong>
                         </div>
+                        <div class="col-md-7">
+                            <dl class="dl-horizontal">
+                                <dt> Validateur </dt>
+                                <dd> <?php echo $hasValidationDRH->getHistoModificateur()->getDisplayName(); ?> </dd>
+                                <dt> Date </dt>
+                                <dd> <?php echo $hasValidationDRH->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
+                            </dl>
+                        </div>
+                        <br/>
+                        <br/>
                     </div>
-                </div>
-                <div class="pull-right">
-                    <br/>
-                    <?php if ($canValiderDrh ) : ?>
+                <?php endif; ?>
+            </div>
+            <div class="pull-right">
+                <?php if ($canValiderDrh) : ?>
+                    <?php if ($hasValidationDRH) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $entretien->getValidationDRH()->getId()], [], true); ?>"
+                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $hasValidationDRH->getId()], [], true); ?>"
                                 class="btn btn-danger action"
                         >
                             <span class="icon validation-undo"></span>
                             Révoquer la validation
                         </a>
-                    <?php endif; ?>
-                </div>
-            <?php else : ?>
-                <div class="col-md-8">
-                    <div class="alert alert-info">
-                        <span class="icon attention"></span>
-                        Cette validation va cloturer les démarches associées à l'entretien professionnel de <?php echo $entretien->getAgent()->getDenomination(); ?>.
-                    </div>
-                </div>
-                <div class="pull-right">
-                    <br/>
-                    <?php if ($dateOk AND $canValiderDrh) : ?>
+                    <?php else : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'DRH'], [], true); ?>"
@@ -229,10 +188,10 @@ $dateOk = ($now > $entretien->getDateEntretien());
                             Validation du responsable hiérarchique
                         </a>
                     <?php endif; ?>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
-    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
 
 <style>

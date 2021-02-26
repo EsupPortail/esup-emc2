@@ -41,9 +41,67 @@
     Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Compte-rendu d'entretien professionnel</strong>'
 </h2>
 
+<div class="information">
+    <div class="description">
+        Message d'information générale
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formulaire', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message affiché si on essaie de modifier le compte-rendu d'entretien professionnel (action: <i>renseigner</i>)
+        et que le responsable d'entretien a validé l'entretien professionnel.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formulaire>validation_responsable', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message affiché si on essaie de modifier le compte-rendu d'entretien professionnel (action: <i>renseigner</i>)
+        et que le délai de modification est dépassé.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formulaire>date_depassee', '', []); ?>
+    </div>
+</div>
+
 <h2 class="page-header-tab">
     Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Compte-rendu d'évaluation de formation</strong>'
 </h2>
+
+<div class="information">
+    <div class="description">
+        Message d'information générale
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formation', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message affiché si on essaie de modifier le compte-rendu d'entretien professionnel (action: <i>renseigner</i>)
+        et que le responsable d'entretien a validé l'entretien professionnel.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>validation_responsable', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message affiché si on essaie de modifier le compte-rendu d'entretien professionnel (action: <i>renseigner</i>)
+        et que le délai de modification est dépassé.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>date_depassee', '', []); ?>
+    </div>
+</div>
 
 <h2 class="page-header-tab">
     Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Observations</strong>'
@@ -88,5 +146,50 @@
 </div>
 
 <h2 class="page-header-tab">
-    Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Validation</strong>'
+    Bulles d'information des '<strong>entretiens professionnels</strong>' onglet '<strong>Validations</strong>'
 </h2>
+
+<div class="information">
+    <div class="description">
+        Message d'information générale.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>validations', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message afficher pour la validation du responsable d'entretien professionnel si la date de l'entretien n'est pas atteinte n'est pas atteinte.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:date_non_atteinte', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message afficher pour la validation de l'agent si responsable d'entretien professionnel n'a pas encore validé.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:pas_de_validation_responsable', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message informant l'agent du recours sous 15 jours.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:reclamations', '', []); ?>
+    </div>
+</div>
+
+<div class="information">
+    <div class="description">
+        Message afficher pour la validation du responsable hiérarchique si l'agent n'a pas encore validé.
+    </div>
+    <div class="messages">
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:pas_de_validation_agent', '', []); ?>
+    </div>
+</div>
