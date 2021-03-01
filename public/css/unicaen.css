@@ -70,7 +70,7 @@ div.navbar-element {
 
 div.navbar-appname {
     float: left;
-    width:auto;
+    /*width:auto;*/
 }
 
 a.navbar-brand h1 {
@@ -197,11 +197,60 @@ label {
 div.row {
     margin: 0;
 }
-@media (min-width: 768px) {
+
+#footer {
+    height: var(--footer-height);
+}
+
+#footer ul.navigation > li {
+    display: inline;
+    padding: 0 2em;
+}
+
+#footer ul.navigation > li:first-child {
+    border: none;
+}
+
+#footer {
+    padding: calc(var(--footer-height) / 4) 0; /** 50 pour 200 **/
+    margin: 0;
+}
+
+#footer ul {
+    width: 100%;
+    margin: auto;
+}
+
+
+#footer ul li {
+    display: inline;
+    padding: 0 1em;
+    border-left: 1px gray solid;
+}
+
+
+#footer ul > li {
+    border: 0;
+    padding: 0;
+}
+
+#footer ul.navigation {
+    display: inline;
+    width: 100%;
+    margin: auto;
+    padding: 0;
+}
+
+#footer ul.navigation {
+    font: normal normal normal var(--font-size-subtitle)/26px var(--font);
+    letter-spacing: var(--letter-spacing);
+}
+
+@media (min-width: 769px) {
 
     :root {
         --header-height: 90px; /** 90px **/
-        --footer-height: 200px; /** 200 px **/
+        --footer-height: 10.42vh; /** 200 px **/
         --font-size: 15px;
         --font-size-title: 18px;
         --font-size-subtitle: 16px;
@@ -244,15 +293,15 @@ div.row {
 
     body {
         padding-top: var(--header-height);
-        margin-top: 2px;
+        margin-top: 0;
         font-size: var(--font-size);
     }
 
     div.container#contenu-principal {
         width:100%;
-        padding: 0 0 0.5rem 0.5rem;
+        padding: 0 0 0 0;
         margin-top: 0;
-        min-height: calc(100vh - var(--header-height) - var(--footer-height)) ;
+        min-height:calc((100vh - 3vh) - var(--header-height) - var(--footer-height));
     }
 
     div.container div.row {
@@ -269,92 +318,49 @@ div.row {
         padding-top: 1rem;
     }
 
-    #footer {
-        height: var(--footer-height);
-    }
-
-    #footer ul.navigation > li {
-        display: inline;
-        padding: 0 2em;
-    }
-
-    #footer ul.navigation > li:first-child {
-        border: none;
-    }
-
-    #footer {
-        padding: calc(var(--footer-height) / 4) 0; /** 50 pour 200 **/
-        margin: 0;
-    }
-
-    #footer ul {
-        width: 100%;
-        margin: auto;
-    }
-
-
-    #footer ul li {
-        display: inline;
-        padding: 0 1em;
-        border-left: 1px gray solid;
-    }
-
-
-    #footer ul > li {
-        border: 0;
-        padding: 0;
-    }
-
-    #footer ul.navigation {
-        display: inline;
-        width: 100%;
-        margin: auto;
-        padding: 0;
-    }
-
-    #footer ul.navigation {
-        font: normal normal normal var(--font-size-subtitle)/26px var(--font);
-        letter-spacing: var(--letter-spacing);
-    }
-
-
+    /** FOOTER **/
     img.footer-logo-republique-francaise {
         display: inline-block;
-        width: 100px;
-        height: 90px;
-        margin: 0 40px;
+        width: 5.21vw;
+        height: 4.69vw;
+        margin: 0 2.083vw;
     }
 
     img.footer-logo-unicaen {
         display: inline-block;
-        width: 132px;
-        height: 70px;
+        width: 6.875vw;
+        height: 3.68vw;
     }
 
     a.footer-logo-normandie-universite {
         display: inline-block;
-        width: 93px;
-        height: 55px;
-        margin-right: 30px;
+        width: 4.84vw;
+        height: 2.86vw;
+        margin-right: 1.56vw;
+    }
+
+    #footer ul > li {
+        font-size: 0.85vw ;
     }
 }
 
-@media (min-width: 0) and (max-width: 767px) {
+@media (min-width: 0) and (max-width: 768px) {
     :root {
         --header-height: 90px; /** 90px **/
-        --footer-height: 200px; /** 200 px **/
+        --footer-height: 50px; /** 200 px **/
         --font-size: 12px;
         --font-size-title: 18px;
         --font-size-subtitle: 16px;
-        --letter-spacing: 0.48px;
+        --letter-spacing: 0.9px;
     }
     body {
         /*font-size: var(--font-size);*/
     }
 
     div.container#contenu-principal {
-        width:100%;
+        width: 100%;
         padding: 0;
+        min-height:calc(100vh - var(--header-height) - var(--footer-height));
     }
 
     .navbar-appname {
@@ -377,24 +383,33 @@ div.row {
         display: none;
     }
 
+    /** FOOTER **/
+    #footer li.footer-large {
+        display: none;
+    }
+    #footer ul.navigation {
+        font: normal normal normal calc(var(--font-size-subtitle)/2)/16px var(--font);
+        letter-spacing: var(--letter-spacing);
+    }
+
     img.footer-logo-republique-francaise {
         display: inline-block;
-        width: 100px;
-        height: 90px;
-        margin: 0 40px;
+        width: 50px;
+        height: 45px;
+        margin: 0 20px;
     }
 
     img.footer-logo-unicaen {
         display: inline-block;
-        width: 132px;
-        height: 70px;
+        width: 76px;
+        height: 35px;
     }
 
     a.footer-logo-normandie-universite {
         display: inline-block;
-        width: 93px;
-        height: 55px;
-        margin-right: 30px;
+        width: 46px;
+        height: 27px;
+        margin-right: 15px;
     }
 }
 

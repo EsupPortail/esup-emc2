@@ -33,32 +33,34 @@ $navigationHelper = $this->navigation('navigation');
 
 <body >
     <div id="navbar" class="navbar" >
-        <div class="navbar-element navbar-appname">
-                    <?php
-                    $version = null;
-                    switch(getenv('APPLICATION_ENV')) {
-                        case 'production' :
-                            $version = "Outil de GPEC";
-                            break;
-                        case 'test' :
-                            $version = "<span class='version test'>Version de test</span>";
-                            break;
-                        case 'development' :
-                            $version = "<span class='version development'>Version de développement</span>";
-                            break;
-                        default :
-                            $version = "<span class='version inconnue'>Version inconnue</span>";
-                            break;
-                    }
-                    echo $this->appLink($this->appInfos()->nom, $version);
-                    ?>
-        </div>
-        <div class="navbar-collapse bs-navbar-collapse collapse">
-            <div class="navbar-menu">
-                <?php echo $this->navigation()->menuPrincipal('navigation'); ?>
+        <div class="row">
+            <div class="navbar-element navbar-appname col-md-2">
+                        <?php
+                        $version = null;
+                        switch(getenv('APPLICATION_ENV')) {
+                            case 'production' :
+                                $version = "Outil de GPEC";
+                                break;
+                            case 'test' :
+                                $version = "<span class='version test'>Version de test</span>";
+                                break;
+                            case 'development' :
+                                $version = "<span class='version development'>Version de développement</span>";
+                                break;
+                            default :
+                                $version = "<span class='version inconnue'>Version inconnue</span>";
+                                break;
+                        }
+                        echo $this->appLink($this->appInfos()->nom, $version);
+                        ?>
             </div>
-            <div class="navbar-element navbar-connection">
-                <?php echo $this->appConnection(); ?>
+            <div class="navbar-collapse bs-navbar-collapse collapse">
+                <div class="navbar-menu">
+                    <?php echo $this->navigation()->menuPrincipal('navigation'); ?>
+                </div>
+                <div class="navbar-element navbar-connection">
+                    <?php echo $this->appConnection(); ?>
+                </div>
             </div>
         </div>
 </div>
@@ -71,7 +73,7 @@ $navigationHelper = $this->navigation('navigation');
                 </div>
             <?php endif; ?>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8" style="background: var(--content-background);">
             <div id="contenu-principal" class="container">
                 <?php echo $this->content; ?>
             </div>
@@ -80,8 +82,6 @@ $navigationHelper = $this->navigation('navigation');
         </div>
     </div>
 
-
-
 <footer id="footer" class="container">
     <ul>
         <li>
@@ -89,7 +89,9 @@ $navigationHelper = $this->navigation('navigation');
                 <img src="/img/normandie-universite-logo.svg" alt="Logo Nomandie Université" class="footer-logo-normandie-universite" />
             </a>
         </li>
-        <li><?php echo $navigationHelper->menuPiedDePage('navigation'); ?></li>
+        <li class="footer-large">
+            <?php echo $navigationHelper->menuPiedDePage('navigation'); ?>
+        </li>
         <li>
             <img src="/img/republique-francaise-logo.svg" alt="Logo République française" class="footer-logo-republique-francaise" />
         </li>
@@ -99,6 +101,7 @@ $navigationHelper = $this->navigation('navigation');
             </a>
         </li>
     </ul>
+
 
 </footer>
 
