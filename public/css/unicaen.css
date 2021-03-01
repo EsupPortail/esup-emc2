@@ -339,7 +339,7 @@ div.row {
     }
 }
 
-@media (min-width: 0) and (max-width: 768px) {
+@media (min-width: 0) and (max-width: 767px) {
     :root {
         --header-height: 90px; /** 90px **/
         --footer-height: 200px; /** 200 px **/
@@ -375,6 +375,26 @@ div.row {
 
     span.version {
         display: none;
+    }
+
+    img.footer-logo-republique-francaise {
+        display: inline-block;
+        width: 100px;
+        height: 90px;
+        margin: 0 40px;
+    }
+
+    img.footer-logo-unicaen {
+        display: inline-block;
+        width: 132px;
+        height: 70px;
+    }
+
+    a.footer-logo-normandie-universite {
+        display: inline-block;
+        width: 93px;
+        height: 55px;
+        margin-right: 30px;
     }
 }
 

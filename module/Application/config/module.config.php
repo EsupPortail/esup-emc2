@@ -123,6 +123,9 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
+                    'etab'                     => [
+                        'footer'   => false, // propriété maison pour inclure cette page dans le menu de pied de page
+                    ],
                     'gestion' => [
                         'order' => 400,
                         'label' => 'Gestion',

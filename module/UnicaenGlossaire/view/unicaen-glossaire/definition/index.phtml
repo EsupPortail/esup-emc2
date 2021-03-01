@@ -24,13 +24,12 @@ $canSupprimer   = $this->isAllowed(DefinitionPrivileges::getResourceId(Definitio
 
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-8 col-md-6">
         <h1 class="page-header">
             Glossaire
         </h1>
     </div>
-    <div class="col-md-3 pull-right">
-        <br/>
+    <div class="pull-right main-button">
         <?php if ($canAjouter) : ?>
             <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::ajouterAction() */?>
                 href="<?php echo $this->url('definition/ajouter', [], [], true); ?>"
@@ -46,38 +45,39 @@ $canSupprimer   = $this->isAllowed(DefinitionPrivileges::getResourceId(Definitio
     <?php if ($definition->estNonHistorise() OR ($definition->estHistorise() AND $canModifier)) : ?>
         <dt class="<?php echo ($definition->estHistorise())?"historise":"";?>">
             <?php echo $definition->getTerme(); ?>
-            <br>
-            <?php if($canAfficher) : ?>
-                <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::afficherAction() */?>
-                        href="<?php echo $this->url('definition/afficher', ['definition' => $definition->getId()], [], true); ?>"
-                        class="ajax-modal" >
-                    <span class="icon voir"></span></a>
-            <?php endif; ?>
-            <?php if($canModifier) : ?>
-                <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::modifierAction() */?>
-                    href="<?php echo $this->url('definition/modifier', ['definition' => $definition->getId()], [], true); ?>"
-                    class="ajax-modal" data-event="modification">
-                    <span class="icon editer"></span></a>
-            <?php endif; ?>
-            <?php if($canHistoriser) : ?>
-                <?php if ($definition->estNonHistorise()) : ?>
-                    <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::historiserAction() */?>
-                            href="<?php echo $this->url('definition/historiser', ['definition' => $definition->getId()], [], true); ?>"
-                            >
-                        <span class="icon historiser"></span></a>
-                <?php else : ?>
-                    <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::restaurerAction() */?>
-                            href="<?php echo $this->url('definition/restaurer', ['definition' => $definition->getId()], [], true); ?>"
-                    >
-                        <span class="icon restaurer"></span></a>
+            <span class="control">
+                <?php if($canAfficher) : ?>
+                    <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::afficherAction() */?>
+                            href="<?php echo $this->url('definition/afficher', ['definition' => $definition->getId()], [], true); ?>"
+                            class="ajax-modal" >
+                        <span class="icon voir"></span></a>
                 <?php endif; ?>
-            <?php endif; ?>
-            <?php if($canSupprimer) : ?>
-                <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::modifierAction() */?>
-                        href="<?php echo $this->url('definition/supprimer', ['definition' => $definition->getId()], [], true); ?>"
+                <?php if($canModifier) : ?>
+                    <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::modifierAction() */?>
+                        href="<?php echo $this->url('definition/modifier', ['definition' => $definition->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification">
-                    <span class="icon detruire"></span></a>
-            <?php endif; ?>
+                        <span class="icon editer"></span></a>
+                <?php endif; ?>
+                <?php if($canHistoriser) : ?>
+                    <?php if ($definition->estNonHistorise()) : ?>
+                        <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::historiserAction() */?>
+                                href="<?php echo $this->url('definition/historiser', ['definition' => $definition->getId()], [], true); ?>"
+                                >
+                            <span class="icon historiser"></span></a>
+                    <?php else : ?>
+                        <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::restaurerAction() */?>
+                                href="<?php echo $this->url('definition/restaurer', ['definition' => $definition->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if($canSupprimer) : ?>
+                    <a  <?php /** @see \UnicaenGlossaire\Controller\DefinitionController::modifierAction() */?>
+                            href="<?php echo $this->url('definition/supprimer', ['definition' => $definition->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification">
+                        <span class="icon detruire"></span></a>
+                <?php endif; ?>
+            </span>
         </dt>
         <dd class="<?php echo ($definition->estHistorise())?"historise":"";?>">
             <?php echo $definition->getDefinition(); ?>
