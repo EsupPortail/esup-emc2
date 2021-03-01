@@ -104,8 +104,8 @@ class UserInfo extends UserAbstract
         }
 
         // formulaire d'usurpation d'identité
-        $userUsurpationHelper = $this->view->plugin('userUsurpation');
-        $out .= $userUsurpationHelper();
+//        $userUsurpationHelper = $this->view->plugin('userUsurpation');
+//        $out .= $userUsurpationHelper();
 
         return $out;
     }
