@@ -45,7 +45,7 @@ class FormationInstance implements HistoriqueAwareInterface
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -53,7 +53,7 @@ class FormationInstance implements HistoriqueAwareInterface
     /**
      * @return Formation
      */
-    public function getFormation()
+    public function getFormation() : Formation
     {
         return $this->formation;
     }
@@ -62,16 +62,16 @@ class FormationInstance implements HistoriqueAwareInterface
      * @param Formation|null $formation
      * @return FormationInstance
      */
-    public function setFormation(?Formation $formation)
+    public function setFormation(?Formation $formation) : FormationInstance
     {
         $this->formation = $formation;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getComplement()
+    public function getComplement() : ?string
     {
         return $this->complement;
     }
@@ -80,7 +80,7 @@ class FormationInstance implements HistoriqueAwareInterface
      * @param string|null $complement
      * @return FormationInstance
      */
-    public function setComplement(?string $complement)
+    public function setComplement(?string $complement) : FormationInstance
     {
         $this->complement = $complement;
         return $this;
@@ -109,7 +109,7 @@ class FormationInstance implements HistoriqueAwareInterface
     /**
      * @return int
      */
-    public function getNbPlacePrincipale()
+    public function getNbPlacePrincipale() : int
     {
         return $this->nbPlacePrincipale;
     }
@@ -118,7 +118,7 @@ class FormationInstance implements HistoriqueAwareInterface
      * @param int $nbPlacePrincipale
      * @return FormationInstance
      */
-    public function setNbPlacePrincipale(int $nbPlacePrincipale)
+    public function setNbPlacePrincipale(int $nbPlacePrincipale) : FormationInstance
     {
         $this->nbPlacePrincipale = $nbPlacePrincipale;
         return $this;
@@ -127,7 +127,7 @@ class FormationInstance implements HistoriqueAwareInterface
     /**
      * @return int
      */
-    public function getNbPlaceComplementaire()
+    public function getNbPlaceComplementaire() : int
     {
         return $this->nbPlaceComplementaire;
     }
@@ -136,7 +136,7 @@ class FormationInstance implements HistoriqueAwareInterface
      * @param int $nbPlaceComplementaire
      * @return FormationInstance
      */
-    public function setNbPlaceComplementaire(int $nbPlaceComplementaire)
+    public function setNbPlaceComplementaire(int $nbPlaceComplementaire) : FormationInstance
     {
         $this->nbPlaceComplementaire = $nbPlaceComplementaire;
         return $this;
@@ -193,7 +193,7 @@ class FormationInstance implements HistoriqueAwareInterface
     /**
      * @return float
      */
-    public function getVolumeHoraireSomme()
+    public function getVolumeHoraireSomme() : float
     {
         $somme = 0;
         /** @var FormationInstanceFormateur $formateur */
@@ -205,13 +205,19 @@ class FormationInstance implements HistoriqueAwareInterface
 
     /** JOURNEE *******************************************************************************************************/
 
-    public function getJournees()
+    /**
+     * @return array|null
+     */
+    public function getJournees() : ?array
     {
         if ($this->journees === null) return null;
         return $this->journees->toArray();
     }
 
-    public function getDebut()
+    /**
+     * @return string|null
+     */
+    public function getDebut() : ?string
     {
         $minimum = null;
         foreach ($this->journees as $journee) {
@@ -228,7 +234,10 @@ class FormationInstance implements HistoriqueAwareInterface
         return $minimum;
     }
 
-    public function getFin()
+    /**
+     * @return string|null
+     */
+    public function getFin() : ?string
     {
         $maximum = null;
         /** @var FormationInstanceJournee $journee */
@@ -249,18 +258,18 @@ class FormationInstance implements HistoriqueAwareInterface
     /** INSCRIT *******************************************************************************************************/
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return FormationInstanceInscrit[]|null
      */
-    public function getInscrits()
+    public function getInscrits() : ?array
     {
         if ($this->inscrits === null) return null;
         return $this->inscrits->toArray();
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return FormationInstanceInscrit[]|null
      */
-    public function getListePrincipale()
+    public function getListePrincipale() : ?array
     {
         if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
@@ -273,9 +282,9 @@ class FormationInstance implements HistoriqueAwareInterface
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return FormationInstanceInscrit[]|null
      */
-    public function getListeComplementaire()
+    public function getListeComplementaire() : ?array
     {
         if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
@@ -288,9 +297,9 @@ class FormationInstance implements HistoriqueAwareInterface
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return FormationInstanceInscrit[]|null
      */
-    public function getListeHistorisee()
+    public function getListeHistorisee() : ?array
     {
         if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
@@ -305,7 +314,7 @@ class FormationInstance implements HistoriqueAwareInterface
     /**
      * @return bool
      */
-    public function isListePrincipaleComplete()
+    public function isListePrincipaleComplete() : bool
     {
         if ($this->inscrits === null) return false;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
@@ -317,7 +326,7 @@ class FormationInstance implements HistoriqueAwareInterface
     /**
      * @return bool
      */
-    public function isListeComplementaireComplete()
+    public function isListeComplementaireComplete() : bool
     {
         if ($this->inscrits === null) return false;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
@@ -326,7 +335,10 @@ class FormationInstance implements HistoriqueAwareInterface
         return (count($array) >= $this->getNbPlaceComplementaire());
     }
 
-    public function getListeDisponible()
+    /**
+     * @return string|null
+     */
+    public function getListeDisponible() : ?string
     {
         $liste = null;
         if ($liste === null and !$this->isListePrincipaleComplete()) $liste = FormationInstanceInscrit::PRINCIPALE;
@@ -338,7 +350,7 @@ class FormationInstance implements HistoriqueAwareInterface
      * @param Agent $agent
      * @return bool
      */
-    public function hasAgent(Agent $agent)
+    public function hasAgent(Agent $agent) :  bool
     {
         foreach ($this->inscrits as $inscrit) {
             if ($inscrit->getAgent() === $agent) return true;
@@ -348,12 +360,12 @@ class FormationInstance implements HistoriqueAwareInterface
 
     /** Fonctions pour les macros **********************************************************************************/
 
-    public function getInstanceCode()
+    public function getInstanceCode() : string
     {
         return $this->getFormation()->getId() . "/" . $this->getId();
     }
 
-    public function getListeFormateurs()
+    public function getListeFormateurs() : string
     {
         /** @var FormationInstanceFormateur[] $formateurs */
         $formateurs = $this->getFormateurs();
@@ -384,7 +396,7 @@ class FormationInstance implements HistoriqueAwareInterface
         return $text;
     }
 
-    public function getListeJournees()
+    public function getListeJournees() : string
     {
         /** @var FormationInstanceJournee[] $journees */
         $journees = $this->getJournees();
@@ -415,7 +427,7 @@ class FormationInstance implements HistoriqueAwareInterface
         return $text;
     }
 
-    public function getListeComplementaireAgents()
+    public function getListeComplementaireAgents() : string
     {
         /** @var FormationInstanceInscrit[] $inscrits */
         $inscrits = $this->getListeComplementaire();
@@ -449,7 +461,7 @@ class FormationInstance implements HistoriqueAwareInterface
         return $text;
     }
 
-    public function getDuree()
+    public function getDuree() : string
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
         /** @var FormationInstanceJournee[] $journees */

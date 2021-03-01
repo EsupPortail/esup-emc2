@@ -18,6 +18,8 @@ usort($formations, function(Formation $a, Formation $b) {
     $ogb = ($b->getGroupe())?$b->getGroupe()->getOrdre():999999;
     return $oga > $ogb;
 });
+
+$this->headTitle("Index des formations");
 ?>
 
 <div class="row">

@@ -61,6 +61,12 @@ $droits = [
                 </span>
             </a>
         </li>
+
+        <li class="pull-right">
+            <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz" >
+                Bulles d'informations &nbsp;
+            </a>
+        </li>
     </ul>
 
     <div class="main-with-tab">
@@ -77,6 +83,10 @@ $droits = [
 
             <div id="formation" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/index-formation', ['formations' => $formations, 'droits' => $droits], [], true); ?>
+            </div>
+
+            <div id="informations" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('administration-messages', [], [], true); ?>
             </div>
         </div>
     </div>

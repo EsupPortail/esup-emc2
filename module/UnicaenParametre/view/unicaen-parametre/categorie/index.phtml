@@ -33,7 +33,7 @@ if ($selection !== null) $categories = [ $selection ];
     <a
         <?php /** @see \Application\Controller\ParametreCategorieController::ajouterAction() */ ?>
         href="<?php echo $this->url('parametre/categorie/ajouter', ['categorie' => -1], [], true); ?>"
-        class="btn btn-primary ajax-modal" data-event="modification">
+        class="btn btn-primary action ajax-modal" data-event="modification">
         <i class="fas fa-plus"></i> Ajouter une catégorie
     </a>
 <?php endif; ?>
@@ -42,31 +42,31 @@ if ($selection !== null) $categories = [ $selection ];
     <?php $id = $categorie->getId(); ?>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <h2 title="<?php echo $categorie->getDescription(); ?>" data-toggle="tooltip" data-html="true" style="cursor: help;"> Catégorie : <?php echo $categorie->getLibelle(); ?> </h2>
         </div>
-        <div class="col-md-6">
+        <div class="pull-right">
             <br/>
             <a  <?php /** @see \Application\Controller\ParametreController::ajouterAction() */?>
                 href="<?php echo $this->url('parametre/ajouter', ['categorie' => $categorie->getId()], [], true); ?>"
-                class="btn btn-primary ajax-modal" data-event="modification">
+                class="btn btn-primary action ajax-modal" data-event="modification">
                 <i class="fas fa-plus"></i> Ajouter un paramètre
             </a>
             <?php if ($selection === null) : ?>
                 <a  <?php /** @see \Application\Controller\ParametreCategorieController::modifierAction() */?>
                     href="<?php echo $this->url('parametre/categorie/modifier', ['categorie' => $categorie->getId()], [], true); ?>"
-                    class="btn btn-primary ajax-modal" data-event="modification">
+                    class="btn btn-primary action ajax-modal" data-event="modification">
                     <i class="fas fa-pencil-alt"></i> Modifier la catégorie
                 </a>
                 <?php if (!isset($array_parametre[$id]) OR empty ($array_parametre[$id])) : ?>
                     <a  <?php /** @see \Application\Controller\ParametreCategorieController::supprimerAction() */?>
                         href="<?php echo $this->url('parametre/categorie/supprimer', ['categorie' => $categorie->getId()], [], true); ?>"
-                        class="btn btn-danger ajax-modal" data-event="modification">
+                        class="btn btn-danger action ajax-modal" data-event="modification">
                         <i class="fas fa-times"></i> Supprimer la catégorie
                     </a>
                 <?php else : ?>
-                    <span class="btn btn-danger disabled" data-toggle="tooltip" data-html="true"
-                          title="La catégorie est non vide et ne peut être supprimer"
+                    <span class="btn btn-danger action disabled" data-toggle="tooltip" data-html="true"
+                          title="La catégorie est non vide et ne peut être supprimée"
                     >
                     <i class="fas fa-times"></i> Supprimer la catégorie
                 </span>

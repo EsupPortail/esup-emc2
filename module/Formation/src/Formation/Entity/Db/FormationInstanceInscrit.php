@@ -91,10 +91,10 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     }
 
     /**
-     * @param string $liste
+     * @param string|null $liste
      * @return FormationInstanceInscrit
      */
-    public function setListe(string $liste)
+    public function setListe(?string $liste)
     {
         $this->liste = $liste;
         return $this;

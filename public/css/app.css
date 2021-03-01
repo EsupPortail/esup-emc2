@@ -58,11 +58,15 @@ ul.nav-tabs {
     border-right-color: #286090;
 }
 
+li.pull-right {
+    margin-right: 1rem;
+}
+
 /** ACTION et autre semantique de lien ********************************************************************************/
 
 .action {
     width:25rem;
-    margin:1rem;
+    margin:0.5rem;
 }
 
 button.btn.dropdown-toggle.btn-default{
@@ -274,11 +278,6 @@ dl.dl-horizontal dt {
 /*    content: " : ";*/
 /*}*/
 
-
-/*th.action {*/
-/*    width: 7em;*/
-/*}*/
-
 /*a.mini {*/
 /*    width: 4em;*/
 /*    margin:5px;*/
@@ -367,7 +366,7 @@ span.inconnue {
 }
 
 tr.historise {
-    background: #b1b1b1;
+    background: #d7d7d7;
 }
 
 dt.historise {
@@ -409,10 +408,6 @@ dd.historise {
 /*    color:lightslategray;*/
 /*    background: #d9d9d9;*/
 /*    !*text-decoration: line-through;*!*/
-/*}*/
-
-/*th.cell-action {*/
-/*    width: 13rem;*/
 /*}*/
 
 /*span.ferme {*/

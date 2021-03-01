@@ -29,7 +29,7 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
 
 <div class="main">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-6 col-md-8">
             <dl class="dl-horizontal">
                 <dt>Libelle</dt>
                 <dd>
@@ -75,21 +75,20 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
     </div>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-6 col-md-8">
             <h2>
-                Instances de la formation
+                Actions de formation
                 <span class="badge"><?php echo count($instances); ?></span>
             </h2>
         </div>
         <div class="pull-right">
-            <br/>
             <?php if ($canAjouterInstance) : ?>
                 <?php /** @see FormationInstanceController::ajouterAction() */ ?>
                 <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
                         class="btn btn-primary action"
                 >
                     <span class="icon ajouter"></span>
-                    Ajouter une instance
+                    Ajouter une action de formation
                 </a>
             <?php endif; ?>
             <br/>

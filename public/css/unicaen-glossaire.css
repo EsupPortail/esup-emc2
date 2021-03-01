@@ -47,11 +47,11 @@ dl#glossaire .tooltip-arrow {
         display: block;
     }
 
-    dl.dl-horizontal dt {
+    dl#glossaire  dt {
         width: 20rem;
         margin-top: 1rem;
     }
-    dl.dl-horizontal dd {
+    dl#glossaire dd {
         margin-left: 20rem;
         padding: 0.5rem 0.5rem 0.5rem 0.5rem;
         margin-top: 1rem;
@@ -72,16 +72,16 @@ dl#glossaire .tooltip-arrow {
         padding-top: 0;
     }
 
-    dl.dl-horizontal {
+    dl#glossaire {
         display: block;
     }
-    dl.dl-horizontal dt {
+    dl#glossaire dt {
         padding: 0.5rem 0.5rem 0.5rem 0.5rem;
         margin-top: 2rem;
         display: block;
         width:100%;
     }
-    dl.dl-horizontal dd {
+    dl#glossaire dd {
         padding: 0.5rem 0.5rem 0.5rem 0.5rem;
         display: block;
     }

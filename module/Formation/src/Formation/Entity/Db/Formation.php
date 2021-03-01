@@ -42,69 +42,69 @@ class Formation implements HistoriqueAwareInterface
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
     /**
-     * @param string $libelle
+     * @param string|null $libelle
      * @return Formation
      */
-    public function setLibelle(string $libelle)
+    public function setLibelle(?string $libelle) : Formation
     {
         $this->libelle = $libelle;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription()
+    public function getDescription() : ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      * @return Formation
      */
-    public function setDescription(string $description)
+    public function setDescription(?string $description) : Formation
     {
         $this->description = $description;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLien()
+    public function getLien() : ?string
     {
         return $this->lien;
     }
 
     /**
-     * @param string $lien
+     * @param string|null $lien
      * @return Formation
      */
-    public function setLien(string $lien)
+    public function setLien(?string $lien) : Formation
     {
         $this->lien = $lien;
         return $this;
     }
 
     /**
-     * @return FormationGroupe
+     * @return FormationGroupe|null
      */
-    public function getGroupe()
+    public function getGroupe() : ?FormationGroupe
     {
         return $this->groupe;
     }
@@ -113,16 +113,16 @@ class Formation implements HistoriqueAwareInterface
      * @param FormationGroupe|null $groupe
      * @return Formation
      */
-    public function setGroupe(?FormationGroupe $groupe)
+    public function setGroupe(?FormationGroupe $groupe) : Formation
     {
         $this->groupe = $groupe;
         return $this;
     }
 
     /**
-     * @return FormationTheme
+     * @return FormationTheme|null
      */
-    public function getTheme()
+    public function getTheme() : ?FormationTheme
     {
         return $this->theme;
     }
@@ -131,7 +131,7 @@ class Formation implements HistoriqueAwareInterface
      * @param FormationTheme|null $theme
      * @return Formation
      */
-    public function setTheme(?FormationTheme $theme)
+    public function setTheme(?FormationTheme $theme) : Formation
     {
         $this->theme = $theme;
         return $this;
@@ -140,7 +140,7 @@ class Formation implements HistoriqueAwareInterface
     /**
      * @return Application[]
      */
-    public function getApplications()
+    public function getApplications() : array
     {
         return $this->applications->toArray();
     }
@@ -149,7 +149,7 @@ class Formation implements HistoriqueAwareInterface
      * @param Application|null $application
      * @return Formation
      */
-    public function addApplication(?Application $application)
+    public function addApplication(?Application $application) : Formation
     {
         $this->applications->add($application);
         return $this;
@@ -159,7 +159,7 @@ class Formation implements HistoriqueAwareInterface
      * @param Application|null $application
      * @return Formation
      */
-    public function removeApplication(?Application $application)
+    public function removeApplication(?Application $application) : Formation
     {
         $this->applications->removeElement($application);
         return $this;
@@ -168,7 +168,7 @@ class Formation implements HistoriqueAwareInterface
     /**
      * @return Activite[]
      */
-    public function getMissions()
+    public function getMissions() : array
     {
         return $this->missions->toArray();
     }
@@ -177,7 +177,7 @@ class Formation implements HistoriqueAwareInterface
      * @param Activite $mission
      * @return Formation
      */
-    public function addMission(Activite $mission)
+    public function addMission(Activite $mission) : Formation
     {
         $this->missions->add($mission);
         return $this;
@@ -187,7 +187,7 @@ class Formation implements HistoriqueAwareInterface
      * @param Activite $mission
      * @return Formation
      */
-    public function removeMission(Activite $mission)
+    public function removeMission(Activite $mission) : Formation
     {
         $this->missions->removeElement($mission);
         return $this;
@@ -197,7 +197,7 @@ class Formation implements HistoriqueAwareInterface
      * @param Formation[] $formations
      * @return array
      */
-    public static function generateOptions(array $formations)
+    public static function generateOptions(array $formations) : array
     {
         $themes = [];
         foreach ($formations as $formation) $themes[($formation->getTheme()) ? $formation->getTheme()->getLibelle() : "Sans thème"][] = $formation;
@@ -225,7 +225,10 @@ class Formation implements HistoriqueAwareInterface
 
     /** Formation Instances *******************************************************************************************/
 
-    public function getInstances()
+    /**
+     * @return FormationInstance[]
+     */
+    public function getInstances() : array
     {
         return $this->instances->toArray();
     }

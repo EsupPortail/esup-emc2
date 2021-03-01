@@ -24,39 +24,41 @@ class FormationGroupe implements HistoriqueAwareInterface
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
-    /** /!\ NB: utilise pour creer le groupe : sans groupe */
+    /** /!\ NB: utilise pour creer le groupe : sans groupe
+     * @param int $id
+     */
     public function setId(int $id)
     {
         $this->id = $id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
     /**
-     * @param string $libelle
+     * @param string|null $libelle
      * @return FormationGroupe
      */
-    public function setLibelle(string $libelle)
+    public function setLibelle(?string $libelle) : FormationGroupe
     {
         $this->libelle = $libelle;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCouleur()
+    public function getCouleur() : ?string
     {
         return $this->couleur;
     }
@@ -65,16 +67,16 @@ class FormationGroupe implements HistoriqueAwareInterface
      * @param string|null $couleur
      * @return FormationGroupe
      */
-    public function setCouleur(?string $couleur)
+    public function setCouleur(?string $couleur) : FormationGroupe
     {
         $this->couleur = $couleur;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getOrdre()
+    public function getOrdre() : ?string
     {
         return $this->ordre;
     }
@@ -83,7 +85,7 @@ class FormationGroupe implements HistoriqueAwareInterface
      * @param string|null $ordre
      * @return FormationGroupe
      */
-    public function setOrdre(?string $ordre)
+    public function setOrdre(?string $ordre) : FormationGroupe
     {
         $this->ordre = $ordre;
         return $this;
@@ -92,7 +94,7 @@ class FormationGroupe implements HistoriqueAwareInterface
     /**
      * @return Formation[]
      */
-    public function getFormations()
+    public function getFormations() : array
     {
         return $this->formations->toArray();
     }
@@ -101,7 +103,7 @@ class FormationGroupe implements HistoriqueAwareInterface
      * @param Formation $formation
      * @return FormationGroupe
      */
-    public function addFormation(Formation $formation)
+    public function addFormation(Formation $formation) : FormationGroupe
     {
         $this->formations->add($formation);
         return $this;
@@ -111,7 +113,7 @@ class FormationGroupe implements HistoriqueAwareInterface
      * @param Formation $formation
      * @return FormationGroupe
      */
-    public function removeFormation(Formation $formation)
+    public function removeFormation(Formation $formation) : FormationGroupe
     {
         $this->formations->removeElement($formation);
         return $this;
@@ -121,7 +123,7 @@ class FormationGroupe implements HistoriqueAwareInterface
      * @param Formation $formation
      * @return boolean
      */
-    public function hasFormation(Formation $formation)
+    public function hasFormation(Formation $formation) : bool
     {
         return $this->formations->contains($formation);
     }
