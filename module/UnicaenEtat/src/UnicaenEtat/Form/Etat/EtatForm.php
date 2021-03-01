@@ -8,6 +8,7 @@ use UnicaenPrivilege\Entity\Db\Privilege;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Color;
 use Zend\Form\Element\Hidden;
+use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
@@ -100,6 +101,17 @@ class EtatForm extends Form
                 'id' => 'couleur',
             ],
         ]);
+        //couleur
+        $this->add([
+            'type' => Number::class,
+            'name' => 'ordre',
+            'options' => [
+                'label' => "Ordre :",
+            ],
+            'attributes' => [
+                'id' => 'ordre',
+            ],
+        ]);
         //button
         $this->add([
             'type' => Button::class,
@@ -137,6 +149,7 @@ class EtatForm extends Form
             'libelle'  => ['required' => true, ],
             'couleur'  => ['required' => false, ],
             'icone'    => ['required' => false, ],
+            'ordre'    => ['required' => false, ],
         ]));
     }
 }

@@ -14,6 +14,7 @@
 
         <field name="icone"             column="icone"                  type="string"    length="256"    nullable="true" />
         <field name="couleur"           column="couleur"                type="string"    length="256"    nullable="true" />
+        <field name="ordre"             column="ordre"                  type="integer"                   nullable="true" />
 
 <!--        <one-to-many field="actions" target-entity="UnicaenEtat\Entity\Db\Action" mapped-by="etat"/>-->
 

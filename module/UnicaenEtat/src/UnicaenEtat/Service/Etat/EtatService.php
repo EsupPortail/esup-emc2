@@ -89,7 +89,8 @@ class EtatService {
     public function getEtats($champ = 'code', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('etat.' . $champ, $ordre)
+//            ->orderBy('etat.' . $champ, $ordre)
+            ->orderBy('etat.type, etat.ordre', 'ASC')
         ;
         return $qb->getQuery()->getResult();
     }
@@ -150,6 +151,7 @@ class EtatService {
         $qb = $this->createQueryBuilder()
             ->andWhere('etat.type = :type')
             ->setParameter('type', $type)
+            ->orderBy('etat.ordre', 'ASC')
         ;
         return $qb->getQuery()->getResult();
     }

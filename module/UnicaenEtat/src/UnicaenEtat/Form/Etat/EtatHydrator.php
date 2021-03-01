@@ -21,6 +21,7 @@ class EtatHydrator implements HydratorInterface {
             'icone' => ($object)?$object->getIcone():null,
             'couleur' => ($object)?$object->getCouleur():null,
             'type' => ($object AND $object->getType())?$object->getType()->getId():null,
+            'ordre' => ($object)?$object->getOrdre():9999,
         ];
         return $data;
     }
@@ -37,12 +38,14 @@ class EtatHydrator implements HydratorInterface {
         $icone = (isset($data['icone']) AND trim($data['icone']) !== "")?trim($data['icone']):null;
         $couleur = (isset($data['couleur']) AND trim($data['couleur']) !== "")?trim($data['couleur']):null;
         $type = isset($data['couleur'])?$this->getEtatTypeService()->getEtatType($data['type']):null;
+        $ordre = (isset($data['ordre']) AND trim($data['ordre']) !== "")?trim($data['ordre']):9999;
 
         $object->setCode($code);
         $object->setLibelle($libelle);
         $object->setIcone($icone);
         $object->setCouleur($couleur);
         $object->setType($type);
+        $object->setOrdre($ordre);
 
         return $object;
     }

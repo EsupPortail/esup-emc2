@@ -7,6 +7,7 @@ create table unicaen_etat_etat_type
     libelle varchar(256) not null,
     icone varchar(256),
     couleur varchar(256),
+    ordre integer DEFAULT 9999 not null,
     histo_creation timestamp not null,
     histo_createur_id integer not null
         constraint unicaen_content_content_user_id_fk

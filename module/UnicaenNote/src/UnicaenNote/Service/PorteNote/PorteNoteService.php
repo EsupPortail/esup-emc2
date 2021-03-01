@@ -72,7 +72,8 @@ class PorteNoteService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(PorteNote::class)->createQueryBuilder('portenote')
-            ->addSelect('note')->leftjoin('portenote.notes', 'note');
+            ->addSelect('note')->leftjoin('portenote.notes', 'note')
+            ->addSelect('ntype')->leftjoin('note.type', 'ntype');
         return $qb;
     }
 

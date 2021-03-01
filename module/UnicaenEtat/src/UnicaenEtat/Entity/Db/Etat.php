@@ -23,6 +23,8 @@ class Etat implements HistoriqueAwareInterface {
     private $couleur;
     /** @var ArrayCollection ($Action) */
     private $actions;
+    /** @var integer */
+    private $ordre;
 
     /**
      * @return int
@@ -119,6 +121,24 @@ class Etat implements HistoriqueAwareInterface {
     public function setCouleur(?string $couleur): Etat
     {
         $this->couleur = $couleur;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    /**
+     * @param int|null $ordre
+     * @return Etat
+     */
+    public function setOrdre(?int $ordre): Etat
+    {
+        $this->ordre = $ordre;
         return $this;
     }
 

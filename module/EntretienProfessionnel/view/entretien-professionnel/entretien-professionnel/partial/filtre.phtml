@@ -73,21 +73,12 @@ use UnicaenEtat\Entity\Db\Etat;
                 </div>
 
                 <div class="col-md-3">
-                    <br/>
-                    <button class="btn btn-primary" id="clear">
-                        <span class="icon effacer"></span>
-                    </button>
-
-                    <button class="btn btn-primary" id="filter" style="width:20rem;">
-                        <span class="icon filtrer"></span>
-                        Filtrer
-                    </button>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3">
                     <label for="campagne">Campagne :</label>
-                    <select id="campagne" name="campagne" class="selectpicker show-tick" data-live-search="false">
+                    <select id="campagne" name="campagne" class="form-control selectpicker show-tick" data-live-search="false">
                         <option value=""> Toutes les campagnes </option>
                         <?php foreach($campagnes as $campagne) : ?>
                             <option
@@ -102,18 +93,31 @@ use UnicaenEtat\Entity\Db\Etat;
 
                 <div class="col-md-3">
                     <label for="etat">État :</label>
-                    <select id="etat" name="etat" class="selectpicker show-tick" data-live-search="false">
+                    <select id="etat" name="etat" class="form-control selectpicker show-tick" data-live-search="false">
                         <option value=""> Tous les états </option>
                         <?php foreach($etats as $etat) : ?>
                             <option
                                     value="<?php echo $etat->getId(); ?>"
-                                    data-content="<?php // echo $this->etatbadge($etat); ?> <?php echo $etat->getLibelle(); ?>"
+                                    data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
                                     <?php if ($etat->getId() == $params['etatId']) echo " selected "; ?>
                             >
                                 <?php echo $etat->getLibelle(); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-3">
+                    <br/>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon effacer"></span>
+                    </button>
+
+                    <button class="btn btn-primary" id="filter" style="width:20rem;">
+                        <span class="icon filtrer"></span>
+                        Filtrer
+                    </button>
                 </div>
             </div>
         </form>
