@@ -14,26 +14,26 @@ use UnicaenUtilisateur\Entity\Db\User;
 
 <div class="jumbotron" id="preecog">
     <div class="row">
-        <div class="col-md-6">
-            <h1>
+        <div class="jumbo-title">
                 <strong style="color:#19bd81;">E</strong>mploi <br/>
                 &nbsp; <strong style="color:#19bd81;">M</strong>obilité <br/>
                 &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>arrière <br/>
                 &nbsp; &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>ompétences
-
-            </h1>
         </div>
-        <div class="col-md-6">
-            <center><img src="img/PrEECoG.svg" style="width:200px;"/> </center>
+        <div class="jumbo-logo">
+            <img src="img/PrEECoG.svg" style="width:200px;"/>
             <br/>
-            <p class="noindent">EMC2 est un outil permettant la rédaction et la gestion des fiches métiers, fiches de postes, entretiens professionnels, ...</p>
         </div>
     </div>
 
-
-
-
     <br/>
+
+    <p>
+        <span class="jumbo-subtitle">
+            EMC2 est un outil permettant la rédaction et la gestion des fiches métiers, fiches de postes, entretiens professionnels, ...
+        </span>
+    </p>
+
     <br/>
 
 <!--    --><?php //var_dump($individu); ?>
@@ -57,6 +57,10 @@ use UnicaenUtilisateur\Entity\Db\User;
 </div>
 
 <style>
+    div.jumbotron {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
     div#contenu-principal {
         background: var(--body-background);
     }
@@ -67,4 +71,40 @@ use UnicaenUtilisateur\Entity\Db\User;
         margin: 1rem;
     }
 
+    .jumbo-title {
+        font-size: xx-large;
+        font-weight: bold;
+        vertical-align: top;
+        width:49%;
+        display:inline-block;
+    }
+
+    .jumbo-logo {
+        font-size: xx-large;
+        font-weight: bold;
+        vertical-align: top;
+        text-align: center;
+        width:49%;
+        display:inline-block;
+    }
+
+    .jumbo-subtitle {
+        margin: 1rem;
+        padding: 1rem;
+        text-align: justify;
+        font-size: larger;
+    }
+
+    @media (min-width: 0) and (max-width: 767px) {
+        .jumbo-title {
+            width:100%;
+            text-align: left;
+            padding-left: 2rem;
+        }
+
+        .jumbo-logo {
+            width:100%;
+            text-align: center;
+        }
+    }
 </style>

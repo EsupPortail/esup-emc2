@@ -106,18 +106,18 @@ use UnicaenEtat\Entity\Db\Etat;
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="col-md-3">
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <br/>
-                    <button class="btn btn-primary" id="clear">
-                        <span class="icon effacer"></span>
-                    </button>
+                    <div class="pull-right">
+                        <button class="btn btn-primary" id="clear">
+                            <span class="icon effacer"></span>
+                        </button>
 
-                    <button class="btn btn-primary" id="filter" style="width:20rem;">
-                        <span class="icon filtrer"></span>
-                        Filtrer
-                    </button>
+                        <button class="btn btn-primary" id="filter" style="width:20rem;">
+                            <span class="icon filtrer"></span>
+                            Filtrer
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -178,5 +178,4 @@ use UnicaenEtat\Entity\Db\Etat;
     $('input[name="responsable-filtre[label]').val(" <?php echo $params['responsable']->getDisplayName(); ?> ");
     $('input[name="responsable-filtre[id]').val(<?php echo $params['responsable']->getId(); ?>);
     <?php endif; ?>
-
 </script>

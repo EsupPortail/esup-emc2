@@ -34,8 +34,8 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
         <th> Agent </th>
         <th> Responsable </th>
         <th> Date </th>
-        <th> État </th>
-        <th> Action </th>
+        <th id="etat"> État </th>
+        <th id="action"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -116,3 +116,27 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
     <?php endforeach; ?>
     </tbody>
 </table>
+
+
+<style>
+    th#etat {
+        width:6rem;
+        min-width: 6rem;
+    }
+
+    th#action {
+        width:11rem;
+        min-width: 6rem;
+    }
+
+@media (min-width: 0) and (max-width: 768px) {
+        th {
+            font-size: small;
+        }
+        td {
+            font-size: small;
+            background: var(--content-background);
+        }
+}
+
+</style>

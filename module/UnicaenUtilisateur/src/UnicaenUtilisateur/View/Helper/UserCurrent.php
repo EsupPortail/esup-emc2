@@ -39,14 +39,14 @@ class UserCurrent extends UserAbstract
     {
         $id                    = 'user-current-info';
         $userStatusHelper      = $this->getView()->plugin('userStatus');
-        $status                = $userStatusHelper(false);
+        $identification        = $userStatusHelper(false) . "";
         $userProfileSelectable = true;
         
         if ($this->getIdentity()) {
             if ($userProfileSelectable) {
 		        // DS : cas où aucun rôle n'est sélectionné, on affiche le rôle "user"
 		        $role = $this->getUserContext()->getSelectedIdentityRole() ?: $this->getUserContext()->getIdentityRole('user');
-                $status .= sprintf(", <small>%s</small>", !method_exists($role, '__toString') ? $role->getRoleId() : $role);
+                $status = sprintf("<small>%s</small>", !method_exists($role, '__toString') ? $role->getRoleId() : $role);
             }
         
             $userProfileHelper = $this->getView()->plugin('userProfile');
@@ -78,7 +78,9 @@ class UserCurrent extends UserAbstract
    data-toggle="popover" 
    data-html="true" 
    data-content="$content" 
-   href="#">$status</a>
+   href="#">
+    <table style="color:var(--header-color);background: var(--header-background);"><tr><td>$identification</td></tr><tr><td style="text-align: right">$status</td></tr></table>
+    </a>
 EOS;
         $out .= PHP_EOL;
         
