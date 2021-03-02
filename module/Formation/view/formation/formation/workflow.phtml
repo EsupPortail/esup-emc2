@@ -39,7 +39,7 @@ use UnicaenEtat\Service\Etat\EtatService;
     <div class="panel-heading">
         ETAPE III : Ouverture des inscriptions
         <div class="pull-right">
-            <span class="icon attente" style="color:darkblue"></span>
+            <span class="icon ok" style="color:darkgreen"></span>
         </div>
     </div>
     <div class="panel-body">
@@ -49,7 +49,18 @@ use UnicaenEtat\Service\Etat\EtatService;
 
 <div class="panel panel-default etape">
     <div class="panel-heading">
-        ETAPE IV : Fermeture des inscriptions
+        ETAPE IV : Inscriptions
+        <div class="pull-right">
+            <span class="icon ko" style="color:darkred"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php //echo $this->partial('partial/workflow-inscription-ouverture', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE V : Fermeture des inscriptions
         <div class="pull-right">
             <span class="icon attente" style="color:darkblue"></span>
         </div>
@@ -61,7 +72,7 @@ use UnicaenEtat\Service\Etat\EtatService;
 
 <div class="panel panel-default etape">
     <div class="panel-heading">
-        ETAPE V : Envoie des convocations et des listes d'emargement
+        ETAPE VI : Envoie des convocations et des listes d'emargement
         <div class="pull-right">
             <span class="icon attente" style="color:darkblue"></span>
         </div>
@@ -73,7 +84,7 @@ use UnicaenEtat\Service\Etat\EtatService;
 
 <div class="panel panel-default etape">
     <div class="panel-heading">
-        ETAPE VI : Demande des retours sur la formation
+        ETAPE VII : Demande des retours sur la formation
         <div class="pull-right">
             <span class="icon attente" style="color:darkblue"></span>
         </div>
@@ -85,9 +96,9 @@ use UnicaenEtat\Service\Etat\EtatService;
 
 <div class="panel panel-default etape">
     <div class="panel-heading">
-        ETAPE VII : Report des inscriptions
+        ETAPE VIII : Report des inscriptions
         <div class="pull-right">
-            <span class="icon attente" style="color:darkblue"></span>
+            <span class="icon ko" style="color:darkred"></span>
         </div>
     </div>
     <div class="panel-body">
@@ -97,7 +108,7 @@ use UnicaenEtat\Service\Etat\EtatService;
 
 <div class="panel panel-default etape">
     <div class="panel-heading">
-        ETAPE VIII : Cloture et envoie justificatifs
+        ETAPE IX : Cloture et envoie justificatifs
         <div class="pull-right">
             <span class="icon ko" style="color:darkred"></span>
         </div>

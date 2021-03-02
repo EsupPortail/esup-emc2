@@ -7,6 +7,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use Formation\Entity\Db\FormationInstance;
 use Mailing\Model\Db\Mail;
 use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -275,6 +276,7 @@ class MailingService
         /**
          * @var Campagne $campagne
          * @var EntretienProfessionnel $entretien
+         * @var FormationInstance $instance
          */
 
         //TODO améliorant en récupérant le entre [] et puis en splittant avec # et tester récupération ou non de l'object ...
@@ -323,6 +325,22 @@ class MailingService
             case 'VAR[ENTRETIEN#lien_entretien]' :
                 $entretien = $variables['entretien'];
                 return '<a href="'.$this->rendererService->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['force_canonical' => true], true).'">Accéder à l\'entretien professionnel</a>';
+            /** FORMATION **************************************************************************************************/
+            case 'VAR[FORMATION#instance_id]' :
+                $instance = $variables['instance'];
+                return $instance->getId();
+            case 'VAR[FORMATION#libelle]' :
+                $instance = $variables['instance'];
+                return $instance->getFormation()->getLibelle();
+            case 'VAR[FORMATION#debut]' :
+                $instance = $variables['instance'];
+                return $instance->getDebut();
+            case 'VAR[FORMATION#fin]' :
+                $instance = $variables['instance'];
+                return $instance->getFin();
+            case 'VAR[FORMATION#lien_inscription]' :
+                $instance = $variables['instance'];
+                return '<a href="'.$this->rendererService->url('formation/inscription', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true).'">Accéder à l\'inscription</a>';
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }
