@@ -260,3 +260,27 @@ span.icon.filtrer:before {
 span.icon.sursis:before {
     content:"\f017";
 }
+
+span.icon.attente:before {
+    content:"\f254";
+}
+
+span.icon.clef:before {
+    content:"\f084";
+}
+
+span.icon.courrier:before {
+    content:"\f0e0";
+}
+
+span.icon.code:before {
+    content:"\f121";
+}
+
+span.icon.inscription-ouverture:before {
+    content:"\f044";
+}
+
+span.icon.inscription-fermeture:before {
+    content:"\f274";
+}

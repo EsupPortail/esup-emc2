@@ -8,17 +8,18 @@ use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class FormationController extends AbstractActionController
 {
+    use EtatServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationThemeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
-
     use FormationFormAwareTrait;
 
     public function indexAction()
@@ -31,6 +32,7 @@ class FormationController extends AbstractActionController
             'formations' => $formations,
             'groupes' => $groupes,
             'themes' => $themes,
+            'etatService' => $this->getEtatService(),
         ]);
     }
 

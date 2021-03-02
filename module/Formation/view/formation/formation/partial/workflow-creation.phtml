@@ -1,0 +1,31 @@
+<dl>
+    <dt> Qui</dt>
+    <dd>
+        Tous les rôles ayant le privilèges <span class="privilege"><span class="icon clef"></span>FormationInstance_ajouter</span>.
+        <br/>
+        Par exemple :
+        <ul>
+            <li> Administrateur Technique/Fonctionnelle</li>
+            <li> Gestionnaire de formation</li>
+        </ul>
+    </dd>
+    <dt> Où</dt>
+    <dd>
+        Dans l'affichage d'une formation : accès en cliquant sur <span class="icon voir"></span> dans le tableau des formations
+    </dd>
+    <dt> Comment</dt>
+    <dd> Clique sur le bouton
+        <button class="label btn-primary"><span class="icon ajouter"></span> Ajouter une action de formation
+        </button>
+    </dd>
+    <dt> Que se passe t'il</dt>
+    <dd>
+        <ol>
+            <li> Creation d'une <span class="classe"><span class="icon code"></span>FormationInstance</span>
+                associé à l'action
+            </li>
+            <li> Formation instance reçoit
+                état <?php echo $this->etatbadge($etatService->getEtatByCode('FORMATION_EN_CREATION')); ?> </li>
+        </ol>
+    </dd>
+</dl>

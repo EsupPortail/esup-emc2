@@ -12,6 +12,7 @@ use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use Zend\Mvc\Console\Router\Simple;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
@@ -41,7 +42,6 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'modifier-informations',
-
                         'export-emargement',
                         'export-tous-emargements',
 
@@ -49,6 +49,16 @@ return [
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'ouvrir-inscription',
+                        'fermer-inscription',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
                     ],
                 ],
                 [
@@ -69,6 +79,15 @@ return [
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_SUPPRIMER,
                     ],
+                ],
+                //console
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'convoquer',
+                        'questionner',
+                    ],
+                    'roles' => [],
                 ],
             ],
         ],
@@ -154,6 +173,53 @@ return [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'renseigner-questionnaire',
                             ],
+                        ],
+                    ],
+                    'ouvrir-inscription' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ouvrir-inscription/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'ouvrir-inscription',
+                            ],
+                        ],
+                    ],
+                    'fermer-inscription' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/fermer-inscription/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'fermer-inscription',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'console' => [
+        'router' => [
+            'routes' => [
+                'formation-instance-convoquer' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'formation-instance-convoquer',
+                        'defaults' => [
+                            'controller' => FormationInstanceController::class,
+                            'action' => 'convoquer'
+                        ],
+                    ],
+                ],
+                'formation-instance-questionner' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'formation-instance-questionner',
+                        'defaults' => [
+                            'controller' => FormationInstanceController::class,
+                            'action' => 'questionner'
                         ],
                     ],
                 ],

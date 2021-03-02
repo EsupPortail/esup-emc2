@@ -1,0 +1,37 @@
+<?php
+
+use Formation\Entity\Db\FormationInstance;
+
+?>
+
+<dl>
+    <dt> Qui</dt>
+    <dd>
+        Envoie gérer automatiquement.
+    </dd>
+    <dt> Comment</dt>
+    <dd>
+        Toutes les nuits en jour ouvré (<i>serai mieux reste à voir comment</i>). <br/>
+        Envoie au formation ayant l'état <?php echo $this->etatbadge($etatService->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE)); ?> et dont la date de début et dans moins de 2 jours.
+    </dd>
+    <dt> Que se passe t'il</dt>
+    <dd>
+        <ol>
+            <li> Formation instance reçoit
+                état <?php echo $this->etatbadge($etatService->getEtatByCode(FormationInstance::ETAT_FORMATION_CONVOCATION)); ?> </li>
+            <li> Notification des agents en liste principale grâce au mail <span class="mail"><span
+                        class="icon courrier"></span>FORMATION_CONVOCATION</span></li>
+            <li> Notification des formateurs des listes d'émargements <span class="mail"><span
+                        class="icon courrier"></span>FORMATION_EMARGEMENT</span></li>
+        </ol>
+    </dd>
+    <dt>Reste à faire </dt>
+    <dd>
+        <ul>
+            <li> Rédaction du mail <span class="mail"><span class="icon courrier"></span>FORMATION_CONVOCATION</span>.</li>
+            <li> Rédaction du mail <span class="mail"><span class="icon courrier"></span>FORMATION_EMARGEMENT</span>.</li>
+            <li> Gérer l'envoi du mail <span class="mail"><span class="icon courrier"></span>FORMATION_EMARGEMENT</span>.</li>
+            <li> Mettre en place le service et le timer associé </li>
+        </ul>
+    </dd>
+</dl>

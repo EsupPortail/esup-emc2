@@ -1,0 +1,146 @@
+<?php
+
+/**
+ * @var EtatService $etatService
+ */
+
+use Formation\Entity\Db\FormationInstance;
+use UnicaenEtat\Service\Etat\EtatService;
+
+?>
+
+<h2> Workflow associé aux actions de formation </h2>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE I : Creation d'une action
+        <div class="pull-right">
+            <span class="icon ok" style="color:darkgreen"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->partial('partial/workflow-creation', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE II : Remplissage des informations liées à l'action de formation
+        <div class="pull-right">
+            <span class="icon ok" style="color:darkgreen"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->partial('partial/workflow-informations', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE III : Ouverture des inscriptions
+        <div class="pull-right">
+            <span class="icon attente" style="color:darkblue"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->partial('partial/workflow-inscription-ouverture', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE IV : Fermeture des inscriptions
+        <div class="pull-right">
+            <span class="icon attente" style="color:darkblue"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->partial('partial/workflow-inscription-fermeture', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE V : Envoie des convocations et des listes d'emargement
+        <div class="pull-right">
+            <span class="icon attente" style="color:darkblue"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->partial('partial/workflow-convocation', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE VI : Demande des retours sur la formation
+        <div class="pull-right">
+            <span class="icon attente" style="color:darkblue"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->partial('partial/workflow-retours', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE VII : Report des inscriptions
+        <div class="pull-right">
+            <span class="icon attente" style="color:darkblue"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php //echo $this->partial('partial/workflow-inscription-fermeture', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<div class="panel panel-default etape">
+    <div class="panel-heading">
+        ETAPE VIII : Cloture et envoie justificatifs
+        <div class="pull-right">
+            <span class="icon ko" style="color:darkred"></span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <?php //echo $this->partial('partial/workflow-inscription-fermeture', ['etatService' => $etatService]); ?>
+    </div>
+</div>
+
+<style>
+    span.classe {
+        font-family: monospace;
+        background: #faebcc;
+        padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+        margin: 1px;
+    }
+
+    span.privilege {
+        font-family: monospace;
+        background: #8ccb89;
+        padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+        margin: 1px;
+    }
+
+    span.mail {
+        font-family: monospace;
+        background: #b6e3ff;
+        padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+        margin: 1px;
+        /*border: 1px solid black;*/
+    }
+
+    button {
+        margin: 1px;
+    }
+</style>
+
+<script>
+    $(function() {
+        $("div.etape div.panel-body").hide();
+
+        $("div.etape").click(function (event) {
+            $(this).children('div.panel-body').toggle();
+        });
+    });
+</script>

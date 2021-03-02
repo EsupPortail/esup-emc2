@@ -58,9 +58,9 @@ ul.nav-tabs {
     border-right-color: #286090;
 }
 
-li.pull-right {
-    margin-right: 1rem;
-}
+/*li.pull-right {*/
+/*    margin-right: 1rem;*/
+/*}*/
 
 /** ACTION et autre semantique de lien ********************************************************************************/
 

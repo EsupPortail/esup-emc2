@@ -8,6 +8,7 @@ use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
+use UnicaenEtat\Service\Etat\EtatService;
 
 class FormationInstanceControllerFactory
 {
@@ -19,11 +20,13 @@ class FormationInstanceControllerFactory
     public function __invoke(ContainerInterface $container)
     {
         /**
+         * @var EtatService $etatService
          * @var FormationService $formationService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var FormulaireInstanceService $formulaireInstanceService
          */
+        $etatService = $container->get(EtatService::class);
         $formationService = $container->get(FormationService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
@@ -36,6 +39,7 @@ class FormationInstanceControllerFactory
 
         /** @var FormationInstanceController $controller */
         $controller = new FormationInstanceController();
+        $controller->setEtatService($etatService);
         $controller->setFormationService($formationService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);

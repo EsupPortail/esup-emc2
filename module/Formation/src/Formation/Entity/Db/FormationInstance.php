@@ -13,6 +13,13 @@ class FormationInstance implements HistoriqueAwareInterface
 {
     use HistoriqueAwareTrait;
 
+    const ETAT_CREATION_EN_COURS      = 'FORMATION_EN_CREATION';
+    const ETAT_INSCRIPTION_OUVERTE    = 'FORMATION_INSCRIPTION_OUVERTE';
+    const ETAT_INSCRIPTION_FERMEE     = 'FORMATION_INSCRIPTION_FERMEE';
+    const ETAT_FORMATION_CONVOCATION  = 'FORMATION_CONVOCATION';
+    const ETAT_ATTENTE_RETOURS        = 'FORMATION_RETOUR';
+    const ETAT_CLOTURE_INSTANCE       = 'FORMATION_FERMEE';
+
     const TYPE_INTERNE = "formation interne";
     const TYPE_EXTERNE = "formation externe";
     const TYPE_REGIONALE = "formation régionale";

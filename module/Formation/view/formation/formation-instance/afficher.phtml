@@ -5,6 +5,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceFormateur;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Provider\Privilege\FormationinstanceformateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
@@ -43,6 +44,7 @@ $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::get
 $canFraisModifier       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER));
 $canPresenceAfficher    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
 $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
+$canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
 
 ?>
 
@@ -77,6 +79,26 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                 <span class="icon retour-double"></span>
                 Retour à l'index des formations
             </a>
+            <?php if ($canGererInscription) : ?>
+                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_CREATION_EN_COURS) : ?>
+                    <br/>
+                    <a      <?php /** @see FormationInstanceController::ouvrirInscriptionAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/ouvrir-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-primary action">
+                        <span class="icon inscription-ouverture"></span>
+                        Ouvrir les inscriptions
+                    </a>
+                <?php endif; ?>
+                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_INSCRIPTION_OUVERTE) : ?>
+                    <br/>
+                    <a      <?php /** @see FormationInstanceController::fermerInscriptionAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/fermer-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-primary action">
+                        <span class="icon inscription-fermeture"></span>
+                        Fermer les inscriptions
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -235,7 +257,7 @@ $canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::
                     <?php if ($canJourneeModifier) : ?>
                         <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
-                                data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la journée de formation">
+                                data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la journée de formation" target="_blank">
                             <span class="icon pdf"></span><span class="lettrine">E</span></a>
                         <?php /** @see FormationInstanceJourneeController::modifierJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"

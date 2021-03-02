@@ -6,12 +6,14 @@
  * @var Formation[] $formations
  * @var FormationGroupe[] $groupes
  * @var FormationTheme[] $themes
+ * @var EtatService $etatService (deplacer dans workflow stuff)
  */
 
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationTheme;
 use Formation\Provider\Privilege\FormationPrivileges;
+use UnicaenEtat\Service\Etat\EtatService;
 
 $canAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 $canAjouter = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AJOUTER));
@@ -63,6 +65,11 @@ $droits = [
         </li>
 
         <li class="pull-right">
+            <a href="#workflow" aria-controls="workflow" role="tab" data-toggle="tabz"  style="margin-right: 1rem;">
+                Workflow
+            </a>
+        </li>
+        <li class="pull-right">
             <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz" >
                 Bulles d'informations &nbsp;
             </a>
@@ -85,6 +92,9 @@ $droits = [
                 <?php echo $this->partial('partial/index-formation', ['formations' => $formations, 'droits' => $droits], [], true); ?>
             </div>
 
+            <div id="workflow" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('workflow', ['etatService' => $etatService], [], true); ?>
+            </div>
             <div id="informations" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('administration-messages', [], [], true); ?>
             </div>

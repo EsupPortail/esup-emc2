@@ -79,7 +79,8 @@ class FormationInstanceService
             ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
             ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
-            ->addSelect('structure')->leftJoin('affectation.structure', 'structure');
+            ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+            ->addSelect('etat')->leftjoin('Finstance.etat', 'etat');
         return $qb;
     }
 
@@ -101,7 +102,7 @@ class FormationInstanceService
      * @param Formation $formation
      * @param string $champ
      * @param string $ordre
-     * @return void
+     * @return array
      */
     public function getFormationsInstancesByFormation(Formation $formation, $champ = 'id', $ordre = 'ASC')
     {
@@ -111,6 +112,20 @@ class FormationInstanceService
             ->setParameter('id', $formation->getId())
             ->orderBy('Finstance.' . $champ, $ordre);
 
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param string $etatCode
+     * @return FormationInstance[]
+     */
+    public function getFormationsInstancesByEtat(string $etatCode) : array
+    {
+        $qb = $this->$this->createQueryBuilder()
+            ->andWhere('etat.code = :code')
+            ->setParametre('code', $etatCode)
+        ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }
