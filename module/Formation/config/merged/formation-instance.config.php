@@ -96,6 +96,16 @@ return [
 
     'router' => [
         'routes' => [
+            'formation-console' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/formation-instance',
+                    'defaults' => [
+                        'controller' => FormationInstanceController::class,
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
             'formation-instance' => [
                 'type'  => Literal::class,
                 'options' => [
