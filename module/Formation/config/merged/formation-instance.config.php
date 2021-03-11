@@ -96,16 +96,6 @@ return [
 
     'router' => [
         'routes' => [
-            'formation-console' => [
-                'type'  => Literal::class,
-                'options' => [
-                    'route'    => '/formation-instance',
-                    'defaults' => [
-                        'controller' => FormationInstanceController::class,
-                    ],
-                ],
-                'may_terminate' => true,
-            ],
             'formation-instance' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -214,26 +204,6 @@ return [
     'console' => [
         'router' => [
             'routes' => [
-                'formation-instance-convoquer' => [
-                    'type' => Simple::class,
-                    'options' => [
-                        'route' => 'formation-instance-convoquer',
-                        'defaults' => [
-                            'controller' => FormationInstanceController::class,
-                            'action' => 'convoquer'
-                        ],
-                    ],
-                ],
-                'formation-instance-questionner' => [
-                    'type' => Simple::class,
-                    'options' => [
-                        'route' => 'formation-instance-questionner',
-                        'defaults' => [
-                            'controller' => FormationInstanceController::class,
-                            'action' => 'questionner'
-                        ],
-                    ],
-                ],
                 'formation-console' => [
                     'type' => Simple::class,
                     'options' => [
