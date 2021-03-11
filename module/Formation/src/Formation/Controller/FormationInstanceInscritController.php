@@ -3,9 +3,13 @@
 namespace Formation\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
+use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -14,10 +18,13 @@ use Zend\View\Model\ViewModel;
 /** @method FlashMessenger flashMessenger() */
 class FormationInstanceInscritController extends AbstractActionController
 {
+    use AgentServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     use SelectionAgentFormAwareTrait;
+
 
     public function ajouterAgentAction()
     {
@@ -126,5 +133,71 @@ class FormationInstanceInscritController extends AbstractActionController
         $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en liste complémentaire.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
+    }
+
+    public function listeFormationsInstancesAction()
+    {
+        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_OUVERTE);
+        $instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+
+        $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
+
+        return new ViewModel([
+            'instances' => $instances,
+            'inscriptions' => $inscriptions,
+            'agent' => $agent,
+        ]);
+    }
+
+    public function inscriptionAction()
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $user = $this->getUserService()->getConnectedUser();
+
+        $break = false;
+        $liste = $instance->getListeDisponible();
+        if ($agent->getUtilisateur() !== $user) {
+            $this->flashMessenger()->addErrorMessage("L'utilisateur connecté ne correspond à l'agent en train de s'inscrire !");
+            $break = true;
+        }
+        if ($liste === null) {
+            $this->flashMessenger()->addErrorMessage("Plus de place disponible sur aucune des listes de cette action de formation.");
+            $break = true;
+        }
+
+        if (!$break) {
+            $inscrit = new FormationInstanceInscrit();
+            $inscrit->setInstance($instance);
+            $inscrit->setAgent($agent);
+            $inscrit->setListe($liste);
+            $this->getFormationInstanceInscritService()->create($inscrit);
+            $this->flashMessenger()->addSuccessMessage("Inscription effectué sur la liste ".$liste.".");
+        }
+
+        return $this->redirect()->toRoute('liste-formations-instances', [], ['fragment' => 'instances'], true);
+    }
+
+    public function desinscriptionAction()
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $agent = $inscrit->getAgent();
+        $user = $this->getUserService()->getConnectedUser();
+
+        $break = false;
+        if ($agent->getUtilisateur() !== $user) {
+            $this->flashMessenger()->addErrorMessage("L'utilisateur connecté ne correspond à l'agent en train de se déinscrire !");
+            $break = true;
+        }
+
+        if (!$break) {
+            $this->getFormationInstanceInscritService()->historise($inscrit);
+            $this->flashMessenger()->addSuccessMessage("Inscription annulée.");
+        }
+
+        return $this->redirect()->toRoute('liste-formations-instances', [], ['fragment' => 'inscriptions'], true);
     }
 }

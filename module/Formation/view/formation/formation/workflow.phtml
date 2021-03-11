@@ -51,13 +51,14 @@ use UnicaenEtat\Service\Etat\EtatService;
     <div class="panel-heading">
         ETAPE IV : Inscriptions
         <div class="pull-right">
-            <span class="icon ko" style="color:darkred"></span>
+            <span class="icon ok" style="color:darkgreen"></span>
         </div>
     </div>
     <div class="panel-body">
-        <?php //echo $this->partial('partial/workflow-inscription-ouverture', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-inscription', ['etatService' => $etatService]); ?>
     </div>
 </div>
+
 <div class="panel panel-default etape">
     <div class="panel-heading">
         ETAPE V : Fermeture des inscriptions

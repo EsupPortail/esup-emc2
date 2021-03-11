@@ -118,6 +118,14 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                 <dd> <?php echo ($instance->getLieu())?:"Non communiqué"; ?> </dd>
                 <dt> Type</dt>
                 <dd> <?php echo ($instance->getType())?:"Non communiqué"; ?> </dd>
+                <dt> Auto-inscription</dt>
+                <dd>
+                    <?php if ($instance->isAutoInscription()) : ?>
+                        Oui (les agents peuvent s'inscrire eux-même)
+                    <?php else : ?>
+                        Non (les agents doivent notifier les gestionnaires de formation)
+                    <?php endif; ?>
+                </dd>
             </dl>
         </div>
         <?php if ($canInformation) : ?>

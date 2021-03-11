@@ -2,9 +2,11 @@
 
 namespace Formation\Service\FormationInstanceInscrit;
 
+use Application\Entity\Db\Agent;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -77,6 +79,7 @@ class FormationInstanceInscritService
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->addSelect('finstance')->join('inscrit.instance', 'finstance')
+            ->addSelect('etat')->join('finstance.etat', 'etat')
             ->addSelect('formation')->join('finstance.formation', 'formation');
         return $qb;
     }
@@ -120,6 +123,24 @@ class FormationInstanceInscritService
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstanceInscrit($id);
+        return $result;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return FormationInstanceInscrit[]
+     */
+    public function getFormationsByInscrit(Agent $agent) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscrit.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('etat.code <> :code')
+            ->setParameter('code', FormationInstance::ETAT_CLOTURE_INSTANCE)
+            ->andWhere('inscrit.histoDestruction IS NULL')
+            ->orderBy('formation.libelle', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 }

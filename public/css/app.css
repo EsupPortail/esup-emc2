@@ -376,15 +376,19 @@ dd.historise {
     text-decoration: line-through gray;
 }
 
-/*span.todo {*/
-/*    color:darkred;*/
-/*    font-weight: bold;*/
-/*    background-color:pink;*/
-/*    margin-left: .5rem;*/
-/*    margin-right: .5rem;*/
-/*    padding-left: .5rem;*/
-/*    padding-right: .5rem;*/
-/*}*/
+span.todo {
+    color:darkred;
+    font-weight: bold;
+    background-color:pink;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    padding: 0.1rem 0.5rem;
+    border: 2px solid darkred;
+}
+span.todo:before {
+    content:"TODO : ";
+    text-decoration: underline;
+}
 
 /*div.validation {*/
 /*    border: 1px grey solid;*/

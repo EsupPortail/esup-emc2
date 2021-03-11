@@ -30,6 +30,8 @@ class FormationInstance implements HistoriqueAwareInterface
     private $formation;
     /** @var string */
     private $complement;
+    /** @var boolean */
+    private $autoInscription;
 
     /** @var integer */
     private $nbPlacePrincipale;
@@ -185,6 +187,24 @@ class FormationInstance implements HistoriqueAwareInterface
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isAutoInscription(): bool
+    {
+        return ($this->autoInscription)?:false;
+    }
+
+    /**
+     * @param bool $autoInscription
+     * @return FormationInstance
+     */
+    public function setAutoInscription(bool $autoInscription = false): FormationInstance
+    {
+        $this->autoInscription = $autoInscription;
+        return $this;
+    }
+
 
     /** FORMATEURS ****************************************************************************************************/
 
@@ -280,7 +300,7 @@ class FormationInstance implements HistoriqueAwareInterface
     {
         if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return $a->getListe() === FormationInstanceInscrit::PRINCIPALE;
+            return ($a->getListe() === FormationInstanceInscrit::PRINCIPALE AND $a->estNonHistorise());
         });
         usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
             return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();
@@ -295,7 +315,7 @@ class FormationInstance implements HistoriqueAwareInterface
     {
         if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return $a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE;
+            return ($a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE AND $a->estNonHistorise());
         });
         usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
             return $a->getHistoCreation() > $b->getHistoCreation();

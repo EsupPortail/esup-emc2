@@ -6,6 +6,7 @@ use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceFormateur;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
@@ -168,8 +169,12 @@ class FormationInstanceController extends AbstractActionController
         if ($instance->getEtat()->getCode() === FormationInstance::ETAT_INSCRIPTION_OUVERTE) {
             $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
             $this->getFormationInstanceService()->update($instance);
-            $this->getMailingService()->sendMailType("FORMATION_LISTE_PRINCIPALE", ['formation-instance' => $instance, 'mailing' => 'ZZZunicaen-biats@unicaen.fr']);
-            $this->getMailingService()->sendMailType("FORMATION_LISTE_SECONDAIRE", ['formation-instance' => $instance, 'mailing' => 'ZZZunicaen-biats@unicaen.fr']);
+            foreach ($instance->getListePrincipale() as $inscrit) {
+                $this->getMailingService()->sendMailType("FORMATION_LISTE_PRINCIPALE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+            }
+            foreach ($instance->getListeComplementaire() as $inscrit) {
+                $this->getMailingService()->sendMailType("FORMATION_LISTE_SECONDAIRE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+            }
         }
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
@@ -187,6 +192,9 @@ class FormationInstanceController extends AbstractActionController
                     $this->getMailingService()->sendMailType("FORMATION_CONVOCATION", ['formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);
                 }
                 echo "Action de formation #" . $instance->getId() ." - " . $instance->getFormation()->getLibelle() . " : Envoi des convocations.\n";
+                $this->getMailingService()->sendMailType("FORMATION_EMARGEMENT", ['formation-instance' => $instance, 'users' => array_map(function (FormationInstanceFormateur $a) { return $a->getEmail(); }, $instance->getFormateurs())]);
+                echo "Action de formation #" . $instance->getId() ." - " . $instance->getFormation()->getLibelle() . " : Envoi des listes d'émargement.\n";
+
             }
         }
     }
@@ -205,5 +213,10 @@ class FormationInstanceController extends AbstractActionController
                 echo "Action de formation #" . $instance->getId() ." - " . $instance->getFormation()->getLibelle() . " : Attente des retours.\n";
             }
         }
+    }
+
+    public function formationConsoleAction() {
+        $this->convoquerAction();
+        $this->questionnerAction();
     }
 }

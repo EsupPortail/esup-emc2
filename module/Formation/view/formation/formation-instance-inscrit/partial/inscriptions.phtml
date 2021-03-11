@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @var FormationInstance[] $instances
+ * @var FormationInstanceInscrit[] $inscriptions
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceInscrit;
+
+$canInscrire = true;
+
+?>
+<h2>
+    Mes inscriptions
+    <span class="badge"><?php echo count($inscriptions); ?></span>
+</h2>
+
+<?php foreach ($inscriptions as $inscription) : ?>
+    <?php
+        $instance = $inscription->getInstance();
+        $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
+    ?>
+    <div class="row formation-inscription">
+        <div class="col-md-8 description">
+            <?php echo $instance->getFormation()->getLibelle(); ?> (#<?php echo $instance->getFormation()->getId(); ?>/<?php echo $instance->getId(); ?>)
+            <br/>
+            Du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?> - <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?>
+            <br/>
+            <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
+        </div>
+        <div class="pull-right">
+            <?php if ($nbPlace <= 0) : ?>
+                <span class="alert alert-danger">Action de formation complète.</span>
+            <?php else: ?>
+                <?php if ($canInscrire) : ?>
+                    <a
+                            <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
+                            href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+                    >
+                        <span class="icon desinscription"> J'annule mon inscription</span>
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endforeach; ?>

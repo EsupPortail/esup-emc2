@@ -284,3 +284,7 @@ span.icon.inscription-ouverture:before {
 span.icon.inscription-fermeture:before {
     content:"\f274";
 }
+
+span.icon.desinscription:before {
+    content:"\f410";
+}

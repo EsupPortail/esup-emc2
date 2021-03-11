@@ -338,9 +338,9 @@ class MailingService
             case 'VAR[FORMATION#fin]' :
                 $instance = $variables['instance'];
                 return $instance->getFin();
-            case 'VAR[FORMATION#lien_inscription]' :
+            case 'VAR[FORMATION#inscription]' :
                 $instance = $variables['instance'];
-                return '<a href="'.$this->rendererService->url('formation/inscription', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true).'">Accéder à l\'inscription</a>';
+                return ($instance->isAutoInscription())?"libre":"manuelle";
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

@@ -72,6 +72,22 @@ class FormationInstanceForm extends Form
         ]);
         /** taille liste complementaire */
         $this->add([
+            'type' => Select::class,
+            'name' => 'inscription',
+            'options' => [
+                'label' => "Inscriptions directes par les agents :",
+                'empty_option' => "Sélectionner un type d'inscription ...",
+                'value_options' => [
+                    false => 'Non, les agents sont inscrits par les gestionnaires de formation',
+                    true => 'Oui, les agents peuvent s\'inscrire direcement dans l\'application',
+                ],
+            ],
+            'attributes' => [
+                'id' => 'inscription',
+            ],
+        ]);
+        /** taille liste complementaire */
+        $this->add([
             'type' => Text::class,
             'name' => 'lieu',
             'options' => [
@@ -101,6 +117,7 @@ class FormationInstanceForm extends Form
             'description' => ['required' => false,],
             'principale' => ['required' => true,],
             'complementaire' => ['required' => true,],
+            'inscription' => ['required' => true,],
             'lieu' => ['required' => true,],
             'type' => ['required' => true,],
         ]));

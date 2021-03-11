@@ -1,0 +1,49 @@
+<?php
+
+use Formation\Entity\Db\FormationInstance;
+
+?>
+
+<h3>Soit l'inscription est faite par les gestionnaires</h3>
+
+<dl>
+    <dt> Qui </dt>
+    <dd>
+        Tous les rôles ayant le privilèges <span class="privilege"><span class="icon clef"></span>FormationInstance_Gerer_Inscription</span>.<br/>
+        Par exemple :
+        <ul>
+            <li> Administrateur Technique/Fonctionnelle</li>
+            <li> Gestionnaire de formation</li>
+        </ul>
+    </dd>
+    <dt> Où</dt>
+    <dd>
+        Dans la page de gestion d'une action de formation Ressources > Formations > Formations en cliquant
+        <span class="icon voir"></span> sur l'icone permettant la visualisation d'une instance de formation.
+    </dd>
+    <dt> Comment </dt>
+    En cliquant sur le bouton <button class="label btn-primary"><span class="icon ajouter"></span> Ajouter un agent</button>
+    <dt> Que se passe t'il</dt>
+    <dd>
+        Si il reste de la place l'agent est inscrit en liste principale, sinon en liste complémentaire si elle n'est pas complète,
+        sinon aucune inscription n'est faite.
+    </dd>
+</dl>
+
+<h3>Soit l'action de formation est en inscription libre</h3>
+<dl>
+    <dt> Qui </dt>
+    <dd>
+        L'agent
+    </dd>
+    <dt> Où</dt>
+    <dd>
+        Dans la page de gestion des actions de formations accessible via le menu 'Formations' onglet 'Actions de formation'.
+    </dd>
+    <dt> Comment </dt>
+    En cliquant sur le bouton <button class="label btn-primary"><span class="icon inscription-ouverture"></span> Je m'inscrit</button> de la formation souhaitée.
+    <dt> Que se passe t'il</dt>
+    <dd>
+        L'agent est inscrit et un confirmation visuelle est faite sur la page des formations.
+    </dd>
+</dl>

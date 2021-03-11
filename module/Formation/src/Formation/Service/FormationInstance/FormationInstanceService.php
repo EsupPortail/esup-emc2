@@ -122,9 +122,9 @@ class FormationInstanceService
      */
     public function getFormationsInstancesByEtat(string $etatCode) : array
     {
-        $qb = $this->$this->createQueryBuilder()
+        $qb = $this->createQueryBuilder()
             ->andWhere('etat.code = :code')
-            ->setParametre('code', $etatCode)
+            ->setParameter('code', $etatCode)
         ;
         $result = $qb->getQuery()->getResult();
         return $result;

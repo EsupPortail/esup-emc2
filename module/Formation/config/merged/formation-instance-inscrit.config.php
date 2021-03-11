@@ -2,12 +2,14 @@
 
 namespace Formation;
 
+use Application\Controller\IndexController;
 use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [
@@ -28,14 +30,70 @@ return [
                         FormationinstanceinscritPrivileges::FORMATIONINSTANCEINSCRIT_MODIFIER,
                     ],
                 ],
+                [
+                    'controller' => FormationInstanceInscritController::class,
+                    'action' => [
+                        'liste-formations-instances',
+                        'inscription',
+                        'desinscription',
+                    ],
+                    'roles' => [
+                        'Agent',
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'formations' => [
+                        'order' => 1000,
+                        'label' => 'Formations',
+                        'title' => "Gestion des actions de formations et des inscriptions à celles-ci",
+                        'route' => 'liste-formations-instances',
+                        'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+                    ],
+                ],
             ],
         ],
     ],
 
     'router'          => [
         'routes' => [
+            'liste-formations-instances' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/liste-formations-instances',
+                    'defaults' => [
+                        'controller' => FormationInstanceInscritController::class,
+                        'action'     => 'liste-formations-instances',
+                    ],
+                ],
+            ],
             'formation-instance' => [
                 'child_routes' => [
+                    'inscription' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/inscription/:formation-instance/:agent',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'inscription',
+                            ],
+                        ],
+                    ],
+                    'desinscription' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/desinscription/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'desinscription',
+                            ],
+                        ],
+                    ],
                     'ajouter-agent' => [
                         'type'  => Segment::class,
                         'options' => [

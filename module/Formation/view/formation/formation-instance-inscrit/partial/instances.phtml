@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @var FormationInstance[] $instances
+ * @var FormationInstanceInscrit[] $inscriptions
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceInscrit;
+
+$canInscrire = true;
+?>
+
+<h2>
+    Actions de formations
+    <span class="badge"><?php echo count($instances); ?></span>
+</h2>
+
+<?php foreach ($instances as $instance) : ?>
+    <?php
+        $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
+        $dejaInscrit = !empty(array_filter($inscriptions, function (FormationInstanceInscrit $a) use ($instance) { return $a->estNonHistorise() AND $a->getInstance() === $instance;}));
+    ?>
+    <div class="row formation-instance">
+        <div class="col-md-8 description">
+            <?php echo $instance->getFormation()->getLibelle(); ?> (#<?php echo $instance->getFormation()->getId(); ?>/<?php echo $instance->getId(); ?>)
+            <br/>
+            Du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?> - <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?>
+            <br/>
+            Liste principale <?php echo count($instance->getListePrincipale());  ?>/<?php echo $instance->getNbPlacePrincipale(); ?>
+            -
+            Liste complémentaire <?php echo count($instance->getListeComplementaire());  ?>/<?php echo $instance->getNbPlaceComplementaire(); ?>
+        </div>
+        <div class="pull-right">
+            <?php if ($dejaInscrit) : ?>
+                <span class="alert alert-success"> <span class="icon ok"></span>Vous êtes inscrit&middot;e à cette action de formation.</span>
+            <?php else: ?>
+                <?php if ($nbPlace <= 0) : ?>
+                    <span class="alert alert-danger">Action de formation complète.</span>
+                <?php else: ?>
+                    <?php if ($canInscrire) : ?>
+                        <a href="<?php echo $this->url('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+                            <span class="icon inscription-ouverture"> Je m'inscrits</span>
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endforeach; ?>

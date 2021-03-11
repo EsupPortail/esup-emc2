@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @see \Formation\Controller\FormationInstanceInscritController::listeFormationsInstancesAction()
+ * @var FormationInstance[] $instances
+ * @var FormationInstanceInscrit[] $inscriptions
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceInscrit;
+
+$this->headTitle("Liste des actions de formations proposées");
+
+?>
+
+<h1 class="page-header">
+    Liste des actions de formations proposées"
+</h1>
+
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<br/>
+
+<div class="main">
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+
+            <li>
+                <a href="#instances" aria-controls="instances" role="tab" data-toggle="tabz">
+                    Actions de formation
+                    <span class="badge">
+                    <?php echo count($instances); ?>
+                </span>
+                </a>
+            </li>
+            <li>
+                <a href="#inscriptions" aria-controls="inscriptions" role="tab" data-toggle="tabz">
+                    Mes inscriptions
+                    <span class="badge">
+                    <?php echo count($inscriptions); ?>
+                </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="main-with-tab">
+
+    <div class="tab-content">
+
+        <!-- Mission------------------------------------------------------------------------------------------->
+        <div id="instances" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/instances', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
+        </div>
+
+        <!-- Type---------------------------------------------------------------------------------------------->
+        <div id="inscriptions" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/inscriptions', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors=[];
+            window.location.reload();
+        });
+    });
+
+    $(document).ready(function() {
+        $('.datatable').DataTable( {
+            sorting:false,
+            paging:false,
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "instances";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+    });
+</script>

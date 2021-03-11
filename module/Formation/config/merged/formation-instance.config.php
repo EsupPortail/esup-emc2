@@ -86,6 +86,7 @@ return [
                     'action' => [
                         'convoquer',
                         'questionner',
+                        'formation-console',
                     ],
                     'roles' => [],
                 ],
@@ -220,6 +221,16 @@ return [
                         'defaults' => [
                             'controller' => FormationInstanceController::class,
                             'action' => 'questionner'
+                        ],
+                    ],
+                ],
+                'formation-console' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'formation-console',
+                        'defaults' => [
+                            'controller' => FormationInstanceController::class,
+                            'action' => 'formation-console'
                         ],
                     ],
                 ],
