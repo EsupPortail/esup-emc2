@@ -3,7 +3,6 @@
 namespace UnicaenUtilisateur\Form\User;
 
 use DoctrineModule\Validator\NoObjectExists;
-use DoctrineModule\Validator\UniqueObject;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Form\Element\Button;

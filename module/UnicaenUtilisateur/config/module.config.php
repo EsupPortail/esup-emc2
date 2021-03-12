@@ -2,7 +2,6 @@
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-//use UnicaenUtilisateur\Event\UserAuthenticatedEventListenerFactory;
 use UnicaenUtilisateur\Event\UserRoleSelectedEventListener;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListener;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;

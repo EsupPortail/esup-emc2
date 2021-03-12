@@ -2,24 +2,26 @@
 
 namespace UnicaenUtilisateur\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenPrivilege\Entity\Db\Privilege;
 
 class Role extends AbstractRole
 {
     /** @var string */
     private $libelle;
-    /** @var \Doctrine\Common\Collections\Collection (Privilege)*/
+    /** @var Collection (Privilege)*/
     private $privilege;
 
     public function __construct()
     {
         parent::__construct();
-        $this->privilege = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->privilege = new ArrayCollection();
     }
 
     /**
      * @param UserInterface $user
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function addUser(UserInterface $user)
     {
@@ -29,7 +31,7 @@ class Role extends AbstractRole
 
     /**
      * @param UserInterface $user
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function removeUser(UserInterface $user)
     {
@@ -38,7 +40,7 @@ class Role extends AbstractRole
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUsers()
     {
@@ -64,7 +66,7 @@ class Role extends AbstractRole
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPrivileges()
     {
@@ -80,10 +82,10 @@ class Role extends AbstractRole
     }
 
     /**
-     * @param string $libelle
+     * @param string|null $libelle
      * @return Role
      */
-    public function setLibelle($libelle)
+    public function setLibelle(?string $libelle)
     {
         $this->libelle = $libelle;
         return $this;

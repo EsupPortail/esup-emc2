@@ -12,7 +12,7 @@ interface UserInterface extends \ZfcUser\Entity\UserInterface
     public function getId();
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @return self
      */
     public function setId($id);

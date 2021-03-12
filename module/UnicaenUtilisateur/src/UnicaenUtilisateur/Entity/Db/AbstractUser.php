@@ -5,8 +5,6 @@ namespace UnicaenUtilisateur\Entity\Db;
 use BjyAuthorize\Provider\Role\ProviderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use UnicaenUtilisateur\Entity\Db\RoleInterface;
-use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenUtilisateur\Service\RechercheIndividu\RechercheIndividuResultatInterface;
 
 abstract class AbstractUser implements UserInterface, ProviderInterface, RechercheIndividuResultatInterface

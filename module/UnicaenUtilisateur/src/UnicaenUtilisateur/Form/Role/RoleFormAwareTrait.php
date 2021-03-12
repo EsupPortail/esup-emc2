@@ -10,7 +10,7 @@ trait RoleFormAwareTrait {
     /**
      * @return RoleForm
      */
-    public function getRoleForm()
+    public function getRoleForm() : RoleForm
     {
         return $this->roleForm;
     }
@@ -19,7 +19,7 @@ trait RoleFormAwareTrait {
      * @param RoleForm $roleForm
      * @return RoleForm
      */
-    public function setRoleForm($roleForm)
+    public function setRoleForm(RoleForm $roleForm) : RoleForm
     {
         $this->roleForm = $roleForm;
         return $this->roleForm;

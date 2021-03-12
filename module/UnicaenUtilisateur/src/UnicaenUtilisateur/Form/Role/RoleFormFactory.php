@@ -5,7 +5,6 @@ namespace  UnicaenUtilisateur\Form\Role;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\Role\RoleService;
-use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 
 class RoleFormFactory {
 

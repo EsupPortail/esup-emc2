@@ -10,7 +10,7 @@ trait UserFormAwareTrait {
     /**
      * @return UserForm
      */
-    public function getUserForm()
+    public function getUserForm() : UserForm
     {
         return $this->userForm;
     }
@@ -19,7 +19,7 @@ trait UserFormAwareTrait {
      * @param UserForm $userForm
      * @return UserForm
      */
-    public function setUserForm($userForm)
+    public function setUserForm(UserForm $userForm) : UserForm
     {
         $this->userForm = $userForm;
         return $this->userForm;

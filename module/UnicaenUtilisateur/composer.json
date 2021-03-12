@@ -8,8 +8,7 @@
     }
   ],
   "require": {
-    "unicaen/app":                                  ">=3.0",
-    "unicaen/auth":                                 ">=3.0"
+    "unicaen/app":                                  ">=3.0"
   },
   "require-dev": {
     "phpunit/phpunit":                              ">=3.7"
@@ -19,8 +18,8 @@
       "UnicaenUtilisateur": "src/"
     },
   "suggested": {
-    "UnicaenUtilisateurLdapAdaptater" : "Fourni un service avec les interfaces de recherche pour unicaen/ldap",
-    "UnicaenUtilisateurOctopusAdaptater" : "Fourni un service avec les interfaces de recherche pour unicaen/octopus"
+    "UnicaenUtilisateurLdapAdaptater" : "unicaen/utilisateur-ldap-adapter",
+    "UnicaenUtilisateurOctopusAdaptater" : "unicaen/utilisateur-octopus-adapter"
   },
     "classmap": [
       "./Module.php"

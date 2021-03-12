@@ -14,8 +14,11 @@ use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+
+/** @method FlashMessenger flashMessenger() */
 
 class UtilisateurController extends AbstractActionController {
     use MailingServiceAwareTrait;
@@ -40,7 +43,6 @@ class UtilisateurController extends AbstractActionController {
             $data = $request->getPost()->toArray()['utilisateur'];
             $source = explode('||',$data['id'])[0];
             $id = explode('||',$data['id'])[1];
-            $label = $data['label'];
 
             $utilisateur = null;
             switch($source) {
@@ -50,7 +52,7 @@ class UtilisateurController extends AbstractActionController {
                     if ($utilisateur !== null) $params = ["query" => ["id" => $id]];
                     return $this->redirect()->toRoute(null, [], $params, true);
 
-                //todo n'importe quelle source connue 
+                // on peut complete en cas nouvelle source
                 default :
                     if (isset($this->recherche[$source])) {
                         $people = $this->recherche[$source]->findById($id);
@@ -217,14 +219,12 @@ class UtilisateurController extends AbstractActionController {
         return $vm;
     }
     
-    /** @TODO afficher si mail manquant ... */
     public function rechercherAction() {
         $term = $this->params()->fromQuery('term');
         $serviceName = $this->params()->fromRoute('service-name');
-        
 
-        /** @var RechercheIndividuServiceInterface $service
-         */
+        $res = [];
+        /** @var RechercheIndividuServiceInterface $service */
         foreach ($this->recherche as $key => $service) {
             $res[$key] = $service->findByTerm($term);
         }
@@ -237,7 +237,7 @@ class UtilisateurController extends AbstractActionController {
                     $result[] = array(
                         'id' => $key . '||' . $individu->getId(),
                         'label' => $individu->getDisplayName(),
-                        'extra' => "<span class='badge' id='" . $key . "' >" . $individu->getEmail() . "</span>",
+                        'extra' => "<span class='badge' id='" . $key . "' >" . (($individu->getEmail())?:"Aucun mail") . "</span>",
                     );
                 }
             }
@@ -255,8 +255,6 @@ class UtilisateurController extends AbstractActionController {
     
     public function exportAction() 
     {
-        $date = (new DateTime())->format("Ymd-his");
-        $filemane = $date . "_listing-utilisateurs-GAETHAN.csv";
         $users = $this->getUserService()->getUtilisateurs();
         $headers = [ 'Nom d\'utilisateur', 'Nom affiché', 'Actif', 'Rôle'];
 

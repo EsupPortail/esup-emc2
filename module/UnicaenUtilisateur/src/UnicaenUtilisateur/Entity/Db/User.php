@@ -2,8 +2,6 @@
 
 namespace UnicaenUtilisateur\Entity\Db;
 
-use UnicaenUtilisateur\Service\RechercheIndividu\RechercheIndividuResultatInterface;
-
 class User extends AbstractUser implements UserInterface
 {
     private $lastRole;
@@ -41,7 +39,6 @@ class User extends AbstractUser implements UserInterface
     }
 
     function hasRole($roleSearch) {
-        $roleArray = $this->getRoles()->toArray();
         /** @var Role $role */
         foreach ($this->getRoles() as $role) {
             if ($role === $roleSearch) return true;

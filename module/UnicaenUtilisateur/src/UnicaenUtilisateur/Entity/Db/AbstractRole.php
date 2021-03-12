@@ -3,8 +3,6 @@
 namespace UnicaenUtilisateur\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenUtilisateur\Entity\Db\RoleInterface;
-use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 abstract class AbstractRole implements RoleInterface
 {
