@@ -32,11 +32,11 @@ foreach ($competences as $item) {
                 <label>
                     <input
                             type="checkbox"
-                            id="<?php echo $item['object']->getId(); ?>"
-                            name="<?php echo $item['object']->getId(); ?>"
+                            id="<?php echo $item['entite']->getId(); ?>"
+                            name="<?php echo $item['entite']->getId(); ?>"
                         <?php if ($item['conserve']) echo "checked"; ?>
                     />
-                    <?php echo $item['object']->getLibelle(); ?>
+                    <?php echo $item['entite']->getLibelle(); ?>
                 </label>
             </div>
         <?php endforeach; ?>

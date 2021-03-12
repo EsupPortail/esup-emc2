@@ -16,10 +16,10 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Validator\Date;
 use Zend\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
+
 class FormationInstanceController extends AbstractActionController
 {
     use EtatServiceAwareTrait;

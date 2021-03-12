@@ -84,8 +84,6 @@ return [
                 [
                     'controller' => FormationInstanceController::class,
                     'action' => [
-                        'convoquer',
-                        'questionner',
                         'formation-console',
                     ],
                     'roles' => [],

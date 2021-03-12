@@ -626,7 +626,7 @@ class FichePosteController extends AbstractActionController {
             $data = $request->getPost();
 
             foreach ($competences as $item) {
-                $competence = $item['object'];
+                $competence = $item['entite'];
                 $checked = (isset($data[$competence->getId()]) AND $data[$competence->getId()] === "on");
 
                 if ($checked === false AND $item['conserve'] === true) {
