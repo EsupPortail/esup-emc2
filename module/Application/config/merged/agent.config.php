@@ -446,7 +446,7 @@ return [
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/afficher/:agent',
+                            'route'    => '/afficher[/:agent]',
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',
@@ -481,6 +481,13 @@ return [
                                 'order'    => 100,
                             ],
                         ],
+                    ],
+                    'donnees' => [
+                        'order' => 0100,
+                        'label' => 'Mes données',
+                        'title' => "Gestion des données d'un agent",
+                        'route' => 'agent/afficher',
+                        'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER_DONNEES),
                     ],
                 ],
             ],

@@ -25,9 +25,7 @@ $canInscrire = true;
     ?>
     <div class="row formation-inscription">
         <div class="col-md-8 description">
-            <?php echo $instance->getFormation()->getLibelle(); ?> (#<?php echo $instance->getFormation()->getId(); ?>/<?php echo $instance->getId(); ?>)
-            <br/>
-            Du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?> - <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?>
+            <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
             <br/>
             <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
         </div>

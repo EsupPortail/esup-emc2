@@ -25,6 +25,7 @@ use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\FormationElement\FormationElementServiceFactory;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceFactory;
+use Formation\View\Helper\FormationInformationsViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
@@ -228,6 +229,11 @@ return [
             FormationElementHydrator::class => FormationElementHydratorFactory::class,
             SelectionFormationHydrator::class => SelectionFormationHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'formationInformations' => FormationInformationsViewHelper::class,
+        ],
+    ],
 
 ];

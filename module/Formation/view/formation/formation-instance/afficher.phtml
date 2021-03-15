@@ -53,17 +53,10 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
 </h1>
 
 <div class="main">
+    <h2> Formation </h2>
     <div class="row">
         <div class="col-sm-6 col-md-8">
-            <h2> Formation </h2>
-            <dl class="dl-horizontal">
-                <dt> Intitulé</dt>
-                <dd> <?php echo $formation->getLibelle(); ?> </dd>
-                <dt>Description</dt>
-                <dd>
-                    <?php echo ($formation->getDescription() !== null AND trim($formation->getDescription()) !== "")?$formation->getDescription():"Aucune description"; ?>
-                </dd>
-            </dl>
+            <?php echo $this->formationInformations($formation); ?>
         </div>
         <div class="pull-right">
             <a      <?php /** @see FormationController::editerAction() */ ?>
@@ -103,30 +96,9 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
     </div>
 
     <div class="row">
+        <h2> Action de formation</h2>
         <div class="col-sm-6 col-md-8">
-            <h2> Action de formation</h2>
-            <dl class="dl-horizontal">
-                <dt> État</dt>
-                <dd>  <?php echo ($instance->getEtat())?$this->etatbadge($instance->getEtat())." ".$instance->getEtat()->getLibelle():"N.C."; ?> </dd>
-                <dt> Compléments </dt>
-                <dd> <?php echo ($instance->getComplement())?:"Aucun complément."; ?></dd>
-                <dt> Taille liste principale</dt>
-                <dd> <?php echo $instance->getNbPlacePrincipale(); ?> </dd>
-                <dt> Taille liste complémentaire</dt>
-                <dd> <?php echo $instance->getNbPlaceComplementaire(); ?> </dd>
-                <dt> Lieu</dt>
-                <dd> <?php echo ($instance->getLieu())?:"Non communiqué"; ?> </dd>
-                <dt> Type</dt>
-                <dd> <?php echo ($instance->getType())?:"Non communiqué"; ?> </dd>
-                <dt> Auto-inscription</dt>
-                <dd>
-                    <?php if ($instance->isAutoInscription()) : ?>
-                        Oui (les agents peuvent s'inscrire eux-même)
-                    <?php else : ?>
-                        Non (les agents doivent notifier les gestionnaires de formation)
-                    <?php endif; ?>
-                </dd>
-            </dl>
+            <?php echo $this->formationInstanceInformations($instance); ?>
         </div>
         <?php if ($canInformation) : ?>
             <div class="pull-right">

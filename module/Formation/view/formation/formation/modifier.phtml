@@ -30,28 +30,7 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
 <div class="main">
     <div class="row">
         <div class="col-sm-6 col-md-8">
-            <dl class="dl-horizontal">
-                <dt>Libelle</dt>
-                <dd>
-                    <?php echo $formation->getLibelle(); ?>
-                </dd>
-                <dt>Description</dt>
-                <dd>
-                    <?php echo ($formation->getDescription() !== null AND trim($formation->getDescription()) !== "")?$formation->getDescription():"Aucune description"; ?>
-                </dd>
-                <dt>Thème</dt>
-                <dd>
-                    <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():"Non renseigné"; ?>
-                </dd>
-                <dt>Groupe</dt>
-                <dd>
-                    <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Non renseigné"; ?>
-                </dd>
-                <dt>Lien</dt>
-                <dd>
-                    <?php echo ($formation->getLien())?"<a href='".$formation->getLien()."'>Lien vers la fiche de la formation</a>":"Non renseigné"; ?>
-                </dd>
-            </dl>
+            <?php echo $this->formationInformations($formation); ?>
         </div>
         <div class="pull-right">
             <?php if ($canModifierInformations) : ?>

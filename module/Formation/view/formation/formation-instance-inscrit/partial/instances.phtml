@@ -25,13 +25,7 @@ $canInscrire = true;
     ?>
     <div class="row formation-instance">
         <div class="col-md-8 description">
-            <?php echo $instance->getFormation()->getLibelle(); ?> (#<?php echo $instance->getFormation()->getId(); ?>/<?php echo $instance->getId(); ?>)
-            <br/>
-            Du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?> - <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?>
-            <br/>
-            Liste principale <?php echo count($instance->getListePrincipale());  ?>/<?php echo $instance->getNbPlacePrincipale(); ?>
-            -
-            Liste complémentaire <?php echo count($instance->getListeComplementaire());  ?>/<?php echo $instance->getNbPlaceComplementaire(); ?>
+            <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
         </div>
         <div class="pull-right">
             <?php if ($dejaInscrit) : ?>

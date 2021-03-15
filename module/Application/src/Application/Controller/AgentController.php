@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
-use Application\Entity\Db\Agent;
 use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\CompetenceElement;
 use Application\Form\ApplicationElement\ApplicationElementForm;
@@ -88,6 +87,9 @@ class AgentController extends AbstractActionController
     public function afficherAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        if ($agent === null) {
+            $agent = $this->getAgentService()->getAgentByUser($this->getUserService()->getConnectedUser());
+        }
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());

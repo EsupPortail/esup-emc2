@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @see \Formation\View\Helper\FormationInstanceInformationsViewHelper
+ * @var FormationInstance $instance
+ * @var string $mode
+ * @var array $options
+ */
+
+use Formation\Entity\Db\FormationInstance;
+
+?>
+
+<?php if ($mode === 'liste') : ?>
+    <dl class="dl-horizontal">
+        <dt> État</dt>
+        <dd>  <?php echo ($instance->getEtat())?$this->etatbadge($instance->getEtat())." ".$instance->getEtat()->getLibelle():"N.C."; ?> </dd>
+        <?php if ($instance->getComplement() !== null) : ?>
+            <dt> Compléments </dt>
+            <dd> <?php echo $instance->getComplement(); ?></dd>
+        <?php endif; ?>
+        <dt> Taille liste principale</dt>
+        <dd> <?php echo $instance->getNbPlacePrincipale(); ?> </dd>
+        <dt> Taille liste complémentaire</dt>
+        <dd> <?php echo $instance->getNbPlaceComplementaire(); ?> </dd>
+        <dt> Lieu</dt>
+        <dd> <?php echo ($instance->getLieu())?:"Non communiqué"; ?> </dd>
+        <?php if ($instance->getType() !== null) : ?>
+            <dt> Type</dt>
+            <dd> <?php echo $instance->getType(); ?> </dd>
+        <?php endif; ?>
+        <dt> Auto-inscription</dt>
+        <dd>
+            <?php if ($instance->isAutoInscription()) : ?>
+                Oui (les agents peuvent s'inscrire eux-même)
+            <?php else : ?>
+                Non (les agents doivent notifier les gestionnaires de formation)
+            <?php endif; ?>
+        </dd>
+    </dl>
+<?php endif; ?>
+
+<?php if ($mode === 'bloc') : ?>
+    <?php echo $instance->getFormation()->getLibelle(); ?> (#<?php echo $instance->getFormation()->getId(); ?>/<?php echo $instance->getId(); ?>)
+    <br/>
+    Du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?> - <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?>
+    <br/>
+    Liste principale <?php echo count($instance->getListePrincipale());  ?>/<?php echo $instance->getNbPlacePrincipale(); ?>
+    -
+    Liste complémentaire <?php echo count($instance->getListeComplementaire());  ?>/<?php echo $instance->getNbPlaceComplementaire(); ?>
+<?php endif; ?>

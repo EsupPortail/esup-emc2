@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @see \Formation\View\Helper\FormationInformationsViewHelper
+ * @var Formation $formation
+ * @var string $mode
+ * @var array $options
+ */
+
+use Formation\Entity\Db\Formation;
+
+?>
+
+<?php if ($mode === 'liste') : ?>
+    <dl class="dl-horizontal">
+        <dt> Libellé </dt>
+        <dd> <?php echo $formation->getLibelle(); ?> </dd>
+        <?php if ($formation->getTheme() !== null) : ?>
+            <dt> Thème </dt>
+            <dd> <?php echo $formation->getTheme()->getLibelle(); ?> </dd>
+        <?php endif; ?>
+        <?php if ($formation->getGroupe() !== null) : ?>
+            <dt> Groupe </dt>
+            <dd> <?php echo $formation->getGroupe()->getLibelle(); ?> </dd>
+        <?php endif; ?>
+        <?php if ($formation->getLien() !== null AND trim ($formation->getLien()) !== "") : ?>
+            <dt> Lien </dt>
+            <dd> <a href="<?php echo $formation->getLien(); ?>" title="Lien vers la documentation associée à la formation" data-toggle="tooltip" data-html="true">
+                    <?php echo $formation->getLien(); ?></a> </dd>
+        <?php endif; ?>
+        <?php if ($formation->getDescription() !== null) : ?>
+            <dt> Description </dt>
+            <dd> <?php echo $formation->getDescription(); ?> </dd>
+        <?php endif; ?>
+    </dl>
+<?php endif; ?>

@@ -11,6 +11,7 @@ use Formation\Form\FormationInstance\FormationInstanceHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
+use Formation\View\Helper\FormationInstanceInformationsViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Mvc\Console\Router\Simple;
 use Zend\Router\Http\Literal;
@@ -81,13 +82,13 @@ return [
                     ],
                 ],
                 //console
-                [
-                    'controller' => FormationInstanceController::class,
-                    'action' => [
-                        'formation-console',
-                    ],
-                    'roles' => [],
-                ],
+//                [
+//                    'controller' => FormationInstanceController::class,
+//                    'action' => [
+//                        'formation-console',
+//                    ],
+//                    'roles' => [],
+//                ],
             ],
         ],
     ],
@@ -235,6 +236,11 @@ return [
         'factories' => [
             FormationInstanceHydrator::class => FormationInstanceHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'formationInstanceInformations' => FormationInstanceInformationsViewHelper::class,
+        ],
+    ],
 
 ];
