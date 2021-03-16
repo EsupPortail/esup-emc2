@@ -71,7 +71,7 @@ ksort($applicationsArray);
                                 <?php echo $application->getLibelle(); ?>
                             </td>
                             <td class="validation">
-                                <?php $hasApplication = $agent->hasApplication($application); ?>
+                                <?php $hasApplication = ($agent)?$agent->hasApplication($application):null; ?>
                                 <?php if ($hasApplication === null) : ?>
                                     <?php if ($canModifier) : ?>
                                         <a
