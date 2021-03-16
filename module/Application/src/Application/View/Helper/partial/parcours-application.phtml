@@ -50,119 +50,68 @@ ksort($applicationsArray);
     $canModifier = isset($options['modification'])?$options['modification']:false;
 ?>
 
-<?php /** Titre du parcours de formation  *****************************************************************************/ ?>
+<div class="parcours">
 
-<div class="parcours-de-formation">
+    <div class="titre">
+        <h3>Parcours d'entrée applicatif</h3>
+    </div>
 
-<div class="row">
-    <div class="col-md-11 titre-bloc">
-        <h3>Parcours de formation lié aux applications</h3>
+    <div class="listing">
+        <table>
+            <?php foreach($applicationsArray as $groupe => $applicationArray) : ?>
+                <?php usort($applicationArray, function ($a, $b) {return $a->getLibelle() > $b->getLibelle();}); ?>
+                    <tr>
+                        <th colspan="2">
+                            <?php echo $groupe; ?>
+                        </th>
+                    </tr>
+                    <?php  foreach($applicationArray as $application) : ?>
+                        <tr>
+                            <td class="libelle">
+                                <?php echo $application->getLibelle(); ?>
+                            </td>
+                            <td class="validation">
+                                <?php $hasApplication = $agent->hasApplication($application); ?>
+                                <?php if ($hasApplication === null) : ?>
+                                    <?php if ($canModifier) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\AgentController::ajouterApplicationAction() */?>
+                                                href="<?php echo $this->url('agent/ajouter-application', ['agent' => $agent->getId(), 'application' => $application->getId()], [], true); ?>"
+                                                class="ajax-modal"
+                                                data-event="modification"
+                                        >
+                                            <span class="icon ajouter"
+                                                  data-toggle="tooltip" data-html="true"
+                                                  title="Ajouter une application"
+                                            ></span>
+                                        </a>
+                                    <?php endif; ?>
+                                <?php else : ?>
+                                    <?php $validation = ($hasApplication AND $hasApplication->getValidation())?$hasApplication->getValidation():null; ?>
+                                    <?php if ($validation) : ?>
+                                        <?php echo $this->validationBadge($validation); ?>
+                                    <?php else : ?>
+                                        <?php if ($canModifier) : ?>
+                                            <a
+                                            <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentApplication", 'id' => $hasApplication->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
+                                            >
+                                        <?php endif; ?>
+                                        <span class="icon question" style="color: cornflowerblue;"
+                                              data-toggle="tooltip" data-html="true"
+                                              title="Application en attente de validation"
+                                        ></span>
+                                        <?php if ($canModifier) : ?>
+                                            </a>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+            <?php endforeach; ?>
+        </table>
     </div>
 </div>
-
-<br/>
-
-<?php /** Affichage du tableau ****************************************************************************************/ ?>
-
-    <div>
-    <table class="parcours-de-formation">
-        <?php foreach($applicationsArray as $groupe => $applicationArray) : ?>
-            <?php usort($applicationArray, function ($a, $b) {return $a->getLibelle() > $b->getLibelle();}); ?>
-
-            <?php /** Barre de groupe de formation  *******************************************************************/ ?>
-                <tr>
-                    <th class="titre" colspan="3">
-                        <?php echo $groupe; ?>
-                    </th>
-                </tr>
-
-            <?php /** Barre de formation ******************************************************************************/ ?>
-
-            <?php  foreach($applicationArray as $application) : ?>
-                <tr>
-                    <td class="libelle">
-                        <?php echo $application->getLibelle(); ?>
-                    </td>
-                    <td class="formation">
-                        <?php $hasApplication = $agent->hasApplication($application); ?>
-                        <?php if ($hasApplication === null) : ?>
-                            <?php if ($canModifier) : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\AgentController::ajouterApplicationAction() */?>
-                                        href="<?php echo $this->url('agent/ajouter-application', ['agent' => $agent->getId(), 'application' => $application->getId()], [], true); ?>"
-                                        class="ajax-modal"
-                                        data-event="modification"
-                                >
-                                    <span class="icon ajouter"
-                                          data-toggle="tooltip" data-html="true"
-                                          title="Ajouter une application"
-                                    ></span>
-                                </a>
-                            <?php endif; ?>
-                        <?php else : ?>
-                            <?php $validation = ($hasApplication AND $hasApplication->getValidation())?$hasApplication->getValidation():null; ?>
-                            <?php if ($validation) : ?>
-                                <?php if ($validation->getValeur() === null) : ?>
-                                    <span class="icon ok" style="color: darkgreen;"
-                                          data-toggle="tooltip" data-html="true"
-                                          title="Validée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
-                                    ></span>
-                                <?php else: ?>
-                                    <span class="icon ko" style="color: darkred;"
-                                          data-toggle="tooltip" data-html="true"
-                                          title="Refusée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
-                                    ></span>
-                                <?php endif; ?>
-                            <?php else : ?>
-                                <?php if ($canModifier) : ?>
-                                    <a
-                                    <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                    href="<?php echo $this->url('agent/valider-element', ['type' => "AgentApplication", 'id' => $hasApplication->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                                    >
-                                <?php endif; ?>
-                                <span class="icon question" style="color: cornflowerblue;"
-                                      data-toggle="tooltip" data-html="true"
-                                      title="Application en attente de validation"
-                                ></span>
-                                <?php if ($canModifier) : ?>
-                                    </a>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                    </td>
-                    <td class="action"></td>
-                </tr>
-            <?php endforeach; ?>
-        <?php endforeach; ?>
-    </table>
-</div>
-</div>
-
-
-<style>
-    div.parcours-de-formation {
-        padding-top: 2rem;
-    }
-
-    div.parcours-de-formation h4 {
-        text-decoration: underline;
-    }
-
-    table.parcours-de-formation {
-        width:95%;
-    }
-
-    table.parcours-de-formation th {
-        padding: 0.5rem;
-        color: white;
-    }
-    table.parcours-de-formation td.libelle {
-        padding-left: 1rem;
-        width:80%;
-    }
-    table.parcours-de-formation td.formation {
-        text-align: center;
-    }
-</style>

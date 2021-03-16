@@ -425,11 +425,6 @@ span.todo:before {
 /*    font-weight: bold;*/
 /*}*/
 
-table.parcours-de-formation th.titre {
-    background: linear-gradient(to right, lightgrey, whitesmoke);
-    color: #3c6c8b;
-}
-
 table.elements {
     width:100%;
 }
@@ -520,4 +515,39 @@ div.information div.description {
     border-left: 1px lightslategray solid ;
     padding: 0.5rem;
     margin: 0.5rem;
+}
+
+/** PARCOURS (DE FORMATION OU APPLICATIF) *****************************************************************************/
+
+div.parcours {
+    margin-bottom: 1rem;
+}
+div.parcours div.titre {
+    background:var(--color-light-bis);
+    padding-left: 2rem;
+    border: 1px var(--content-color) solid;
+    margin: 1rem;
+}
+
+div.parcours div.listing {
+    background: lightpink;
+}
+
+div.parcours div.listing table {
+    width: 100%;
+}
+
+div.parcours div.listing table th {
+    background: lightgrey;
+    color: #3c6c8b;
+    padding: 0.5rem 0.5rem 0.5rem 3rem;
+}
+
+div.parcours div.listing table td {
+    background: var(--content-background);
+    padding: 0.1rem 0.1rem 0.1rem 3rem;
+}
+
+div.parcours div.listing table td.validation {
+    width:5rem;
 }

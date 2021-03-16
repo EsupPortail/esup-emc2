@@ -1,0 +1,16 @@
+:root {
+    --tooltip-border-color: lightslategray;
+    --tooltip-background : whitesmoke;
+    --tooltip-color: black;
+}
+
+.tooltip-inner {
+    background-color: var(--tooltip-background); !important;
+    border: 1px solid var(--tooltip-border-color);
+    color: var(--tooltip-color);
+    text-align: initial;
+}
+
+.tooltip-arrow {
+    border-top-color: var(--tooltip-border-color);
+}

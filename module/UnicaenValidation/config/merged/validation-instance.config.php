@@ -13,6 +13,7 @@ use UnicaenValidation\Provider\Privilege\ValidationinstancePrivileges;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceFactory;
 use UnicaenValidation\View\Helper\ValidationAfficherViewHelper;
+use UnicaenValidation\View\Helper\ValidationBadgeViewHelper;
 use UnicaenValidation\View\Helper\ValidationValiderViewHelperFactory;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -181,6 +182,7 @@ return [
     'view_helpers' => [
         'invokables' => [
             'validationAfficher'              => ValidationAfficherViewHelper::class,
+            'validationBadge'                 => ValidationBadgeViewHelper::class,
         ],
         'factories' => [
             'validationValider'              => ValidationValiderViewHelperFactory::class,

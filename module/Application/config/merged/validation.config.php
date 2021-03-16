@@ -190,7 +190,7 @@ return [
 
     'view_helpers' => [
         'invokables' => [
-            'validationBadge' => ValidationBadgeViewHelper::class,
+            'validationBadgeBis' => ValidationBadgeViewHelper::class,
         ],
     ],
 

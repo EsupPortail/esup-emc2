@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @see \UnicaenValidation\View\Helper\ValidationBadgeViewHelper
+ * @var ValidationInstance $validation
+ * @var array $options
+ */
+
+use UnicaenValidation\Entity\Db\ValidationInstance;
+
+?>
+
+<?php if ($validation->getValeur() === null) : ?>
+    <span class="icon ok" style="color: darkgreen;"
+          data-toggle="tooltip" data-html="true"
+          title="Validé le <span class='highlight date'> <?php echo $validation->getHistoCreation()->format('d/m/Y'); ?> </span> par <span class='highlight agent'> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?>">
+    </span>
+<?php else : ?>
+    <span class="icon ko" style="color: darkred;"
+          data-toggle="tooltip" data-html="true"
+          title="Validé le <span class='highlight date'> <?php echo $validation->getHistoCreation()->format('d/m/Y'); ?> </span> par <span class='highlight agent'> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?>">
+    </span>
+<?php endif; ?>
