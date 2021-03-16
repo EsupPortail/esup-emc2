@@ -64,7 +64,7 @@ class FormationElementForm extends Form {
             'options' => [
                 'label' => "Année de la formation :",
                 'empty_value' => 'Sélectionner une année ...',
-                'value_options' => $this->getAnneesScolaires(( (int) (new DateTime())->format('Y')) - 5, ( (int) (new DateTime())->format('Y')) + 5),
+                'value_options' => $this->getAnneesScolaires(( (int) (new DateTime())->format('Y')) - 20, ( (int) (new DateTime())->format('Y')) + 5),
             ],
             'attributes' => [
                 'id' => 'annee',
