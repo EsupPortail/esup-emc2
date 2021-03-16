@@ -83,7 +83,55 @@ ksort($applicationsArray);
                     <td class="libelle">
                         <?php echo $application->getLibelle(); ?>
                     </td>
-                    <td class="formation"></td>
+                    <td class="formation">
+                        <?php $hasApplication = $agent->hasApplication($application); ?>
+                        <?php if ($hasApplication === null) : ?>
+                            <?php if ($canModifier) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\AgentController::ajouterApplicationAction() */?>
+                                        href="<?php echo $this->url('agent/ajouter-application', ['agent' => $agent->getId(), 'application' => $application->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                >
+                                    <span class="icon ajouter"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Ajouter une application"
+                                    ></span>
+                                </a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php $validation = ($hasApplication AND $hasApplication->getValidation())?$hasApplication->getValidation():null; ?>
+                            <?php if ($validation) : ?>
+                                <?php if ($validation->getValeur() === null) : ?>
+                                    <span class="icon ok" style="color: darkgreen;"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Validée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
+                                    ></span>
+                                <?php else: ?>
+                                    <span class="icon ko" style="color: darkred;"
+                                          data-toggle="tooltip" data-html="true"
+                                          title="Refusée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
+                                    ></span>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <?php if ($canModifier) : ?>
+                                    <a
+                                    <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+                                    href="<?php echo $this->url('agent/valider-element', ['type' => "AgentApplication", 'id' => $hasApplication->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                                    >
+                                <?php endif; ?>
+                                <span class="icon question" style="color: cornflowerblue;"
+                                      data-toggle="tooltip" data-html="true"
+                                      title="Application en attente de validation"
+                                ></span>
+                                <?php if ($canModifier) : ?>
+                                    </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </td>
                     <td class="action"></td>
                 </tr>
             <?php endforeach; ?>
@@ -92,8 +140,8 @@ ksort($applicationsArray);
 </div>
 </div>
 
-<style>
 
+<style>
     div.parcours-de-formation {
         padding-top: 2rem;
     }

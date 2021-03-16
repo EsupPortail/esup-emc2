@@ -149,7 +149,7 @@ class ApplicationService {
      * @param string paramName
      * @return Application
      */
-    public function getRequestedApplication(AbstractActionController $controller, $paramName)
+    public function getRequestedApplication(AbstractActionController $controller, $paramName = 'application')
     {
         $id = $controller->params()->fromRoute($paramName);
         return $this->getApplication($id);

@@ -32,14 +32,14 @@ trait HasApplicationCollectionTrait {
 
     /**
      * @param Application $application
-     * @return bool
+     * @return ApplicationElement|null
      */
-    public function hasApplication(Application $application) : bool
+    public function hasApplication(Application $application) : ?ApplicationElement
     {
         /** @var ApplicationElement $applicationElement */
         foreach ($this->applications as $applicationElement) {
-            if ($applicationElement->estNonHistorise() AND $applicationElement->getApplication() === $application) return true;
+            if ($applicationElement->estNonHistorise() AND $applicationElement->getApplication() === $application) return $applicationElement;
         }
-        return false;
+        return null;
     }
 }

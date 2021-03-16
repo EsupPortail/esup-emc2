@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\Application\ApplicationService;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\Categorie\CategorieService;
 use Application\Service\CompetenceElement\CompetenceElementService;
@@ -45,6 +46,7 @@ class AgentControllerFactory {
 
          * @var NatureService $natureService
          * @var FichierService $fichierService
+         * @var ApplicationService $applicationService
          * @var FormationService $formationService
          * @var StructureService $structureService
          * @var UserService $userService
@@ -63,6 +65,7 @@ class AgentControllerFactory {
         $validationTypeService = $container->get(ValidationTypeService::class);
         $natureService = $container->get(NatureService::class);
         $fichierService = $container->get(FichierService::class);
+        $applicationService = $container->get(ApplicationService::class);
         $formationService = $container->get(FormationService::class);
         $userService = $container->get(UserService::class);
         $structureService = $container->get(StructureService::class);
@@ -98,6 +101,7 @@ class AgentControllerFactory {
         $controller->setNatureService($natureService);
         $controller->setFichierService($fichierService);
         $controller->setFormationService($formationService);
+        $controller->setApplicationService($applicationService);
         $controller->setUserService($userService);
         $controller->setStructureService($structureService);
 

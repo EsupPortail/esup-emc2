@@ -11,6 +11,7 @@ use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
@@ -56,6 +57,7 @@ class AgentController extends AbstractActionController
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
     use FichierServiceAwareTrait;
+    use ApplicationServiceAwareTrait;
     use FormationServiceAwareTrait;
     use CategorieServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
@@ -125,11 +127,13 @@ class AgentController extends AbstractActionController
     public function ajouterApplicationAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        $application = $this->getApplicationService()->getRequestedApplication($this);
         $applicationElement = new ApplicationElement();
 
         /** @var ApplicationElementForm $form */
         $form = $this->getApplicationElementForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-application', ['agent' => $agent->getId()], [], true));
+        $applicationElement->setApplication($application);
         $form->bind($applicationElement);
 
         /** @var Request $request */
@@ -367,12 +371,16 @@ class AgentController extends AbstractActionController
     public function ajouterFormationAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+
         $formationElement = new FormationElement();
 
         /** @var FormationElementForm $form */
         $form = $this->getFormationElementForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-formation', ['agent' => $agent->getId()], [], true));
+        $formationElement->setFormation($formation);
         $form->bind($formationElement);
+
 
         /** @var Request $request */
         $request = $this->getRequest();

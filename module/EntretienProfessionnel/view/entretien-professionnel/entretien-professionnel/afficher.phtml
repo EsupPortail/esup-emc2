@@ -4,6 +4,7 @@
  * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::afficherAction()
  * @var EntretienProfessionnel $entretien
  * @var Agent $agent
+ * @var ParcoursDeFormation[] $parcours
  * @var FichePoste[] $fichespostes
  * @var FicheMetier[] $fichesmetiers
  */
@@ -11,6 +12,7 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\ParcoursDeFormation;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
 $this->headTitle('Édition de l\'entretien professionnel');
@@ -19,6 +21,8 @@ $ficheposte = $agent->getFichePosteActif();
 $droits = [
         'canVoir' => $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER)),
 ];
+
+
 ?>
 
 <h1 class="page-header">
@@ -31,37 +35,55 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-
-        <li role="formulaire">
+        <li>
             <a href="#formulaire" aria-controls="formulaire" role="tab" data-toggle="tabz">
                 Compte-rendu <br/> d'entretien professionnel
             </a>
         </li>
-
-        <li role="parcours">
-            <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
+        <li>
+            <a href="#formations" aria-controls="formations" role="tab" data-toggle="tabz">
                 Compte-rendu <br/> d'évaluation de formation &nbsp;
             </a>
         </li>
-
-        <li role="avis">
+        <li>
+            <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
+                Parcours de formation<br/> et applicatif
+            </a>
+        </li>
+        <li>
+            <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
+                Acquis de l'agent <br/> &nbsp;
+            </a>
+        </li>
+        <li>
             <a href="#avis" aria-controls="avis" role="tab" data-toggle="tabz" >
                 Observations <br/> &nbsp;
             </a>
         </li>
+        <li>
+            <a href="#validation" aria-controls="validation" role="tab" data-toggle="tabz" >
+                Validations <br/> &nbsp;
+            </a>
+        </li>
     </ul>
+</div>
 
     <div class="main-with-tab">
 
         <div class="tab-content">
 
             <div id="formulaire" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser]); ?>
+                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte]); ?>
             </div>
 
-            <div id="parcours" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => true]]); ?>
+            <div id="formations" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => false], 'source' => 'afficherAction']); ?>
             </div>
+            <div id="parcours" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'affichage', 'modification' => false, 'droits' => $droits], 'source' => 'afficherAction']); ?>
+            </div>
+            <div id="acquis" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['mode' => 'affichage', 'modification' => false], 'source' => 'afficherAction']); ?>
 
             <div id="avis" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'source' => 'afficherAction']); ?>

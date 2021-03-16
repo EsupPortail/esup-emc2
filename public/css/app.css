@@ -197,6 +197,10 @@ h1.page-header strong {
     color: var(--color-info);
 }
 
+div.bloc {
+    margin:1rem;
+    padding: 1rem;
+}
 /** DL ****************************************************************************************************************/
 
 dl.dl-horizontal dt {

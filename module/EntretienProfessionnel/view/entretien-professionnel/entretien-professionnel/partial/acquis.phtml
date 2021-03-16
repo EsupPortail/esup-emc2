@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @var EntretienProfessionnel $entretien
+ * @var Agent $agent
+ * @var array $options
+ * @var string $source
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+
+$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
+$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+
+$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
+$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
+$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+$canRenseigner = ($canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
+
+$droits = [
+    'afficher' => $canVoir,
+    'ajouter' => $canAjouter,
+    'modifier' => $canModifier,
+    'historiser' => $canHistoriser,
+    'detruire' => $canDetruire,
+    'valider' => $canValider,
+];
+
+$options = [];
+$options['mode'] = 'modification';
+$options['modification'] = $canModifier;
+$options['droits'] = $droits;
+$options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'acquis'], true);
+
+?>
+
+<h2 class="page-header-tab"> Acquis de l'agent </h2>
+
+<?php echo $this->portenote('EntretienProfessionnelController::renseigner()>AgentAutres', '', []); ?>
+
+<!-- APPLICATION ------------------------------------------------------------------------------------------------------>
+
+<div class="bloc">
+    <?php
+    /** @see \Application\View\Helper\AgentApplicationViewHelper */
+    echo $this->agentApplication($agent, $options);
+    ?>
+</div>
+
+<!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
+
+<div class="bloc">
+<?php
+/** @see \Application\View\Helper\AgentCompetenceViewHelper */
+echo $this->agentCompetence($agent, $options);
+?>
+</div>
+
+<!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
+
+<div class="bloc">
+<?php
+/** @see \Application\View\Helper\AgentFormationViewHelper */
+echo $this->agentFormation($agent, $options);
+?>
+</div>

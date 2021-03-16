@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @var EntretienProfessionnel $entretien
+ * @var ParcoursDeFormation $parcours
+ * @var array $options
+ * @var string $source
+ */
+
+use Application\Entity\Db\ParcoursDeFormation;
+use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+
+$agent = $entretien->getAgent();
+
+$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
+$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+
+$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
+$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
+$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+$canRenseigner = ($canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
+
+$droits = [
+    'afficher' => $canVoir,
+    'ajouter' => $canAjouter,
+    'modifier' => $canModifier,
+    'historiser' => $canHistoriser,
+    'detruire' => $canDetruire,
+    'valider' => $canValider,
+];
+$options = [];
+$options['mode'] = 'modification';
+$options['modification'] = $canModifier;
+$options['droits'] = $droits;
+$options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'formations'], true);
+
+$DEBUG = false;
+
+$now = new DateTime();
+$date = $entretien->getMaxSaisiEntretien();
+$res = ($now <= $date);
+
+$has_validation_responsable = $entretien->getValidationResponsable();
+$date_depassee = $now > $date;
+?>
+
+<h2 class="page-header-tab"> Compte-rendu d'entretien de formation </h2>
+
+<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formation', '', []); ?>
+
+<!-- Formation de l'agent : WARNING ----------------------------------------------------------------------------------->
+
+<?php if ($has_validation_responsable) : ?>
+    <?php if ($source === 'renseignerAction') : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>validation_responsable', '', []); ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($date_depassee) : ?>
+    <?php if ($source === 'renseignerAction') : ?>
+        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>date_depassee', '', []); ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<!-- Formulaire ------------------------------------------------------------------------------------------------------->
+
+<h3> Formation survie durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
+
+<?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
+
+
+<?php
+$instance = $entretien->getFormationInstance();
+$formulaire = $instance->getFormulaire();
+$reponses = $instance->getReponses();
+
+/** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+$data = [];
+foreach ($reponses as $reponse) {
+    $data[$reponse->getChamp()->getId()] = $reponse;
+}
+?>
+
+<?php if ($canRenseigner) : ?>
+    <?php if ($res AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+        <?php
+        /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+        $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+        echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+        ?>
+    <?php else : ?>
+        <?php echo $this->instanceAsText()->render($instance); ?>
+    <?php endif; ?>
+<?php else : ?>
+    <div class="alert alert-danger">
+        Vous ne pouvez saisir le formulaire d'entretien de formation.
+    </div>
+<?php endif; ?>
+
+
+

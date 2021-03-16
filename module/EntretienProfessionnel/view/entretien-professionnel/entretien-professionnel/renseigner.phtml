@@ -15,12 +15,34 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
+use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenUtilisateur\Entity\Db\User;
 
 $ficheposte = $agent->getFichePosteActif();
 
 $this->headTitle('Modification de l\'entretien professionnel');
+
+$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
+$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+
+$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
+$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
+$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+
+$droits = [
+    'afficher' => $canVoir,
+    'ajouter' => $canAjouter,
+    'modification' => $canModifier,
+    'historiser' => $canHistoriser,
+    'detruire' => $canDetruire,
+    'valider' => $canValider,
+];
 ?>
 
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
@@ -41,28 +63,34 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-
-        <li role="formulaire">
+        <li>
             <a href="#formulaire" aria-controls="formulaire" role="tab" data-toggle="tabz">
-                Compte-rendu <br/> d'entretien professionnel
+                Compte-rendu <br/> d'entretien <br/> professionnel
             </a>
         </li>
-
-        <li role="parcours">
+        <li>
+            <a href="#formations" aria-controls="formations" role="tab" data-toggle="tabz">
+                Compte-rendu <br/> d'évaluation <br/> de formation &nbsp;
+            </a>
+        </li>
+        <li>
             <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
-                Compte-rendu <br/> d'évaluation de formation &nbsp;
+                Parcours de <br/> formation et <br/> applicatif
             </a>
         </li>
-
-        <li role="avis">
+        <li>
+            <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
+                Acquis de <br/> l'agent <br/> &nbsp;
+            </a>
+        </li>
+        <li>
             <a href="#avis" aria-controls="avis" role="tab" data-toggle="tabz" >
-                Observations <br/> &nbsp;
+                <br/> &nbsp; Observations <br/> &nbsp;
             </a>
         </li>
-
-        <li role="validation">
+        <li>
             <a href="#validation" aria-controls="validation" role="tab" data-toggle="tabz" >
-                Validations <br/> &nbsp;
+                <br/> &nbsp; Validations <br/> &nbsp;
             </a>
         </li>
     </ul>
@@ -75,8 +103,14 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
                 <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
             </div>
 
+            <div id="formations" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+            </div>
             <div id="parcours" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'modification', 'modification' => true, 'droits' => $droits], 'source' => 'renseignerAction']); ?>
+            </div>
+            <div id="acquis" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
             </div>
 
             <div id="avis" class="tab-pane " role="tabpanel">

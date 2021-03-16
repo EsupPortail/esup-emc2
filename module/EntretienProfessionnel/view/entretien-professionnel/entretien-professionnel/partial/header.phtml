@@ -10,6 +10,7 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
@@ -66,11 +67,20 @@ $sursis = $entretien->getSursisActif();
                     </dd>
                     <dt> Structure(s) </dt>
                     <dd>
-                        <?php foreach ($agent->getAffectationsActifs() as $affectation) : ?>
+                        <?php
+                            $structures = [];
+                            foreach ($agent->getAffectationsActifs() as $affectation) {
+                                $structure = $affectation->getStructure();
+                                $structures[$structure->getId()] = $structure;
+                            }
+                            usort($structures, function (Structure $a, Structure $b) { return ($a->getLibelleCourt() .' '. $a->getLibelleLong()) < ($b->getLibelleCourt() .' '. $b->getLibelleLong());});
+                        ?>
+                        <?php foreach ($structures as $structure) : ?>
+
                             <?php
-                                $structureLibelle = "[" .$affectation->getStructure()->getLibelleCourt(). "] ". $affectation->getStructure()->getLibelleLong();
-                                $structureUrl = $this->url("structure/afficher", ['structure' => $affectation->getStructure()->getId()], [], true);
-                                $canAfficherStructure = $this->isAllowed($affectation->getStructure(), StructurePrivileges::STRUCTURE_AFFICHER);
+                                $structureLibelle = "[" .$structure->getLibelleCourt(). "] ". $structure->getLibelleLong();
+                                $structureUrl = $this->url("structure/afficher", ['structure' => $structure->getId()], [], true);
+                                $canAfficherStructure = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AFFICHER);
                             ?>
                                 <?php if ($canAfficherStructure) : ?>
                                     <a href="<?php echo $structureUrl; ?>" target="_blank" title="Affichage de la structure" data-toggle="tooltip" data-html="true">

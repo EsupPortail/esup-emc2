@@ -248,6 +248,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $fichesmetiers[] = $fiche->getFicheType();
             }
         }
+        $parcours = ($fichespostes[0]) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichespostes[0]) : null;
 
         return new ViewModel([
             'title'                     => 'Entretien professionnel ' . $entretien->getCampagne()->getAnnee() . ' de ' . $entretien->getAgent()->getDenomination(),
@@ -258,7 +259,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
             'agent'                     => $agent,
             'fichespostes'              => $fichespostes,
-            'fichesmetiers'             => $fichesmetiers
+            'fichesmetiers'             => $fichesmetiers,
+            'parcours'                  => $parcours,
         ]);
     }
 

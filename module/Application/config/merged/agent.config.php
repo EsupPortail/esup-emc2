@@ -223,7 +223,7 @@ return [
                     'ajouter-application' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-application/:agent',
+                            'route'    => '/ajouter-application/:agent[/:application]',
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'ajouter-application',
@@ -349,7 +349,7 @@ return [
                     'ajouter-formation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-formation/:agent',
+                            'route'    => '/ajouter-formation/:agent[/:formation]',
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'ajouter-formation',
