@@ -4,6 +4,9 @@ namespace Application;
 
 use Application\Controller\CompetenceController;
 use Application\Controller\CompetenceControllerFactory;
+use Application\Controller\CompetenceMaitriseController;
+use Application\Controller\CompetenceMaitriseControllerFactory;
+use Application\Controller\CompetenceMatriseController;
 use Application\Form\Competence\CompetenceForm;
 use Application\Form\Competence\CompetenceFormFactory;
 use Application\Form\Competence\CompetenceHydrator;
@@ -12,6 +15,10 @@ use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Form\CompetenceElement\CompetenceElementFormFactory;
 use Application\Form\CompetenceElement\CompetenceElementHydrator;
 use Application\Form\CompetenceElement\CompetenceElementHydratorFactory;
+use Application\Form\CompetenceMaitrise\CompetenceMaitriseForm;
+use Application\Form\CompetenceMaitrise\CompetenceMaitriseFormFactory;
+use Application\Form\CompetenceMaitrise\CompetenceMaitriseHydrator;
+use Application\Form\CompetenceMaitrise\CompetenceMaitriseHydratorFactory;
 use Application\Form\CompetenceType\CompetenceTypeForm;
 use Application\Form\CompetenceType\CompetenceTypeFormFactory;
 use Application\Form\CompetenceType\CompetenceTypeHydrator;
@@ -24,6 +31,8 @@ use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
 use Application\Service\CompetenceElement\CompetenceElementService;
 use Application\Service\CompetenceElement\CompetenceElementServiceFactory;
+use Application\Service\CompetenceMaitrise\CompetenceMaitriseService;
+use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceFactory;
 use Application\Service\CompetenceTheme\CompetenceThemeService;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceFactory;
 use Application\Service\CompetenceType\CompetenceTypeService;
@@ -99,6 +108,20 @@ return [
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_EFFACER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceMaitriseController::class,
+                    'action' => [
+                        'afficher',
+                        'ajouter',
+                        'modifier',
+                        'historiser',
+                        'restaurer',
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_EFFACER, //todo ajouter des privileges
                     ],
                 ],
             ],
@@ -202,6 +225,84 @@ return [
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                ],
+            ],
+            'competence-maitrise' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/competence-maitrise',
+                    'defaults' => [
+                        'controller' => CompetenceMaitriseController::class,
+                    ],
+                ],
+                'may_terminate' => false,
+                'child_routes' => [
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                'controller' => CompetenceMaitriseController::class,
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:maitrise',
+                            'defaults' => [
+                                'controller' => CompetenceMaitriseController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:maitrise',
+                            'defaults' => [
+                                'controller' => CompetenceMaitriseController::class,
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:maitrise',
+                            'defaults' => [
+                                'controller' => CompetenceMaitriseController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:maitrise',
+                            'defaults' => [
+                                'controller' => CompetenceMaitriseController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:maitrise',
+                            'defaults' => [
+                                'controller' => CompetenceMaitriseController::class,
+                                'action'     => 'supprimer',
                             ],
                         ],
                         'may_terminate' => true,
@@ -391,6 +492,7 @@ return [
             CompetenceService::class => CompetenceServiceFactory::class,
             CompetenceElementService::class => CompetenceElementServiceFactory::class,
             HasCompetenceCollectionService::class => HasCompetenceCollectionServiceFactory::class,
+            CompetenceMaitriseService::class => CompetenceMaitriseServiceFactory::class,
             CompetenceThemeService::class => CompetenceThemeServiceFactory::class,
             CompetenceTypeService::class => CompetenceTypeServiceFactory::class,
         ],
@@ -398,11 +500,13 @@ return [
     'controllers'     => [
         'factories' => [
             CompetenceController::class => CompetenceControllerFactory::class,
+            CompetenceMaitriseController::class => CompetenceMaitriseControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
             CompetenceForm::class => CompetenceFormFactory::class,
+            CompetenceMaitriseForm::class => CompetenceMaitriseFormFactory::class,
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
             CompetenceElementForm::class => CompetenceElementFormFactory::class,
             SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
@@ -414,6 +518,7 @@ return [
         ],
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
+            CompetenceMaitriseHydrator::class => CompetenceMaitriseHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
             CompetenceElementHydrator::class => CompetenceElementHydratorFactory::class,
         ],

@@ -9,6 +9,7 @@ use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\CompetenceElement\CompetenceElementService;
+use Application\Service\CompetenceMaitrise\CompetenceMaitriseService;
 use Application\Service\CompetenceTheme\CompetenceThemeService;
 use Application\Service\CompetenceType\CompetenceTypeService;
 use Application\Service\FicheMetier\FicheMetierService;
@@ -22,6 +23,7 @@ class CompetenceControllerFactory
         /**
          * @var ActiviteService $activiteService
          * @var CompetenceService $competenceService
+         * @var CompetenceMaitriseService $competenceMaitriseService
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          * @var CompetenceElementService $competenceElementService
@@ -29,6 +31,7 @@ class CompetenceControllerFactory
          */
         $activiteService = $container->get(ActiviteService::class);
         $competenceService = $container->get(CompetenceService::class);
+        $competenceMaitriseService = $container->get(CompetenceMaitriseService::class);
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -49,6 +52,7 @@ class CompetenceControllerFactory
         $controller = new CompetenceController();
         $controller->setActiviteService($activiteService);
         $controller->setCompetenceService($competenceService);
+        $controller->setCompetenceMaitriseService($competenceMaitriseService);
         $controller->setCompetenceThemeService($competenceThemeService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCompetenceElementService($competenceElementService);

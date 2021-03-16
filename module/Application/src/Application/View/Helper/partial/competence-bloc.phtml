@@ -37,7 +37,33 @@ foreach ($competences as $item) {
 
 ksort($groupes);
 
+
 ?>
+
+<table>
+    <?php foreach ($types as $type) : ?>
+        <?php $groupe = $groupes[$type->getLibelle()]; ?>
+        <?php if ($groupe !== null AND !empty($groupe)) : ?>
+            <tr>
+                <th colspan="2">
+                    <?php echo $type->getLibelle(); ?>
+                </th>
+            </tr>
+            <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle(); }); ?>
+            <?php foreach ($groupe as $competence) : ?>
+                <tr>
+                    <td>
+                        <?php echo $competence['entite']->getLibelle(); ?>
+                        <?php echo $this->raisons($competence['raison']); ?>
+                    </td>
+                    <td>
+                        <?php echo "Niveau cible"; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</table>
 
 <ul>
 <?php foreach ($types as $type) : ?>

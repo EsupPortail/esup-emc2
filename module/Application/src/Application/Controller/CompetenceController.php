@@ -12,6 +12,7 @@ use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -23,6 +24,7 @@ class CompetenceController extends AbstractActionController
 {
     use ActiviteServiceAwareTrait;
     use CompetenceServiceAwareTrait;
+    use CompetenceMaitriseServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -39,12 +41,14 @@ class CompetenceController extends AbstractActionController
     {
         $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
+        $niveaux = $this->getCompetenceMaitriseService()->getCompetencesMaitrises('niveau', 'ASC', true);
         $array = $this->getCompetenceService()->getCompetencesByTypes();
 
         return new ViewModel([
             'competencesByType' => $array,
             'themes' => $themes,
             'types' => $types,
+            'niveaux' => $niveaux,
         ]);
     }
 

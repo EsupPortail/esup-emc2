@@ -43,9 +43,12 @@ class CompetenceElementForm extends Form {
                 ],
                 'empty_option' => "Sélectionner un niveau ... ",
                 'value_options' => [
-                    'Débutant'          => "Débutant",
-                    'Intermédiaire'       => "Intermédiaire",
-                    'Expert'       => "Expert",
+                    'Aucune'         => "Aucune (0/5)",
+                    'Débutant'       => "Débutant (1/5)",
+                    'Apprenti'       => "Apprenti (2/5)",
+                    'Intermédiaire'  => "Intermédiaire (3/5)",
+                    'Confirmé'       => "Confirmé (4/5)",
+                    'Expert'         => "Expert (5/5)",
                 ],
             ],
             'attributes' => [
