@@ -529,10 +529,6 @@ div.parcours div.titre {
     margin: 1rem;
 }
 
-div.parcours div.listing {
-    background: lightpink;
-}
-
 div.parcours div.listing table {
     width: 100%;
 }
