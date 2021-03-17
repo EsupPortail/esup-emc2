@@ -288,3 +288,7 @@ span.icon.inscription-fermeture:before {
 span.icon.desinscription:before {
     content:"\f410";
 }
+
+span.icon.graphique:before {
+    content:"\f080";
+}

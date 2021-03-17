@@ -9,6 +9,7 @@ use Application\Form\Competence\CompetenceFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
@@ -34,6 +35,7 @@ class CompetenceController extends AbstractActionController
     use CompetenceTypeFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
+    use SelectionCompetenceMaitriseFormAwareTrait;
 
     /** INDEX *********************************************************************************************************/
 
@@ -444,6 +446,31 @@ class CompetenceController extends AbstractActionController
            'title' => "Sélection de la compétence qui remplacera [".$competence->getLibelle()."]",
            'form' => $form,
         ]);
+        return $vm;
+    }
+
+    /** Niveau de maitrise d'un  */
+    public function changerNiveauAction() {
+        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+
+        $form = $this->getSelectionCompetenceMaitriseForm();
+        $form->setAttribute('action', $this->url()->fromRoute('competence/changer-niveau', ['competence-element' => $competenceElement->getId()], [], true));
+        $form->bind($competenceElement);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getCompetenceElementService()->update($competenceElement);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Changer le niveau de maîtrise",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 }

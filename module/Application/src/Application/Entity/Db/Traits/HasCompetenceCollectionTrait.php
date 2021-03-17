@@ -21,7 +21,7 @@ trait HasCompetenceCollectionTrait {
         $competences = [];
         /** @var CompetenceElement $competenceElement */
         foreach ($this->competences as $competenceElement) {
-            if ($avecHisto OR $competenceElement->estNonHistorise()) $competences[] = $competenceElement;
+            if ($avecHisto OR $competenceElement->estNonHistorise()) $competences[$competenceElement->getCompetence()->getId()] = $competenceElement;
         }
         return $competences;
     }

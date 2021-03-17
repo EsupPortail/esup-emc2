@@ -6,7 +6,6 @@ use Application\Controller\CompetenceController;
 use Application\Controller\CompetenceControllerFactory;
 use Application\Controller\CompetenceMaitriseController;
 use Application\Controller\CompetenceMaitriseControllerFactory;
-use Application\Controller\CompetenceMatriseController;
 use Application\Form\Competence\CompetenceForm;
 use Application\Form\Competence\CompetenceFormFactory;
 use Application\Form\Competence\CompetenceHydrator;
@@ -26,6 +25,10 @@ use Application\Form\CompetenceType\CompetenceTypeHydratorFactory;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormFactory;
 use Application\Form\SelectionCompetence\SelectionCompetenceHydrator;
+use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseForm;
+use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseFormFactory;
+use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseHydrator;
+use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseHydratorFactory;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
@@ -114,14 +117,47 @@ return [
                     'controller' => CompetenceMaitriseController::class,
                     'action' => [
                         'afficher',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceMaitriseController::class,
+                    'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceMaitriseController::class,
+                    'action' => [
                         'modifier',
                         'historiser',
                         'restaurer',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_EDITER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceMaitriseController::class,
+                    'action' => [
                         'supprimer',
                     ],
                     'privileges' => [
-                        CompetencePrivileges::COMPETENCE_EFFACER, //todo ajouter des privileges
+                        CompetencePrivileges::COMPETENCE_EFFACER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceController::class,
+                    'action' => [
+                        'changer-niveau',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_EFFACER,
                     ],
                 ],
             ],
@@ -141,6 +177,17 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'changer-niveau' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/changer-niveau/:competence-element',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'changer-niveau',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'ajouter' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -510,6 +557,7 @@ return [
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
             CompetenceElementForm::class => CompetenceElementFormFactory::class,
             SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
+            SelectionCompetenceMaitriseForm::class => SelectionCompetenceMaitriseFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -521,6 +569,7 @@ return [
             CompetenceMaitriseHydrator::class => CompetenceMaitriseHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
             CompetenceElementHydrator::class => CompetenceElementHydratorFactory::class,
+            SelectionCompetenceMaitriseHydrator::class => SelectionCompetenceMaitriseHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

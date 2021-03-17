@@ -368,15 +368,20 @@ class FicheMetierService {
 
     /**
      * @param FicheMetier $fiche
+     * @param bool $asElement
      * @param DateTime|null $date
      * @return array
      */
-    public function getCompetencesDictionnaires(FicheMetier $fiche, ?DateTime $date = null)
+    public function getCompetencesDictionnaires(FicheMetier $fiche, bool $asElement = false, ?DateTime $date = null)
     {
         $dictionnaire = [];
 
         foreach ($fiche->getCompetenceListe() as $competenceElement) {
-            $competence = $competenceElement->getCompetence();
+            if ($asElement) {
+                $competence = $competenceElement;
+            } else {
+                $competence = $competenceElement->getCompetence();
+            }
             $dictionnaire[$competence->getId()]["entite"] = $competence;
             $dictionnaire[$competence->getId()]["raison"][] = $fiche;
             $dictionnaire[$competence->getId()]["conserve"] = true;
@@ -384,13 +389,16 @@ class FicheMetierService {
 
         foreach ($fiche->getActivites() as $activite) {
             foreach ($activite->getActivite()->getCompetenceListe() as $competenceElement) {
-                $competence = $competenceElement->getCompetence();
+                if ($asElement) {
+                    $competence = $competenceElement;
+                } else {
+                    $competence = $competenceElement->getCompetence();
+                }
                 $dictionnaire[$competence->getId()]["entite"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $activite;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
         }
-
         return $dictionnaire;
     }
 

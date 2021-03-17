@@ -41,6 +41,7 @@ return [
                         'afficher',
                         'exporter',
                         'exporter-toutes',
+                        'graphique-competences',
 
                     ],
                     'privileges' => [
@@ -230,6 +231,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'graphique-competences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/graphique-competences/:fiche-metier[/:agent]',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'graphique-competences',
                             ],
                         ],
                         'may_terminate' => true,

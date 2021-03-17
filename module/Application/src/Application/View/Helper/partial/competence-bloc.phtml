@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\CompetenceType;
 
 /**
@@ -28,7 +29,9 @@ $groupes = [];
 $sansGroupe = "zzz";
 foreach ($competences as $item) {
     /** @var Competence $competence */
-    $competence = $item['entite'];
+    $entite = $item['entite'];
+    $competence = $entite;
+    if ($entite instanceof CompetenceElement) $competence = $entite->getCompetence();
     if ($competence) {
         $libelleGroupe = ($competence->getType()) ? $competence->getType()->getLibelle() : $sansGroupe;
         if ($item['conserve'] === true) $groupes[$libelleGroupe][] = $item;
@@ -38,9 +41,10 @@ foreach ($competences as $item) {
 ksort($groupes);
 
 
+$niveau_modifiable = true;
 ?>
 
-<table>
+<table class="listing">
     <?php foreach ($types as $type) : ?>
         <?php $groupe = $groupes[$type->getLibelle()]; ?>
         <?php if ($groupe !== null AND !empty($groupe)) : ?>
@@ -50,14 +54,29 @@ ksort($groupes);
                 </th>
             </tr>
             <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle(); }); ?>
-            <?php foreach ($groupe as $competence) : ?>
+            <?php foreach ($groupe as $element) : ?>
+                <?php
+                    $entite = $element['entite'];
+                    $competence = $entite;
+                    if ($competence instanceof CompetenceElement) $competence = $competence->getCompetence();
+                ?>
                 <tr>
-                    <td>
-                        <?php echo $competence['entite']->getLibelle(); ?>
-                        <?php echo $this->raisons($competence['raison']); ?>
+                    <td class="libelle">
+                        <?php echo $competence->getLibelle(); ?>
+                        <?php echo $this->raisons($element['raison']); ?>
                     </td>
-                    <td>
-                        <?php echo "Niveau cible"; ?>
+                    <td class="niveau">
+                        <?php if ($entite instanceof CompetenceElement) : ?>
+                            <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Niveau non précisé"; ?>
+                            <?php if ($niveau_modifiable) : ?>
+                                <a  <?php /** @see \Application\Controller\CompetenceController::changerNiveauAction() */ ?>
+                                    href="<?php echo $this->url("competence/changer-niveau", ['competence-element' => $entite->getId()], [], true); ?>"
+                                    class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
+                                    title="Modifier le niveau de la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
+                                    <span class="icon editer"></span>
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -65,24 +84,6 @@ ksort($groupes);
     <?php endforeach; ?>
 </table>
 
-<ul>
-<?php foreach ($types as $type) : ?>
-    <?php $groupe = $groupes[$type->getLibelle()]; ?>
-    <?php if ($groupe !== null AND !empty($groupe)) : ?>
-        <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle(); }); ?>
-        <li class="groupe-libelle">
-            <?php echo $type->getLibelle(); ?>
-        </li>
-        <ul>
-            <?php foreach ($groupe as $competence) : ?>
-                <li class="element-libelle">
-                    <?php echo $competence['entite']->getLibelle(); ?>
-                    <?php echo $this->raisons($competence['raison']); ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-<?php endforeach; ?>
-</ul>
+
 
 

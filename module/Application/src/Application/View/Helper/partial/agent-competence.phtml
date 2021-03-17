@@ -92,7 +92,7 @@ ksort($dictionnaire);
                 <?php foreach ($liste as $competenceElement) : ?>
                     <tr <?php if ($competenceElement->estHistorise()) echo 'class="historise"'; ?>>
                         <td class="libelle-cell"> <?php echo $competenceElement->getCompetence()->getLibelle(); ?> </td>
-                        <td class="info-cell"> <?php echo $competenceElement->getCommentaire() ?> </td>
+                        <td class="info-cell"> <?php echo ($competenceElement->getNiveauMaitrise())?$competenceElement->getNiveauMaitrise()->getLibelle():"" ?> </td>
                         <td class="validation-cell">
                             <?php if ($competenceElement->getValidation()) : ?>
                             <?php $validation = $competenceElement->getValidation(); ?>

@@ -8,6 +8,7 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Service\Activite\ActiviteService;
+use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
@@ -29,6 +30,7 @@ class FicheMetierControllerFactory {
     {
         /**
          * @var ActiviteService $activiteService
+         * @var AgentService $agentService;
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
@@ -41,6 +43,7 @@ class FicheMetierControllerFactory {
          * @var ParcoursDeFormationService $parcoursService
          */
         $activiteService = $container->get(ActiviteService::class);
+        $agentService = $container->get(AgentService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
@@ -77,6 +80,7 @@ class FicheMetierControllerFactory {
         $controller->setRenderer($renderer);
 
         $controller->setActiviteService($activiteService);
+        $controller->setAgentService($agentService);
         $controller->setDomaineService($domaineService);
         $controller->setEtatService($etatService);
         $controller->setEtatTypeService($etatTypeService);

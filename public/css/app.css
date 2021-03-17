@@ -547,3 +547,22 @@ div.parcours div.listing table td {
 div.parcours div.listing table td.validation {
     width:5rem;
 }
+
+table.listing {
+    width:100%;
+}
+
+table.listing th {
+    background: lightgrey;
+    color: #3c6c8b;
+    padding: 0.5rem 0.5rem 0.5rem 3rem;
+}
+
+table.listing td.libelle {
+    padding-left: 3rem;
+}
+
+table.listing td.niveau {
+    width: 25rem;
+    text-align: right;
+}

@@ -1,11 +1,17 @@
 <?php
 
 use Application\Entity\Db\CompetenceMaitrise;
+use Application\Provider\Privilege\CompetencePrivileges;
 
 /**
  * @var CompetenceMaitrise[] $niveaux
  */
 
+$canAfficher = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+$canAjouter = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AJOUTER));
+$canModifier = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EDITER));
+$canHistoriser = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EDITER));
+$canSupprimer = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EFFACER));
 ?>
 
 <div class="row">
@@ -13,13 +19,15 @@ use Application\Entity\Db\CompetenceMaitrise;
         <h2 class="page-header-tab"> Niveaux de maîtrise des compétences </h2>
     </div>
     <div class="pull-right">
-        <br/>
-        <a  <?php /** @see \Application\Controller\CompetenceMaitriseController::ajouterAction()*/ ?>
-            href="<?php echo $this->url('competence-maitrise/ajouter', [], [], true); ?>"
-            class="btn btn-primary action ajax-modal" data-event="modification"
-            >
-            <span class="icon ajouter"> Ajouter un niveau de maîtrise</span>
-        </a>
+        <?php if ($canAjouter) : ?>
+            <br/>
+            <a  <?php /** @see \Application\Controller\CompetenceMaitriseController::ajouterAction()*/ ?>
+                href="<?php echo $this->url('competence-maitrise/ajouter', [], [], true); ?>"
+                class="btn btn-primary action ajax-modal" data-event="modification"
+                >
+                <span class="icon ajouter"> Ajouter un niveau de maîtrise</span>
+            </a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -37,24 +45,32 @@ use Application\Entity\Db\CompetenceMaitrise;
             <td> <?php echo $niveau->getLibelle(); ?> </td>
             <td> <?php echo $niveau->getNiveau(); ?> </td>
             <td>
-                <?php /** @see \Application\Controller\CompetenceMaitriseController::afficherAction() */?>
-                <a href="<?php echo $this->url('competence-maitrise/afficher', ['maitrise' => $niveau->getId()], [], true); ?>" class="ajax-modal">
-                    <span class="icon voir"></span></a>
-                <?php /** @see \Application\Controller\CompetenceMaitriseController::modifierAction() */?>
-                <a href="<?php echo $this->url('competence-maitrise/modifier', ['maitrise' => $niveau->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                    <span class="icon editer"></span></a>
-                <?php if ($niveau->estNonHistorise()) : ?>
-                    <?php /** @see \Application\Controller\CompetenceMaitriseController::historiserAction() */?>
-                    <a href="<?php echo $this->url('competence-maitrise/historiser', ['maitrise' => $niveau->getId()], [], true); ?>">
-                        <span class="icon historiser"></span></a>
-                <?php else: ?>
-                    <?php /** @see \Application\Controller\CompetenceMaitriseController::restaurerAction() */?>
-                    <a href="<?php echo $this->url('competence-maitrise/restaurer', ['maitrise' => $niveau->getId()], [], true); ?>">
-                        <span class="icon restaurer"></span></a>
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \Application\Controller\CompetenceMaitriseController::afficherAction() */?>
+                    <a href="<?php echo $this->url('competence-maitrise/afficher', ['maitrise' => $niveau->getId()], [], true); ?>" class="ajax-modal">
+                        <span class="icon voir"></span></a>
                 <?php endif; ?>
-                <?php /** @see \Application\Controller\CompetenceMaitriseController::supprimerAction() */?>
-                <a href="<?php echo $this->url('competence-maitrise/supprimer', ['maitrise' => $niveau->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                    <span class="icon detruire"></span></a>
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \Application\Controller\CompetenceMaitriseController::modifierAction() */?>
+                    <a href="<?php echo $this->url('competence-maitrise/modifier', ['maitrise' => $niveau->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                        <span class="icon editer"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($niveau->estNonHistorise()) : ?>
+                        <?php /** @see \Application\Controller\CompetenceMaitriseController::historiserAction() */?>
+                        <a href="<?php echo $this->url('competence-maitrise/historiser', ['maitrise' => $niveau->getId()], [], true); ?>">
+                            <span class="icon historiser"></span></a>
+                    <?php else: ?>
+                        <?php /** @see \Application\Controller\CompetenceMaitriseController::restaurerAction() */?>
+                        <a href="<?php echo $this->url('competence-maitrise/restaurer', ['maitrise' => $niveau->getId()], [], true); ?>">
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <?php /** @see \Application\Controller\CompetenceMaitriseController::supprimerAction() */?>
+                    <a href="<?php echo $this->url('competence-maitrise/supprimer', ['maitrise' => $niveau->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                        <span class="icon detruire"></span></a>
+                <?php endif; ?>
                 </td>
         </tr>
     <?php endforeach; ?>

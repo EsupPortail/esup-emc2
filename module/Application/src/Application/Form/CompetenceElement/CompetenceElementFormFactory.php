@@ -3,6 +3,7 @@
 namespace Application\Form\CompetenceElement;
 
 use Application\Service\Competence\CompetenceService;
+use Application\Service\CompetenceMaitrise\CompetenceMaitriseService;
 use Interop\Container\ContainerInterface;
 
 class CompetenceElementFormFactory {
@@ -15,8 +16,10 @@ class CompetenceElementFormFactory {
     {
         /**
          * @var CompetenceService $competenceService
+         * @var CompetenceMaitriseService $competenceMaitriseService
          */
         $competenceService = $container->get(CompetenceService::class);
+        $competenceMaitriseService = $container->get(CompetenceMaitriseService::class);
 
         /** @var CompetenceElementHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(CompetenceElementHydrator::class);
@@ -24,6 +27,7 @@ class CompetenceElementFormFactory {
         /** @var CompetenceElementForm $form */
         $form = new CompetenceElementForm();
         $form->setCompetenceService($competenceService);
+        $form->setCompetenceMaitriseService($competenceMaitriseService);
         $form->setHydrator($hydrator);
         return $form;
     }

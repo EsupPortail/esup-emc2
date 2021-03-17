@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @var string[] $label
+ * @var array $values
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+
+?>
+
+<?php if ($agent) : ?>
+    <?php echo $agent->getDenomination(); ?>
+<?php else: ?>
+    Aucun agent
+<?php endif; ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js">
+</script>
+<canvas id="myChart" style=""></canvas>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type:"radar",
+        data: {
+            labels: [<?php foreach ($label as $element) {echo '"'.$element .'",';}; ?>
+            ],
+            datasets: [
+                <?php foreach ($values as $value) : ?>
+                    {
+                        label: "<?php echo $value['title']; ?>",
+                        data: [<?php foreach ($value['values'] as $element) {echo $element .',';} ?>],
+                        backgroundColor: "rgba(<?php echo $value['color']; ?>,0.1)",
+                        borderColor: "rgba(<?php echo $value['color']; ?>,0.8)",
+                    },
+                <?php endforeach; ?>
+            ],
+        },
+        options: {
+            scale: {
+                ticks: {
+                    min: 0,
+                    max: 5,
+                    stepSize: 1
+                }
+            },
+        }
+    });
+</script>

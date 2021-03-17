@@ -16,6 +16,7 @@ use Application\Entity\Db\FicheTypeExterne;
  */
 
 $metier = $fichemetier->getMetier();
+$agent = ($ficheposte)?$ficheposte->getAgent():null;
 
 /**
  * @var FicheMetierTypeActivite[] $activites
@@ -218,8 +219,8 @@ $mode = $options['mode'];
                                     <?php echo count($dictionnaireCompetence); ?>
                             </span>
                     </div>
+                    <div class="pull-right" style="margin-right:1rem;">
                     <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
-                        <div class="pull-right" style="margin-right:1rem;">
                             <?php /** @see FicheMetierController::gererCompetencesAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier-type/gerer-competences', ['fiche' => $fichemetier->getId()], [], true); ?>"
                                class="btn btn-primary action ajax-modal"
@@ -228,8 +229,15 @@ $mode = $options['mode'];
                                 <span class="icon ajouter"></span>
                                 Gérer les compétences
                             </a>
-                        </div>
                     <?php endif; ?>
+                        <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
+                           class="btn btn-primary action ajax-modal"
+                        >
+                            <span class="icon graphique"></span>
+                            Afficher les compétences
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="panel-body">
@@ -314,6 +322,14 @@ $mode = $options['mode'];
             </div>
         <?php endif; ?>
     </div>
+<?php else : ?>
+        <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
+           class="btn btn-primary action ajax-modal"
+        >
+            <span class="icon graphique"></span>
+            Afficher les compétences
+        </a>
 <?php endif; ?>
 
 <script>

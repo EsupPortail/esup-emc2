@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
@@ -16,6 +17,7 @@ use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -44,6 +46,7 @@ class FicheMetierController extends AbstractActionController
 
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
+    use AgentServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
@@ -143,7 +146,7 @@ class FicheMetierController extends AbstractActionController
         if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche);
-        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche);
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche, true);
 
         return new ViewModel([
             'fiche' => $fiche,
@@ -461,6 +464,55 @@ class FicheMetierController extends AbstractActionController
             'title' => "Changer l'état de la fiche métier",
             'form' => $form,
         ]);
+        return $vm;
+    }
+
+    public function graphiqueCompetencesAction() {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $dictionnaire = $this->getFicheMetierService()->getCompetencesDictionnaires($ficheMetier, true);
+        $labels = []; $values = [];
+
+        $valuesFiche = [];
+        foreach ($dictionnaire as $entry) {
+            /** @var CompetenceElement $element */
+            $element = $entry['entite'];
+            $labels[] = substr($element->getLibelle(),0,200);
+            $valuesFiche[] = ($element->getNiveauMaitrise())?$element->getNiveauMaitrise()->getNiveau():"'-'";
+        }
+        $values[] = [
+            'title' => "pré-requis",
+            'values' => $valuesFiche,
+            'color' => "255,0,0",
+        ];
+
+        if ($agent !== null) {
+            $valuesAgent = [];
+            /** @var CompetenceElement[] $competences */
+            $competences = $agent->getCompetenceListe();
+            foreach ($dictionnaire as $entry) {
+                /** @var CompetenceElement $element */
+                $element = $entry['entite'];
+                $id = $element->getCompetence()->getId();
+                $niveau = (isset($competences[$id]) AND $competences[$id]->getNiveauMaitrise())?$competences[$id]->getNiveauMaitrise()->getNiveau():"'-'";
+                $valuesAgent[] = $niveau;
+            }
+            $values[] = [
+                'title' => "Acquis",
+                'values' => $valuesAgent,
+                'color' => "0,255,0",
+            ];
+        }
+
+        $libelle = $ficheMetier->getMetier()->getLibelle();
+        $vm =  new ViewModel([
+            'title' => "Diagramme des compétences pour la fiche métier <strong>".$libelle."</strong>",
+            'agent' => $agent,
+            'label' => $labels,
+            'values' => $values,
+        ]);
+        $vm->setTemplate('application/fiche-metier/graphique-competences');
         return $vm;
     }
 
