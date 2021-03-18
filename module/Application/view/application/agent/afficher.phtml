@@ -33,6 +33,7 @@ $droits = [
 ];
 
 $options  = [];
+$options['texte'] = true;
 $options['droits'] = $droits;
 $options['retour'] = $this->url('agent/afficher', ['agent' => $agent->getId()], [], true);
 
@@ -180,10 +181,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
     <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
 
-    <?php
-    /** @see \Application\View\Helper\AgentCompetenceViewHelper */
-    echo $this->agentCompetence($agent, $options);
-    ?>
+    <?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, $options); ?>
 
     <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
 

@@ -548,21 +548,44 @@ div.parcours div.listing table td.validation {
     width:5rem;
 }
 
-table.listing {
-    width:100%;
+div.titre {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+div.listing table {
+    width:90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-table.listing th {
+div.listing table th {
     background: lightgrey;
     color: #3c6c8b;
     padding: 0.5rem 0.5rem 0.5rem 3rem;
 }
 
-table.listing td.libelle {
+div.listing td.libelle {
     padding-left: 3rem;
 }
 
-table.listing td.niveau {
-    width: 25rem;
+div.listing  td.niveau {
+    width: 10rem;
     text-align: right;
+    padding-left: 1rem;
+    /*background: lightblue;*/
+}
+
+div.listing  td.validation {
+    width: 10rem;
+    text-align: right;
+    padding-left: 1rem;
+    /*background: lightgoldenrodyellow;*/
+}
+
+div.listing  td.action {
+    width: 12rem;
+    text-align: right;
+    padding-left: 1rem;
+    /*background: lightgreen;*/
 }

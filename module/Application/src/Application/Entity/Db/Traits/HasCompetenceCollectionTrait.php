@@ -26,6 +26,19 @@ trait HasCompetenceCollectionTrait {
         return $competences;
     }
 
+    public function getCompetenceDictionnaire()
+    {
+        $dictionnaire = [];
+        foreach ($this->competences as $competenceElement) {
+            $element = [];
+            $element['entite'] = $competenceElement;
+            $element['raison'] = null;
+            $element['conserve'] = true;
+            $dictionnaire[] = $element;
+        }
+        return $dictionnaire;
+    }
+
     public function hasCompetence(Competence $competence) : bool
     {
         /** @var CompetenceElement $competenceElement */
@@ -33,5 +46,10 @@ trait HasCompetenceCollectionTrait {
             if ($competenceElement->estNonHistorise() AND $competenceElement->getCompetence() === $competence) return true;
         }
         return false;
+    }
+
+    public function addCompetenceElement(CompetenceElement $element)
+    {
+        $this->competences->add($element);
     }
 }

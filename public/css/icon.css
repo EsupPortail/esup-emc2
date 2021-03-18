@@ -292,3 +292,7 @@ span.icon.desinscription:before {
 span.icon.graphique:before {
     content:"\f080";
 }
+
+span.icon.aucune:before {
+    content:"\f128";
+}

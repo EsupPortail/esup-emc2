@@ -2,15 +2,20 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\CompetenceTheme;
 use Application\Entity\Db\CompetenceType;
+use Application\Entity\Db\FicheMetier;
 use Application\Form\Competence\CompetenceFormAwareTrait;
+use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
@@ -24,6 +29,7 @@ use Zend\View\Model\ViewModel;
 class CompetenceController extends AbstractActionController
 {
     use ActiviteServiceAwareTrait;
+    use AgentServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceMaitriseServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
@@ -32,6 +38,7 @@ class CompetenceController extends AbstractActionController
     use FicheMetierServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
+    use CompetenceElementFormAwareTrait;
     use CompetenceTypeFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -473,4 +480,86 @@ class CompetenceController extends AbstractActionController
         $vm->setTemplate('application/default/default-form');
         return $vm;
     }
+
+    /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
+
+    public function afficherCompetenceElementAction()
+    {
+        $element = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+        return new ViewModel([
+            'title' => "Affichage de la compétence [".$element->getCompetence()->getLibelle()."]",
+            'competenceElement' => $element,
+        ]);
+    }
+
+    public function ajouterCompetenceElementAction()
+    {
+        $type = $this->params()->fromRoute('type');
+        $hasCompetenceCollection = null;
+        switch($type) {
+            case Agent::class : $hasCompetenceCollection = $this->getAgentService()->getRequestedAgent($this, 'id');
+                break;
+            case FicheMetier::class : $hasCompetenceCollection = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
+                break;
+        }
+
+        if ($hasCompetenceCollection !== null) {
+            $element = new CompetenceElement();
+
+            $form = $this->getCompetenceElementForm();
+            $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter-competence-element', ['type' => $type, 'id' => $hasCompetenceCollection->getId()], [], true));
+            $form->bind($element);
+
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $data = $request->getPost();
+                $form->setData($data);
+                if ($form->isValid()) {
+                    $this->getCompetenceElementService()->create($element);
+                    $hasCompetenceCollection->addCompetenceElement($element);
+                    switch($type) {
+                        case Agent::class :
+                            $this->getAgentService()->update($hasCompetenceCollection);
+                            break;
+                        case FicheMetier::class :
+                            $this->getFicheMetierService()->update($hasCompetenceCollection);
+                            break;
+                    }
+                }
+            }
+
+            $vm = new ViewModel([
+                'title' => "Ajout d'une compétence",
+                'form' => $form,
+            ]);
+            $vm->setTemplate('application/default/default-form');
+            return $vm;
+        }
+
+    }
+
+    public function supprimerCompetenceElementAction()
+    {
+        $element = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getCompetenceElementService()->delete($element);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($element !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de la compétence  " . $element->getCompetence()->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('competence/supprimer-competence-element', ["competence-element" => $element->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
 }

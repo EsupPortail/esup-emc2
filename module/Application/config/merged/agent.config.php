@@ -15,7 +15,6 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentApplicationViewHelper;
-use Application\View\Helper\AgentCompetenceViewHelper;
 use Application\View\Helper\AgentFormationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
@@ -80,7 +79,6 @@ return [
                     'action' => [
                         'afficher-statuts-grades',
                         'afficher-application',
-                        'afficher-competence',
                         'afficher-formation',
                     ],
                     'privileges' => [
@@ -101,7 +99,6 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'ajouter-application',
-                        'ajouter-competence',
                         'ajouter-formation',
                     ],
                     'privileges' => [
@@ -113,7 +110,6 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'modifier-application',
-                        'modifier-competence',
                         'modifier-formation',
                     ],
                     'privileges' => [
@@ -126,8 +122,6 @@ return [
                     'action' => [
                         'historiser-application',
                         'restaurer-application',
-                        'historiser-competence',
-                        'restaurer-competence',
                         'historiser-formation',
                         'restaurer-formation',
                     ],
@@ -140,7 +134,6 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'detruire-formation',
-                        'detruire-competence',
                         'detruire-application',
                     ],
                     'privileges' => [
@@ -277,69 +270,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'detruire-application',
-                            ],
-                        ],
-                    ],
-
-                    /** Route des AgentCompetence *********************************************************************/
-
-                    'ajouter-competence' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-competence/:agent',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'ajouter-competence',
-                            ],
-                        ],
-                    ],
-                    'afficher-competence' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher-competence/:agent/:competence-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'afficher-competence',
-                            ],
-                        ],
-                    ],
-                    'modifier-competence' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-competence/:agent/:competence-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier-competence',
-                            ],
-                        ],
-                    ],
-                    'historiser-competence' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-competence/:agent/:competence-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'historiser-competence',
-                            ],
-                        ],
-                    ],
-                    'restaurer-competence' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-competence/:agent/:competence-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'restaurer-competence',
-                            ],
-                        ],
-                    ],
-                    'detruire-competence' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/detruire-competence/:agent/:competence-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'detruire-competence',
                             ],
                         ],
                     ],
@@ -520,7 +450,6 @@ return [
             'agent' => AgentViewHelper::class,
             'agentAffectation' => AgentAffectationViewHelper::class,
             'agentApplication' => AgentApplicationViewHelper::class,
-            'agentCompetence' => AgentCompetenceViewHelper::class,
             'agentFormation' => AgentFormationViewHelper::class,
             'agentStatut' => AgentStatutViewHelper::class,
             'agentGrade' => AgentGradeViewHelper::class,

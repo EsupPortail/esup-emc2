@@ -56,12 +56,7 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
 
 <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
 
-<div class="bloc">
-<?php
-/** @see \Application\View\Helper\AgentCompetenceViewHelper */
-echo $this->agentCompetence($agent, $options);
-?>
-</div>
+<?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, ['texte' => true]);?>
 
 <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
 

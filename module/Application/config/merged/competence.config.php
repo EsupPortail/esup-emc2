@@ -67,6 +67,7 @@ return [
                         'afficher',
                         'afficher-competence-type',
                         'afficher-competence-theme',
+                        'afficher-competence-element',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_AFFICHER,
@@ -78,6 +79,7 @@ return [
                         'ajouter',
                         'ajouter-competence-type',
                         'ajouter-competence-theme',
+                        'ajouter-competence-element',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_AJOUTER,
@@ -108,6 +110,7 @@ return [
                         'detruire',
                         'detruire-competence-type',
                         'detruire-competence-theme',
+                        'supprimer-competence-element',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_EFFACER,
@@ -228,6 +231,39 @@ return [
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher-competence-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-competence-element/:competence-element',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'afficher-competence-element',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-competence-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-competence-element/:type/:id',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'ajouter-competence-element',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer-competence-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-competence-element/:competence-element',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'supprimer-competence-element',
                             ],
                         ],
                         'may_terminate' => true,

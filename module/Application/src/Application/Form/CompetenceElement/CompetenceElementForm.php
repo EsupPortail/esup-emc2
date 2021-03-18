@@ -21,11 +21,11 @@ class CompetenceElementForm extends Form {
             'name' => 'competence',
             'type' => Select::class,
             'options' => [
-                'label' => 'Application * : ',
+                'label' => 'Compétences * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'empty_option' => "Sélectionner une application ... ",
+                'empty_option' => "Sélectionner une compétence ... ",
                 'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [

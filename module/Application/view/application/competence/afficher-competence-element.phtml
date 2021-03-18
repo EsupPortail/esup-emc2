@@ -1,28 +1,27 @@
 <?php
 
 /**
- * @see \Application\Controller\CompetenceMaitriseController::afficherAction()
- *
- * @var CompetenceMaitrise $maitrise
+ * @see \Application\Controller\CompetenceController::afficherCompetenceElementAction()
+ * @var CompetenceElement $competenceElement
  */
 
-use Application\Controller\CompetenceController;
-use Application\Entity\Db\CompetenceMaitrise;
-use Application\Entity\Db\CompetenceTheme;
+use Application\Entity\Db\CompetenceElement;
 
 ?>
 
 <dl class="dl-horizontal">
     <dt> Libellé </dt>
-    <dd> <?php echo $maitrise->getLibelle(); ?> </dd>
+    <dd> <?php echo $competenceElement->getCompetence()->getLibelle(); ?> </dd>
     <dt> Niveau </dt>
-    <dd> <?php echo $maitrise->getNiveau(); ?> </dd>
-    <dt> Description </dt>
-    <dd> <?php echo $maitrise->getDescription(); ?> </dd>
+    <dd> <?php echo ($competenceElement->getNiveauMaitrise())?$competenceElement->getNiveauMaitrise()->getLibelle():"Non précisé"; ?> </dd>
+    <?php if ($competenceElement->getCompetence()->getDescription() !== null) : ?>
+        <dt> Description de <br/>la compétence </dt>
+        <dd> <?php echo $competenceElement->getCompetence()->getDescription(); ?> </dd>
+    <?php endif; ?>
     <dt> Modificateur </dt>
-    <dd> <?php echo $maitrise->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $maitrise->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
-    <?php if ($maitrise->estHistorise()) : ?>
+    <dd> <?php echo $competenceElement->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $competenceElement->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
+    <?php if ($competenceElement->estHistorise()) : ?>
         <dt> Historisation </dt>
-        <dd> <?php echo $maitrise->getHistoDestructeur()->getDisplayName() ; ?> le <?php echo $maitrise->getHistoDestruction()->format('d/m/Y à H:i:s'); ?> </dd>
+        <dd> <?php echo $competenceElement->getHistoDestructeur()->getDisplayName() ; ?> le <?php echo $competenceElement->getHistoDestruction()->format('d/m/Y à H:i:s'); ?> </dd>
     <?php endif; ?>
 </dl>

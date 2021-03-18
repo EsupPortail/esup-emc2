@@ -18,8 +18,8 @@ class SelectionCompetenceMaitriseForm extends Form {
             'type' => Select::class,
             'name' => 'niveau',
             'options' => [
-                'label' => "Niveau de maïtrise * :",
-                'empty_option' => "Sélectionner un niveau de maitrise ...",
+                'label' => "Niveau de maîtrise * :",
+                'empty_option' => "Sélectionner un niveau de maîtrise ...",
                 'value_options' => $this->getCompetenceMaitriseService()->getCompetencesMaitrisesAsOptions(),
             ],
             'attributes' => [

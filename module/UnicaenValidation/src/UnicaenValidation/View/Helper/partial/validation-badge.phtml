@@ -8,16 +8,23 @@
 
 use UnicaenValidation\Entity\Db\ValidationInstance;
 
+$texte = (isset($options['texte']) AND $options['texte'] === true);
 ?>
 
-<?php if ($validation->getValeur() === null) : ?>
-    <span class="icon ok" style="color: darkgreen;"
-          data-toggle="tooltip" data-html="true"
-          title="Validé le <span class='highlight date'> <?php echo $validation->getHistoCreation()->format('d/m/Y'); ?> </span> par <span class='highlight agent'> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?>">
-    </span>
+<?php if ($validation !== null) : ?>
+    <?php if ($validation->getValeur() === null) : ?>
+        <span class="icon ok" style="color: darkgreen;"
+              data-toggle="tooltip" data-html="true"
+              title="Validé le <span class='highlight date'> <?php echo $validation->getHistoCreation()->format('d/m/Y'); ?> </span> par <span class='highlight agent'> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?>">
+            <?php echo ($texte)?"Validée":""; ?>
+        </span>
+    <?php else : ?>
+        <span class="icon ko" style="color: darkred;"
+              data-toggle="tooltip" data-html="true"
+              title="Validé le <span class='highlight date'> <?php echo $validation->getHistoCreation()->format('d/m/Y'); ?> </span> par <span class='highlight agent'> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?>">
+            <?php echo ($texte)?"Refusée":""; ?>
+        </span>
+    <?php endif; ?>
 <?php else : ?>
-    <span class="icon ko" style="color: darkred;"
-          data-toggle="tooltip" data-html="true"
-          title="Validé le <span class='highlight date'> <?php echo $validation->getHistoCreation()->format('d/m/Y'); ?> </span> par <span class='highlight agent'> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?>">
-    </span>
+    <span style="color:#123456;"><span class="icon aucune"></span> &nbsp;<?php echo ($texte)?"Aucune":""; ?></span>
 <?php endif; ?>
