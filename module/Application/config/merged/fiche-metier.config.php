@@ -74,7 +74,6 @@ return [
                         'changer-etat',
                         'modifier-application',
                         'modifier-formation',
-                        'gerer-competences',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -264,17 +263,6 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'exporter-toutes',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'gerer-competences' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/gerer-competences/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'gerer-competences',
                             ],
                         ],
                         'may_terminate' => true,

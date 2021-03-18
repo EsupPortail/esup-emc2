@@ -54,4 +54,10 @@ class CompetenceBlocViewHelper extends AbstractHelper
     }
 
 
+
+    public static function isDisplayed(array $options, string $key)
+    {
+        return (!isset($options['display']) OR !isset($options['display'][$key]) OR $options['display'][$key] !== false);
+    }
+
 }

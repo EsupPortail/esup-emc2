@@ -374,57 +374,6 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function gererCompetencesAction()
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
-
-        /** @var SelectionCompetenceForm $form */
-        $form = $this->getSelectionCompetenceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/gerer-competences', ['fiche' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        /**  @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $this->getHasCompetenceCollectionService()->updateCompetences($fiche, $data);
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Gestion des compétences de la fiche métier " . $fiche->getMetier()->getLibelle(),
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierFormationAction()
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
-
-        /** @var SelectionFormationForm $form */
-        $form = $this->getSelectionFormationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-formation', ['id' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $this->getFicheMetierService()->updateFormations($fiche, $data);
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modification des formations',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-
     public function changerExpertiseAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);

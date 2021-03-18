@@ -221,13 +221,13 @@ $mode = $options['mode'];
                     </div>
                     <div class="pull-right" style="margin-right:1rem;">
                     <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
-                            <?php /** @see FicheMetierController::gererCompetencesAction() */ ?>
-                            <a href="<?php echo $this->url('fiche-metier-type/gerer-competences', ['fiche' => $fichemetier->getId()], [], true); ?>"
+                            <?php /** @see \Application\Controller\CompetenceController::afficherCompetenceElementAction() */ ?>
+                            <a href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()], [], true); ?>"
                                class="btn btn-primary action ajax-modal"
                                data-event="modification"
                             >
                                 <span class="icon ajouter"></span>
-                                Gérer les compétences
+                                Ajouter une compétence
                             </a>
                     <?php endif; ?>
                         <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
@@ -242,7 +242,7 @@ $mode = $options['mode'];
             </div>
             <div class="panel-body">
                 <div class="col-md-1"></div>
-                <div class="col-md-10"><?php echo $this->competenceBloc($dictionnaireCompetence); ?></div>
+                <div class="col-md-10"><?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => ['valider' => false]]); ?></div>
             </div>
         </div>
         <?php endif; ?>

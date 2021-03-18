@@ -30,13 +30,14 @@ use Application\View\Helper\CompetenceBlocViewHelper;
  *  ]
  */
 
-$canAfficher    = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher') AND true);
-$canAjouter     = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter') AND true);
-$canModifier    = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier') AND true);
-$canSupprimer   = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer') AND true);
-$canValider     = (CompetenceBlocViewHelper::isActionActivee($options, 'valider') AND true);
+$canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher') AND true);
+$canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter') AND true);
+$canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier') AND true);
+$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer') AND true);
+$canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'valider') AND true);
 
-$displayTitre   = true;
+$displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
+$displayValidation  = CompetenceBlocViewHelper::isDisplayed($options,'validation');
 
 $groupes = [];
 $sansGroupe = "zzz";
@@ -68,6 +69,7 @@ ksort($groupes);
                 <br/>
                 <a
                     <?php /** @see \Application\Controller\CompetenceController::ajouterCompetenceElementAction() */?>
+                        <?php //todo ... Agent::class => get_class($objet) ... ?>
                         href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId()], [], true); ?>"
                         class="ajax-modal btn btn-primary action"
                         data-event="modification"
@@ -109,11 +111,13 @@ ksort($groupes);
                             <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Niveau non précisé"; ?>
                         <?php endif; ?>
                     </td>
-                    <td class="validation">
-                        <?php if ($entite instanceof CompetenceElement) : ?>
-                            <?php echo $this->validationBadge($entite->getValidation(),$options); ?>
-                        <?php endif; ?>
-                    </td>
+                    <?php if ($displayValidation) : ?>
+                        <td class="validation">
+                            <?php if ($entite instanceof CompetenceElement) : ?>
+                                <?php echo $this->validationBadge($entite->getValidation(),$options); ?>
+                            <?php endif; ?>
+                        </td>
+                    <?php endif; ?>
                     <td class="action">
                         <?php if ($entite instanceof CompetenceElement) : ?>
                             <?php if ($canAfficher) : ?>
