@@ -42,6 +42,6 @@ foreach ($competences as $item) {
 <div class="row" style="margin: 1rem;">
     <div class="col-md-11">
         <br/>
-        <?php echo $this->competenceBloc($cCompetences); ?>
+        <?php echo $this->competenceBloc($cCompetences, $fiche->getAgent()); ?>
     </div>
 </div>
