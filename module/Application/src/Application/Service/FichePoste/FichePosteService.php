@@ -557,6 +557,7 @@ class FichePosteService {
         $retirees = $fiche->getApplicationsRetirees();
         foreach ($retirees as $retiree) {
             $dictionnaire[$retiree->getApplication()->getId()]["conserve"] = false;
+            $dictionnaire[$retiree->getApplication()->getId()]["entite"] = $retiree->getApplication();
         }
 
         return $dictionnaire;
@@ -652,7 +653,7 @@ class FichePosteService {
         foreach ($activites as $activite) {
             foreach ($activite->getCompetenceListe() as $competenceElement) {
                 $competence = $competenceElement->getCompetence();
-                $dictionnaire[$competence->getId()]["object"] = $competence;
+                $dictionnaire[$competence->getId()]["entite"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $activite;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
@@ -660,6 +661,7 @@ class FichePosteService {
 
         $retirees = $fiche->getCompetencesRetirees();
         foreach ($retirees as $retiree) {
+            $dictionnaire[$retiree->getCompetence()->getId()]["entite"] = $retiree->getCompetence();
             $dictionnaire[$retiree->getCompetence()->getId()]["conserve"] = false;
         }
 
