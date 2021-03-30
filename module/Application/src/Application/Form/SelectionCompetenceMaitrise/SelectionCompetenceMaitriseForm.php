@@ -4,6 +4,7 @@ namespace Application\Form\SelectionCompetenceMaitrise;
 
 use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -28,6 +29,16 @@ class SelectionCompetenceMaitriseForm extends Form {
                 'data-live-search'  => 'true',
             ],
         ]);
+        $this->add([
+            'type' => Checkbox::class,
+            'name' => 'clef',
+            'options' => [
+                'label' => "Est clef",
+            ],
+            'attributes' => [
+                'id'                => 'clef',
+            ],
+        ]);
         //button
         $this->add([
             'type' => Button::class,
@@ -46,6 +57,7 @@ class SelectionCompetenceMaitriseForm extends Form {
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
             'niveau'           => [ 'required' => true,  ],
+            'clef'             => [ 'required' => false,  ],
         ]));
 
     }

@@ -8,6 +8,8 @@ trait HasNiveauMaitriseTrait {
 
     /** @var CompetenceMaitrise */
     private $niveau;
+    /** @var bool */
+    private $clef;
 
     /**
      * @return CompetenceMaitrise|null
@@ -26,5 +28,24 @@ trait HasNiveauMaitriseTrait {
         $this->niveau = $niveau;
         return $this;
     }
+
+    /**
+     * @return bool|null
+     */
+    public function isClef(): ?bool
+    {
+        return $this->clef;
+    }
+
+    /**
+     * @param bool $clef
+     * @return HasNiveauMaitriseTrait
+     */
+    public function setClef(bool $clef): self
+    {
+        $this->clef = $clef;
+        return $this;
+    }
+
 
 }

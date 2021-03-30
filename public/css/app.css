@@ -576,6 +576,12 @@ div.listing  td.niveau {
     /*background: lightblue;*/
 }
 
+div.listing  td.clef {
+    width: 5rem;
+    text-align: center;
+    /*background: lightblue;*/
+}
+
 div.listing  td.validation {
     width: 10rem;
     text-align: right;

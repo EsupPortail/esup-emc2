@@ -90,7 +90,7 @@ ksort($groupes);
         <?php $groupe = $groupes[$type->getLibelle()]; ?>
         <?php if ($groupe !== null AND !empty($groupe)) : ?>
             <tr>
-                <th colspan="4">
+                <th colspan="5">
                     <?php echo $type->getLibelle(); ?>
                 </th>
             </tr>
@@ -99,7 +99,11 @@ ksort($groupes);
                 <?php
                     $entite = $element['entite'];
                     $competence = $entite;
-                    if ($competence instanceof CompetenceElement) $competence = $competence->getCompetence();
+                    $isClef = false;
+                    if ($competence instanceof CompetenceElement) {
+                        $isClef = $competence->isClef();
+                        $competence = $competence->getCompetence();
+                    }
                 ?>
                 <tr>
                     <td class="libelle">
@@ -109,6 +113,11 @@ ksort($groupes);
                     <td class="niveau">
                         <?php if ($entite instanceof CompetenceElement) : ?>
                             <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Niveau non précisé"; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td class="clef">
+                        <?php if ($isClef) : ?>
+                            <span class="icon star"></span>
                         <?php endif; ?>
                     </td>
                     <?php if ($displayValidation) : ?>

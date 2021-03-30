@@ -421,6 +421,7 @@ class FicheMetierController extends AbstractActionController
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $dictionnaire = $this->getFicheMetierService()->getCompetencesDictionnaires($ficheMetier, true);
+        $dictionnaire = array_filter($dictionnaire, function($item) { return ($item['entite'])->isClef();});
         $labels = []; $values = [];
 
         $valuesFiche = [];

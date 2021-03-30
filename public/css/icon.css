@@ -296,3 +296,7 @@ span.icon.graphique:before {
 span.icon.aucune:before {
     content:"\f128";
 }
+
+span.icon.star:before {
+    content: "\f005";
+}
