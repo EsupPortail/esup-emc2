@@ -343,20 +343,28 @@ class FicheMetierService {
      * @param DateTime|null $date
      * @return array
      */
-    public function getApplicationsDictionnaires(FicheMetier $fiche, ?DateTime $date = null)
+    public function getApplicationsDictionnaires(FicheMetier $fiche, bool $asElement = false, ?DateTime $date = null)
     {
         $dictionnaire = [];
 
         foreach ($fiche->getApplicationListe() as $applicationElement) {
+            if ($asElement) {
+                $application = $applicationElement;
+            } else {
                 $application = $applicationElement->getApplication();
-                $dictionnaire[$application->getId()]["entite"] = $application;
-                $dictionnaire[$application->getId()]["raison"][] = $fiche;
-                $dictionnaire[$application->getId()]["conserve"] = true;
+            }
+            $dictionnaire[$application->getId()]["entite"] = $application;
+            $dictionnaire[$application->getId()]["raison"][] = $fiche;
+            $dictionnaire[$application->getId()]["conserve"] = true;
         }
 
         foreach ($fiche->getActivites() as $activite) {
             foreach ($activite->getActivite()->getApplicationListe() as $applicationElement) {
-                $application = $applicationElement->getApplication();
+                if ($asElement) {
+                    $application = $applicationElement;
+                } else {
+                    $application = $applicationElement->getApplication();
+                }
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $activite;
                 $dictionnaire[$application->getId()]["conserve"] = true;

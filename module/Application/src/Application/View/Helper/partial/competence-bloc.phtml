@@ -112,7 +112,7 @@ ksort($groupes);
                     </td>
                     <td class="niveau">
                         <?php if ($entite instanceof CompetenceElement) : ?>
-                            <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Niveau non précisé"; ?>
+                            <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Non précisé"; ?>
                         <?php endif; ?>
                     </td>
                     <td class="clef">

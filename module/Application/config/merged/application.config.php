@@ -21,9 +21,9 @@ use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
 use Application\Form\SelectionApplication\SelectionApplicationHydrator;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\Application\ApplicationGroupeService;
+use Application\Service\Application\ApplicationGroupeServiceFactory;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
-use Application\Service\Application\ApplicationGroupeServiceFactory;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\ApplicationElement\ApplicationElementServiceFactory;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
@@ -51,6 +51,7 @@ return [
                     'action' => [
                         'afficher',
                         'afficher-groupe',
+                        'afficher-application-element',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
@@ -64,6 +65,7 @@ return [
                         'modifier-groupe',
                         'historiser-groupe',
                         'restaurer-groupe',
+                        'changer-niveau',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EDITER,
@@ -74,6 +76,7 @@ return [
                     'action' => [
                         'creer',
                         'ajouter-groupe',
+                        'ajouter-application-element',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AJOUTER,
@@ -125,6 +128,17 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'changer-niveau' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/changer-niveau/:application-element',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action'     => 'changer-niveau',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'groupe' => [
                         'type' => Literal::class,
                         'may_terminate' => false,
@@ -206,6 +220,28 @@ return [
                                 'action' => 'afficher',
                             ],
                         ],
+                    ],
+                    'afficher-application-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-application-element/:application-element',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action'     => 'afficher-application-element',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'ajouter-application-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-application-element/:type/:id',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action'     => 'ajouter-application-element',
+                            ],
+                        ],
+                        'may_terminate' => true,
                     ],
                     'changer-status' => [
                         'type' => Segment::class,

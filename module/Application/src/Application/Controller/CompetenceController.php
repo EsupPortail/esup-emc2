@@ -535,7 +535,7 @@ class CompetenceController extends AbstractActionController
             $vm->setTemplate('application/default/default-form');
             return $vm;
         }
-
+        exit();
     }
 
     public function supprimerCompetenceElementAction()

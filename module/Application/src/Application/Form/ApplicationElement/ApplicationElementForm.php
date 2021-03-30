@@ -3,6 +3,7 @@
 namespace Application\Form\ApplicationElement;
 
 use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
@@ -11,6 +12,7 @@ use Zend\InputFilter\Factory;
 
 class ApplicationElementForm extends Form {
     use ApplicationServiceAwareTrait;
+    use CompetenceMaitriseServiceAwareTrait;
 
     public function init()
     {
@@ -34,35 +36,20 @@ class ApplicationElementForm extends Form {
         ]);
         //niveau
         $this->add([
-            'name' => 'type',
+            'name' => 'niveau',
             'type' => Select::class,
             'options' => [
-                'label' => 'Type de formation * : ',
+                'label' => 'Niveau  : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'empty_option' => "Sélectionner un type de formation ... ",
-                'value_options' => [
-                    'Autoformation'          => "Autoformation",
-                    'Formation externe'       => "Formation externe",
-                    'Formation interne'       => "Formation interne",
-                ],
+                'empty_option' => "Sélectionner un niveau ... ",
+                'value_options' => $this->getCompetenceMaitriseService()->getCompetencesMaitrisesAsOptions(),
             ],
             'attributes' => [
-                'id'                => 'type',
+                'id'                => 'niveau',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
-            ]
-        ]);
-        //Année
-        $this->add([
-            'type' => Number::class,
-            'name' => 'annee',
-            'options' => [
-                'label' => "Année de la formation :",
-            ],
-            'attributes' => [
-                'id' => 'annee',
             ],
         ]);
         // button
@@ -83,8 +70,7 @@ class ApplicationElementForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'application'   => [ 'required' => true, ],
-            'type'          => [ 'required' => true, ],
-            'annee'         => [ 'required' => false, ],
+            'niveau'        => [ 'required' => false, ],
         ]));
     }
 }

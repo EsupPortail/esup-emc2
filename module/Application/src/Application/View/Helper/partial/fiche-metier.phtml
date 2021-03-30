@@ -213,31 +213,33 @@ $mode = $options['mode'];
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-8">
+                            <h2>
                                 <span class="icon competence"></span>
                                 Compétences
                                 <span class="badge">
                                     <?php echo count($dictionnaireCompetence); ?>
-                            </span>
-                    </div>
-                    <div class="pull-right" style="margin-right:1rem;">
-                    <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
-                            <?php /** @see \Application\Controller\CompetenceController::afficherCompetenceElementAction() */ ?>
-                            <a href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()], [], true); ?>"
+                                </span>
+                            </h2>
+                         </div>
+                        <div class="col-md-3" style="margin-right:1rem;">
+                        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
+                                <?php /** @see \Application\Controller\CompetenceController::afficherCompetenceElementAction() */ ?>
+                                <a href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()], [], true); ?>"
+                                   class="btn btn-primary action ajax-modal"
+                                   data-event="modification"
+                                >
+                                    <span class="icon ajouter"></span>
+                                    Ajouter une compétence
+                                </a>
+                        <?php endif; ?>
+                            <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
                                class="btn btn-primary action ajax-modal"
-                               data-event="modification"
                             >
-                                <span class="icon ajouter"></span>
-                                Ajouter une compétence
+                                <span class="icon graphique"></span>
+                                Afficher les compétences
                             </a>
-                    <?php endif; ?>
-                        <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
-                        <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
-                           class="btn btn-primary action ajax-modal"
-                        >
-                            <span class="icon graphique"></span>
-                            Afficher les compétences
-                        </a>
-                    </div>
+                        </div>
                 </div>
             </div>
             <div class="panel-body">
@@ -259,21 +261,23 @@ $mode = $options['mode'];
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-8">
+                            <h2>
                                 <span class="icon application"></span>
                                 Applications
                                 <span class="badge">
                                     <?php echo count($dictionnaireApplication); ?>
                                 </span>
+                            </h2>
                         </div>
                         <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
-                        <div class="pull-right" style="margin-right:1rem;">
-                            <?php /** @see FicheMetierController::modifierApplicationAction() */ ?>
-                            <a href="<?php echo $this->url('fiche-metier-type/modifier-application', ['id' => $fichemetier->getId()], [], true); ?>"
+                        <div class="col-md-3" style="margin-right:1rem;">
+                            <?php /** @see \Application\Controller\ApplicationController::ajouterApplicationElementAction() */ ?>
+                            <a href="<?php echo $this->url('application/ajouter-application-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()], [], true); ?>"
                                class="btn btn-primary action ajax-modal"
                                data-event="modification"
                             >
                                 <span class="icon ajouter"></span>
-                                Gérer les applications
+                                Ajouter une application
                             </a>
                         </div>
                         <?php endif; ?>
@@ -282,7 +286,7 @@ $mode = $options['mode'];
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-1"></div>
-                        <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication); ?></div>
+                        <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => ['valider' => false]]); ?></div>
                     </div>
                 </div>
             </div>

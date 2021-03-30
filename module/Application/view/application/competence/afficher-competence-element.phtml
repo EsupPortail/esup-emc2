@@ -14,6 +14,8 @@ use Application\Entity\Db\CompetenceElement;
     <dd> <?php echo $competenceElement->getCompetence()->getLibelle(); ?> </dd>
     <dt> Niveau </dt>
     <dd> <?php echo ($competenceElement->getNiveauMaitrise())?$competenceElement->getNiveauMaitrise()->getLibelle():"Non précisé"; ?> </dd>
+    <dt> Est compétence clef </dt>
+    <dd> <?php echo ($competenceElement->isClef())?"Oui":"Non"; ?> </dd>
     <?php if ($competenceElement->getCompetence()->getDescription() !== null) : ?>
         <dt> Description de <br/>la compétence </dt>
         <dd> <?php echo $competenceElement->getCompetence()->getDescription(); ?> </dd>

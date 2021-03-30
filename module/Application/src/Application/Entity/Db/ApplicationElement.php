@@ -2,14 +2,17 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
+use Application\Entity\Db\Traits\HasNiveauMaitriseTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 
-class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface {
+class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface, HasNiveauMaitriseInterface {
     use HistoriqueAwareTrait;
     use ValidableAwareTrait;
+    use HasNiveauMaitriseTrait;
 
     /** @var integer */
     private $id;
@@ -62,4 +65,8 @@ class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface
         return $this;
     }
 
+    public function getLibelle()
+    {
+        return ($this->application)?$this->application->getLibelle():"";
+    }
 }
