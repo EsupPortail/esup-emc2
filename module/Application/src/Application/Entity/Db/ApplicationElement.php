@@ -69,4 +69,8 @@ class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface
     {
         return ($this->application)?$this->application->getLibelle():"";
     }
+
+    public function getObjet() {
+        return $this->getApplication();
+    }
 }

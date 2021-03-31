@@ -1,5 +1,6 @@
 <?php
 
+use Application\Controller\ElementController;
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\FormationElement;
 
@@ -116,11 +117,11 @@ ksort($dictionnaire);
                         </td>
                         <td class="action-cell">
                             <?php if ($canVoir) : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\AgentController::afficherFormationAction() */?>
-                                        href="<?php echo $this->url('agent/afficher-formation', ['formation-element' => $formationElement->getId(), 'agent' => $agent->getId()], [], true); ?>"
-                                        class="ajax-modal"
-                                >
+                                    <a
+                                        <?php /** @see \Application\Controller\ElementController::afficherAction() */?>
+                                            href="<?php echo $this->url('element/afficher', ['type' => ElementController::TYPE_FORMATION,  'id' => $formationElement->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                    >
                                     <span class="icon voir" title="Afficher une formation liée à l'agent"></span></a>
                             <?php endif; ?>
                             <?php if ($canModifier) : ?>

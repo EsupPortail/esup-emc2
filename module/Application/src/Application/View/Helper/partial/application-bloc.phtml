@@ -1,5 +1,6 @@
 <?php
 
+use Application\Controller\ElementController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\ApplicationElement;
@@ -130,8 +131,8 @@ ksort($groupes);
                 <td class="action">
                     <?php if ($entite instanceof ApplicationElement) : ?>
                         <?php if ($canAfficher) : ?>
-                            <a  <?php /** @see \Application\Controller\ApplicationController::afficherApplicationElementAction() */ ?>
-                                    href="<?php echo $this->url("application/afficher-application-element", ['application-element' => $entite->getId()], [], true); ?>"
+                            <a  <?php /** @see \Application\Controller\ElementController::afficherAction() */ ?>
+                                    href="<?php echo $this->url("element/afficher", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId()], [], true); ?>"
                                     class="ajax-modal" data-toggle="tooltip" data-html="true"
                                     title="Afficher l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
                                 <span class="icon voir"></span></a>

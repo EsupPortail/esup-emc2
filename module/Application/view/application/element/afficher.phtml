@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @see \Application\Controller\ElementController::afficherAction()
+ * @var string $type
+ * @var int $id
+ * @var ApplicationElement|CompetenceElement|FormationElement $element
+ */
+
+use Application\Entity\Db\ApplicationElement;
+use Application\Entity\Db\CompetenceElement;
+use Application\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
+use Formation\Entity\Db\FormationElement;
+
+$objet = $element->getObjet();
+?>
+
+<dl class="dl-horizontal">
+    <dt> Libellé </dt>
+    <dd> <?php echo $objet->getLibelle(); ?> </dd>
+    <?php if ($element instanceOf HasNiveauMaitriseInterface) : ?>
+        <dt> Niveau </dt>
+        <dd> <?php echo ($element->getNiveauMaitrise())?$element->getNiveauMaitrise()->getLibelle():"Non précisé"; ?> </dd>
+        <dt> Est un élément clef </dt>
+        <dd> <?php echo ($element->isClef())?"Oui":"Non"; ?> </dd>
+    <?php endif; ?>
+
+    <?php if ($objet->getDescription() !== null) : ?>
+        <dt> Description </dt>
+        <dd> <?php echo $objet->getDescription(); ?> </dd>
+    <?php endif; ?>
+    <dt> Modificateur </dt>
+    <dd> <?php echo $element->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $element->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
+    <?php if ($element->estHistorise()) : ?>
+        <dt> Historisation </dt>
+        <dd> <?php echo $element->getHistoDestructeur()->getDisplayName() ; ?> le <?php echo $element->getHistoDestruction()->format('d/m/Y à H:i:s'); ?> </dd>
+    <?php endif; ?>
+</dl>

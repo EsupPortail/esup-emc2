@@ -51,7 +51,6 @@ return [
                     'action' => [
                         'afficher',
                         'afficher-groupe',
-                        'afficher-application-element',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
@@ -221,17 +220,6 @@ return [
                                 'action' => 'afficher',
                             ],
                         ],
-                    ],
-                    'afficher-application-element' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher-application-element/:application-element',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action'     => 'afficher-application-element',
-                            ],
-                        ],
-                        'may_terminate' => true,
                     ],
                     'ajouter-application-element' => [
                         'type'  => Segment::class,

@@ -93,6 +93,9 @@ class EntretienProfessionnelService {
             ->addSelect('categorie')->join('formulaire.categories', 'categorie')
             ->addSelect('champ')->join('categorie.champs', 'champ')
 
+            ->addSelect('etat')->leftjoin('entretien.etat', 'etat')
+            ->addSelect('etattype')->leftjoin('etat.type', 'etattype')
+
             ->addSelect('validationResponsable')->leftjoin('entretien.validationResponsable','validationResponsable')
             ->addSelect('validationAgent')->leftjoin('entretien.validationAgent','validationAgent')
             ->addSelect('validationDRH')->leftjoin('entretien.validationDRH','validationDRH')

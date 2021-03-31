@@ -148,7 +148,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
     <?php echo $this->partial('partial/mission-specifique', ['missions' => $agent->getMissionsSpecifiques(), 'agent' => $agent,  "droits" => $droits], []); ?>
 
-    <!-- Parcours de formation -------------------------------------------------------------------------------------------->
+     <!-- Parcours de formation ------------------------------------------------------------------------------------------>
 
     <h2>
         Parcours de formation
@@ -157,13 +157,11 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     <div class="alert alert-info">
         <strong><span class="icon attention"></span> Affichage des parcours de formations attachés à votre catégorie, domaines professionnels et métier.</strong> <br/>
         Il est possible qu'un domaine ou un métier ne possède pas de parcours.
-
     </div>
 
     <?php
     echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true);
     ?>
-
 
     <h2> Applications, compétences et formations</h2>
 
@@ -179,7 +177,6 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     <?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, $options); ?>
 
     <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
-
     <?php
     /** @see \Application\View\Helper\AgentFormationViewHelper */
     echo $this->agentFormation($agent, $options);

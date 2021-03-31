@@ -4,10 +4,8 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\ApplicationElement;
-use Application\Entity\Db\CompetenceElement;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
-use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;

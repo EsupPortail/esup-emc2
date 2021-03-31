@@ -67,7 +67,6 @@ return [
                         'afficher',
                         'afficher-competence-type',
                         'afficher-competence-theme',
-                        'afficher-competence-element',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_AFFICHER,
@@ -231,17 +230,6 @@ return [
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'afficher',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'afficher-competence-element' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher-competence-element/:competence-element',
-                            'defaults' => [
-                                'controller' => CompetenceController::class,
-                                'action'     => 'afficher-competence-element',
                             ],
                         ],
                         'may_terminate' => true,

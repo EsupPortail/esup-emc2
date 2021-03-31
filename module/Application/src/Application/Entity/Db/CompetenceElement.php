@@ -69,4 +69,8 @@ class CompetenceElement implements HistoriqueAwareInterface, ValidableInterface,
     {
         return ($this->competence)?$this->competence->getLibelle():"";
     }
+
+    public function getObjet() {
+        return $this->getCompetence();
+    }
 }

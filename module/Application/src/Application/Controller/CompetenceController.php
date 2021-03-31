@@ -458,15 +458,6 @@ class CompetenceController extends AbstractActionController
 
     /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
 
-    public function afficherCompetenceElementAction()
-    {
-        $element = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-        return new ViewModel([
-            'title' => "Affichage de la compétence [".$element->getCompetence()->getLibelle()."]",
-            'competenceElement' => $element,
-        ]);
-    }
-
     public function ajouterCompetenceElementAction()
     {
         $type = $this->params()->fromRoute('type');

@@ -1,5 +1,6 @@
 <?php
 
+use Application\Controller\ElementController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceElement;
@@ -131,10 +132,10 @@ ksort($groupes);
                     <td class="action">
                         <?php if ($entite instanceof CompetenceElement) : ?>
                             <?php if ($canAfficher) : ?>
-                            <a  <?php /** @see \Application\Controller\CompetenceController::afficherCompetenceElementAction() */ ?>
-                                    href="<?php echo $this->url("competence/afficher-competence-element", ['competence-element' => $entite->getId()], [], true); ?>"
+                                <a  <?php /** @see \Application\Controller\ElementController::afficherAction() */ ?>
+                                    href="<?php echo $this->url("element/afficher", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?>"
                                     class="ajax-modal" data-toggle="tooltip" data-html="true"
-                                    title="Afficher la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
+                                    title="Afficher l'application <span class='highlight competence'><?php echo $entite->getLibelle(); ?></span>">
                                 <span class="icon voir"></span></a>
                             <?php endif; ?>
                             <?php if ($canModifier) : ?>

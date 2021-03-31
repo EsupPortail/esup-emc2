@@ -272,15 +272,6 @@ class ApplicationController  extends AbstractActionController {
 
     /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
 
-    public function afficherApplicationElementAction()
-    {
-        $element = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-        return new ViewModel([
-            'title' => "Affichage de l'application [".$element->getApplication()->getLibelle()."]",
-            'applicationElement' => $element,
-        ]);
-    }
-
     public function ajouterApplicationElementAction()
     {
         $type = $this->params()->fromRoute('type');
