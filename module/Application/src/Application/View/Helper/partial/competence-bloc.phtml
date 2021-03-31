@@ -7,6 +7,7 @@ use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Provider\Privilege\CompetencePrivileges;
 use Application\View\Helper\CompetenceBlocViewHelper;
 
 /**
@@ -32,14 +33,19 @@ use Application\View\Helper\CompetenceBlocViewHelper;
  *  ]
  */
 
-$canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher') AND true);
-$canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter') AND true);
-$canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier') AND true);
-$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer') AND true);
-$canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'valider') AND true);
+$canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher'));
+$canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter'));
+$canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier'));
+$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer'));
+$canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'valider'));
 
 $displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
 $displayValidation  = CompetenceBlocViewHelper::isDisplayed($options,'validation');
+
+//var_dump([
+//        'actions' => $options['actions'],
+//        'can' => ['afficher' => $canAfficher, 'ajouter' => $canAjouter, 'modifier' => $canModifier, 'supprimer' => $canSupprimer, 'valider' => $canValider,]
+//]);
 
 $groupes = [];
 $sansGroupe = "zzz";
@@ -152,8 +158,7 @@ ksort($groupes);
                                         class="ajax-modal"
                                         data-event="modification"
                                 >
-                                    <span class="icon detruire" title="Supprimer définitivement une compétence liées à l'agent"></span>
-                                </a>
+                                    <span class="icon detruire" title="Supprimer définitivement une compétence liées à l'agent"></span></a>
                             <?php endif; ?>
                             <?php if ($canValider) : ?>
                                 <?php if ($entite->getValidation() === null) : ?>

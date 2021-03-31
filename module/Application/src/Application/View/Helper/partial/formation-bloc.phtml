@@ -1,7 +1,6 @@
 <?php
 
 use Application\Controller\ElementController;
-use Application\Entity\Db\CompetenceType;
 use Application\View\Helper\CompetenceBlocViewHelper;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
@@ -149,8 +148,7 @@ ksort($groupes);
                                         class="ajax-modal"
                                         data-event="modification"
                                 >
-                                    <span class="icon detruire" title="Supprimer définitivement une formation liées à l'agent"></span>
-                                </a>
+                                    <span class="icon detruire" title="Supprimer définitivement une formation liées à l'agent"></span></a>
                             <?php endif; ?>
                             <?php if ($canValider) : ?>
                                 <?php if ($entite->getValidation() === null) : ?>

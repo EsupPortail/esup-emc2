@@ -15,6 +15,9 @@ use Application\Entity\Db\FicheTypeExterne;
  * @var array $options
  */
 
+
+//var_dump($options['actions']);
+
 $metier = $fichemetier->getMetier();
 $agent = ($ficheposte)?$ficheposte->getAgent():null;
 
@@ -244,7 +247,7 @@ $mode = $options['mode'];
             </div>
             <div class="panel-body">
                 <div class="col-md-1"></div>
-                <div class="col-md-10"><?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => ['valider' => false]]); ?></div>
+                <div class="col-md-10"><?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => $options['actions']]); ?></div>
             </div>
         </div>
         <?php endif; ?>
@@ -294,7 +297,7 @@ $mode = $options['mode'];
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-1"></div>
-                        <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => ['valider' => false]]); ?></div>
+                        <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => $options['actions']]); ?></div>
                     </div>
                 </div>
             </div>

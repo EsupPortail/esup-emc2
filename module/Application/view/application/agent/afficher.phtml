@@ -36,6 +36,9 @@ $options  = [];
 $options['texte'] = true;
 $options['droits'] = $droits;
 $options['retour'] = $this->url('agent/afficher', ['agent' => $agent->getId()], [], true);
+$options['actions'] = [
+    'afficher' => true, 'ajouter' => $canAjouter, 'modifier' => $canModifier, 'supprimer' => $canDetruire, 'valider' => $canValider
+];
 
 $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 
