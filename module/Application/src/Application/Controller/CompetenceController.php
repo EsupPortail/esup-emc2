@@ -505,32 +505,4 @@ class CompetenceController extends AbstractActionController
         }
         exit();
     }
-
-    /** Niveau de maitrise d'un  */
-    public function changerNiveauAction() {
-        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-        $clef=$this->params()->fromRoute('clef');
-
-        $form = $this->getSelectionCompetenceMaitriseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('competence/changer-niveau', ['competence-element' => $competenceElement->getId(), 'clef' => $clef], [], true));
-        $form->bind($competenceElement);
-        if ($clef === 'masquer') $form->masquerClef();
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getCompetenceElementService()->update($competenceElement);
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Changer le niveau de maîtrise",
-            'form' => $form,
-        ]);
-        $vm->setTemplate('application/default/default-form');
-        return $vm;
-    }
-
 }

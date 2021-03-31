@@ -64,7 +64,6 @@ return [
                         'modifier-groupe',
                         'historiser-groupe',
                         'restaurer-groupe',
-                        'changer-niveau',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EDITER,
@@ -127,17 +126,6 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'changer-niveau' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/changer-niveau/:application-element[/:clef]',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action'     => 'changer-niveau',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'groupe' => [
                         'type' => Literal::class,
                         'may_terminate' => false,

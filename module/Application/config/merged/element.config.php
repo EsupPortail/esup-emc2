@@ -4,8 +4,10 @@ namespace Application;
 
 use Application\Controller\ElementController;
 use Application\Controller\ElementControllerFactory;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -35,6 +37,16 @@ return [
                         ApplicationPrivileges::APPLICATION_EFFACER,
                         CompetencePrivileges::COMPETENCE_EFFACER,
                         FormationPrivileges::FORMATION_SUPPRIMER,
+                    ],
+                ],
+                [
+                    'controller' => ElementController::class,
+                    'action' => [
+                        'changer-niveau',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_ELEMENT_MODIFIER,
+                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
                     ],
                 ],
             ],
@@ -71,6 +83,17 @@ return [
                             'defaults' => [
                                 'controller' => ElementController::class,
                                 'action'     => 'supprimer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'changer-niveau' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/changer-niveau/:type/:id[/:clef]',
+                            'defaults' => [
+                                'controller' => ElementController::class,
+                                'action'     => 'changer-niveau',
                             ],
                         ],
                         'may_terminate' => true,

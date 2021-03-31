@@ -152,15 +152,6 @@ return [
                         CompetencePrivileges::COMPETENCE_EFFACER,
                     ],
                 ],
-                [
-                    'controller' => CompetenceController::class,
-                    'action' => [
-                        'changer-niveau',
-                    ],
-                    'privileges' => [
-                        CompetencePrivileges::COMPETENCE_EFFACER,
-                    ],
-                ],
             ],
         ],
     ],
@@ -178,17 +169,6 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'changer-niveau' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/changer-niveau/:competence-element[/:clef]',
-                            'defaults' => [
-                                'controller' => CompetenceController::class,
-                                'action'     => 'changer-niveau',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'ajouter' => [
                         'type'  => Segment::class,
                         'options' => [

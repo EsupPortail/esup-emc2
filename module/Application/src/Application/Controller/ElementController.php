@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseFormAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
@@ -13,6 +14,7 @@ class ElementController extends AbstractActionController {
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FormationElementServiceAwareTrait;
+    use SelectionCompetenceMaitriseFormAwareTrait;
 
     const TYPE_APPLICATION = 'Application';
     const TYPE_COMPETENCE = 'Competence';
@@ -85,4 +87,42 @@ class ElementController extends AbstractActionController {
         return $vm;
     }
 
+    public function changerNiveauAction() {
+        $elementType = $this->params()->fromRoute('type');
+        $elementId = $this->params()->fromRoute('id');
+        $clef=$this->params()->fromRoute('clef');
+
+        $element = null; $service = null;
+        switch ($elementType) {
+            case ElementController::TYPE_APPLICATION :
+                $element = $this->getApplicationElementService()->getApplicationElement($elementId);
+                $service = $this->getApplicationElementService();
+                break;
+            case ElementController::TYPE_COMPETENCE :
+                $element = $this->getCompetenceElementService()->getCompetenceElement($elementId);
+                $service = $this->getCompetenceElementService();
+                break;
+        }
+
+        $form = $this->getSelectionCompetenceMaitriseForm();
+        $form->setAttribute('action', $this->url()->fromRoute('element/changer-niveau', ['type' => $elementType, 'id' => $element->getId(), 'clef' => $clef], [], true));
+        $form->bind($element);
+        if ($clef === 'masquer') $form->masquerClef();
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $service->update($element);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Changer le niveau de maîtrise",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('application/default/default-form');
+        return $vm;
+    }
 }

@@ -139,8 +139,8 @@ ksort($groupes);
                                 <span class="icon voir"></span></a>
                             <?php endif; ?>
                             <?php if ($canModifier) : ?>
-                                <a  <?php /** @see \Application\Controller\CompetenceController::changerNiveauAction() */ ?>
-                                        href="<?php echo $this->url("competence/changer-niveau", ['competence-element' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                                <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
+                                        href="<?php echo $this->url("element/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                         class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
                                         title="Modifier le niveau de la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
                                     <span class="icon editer"></span></a>
