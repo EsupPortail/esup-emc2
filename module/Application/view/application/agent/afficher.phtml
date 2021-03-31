@@ -176,11 +176,8 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
     <?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, $options); ?>
 
-    <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
-    <?php
-    /** @see \Application\View\Helper\AgentFormationViewHelper */
-    echo $this->agentFormation($agent, $options);
-    ?>
+    <!-- FORMATION ------------------------------------------------------------------------------------------------------->
+    <?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
 
     <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
 

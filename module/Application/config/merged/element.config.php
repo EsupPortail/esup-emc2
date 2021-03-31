@@ -8,6 +8,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
+use Application\View\Helper\FormationBlocViewHelper;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -117,6 +118,11 @@ return [
     ],
     'hydrators' => [
         'factories' => [],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'formationBloc' => FormationBlocViewHelper::class,
+        ],
     ]
 
 ];

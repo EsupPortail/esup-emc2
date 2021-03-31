@@ -100,10 +100,10 @@ class FormationService
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @return Formation
      */
-    public function getFormation(int $id)
+    public function getFormation(?int $id)
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()

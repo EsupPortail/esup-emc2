@@ -51,11 +51,5 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
 <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
 <?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, ['texte' => true]);?>
 
-<!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
-
-<div class="bloc">
-<?php
-/** @see \Application\View\Helper\AgentFormationViewHelper */
-echo $this->agentFormation($agent, $options);
-?>
-</div>
+<!-- FORMATION ------------------------------------------------------------------------------------------------------->
+<?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>

@@ -2,7 +2,7 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
@@ -17,11 +17,11 @@ class ApplicationBlocViewHelper extends AbstractHelper
      */
     /**
      * @param array $applications
-     * @param HasCompetenceCollectionInterface|null $objet
+     * @param HasApplicationCollectionInterface|null $objet
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $applications, ?HasCompetenceCollectionInterface $objet = null, $options = [])
+    public function __invoke(array $applications, ?HasApplicationCollectionInterface $objet = null, $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

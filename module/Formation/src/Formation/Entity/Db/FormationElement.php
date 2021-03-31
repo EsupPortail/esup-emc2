@@ -66,4 +66,7 @@ class FormationElement implements HistoriqueAwareInterface, ValidableInterface {
         return $this->getFormation();
     }
 
+    public function getLibelle() {
+        return $this->getFormation()->getLibelle();
+    }
 }

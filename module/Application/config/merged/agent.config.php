@@ -449,7 +449,6 @@ return [
         'invokables' => [
             'agent' => AgentViewHelper::class,
             'agentAffectation' => AgentAffectationViewHelper::class,
-            'agentFormation' => AgentFormationViewHelper::class,
             'agentStatut' => AgentStatutViewHelper::class,
             'agentGrade' => AgentGradeViewHelper::class,
         ],

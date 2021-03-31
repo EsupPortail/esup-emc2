@@ -25,9 +25,22 @@ trait HasFormationCollectionTrait {
         $formations = [];
         /** @var FormationElement $formationElement */
         foreach ($this->formations as $formationElement) {
-            if ($avecHisto OR $formationElement->estNonHistorise()) $formations[] = $formationElement;
+            if ($avecHisto OR $formationElement->estNonHistorise()) $formations[$formationElement->getFormation()->getId()] = $formationElement;
         }
         return $formations;
+    }
+
+    public function getFormationDictionnaire()
+    {
+        $dictionnaire = [];
+        foreach ($this->formations as $formationElement) {
+            $element = [];
+            $element['entite'] = $formationElement;
+            $element['raison'] = null;
+            $element['conserve'] = true;
+            $dictionnaire[] = $element;
+        }
+        return $dictionnaire;
     }
 
     public function hasFormation(Formation $formation) : ?FormationElement
