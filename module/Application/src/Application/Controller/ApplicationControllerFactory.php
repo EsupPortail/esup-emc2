@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Form\Application\ApplicationForm;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\ApplicationGroupe\ApplicationGroupeForm;
-use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\Application\ApplicationGroupeService;
 use Application\Service\Application\ApplicationService;
@@ -33,12 +32,10 @@ class ApplicationControllerFactory {
         /**
          * @var ApplicationForm $applicationForm
          * @var ApplicationGroupeForm $applicationGroupeForm
-         * @var SelectionCompetenceMaitriseForm $selectionMaitriseForm
          * @var ApplicationElementForm $applicationElementForm
          */
         $applicationForm = $container->get('FormElementManager')->get(ApplicationForm::class);
         $applicationGroupeForm = $container->get('FormElementManager')->get(ApplicationGroupeForm::class);
-        $selectionMaitriseForm = $container->get('FormElementManager')->get(SelectionCompetenceMaitriseForm::class);
         $applicationElementForm = $container->get('FormElementManager')->get(ApplicationElementForm::class);
 
         /** @var ApplicationController $controller */
@@ -50,7 +47,6 @@ class ApplicationControllerFactory {
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setApplicationForm($applicationForm);
         $controller->setApplicationGroupeForm($applicationGroupeForm);
-        $controller->setSelectionCompetenceMaitriseForm($selectionMaitriseForm);
         $controller->setApplicationElementForm($applicationElementForm);
         return $controller;
     }

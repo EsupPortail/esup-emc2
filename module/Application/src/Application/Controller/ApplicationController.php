@@ -11,14 +11,11 @@ use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormAwareTrait;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\ApplicationGroupe\ApplicationGroupeFormAwareTrait;
-use Application\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
-use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
+use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Zend\Form\Element\Hidden;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -32,7 +29,6 @@ class ApplicationController  extends AbstractActionController {
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
     use ApplicationGroupeFormAwareTrait;
-    use SelectionCompetenceMaitriseFormAwareTrait;
 
     /** APPLICATION ***************************************************************************************************/
 

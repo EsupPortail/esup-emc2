@@ -13,7 +13,6 @@ use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
-use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
@@ -42,7 +41,6 @@ class CompetenceController extends AbstractActionController
     use CompetenceTypeFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
-    use SelectionCompetenceMaitriseFormAwareTrait;
 
     /** INDEX *********************************************************************************************************/
 
