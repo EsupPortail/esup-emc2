@@ -75,6 +75,7 @@ class CompetenceElementService {
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceElement::class)->createQueryBuilder('competenceelement')
             ->addSelect('competence')->join('competenceelement.competence', 'competence')
+            ->addSelect('niveau')->leftjoin('competenceelement.niveau', 'niveau')
         ;
         return $qb;
     }

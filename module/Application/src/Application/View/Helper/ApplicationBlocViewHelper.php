@@ -3,7 +3,6 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Application\Entity\Db\Poste;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;

@@ -21,6 +21,7 @@ class CompetenceElementHydrator implements HydratorInterface {
         $data = [
             'competence'   => ($object->getCompetence())?$object->getCompetence()->getId():null,
             'niveau'       => ($object->getNiveauMaitrise())?$object->getNiveauMaitrise()->getId():null,
+            'clef'         => $object->isClef(),
         ];
         return $data;
     }
@@ -37,6 +38,10 @@ class CompetenceElementHydrator implements HydratorInterface {
 
         $object->setCompetence($competence);
         $object->setNiveauMaitrise($niveau);
+
+        if (isset($data['clef'])) {
+            $object->setClef($data['clef']);
+        }
 
         return $object;
     }

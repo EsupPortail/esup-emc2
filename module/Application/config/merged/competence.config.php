@@ -183,7 +183,7 @@ return [
                     'changer-niveau' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/changer-niveau/:competence-element',
+                            'route'    => '/changer-niveau/:competence-element[/:clef]',
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'changer-niveau',
@@ -249,7 +249,7 @@ return [
                     'ajouter-competence-element' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-competence-element/:type/:id',
+                            'route'    => '/ajouter-competence-element/:type/:id[/:clef]',
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'ajouter-competence-element',

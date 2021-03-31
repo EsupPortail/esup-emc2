@@ -173,14 +173,9 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     </div>
 
     <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
-
-    <?php
-    /** @see \Application\View\Helper\AgentApplicationViewHelper */
-    echo $this->agentApplication($agent, $options);
-    ?>
+    <?php echo $this->applicationBloc($agent->getApplicationDictionnaire(), $agent, $options); ?>
 
     <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
-
     <?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, $options); ?>
 
     <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->

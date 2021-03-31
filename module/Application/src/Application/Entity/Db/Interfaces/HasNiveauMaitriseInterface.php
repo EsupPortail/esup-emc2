@@ -10,6 +10,6 @@ interface HasNiveauMaitriseInterface {
     public function setNiveauMaitrise(?CompetenceMaitrise $competenceMaitrise);
 
     public function isClef() : ?bool;
-    public function setClef(bool $clef);
+    public function setClef(?bool $clef);
 
 }

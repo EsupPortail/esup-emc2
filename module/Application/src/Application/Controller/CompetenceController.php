@@ -456,31 +456,6 @@ class CompetenceController extends AbstractActionController
         return $vm;
     }
 
-    /** Niveau de maitrise d'un  */
-    public function changerNiveauAction() {
-        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-
-        $form = $this->getSelectionCompetenceMaitriseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('competence/changer-niveau', ['competence-element' => $competenceElement->getId()], [], true));
-        $form->bind($competenceElement);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getCompetenceElementService()->update($competenceElement);
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Changer le niveau de maîtrise",
-            'form' => $form,
-        ]);
-        $vm->setTemplate('application/default/default-form');
-        return $vm;
-    }
-
     /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
 
     public function afficherCompetenceElementAction()
@@ -502,13 +477,15 @@ class CompetenceController extends AbstractActionController
             case FicheMetier::class : $hasCompetenceCollection = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
                 break;
         }
+        $clef = $this->params()->fromRoute('clef');
 
         if ($hasCompetenceCollection !== null) {
             $element = new CompetenceElement();
 
             $form = $this->getCompetenceElementForm();
-            $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter-competence-element', ['type' => $type, 'id' => $hasCompetenceCollection->getId()], [], true));
+            $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter-competence-element', ['type' => $type, 'id' => $hasCompetenceCollection->getId(), 'clef' => $clef], [], true));
             $form->bind($element);
+            if ($clef === 'masquer') $form->masquerClef();
 
             $request = $this->getRequest();
             if ($request->isPost()) {
@@ -559,6 +536,33 @@ class CompetenceController extends AbstractActionController
                 'action' => $this->url()->fromRoute('competence/supprimer-competence-element', ["competence-element" => $element->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    /** Niveau de maitrise d'un  */
+    public function changerNiveauAction() {
+        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+        $clef=$this->params()->fromRoute('clef');
+
+        $form = $this->getSelectionCompetenceMaitriseForm();
+        $form->setAttribute('action', $this->url()->fromRoute('competence/changer-niveau', ['competence-element' => $competenceElement->getId(), 'clef' => $clef], [], true));
+        $form->bind($competenceElement);
+        if ($clef === 'masquer') $form->masquerClef();
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getCompetenceElementService()->update($competenceElement);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Changer le niveau de maîtrise",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 

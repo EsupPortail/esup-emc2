@@ -87,6 +87,7 @@ return [
                     'action' => [
                         'effacer',
                         'detruire-groupe',
+                        'supprimer-application-element',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EFFACER,
@@ -131,7 +132,7 @@ return [
                     'changer-niveau' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/changer-niveau/:application-element',
+                            'route'    => '/changer-niveau/:application-element[/:clef]',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
                                 'action'     => 'changer-niveau',
@@ -235,10 +236,21 @@ return [
                     'ajouter-application-element' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-application-element/:type/:id',
+                            'route'    => '/ajouter-application-element/:type/:id[/:clef]',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
                                 'action'     => 'ajouter-application-element',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer-application-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-application-element/:application-element',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action'     => 'supprimer-application-element',
                             ],
                         ],
                         'may_terminate' => true,

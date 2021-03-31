@@ -5,6 +5,7 @@ namespace Application\Form\SelectionCompetenceMaitrise;
 use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
+use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -59,6 +60,10 @@ class SelectionCompetenceMaitriseForm extends Form {
             'niveau'           => [ 'required' => true,  ],
             'clef'             => [ 'required' => false,  ],
         ]));
+    }
 
+    public function masquerClef()
+    {
+        $this->remove('clef');
     }
 }

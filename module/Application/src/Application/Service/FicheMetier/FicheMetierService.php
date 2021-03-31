@@ -162,6 +162,7 @@ class FicheMetierService {
             ->addSelect('activite_application_groupe')->leftJoin('activite_application.groupe', 'activite_application_groupe')
             ->addSelect('fiche_applicationelement')->leftJoin('ficheMetier.applications', 'fiche_applicationelement')
             ->addSelect('fiche_application')->leftJoin('fiche_applicationelement.application', 'fiche_application')
+            ->addSelect('fiche_application_niveau')->leftJoin('fiche_applicationelement.niveau', 'fiche_application_niveau')
             ->addSelect('fiche_application_groupe')->leftJoin('fiche_application.groupe', 'fiche_application_groupe')
 
             //APPLICATIONS - fiche et activités associées
@@ -171,6 +172,7 @@ class FicheMetierService {
             ->addSelect('activite_competence_type')->leftJoin('activite_competence.type', 'activite_competence_type')
             ->addSelect('fiche_competenceelement')->leftJoin('ficheMetier.competences', 'fiche_competenceelement')
             ->addSelect('fiche_competence')->leftJoin('fiche_competenceelement.competence', 'fiche_competence')
+            ->addSelect('fiche_competence_niveau')->leftJoin('fiche_competenceelement.niveau', 'fiche_competence_niveau')
             ->addSelect('fiche_competence_theme')->leftJoin('fiche_competence.theme', 'fiche_competence_theme')
             ->addSelect('fiche_competence_type')->leftJoin('fiche_competence.type', 'fiche_competence_type')
 

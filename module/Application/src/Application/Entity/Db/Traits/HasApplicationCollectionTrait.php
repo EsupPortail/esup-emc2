@@ -26,9 +26,22 @@ trait HasApplicationCollectionTrait
         $applications = [];
         /** @var ApplicationElement $applicationElement */
         foreach ($this->applications as $applicationElement) {
-            if ($avecHisto or $applicationElement->estNonHistorise()) $applications[] = $applicationElement;
+            if ($avecHisto or $applicationElement->estNonHistorise()) $applications[$applicationElement->getApplication()->getId()] = $applicationElement;
         }
         return $applications;
+    }
+
+    public function getApplicationDictionnaire()
+    {
+        $dictionnaire = [];
+        foreach ($this->applications as $applicationElement) {
+            $element = [];
+            $element['entite'] = $applicationElement;
+            $element['raison'] = null;
+            $element['conserve'] = true;
+            $dictionnaire[] = $element;
+        }
+        return $dictionnaire;
     }
 
     /**

@@ -4,6 +4,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\CompetenceType;
+use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\View\Helper\CompetenceBlocViewHelper;
 
@@ -70,7 +71,7 @@ ksort($groupes);
                 <a
                     <?php /** @see \Application\Controller\CompetenceController::ajouterCompetenceElementAction() */?>
                         <?php //todo ... Agent::class => get_class($objet) ... ?>
-                        href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId()], [], true); ?>"
+                        href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                         class="ajax-modal btn btn-primary action"
                         data-event="modification"
                 >
@@ -138,7 +139,7 @@ ksort($groupes);
                             <?php endif; ?>
                             <?php if ($canModifier) : ?>
                                 <a  <?php /** @see \Application\Controller\CompetenceController::changerNiveauAction() */ ?>
-                                        href="<?php echo $this->url("competence/changer-niveau", ['competence-element' => $entite->getId()], [], true); ?>"
+                                        href="<?php echo $this->url("competence/changer-niveau", ['competence-element' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                         class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
                                         title="Modifier le niveau de la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
                                     <span class="icon editer"></span></a>

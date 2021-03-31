@@ -269,8 +269,8 @@ $mode = $options['mode'];
                                 </span>
                             </h2>
                         </div>
-                        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
                         <div class="col-md-3" style="margin-right:1rem;">
+                            <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
                             <?php /** @see \Application\Controller\ApplicationController::ajouterApplicationElementAction() */ ?>
                             <a href="<?php echo $this->url('application/ajouter-application-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()], [], true); ?>"
                                class="btn btn-primary action ajax-modal"
@@ -279,8 +279,16 @@ $mode = $options['mode'];
                                 <span class="icon ajouter"></span>
                                 Ajouter une application
                             </a>
+                            <?php endif; ?>
+                            <?php /** @see FicheMetierController::graphiqueApplicationsAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
+                               class="btn btn-primary action ajax-modal"
+                            >
+                                <span class="icon graphique"></span>
+                                Afficher les applications
+                            </a>
                         </div>
-                        <?php endif; ?>
+
                     </div>
                 </div>
                 <div class="panel-body">
@@ -333,6 +341,14 @@ $mode = $options['mode'];
         >
             <span class="icon graphique"></span>
             Afficher les compétences
+        </a>
+
+        <?php /** @see FicheMetierController::graphiqueApplicationsAction() */ ?>
+        <a href="<?php echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
+           class="btn btn-primary action ajax-modal"
+        >
+            <span class="icon graphique"></span>
+            Afficher les applications
         </a>
 <?php endif; ?>
 

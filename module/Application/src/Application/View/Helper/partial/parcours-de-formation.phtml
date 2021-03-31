@@ -104,16 +104,16 @@ usort($formationArray,
                     <td class="libelle"> <?php echo $formation->getLibelle(); ?> </td>
                     <?php if ($mode === 'modification' OR $mode === 'affichage') : ?>
                         <td class="validation">
-                        <?php if ($mode === 'modification') : ?>
                             <?php
                                 $agentFormation = ($agent !== null AND $agent->hasFormation($formation)) ? $agent->hasFormation($formation):null;
                                 $agentValidation = ($agentFormation !== null AND $agentFormation->getValidation() !== null) ? $agentFormation->getValidation():null;
                             ?>
+                            <?php if ($mode === 'modification' or $mode === 'affichage') : ?>
                             <?php if ($agentFormation !== null) : ?>
                                 <?php if ($agentValidation !== null) : ?>
-                                    <?php echo $this->validationBadge($agentValidation); ?>
+                                           <?php echo $this->validationBadge($agentValidation); ?>
                                 <?php else : ?>
-                                    <?php if ($canModifier) : ?>
+                                    <?php if ($canModifier AND $mode === 'modification') : ?>
                                         <a
                                             <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
                                             href="<?php echo $this->url('agent/valider-element', ['type' => "AgentFormation", 'id' => $agentFormation->getId()], [], true); ?>"

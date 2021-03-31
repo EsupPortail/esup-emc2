@@ -30,8 +30,8 @@ class SelectionCompetenceMaitriseHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $niveau = $this->getCompetenceMaitriseService()->getCompetenceMaitrise(isset($data['niveau'])?$data['niveau']:null);
-        $clef = (isset($data['clef']))? ($data['clef'] == 1) : null;
         $object->setNiveauMaitrise($niveau);
+        $clef = (isset($data['clef']))? ($data['clef'] == 1) : null;
         $object->setClef($clef);
         return $object;
     }

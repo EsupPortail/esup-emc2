@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
+use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
@@ -14,7 +15,6 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
-use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -25,7 +25,6 @@ use Application\Service\HasApplicationCollection\HasApplicationCollectionService
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
-use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
@@ -416,6 +415,8 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
+    /** Graphique *****************************************************************************************************/
+
     public function graphiqueCompetencesAction() {
         $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $agent = $this->getAgentService()->getRequestedAgent($this);
@@ -462,7 +463,60 @@ class FicheMetierController extends AbstractActionController
             'label' => $labels,
             'values' => $values,
         ]);
-        $vm->setTemplate('application/fiche-metier/graphique-competences');
+        $vm->setTemplate('application/fiche-metier/graphique-radar');
+        return $vm;
+    }
+
+    public function graphiqueApplicationsAction() {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $dictionnaire = $this->getFicheMetierService()->getApplicationsDictionnaires($ficheMetier, true);
+        $dictionnaire = array_filter($dictionnaire, function($item) { return ($item['entite'])->isClef();});
+        $labels = []; $values = [];
+
+        $valuesFiche = [];
+        foreach ($dictionnaire as $entry) {
+            /** @var ApplicationElement $element */
+            $element = $entry['entite'];
+            $labels[] = substr($element->getLibelle(),0,200);
+            $valuesFiche[] = ($element->getNiveauMaitrise())?$element->getNiveauMaitrise()->getNiveau():"'-'";
+        }
+        $values[] = [
+            'title' => "pré-requis",
+            'values' => $valuesFiche,
+            'color' => "255,0,0",
+        ];
+
+        if ($agent !== null) {
+            $valuesAgent = [];
+            /** @var ApplicationElement[] $applications */
+            $applications = $agent->getApplicationListe();
+            foreach ($dictionnaire as $entry) {
+                /** @var ApplicationElement $element */
+                $element = $entry['entite'];
+                $id = $element->getApplication()->getId();
+                $niveau = (isset($applications[$id]) AND $applications[$id]->getNiveauMaitrise())?$applications[$id]->getNiveauMaitrise()->getNiveau():"'-'";
+                $valuesAgent[] = $niveau;
+            }
+            $values[] = [
+                'title' => "Acquis",
+                'values' => $valuesAgent,
+                'color' => "0,255,0",
+            ];
+        }
+
+//        var_dump($valuesFiche);
+//        var_dump($valuesAgent);
+
+        $libelle = $ficheMetier->getMetier()->getLibelle();
+        $vm =  new ViewModel([
+            'title' => "Diagramme des applications pour la fiche métier <strong>".$libelle."</strong>",
+            'agent' => $agent,
+            'label' => $labels,
+            'values' => $values,
+        ]);
+        $vm->setTemplate('application/fiche-metier/graphique-radar');
         return $vm;
     }
 

@@ -1,11 +1,15 @@
 <?php
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\ApplicationElement;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\View\Helper\CompetenceBlocViewHelper;
 
 /**
  * @var array $applications
+ * @var HasCompetenceCollectionInterface|null $objet
  * @var array $options
  *
  * la sutrcture de application est la suivante :
@@ -54,6 +58,32 @@ foreach ($applications as $item) {
 ksort($groupes);
 
 ?>
+
+<?php if ($displayTitre) : ?>
+    <div class="titre">
+        <div class="row">
+            <div class="col-md-8" style="border-bottom: 1px solid #31708f">
+                <h3> <span class="icon application"></span> Applications</h3>
+            </div>
+            <div class="pull-right">
+                <?php if ($canAjouter) : ?>
+                    <br/>
+                    <a
+                        <?php /** @see \Application\Controller\ApplicationController::ajouterApplicationElementAction() */?>
+                        <?php //todo ... Agent::class => get_class($objet) ... ?>
+                            href="<?php echo $this->url('application/ajouter-application-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                            class="ajax-modal btn btn-primary action"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter" title="Ajouter une compétence"></span>
+                        Ajouter une application
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <br/>
+    </div>
+<?php endif; ?>
 
 <div class="listing">
     <table class="listing">
@@ -108,20 +138,20 @@ ksort($groupes);
                         <?php endif; ?>
                         <?php if ($canModifier) : ?>
                             <a  <?php /** @see \Application\Controller\ApplicationController::changerNiveauAction() */ ?>
-                                    href="<?php echo $this->url("application/changer-niveau", ['application-element' => $entite->getId()], [], true); ?>"
+                                    href="<?php echo $this->url("application/changer-niveau", ['application-element' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                     class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
                                     title="Modifier le niveau de l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
                                 <span class="icon editer"></span></a>
                         <?php endif; ?>
                         <?php if ($canSupprimer) : ?>
-<!--                            <a-->
-<!--                                --><?php ///** @see \Application\Controller\CompetenceController::supprimerCompetenceElementAction() */?>
-<!--                                    href="--><?php //echo $this->url('competence/supprimer-competence-element', ['competence-element' => $entite->getId()], [], true); ?><!--"-->
-<!--                                    class="ajax-modal"-->
-<!--                                    data-event="modification"-->
-<!--                            >-->
-<!--                                <span class="icon detruire" title="Supprimer définitivement une compétence liées à l'agent"></span>-->
-<!--                            </a>-->
+                            <a
+                                <?php /** @see \Application\Controller\ApplicationController::supprimerApplicationElementAction() */?>
+                                    href="<?php echo $this->url('application/supprimer-application-element', ['application-element' => $entite->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon detruire" title="Supprimer définitivement une application liées à l'agent"></span>
+                            </a>
                         <?php endif; ?>
                         <?php if ($canValider) : ?>
                             <?php if ($entite->getValidation() === null) : ?>

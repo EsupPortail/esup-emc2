@@ -46,16 +46,9 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
 <?php echo $this->portenote('EntretienProfessionnelController::renseigner()>AgentAutres', '', []); ?>
 
 <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
-
-<div class="bloc">
-    <?php
-    /** @see \Application\View\Helper\AgentApplicationViewHelper */
-    echo $this->agentApplication($agent, $options);
-    ?>
-</div>
+<?php echo $this->applicationBloc($agent->getApplicationDictionnaire(), $agent, ['texte' => true]);?>
 
 <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
-
 <?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, ['texte' => true]);?>
 
 <!-- FORMATIONS ------------------------------------------------------------------------------------------------------->

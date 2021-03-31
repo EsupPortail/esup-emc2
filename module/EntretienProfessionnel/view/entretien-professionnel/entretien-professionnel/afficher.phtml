@@ -5,7 +5,7 @@
  * @var EntretienProfessionnel $entretien
  * @var Agent $agent
  * @var ParcoursDeFormation[] $parcours
- * @var FichePoste[] $fichespostes
+ * @var FichePoste $fichesposte
  * @var FicheMetier[] $fichesmetiers
  */
 
@@ -30,7 +30,7 @@ $droits = [
 </h1>
 
 <?php
-echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $fichesposte, 'fichesmetiers' => $fichesmetiers], [], true);
 ?>
 
 <div role="tabpanel">
@@ -87,6 +87,9 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
             <div id="avis" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'source' => 'afficherAction']); ?>
+            </div>
+            <div id="validation" class="tab-pane " role="tabpanel">
+                <?php // echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'afficherAction']); ?>
             </div>
         </div>
     </div>

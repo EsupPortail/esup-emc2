@@ -5,6 +5,7 @@ namespace Application\Form\ApplicationElement;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
@@ -52,6 +53,16 @@ class ApplicationElementForm extends Form {
                 'data-live-search'  => 'true',
             ],
         ]);
+        $this->add([
+            'type' => Checkbox::class,
+            'name' => 'clef',
+            'options' => [
+                'label' => "Est clef",
+            ],
+            'attributes' => [
+                'id'                => 'clef',
+            ],
+        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -71,6 +82,12 @@ class ApplicationElementForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'application'   => [ 'required' => true, ],
             'niveau'        => [ 'required' => false, ],
+            'clef'        => [ 'required' => false, ],
         ]));
+    }
+
+    public function masquerClef()
+    {
+        $this->remove('clef');
     }
 }

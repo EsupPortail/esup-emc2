@@ -38,10 +38,10 @@ trait HasNiveauMaitriseTrait {
     }
 
     /**
-     * @param bool $clef
+     * @param bool|null $clef
      * @return HasNiveauMaitriseTrait
      */
-    public function setClef(bool $clef): self
+    public function setClef(?bool $clef): self
     {
         $this->clef = $clef;
         return $this;

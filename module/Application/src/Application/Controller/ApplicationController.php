@@ -18,6 +18,7 @@ use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Zend\Form\Element\Hidden;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -290,6 +291,7 @@ class ApplicationController  extends AbstractActionController {
             case FicheMetier::class : $hasApplicationElement = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
                 break;
         }
+        $clef=$this->params()->fromRoute('clef');
 
         if ($hasApplicationElement !== null) {
             $element = new ApplicationElement();
@@ -297,6 +299,7 @@ class ApplicationController  extends AbstractActionController {
             $form = $this->getApplicationElementForm();
             $form->setAttribute('action', $this->url()->fromRoute('application/ajouter-application-element', ['type' => $type, 'id' => $hasApplicationElement->getId()], [], true));
             $form->bind($element);
+            if ($clef === 'masquer') $form->masquerClef();
 
             $request = $this->getRequest();
             if ($request->isPost()) {
@@ -326,13 +329,39 @@ class ApplicationController  extends AbstractActionController {
         exit();
     }
 
+    public function supprimerApplicationElementAction()
+    {
+        $element = $this->getApplicationElementService()->getRequestedApplicationElement($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getApplicationElementService()->delete($element);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($element !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'application  " . $element->getApplication()->getLibelle(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('application/supprimer-application-element', ["application-element" => $element->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     /** Niveau de maitrise d'un  */
     public function changerNiveauAction() {
         $element = $this->getApplicationElementService()->getRequestedApplicationElement($this);
+        $clef=$this->params()->fromRoute('clef');
 
         $form = $this->getSelectionCompetenceMaitriseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('application/changer-niveau', ['application-element' => $element->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('application/changer-niveau', ['application-element' => $element->getId(), 'clef' => $clef], [], true));
         $form->bind($element);
+        if ($clef === 'masquer') $form->masquerClef();
 
         $request = $this->getRequest();
         if ($request->isPost()) {
