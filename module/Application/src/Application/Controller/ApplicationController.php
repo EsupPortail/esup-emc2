@@ -319,31 +319,4 @@ class ApplicationController  extends AbstractActionController {
         }
         exit();
     }
-
-    /** Niveau de maitrise d'un  */
-    public function changerNiveauAction() {
-        $element = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-        $clef=$this->params()->fromRoute('clef');
-
-        $form = $this->getSelectionCompetenceMaitriseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('application/changer-niveau', ['application-element' => $element->getId(), 'clef' => $clef], [], true));
-        $form->bind($element);
-        if ($clef === 'masquer') $form->masquerClef();
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getApplicationElementService()->update($element);
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Changer le niveau de maîtrise",
-            'form' => $form,
-        ]);
-        $vm->setTemplate('application/default/default-form');
-        return $vm;
-    }
 }
