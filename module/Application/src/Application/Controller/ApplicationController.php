@@ -320,30 +320,6 @@ class ApplicationController  extends AbstractActionController {
         exit();
     }
 
-    public function supprimerApplicationElementAction()
-    {
-        $element = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getApplicationElementService()->delete($element);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($element !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de l'application  " . $element->getApplication()->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('application/supprimer-application-element', ["application-element" => $element->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
     /** Niveau de maitrise d'un  */
     public function changerNiveauAction() {
         $element = $this->getApplicationElementService()->getRequestedApplicationElement($this);

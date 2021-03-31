@@ -86,7 +86,6 @@ return [
                     'action' => [
                         'effacer',
                         'detruire-groupe',
-                        'supprimer-application-element',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EFFACER,
@@ -228,17 +227,6 @@ return [
                             'defaults' => [
                                 'controller' => ApplicationController::class,
                                 'action'     => 'ajouter-application-element',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'supprimer-application-element' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer-application-element/:application-element',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action'     => 'supprimer-application-element',
                             ],
                         ],
                         'may_terminate' => true,

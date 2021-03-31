@@ -147,8 +147,8 @@ ksort($groupes);
                             <?php endif; ?>
                             <?php if ($canSupprimer) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\CompetenceController::supprimerCompetenceElementAction() */?>
-                                        href="<?php echo $this->url('competence/supprimer-competence-element', ['competence-element' => $entite->getId()], [], true); ?>"
+                                    <?php /** @see \Application\Controller\ElementController::supprimerAction() */?>
+                                        href="<?php echo $this->url('element/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?>"
                                         class="ajax-modal"
                                         data-event="modification"
                                 >

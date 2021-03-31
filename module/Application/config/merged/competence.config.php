@@ -109,7 +109,6 @@ return [
                         'detruire',
                         'detruire-competence-type',
                         'detruire-competence-theme',
-                        'supprimer-competence-element',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_EFFACER,
@@ -241,17 +240,6 @@ return [
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'ajouter-competence-element',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'supprimer-competence-element' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/supprimer-competence-element/:competence-element',
-                            'defaults' => [
-                                'controller' => CompetenceController::class,
-                                'action'     => 'supprimer-competence-element',
                             ],
                         ],
                         'may_terminate' => true,

@@ -26,6 +26,17 @@ return [
                         FormationPrivileges::FORMATION_AFFICHER,
                     ],
                 ],
+                [
+                    'controller' => ElementController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::APPLICATION_EFFACER,
+                        CompetencePrivileges::COMPETENCE_EFFACER,
+                        FormationPrivileges::FORMATION_SUPPRIMER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -49,6 +60,17 @@ return [
                             'defaults' => [
                                 'controller' => ElementController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:type/:id',
+                            'defaults' => [
+                                'controller' => ElementController::class,
+                                'action'     => 'supprimer',
                             ],
                         ],
                         'may_terminate' => true,

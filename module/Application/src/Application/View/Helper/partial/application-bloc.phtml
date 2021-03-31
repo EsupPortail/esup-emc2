@@ -146,8 +146,8 @@ ksort($groupes);
                         <?php endif; ?>
                         <?php if ($canSupprimer) : ?>
                             <a
-                                <?php /** @see \Application\Controller\ApplicationController::supprimerApplicationElementAction() */?>
-                                    href="<?php echo $this->url('application/supprimer-application-element', ['application-element' => $entite->getId()], [], true); ?>"
+                                <?php /** @see \Application\Controller\ElementController::supprimerAction() */?>
+                                    href="<?php echo $this->url('element/supprimer', ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId()], [], true); ?>"
                                     class="ajax-modal"
                                     data-event="modification"
                             >
