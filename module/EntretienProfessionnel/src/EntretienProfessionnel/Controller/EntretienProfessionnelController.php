@@ -261,24 +261,23 @@ class EntretienProfessionnelController extends AbstractActionController
         /** TODO  revoir ici une seul fiche de poste actives sinon c'est la merde */
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
-        //$agent = $entretien->getAgent();
-        $fichespostes = ($agent) ? $agent->getFiches() : [];
+        $ficheposte = ($agent) ? $agent->getFichePosteActif() : null;
         $fichesmetiers = [];
-        $parcours = ($fichespostes[0]) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichespostes[0]) : null;
+        $parcours = ($ficheposte) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($ficheposte) : null;
 
-        foreach ($fichespostes as $ficheposte) {
-            $fiches = $ficheposte->getFichesMetiers();
-            foreach ($fiches as $fiche) {
-                $fichesmetiers[] = $fiche->getFicheType();
-            }
+
+        $fiches = ($ficheposte)?$ficheposte->getFichesMetiers():[];
+        foreach ($fiches as $fiche) {
+            $fichesmetiers[] = $fiche->getFicheType();
         }
+
 
         return new ViewModel([
             'entretien' => $entretien,
             'parcours' => $parcours,
 
             'agent' => $agent,
-            'fichespostes' => $fichespostes,
+            'ficheposte' => $agent->getFichePosteActif(),
             'fichesmetiers' => $fichesmetiers,
             'connectedUser' => $this->getUserService()->getConnectedUser(),
         ]);

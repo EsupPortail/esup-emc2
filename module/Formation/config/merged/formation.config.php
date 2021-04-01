@@ -78,6 +78,8 @@ return [
                         'editer',
                         'modifier-formation-informations',
                         'ajouter-instance',
+                        'ajouter-application-element',
+                        'ajouter-competence-element',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_MODIFIER,
@@ -165,6 +167,26 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action'     => 'modifier-formation-informations',
+                            ],
+                        ],
+                    ],
+                    'ajouter-application-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-application-element/:formation',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'ajouter-application-element',
+                            ],
+                        ],
+                    ],
+                    'ajouter-competence-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-competence-element/:formation',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'ajouter-competence-element',
                             ],
                         ],
                     ],

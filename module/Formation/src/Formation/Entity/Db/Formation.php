@@ -3,14 +3,19 @@
 namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\Application;
+use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
+use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Formation implements HistoriqueAwareInterface
+class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface
 {
     use HistoriqueAwareTrait;
+    use HasApplicationCollectionTrait;
+    use HasCompetenceCollectionTrait;
 
     /** @var integer */
     private $id;
@@ -26,8 +31,6 @@ class Formation implements HistoriqueAwareInterface
     private $theme;
 
     /** @var ArrayCollection */
-    private $applications;
-    /** @var ArrayCollection */
     private $missions;
     /** @var ArrayCollection (FormationInstance) */
     private $instances;
@@ -35,7 +38,6 @@ class Formation implements HistoriqueAwareInterface
 
     public function __construct()
     {
-        $this->applications = new ArrayCollection();
         $this->missions = new ArrayCollection();
     }
 
@@ -134,34 +136,6 @@ class Formation implements HistoriqueAwareInterface
     public function setTheme(?FormationTheme $theme) : Formation
     {
         $this->theme = $theme;
-        return $this;
-    }
-
-    /**
-     * @return Application[]
-     */
-    public function getApplications() : array
-    {
-        return $this->applications->toArray();
-    }
-
-    /**
-     * @param Application|null $application
-     * @return Formation
-     */
-    public function addApplication(?Application $application) : Formation
-    {
-        $this->applications->add($application);
-        return $this;
-    }
-
-    /**
-     * @param Application|null $application
-     * @return Formation
-     */
-    public function removeApplication(?Application $application) : Formation
-    {
-        $this->applications->removeElement($application);
         return $this;
     }
 

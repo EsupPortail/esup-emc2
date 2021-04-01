@@ -354,6 +354,21 @@ span.fiche-metier {
     font-variant-position: super;
 }
 
+span.agent {
+    font-weight: bolder;
+    color: #ff00e5;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
+span.raison.formation {
+    font-weight: bolder;
+    color: #ffb700;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
+
 span.activite {
     font-weight: bolder;
     color: orangered;

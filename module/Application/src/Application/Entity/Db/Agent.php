@@ -535,4 +535,50 @@ class Agent implements
         }
         return $structureAgentForces;
     }
+
+    /** Competence */
+    public function getCompetenceDictionnaireComplet()
+    {
+        $dictionnaire = $this->getCompetenceDictionnaire();
+        foreach ($this->getFormationDictionnaire() as $item) {
+            $formation = $item['entite']->getFormation();
+            foreach ($formation->getCompetenceDictionnaire() as $competenceObtenue) {
+                $competenceId = $competenceObtenue['entite']->getCompetence()->getId();
+                if (isset($dictionnaire[$competenceId])) {
+                    $dictionnaire[$competenceId]["raison"][] = $formation;
+                } else {
+                    $element = [];
+                    $element['entite'] = $competenceObtenue['entite'];
+                    $element['raison'][] = $formation;
+                    $element['conserve'] = true;
+                    $dictionnaire[$competenceId] = $element;
+                }
+            }
+        }
+        return $dictionnaire;
+    }
+
+    public function getApplicationDictionnaireComplet()
+    {
+        $dictionnaire = $this->getApplicationDictionnaire();
+        foreach ($this->getFormationDictionnaire() as $item) {
+            $formation = $item['entite']->getFormation();
+            foreach ($formation->getApplicationDictionnaire() as $applicationObtenue) {
+                $applicationId = $applicationObtenue['entite']->getApplication()->getId();
+                if (isset($dictionnaire[$applicationId])) {
+                    $obtenueNiveau = ($applicationObtenue['entite']->getNiveauMaitrise())?$applicationObtenue['entite']->getNiveauMaitrise()->getNiveau():0;
+                    $currentNiveau = ($dictionnaire[$applicationId]['entite']->getNiveauMaitrise())?$dictionnaire[$applicationId]['entite']->getNiveauMaitrise()->getNiveau():0;
+                    if ($obtenueNiveau > $currentNiveau) $dictionnaire[$applicationId]['entite'] = $applicationObtenue['entite'];
+                    $dictionnaire[$applicationId]["raison"][] = $formation;
+                } else {
+                    $element = [];
+                    $element['entite'] = $applicationObtenue['entite'];
+                    $element['raison'][] = $formation;
+                    $element['conserve'] = true;
+                    $dictionnaire[$applicationId] = $element;
+                }
+            }
+        }
+        return $dictionnaire;
+    }
 }

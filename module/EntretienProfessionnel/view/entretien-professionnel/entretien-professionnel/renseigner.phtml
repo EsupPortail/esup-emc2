@@ -5,7 +5,7 @@
  * @var EntretienProfessionnel $entretien
  * @var array $parcours
  * @var Agent $agent
- * @var FichePoste[] $fichespostes
+ * @var FichePoste[] $ficheposte
  * @var FicheMetier[] $fichesmetiers
  * @var ParcoursDeFormation $parcours
  * @var User $connectedUser
@@ -20,7 +20,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenUtilisateur\Entity\Db\User;
 
-$ficheposte = $agent->getFichePosteActif();
 
 $this->headTitle('Modification de l\'entretien professionnel');
 
@@ -58,7 +57,7 @@ $droits = [
 </h1>
 
 <?php
-echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers], [], true);
 ?>
 
 <div role="tabpanel">

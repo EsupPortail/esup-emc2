@@ -7,6 +7,7 @@ use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\View\Helper\CompetenceBlocViewHelper;
+use Formation\Entity\Db\Formation;
 
 /**
  * @var array $applications
@@ -69,16 +70,30 @@ ksort($groupes);
             <div class="pull-right">
                 <?php if ($canAjouter) : ?>
                     <br/>
-                    <a
-                        <?php /** @see \Application\Controller\ApplicationController::ajouterApplicationElementAction() */?>
-                        <?php //todo ... Agent::class => get_class($objet) ... ?>
-                            href="<?php echo $this->url('application/ajouter-application-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
-                            class="ajax-modal btn btn-primary action"
-                            data-event="modification"
-                    >
-                        <span class="icon ajouter" title="Ajouter une compétence"></span>
-                        Ajouter une application
-                    </a>
+                    <?php if ($objet instanceof Agent) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\ApplicationController::ajouterApplicationElementAction() */?>
+                            <?php //todo ... Agent::class => get_class($objet) ... ?>
+                                href="<?php echo $this->url('application/ajouter-application-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                                class="ajax-modal btn btn-primary action"
+                                data-event="modification"
+                        >
+                            <span class="icon ajouter" title="Ajouter une application"></span>
+                            Ajouter une application
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($objet instanceof Formation) : ?>
+                        <a
+                            <?php /** @see \Formation\Controller\FormationController::ajouterApplicationAction() */?>
+                            <?php //todo ... Agent::class => get_class($objet) ... ?>
+                                href="<?php echo $this->url('formation/ajouter-application-element', ['type' => Formation::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                                class="ajax-modal btn btn-primary action"
+                                data-event="modification"
+                        >
+                            <span class="icon ajouter" title="Ajouter une application"></span>
+                            Ajouter une application
+                        </a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>

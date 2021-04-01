@@ -53,6 +53,20 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
         </div>
     </div>
 
+    <div>
+        <h2> Applications et compétences obtenues après cette formation</h2>
+
+        <?php echo $this->applicationBloc($formation->getApplicationDictionnaire(), $formation, [
+                'actions' => ['afficher' => true, 'valider' => false, 'modifier' => $canModifierInformations, 'supprimer' => $canModifierInformations],
+                'display' => ['validation' => false]
+        ]); ?>
+        <?php echo $this->competenceBloc($formation->getCompetenceDictionnaire(), $formation, [
+                'actions' => ['afficher' => true, 'valider' => false, 'modifier' => $canModifierInformations, 'supprimer' => $canModifierInformations],
+                'display' => ['validation' => false]
+        ]); ?>
+    </div>
+
+
     <div class="row">
         <div class="col-sm-6 col-md-8">
             <h2>

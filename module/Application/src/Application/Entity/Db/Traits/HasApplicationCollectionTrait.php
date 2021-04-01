@@ -37,9 +37,9 @@ trait HasApplicationCollectionTrait
         foreach ($this->applications as $applicationElement) {
             $element = [];
             $element['entite'] = $applicationElement;
-            $element['raison'] = null;
+            $element['raison'][] = $this;
             $element['conserve'] = true;
-            $dictionnaire[] = $element;
+            $dictionnaire[$applicationElement->getApplication()->getId()] = $element;
         }
         return $dictionnaire;
     }

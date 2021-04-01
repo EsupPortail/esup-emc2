@@ -32,9 +32,9 @@ trait HasCompetenceCollectionTrait {
         foreach ($this->competences as $competenceElement) {
             $element = [];
             $element['entite'] = $competenceElement;
-            $element['raison'] = null;
+            $element['raison'][] = $this;
             $element['conserve'] = true;
-            $dictionnaire[] = $element;
+            $dictionnaire[$competenceElement->getCompetence()->getId()] = $element;
         }
         return $dictionnaire;
     }

@@ -174,10 +174,10 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     </div>
 
     <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
-    <?php echo $this->applicationBloc($agent->getApplicationDictionnaire(), $agent, $options); ?>
+    <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
 
     <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
-    <?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, $options); ?>
+    <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
 
     <!-- FORMATION ------------------------------------------------------------------------------------------------------->
     <?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
