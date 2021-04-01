@@ -470,16 +470,18 @@ class Agent implements
         return ($fiche) ? $fiche->getPoste() : null;
     }
 
+    /** Entretien dans moins de 15 jours */
     public function hasEntretienEnCours() {
         $now = $this->getDateTime();
-
         /** @var EntretienProfessionnel $entretien */
         foreach ($this->entretiens as $entretien) {
-            if ($entretien->getDateEntretien() > $now
-                AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estNonHistorise())
-                AND $entretien->estNonHistorise()) return true;
+            if ($entretien->estNonHistorise()) {
+                $date_min = DateTime::createFromFormat('d/m/Y', $entretien->getDateEntretien()->format('d/m/y'));
+                $date_min = $date_min->sub(new \DateInterval('P15D'));
+                $date_max = DateTime::createFromFormat('d/m/Y', $entretien->getDateEntretien()->format('d/m/y'));
+                if ($now >= $date_min and $now <= $date_max) return true;
+            }
         }
-
         return false;
     }
 

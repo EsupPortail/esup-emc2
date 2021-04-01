@@ -67,6 +67,7 @@ ksort($groupes);
                 <br/>
                 <a
                     <?php /** @see \Formation\Controller\FormationController::ajouterFormationElement() */?>
+                    <?php /** @see \Application\Controller\AgentController::ajouterFormationAction() */?>
                         <?php //todo provient de agent-fomation ... ?>
                         href="<?php
                             //echo $this->url('competence/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true);
@@ -154,7 +155,7 @@ ksort($groupes);
                                 <?php if ($entite->getValidation() === null) : ?>
                                     <a
                                         <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentFormation", 'id' => $entite->getId()], [], true); ?>"
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AGENT_FORMATION", 'id' => $entite->getId()], [], true); ?>"
                                             class="ajax-modal" data-event="modification"
                                     >
                                         <span class="icon validation-do" title="Valider la formation"></span></a>

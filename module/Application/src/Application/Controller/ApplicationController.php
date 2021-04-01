@@ -280,13 +280,20 @@ class ApplicationController  extends AbstractActionController {
         }
         $clef=$this->params()->fromRoute('clef');
 
-        if ($hasApplicationElement !== null) {
-            $element = new ApplicationElement();
+        $application = null;
+        if ($applicationId = $this->params()->fromQuery('application')) {
+            $application = $this->getApplicationService()->getApplication($applicationId);
+        }
 
+        if ($hasApplicationElement !== null) {
             $form = $this->getApplicationElementForm();
+            $element = new ApplicationElement();
+            if ($application !== null) {$element->setApplication($application);}
+            if ($clef === 'masquer') $form->masquerClef();
+
             $form->setAttribute('action', $this->url()->fromRoute('application/ajouter-application-element', ['type' => $type, 'id' => $hasApplicationElement->getId()], [], true));
             $form->bind($element);
-            if ($clef === 'masquer') $form->masquerClef();
+
 
             $request = $this->getRequest();
             if ($request->isPost()) {

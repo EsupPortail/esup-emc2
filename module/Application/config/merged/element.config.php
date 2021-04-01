@@ -27,6 +27,7 @@ return [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
                         CompetencePrivileges::COMPETENCE_AFFICHER,
                         FormationPrivileges::FORMATION_AFFICHER,
+                        AgentPrivileges::AGENT_ACQUIS_AFFICHER,
                     ],
                 ],
                 [
@@ -38,6 +39,7 @@ return [
                         ApplicationPrivileges::APPLICATION_EFFACER,
                         CompetencePrivileges::COMPETENCE_EFFACER,
                         FormationPrivileges::FORMATION_SUPPRIMER,
+                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                     ],
                 ],
                 [
@@ -48,6 +50,7 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_MODIFIER,
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
+                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                     ],
                 ],
             ],

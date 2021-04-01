@@ -172,7 +172,7 @@ ksort($groupes);
                             <?php if ($entite->getValidation() === null) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                        href="<?php echo $this->url('agent/valider-element', ['type' => "AgentApplication", 'id' => $entite->getId()], [], true); ?>"
+                                        href="<?php echo $this->url('agent/valider-element', ['type' => "AGENT_APPLICATION", 'id' => $entite->getId()], [], true); ?>"
                                         class="ajax-modal" data-event="modification"
                                 >
                                     <span class="icon validation-do" title="Valider l'application"></span></a>

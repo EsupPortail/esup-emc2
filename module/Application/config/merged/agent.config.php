@@ -14,8 +14,6 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
-use Application\View\Helper\AgentApplicationViewHelper;
-use Application\View\Helper\AgentFormationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
@@ -42,6 +40,8 @@ return [
                             AgentPrivileges::AGENT_ELEMENT_HISTORISER,
                             AgentPrivileges::AGENT_ELEMENT_DETRUIRE,
                             AgentPrivileges::AGENT_ELEMENT_VALIDER,
+                            AgentPrivileges::AGENT_ACQUIS_AFFICHER,
+                            AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                         ],
                         'resources' => ['Agent'],
                         'assertion' => AgentAssertion::class
@@ -78,8 +78,6 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'afficher-statuts-grades',
-                        'afficher-application',
-                        'afficher-formation',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_VOIR,
@@ -90,56 +88,13 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'upload-fichier',
+                        'ajouter-formation',
+                        'ajouter-application',
+                        'modifier-formation',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_EDITER,
                     ],
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'ajouter-application',
-                        'ajouter-formation',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_ELEMENT_AJOUTER,
-                    ],
-                    'assertion'  => AgentAssertion::class,
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'modifier-application',
-                        'modifier-formation',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_ELEMENT_MODIFIER,
-                    ],
-                    'assertion'  => AgentAssertion::class,
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'historiser-application',
-                        'restaurer-application',
-                        'historiser-formation',
-                        'restaurer-formation',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_ELEMENT_MODIFIER,
-                    ],
-                    'assertion'  => AgentAssertion::class,
-                ],
-                [
-                    'controller' => AgentController::class,
-                    'action' => [
-                        'detruire-formation',
-                        'detruire-application',
-                    ],
-                    'privileges' => [
-                        AgentPrivileges::AGENT_ELEMENT_DETRUIRE,
-                    ],
-                    'assertion'  => AgentAssertion::class,
                 ],
                 [
                     'controller' => AgentController::class,
@@ -213,6 +168,7 @@ return [
 
                     /** Routes de gestion des applications*************************************************************/
 
+                    //TODO changer dans parcours-applicatifs
                     'ajouter-application' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -223,58 +179,8 @@ return [
                             ],
                         ],
                     ],
-                    'afficher-application' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher-application/:agent/:application-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'afficher-application',
-                            ],
-                        ],
-                    ],
-                    'modifier-application' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/modifier-application/:agent/:application-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'modifier-application',
-                            ],
-                        ],
-                    ],
-                    'historiser-application' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-application/:agent/:application-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'historiser-application',
-                            ],
-                        ],
-                    ],
-                    'restaurer-application' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-application/:agent/:application-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'restaurer-application',
-                            ],
-                        ],
-                    ],
-                    'detruire-application' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/detruire-application/:agent/:application-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'detruire-application',
-                            ],
-                        ],
-                    ],
-
-                    /** Route des AgentFormation **********************************************************************/
+                    //TODO changer dans parcours-de-formation
+                    //TODO changer dans formation-bloc
 
                     'ajouter-formation' => [
                         'type'  => Segment::class,
@@ -286,16 +192,7 @@ return [
                             ],
                         ],
                     ],
-                    'afficher-formation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher-formation/:agent/:formation-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'afficher-formation',
-                            ],
-                        ],
-                    ],
+                    //TODO changer dans formation-bloc
                     'modifier-formation' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -303,36 +200,6 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'modifier-formation',
-                            ],
-                        ],
-                    ],
-                    'historiser-formation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser-formation/:agent/:formation-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'historiser-formation',
-                            ],
-                        ],
-                    ],
-                    'restaurer-formation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer-formation/:agent/:formation-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'restaurer-formation',
-                            ],
-                        ],
-                    ],
-                    'detruire-formation' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/detruire-formation/:agent/:formation-element',
-                            'defaults' => [
-                                'controller' => AgentController::class,
-                                'action'     => 'detruire-formation',
                             ],
                         ],
                     ],
@@ -407,7 +274,7 @@ return [
                             'agent' => [
                                 'label'    => 'Agents',
                                 'route'    => 'agent',
-                                'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER),
+                                'resource' => PrivilegeController::getResourceId(AgentController::class, 'index') ,
                                 'order'    => 100,
                             ],
                         ],

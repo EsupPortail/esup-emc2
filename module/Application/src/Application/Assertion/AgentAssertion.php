@@ -49,20 +49,9 @@ class AgentAssertion extends AbstractAssertion {
         }
 
         switch($privilege) {
-            case AgentPrivileges::AGENT_ELEMENT_VOIR:
-                switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::OBSERVATEUR:
-                        return true;
-                    case RoleConstant::PERSONNEL:
-                        return ($entity->getUtilisateur() === $user);
-                    case RoleConstant::GESTIONNAIRE:
-                        return $isGestionnaire;
-                    case RoleConstant::RESPONSABLE:
-                        return $isResponsable;
-                }
-                return false;
+            case AgentPrivileges::AGENT_ACQUIS_AFFICHER:
+                case true;
+            case AgentPrivileges::AGENT_ACQUIS_MODIFIER:
             case AgentPrivileges::AGENT_ELEMENT_AJOUTER:
             case AgentPrivileges::AGENT_ELEMENT_MODIFIER:
             case AgentPrivileges::AGENT_ELEMENT_HISTORISER:

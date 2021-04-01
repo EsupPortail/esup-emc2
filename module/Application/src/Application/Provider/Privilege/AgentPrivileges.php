@@ -22,4 +22,7 @@ class AgentPrivileges extends Privileges
     const AGENT_ELEMENT_AJOUTER_EPRO        = 'agent-agent_element_ajouter_epro';
 
     const AGENT_INFO_SOURCE = 'agent-agent_info_source';
+
+    const AGENT_ACQUIS_AFFICHER = 'agent-agent_acquis_afficher';
+    const AGENT_ACQUIS_MODIFIER = 'agent-agent_acquis_modifier';
 }

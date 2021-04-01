@@ -116,7 +116,7 @@ usort($formationArray,
                                     <?php if ($canModifier AND $mode === 'modification') : ?>
                                         <a
                                             <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentFormation", 'id' => $agentFormation->getId()], [], true); ?>"
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AGENT_FORMATION", 'id' => $agentFormation->getId()], [], true); ?>"
                                             class="ajax-modal"
                                             data-event="modification"
                                         >
@@ -132,7 +132,7 @@ usort($formationArray,
                             <?php else : ?>
                                 <?php if ($canModifier) : ?>
                                     <a
-                                        <?php /** @see \Application\Controller\AgentController::ajouterAgentFormationAction() */?>
+                                        <?php /** @see \Application\Controller\AgentController::ajouterFormationAction() todo provient de agent formation ... */?>
                                             href="<?php echo $this->url('agent/ajouter-formation', ['agent' => $agent->getId(), 'formation' => $formation->getId()], [], true); ?>"
                                             class="ajax-modal"
                                             data-event="modification"
