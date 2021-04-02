@@ -21,8 +21,8 @@ $canSupprimer = $this->isAllowed(CompetencePrivileges::getResourceId(CompetenceP
     <div class="pull-right">
         <?php if ($canAjouter) : ?>
             <br/>
-            <a  <?php /** @see \Application\Controller\CompetenceMaitriseController::ajouterAction()*/ ?>
-                href="<?php echo $this->url('competence-maitrise/ajouter', [], [], true); ?>"
+            <a  <?php /** @see \Application\Controller\MaitriseNiveauController::ajouterAction()*/ ?>
+                href="<?php echo $this->url('competence-maitrise/ajouter', ['type' => 'competence'], [], true); ?>"
                 class="btn btn-primary action ajax-modal" data-event="modification"
                 >
                 <span class="icon ajouter"> Ajouter un niveau de maîtrise</span>

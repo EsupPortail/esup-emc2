@@ -2,20 +2,20 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\CompetenceMaitrise;
-use Application\Form\CompetenceMaitrise\CompetenceMaitriseFormAwareTrait;
-use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
+use Application\Entity\Db\MaitriseNiveau;
+use Application\Form\MaitriseNiveau\MaitriseNiveauFormAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class CompetenceMaitriseController extends AbstractActionController
+class MaitriseNiveauController extends AbstractActionController
 {
-    use CompetenceMaitriseServiceAwareTrait;
-    use CompetenceMaitriseFormAwareTrait;
+    use MaitriseNiveauServiceAwareTrait;
+    use MaitriseNiveauFormAwareTrait;
 
     public function afficherAction()
     {
-        $maitrise = $this->getCompetenceMaitriseService()->getRequestedCompetenceMaitrise($this);
+        $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
 
         $vm = new ViewModel([
             'title' => "Affichage d'un niveau de maîtrise",
@@ -27,9 +27,12 @@ class CompetenceMaitriseController extends AbstractActionController
 
     public function ajouterAction()
     {
-        $maitrise = new CompetenceMaitrise();
-        $form = $this->getCompetenceMaitriseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('competence-maitrise/ajouter', [], [], true));
+        $type = $this->params()->fromRoute('type');
+        $maitrise = new MaitriseNiveau();
+        $maitrise->setType($type);
+        $form = $this->getMaitriseNiveauForm();
+        $form->setType($type);
+        $form->setAttribute('action', $this->url()->fromRoute('competence-maitrise/ajouter', ['type' => $type], [], true));
         $form->bind($maitrise);
 
         $request = $this->getRequest();
@@ -37,7 +40,7 @@ class CompetenceMaitriseController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getCompetenceMaitriseService()->create($maitrise);
+                $this->getMaitriseNiveauService()->create($maitrise);
             }
         }
 
@@ -51,8 +54,8 @@ class CompetenceMaitriseController extends AbstractActionController
 
     public function modifierAction()
     {
-        $maitrise = $this->getCompetenceMaitriseService()->getRequestedCompetenceMaitrise($this);
-        $form = $this->getCompetenceMaitriseForm();
+        $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
+        $form = $this->getMaitriseNiveauForm();
         $form->setAttribute('action', $this->url()->fromRoute('competence-maitrise/modifier', ['maitrise' => $maitrise->getId()], [], true));
         $form->bind($maitrise);
         $form->get('old-niveau')->setValue($maitrise->getNiveau());
@@ -64,7 +67,7 @@ class CompetenceMaitriseController extends AbstractActionController
             if ($form->isValid()) {
                 $old = $form->get('old-niveau')->getValue();
                 $value = $form->get('niveau')->getValue();
-                $this->getCompetenceMaitriseService()->update($maitrise);
+                $this->getMaitriseNiveauService()->update($maitrise);
             }
         }
 
@@ -78,26 +81,26 @@ class CompetenceMaitriseController extends AbstractActionController
 
     public function historiserAction()
     {
-        $maitrise = $this->getCompetenceMaitriseService()->getRequestedCompetenceMaitrise($this);
-        $this->getCompetenceMaitriseService()->historise($maitrise);
+        $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
+        $this->getMaitriseNiveauService()->historise($maitrise);
         return $this->redirect()->toRoute('competence', [], ['fragment' => 'niveau'], true);
     }
 
     public function restaurerAction()
     {
-        $maitrise = $this->getCompetenceMaitriseService()->getRequestedCompetenceMaitrise($this);
-        $this->getCompetenceMaitriseService()->restore($maitrise);
+        $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
+        $this->getMaitriseNiveauService()->restore($maitrise);
         return $this->redirect()->toRoute('competence', [], ['fragment' => 'niveau'], true);
     }
 
     public function supprimerAction()
     {
-        $maitrise = $this->getCompetenceMaitriseService()->getRequestedCompetenceMaitrise($this);
+        $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getCompetenceMaitriseService()->delete($maitrise);
+            if ($data["reponse"] === "oui") $this->getMaitriseNiveauService()->delete($maitrise);
             exit();
         }
 

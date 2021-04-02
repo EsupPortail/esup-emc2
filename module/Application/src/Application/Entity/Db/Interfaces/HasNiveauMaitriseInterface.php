@@ -2,12 +2,12 @@
 
 namespace Application\Entity\Db\Interfaces;
 
-use Application\Entity\Db\CompetenceMaitrise;
+use Application\Entity\Db\MaitriseNiveau;
 
 interface HasNiveauMaitriseInterface {
 
-    public function getNiveauMaitrise() : ?CompetenceMaitrise;
-    public function setNiveauMaitrise(?CompetenceMaitrise $competenceMaitrise);
+    public function getNiveauMaitrise() : ?MaitriseNiveau;
+    public function setNiveauMaitrise(?MaitriseNiveau $competenceMaitrise);
 
     public function isClef() : ?bool;
     public function setClef(?bool $clef);

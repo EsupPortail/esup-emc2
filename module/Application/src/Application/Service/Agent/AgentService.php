@@ -68,11 +68,11 @@ class AgentService {
             ->addSelect('formation_theme')->leftJoin('formation.theme', 'formation_theme')
             ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
             //missions spécifiques
-            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
-            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
-            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
-            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
-            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
+//            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
+//            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
+//            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+//            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
+//            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
 
 //            ->addSelect('fichePoste')->leftJoin('agent.fiches','fichePoste')
 //            ->addSelect('fpPoste')->leftJoin('fichePoste.poste', 'fpPoste')

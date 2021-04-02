@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\CompetenceMaitrise;
+namespace Application\Form\MaitriseNiveau;
 
-use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
@@ -11,8 +11,30 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 use Zend\Validator\Callback;
 
-class CompetenceMaitriseForm extends Form {
-    use CompetenceMaitriseServiceAwareTrait;
+class MaitriseNiveauForm extends Form {
+    use MaitriseNiveauServiceAwareTrait;
+
+    /** @var string type */
+    private $type;
+
+    /**
+     * @return string|null
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string|null $type
+     * @return MaitriseNiveauForm
+     */
+    public function setType(?string $type): MaitriseNiveauForm
+    {
+        $this->type = $type;
+        return $this;
+    }
+
 
     public function init()
     {
@@ -59,6 +81,12 @@ class CompetenceMaitriseForm extends Form {
                 'class' => 'type2 form-control',
             ]
         ]);
+        //type
+        $this->add([
+            'type' => Hidden::class,
+            'name' => 'type',
+            'value' => $this->type,
+        ]);
         //submit
         $this->add([
             'type' => Button::class,
@@ -78,6 +106,7 @@ class CompetenceMaitriseForm extends Form {
         //inputFilter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'            => [ 'required' => true, ],
+            'type'               => [ 'required' => true, ],
             'niveau'             => [
                 'required' => true,
                 'validators' => [[
@@ -88,7 +117,7 @@ class CompetenceMaitriseForm extends Form {
                         ],
                         'callback' => function ($value, $context = []) {
                             if($value ==  $context['old-niveau']) return true;
-                            return ($this->getCompetenceMaitriseService()->getCompetenceMaitriseByNiveau($value) == null);
+                            return ($this->getMaitriseNiveauService()->getMaitriseNiveauByNiveau($value) == null);
                         },
                     ],
                 ]],

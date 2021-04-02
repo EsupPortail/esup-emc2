@@ -1,0 +1,104 @@
+<?php
+/**
+ * @var Agent $agent
+ * @var User[] $responsables
+ * @var bool $canInfoSource
+ */
+
+use Application\Entity\Db\Agent;
+use UnicaenUtilisateur\Entity\Db\User;
+
+?>
+<h2> Informations générales sur l'agent </h2>
+
+
+<div class="row">
+    <div class="col-md-6">
+        Informations générales "publiques"
+        <dl>
+            <dt> Prénom </dt>
+            <dd>
+                <?php echo $agent->getPrenom(); ?>
+            </dd>
+            <dt> Nom </dt>
+            <dd>
+                <?php echo $agent->getNomUsuel(); ?>
+            </dd>
+            <dt> Quotité travaillée </dt>
+            <dd>
+                <?php if($quotite = $agent->getQuotiteCourante()) : ?>
+                    <?php echo $quotite->getQuotite(); ?>%
+                <?php else: ?>
+                    100%
+                <?php endif; ?>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <?php if ($canInfoSource) : ?>
+            Informations générales "application"
+            <dl>
+                <dt> Identifiant sources </dt>
+                <dd>
+                    OCTOPUS - <?php echo $agent->getId(); ?> <br/>
+                    HARPEGE - <?php echo $agent->getHarpId(); ?>
+                <dt> Compte associé </dt>
+                <dd>
+                    Agent : <?php echo $agent->getLogin(); ?> (<?php echo $agent->getEmail(); ?>) <br/>
+                    <?php if($agent->getUtilisateur()) : ?>
+                        Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?> (<?php echo $agent->getUtilisateur()->getEmail(); ?>)
+                    <?php else: ?>
+                        <span class="probleme">
+                                <span class="icon attention"></span>
+                                <em> Aucun compte lié à l'agent </em>
+                            </span>
+                    <?php endif; ?>
+                </dd>
+                <dt> Responsables hiérarchiques</dt>
+                <dd>
+                    <?php if ($responsables !== null AND !empty($responsables)) : ?>
+                        <ul>
+                            <?php foreach ($responsables as $responsable) : ?>
+                                <li> <?php echo $responsable->getDisplayName(); ?> </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else : ?>
+                        <span class="probleme">
+                                <span class="icon attention"></span>
+                                <em> Aucun responsable de remonté </em>
+                            </span>
+
+                    <?php endif; ?>
+                </dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h2>Affectation(s)</h2>
+        <?php foreach ($agent->getAffectationsActifs() as $affectation) : ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+    <div class="col-md-3">
+        <h2>Statut(s)</h2>
+        <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+    <div class="col-md-6">
+        <h2>Grade(s)</h2>
+        <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+</div>
+<a
+    <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */?>
+    href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
+    class="ajax-modal"
+>
+    <span class="icon voir"></span> Listing de tous les affectations, statuts et grades
+</a>

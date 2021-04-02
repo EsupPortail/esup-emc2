@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\CompetenceMaitrise" table="competence_maitrise">
+    <entity name="Application\Entity\Db\MaitriseNiveau" table="maitrise_niveau">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
+        <field name="type"            type="string" length="256"        column="type"            nullable="false"/>
         <field name="libelle"         type="string" length="256"        column="libelle"         nullable="false"/>
         <field name="niveau"          type="integer"                    column="niveau"          nullable="false"/>
         <field name="description"     type="string" length="4096"       column="description"     nullable="true"/>

@@ -1,16 +1,16 @@
 <?php
 
-namespace Application\Service\CompetenceMaitrise;
+namespace Application\Service\MaitriseNiveau;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class CompetenceMaitriseServiceFactory {
+class MaitriseNiveauServiceFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return CompetenceMaitriseService
+     * @return MaitriseNiveauService
      */
     public function __invoke(ContainerInterface $container)
     {
@@ -21,7 +21,7 @@ class CompetenceMaitriseServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $userService = $container->get(UserService::class);
 
-        $service = new CompetenceMaitriseService();
+        $service = new MaitriseNiveauService();
         $service->setEntityManager($entityManager);
         $service->setUserService($userService);
         return $service;

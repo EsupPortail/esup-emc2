@@ -1,6 +1,8 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -11,6 +13,8 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var EntretienProfessionnel[] $entretiens
  * @var User[]  $responsables
  * @var array $parcoursArray
+ * @var FichePoste[] $fichespostes
+ * @var AgentMissionSpecifique[] missions
  */
 
 $canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
@@ -41,7 +45,6 @@ $options['actions'] = [
 ];
 
 $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
-
 ?>
 
 <h1 class="page-header">
@@ -49,143 +52,93 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
     <strong><?php echo $agent->getDenomination(); ?></strong>
 </h1>
 
-<h2> Informations générales sur l'agent </h2>
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li>
+            <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz">
+               Informations <br/> générales
+            </a>
+        </li>
+        <li>
+            <a href="#fiches" aria-controls="fiches" role="tab" data-toggle="tabz">
+                Fiches de poste, <br/>
+                missions spécifiques
+            </a>
+        </li>
+        <li>
+            <a href="#entretiens" aria-controls="entretiens" role="tab" data-toggle="tabz">
+                Entretiens <br/>
+                professionnels
+            </a>
+        </li>
+        <li>
+            <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
+                Parcours de formation<br/> et logiciels metiers
+            </a>
+        </li>
+        <li>
+            <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
+                Acquis de l'agent <br/> &nbsp;
+            </a>
+        </li>
+        <li>
+            <a href="#portfolio" aria-controls="portfolio" role="tab" data-toggle="tabz">
+                Portfolio <br/> &nbsp;
+            </a>
+        </li>
+    </ul>
+</div>
 
-
-    <div class="row">
-        <div class="col-md-6">
-             Informations générales "publiques"
-            <dl>
-                <dt> Prénom </dt>
-                <dd>
-                    <?php echo $agent->getPrenom(); ?>
-                </dd>
-                <dt> Nom </dt>
-                <dd>
-                    <?php echo $agent->getNomUsuel(); ?>
-                </dd>
-                <dt> Quotité travaillée </dt>
-                <dd>
-                    <?php if($quotite = $agent->getQuotiteCourante()) : ?>
-                        <?php echo $quotite->getQuotite(); ?>%
-                    <?php else: ?>
-                        100%
-                    <?php endif; ?>
-                </dd>
-            </dl>
+<div>
+    <div class="tab-content">
+        <div id="informations" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'responsables' => $responsables, 'canInfoSource' => $canInfoSource]); ?>
         </div>
-        <div class="col-md-6">
-            <?php if ($canInfoSource) : ?>
-                 Informations générales "application"
-                <dl>
-                    <dt> Identifiant sources </dt>
-                    <dd>
-                        OCTOPUS - <?php echo $agent->getId(); ?> <br/>
-                        HARPEGE - <?php echo $agent->getHarpId(); ?>
-                    <dt> Compte associé </dt>
-                    <dd>
-                        Agent : <?php echo $agent->getLogin(); ?> (<?php echo $agent->getEmail(); ?>) <br/>
-                        <?php if($agent->getUtilisateur()) : ?>
-                            Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?> (<?php echo $agent->getUtilisateur()->getEmail(); ?>)
-                        <?php else: ?>
-                            <span class="probleme">
-                                <span class="icon attention"></span>
-                                <em> Aucun compte lié à l'agent </em>
-                            </span>
-                        <?php endif; ?>
-                    </dd>
-                    <dt> Responsables hiérarchiques</dt>
-                    <dd>
-                        <?php if ($responsables !== null AND !empty($responsables)) : ?>
-                            <ul>
-                                <?php foreach ($responsables as $responsable) : ?>
-                                    <li> <?php echo $responsable->getDisplayName(); ?> </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php else : ?>
-                            <span class="probleme">
-                                <span class="icon attention"></span>
-                                <em> Aucun responsable de remonté </em>
-                            </span>
+        <div id="fiches" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>
+            <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits], []); ?>
+        </div>
+        <div id="entretiens" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/entretien-professionnel',
+                ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits]
+                , []); ?>
+        </div>
+        <div id="parcours" class="tab-pane " role="tabpanel">
+            <h2>
+                Parcours de formation
+            </h2>
 
-                        <?php endif; ?>
-                    </dd>
-                </dl>
-            <?php endif; ?>
+            <div class="alert alert-info">
+                <strong><span class="icon attention"></span> Affichage des parcours de formations attachés à votre catégorie, domaines professionnels et métier.</strong> <br/>
+                Il est possible qu'un domaine ou un métier ne possède pas de parcours.
+            </div>
+
+            <?php
+            echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true);
+            ?>
+        </div>
+        <div id="acquis" class="tab-pane " role="tabpanel">
+            <h2> Applications, compétences et formations</h2>
+
+            <div class="alert alert-info">
+                <strong><span class="icon attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong> <br/>
+                Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
+            </div>
+
+            <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
+            <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
+
+            <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
+            <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
+
+            <!-- FORMATION ------------------------------------------------------------------------------------------------------->
+            <?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
+        </div>
+        <div id="portfolio" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-3">
-            <h2>Affectation(s)</h2>
-            <?php foreach ($agent->getAffectationsActifs() as $affectation) : ?>
-                <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
-            <?php endforeach; ?>
-        </div>
-        <div class="col-md-3">
-            <h2>Statut(s)</h2>
-            <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
-                <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
-            <?php endforeach; ?>
-        </div>
-        <div class="col-md-6">
-            <h2>Grade(s)</h2>
-        <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
-        <?php endforeach; ?>
-        </div>
-    </div>
-    <a
-        <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */?>
-        href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
-        class="ajax-modal"
-    >
-        <span class="icon voir"></span> Listing de tous les affectations, statuts et grades
-    </a>
-
-    <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $agent->getFiches()], []); ?>
-
-    <?php echo $this->partial('partial/entretien-professionnel',
-        ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits]
-    , []); ?>
-
-    <?php echo $this->partial('partial/mission-specifique', ['missions' => $agent->getMissionsSpecifiques(), 'agent' => $agent,  "droits" => $droits], []); ?>
-
-     <!-- Parcours de formation ------------------------------------------------------------------------------------------>
-
-    <h2>
-        Parcours de formation
-    </h2>
-
-    <div class="alert alert-info">
-        <strong><span class="icon attention"></span> Affichage des parcours de formations attachés à votre catégorie, domaines professionnels et métier.</strong> <br/>
-        Il est possible qu'un domaine ou un métier ne possède pas de parcours.
-    </div>
-
-    <?php
-    echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true);
-    ?>
-
-    <h2> Applications, compétences et formations</h2>
-
-    <div class="alert alert-info">
-        <strong><span class="icon attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong> <br/>
-        Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
-    </div>
-
-    <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
-    <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
-
-    <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
-    <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
-
-    <!-- FORMATION ------------------------------------------------------------------------------------------------------->
-    <?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
-
-    <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
-
-
-
+</div>
 
 <style>
     table.parcours-de-formation {
@@ -206,6 +159,18 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 </style>
 
 <script>
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "informations";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+    });
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');

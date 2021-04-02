@@ -21,6 +21,7 @@ use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -30,7 +31,7 @@ class CompetenceController extends AbstractActionController
     use ActiviteServiceAwareTrait;
     use AgentServiceAwareTrait;
     use CompetenceServiceAwareTrait;
-    use CompetenceMaitriseServiceAwareTrait;
+    use MaitriseNiveauServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -48,7 +49,7 @@ class CompetenceController extends AbstractActionController
     {
         $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
-        $niveaux = $this->getCompetenceMaitriseService()->getCompetencesMaitrises('niveau', 'ASC', true);
+        $niveaux = $this->getMaitriseNiveauService()->getMaitrisesNiveaux('Compétence', 'niveau', 'ASC', true);
         $array = $this->getCompetenceService()->getCompetencesByTypes();
 
         return new ViewModel([

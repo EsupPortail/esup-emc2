@@ -1,64 +1,64 @@
 <?php
 
-namespace Application\Service\CompetenceMaitrise;
+namespace Application\Service\MaitriseNiveau;
 
-use Application\Entity\Db\CompetenceMaitrise;
+use Application\Entity\Db\MaitriseNiveau;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class CompetenceMaitriseService {
+class MaitriseNiveauService {
     use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * @param CompetenceMaitrise $maitrise
-     * @return CompetenceMaitrise
+     * @param MaitriseNiveau $maitrise
+     * @return MaitriseNiveau
      */
-    public function create(CompetenceMaitrise $maitrise) : CompetenceMaitrise
+    public function create(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
         $this->createFromTrait($maitrise);
         return $maitrise;
     }
 
     /**
-     * @param CompetenceMaitrise $maitrise
-     * @return CompetenceMaitrise
+     * @param MaitriseNiveau $maitrise
+     * @return MaitriseNiveau
      */
-    public function update(CompetenceMaitrise $maitrise) : CompetenceMaitrise
+    public function update(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
         $this->updateFromTrait($maitrise);
         return $maitrise;
     }
 
     /**
-     * @param CompetenceMaitrise $maitrise
-     * @return CompetenceMaitrise
+     * @param MaitriseNiveau $maitrise
+     * @return MaitriseNiveau
      */
-    public function historise(CompetenceMaitrise $maitrise) : CompetenceMaitrise
+    public function historise(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
         $this->historiserFromTrait($maitrise);
         return $maitrise;
     }
 
     /**
-     * @param CompetenceMaitrise $maitrise
-     * @return CompetenceMaitrise
+     * @param MaitriseNiveau $maitrise
+     * @return MaitriseNiveau
      */
-    public function restore(CompetenceMaitrise $maitrise) : CompetenceMaitrise
+    public function restore(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
         $this->restoreFromTrait($maitrise);
         return $maitrise;
     }
 
     /**
-     * @param CompetenceMaitrise $maitrise
-     * @return CompetenceMaitrise
+     * @param MaitriseNiveau $maitrise
+     * @return MaitriseNiveau
      */
-    public function delete(CompetenceMaitrise $maitrise) : CompetenceMaitrise
+    public function delete(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
         $this->deleteFromTrait($maitrise);
         return $maitrise;
@@ -71,20 +71,26 @@ class CompetenceMaitriseService {
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(CompetenceMaitrise::class)->createQueryBuilder('maitrise');
+        $qb = $this->getEntityManager()->getRepository(MaitriseNiveau::class)->createQueryBuilder('maitrise');
         return $qb;
     }
 
     /**
+     * @param string $type
      * @param string $champ
      * @param string $ordre
      * @param bool $nonHistorise
-     * @return CompetenceMaitrise[]
+     * @return MaitriseNiveau[]
      */
-    public function getCompetencesMaitrises(string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false) : array
+    public function getMaitrisesNiveaux(string $type = "", string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('maitrise.' . $champ, $ordre);
+
+        if ($type !== null AND $type !== "") {
+            $qb = $qb->andWhere('maitrise.type = :type')
+                ->setParameter('type', $type);
+        }
 
         if ($nonHistorise !== true) $qb = $qb->andWhere('maitrise.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
@@ -92,14 +98,15 @@ class CompetenceMaitriseService {
     }
 
     /**
+     * @param string $type
      * @param string $champ
      * @param string $ordre
      * @param bool $nonHistorise
      * @return array
      */
-    public function getCompetencesMaitrisesAsOptions(string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false) : array
+    public function getMaitrisesNiveauxAsOptions(string $type="", string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false) : array
     {
-        $maitrises = $this->getCompetencesMaitrises($champ, $ordre, $nonHistorise);
+        $maitrises = $this->getMaitrisesNiveaux($type, $champ, $ordre, $nonHistorise);
         $options = [];
         foreach ($maitrises as $maitrise) {
             $options[$maitrise->getId()] = $maitrise->getLibelle();
@@ -109,9 +116,9 @@ class CompetenceMaitriseService {
 
     /**
      * @param int|null $id
-     * @return CompetenceMaitrise|null
+     * @return MaitriseNiveau|null
      */
-    public function getCompetenceMaitrise(?int $id) : ?CompetenceMaitrise
+    public function getMaitriseNiveau(?int $id) : ?MaitriseNiveau
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -121,7 +128,7 @@ class CompetenceMaitriseService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs CompetenceMaitrise partagent le même id [".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs MaitriseNiveau partagent le même id [".$id."]",0,$e);
         }
         return $result;
     }
@@ -129,20 +136,20 @@ class CompetenceMaitriseService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return CompetenceMaitrise|null
+     * @return MaitriseNiveau|null
      */
-    public function getRequestedCompetenceMaitrise(AbstractActionController $controller, string $param = 'maitrise') : ?CompetenceMaitrise
+    public function getRequestedMaitriseNiveau(AbstractActionController $controller, string $param = 'maitrise') : ?MaitriseNiveau
     {
         $id = $controller->params()->fromRoute($param);
-        $result = $this->getCompetenceMaitrise($id);
+        $result = $this->getMaitriseNiveau($id);
         return $result;
     }
 
     /**
      * @param int $niveau
-     * @return CompetenceMaitrise|null
+     * @return MaitriseNiveau|null
      */
-    public function getCompetenceMaitriseByNiveau(int $niveau) : ?CompetenceMaitrise
+    public function getMaitriseNiveauByNiveau(int $niveau) : ?MaitriseNiveau
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('maitrise.niveau = :niveau')
@@ -151,7 +158,7 @@ class CompetenceMaitriseService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs CompetenceMaitrise partagent le même niveau [".$niveau."]",0,$e);
+            throw new RuntimeException("Plusieurs MaitriseNiveau partagent le même niveau [".$niveau."]",0,$e);
         }
         return $result;
     }

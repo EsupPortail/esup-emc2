@@ -9,6 +9,7 @@ use Application\Service\Application\ApplicationService;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\Categorie\CategorieService;
 use Application\Service\CompetenceElement\CompetenceElementService;
+use Application\Service\FichePoste\FichePosteService;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
@@ -50,6 +51,8 @@ class AgentControllerFactory {
          * @var FormationService $formationService
          * @var StructureService $structureService
          * @var UserService $userService
+         *
+         * @var FichePosteService $fichePosteService
          */
         $agentService = $container->get(AgentService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
@@ -69,6 +72,7 @@ class AgentControllerFactory {
         $formationService = $container->get(FormationService::class);
         $userService = $container->get(UserService::class);
         $structureService = $container->get(StructureService::class);
+        $fichePosteService = $container->get(FichePosteService::class);
 
         /**
          * @var ApplicationElementForm $applicationElementForm
@@ -104,6 +108,7 @@ class AgentControllerFactory {
         $controller->setApplicationService($applicationService);
         $controller->setUserService($userService);
         $controller->setStructureService($structureService);
+        $controller->setFichePosteService($fichePosteService);
 
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);

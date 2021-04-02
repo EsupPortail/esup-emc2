@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\ApplicationElement;
-use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -13,6 +12,7 @@ use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
@@ -68,6 +68,8 @@ class AgentController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
 
+    use FichePosteServiceAwareTrait;
+
     public function indexAction()
     {
         $fromQueries = $this->params()->fromQuery();
@@ -97,12 +99,18 @@ class AgentController extends AbstractActionController
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
 
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+        $missions = $agent->getMissionsSpecifiques();
+
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
             'entretiens' => $entretiens,
             'responsables' => $responsables,
             'parcoursArray' => $parcoursArray,
+
+            'fichespostes' => $fichespostes,
+            'missions' => $missions,
         ]);
     }
 

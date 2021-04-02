@@ -11,10 +11,10 @@ use Application\Service\Activite\ActiviteService;
 use Application\Service\Agent\AgentService;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\CompetenceElement\CompetenceElementService;
-use Application\Service\CompetenceMaitrise\CompetenceMaitriseService;
 use Application\Service\CompetenceTheme\CompetenceThemeService;
 use Application\Service\CompetenceType\CompetenceTypeService;
 use Application\Service\FicheMetier\FicheMetierService;
+use Application\Service\MaitriseNiveau\MaitriseNiveauService;
 use Interop\Container\ContainerInterface;
 
 class CompetenceControllerFactory
@@ -26,7 +26,7 @@ class CompetenceControllerFactory
          * @var ActiviteService $activiteService
          * @var AgentService $agentService
          * @var CompetenceService $competenceService
-         * @var CompetenceMaitriseService $competenceMaitriseService
+         * @var MaitriseNiveauService $maitriseNiveauService
          * @var CompetenceThemeService $competenceThemeService
          * @var CompetenceTypeService $competenceTypeService
          * @var CompetenceElementService $competenceElementService
@@ -35,7 +35,7 @@ class CompetenceControllerFactory
         $activiteService = $container->get(ActiviteService::class);
         $agentService = $container->get(AgentService::class);
         $competenceService = $container->get(CompetenceService::class);
-        $competenceMaitriseService = $container->get(CompetenceMaitriseService::class);
+        $maitriseNiveauService = $container->get(MaitriseNiveauService::class);
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -59,7 +59,7 @@ class CompetenceControllerFactory
         $controller->setActiviteService($activiteService);
         $controller->setAgentService($agentService);
         $controller->setCompetenceService($competenceService);
-        $controller->setCompetenceMaitriseService($competenceMaitriseService);
+        $controller->setMaitriseNiveauService($maitriseNiveauService);
         $controller->setCompetenceThemeService($competenceThemeService);
         $controller->setCompetenceTypeService($competenceTypeService);
         $controller->setCompetenceElementService($competenceElementService);

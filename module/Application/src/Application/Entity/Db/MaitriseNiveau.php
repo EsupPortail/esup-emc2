@@ -5,11 +5,13 @@ namespace Application\Entity\Db;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class CompetenceMaitrise implements HistoriqueAwareInterface {
+class MaitriseNiveau implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */
     private $id;
+    /** @var string */
+    private $type;
     /** @var string */
     private $libelle;
     /** @var integer */
@@ -28,6 +30,24 @@ class CompetenceMaitrise implements HistoriqueAwareInterface {
     /**
      * @return string|null
      */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string|null $type
+     * @return MaitriseNiveau
+     */
+    public function setType(?string $type): MaitriseNiveau
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getLibelle(): ?string
     {
         return $this->libelle;
@@ -35,9 +55,9 @@ class CompetenceMaitrise implements HistoriqueAwareInterface {
 
     /**
      * @param string|null $libelle
-     * @return CompetenceMaitrise
+     * @return MaitriseNiveau
      */
-    public function setLibelle(?string $libelle): CompetenceMaitrise
+    public function setLibelle(?string $libelle): MaitriseNiveau
     {
         $this->libelle = $libelle;
         return $this;
@@ -53,9 +73,9 @@ class CompetenceMaitrise implements HistoriqueAwareInterface {
 
     /**
      * @param int|null $niveau
-     * @return CompetenceMaitrise
+     * @return MaitriseNiveau
      */
-    public function setNiveau(?int $niveau): CompetenceMaitrise
+    public function setNiveau(?int $niveau): MaitriseNiveau
     {
         $this->niveau = $niveau;
         return $this;
@@ -71,9 +91,9 @@ class CompetenceMaitrise implements HistoriqueAwareInterface {
 
     /**
      * @param string|null $description
-     * @return CompetenceMaitrise
+     * @return MaitriseNiveau
      */
-    public function setDescription(?string $description): CompetenceMaitrise
+    public function setDescription(?string $description): MaitriseNiveau
     {
         $this->description = $description;
         return $this;

@@ -166,6 +166,21 @@ class FichePosteService {
 
     }
 
+    /**
+     * @var Agent $agent
+     * @return FichePoste[]
+     */
+    public function getFichesPostesByAgent(Agent $agent) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fiche.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->orderBy('fiche.id', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /** FICHE TYPE EXTERNE ********************************************************************************************/
 
     /**

@@ -1,19 +1,19 @@
 <?php
 
-namespace Application\Form\CompetenceMaitrise;
+namespace Application\Form\MaitriseNiveau;
 
 use Interop\Container\ContainerInterface;
 
-class CompetenceMaitriseHydratorFactory {
+class MaitriseNiveauHydratorFactory {
 
 
     /**
      * @param ContainerInterface $container
-     * @return CompetenceMaitriseHydrator
+     * @return MaitriseNiveauHydrator
      */
     public function __invoke(ContainerInterface $container)
     {
-        $hydrator = new CompetenceMaitriseHydrator();
+        $hydrator = new MaitriseNiveauHydrator();
         return $hydrator;
     }
 }
