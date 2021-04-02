@@ -5,7 +5,6 @@ namespace Application\Form\CompetenceElement;
 use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\CompetenceElement;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
-use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
 use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 

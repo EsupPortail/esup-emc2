@@ -3,17 +3,16 @@
 namespace Application\Form\ApplicationElement;
 
 use Application\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\CompetenceMaitrise\CompetenceMaitriseServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
-use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class ApplicationElementForm extends Form {
     use ApplicationServiceAwareTrait;
-    use CompetenceMaitriseServiceAwareTrait;
+    use MaitriseNiveauServiceAwareTrait;
 
     public function init()
     {
@@ -45,7 +44,7 @@ class ApplicationElementForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner un niveau ... ",
-                'value_options' => $this->getCompetenceMaitriseService()->getCompetencesMaitrisesAsOptions(),
+                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions("Application"),
             ],
             'attributes' => [
                 'id'                => 'niveau',

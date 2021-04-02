@@ -2,7 +2,7 @@
 
 namespace Application\Controller;
 
-use Application\Form\SelectionCompetenceMaitrise\SelectionCompetenceMaitriseFormAwareTrait;
+use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauFormAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
@@ -14,7 +14,7 @@ class ElementController extends AbstractActionController {
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FormationElementServiceAwareTrait;
-    use SelectionCompetenceMaitriseFormAwareTrait;
+    use SelectionMaitriseNiveauFormAwareTrait;
 
     const TYPE_APPLICATION = 'Application';
     const TYPE_COMPETENCE = 'Competence';
@@ -104,7 +104,7 @@ class ElementController extends AbstractActionController {
                 break;
         }
 
-        $form = $this->getSelectionCompetenceMaitriseForm();
+        $form = $this->getSelectionMaitriseNiveauForm();
         $form->setAttribute('action', $this->url()->fromRoute('element/changer-niveau', ['type' => $elementType, 'id' => $element->getId(), 'clef' => $clef], [], true));
         $form->bind($element);
         if ($clef === 'masquer') $form->masquerClef();

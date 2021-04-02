@@ -3,7 +3,6 @@
 namespace Application\Form\CompetenceElement;
 
 use Application\Service\Competence\CompetenceService;
-use Application\Service\CompetenceMaitrise\CompetenceMaitriseService;
 use Application\Service\MaitriseNiveau\MaitriseNiveauService;
 use Interop\Container\ContainerInterface;
 
