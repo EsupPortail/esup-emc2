@@ -34,8 +34,10 @@ class CampagneController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCampagneService()->create($campagne);
-                $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_DAC", ['campagne' => $campagne, 'mailing' => 'ZZZcentrale-liste@unicaen.fr']);
-                $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_BIATSS", ['campagne' => $campagne, 'mailing' => 'ZZZunicaen-biats@unicaen.fr']);
+                $mail1 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_DAC", ['campagne' => $campagne, 'mailing' => 'ZZZcentrale-liste@unicaen.fr']);
+                $this->getMailingService()->addAttachement($mail1, Campagne::class, $campagne->getId());
+                $mail2 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_BIATSS", ['campagne' => $campagne, 'mailing' => 'ZZZunicaen-biats@unicaen.fr']);
+                $this->getMailingService()->addAttachement($mail2, Campagne::class, $campagne->getId());
             }
         }
 

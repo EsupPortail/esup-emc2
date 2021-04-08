@@ -60,11 +60,15 @@ class MailingController extends AbstractActionController {
 
     public function reEnvoiAction()
     {
+        $retour = $this->params()->fromQuery('retour');
+
         $mailId = $this->params()->fromRoute('id');
         $mail = $this->getMailingService()->getMail($mailId);
 
-        $this->getMailingService()->reEnvoi($mail);
+        $newMail = $this->getMailingService()->reEnvoi($mail);
+        $this->getMailingService()->addAttachement($newMail, $mail->getAttachementType(), $mail->getAttachementId());
 
+        if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('mailing');
     }
 }

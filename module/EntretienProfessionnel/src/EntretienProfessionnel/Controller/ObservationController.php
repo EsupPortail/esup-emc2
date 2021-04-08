@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\Observation;
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -34,7 +35,8 @@ class ObservationController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getObservationService()->create($observation);
-                $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
+                $mail = $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
+                $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
             }
         }
 

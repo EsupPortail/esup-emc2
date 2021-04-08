@@ -9,6 +9,7 @@
  * @var FicheMetier[] $fichesmetiers
  * @var ParcoursDeFormation $parcours
  * @var User $connectedUser
+ * @var Mail[] $mails
  */
 
 use Application\Entity\Db\Agent;
@@ -18,6 +19,7 @@ use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use Mailing\Model\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\User;
 
 
@@ -92,6 +94,11 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
                 <br/> &nbsp; Validations <br/> &nbsp;
             </a>
         </li>
+        <li class="pull-right">
+            <a href="#mails" aria-controls="mails" role="tab" data-toggle="tabz" >
+                Mails <br/> &nbsp;
+            </a>
+        </li>
     </ul>
 
     <div class="main-with-tab">
@@ -118,6 +125,9 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
             <div id="validation" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction']); ?>
+            </div>
+            <div id="mails" class="tab-pane " role="tabpanel">
+                <?php  echo $this->partial('partial/mails-entretien', ['entretien' => $entretien, 'mails' => $mails, 'retour' => $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => true, 'fragment' => 'mails'], true), 'source' => 'renseignerAction']); ?>
             </div>
         </div>
     </div>

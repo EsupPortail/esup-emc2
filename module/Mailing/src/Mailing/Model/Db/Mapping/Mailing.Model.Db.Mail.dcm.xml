@@ -13,5 +13,7 @@
         <field name="sujet"             type="string"   length="256"      column="sujet"                nullable="true"  />
         <field name="corps"             type="string"   length="2048"     column="corps"                nullable="true"  />
 
+        <field name="attachementType"   type="string"   length="2048"     column="attachement_type"     nullable="true"  />
+        <field name="attachementId"     type="integer"                    column="attachement_id"       nullable="false" />
     </entity>
 </doctrine-mapping>
