@@ -47,7 +47,7 @@ class CompetenceForm extends Form {
             'type' => Select::class,
             'name' => 'type',
             'options' => [
-                'label' => "Type de la compétence :",
+                'label' => "Type de la compétence * :",
                 'empty_option' => "Sélectionner le type de la compétence ...",
                 'value_options' => $this->getCompetenceTypeService()->getCompetencesTypesAsOptions(),
             ],
@@ -91,7 +91,7 @@ class CompetenceForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => [ 'required' => true,  ],
             'description' => [ 'required' => false,  ],
-            'type'    => [ 'required' => false, ],
+            'type'    => [ 'required' => true, ],
             'theme'   => [ 'required' => false, ],
         ]));
     }

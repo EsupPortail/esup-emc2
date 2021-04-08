@@ -3,14 +3,16 @@
 namespace Application\Form\CompetenceElement;
 
 use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Number;
+use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class CompetenceElementForm extends Form {
     use CompetenceServiceAwareTrait;
+    use MaitriseNiveauServiceAwareTrait;
 
     public function init()
     {
@@ -19,11 +21,11 @@ class CompetenceElementForm extends Form {
             'name' => 'competence',
             'type' => Select::class,
             'options' => [
-                'label' => 'Application * : ',
+                'label' => 'Compétences * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'empty_option' => "Sélectionner une application ... ",
+                'empty_option' => "Sélectionner une compétence ... ",
                 'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [
@@ -37,32 +39,27 @@ class CompetenceElementForm extends Form {
             'name' => 'niveau',
             'type' => Select::class,
             'options' => [
-                'label' => 'Niveau * : ',
+                'label' => 'Niveau  : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner un niveau ... ",
-                'value_options' => [
-                    'Débutant'          => "Débutant",
-                    'Intermédiaire'       => "Intermédiaire",
-                    'Expert'       => "Expert",
-                ],
+                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions('Compétence'),
             ],
             'attributes' => [
                 'id'                => 'niveau',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
-            ]
+            ],
         ]);
-        //Année
         $this->add([
-            'type' => Number::class,
-            'name' => 'annee',
+            'type' => Checkbox::class,
+            'name' => 'clef',
             'options' => [
-                'label' => "Année de la formation :",
+                'label' => "Est clef",
             ],
             'attributes' => [
-                'id' => 'annee',
+                'id'                => 'clef',
             ],
         ]);
         // button
@@ -83,8 +80,13 @@ class CompetenceElementForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'competence'   => [ 'required' => true, ],
-            'niveau'          => [ 'required' => true, ],
-            'annee'         => [ 'required' => false, ],
+            'niveau'          => [ 'required' => false, ],
+            'clef'          => [ 'required' => false, ],
         ]));
+    }
+
+    public function masquerClef()
+    {
+        $this->remove('clef');
     }
 }

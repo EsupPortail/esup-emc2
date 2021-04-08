@@ -4,10 +4,7 @@ namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\ApplicationElement;
-use Application\Entity\Db\CompetenceElement;
-use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
-use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -15,6 +12,7 @@ use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
@@ -70,6 +68,8 @@ class AgentController extends AbstractActionController
     use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
 
+    use FichePosteServiceAwareTrait;
+
     public function indexAction()
     {
         $fromQueries = $this->params()->fromQuery();
@@ -89,12 +89,18 @@ class AgentController extends AbstractActionController
     public function afficherAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
-        if ($agent === null) {
-            $agent = $this->getAgentService()->getAgentByUser($this->getUserService()->getConnectedUser());
+        $connectedUser = $this->getUserService()->getConnectedUser();
+        $connectedAgent = $this->getAgentService()->getAgentByUser($connectedUser);
+        $connectedRole = $this->getUserService()->getConnectedRole();
+        if ($agent !== $connectedAgent AND ($connectedRole->getRoleId() === RoleConstant::PERSONNEL OR $agent === null)) {
+            return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [] , true);
         }
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
+
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+        $missions = $agent->getMissionsSpecifiques();
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
@@ -102,6 +108,9 @@ class AgentController extends AbstractActionController
             'entretiens' => $entretiens,
             'responsables' => $responsables,
             'parcoursArray' => $parcoursArray,
+
+            'fichespostes' => $fichespostes,
+            'missions' => $missions,
         ]);
     }
 
@@ -122,251 +131,7 @@ class AgentController extends AbstractActionController
         ]);
     }
 
-    /** Gestion des applications***************************************************************************************/
-
-    public function ajouterApplicationAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $application = $this->getApplicationService()->getRequestedApplication($this);
-        $applicationElement = new ApplicationElement();
-
-        /** @var ApplicationElementForm $form */
-        $form = $this->getApplicationElementForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-application', ['agent' => $agent->getId()], [], true));
-        $applicationElement->setApplication($application);
-        $form->bind($applicationElement);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getHasApplicationCollectionService()->addApplication($agent, $applicationElement);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une application maîtrisée par l'agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function afficherApplicationAction()
-    {
-        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-
-        return new ViewModel([
-            'title' => "Affichage d'une application maîtrisée par un agent",
-            'applicationElement' => $applicationElement,
-            'agent' => $agent,
-        ]);
-    }
-
-    public function modifierApplicationAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-
-        $form = $this->getApplicationElementForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-application', ['agent' => $agent->getId(), 'application-element' => $applicationElement->getId()]));
-        $form->bind($applicationElement);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getApplicationElementService()->update($applicationElement);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'une application maîtrisée par un agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserApplicationAction()
-    {
-        $retour = $this->params()->fromQuery('retour');
-
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-        $this->getApplicationElementService()->historise($applicationElement);
-
-        if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-    }
-
-    public function restaurerApplicationAction()
-    {
-        $retour = $this->params()->fromQuery('retour');
-
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-        $this->getApplicationElementService()->restore($applicationElement);
-
-        if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-    }
-
-    public function detruireApplicationAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            //la cascade doit gérer l'affaire
-            if ($data["reponse"] === "oui") $this->getApplicationElementService()->delete($applicationElement);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($applicationElement !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de l'application  de " . $applicationElement->getApplication()->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('agent/detruire-application', ["agent" => $agent->getId(), "application-element" => $applicationElement->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
-    /** Gestion des compétences ***************************************************************************************/
-
-    public function ajouterCompetenceAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $competenceElement = new CompetenceElement();
-
-        /** @var CompetenceElementForm $form */
-        $form = $this->getCompetenceElementForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/ajouter-competence', ['agent' => $agent->getId()], [], true));
-        $form->bind($competenceElement);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getHasCompetenceCollectionService()->addCompetence($agent, $competenceElement);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une application maîtrisée par l'agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function afficherCompetenceAction()
-    {
-        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-
-        return new ViewModel([
-            'title' => "Affichage d'une compétence maîtrisée par un agent",
-            'competenceElement' => $competenceElement,
-            'agent' => $agent,
-        ]);
-    }
-
-    public function modifierCompetenceAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-
-        $form = $this->getCompetenceElementForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-competence', ['agent' => $agent->getId(), 'competence-element' => $competenceElement->getId()]));
-        $form->bind($competenceElement);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getCompetenceElementService()->update($competenceElement);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'une compétence maîtrisée par un agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserCompetenceAction()
-    {
-        $retour = $this->params()->fromQuery('retour');
-
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-        $this->getCompetenceElementService()->historise($competenceElement);
-
-        if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-    }
-
-    public function restaurerCompetenceAction()
-    {
-        $retour = $this->params()->fromQuery('retour');
-
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-        $this->getCompetenceElementService()->restore($competenceElement);
-
-        if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-    }
-
-    public function detruireCompetenceAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $competenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            //la cascade doit gérer l'affaire
-            if ($data["reponse"] === "oui") $this->getCompetenceElementService()->delete($competenceElement);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($competenceElement !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de la compétence  de " . $competenceElement->getCompetence()->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('agent/detruire-competence', ["agent" => $agent->getId(), "competence-element" => $competenceElement->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
-    /** Gestion des formation ***************************************************************************************/
+    /** Gestion des ACQUIS ***************************************************************************************/
 
     public function ajouterFormationAction()
     {
@@ -401,96 +166,6 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    public function afficherFormationAction()
-    {
-        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-
-        return new ViewModel([
-            'title' => "Affichage d'une formation suivie par un agent",
-            'formationElement' => $formationElement,
-            'agent' => $agent,
-        ]);
-    }
-
-    public function modifierFormationAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
-
-        $form = $this->getFormationElementForm();
-        $form->setAttribute('action', $this->url()->fromRoute('agent/modifier-formation', ['agent' => $agent->getId(), 'formation-element' => $formationElement->getId()]));
-        $form->bind($formationElement);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFormationElementService()->update($formationElement);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'une formation suivie par un agent",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserFormationAction()
-    {
-        $retour = $this->params()->fromQuery('retour');
-
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
-        $this->getFormationElementService()->historise($formationElement);
-
-        if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-    }
-
-    public function restaurerFormationAction()
-    {
-        $retour = $this->params()->fromQuery('retour');
-
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
-        $this->getFormationElementService()->restore($formationElement);
-
-        if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-    }
-
-    public function detruireFormationAction()
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $formationElement = $this->getFormationElementService()->getRequestedFormationElement($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            //la cascade doit gérer l'affaire
-            if ($data["reponse"] === "oui") $this->getFormationElementService()->delete($formationElement);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($formationElement !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de la formation de " . $formationElement->getFormation()->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('agent/detruire-formation', ["agent" => $agent->getId(), "formation-element" => $formationElement->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
     /** Validation élement associée à l'agent *************************************************************************/
 
     public function validerElementAction()
@@ -502,17 +177,17 @@ class AgentController extends AbstractActionController
         $validationType = null;
         $elementText = null;
         switch ($type) {
-            case 'AgentApplication' :
+            case 'AGENT_APPLICATION' :
                 $entity = $this->getApplicationElementService()->getApplicationElement($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_APPLICATION");
                 $elementText = "l'application [" . $entity->getApplication()->getLibelle() . "]";
                 break;
-            case 'AgentCompetence' :
+            case 'AGENT_COMPETENCE' :
                 $entity = $this->getCompetenceElementService()->getCompetenceElement($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_COMPETENCE");
                 $elementText = "la compétence [" . $entity->getCompetence()->getLibelle() . "]";
                 break;
-            case 'AgentFormation' :
+            case 'AGENT_FORMATION' :
                 $entity = $this->getFormationElementService()->getFormationElement($entityId);
                 $validationType = $this->getValidationTypeService()->getValidationTypeByCode("AGENT_FORMATION");
                 $elementText = "la formation [" . $entity->getFormation()->getLibelle() . "]";
@@ -541,13 +216,13 @@ class AgentController extends AbstractActionController
             if ($validation !== null and $entity !== null) {
                 $entity->setValidation($validation);
                 switch ($type) {
-                    case 'AgentApplication' :
+                    case 'AGENT_APPLICATION' :
                         $this->getApplicationElementService()->update($entity);
                         break;
-                    case 'AgentCompetence' :
+                    case 'AGENT_COMPETENCE' :
                         $this->getCompetenceElementService()->update($entity);
                         break;
-                    case 'AgentFormation' :
+                    case 'AGENT_FORMATION' :
                         $this->getFormationElementService()->update($entity);
                         break;
                 }

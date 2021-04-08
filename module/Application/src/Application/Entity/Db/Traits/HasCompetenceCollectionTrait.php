@@ -21,9 +21,22 @@ trait HasCompetenceCollectionTrait {
         $competences = [];
         /** @var CompetenceElement $competenceElement */
         foreach ($this->competences as $competenceElement) {
-            if ($avecHisto OR $competenceElement->estNonHistorise()) $competences[] = $competenceElement;
+            if ($avecHisto OR $competenceElement->estNonHistorise()) $competences[$competenceElement->getCompetence()->getId()] = $competenceElement;
         }
         return $competences;
+    }
+
+    public function getCompetenceDictionnaire()
+    {
+        $dictionnaire = [];
+        foreach ($this->competences as $competenceElement) {
+            $element = [];
+            $element['entite'] = $competenceElement;
+            $element['raison'][] = $this;
+            $element['conserve'] = true;
+            $dictionnaire[$competenceElement->getCompetence()->getId()] = $element;
+        }
+        return $dictionnaire;
     }
 
     public function hasCompetence(Competence $competence) : bool
@@ -33,5 +46,10 @@ trait HasCompetenceCollectionTrait {
             if ($competenceElement->estNonHistorise() AND $competenceElement->getCompetence() === $competence) return true;
         }
         return false;
+    }
+
+    public function addCompetenceElement(CompetenceElement $element)
+    {
+        $this->competences->add($element);
     }
 }

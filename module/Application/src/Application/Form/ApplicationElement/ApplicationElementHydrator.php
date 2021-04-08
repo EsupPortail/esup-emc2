@@ -4,10 +4,12 @@ namespace Application\Form\ApplicationElement;
 
 use Application\Entity\Db\ApplicationElement;
 use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ApplicationElementHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
+    use MaitriseNiveauServiceAwareTrait;
 
     /**
      * @param ApplicationElement $object
@@ -15,19 +17,10 @@ class ApplicationElementHydrator implements HydratorInterface {
      */
     public function extract($object)
     {
-        $commentaires = $object->getCommentaire();
-        $type = null;
-        $annee = null;
-        if ($commentaires !== null) {
-            $split = explode(" - ",$commentaires);
-            $type = $split[1];
-            $annee = $split[0];
-        }
-
         $data = [
             'application'   => ($object->getApplication())?$object->getApplication()->getId():null,
-            'type'          => $type,
-            'annee'         => $annee,
+            'niveau'       => ($object->getNiveauMaitrise())?$object->getNiveauMaitrise()->getId():null,
+            'clef'       => ($object->isClef()),
         ];
         return $data;
     }
@@ -40,12 +33,14 @@ class ApplicationElementHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $application = isset($data['application'])?$this->getApplicationService()->getApplication($data['application']):null;
-        $type = isset($data['type'])?$data['type']:"Auto-formation";
-        $annee= (isset($data['annee']) AND $data['annee'] !== "")? ((int) $data['annee']):null;
-        $commentaire = $annee . " - " . $type;
+        $niveau = (isset($data['niveau']) AND $data['niveau'] !== '')?$this->getMaitriseNiveauService()->getMaitriseNiveau($data['niveau']):null;
 
         $object->setApplication($application);
-        $object->setCommentaire($commentaire);
+        $object->setNiveauMaitrise($niveau);
+
+        if (isset($data['clef'])) {
+            $object->setClef($data['clef']);
+        }
 
         return $object;
     }

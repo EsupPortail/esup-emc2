@@ -5,8 +5,9 @@
  * @var EntretienProfessionnel $entretien
  * @var Agent $agent
  * @var ParcoursDeFormation[] $parcours
- * @var FichePoste[] $fichespostes
+ * @var FichePoste $fichesposte
  * @var FicheMetier[] $fichesmetiers
+ * @var Mail[] $mails
  */
 
 use Application\Entity\Db\Agent;
@@ -14,6 +15,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use Mailing\Model\Db\Mail;
 
 $this->headTitle('Édition de l\'entretien professionnel');
 $ficheposte = $agent->getFichePosteActif();
@@ -22,7 +24,6 @@ $droits = [
         'canVoir' => $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER)),
 ];
 
-
 ?>
 
 <h1 class="page-header">
@@ -30,7 +31,7 @@ $droits = [
 </h1>
 
 <?php
-echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $fichesposte, 'fichesmetiers' => $fichesmetiers], [], true);
 ?>
 
 <div role="tabpanel">
@@ -47,7 +48,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         </li>
         <li>
             <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
-                Parcours de formation<br/> et applicatif
+                Parcours de formation<br/> et logiciels metiers
             </a>
         </li>
         <li>
@@ -63,6 +64,11 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         <li>
             <a href="#validation" aria-controls="validation" role="tab" data-toggle="tabz" >
                 Validations <br/> &nbsp;
+            </a>
+        </li>
+        <li class="pull-right">
+            <a href="#mails" aria-controls="mails" role="tab" data-toggle="tabz" >
+                Mails <br/> &nbsp;
             </a>
         </li>
     </ul>
@@ -84,9 +90,15 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
             <div id="acquis" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['mode' => 'affichage', 'modification' => false], 'source' => 'afficherAction']); ?>
-
+            </div>
             <div id="avis" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'source' => 'afficherAction']); ?>
+            </div>
+            <div id="validation" class="tab-pane " role="tabpanel">
+                <?php // echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'afficherAction']); ?>
+            </div>
+            <div id="mails" class="tab-pane " role="tabpanel">
+                <?php  echo $this->partial('partial/mails-entretien', ['entretien' => $entretien, 'mails' => $mails, 'retour' => $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], ['force_canonical' => true, 'fragment' => 'mails'], true), 'source' => 'afficherAction']); ?>
             </div>
         </div>
     </div>

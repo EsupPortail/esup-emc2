@@ -6,32 +6,49 @@
  * @var array $options
  */
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
+use Formation\Entity\Db\Formation;
+
 
 ?>
+<?php if ($raisons !== null) : ?>
+    <?php foreach ($raisons as $raison) : ?>
+        <?php $text = "";
+        switch ($raison) {
+            case $raison instanceof FicheMetier :
+                $fm = $raison;
+                $text = "";//$fm->getMetier()->getLibelle();
+                $label = "FicheMétier";
+                $class = 'fiche-metier';
+                break;
+            case $raison instanceof FicheMetierTypeActivite :
+                $ac = $raison;
+                $text = $ac->getActivite()->getLibelle();
+                $label = "Activité";
+                $class = 'activite';
+                break;
+            case $raison instanceof Formation :
+                $fm = $raison;
+                $text = "Obtenue grâce à la formation <span class='highlight formation'>" . $fm->getLibelle() . "</span>";
+                $label = "Formation";
+                $class = 'raison formation';
+                break;
+            case $raison instanceof Agent :
+                $fm = $raison;
+                $text = "Liée à l'agent <span class='highlight formation'>" . $raison->getDenomination() . "</span>";
+                $label = "Agent";
+                $class = 'agent';
+                break;
+            default :
+                var_dump($raison);
+                $text = "Provenance inconnue";
+                $label = "???";
+                $class = 'inconnue';
 
-<?php foreach ($raisons as $raison) : ?>
-    <?php $text = "";
-    switch ($raison) {
-        case $raison instanceof FicheMetier :
-            $fm = $raison;
-            $text = $fm->getMetier()->getLibelle();
-            $label = "F";
-            $class = 'fiche-metier';
-            break;
-        case $raison instanceof FicheMetierTypeActivite :
-            $ac = $raison;
-            $text = $ac->getActivite()->getLibelle();
-            $label = "A";
-            $class = 'activite';
-            break;
-        default :
-            $text = "Provenance inconnue";
-            $label = "?";
-            $class = 'inconnue';
-
-    }
-    ?>
-    <span class="<?php echo $class; ?>" title="<?php echo $text; ?>"><?php echo $label; ?></span>
-<?php endforeach;?>
+        }
+        ?>
+        <span class="<?php echo $class; ?>" title="<?php echo $text; ?>" data-toggle="tooltip" data-html="true"><?php echo $label; ?></span>
+    <?php endforeach;?>
+<?php endif; ?>

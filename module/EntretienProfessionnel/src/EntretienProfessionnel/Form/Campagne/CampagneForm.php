@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Form\Campagne;
 
+use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
@@ -44,12 +45,13 @@ class CampagneForm extends Form
         //DEBUT (DATE)
         $this->add([
             'name' => 'date_debut',
-            'type' => Date::class,
+            'type' => DateTime::class,
             'options' => [
                 'label' => 'Date de début de la campagne * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
+                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id'                => 'date_debut',
@@ -58,12 +60,13 @@ class CampagneForm extends Form
         //FIN (DATE)
         $this->add([
             'name' => 'date_fin',
-            'type' => Date::class,
+            'type' => DateTime::class,
             'options' => [
                 'label' => 'Date de fin de la campagne * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
+                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id'                => 'date_fin',

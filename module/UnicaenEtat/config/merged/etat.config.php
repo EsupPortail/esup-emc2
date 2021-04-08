@@ -16,6 +16,7 @@ use UnicaenEtat\Provider\Privilege\EtatPrivileges;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\Etat\EtatServiceFactory;
 use UnicaenEtat\View\Helper\EtatBadgeViewHelper;
+use UnicaenEtat\View\Helper\EtatBadgeViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -197,8 +198,11 @@ return [
         ),
     ],
     'view_helpers' => [
-        'invokables' => [
-            'etatbadge'  => EtatBadgeViewHelper::class,
+        'factories' => [
+            EtatBadgeViewHelper::class => EtatBadgeViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'etatbadge' => EtatBadgeViewHelper::class,
         ],
     ],
 

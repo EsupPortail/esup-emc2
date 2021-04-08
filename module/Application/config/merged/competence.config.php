@@ -4,6 +4,8 @@ namespace Application;
 
 use Application\Controller\CompetenceController;
 use Application\Controller\CompetenceControllerFactory;
+use Application\Controller\MaitriseNiveauController;
+use Application\Controller\MaitriseNiveauControllerFactory;
 use Application\Form\Competence\CompetenceForm;
 use Application\Form\Competence\CompetenceFormFactory;
 use Application\Form\Competence\CompetenceHydrator;
@@ -12,6 +14,10 @@ use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Form\CompetenceElement\CompetenceElementFormFactory;
 use Application\Form\CompetenceElement\CompetenceElementHydrator;
 use Application\Form\CompetenceElement\CompetenceElementHydratorFactory;
+use Application\Form\MaitriseNiveau\MaitriseNiveauForm;
+use Application\Form\MaitriseNiveau\MaitriseNiveauFormFactory;
+use Application\Form\MaitriseNiveau\MaitriseNiveauHydrator;
+use Application\Form\MaitriseNiveau\MaitriseNiveauHydratorFactory;
 use Application\Form\CompetenceType\CompetenceTypeForm;
 use Application\Form\CompetenceType\CompetenceTypeFormFactory;
 use Application\Form\CompetenceType\CompetenceTypeHydrator;
@@ -19,6 +25,10 @@ use Application\Form\CompetenceType\CompetenceTypeHydratorFactory;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormFactory;
 use Application\Form\SelectionCompetence\SelectionCompetenceHydrator;
+use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauForm;
+use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauFormFactory;
+use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauHydrator;
+use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauHydratorFactory;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
@@ -30,6 +40,8 @@ use Application\Service\CompetenceType\CompetenceTypeService;
 use Application\Service\CompetenceType\CompetenceTypeServiceFactory;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceFactory;
+use Application\Service\MaitriseNiveau\MaitriseNiveauService;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceFactory;
 use Application\View\Helper\CompetenceBlocViewHelper;
 use Application\View\Helper\CompetenceBlocViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -66,6 +78,7 @@ return [
                         'ajouter',
                         'ajouter-competence-type',
                         'ajouter-competence-theme',
+                        'ajouter-competence-element',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_AJOUTER,
@@ -96,6 +109,44 @@ return [
                         'detruire',
                         'detruire-competence-type',
                         'detruire-competence-theme',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_EFFACER,
+                    ],
+                ],
+                [
+                    'controller' => MaitriseNiveauController::class,
+                    'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => MaitriseNiveauController::class,
+                    'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => MaitriseNiveauController::class,
+                    'action' => [
+                        'modifier',
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        CompetencePrivileges::COMPETENCE_EDITER,
+                    ],
+                ],
+                [
+                    'controller' => MaitriseNiveauController::class,
+                    'action' => [
+                        'supprimer',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_EFFACER,
@@ -162,6 +213,17 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'ajouter-competence-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-competence-element/:type/:id[/:clef]',
+                            'defaults' => [
+                                'controller' => CompetenceController::class,
+                                'action'     => 'ajouter-competence-element',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'modifier' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -202,6 +264,84 @@ return [
                             'defaults' => [
                                 'controller' => CompetenceController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                ],
+            ],
+            'competence-maitrise' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/competence-maitrise',
+                    'defaults' => [
+                        'controller' => MaitriseNiveauController::class,
+                    ],
+                ],
+                'may_terminate' => false,
+                'child_routes' => [
+                    'ajouter' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter/:type',
+                            'defaults' => [
+                                'controller' => MaitriseNiveauController::class,
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:maitrise',
+                            'defaults' => [
+                                'controller' => MaitriseNiveauController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:maitrise',
+                            'defaults' => [
+                                'controller' => MaitriseNiveauController::class,
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:maitrise',
+                            'defaults' => [
+                                'controller' => MaitriseNiveauController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:maitrise',
+                            'defaults' => [
+                                'controller' => MaitriseNiveauController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:maitrise',
+                            'defaults' => [
+                                'controller' => MaitriseNiveauController::class,
+                                'action'     => 'supprimer',
                             ],
                         ],
                         'may_terminate' => true,
@@ -391,6 +531,7 @@ return [
             CompetenceService::class => CompetenceServiceFactory::class,
             CompetenceElementService::class => CompetenceElementServiceFactory::class,
             HasCompetenceCollectionService::class => HasCompetenceCollectionServiceFactory::class,
+            MaitriseNiveauService::class => MaitriseNiveauServiceFactory::class,
             CompetenceThemeService::class => CompetenceThemeServiceFactory::class,
             CompetenceTypeService::class => CompetenceTypeServiceFactory::class,
         ],
@@ -398,14 +539,17 @@ return [
     'controllers'     => [
         'factories' => [
             CompetenceController::class => CompetenceControllerFactory::class,
+            MaitriseNiveauController::class => MaitriseNiveauControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
             CompetenceForm::class => CompetenceFormFactory::class,
+            MaitriseNiveauForm::class => MaitriseNiveauFormFactory::class,
             CompetenceTypeForm::class => CompetenceTypeFormFactory::class,
             CompetenceElementForm::class => CompetenceElementFormFactory::class,
             SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
+            SelectionMaitriseNiveauForm::class => SelectionMaitriseNiveauFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -414,8 +558,10 @@ return [
         ],
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
+            MaitriseNiveauHydrator::class => MaitriseNiveauHydratorFactory::class,
             CompetenceTypeHydrator::class => CompetenceTypeHydratorFactory::class,
             CompetenceElementHydrator::class => CompetenceElementHydratorFactory::class,
+            SelectionMaitriseNiveauHydrator::class => SelectionMaitriseNiveauHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

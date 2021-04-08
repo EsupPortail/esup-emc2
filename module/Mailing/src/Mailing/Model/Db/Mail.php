@@ -6,10 +6,10 @@ use DateTime;
 
 class Mail {
 
-    const PENDING = 0;
-    const SUCCESS = 1;
-    const FAILURE = 2;
-
+    //todo referencer directement les etats (quid du lien avec UnicaenEtat)
+    const PENDING = 14;
+    const SUCCESS = 15;
+    const FAILURE = 16;
 
     /** @var integer */
     private $id;
@@ -27,119 +27,166 @@ class Mail {
     private $corps;
 
     /**
+     * L'ATTACHEMENT CORRESPOND A UNE ENTITE (TYPE + ID) LIE À L'ENVOI DU MAIL
+     * PAR EXEMPLE : TYPE=EntretienProfessionnel::class ID=123
+     */
+    /** @var string */
+    private $attachementType;
+    /** @var int */
+    private $attachementId;
+
+
+    /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getDateEnvoi()
+    public function getDateEnvoi() : ?DateTime
     {
         return $this->dateEnvoi;
     }
 
     /**
-     * @param DateTime $dateEnvoi
+     * @param DateTime|null $dateEnvoi
      * @return Mail
      */
-    public function setDateEnvoi($dateEnvoi)
+    public function setDateEnvoi(?DateTime $dateEnvoi) : Mail
     {
         $this->dateEnvoi = $dateEnvoi;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getStatusEnvoi()
+    public function getStatusEnvoi() : ?int
     {
         return $this->statusEnvoi;
     }
 
     /**
-     * @param int $statusEnvoi
+     * @param int|null $statusEnvoi
      * @return Mail
      */
-    public function setStatusEnvoi($statusEnvoi)
+    public function setStatusEnvoi(?int $statusEnvoi) : Mail
     {
         $this->statusEnvoi = $statusEnvoi;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDestinatires()
+    public function getDestinatires() : ?string
     {
         return $this->destinataires;
     }
 
     /**
-     * @param string $destinataires
+     * @param string|null $destinataires
      * @return Mail
      */
-    public function setDestinatires($destinataires)
+    public function setDestinatires(?string $destinataires) : Mail
     {
         $this->destinataires = $destinataires;
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isRedirection()
+    public function isRedirection() : bool
     {
         return $this->redirection;
     }
 
     /**
-     * @param int $redirection
+     * @param bool|null $redirection
      * @return Mail
      */
-    public function setRedir($redirection)
+    public function setRedir(?bool $redirection) : Mail
     {
         $this->redirection = $redirection;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSujet()
+    public function getSujet() : ?string
     {
         return $this->sujet;
     }
 
     /**
-     * @param string $sujet
+     * @param string|null $sujet
      * @return Mail
      */
-    public function setSujet($sujet)
+    public function setSujet(?string $sujet) : Mail
     {
         $this->sujet = $sujet;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getCorps()
+    public function getCorps() : ?string
     {
         return $this->corps;
     }
 
     /**
-     * @param string $corps
+     * @param string|null $corps
      * @return Mail
      */
-    public function setCorps($corps)
+    public function setCorps(?string $corps) : Mail
     {
         $this->corps = $corps;
         return $this;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getAttachementType(): ?string
+    {
+        return $this->attachementType;
+    }
+
+    /**
+     * @param string|null $attachementType
+     * @return Mail
+     */
+    public function setAttachementType(?string $attachementType): Mail
+    {
+        $this->attachementType = $attachementType;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getAttachementId(): ?int
+    {
+        return $this->attachementId;
+    }
+
+    /**
+     * @param int|null $attachementId
+     * @return Mail
+     */
+    public function setAttachementId(?int $attachementId): Mail
+    {
+        $this->attachementId = $attachementId;
+        return $this;
+    }
+
 
 }

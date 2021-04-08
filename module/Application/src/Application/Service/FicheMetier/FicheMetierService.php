@@ -162,6 +162,7 @@ class FicheMetierService {
             ->addSelect('activite_application_groupe')->leftJoin('activite_application.groupe', 'activite_application_groupe')
             ->addSelect('fiche_applicationelement')->leftJoin('ficheMetier.applications', 'fiche_applicationelement')
             ->addSelect('fiche_application')->leftJoin('fiche_applicationelement.application', 'fiche_application')
+            ->addSelect('fiche_application_niveau')->leftJoin('fiche_applicationelement.niveau', 'fiche_application_niveau')
             ->addSelect('fiche_application_groupe')->leftJoin('fiche_application.groupe', 'fiche_application_groupe')
 
             //APPLICATIONS - fiche et activités associées
@@ -171,6 +172,7 @@ class FicheMetierService {
             ->addSelect('activite_competence_type')->leftJoin('activite_competence.type', 'activite_competence_type')
             ->addSelect('fiche_competenceelement')->leftJoin('ficheMetier.competences', 'fiche_competenceelement')
             ->addSelect('fiche_competence')->leftJoin('fiche_competenceelement.competence', 'fiche_competence')
+            ->addSelect('fiche_competence_niveau')->leftJoin('fiche_competenceelement.niveau', 'fiche_competence_niveau')
             ->addSelect('fiche_competence_theme')->leftJoin('fiche_competence.theme', 'fiche_competence_theme')
             ->addSelect('fiche_competence_type')->leftJoin('fiche_competence.type', 'fiche_competence_type')
 
@@ -343,20 +345,28 @@ class FicheMetierService {
      * @param DateTime|null $date
      * @return array
      */
-    public function getApplicationsDictionnaires(FicheMetier $fiche, ?DateTime $date = null)
+    public function getApplicationsDictionnaires(FicheMetier $fiche, bool $asElement = false, ?DateTime $date = null)
     {
         $dictionnaire = [];
 
         foreach ($fiche->getApplicationListe() as $applicationElement) {
+            if ($asElement) {
+                $application = $applicationElement;
+            } else {
                 $application = $applicationElement->getApplication();
-                $dictionnaire[$application->getId()]["entite"] = $application;
-                $dictionnaire[$application->getId()]["raison"][] = $fiche;
-                $dictionnaire[$application->getId()]["conserve"] = true;
+            }
+            $dictionnaire[$application->getId()]["entite"] = $application;
+            $dictionnaire[$application->getId()]["raison"][] = $fiche;
+            $dictionnaire[$application->getId()]["conserve"] = true;
         }
 
         foreach ($fiche->getActivites() as $activite) {
             foreach ($activite->getActivite()->getApplicationListe() as $applicationElement) {
-                $application = $applicationElement->getApplication();
+                if ($asElement) {
+                    $application = $applicationElement;
+                } else {
+                    $application = $applicationElement->getApplication();
+                }
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $activite;
                 $dictionnaire[$application->getId()]["conserve"] = true;
@@ -368,15 +378,20 @@ class FicheMetierService {
 
     /**
      * @param FicheMetier $fiche
+     * @param bool $asElement
      * @param DateTime|null $date
      * @return array
      */
-    public function getCompetencesDictionnaires(FicheMetier $fiche, ?DateTime $date = null)
+    public function getCompetencesDictionnaires(FicheMetier $fiche, bool $asElement = false, ?DateTime $date = null)
     {
         $dictionnaire = [];
 
         foreach ($fiche->getCompetenceListe() as $competenceElement) {
-            $competence = $competenceElement->getCompetence();
+            if ($asElement) {
+                $competence = $competenceElement;
+            } else {
+                $competence = $competenceElement->getCompetence();
+            }
             $dictionnaire[$competence->getId()]["entite"] = $competence;
             $dictionnaire[$competence->getId()]["raison"][] = $fiche;
             $dictionnaire[$competence->getId()]["conserve"] = true;
@@ -384,13 +399,16 @@ class FicheMetierService {
 
         foreach ($fiche->getActivites() as $activite) {
             foreach ($activite->getActivite()->getCompetenceListe() as $competenceElement) {
-                $competence = $competenceElement->getCompetence();
+                if ($asElement) {
+                    $competence = $competenceElement;
+                } else {
+                    $competence = $competenceElement->getCompetence();
+                }
                 $dictionnaire[$competence->getId()]["entite"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $activite;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
         }
-
         return $dictionnaire;
     }
 

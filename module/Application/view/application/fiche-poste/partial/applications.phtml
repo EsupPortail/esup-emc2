@@ -42,6 +42,6 @@ foreach ($applications as $item) {
 <div class="row" style="margin: 1rem;">
     <div class="col-md-11">
         <br/>
-        <?php echo $this->applicationBloc($cApplications); ?>
+        <?php echo $this->applicationBloc($cApplications, $fiche->getAgent(), ['display' => ['titre' => false]]); ?>
     </div>
 </div>

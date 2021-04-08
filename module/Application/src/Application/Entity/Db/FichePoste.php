@@ -5,9 +5,9 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\MacroContent\FichePosteMacroTrait;
 use Application\Entity\HasAgentInterface;
 use DateTime;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -380,4 +380,33 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
         return $metier->getLibelle();
     }
+
+    /** INTERFACE POUR LES COLLECTIONS DE COMPETENCES */
+//    public function getCompetenceCollection() {
+//        $collection = new ArrayCollection();
+//        /** @var FicheTypeExterne $ficheType */
+//        foreach ($this->fichesMetiers as $ficheType) {
+//            $ficheMetier = $ficheType->getFicheType();
+//            foreach ($ficheMetier->getCompetenceCollection() as $competence) $collection->add($competence);
+//        }
+//        return $collection;
+//    }
+//
+//    public function getCompetenceListe(bool $avecHisto = false)
+//    {
+//        $dictionnaire = [];
+//        foreach ($this->getCompetenceCollection() as $competenceElement) {
+//            $element = [];
+//            $element['entite'] = $competenceElement;
+//            $element['raison'] = null;
+//            $element['conserve'] = true;
+//            $dictionnaire[] = $element;
+//        }
+//        return $dictionnaire;
+//    }
+//
+//    public function hasCompetence(Competence $competence) : bool
+//    {
+//        return false;
+//    }
 }

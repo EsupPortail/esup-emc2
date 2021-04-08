@@ -2,16 +2,22 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\CompetenceTheme;
 use Application\Entity\Db\CompetenceType;
+use Application\Entity\Db\FicheMetier;
 use Application\Form\Competence\CompetenceFormAwareTrait;
+use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -22,13 +28,16 @@ use Zend\View\Model\ViewModel;
 class CompetenceController extends AbstractActionController
 {
     use ActiviteServiceAwareTrait;
+    use AgentServiceAwareTrait;
     use CompetenceServiceAwareTrait;
+    use MaitriseNiveauServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
+    use CompetenceElementFormAwareTrait;
     use CompetenceTypeFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -39,12 +48,14 @@ class CompetenceController extends AbstractActionController
     {
         $types = $this->getCompetenceTypeService()->getCompetencesTypes('ordre');
         $themes = $this->getCompetenceThemeService()->getCompetencesThemes();
+        $niveaux = $this->getMaitriseNiveauService()->getMaitrisesNiveaux('Compétence', 'niveau', 'ASC', true);
         $array = $this->getCompetenceService()->getCompetencesByTypes();
 
         return new ViewModel([
             'competencesByType' => $array,
             'themes' => $themes,
             'types' => $types,
+            'niveaux' => $niveaux,
         ]);
     }
 
@@ -441,5 +452,55 @@ class CompetenceController extends AbstractActionController
            'form' => $form,
         ]);
         return $vm;
+    }
+
+    /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
+
+    public function ajouterCompetenceElementAction()
+    {
+        $type = $this->params()->fromRoute('type');
+        $hasCompetenceCollection = null;
+        switch($type) {
+            case Agent::class : $hasCompetenceCollection = $this->getAgentService()->getRequestedAgent($this, 'id');
+                break;
+            case FicheMetier::class : $hasCompetenceCollection = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
+                break;
+        }
+        $clef = $this->params()->fromRoute('clef');
+
+        if ($hasCompetenceCollection !== null) {
+            $element = new CompetenceElement();
+
+            $form = $this->getCompetenceElementForm();
+            $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter-competence-element', ['type' => $type, 'id' => $hasCompetenceCollection->getId(), 'clef' => $clef], [], true));
+            $form->bind($element);
+            if ($clef === 'masquer') $form->masquerClef();
+
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $data = $request->getPost();
+                $form->setData($data);
+                if ($form->isValid()) {
+                    $this->getCompetenceElementService()->create($element);
+                    $hasCompetenceCollection->addCompetenceElement($element);
+                    switch($type) {
+                        case Agent::class :
+                            $this->getAgentService()->update($hasCompetenceCollection);
+                            break;
+                        case FicheMetier::class :
+                            $this->getFicheMetierService()->update($hasCompetenceCollection);
+                            break;
+                    }
+                }
+            }
+
+            $vm = new ViewModel([
+                'title' => "Ajout d'une compétence",
+                'form' => $form,
+            ]);
+            $vm->setTemplate('application/default/default-form');
+            return $vm;
+        }
+        exit();
     }
 }

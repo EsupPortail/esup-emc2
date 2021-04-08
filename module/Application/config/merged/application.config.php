@@ -21,9 +21,9 @@ use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
 use Application\Form\SelectionApplication\SelectionApplicationHydrator;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\Application\ApplicationGroupeService;
+use Application\Service\Application\ApplicationGroupeServiceFactory;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Application\ApplicationServiceFactory;
-use Application\Service\Application\ApplicationGroupeServiceFactory;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\ApplicationElement\ApplicationElementServiceFactory;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
@@ -74,6 +74,7 @@ return [
                     'action' => [
                         'creer',
                         'ajouter-groupe',
+                        'ajouter-application-element',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AJOUTER,
@@ -206,6 +207,17 @@ return [
                                 'action' => 'afficher',
                             ],
                         ],
+                    ],
+                    'ajouter-application-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-application-element/:type/:id[/:clef]',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action'     => 'ajouter-application-element',
+                            ],
+                        ],
+                        'may_terminate' => true,
                     ],
                     'changer-status' => [
                         'type' => Segment::class,

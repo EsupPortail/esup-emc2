@@ -5,6 +5,7 @@ namespace Mailing\Service\Mailing;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Formation\Entity\Db\FormationInstance;
@@ -42,18 +43,126 @@ class MailingService
         $this->doNotSend = $doNotSend;
     }
 
+    /** GESTION DE L'ENTITE *******************************************************************************************/
     /**
      * @param Mail $mail
+     * @return Mail
      */
-    public function reEnvoi(Mail $mail)
+    public function create(Mail $mail) : Mail
     {
-        $this->sendMail(explode(",", $mail->getDestinatires()), $mail->getSujet(), $mail->getCorps());
+        try {
+            $this->getEntityManager()->persist($mail);
+            $this->getEntityManager()->flush($mail);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Problème lors de la création du mail", $e);
+        }
+        return $mail;
     }
 
+    /**
+     * @param Mail $mail
+     * @return Mail
+     */
+    public function update(Mail $mail) : Mail
+    {
+        try {
+            $this->getEntityManager()->flush($mail);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Problème lors de la mise à jour du mail", $e);
+        }
+        return $mail;
+    }
+
+    /**
+     * @param Mail $mail
+     * @return Mail
+     */
+    public function delete(Mail $mail) : Mail
+    {
+        try {
+            $this->getEntityManager()->remove($mail);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException("Problème lors de la destruction du mail", $e);
+        }
+        return $mail;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder() : QueryBuilder
+    {
+        $qb = $this->getEntityManager()->getRepository(Mail::class)->createQueryBuilder('mail');
+        return $qb;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return Mail[]
+     */
+    public function getMails(string $champ = 'id', string $ordre = 'DESC') : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->orderBy('mail.' . $champ,  $ordre);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param int $mailId
+     * @return Mail|null
+     */
+    public function getMail(int $mailId) : ?Mail
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('mail.id = :id')
+            ->setParameter('id', $mailId);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs mails ont le même identifiant");
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $type
+     * @param int $id
+     * @param string $champ
+     * @param string $ordre
+     * @return Mail[]
+     */
+    public function getMailsByAttachement(string $type, int $id, string $champ = 'id', string $ordre = 'DESC') : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('mail.attachementType = :type')
+            ->andWhere('mail.attachementId = :id')
+            ->setParameter('type', $type)
+            ->setParameter('id', $id)
+            ->orderBy('mail.' . $champ,  $ordre);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** FONCTION D'ENVOI DE MAIL **************************************************************************************/
+
+    /**
+     * @param $to
+     * @param $subject
+     * @param $texte
+     * @param null $attachement_path
+     * @return Mail
+     */
     public function sendMail($to, $subject, $texte, $attachement_path = null)
     {
-//        return true;
-
         $message = (new Message())->setEncoding('UTF-8');
         $message->setFrom('ne-pas-repondre@unicaen.fr', "EMC2");
         if (!is_array($to)) $to = [$to];
@@ -117,52 +226,6 @@ class MailingService
         $this->transport->send($message);
 
         $this->changerStatus($mail, Mail::SUCCESS);
-
-    }
-
-    /**
-     * @return Mail[]
-     */
-    public function getMails()
-    {
-        $qb = $this->getEntityManager()->getRepository(Mail::class)->createQueryBuilder('mail')
-            ->orderBy('mail.id', 'DESC');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param int $mailId
-     * @return Mail
-     */
-    public function getMail($mailId)
-    {
-        $qb = $this->getEntityManager()->getRepository(Mail::class)->createQueryBuilder('mail')
-            ->andWhere('mail.id = :id')
-            ->setParameter('id', $mailId);
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs mails ont le même identifiant");
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Mail $mail
-     * @return Mail
-     */
-    public function create($mail)
-    {
-        try {
-            $this->getEntityManager()->persist($mail);
-            $this->getEntityManager()->flush($mail);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la création du mail", $e);
-        }
         return $mail;
     }
 
@@ -170,27 +233,10 @@ class MailingService
      * @param Mail $mail
      * @return Mail
      */
-    public function update($mail)
+    public function reEnvoi(Mail $mail) : Mail
     {
-        try {
-            $this->getEntityManager()->flush($mail);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la mise à jour du mail", $e);
-        }
+        $mail = $this->sendMail(explode(",", $mail->getDestinatires()), $mail->getSujet(), $mail->getCorps());
         return $mail;
-    }
-
-    /**
-     * @param Mail $mail
-     */
-    public function delete($mail)
-    {
-        try {
-            $this->getEntityManager()->remove($mail);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème lors de la destruction du mail", $e);
-        }
     }
 
     /**
@@ -198,10 +244,25 @@ class MailingService
      * @param int $status
      * @return Mail
      */
-    public function changerStatus($mail, $status)
+    public function changerStatus(Mail $mail, int $status) : Mail
     {
         $mail->setStatusEnvoi($status);
         $mail = $this->update($mail);
+        return $mail;
+    }
+
+    /**
+     * @param Mail|null $mail
+     * @param string $type
+     * @param int $id
+     * @return Mail|null
+     */
+    public function addAttachement(?Mail $mail, string $type, int $id) : ?Mail
+    {
+        if ($mail === null) return null;
+        $mail->setAttachementType($type);
+        $mail->setAttachementId($id);
+        $this->update($mail);
         return $mail;
     }
 
@@ -210,8 +271,9 @@ class MailingService
     /**
      * @param string code
      * @param array $variables
+     * @return Mail|null
      */
-    public function sendMailType($code, array $variables)
+    public function sendMailType($code, array $variables) : ?Mail
     {
         $mailtype = $this->getMailTypeService()->getMailTypeByCode($code);
         if ($mailtype === null) {
@@ -242,8 +304,10 @@ class MailingService
                 }
             }
 
-            $this->sendMail($mails, $sujet, $corps);
+            $mail = $this->sendMail($mails, $sujet, $corps);
+            return $mail;
         }
+        return null;
     }
 
     /**
@@ -251,7 +315,7 @@ class MailingService
      * @param array $variables
      * @return string
      */
-    private function replaceMacros(?string $texteInitial, array $variables)
+    private function replaceMacros(?string $texteInitial, array $variables) : string
     {
         $matches = [];
         preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);
@@ -271,7 +335,7 @@ class MailingService
      * @param array $variables
      * @return string
      */
-    private function getReplacementText($identifier, $variables)
+    private function getReplacementText(string $identifier, array $variables) : string
     {
         /**
          * @var Campagne $campagne
@@ -344,4 +408,4 @@ class MailingService
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }
-}
+    }

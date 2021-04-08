@@ -3,6 +3,7 @@
 namespace Application\Form\ApplicationElement;
 
 use Application\Service\Application\ApplicationService;
+use Application\Service\MaitriseNiveau\MaitriseNiveauService;
 use Interop\Container\ContainerInterface;
 
 class ApplicationElementFormFactory {
@@ -15,8 +16,10 @@ class ApplicationElementFormFactory {
     {
         /**
          * @var ApplicationService $applicationService
+         * @var MaitriseNiveauService $MaitriseNiveauService
          */
         $applicationService = $container->get(ApplicationService::class);
+        $MaitriseNiveauService = $container->get(MaitriseNiveauService::class);
 
         /** @var ApplicationElementHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ApplicationElementHydrator::class);
@@ -24,6 +27,7 @@ class ApplicationElementFormFactory {
         /** @var ApplicationElementForm $form */
         $form = new ApplicationElementForm();
         $form->setApplicationService($applicationService);
+        $form->setMaitriseNiveauService($MaitriseNiveauService);
         $form->setHydrator($hydrator);
         return $form;
     }

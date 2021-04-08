@@ -288,3 +288,15 @@ span.icon.inscription-fermeture:before {
 span.icon.desinscription:before {
     content:"\f410";
 }
+
+span.icon.graphique:before {
+    content:"\f080";
+}
+
+span.icon.aucune:before {
+    content:"\f128";
+}
+
+span.icon.star:before {
+    content: "\f005";
+}

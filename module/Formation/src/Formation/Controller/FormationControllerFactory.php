@@ -2,6 +2,10 @@
 
 namespace Formation\Controller;
 
+use Application\Form\ApplicationElement\ApplicationElementForm;
+use Application\Form\CompetenceElement\CompetenceElementForm;
+use Application\Service\ApplicationElement\ApplicationElementService;
+use Application\Service\CompetenceElement\CompetenceElementService;
 use Formation\Form\Formation\FormationForm;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
@@ -30,6 +34,17 @@ class FormationControllerFactory
          */
         $formationForm = $container->get('FormElementManager')->get(FormationForm::class);
 
+        /**
+         * @var ApplicationElementService $applicationElementService
+         * @var ApplicationElementForm $applicationElementForm
+         * @var CompetenceElementService $competenceElementService
+         * @var CompetenceElementForm $competenceElementForm
+         */
+        $applicationElementService = $container->get(ApplicationElementService::class);
+        $applicationElementForm = $container->get('FormElementManager')->get(ApplicationElementForm::class);
+        $competenceElementService = $container->get(CompetenceElementService::class);
+        $competenceElementForm = $container->get('FormElementManager')->get(CompetenceElementForm::class);
+
         /** @var FormationController $controller */
         $controller = new FormationController();
         $controller->setEtatService($etatService);
@@ -37,6 +52,12 @@ class FormationControllerFactory
         $controller->setFormationGroupeService($formationGroupeService);
         $controller->setFormationThemeService($formationThemeService);
         $controller->setFormationForm($formationForm);
+
+        $controller->setApplicationElementService($applicationElementService);
+        $controller->setApplicationElementForm($applicationElementForm);
+        $controller->setCompetenceElementService($competenceElementService);
+        $controller->setCompetenceElementForm($competenceElementForm);
+
         return $controller;
     }
 

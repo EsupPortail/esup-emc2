@@ -52,10 +52,6 @@ ksort($applicationsArray);
 
 <div class="parcours">
 
-    <div class="titre">
-        <h3>Parcours d'entrée applicatif</h3>
-    </div>
-
     <div class="listing">
         <table>
             <?php foreach($applicationsArray as $groupe => $applicationArray) : ?>
@@ -75,8 +71,8 @@ ksort($applicationsArray);
                                 <?php if ($hasApplication === null) : ?>
                                     <?php if ($canModifier) : ?>
                                         <a
-                                            <?php /** @see \Application\Controller\AgentController::ajouterApplicationAction() */?>
-                                                href="<?php echo $this->url('agent/ajouter-application', ['agent' => $agent->getId(), 'application' => $application->getId()], [], true); ?>"
+                                            <?php /** @see \Application\Controller\ApplicationController::ajouterApplicationElementAction() */?>
+                                                href="<?php echo $this->url('application/ajouter-application-element', ['type' => Agent::class, 'id' => $agent->getId(), 'clef' => 'masquer'], ["query" => ['application' => $application->getId()]], true); ?>"
                                                 class="ajax-modal"
                                                 data-event="modification"
                                         >
@@ -94,7 +90,7 @@ ksort($applicationsArray);
                                         <?php if ($canModifier) : ?>
                                             <a
                                             <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AgentApplication", 'id' => $hasApplication->getId()], [], true); ?>"
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AGENT_APPLICATION", 'id' => $hasApplication->getId()], [], true); ?>"
                                             class="ajax-modal"
                                             data-event="modification"
                                             >

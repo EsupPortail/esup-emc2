@@ -3,6 +3,7 @@
 namespace Application\Form\CompetenceElement;
 
 use Application\Service\Competence\CompetenceService;
+use Application\Service\MaitriseNiveau\MaitriseNiveauService;
 use Interop\Container\ContainerInterface;
 
 class CompetenceElementHydratorFactory {
@@ -15,12 +16,15 @@ class CompetenceElementHydratorFactory {
     {
         /**
          * @var CompetenceService $competenceService
+         * @var MaitriseNiveauService $maitriseNiveauService
          */
         $competenceService = $container->get(CompetenceService::class);
+        $maitriseNiveauService = $container->get(MaitriseNiveauService::class);
 
         /** @var CompetenceElementHydrator $hydrator */
         $hydrator = new CompetenceElementHydrator();
         $hydrator->setCompetenceService($competenceService);
+        $hydrator->setMaitriseNiveauService($maitriseNiveauService);
         return $hydrator;
     }
 }

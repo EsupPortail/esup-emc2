@@ -2,7 +2,7 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\Poste;
+use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
@@ -15,12 +15,18 @@ class ApplicationBlocViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($applications, $options = [])
+    /**
+     * @param array $applications
+     * @param HasApplicationCollectionInterface|null $objet
+     * @param array $options
+     * @return string|Partial
+     */
+    public function __invoke(array $applications, ?HasApplicationCollectionInterface $objet = null, $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('application-bloc', ['applications' => $applications, 'options' => $options]);
+        return $view->partial('application-bloc', ['applications' => $applications, 'objet' => $objet, 'options' => $options]);
     }
 }

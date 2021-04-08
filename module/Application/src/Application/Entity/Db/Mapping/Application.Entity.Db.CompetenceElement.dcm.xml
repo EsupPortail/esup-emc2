@@ -14,6 +14,12 @@
             <join-column name="validation_id" referenced-column-name="id" />
         </one-to-one>
 
+        <many-to-one target-entity="Application\Entity\Db\MaitriseNiveau"  field="niveau">
+            <join-column name="niveau_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="clef" column="clef" type="boolean" nullable="true"/>
+
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

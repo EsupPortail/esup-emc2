@@ -24,8 +24,8 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
             'mission'   => ($object->getMission()?$object->getMission()->getId():null),
             'agent'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
             'structure' => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
-            'debut'     => ($object->getDateDebut()?$object->getDateDebut()->format('Y-m-d'):null),
-            'fin'       => ($object->getDateFin()?$object->getDateFin()->format('Y-m-d'):null),
+            'debut'     => ($object->getDateDebut()?$object->getDateDebut()->format('d/m/Y'):null),
+            'fin'       => ($object->getDateFin()?$object->getDateFin()->format('d/m/Y'):null),
             'decharge'  => ($object->getDecharge()?$object->getDecharge():null)
         ];
         return $data;
@@ -41,8 +41,8 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
         $mission = $this->getMissionSpecifiqueService()->getMissionSpecifique($data['mission']);
         $agent = $this->getAgentService()->getAgent($data['agent']['id']);
         $structure = $this->getStructureService()->getStructure($data['structure']['id']);
-        $debut = ($data['debut']?DateTime::createFromFormat('Y-m-d', $data['debut']):null);
-        $fin   = ($data['fin']?DateTime::createFromFormat('Y-m-d', $data['fin']):null);
+        $debut = ($data['debut']?DateTime::createFromFormat('d/m/Y', $data['debut']):null);
+        $fin   = ($data['fin']?DateTime::createFromFormat('d/m/Y', $data['fin']):null);
         $decharge   = (isset($data['decharge']) AND trim($data['decharge']) !== '')?$data['decharge']:null;
 
         $object->setAgent($agent);

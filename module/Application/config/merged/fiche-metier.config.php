@@ -41,6 +41,8 @@ return [
                         'afficher',
                         'exporter',
                         'exporter-toutes',
+                        'graphique-applications',
+                        'graphique-competences',
 
                     ],
                     'privileges' => [
@@ -73,7 +75,6 @@ return [
                         'changer-etat',
                         'modifier-application',
                         'modifier-formation',
-                        'gerer-competences',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -234,6 +235,28 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'graphique-applications' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/graphique-applications/:fiche-metier[/:agent]',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'graphique-applications',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'graphique-competences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/graphique-competences/:fiche-metier[/:agent]',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'graphique-competences',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'exporter' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -252,17 +275,6 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'exporter-toutes',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'gerer-competences' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/gerer-competences/:fiche',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'gerer-competences',
                             ],
                         ],
                         'may_terminate' => true,
@@ -442,7 +454,6 @@ return [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
             'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
-            'ficheMetierEtat' => FicheMetierEtatViewHelper::class,
             'ficheMetier'  => FicheMetierViewHelper::class,
             'raisons' => RaisonsViewHelper::class,
         ],

@@ -52,10 +52,13 @@ class AgentService {
             //applications liées à l'agent
             ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
             ->addSelect('application')->leftJoin('agentapplication.application', 'application')
+            ->addSelect('application_niveau')->leftJoin('agentapplication.niveau', 'application_niveau')
+            ->addSelect('application_groupe')->leftJoin('application.groupe', 'application_groupe')
             ->addSelect('fapplication')->leftJoin('agentapplication.validation', 'fapplication')
             //competences liées à l'agent
             ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
             ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
+            ->addSelect('competence_niveau')->leftJoin('agentcompetence.niveau', 'competence_niveau')
             ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
             ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
             ->addSelect('fcompetence')->leftJoin('agentcompetence.validation', 'fcompetence')
@@ -65,11 +68,11 @@ class AgentService {
             ->addSelect('formation_theme')->leftJoin('formation.theme', 'formation_theme')
             ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
             //missions spécifiques
-            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
-            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
-            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
-            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
-            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
+//            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
+//            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
+//            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+//            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
+//            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
 
 //            ->addSelect('fichePoste')->leftJoin('agent.fiches','fichePoste')
 //            ->addSelect('fpPoste')->leftJoin('fichePoste.poste', 'fpPoste')

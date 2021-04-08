@@ -354,6 +354,21 @@ span.fiche-metier {
     font-variant-position: super;
 }
 
+span.agent {
+    font-weight: bolder;
+    color: #ff00e5;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
+span.raison.formation {
+    font-weight: bolder;
+    color: #ffb700;
+    font-family: monospace;
+    cursor: help;
+    font-variant-position: super;
+}
+
 span.activite {
     font-weight: bolder;
     color: orangered;
@@ -546,4 +561,52 @@ div.parcours div.listing table td {
 
 div.parcours div.listing table td.validation {
     width:5rem;
+}
+
+div.titre {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+div.listing table {
+    width:90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.listing table th {
+    background: lightgrey;
+    color: #3c6c8b;
+    padding: 0.5rem 0.5rem 0.5rem 3rem;
+}
+
+div.listing td.libelle {
+    padding-left: 3rem;
+}
+
+div.listing  td.niveau {
+    width: 10rem;
+    text-align: right;
+    padding-left: 1rem;
+    /*background: lightblue;*/
+}
+
+div.listing  td.clef {
+    width: 5rem;
+    text-align: center;
+    /*background: lightblue;*/
+}
+
+div.listing  td.validation {
+    width: 10rem;
+    text-align: right;
+    padding-left: 1rem;
+    /*background: lightgoldenrodyellow;*/
+}
+
+div.listing  td.action {
+    width: 12rem;
+    text-align: right;
+    padding-left: 1rem;
+    /*background: lightgreen;*/
 }

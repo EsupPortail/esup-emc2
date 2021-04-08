@@ -12,12 +12,12 @@ use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
-$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
-$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
-$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
-$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
-$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
-$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ACQUIS_AFFICHER);
+$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
 
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
@@ -38,7 +38,9 @@ $options['mode'] = 'modification';
 $options['modification'] = $canModifier;
 $options['droits'] = $droits;
 $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'acquis'], true);
-
+$options['actions'] = [
+    'afficher' => true, 'ajouter' => $canAjouter, 'modifier' => $canModifier, 'supprimer' => $canDetruire, 'valider' => $canValider
+];
 ?>
 
 <h2 class="page-header-tab"> Acquis de l'agent </h2>
@@ -46,28 +48,10 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
 <?php echo $this->portenote('EntretienProfessionnelController::renseigner()>AgentAutres', '', []); ?>
 
 <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
-
-<div class="bloc">
-    <?php
-    /** @see \Application\View\Helper\AgentApplicationViewHelper */
-    echo $this->agentApplication($agent, $options);
-    ?>
-</div>
+<?php echo $this->applicationBloc($agent->getApplicationDictionnaire(), $agent, ['texte' => true]);?>
 
 <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
+<?php echo $this->competenceBloc($agent->getCompetenceDictionnaire(), $agent, ['texte' => true]);?>
 
-<div class="bloc">
-<?php
-/** @see \Application\View\Helper\AgentCompetenceViewHelper */
-echo $this->agentCompetence($agent, $options);
-?>
-</div>
-
-<!-- FORMATIONS ------------------------------------------------------------------------------------------------------->
-
-<div class="bloc">
-<?php
-/** @see \Application\View\Helper\AgentFormationViewHelper */
-echo $this->agentFormation($agent, $options);
-?>
-</div>
+<!-- FORMATION ------------------------------------------------------------------------------------------------------->
+<?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>

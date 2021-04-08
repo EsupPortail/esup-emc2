@@ -5,10 +5,11 @@
  * @var EntretienProfessionnel $entretien
  * @var array $parcours
  * @var Agent $agent
- * @var FichePoste[] $fichespostes
+ * @var FichePoste[] $ficheposte
  * @var FicheMetier[] $fichesmetiers
  * @var ParcoursDeFormation $parcours
  * @var User $connectedUser
+ * @var Mail[] $mails
  */
 
 use Application\Entity\Db\Agent;
@@ -18,9 +19,9 @@ use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use Mailing\Model\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\User;
 
-$ficheposte = $agent->getFichePosteActif();
 
 $this->headTitle('Modification de l\'entretien professionnel');
 
@@ -58,7 +59,7 @@ $droits = [
 </h1>
 
 <?php
-echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'fichespostes' => $fichespostes, 'fichesmetiers' => $fichesmetiers], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers], [], true);
 ?>
 
 <div role="tabpanel">
@@ -75,7 +76,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         </li>
         <li>
             <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
-                Parcours de <br/> formation et <br/> applicatif
+                Parcours de <br/> formation et <br/> logiciels metiers
             </a>
         </li>
         <li>
@@ -91,6 +92,11 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
         <li>
             <a href="#validation" aria-controls="validation" role="tab" data-toggle="tabz" >
                 <br/> &nbsp; Validations <br/> &nbsp;
+            </a>
+        </li>
+        <li class="pull-right">
+            <a href="#mails" aria-controls="mails" role="tab" data-toggle="tabz" >
+                Mails <br/> &nbsp;
             </a>
         </li>
     </ul>
@@ -119,6 +125,9 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
             <div id="validation" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction']); ?>
+            </div>
+            <div id="mails" class="tab-pane " role="tabpanel">
+                <?php  echo $this->partial('partial/mails-entretien', ['entretien' => $entretien, 'mails' => $mails, 'retour' => $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => true, 'fragment' => 'mails'], true), 'source' => 'renseignerAction']); ?>
             </div>
         </div>
     </div>

@@ -2,13 +2,20 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Application;
+use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\ApplicationGroupe;
+use Application\Entity\Db\FicheMetier;
 use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormAwareTrait;
+use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\ApplicationGroupe\ApplicationGroupeFormAwareTrait;
-use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
+use Application\Service\Application\ApplicationServiceAwareTrait;
+use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -16,7 +23,11 @@ use Zend\View\Model\ViewModel;
 class ApplicationController  extends AbstractActionController {
     use ApplicationServiceAwareTrait;
     use ApplicationGroupeServiceAwareTrait;
+    use ApplicationElementServiceAwareTrait;
+    use AgentServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
     use ApplicationFormAwareTrait;
+    use ApplicationElementFormAwareTrait;
     use ApplicationGroupeFormAwareTrait;
 
     /** APPLICATION ***************************************************************************************************/
@@ -253,5 +264,62 @@ class ApplicationController  extends AbstractActionController {
             ]);
         }
         return $vm;
+    }
+
+    /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
+
+    public function ajouterApplicationElementAction()
+    {
+        $type = $this->params()->fromRoute('type');
+        $hasApplicationElement = null;
+        switch($type) {
+            case Agent::class : $hasApplicationElement = $this->getAgentService()->getRequestedAgent($this, 'id');
+                break;
+            case FicheMetier::class : $hasApplicationElement = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
+                break;
+        }
+        $clef=$this->params()->fromRoute('clef');
+
+        $application = null;
+        if ($applicationId = $this->params()->fromQuery('application')) {
+            $application = $this->getApplicationService()->getApplication($applicationId);
+        }
+
+        if ($hasApplicationElement !== null) {
+            $form = $this->getApplicationElementForm();
+            $element = new ApplicationElement();
+            if ($application !== null) {$element->setApplication($application);}
+            if ($clef === 'masquer') $form->masquerClef();
+
+            $form->setAttribute('action', $this->url()->fromRoute('application/ajouter-application-element', ['type' => $type, 'id' => $hasApplicationElement->getId()], [], true));
+            $form->bind($element);
+
+
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $data = $request->getPost();
+                $form->setData($data);
+                if ($form->isValid()) {
+                    $this->getApplicationElementService()->create($element);
+                    $hasApplicationElement->addApplicationElement($element);
+                    switch($type) {
+                        case Agent::class :
+                            $this->getAgentService()->update($hasApplicationElement);
+                            break;
+                        case FicheMetier::class :
+                            $this->getFicheMetierService()->update($hasApplicationElement);
+                            break;
+                    }
+                }
+            }
+
+            $vm = new ViewModel([
+                'title' => "Ajout d'une application",
+                'form' => $form,
+            ]);
+            $vm->setTemplate('application/default/default-form');
+            return $vm;
+        }
+        exit();
     }
 }

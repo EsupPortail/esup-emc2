@@ -94,10 +94,11 @@ class EntretienProfessionnelForm extends Form {
 
         //Date        (initialisée à la date du jour)
         $this->add([
-            'type' => Date::class,
+            'type' => DateTime::class,
             'name' => 'date_entretien',
             'options' => [
                 'label' => "Date de l'entretien* :",
+                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'date_entretien',
@@ -162,7 +163,7 @@ class EntretienProfessionnelForm extends Form {
                                 /** @var EntretienProfessionnel $entretien */
                                 $entretien = $this->getObject();
                                 $campagne = $entretien->getCampagne();
-                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
+                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
                                 $res =  ($campagne->getDateDebut() <= $date AND $campagne->getDateFin() >= $date);
                                 return $res;
                             },
@@ -179,7 +180,7 @@ class EntretienProfessionnelForm extends Form {
                                 /** @var EntretienProfessionnel $entretien */
                                 $maintenant = new DateTime();
                                 $maintenant = $maintenant->add(new DateInterval('P14D'));
-                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
+                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
                                 $res =  ($maintenant <= $date);
                                 return $res;
                             },

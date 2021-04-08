@@ -470,16 +470,18 @@ class Agent implements
         return ($fiche) ? $fiche->getPoste() : null;
     }
 
+    /** Entretien dans moins de 15 jours */
     public function hasEntretienEnCours() {
         $now = $this->getDateTime();
-
         /** @var EntretienProfessionnel $entretien */
         foreach ($this->entretiens as $entretien) {
-            if ($entretien->getDateEntretien() > $now
-                AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estNonHistorise())
-                AND $entretien->estNonHistorise()) return true;
+            if ($entretien->estNonHistorise()) {
+                $date_min = DateTime::createFromFormat('d/m/Y', $entretien->getDateEntretien()->format('d/m/y'));
+                $date_min = $date_min->sub(new \DateInterval('P15D'));
+                $date_max = DateTime::createFromFormat('d/m/Y', $entretien->getDateEntretien()->format('d/m/y'));
+                if ($now >= $date_min and $now <= $date_max) return true;
+            }
         }
-
         return false;
     }
 
@@ -534,5 +536,51 @@ class Agent implements
             $structureAgentForces = array_filter($structureAgentForces, function (StructureAgentForce $a) { return $a->estNonHistorise();});
         }
         return $structureAgentForces;
+    }
+
+    /** Competence */
+    public function getCompetenceDictionnaireComplet()
+    {
+        $dictionnaire = $this->getCompetenceDictionnaire();
+        foreach ($this->getFormationDictionnaire() as $item) {
+            $formation = $item['entite']->getFormation();
+            foreach ($formation->getCompetenceDictionnaire() as $competenceObtenue) {
+                $competenceId = $competenceObtenue['entite']->getCompetence()->getId();
+                if (isset($dictionnaire[$competenceId])) {
+                    $dictionnaire[$competenceId]["raison"][] = $formation;
+                } else {
+                    $element = [];
+                    $element['entite'] = $competenceObtenue['entite'];
+                    $element['raison'][] = $formation;
+                    $element['conserve'] = true;
+                    $dictionnaire[$competenceId] = $element;
+                }
+            }
+        }
+        return $dictionnaire;
+    }
+
+    public function getApplicationDictionnaireComplet()
+    {
+        $dictionnaire = $this->getApplicationDictionnaire();
+        foreach ($this->getFormationDictionnaire() as $item) {
+            $formation = $item['entite']->getFormation();
+            foreach ($formation->getApplicationDictionnaire() as $applicationObtenue) {
+                $applicationId = $applicationObtenue['entite']->getApplication()->getId();
+                if (isset($dictionnaire[$applicationId])) {
+                    $obtenueNiveau = ($applicationObtenue['entite']->getNiveauMaitrise())?$applicationObtenue['entite']->getNiveauMaitrise()->getNiveau():0;
+                    $currentNiveau = ($dictionnaire[$applicationId]['entite']->getNiveauMaitrise())?$dictionnaire[$applicationId]['entite']->getNiveauMaitrise()->getNiveau():0;
+                    if ($obtenueNiveau > $currentNiveau) $dictionnaire[$applicationId]['entite'] = $applicationObtenue['entite'];
+                    $dictionnaire[$applicationId]["raison"][] = $formation;
+                } else {
+                    $element = [];
+                    $element['entite'] = $applicationObtenue['entite'];
+                    $element['raison'][] = $formation;
+                    $element['conserve'] = true;
+                    $dictionnaire[$applicationId] = $element;
+                }
+            }
+        }
+        return $dictionnaire;
     }
 }
