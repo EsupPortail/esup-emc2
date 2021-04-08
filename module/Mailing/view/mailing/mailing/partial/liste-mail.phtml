@@ -43,6 +43,7 @@ foreach ($types as $type) $typeListe[$type->getId()] = $type->getLibelle();
         <th> Destinataires </th>
         <th> Typé </th>
         <th> Redir </th>
+        <th> Lié </th>
         <th> Sujet </th>
         <th> Action </th>
     </tr>
@@ -61,6 +62,12 @@ foreach ($types as $type) $typeListe[$type->getId()] = $type->getLibelle();
             <td>
                 <?php if ($mail->isRedirection()) : ?>
                     <span class="icon ok" style="color:darkgreen;" data-toggle="tooltip" data-html="true" title="A été redirigé"></span>
+                <?php else : ?>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($mail->getAttachementType()) : ?>
+                    <span class="icon ok" style="color:darkgreen;" data-toggle="tooltip" data-html="true" title="Lié à <?php echo $mail->getAttachementType(); ?>-<?php echo $mail->getAttachementId(); ?>"></span>
                 <?php else : ?>
                 <?php endif; ?>
             </td>
