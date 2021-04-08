@@ -371,7 +371,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         switch ($type) {
             case FichePoste::TYPE_INCLUSIF : return $metier->getLibelle(true);
             case FichePoste::TYPE_GENRE :
-                if ($this->agent !== null)
+                if ($this->agent === null) return $metier->getLibelle(true);
                 if ($this->agent->isHomme() AND $metier->getLibelleMasculin()) return $metier->getLibelleMasculin();
                 if ($this->agent->isFemme() AND $metier->getLibelleFeminin()) return $metier->getLibelleFeminin();
                 return $metier->getLibelle(true);
