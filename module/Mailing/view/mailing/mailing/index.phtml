@@ -3,11 +3,14 @@
 use Mailing\Model\Db\Mail;
 use Mailing\Model\Db\MailType;
 use Mailing\Provider\Privilege\MailingPrivileges;
+use UnicaenEtat\Entity\Db\Etat;
 
 /**
  * @see \Mailing\Controller\MailingController::indexAction()
  * @var Mail[] $mails
  * @var MailType[] $types
+ * @var Etat[] $etats
+ * @var array $params
  */
 
 $this->headTitle("Index des mails envoyées");
@@ -40,7 +43,7 @@ $this->headTitle("Index des mails envoyées");
 
                 <!-- listing ---------------------------------------------------------------------------------------------->
                 <div id="maillisting" class="tab-pane " role="tabpanel">
-                    <?php echo $this->partial('partial/liste-mail', ['mails' => $mails]); ?>
+                    <?php echo $this->partial('partial/liste-mail', ['mails' => $mails, 'etats' => $etats, 'types' => $types, 'params' => $params]); ?>
                 </div>
 
                 <!-- type ---------------------------------------------------------------------------------------------->
@@ -67,7 +70,7 @@ $this->headTitle("Index des mails envoyées");
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "metier";
+        if (name === undefined || name === "") name = "maillisting";
 
         $('a[aria-controls=' + name + ']').tab('show');
 

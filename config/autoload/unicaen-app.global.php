@@ -26,8 +26,8 @@ return [
         'app_infos' => [
             'nom'     => "EMC2",
             'desc'    => "Emploi Mobilité Carrière Compétences",
-            'version' => "1.1.2",
-            'date'    => "19/03/2021",
+            'version' => "1.1.3",
+            'date'    => "08/04/2021",
             'contact' => ['mail' => "dsi.applications@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],
             'mentionsLegales'        => "http://www.unicaen.fr/acces-direct/mentions-legales/",
             'informatiqueEtLibertes' => "http://www.unicaen.fr/acces-direct/informatique-et-libertes/",

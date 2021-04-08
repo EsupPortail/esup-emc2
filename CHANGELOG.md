@@ -1,6 +1,8 @@
 Version 1.1.3
 -------------
-+ [Planifier] Repenser les niveaux de maitrise (ajouter un type)
++ [Correction bug] Ajout d'une garde pour les entretiens professionnels d'agent sans fiche de poste
++ Ajout du mailtype dans les mails pour savoir si un mail est issue d'un mail type
++ [Interface] filtre pour les mails envoyés
 
 Version 1.1.2
 -------------
@@ -8,10 +10,12 @@ Version 1.1.2
 + Premier rendu visuel des graphiques en radar des applications liées aux fiches métiers et des couples (fiche métier, agent).
 + Premier rendu visuel des graphiques en radar des compétences liées aux fiches métiers et des couples (fiche métier, agent).
 + [Interface] changement de l'intitulé 'applicatif' en 'logiciels métiers' 
++ [Interface] éclatement en onglet de la page 'Agent' devenu trop longue
 + Refonte des ElementBlocs : applicationBloc, CompetenceBloc, formationBloc remplacent les agentApplication, agentCompetence, agentFormation
 + Possibilité de liés des compétences et des applications dans une formation qui sont transmises sur la fiche de l'agent si la formation a été suivie.
 + Ajout d'un attachement au mail pour pouvoir lister ceux-ci en fonction d'un élément (un entretien, une action de formation, ...)
 + Attachement des mails aux entretiens professionnels et aux campagnes d'entretien professionnel
++ [Interface] ajout d'un onglet 'Mails' dans les entretiens professionnels
 
 Version 1.1.1
 -------------

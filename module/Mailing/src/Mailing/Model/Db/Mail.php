@@ -26,6 +26,9 @@ class Mail {
     /** @var string */
     private $corps;
 
+    /** @var int */
+    private $mailtype_id;
+
     /**
      * L'ATTACHEMENT CORRESPOND A UNE ENTITE (TYPE + ID) LIE À L'ENVOI DU MAIL
      * PAR EXEMPLE : TYPE=EntretienProfessionnel::class ID=123
@@ -153,6 +156,24 @@ class Mail {
     }
 
     /**
+     * @return int|null
+     */
+    public function getMailtypeId(): ?int
+    {
+        return $this->mailtype_id;
+    }
+
+    /**
+     * @param int|null $mailtype_id
+     * @return Mail
+     */
+    public function setMailtypeId(?int $mailtype_id): Mail
+    {
+        $this->mailtype_id = $mailtype_id;
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getAttachementType(): ?string
@@ -187,6 +208,4 @@ class Mail {
         $this->attachementId = $attachementId;
         return $this;
     }
-
-
 }
