@@ -88,15 +88,4 @@ $this->headTitle('Index des fiches métiers');
             window.location.reload();
         });
     });
-
-    $(function() {
-        $('select#domaine').on("change", function() {
-            let domaine = $('select#domaine').find(":selected").val();
-            if (domaine == 0) {
-                window.location.href = 'fiche-metier-type';
-            } else {
-                window.location.href = 'fiche-metier-type?domaine=' + domaine;
-            }
-        });
-    })
 </script>
