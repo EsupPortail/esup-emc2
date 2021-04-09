@@ -1,8 +1,12 @@
 Version 1.1.3
 -------------
 + [Correction bug] Ajout d'une garde pour les entretiens professionnels d'agent sans fiche de poste
-+ Ajout du mailtype dans les mails pour savoir si un mail est issue d'un mail type
++ [Correction bug] Ajout d'un message d'alerte lorsque un mail lié à une campagne d'entretien professionnel n'a pu être envoyé
 + [Interface] filtre pour les mails envoyés
++ [Qualité de vie] Adresse électronique de diffusion lié à la création de campagne d'entretien professionnel devenu un paramètre.
++ Ajout du mailtype dans les mails pour savoir si un mail est issue d'un mail type
++ Ajout d'une source et d'un id source dans les formations et les actions de formations
+  
 
 Version 1.1.2
 -------------
