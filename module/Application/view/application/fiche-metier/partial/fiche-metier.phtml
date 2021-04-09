@@ -10,7 +10,7 @@ use Metier\Entity\Db\Domaine;
 use Application\Entity\Db\FicheMetier;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 
-$canAjouter     = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AJOUTER));
+
 $canVoir        = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canHistoriser  = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_HISTORISER));
 $canEditer      = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
@@ -18,33 +18,6 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
 
 ?>
 
-<div class="row">
-    <div class="col-md-6">
-        <?php if ($canAjouter) : ?>
-            <a href="<?php echo $this->url('fiche-metier-type/ajouter', [], [], true); ?>"
-               class="btn btn-primary action ajax-modal" data-event="creation">
-                <span class="icon ajouter"></span>
-                Ajouter une fiche métier
-            </a>
-            <br/> <br/>
-        <?php endif; ?>
-    </div>
-
-    <div class="pull-right" style="margin-right: 1em; ">
-        <label for="domaine"> Sélection d'un domaine : </label>
-        <select id="domaine" class="selectpicker" data-live-search="true">
-            <option value="0"> Tous les domaines</option>
-            <?php foreach ($domaines as $domaine) : ?>
-                <option
-                    value="<?php echo $domaine->getId(); ?>"
-                    <?php if ($domaine === $domaineSelect) echo "selected"; ?>
-                >
-                    <?php echo $domaine->getLibelle(); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-</div>
 
 <table id="fiches" class="table table-condensed datatable">
     <thead>
@@ -52,8 +25,8 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         <th> Libellé </th>
         <th> Domaine </th>
         <th class="cell-expertise"> Expertise </th>
-        <th class="cell-etat"> État </th>
-        <th class="cell-action"> Action </th>
+        <th  style="width:8rem;"> État </th>
+        <th  style="width:14rem;"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -63,7 +36,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                 <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
                       data-toggle='tooltip' data-html='true'
                 >
-                    <?php echo $fiche->getMetier()->getLibelle(); ?>
+                    <?php echo $fiche->getMetier()->getLibelle(true); ?>
                 </span>
             </td>
             <td>
@@ -79,8 +52,6 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
             <td class="cell-expertise">
                 <?php if ($fiche->hasExpertise()) : ?>
                     <span class="icon ok" style="color:darkgreen;"></span>
-                <?php else: ?>
-                    <span class="icon ko" style="color:darkred;"></span>
                 <?php endif; ?>
             </td>
             <td class="cell-etat">
@@ -146,16 +117,6 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     </tbody>
 </table>
 
-<?php //if ($canVoir) : ?>
-<!--    <a class="btn btn-primary action"-->
-<!--        --><?php ///** @see \Application\Controller\FicheMetierController::exporterToutesAction() */?>
-<!--       href="--><?php //echo $this->url('fiche-metier-type/exporter-toutes', [], [], true); ?><!--"-->
-<!--       title="Exporter en PDF toutes les fiches métiers"-->
-<!--    >-->
-<!--        <span class="icon pdf"></span> Exporter toutes les fiches-->
-<!--    </a>-->
-<?php //endif; ?>
-
 <script>
     $(document).ready(function() {
         $('table#fiches').DataTable({
@@ -163,29 +124,3 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
         });
     });
 </script>
-
-<style>
-
-    th.cell-expertise {
-        width:6rem;
-    }
-    td.cell-expertise {
-        text-align:center;
-    }
-
-    th.cell-etat {
-        width:6rem;
-    }
-    td.cell-etat {
-        text-align:center;
-    }
-
-    th.cell-action {
-        width:10rem;
-    }
-    td.cell-action {
-        text-align: right;
-    }
-
-
-</style>

@@ -328,16 +328,6 @@ class AgentController extends AbstractActionController
         exit;
     }
 
-    public function rechercherResponsableAction()
-    {
-        if (($term = $this->params()->fromQuery('term'))) {
-            $responsables = $this->getUserService()->findByTermAndRole($term, RoleConstant::RESPONSABLE_EPRO);
-            $result = $result = $this->getUserService()->formatUserJSON($responsables);
-            return new JsonModel($result);
-        }
-        exit;
-    }
-
     public function rechercherGestionnaireAction()
     {
         if (($term = $this->params()->fromQuery('term'))) {

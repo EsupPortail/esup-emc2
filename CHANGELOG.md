@@ -1,5 +1,6 @@
-Version 1.3.0 *Module de mouvement*
+Version 1.3.0 *Module de bourse emploi*
 -------------
+- TODO creation module
 
 Version 1.2.0 *Module de formation*
 -------------
@@ -9,7 +10,9 @@ Version 1.1.3
 + [Correction bug] Ajout d'une garde pour les entretiens professionnels d'agent sans fiche de poste
 + [Correction bug] Ajout d'un message d'alerte lorsque un mail lié à une campagne d'entretien professionnel n'a pu être envoyé
 + [Interface] filtre pour les mails envoyés
++ [Interface] filtre pour les fiches métiers
 + [Qualité de vie] Adresse électronique de diffusion lié à la création de campagne d'entretien professionnel devenu un paramètre.
++ Suppression du rôle de responsable d'entretien professionnaire au profit des rôles de gestionnaire/responsable de structures
 + Ajout du mailtype dans les mails pour savoir si un mail est issue d'un mail type
 + Ajout d'une source et d'un id source dans les formations et les actions de formations
   

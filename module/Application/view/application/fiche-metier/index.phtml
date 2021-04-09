@@ -1,5 +1,6 @@
 <?php
 
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Metier\Entity\Db\Domaine;
 use Application\Entity\Db\FicheMetier;
 use Metier\Entity\Db\Metier;
@@ -8,27 +9,45 @@ use UnicaenEtat\Entity\Db\Etat;
 /**
  * @see \Application\Controller\FicheMetierController::indexAction()
  * @var Domaine[] $domaines
- * @var Domaine $domaineSelect
  * @var FicheMetier[] $fiches
  * @var Etat[] $etats
- * @var Metier[] $metiers
+ * @var array $params
  * @var \UnicaenNote\Entity\Db\PorteNote $portenote
  */
+
+
+$canAjouter     = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AJOUTER));
 
 $this->headTitle('Index des fiches métiers');
 
 ?>
 
-<h1 class="page-header">
-    Fiches métiers
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Fiches métiers
+        </h1>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouter) : ?>
+            <br/>
+            <a href="<?php echo $this->url('fiche-metier-type/ajouter', [], [], true); ?>"
+               class="btn btn-primary action ajax-modal" data-event="creation">
+                <span class="icon ajouter"></span>
+                Ajouter une fiche métier
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
 <div class="main">
 
     <?php echo $this->portenote('FicheMetierController::indexAction()', '', []); ?>
 
 
-    <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'domaineSelect' => $domaineSelect, 'portenote' => $portenote]); ?>
+    <?php echo $this->partial('partial/filtre.phtml', ['etats' => $etats, 'domaines'=> $domaines, 'params' => $params]); ?>
+
+    <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'portenote' => $portenote]); ?>
 
 </div>
 

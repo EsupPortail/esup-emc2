@@ -69,25 +69,24 @@ class FicheMetierController extends AbstractActionController
 
     public function indexAction()
     {
-        $domaineId = $this->params()->fromQuery('domaine');
-        $domaines = $this->getDomaineService()->getDomaines();
+        $fromQueries  = $this->params()->fromQuery();
+        $etatId       = $fromQueries['etat'];
+        $domaineId    = $fromQueries['domaine'];
+        $expertise    = $fromQueries['expertise'];
 
-        if ($domaineId === null) {
-            $domaine = null;
-            $fichesMetiers = $this->getFicheMetierService()->getFichesMetiers();
-        } else {
-            $domaine = $this->getDomaineService()->getDomaine($domaineId);
-            $fichesMetiers = $this->getFicheMetierService()->getFicheByDomaine($domaine);
-        }
+        $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
 
         $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetier::TYPE_FICHEMETIER);
         $etats = $this->getEtatService()->getEtatsByType($type);
+        $domaines = $this->getDomaineService()->getDomaines();
+
+        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
 
         return new ViewModel([
-            'domaineSelect' => $domaine,
+            'params' => $params,
             'domaines' => $domaines,
-            'fiches' => $fichesMetiers,
             'etats' => $etats,
+            'fiches' => $fichesMetiers,
         ]);
     }
 
