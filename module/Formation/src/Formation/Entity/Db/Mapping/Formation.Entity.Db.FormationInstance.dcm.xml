@@ -24,6 +24,11 @@
         <one-to-many field="inscrits"   target-entity="Formation\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>
         <one-to-many field="formateurs" target-entity="Formation\Entity\Db\FormationInstanceFormateur"    mapped-by="instance"/>
 
+        <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
+        <field name="idSource"          type="integer"                  column="id_source"          nullable="true"/>
+
+        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>

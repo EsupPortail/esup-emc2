@@ -53,6 +53,7 @@ $this->headTitle("Index des formations");
             <th> Libellé </th>
             <th> Groupe </th>
             <th> Thème </th>
+            <th> Source </th>
             <th style="width:12rem;"> Action </th>
         </tr>
     </thead>
@@ -62,6 +63,11 @@ $this->headTitle("Index des formations");
             <td> <?php echo $formation->getLibelle(); ?> </td>
             <td> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Sans groupe ..."; ?> </td>
             <td> <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():""; ?> </td>
+            <td>
+                <span class="badge source <?php echo $formation->getSource(); ?>">
+                    <?php echo $formation->getSource(); ?>  <?php echo ($formation->getIdSource())?:$formation->getId(); ?>
+                </span>
+            </td>
             <td>
                 <?php if ($canAfficher) : ?>
                     <a
@@ -104,6 +110,7 @@ $this->headTitle("Index des formations");
         let groupColumn = 1;
         $('#formations').DataTable({
             "sorting" : false,
+            paging:false,
             "columnDefs": [
                 { "visible": false, "targets": groupColumn }
             ],
@@ -134,5 +141,15 @@ $this->headTitle("Index des formations");
     tr.group {
         background: linear-gradient(to right, lightgrey, white);
         color: #3c6c8b;
+    }
+
+    span.badge.source.EMC2 {
+        background: #123456;
+    }
+    span.badge.source.FauxLAGAF {
+        background: crimson;
+    }
+    span.badge.source.LAGAF {
+        background: darkred;
     }
 </style>

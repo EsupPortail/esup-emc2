@@ -1,3 +1,9 @@
+Version 1.3.0 *Module de mouvement*
+-------------
+
+Version 1.2.0 *Module de formation*
+-------------
+
 Version 1.1.3
 -------------
 + [Correction bug] Ajout d'une garde pour les entretiens professionnels d'agent sans fiche de poste
