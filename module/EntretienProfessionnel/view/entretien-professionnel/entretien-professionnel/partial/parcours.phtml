@@ -11,7 +11,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\ParcoursDeFormation;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
-$options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'parcours'], true);
+$options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId(), 'agent' => $agent], ['fragment' => 'parcours'], true);
 
 ?>
 

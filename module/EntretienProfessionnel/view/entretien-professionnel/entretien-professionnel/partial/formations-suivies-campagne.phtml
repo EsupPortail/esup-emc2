@@ -3,11 +3,14 @@
 /**
  * @var EntretienProfessionnel $entretien
  * @var FormationElement[] $formations
+ * @var Agent $agent
  */
 
 /**
  * @var FormationElement $formationElement
  */
+
+use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Formation\Entity\Db\FormationElement;
 
@@ -18,7 +21,10 @@ foreach ($formations as $formation) {
     if ($formation->estNonHistorise()) {
         $anneeFormation = explode(" - ", $formation->getCommentaire())[0];
         if ( $anneeFormation===$anneeCampagne ) {
-            $array[($formation->getFormation()->getGroupe()) ? $formation->getFormation()->getGroupe()->getLibelle() : "Sans groupe"][] = $formation;
+            $array[] = [
+                    'entite' => $formation,
+                    'conserve' => true,
+            ];
         }
     }
 }
@@ -29,50 +35,7 @@ ksort($array);
 <?php if (empty($array)) : ?>
     Aucune formation suivie durant la période de la campagne
 <?php else : ?>
-<div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-        <table class="formations">
-            <tbody>
-            <?php foreach($array as $groupe => $listing) : ?>
-                <tr>
-                    <th class="titre" colspan="3">
-                        <?php echo $groupe; ?>
-                    </th>
-                </tr>
-                <?php foreach ($listing as $formationElement) : ?>
-                    <tr>
-                        <td class="libelle-cell">
-                            <?php echo $formationElement->getFormation()->getLibelle(); ?>
-                        </td>
-                        <td class="info-cell">
-                            <?php echo $formationElement->getCommentaire(); ?>
-                        </td>
-                        <td class="validation-cell">
-                            <?php $validation = $formationElement->getValidation(); ?>
-                            <?php if ($validation === null ) : ?>
-                                Aucune validation
-                            <?php else : ?>
-                                <?php if ($validation->getValeur() === null) : ?>
-                                    <span class="icon ok" style="color: darkgreen;"
-                                          data-toggle="tooltip" data-html="true"
-                                          title="Validée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
-                                    > Validée</span>
-                                <?php else : ?>
-                                    <span class="icon ko" style="color: darkred;"
-                                          data-toggle="tooltip" data-html="true"
-                                          title="Refusée le <?php echo $validation->getHistoModification()->format('d/m/Y'); ?> par <?php echo $validation->getHistoModificateur()->getDisplayName(); ?>"
-                                    >Refusée</span>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach;?>
-            <?php endforeach;?>
-            </tbody>
-        </table>
-    </div>
-</div>
+    <?php echo $this->formationBloc($array, $agent, ['actions' => ['modifier' => false, 'supprimer' => false], 'display' => ['titre'=>false]]); ?>
 <?php endif; ?>
 
 <br/>
