@@ -164,7 +164,7 @@ ksort($groupes);
                                         <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
                                             href="<?php echo $this->url('agent/revoquer-element', ['validation' => $entite->getValidation()->getId()], ['query' => ['retour' => $options['retour']]], true); ?>"
                                     >
-                                        <span class="icon validation-undo" title="Dévalider la formation"></span></a>
+                                        <span class="icon validation-undo" title="Révoquer la validation associée à la formation"></span></a>
                                 <?php endif; ?>
                             <?php endif; ?>
                         <?php endif; ?>

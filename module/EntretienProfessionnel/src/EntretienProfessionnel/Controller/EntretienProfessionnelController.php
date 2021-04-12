@@ -241,8 +241,10 @@ class EntretienProfessionnelController extends AbstractActionController
 
         $fichesposte = ($agent) ? $agent->getFichePosteActif() : [];
         $fichesmetiers = [];
-        foreach ($fichesposte->getFichesMetiers() as $fiche) {
-            $fichesmetiers[] = $fiche->getFicheType();
+        if ($fichesposte) {
+            foreach ($fichesposte->getFichesMetiers() as $fiche) {
+                $fichesmetiers[] = $fiche->getFicheType();
+            }
         }
         $parcours = ($fichesposte) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichesposte) : null;
 

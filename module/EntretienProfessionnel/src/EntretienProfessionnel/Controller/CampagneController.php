@@ -5,7 +5,9 @@ namespace EntretienProfessionnel\Controller;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use Exception;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -16,6 +18,7 @@ class CampagneController extends AbstractActionController {
 
     use CampagneServiceAwareTrait;
     use MailingServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     use CampagneFormAwareTrait;
 
@@ -34,10 +37,22 @@ class CampagneController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCampagneService()->create($campagne);
-                $mail1 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_DAC", ['campagne' => $campagne, 'mailing' => 'ZZZcentrale-liste@unicaen.fr']);
-                $this->getMailingService()->addAttachement($mail1, Campagne::class, $campagne->getId());
-                $mail2 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_BIATSS", ['campagne' => $campagne, 'mailing' => 'ZZZunicaen-biats@unicaen.fr']);
-                $this->getMailingService()->addAttachement($mail2, Campagne::class, $campagne->getId());
+                try {
+                    $mail_DAC = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_DAC')->getValeur();
+                    $mail1 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_DAC", ['campagne' => $campagne, 'mailing' => $mail_DAC]);
+                    $mail_BIATS = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_BIATS')->getValeur();
+                    $mail2 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_BIATSS", ['campagne' => $campagne, 'mailing' => $mail_BIATS]);
+                    $this->getMailingService()->addAttachement($mail1, Campagne::class, $campagne->getId());
+                    $this->getMailingService()->addAttachement($mail2, Campagne::class, $campagne->getId());
+                } catch(Exception $e) {
+                    $vm = new ViewModel([
+                        'title' => "Un problème est survenu lors de la création de la campagne d'entretien professionnel",
+                        'text' => "Création effectué mais une exception a été levée lors de l'envoi des mails <br/><br/> <strong>" . $e->getMessage() ."</strong>",
+                    ]);
+                    $vm->setTemplate('entretien-professionnel/default/probleme');
+                    return $vm;
+
+                }
             }
         }
 

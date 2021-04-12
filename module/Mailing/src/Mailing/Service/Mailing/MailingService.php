@@ -152,6 +152,66 @@ class MailingService
         return $result;
     }
 
+    /**
+     * @param string $term
+     * @return array
+     */
+    public function findAdressetByTerm(string $term) {
+        $qb = $this->createQueryBuilder()
+            ->select('mail.destinataires')
+            ->andWhere("LOWER(mail.destinataires) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+            ->groupBy('mail.destinataires');
+        $result = $qb->getQuery()->getResult();
+
+        $adresses = [];
+        foreach ($result as $item) $adresses[] = $item['destinataires'];
+        return $adresses;
+    }
+
+    public function formatAdresseJSON(array $adresses)
+    {
+        $position = 1;
+        $result = [];
+        foreach ($adresses as $adresse) {
+            $extra = "";
+            $result[] = array(
+                'id' => $position++,
+                'label' => $adresse,
+                'extra' => $extra,
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
+    /**
+     * @param array $filtre
+     * @param string $champ
+     * @param string $ordre
+     * @return Mail[]
+     */
+    public function getMailsWithFiltre(array $filtre, string $champ = 'id', string $ordre = 'DESC') : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->orderBy('mail.' . $champ, $ordre);
+    ;
+        if (isset($filtre['adresse']) AND $filtre['adresse'] != '') {
+            $qb = $qb->andWhere('mail.destinataires = :adresse')->setParameter('adresse', $filtre['adresse']);
+        }
+        if (isset($filtre['etat']) AND $filtre['etat'] != '') {
+            $qb = $qb->andWhere('mail.statusEnvoi = :etat')->setParameter('etat', $filtre['etat']);
+        }
+        if (isset($filtre['type']) AND $filtre['type'] != '') {
+            $qb = $qb->andWhere('mail.mailtype_id = :type')->setParameter('type', $filtre['type']);
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /** FONCTION D'ENVOI DE MAIL **************************************************************************************/
 
     /**
@@ -305,6 +365,8 @@ class MailingService
             }
 
             $mail = $this->sendMail($mails, $sujet, $corps);
+            $mail->setMailtypeId($mailtype->getId());
+            $this->update($mail);
             return $mail;
         }
         return null;

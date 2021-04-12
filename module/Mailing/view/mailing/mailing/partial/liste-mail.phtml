@@ -2,42 +2,27 @@
 
 /**
  * @var Mail[] $mails
+ * @var Etat[] $etats
+ * @var MailType[] $types
+ * @var array $params
  */
 
 use Mailing\Model\Db\Mail;
+use Mailing\Model\Db\MailType;
 use Mailing\Provider\Privilege\MailingPrivileges;
+use UnicaenEtat\Entity\Db\Etat;
 
 $canTest        = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_TEST));
 $canAfficher    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER));
 $canReEnvoi     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_REENVOI));
 $canEffacer     = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_EFFACER));
 
-
-function htmlStatus($status)
-{
-    switch ($status) {
-        case Mail::PENDING :
-            $text = '<span class="badge badge-warning"> PENDING </span>';
-            return $text;
-        case Mail::SUCCESS :
-            $text = '<span class="badge badge-success"> SUCCESS </span>';
-            return $text;
-        case Mail::FAILURE :
-            $text = '<span class="badge badge-danger"> FAILURE </span>';
-            return $text;
-        default :
-            $text = '<span class="badge"> FAILURE </span>';
-            return $text;
-    }
-}
-
-function htmlRedirection($redir)
-{
-    if ($redir === true) return '<span class="badge badge-success">&nbsp;</span>'; //"Oui";
-    else return "";
-}
-
+$typeListe = [];
+foreach ($types as $type) $typeListe[$type->getId()] = $type->getLibelle();
 ?>
+
+<br/>
+<?php echo $this->partial('partial/filtre', ['params' => $params, 'etats' => $etats, 'types' => $types ], [], true); ?>
 
 <?php if ($canTest) : ?>
     <a
@@ -53,11 +38,12 @@ function htmlRedirection($redir)
 <table class="table table-extra-condensed">
     <thead>
     <tr>
-        <!--            <th> Id </th>-->
         <th> Status </th>
         <th> Date d'envoi </th>
         <th> Destinataires </th>
+        <th> Typé </th>
         <th> Redir </th>
+        <th> Lié </th>
         <th> Sujet </th>
         <th> Action </th>
     </tr>
@@ -65,11 +51,26 @@ function htmlRedirection($redir)
     <tbody>
     <?php foreach ($mails as $mail) : ?>
         <tr>
-            <!--            <td> --><?php //echo $mail->getId(); ?><!-- </td>-->
-            <td> <?php echo htmlStatus($mail->getStatusEnvoi()); ?> </td>
+            <td> <?php echo $this->etatbadge($mail->getStatusEnvoi()); ?> </td>
             <td> <?php echo $mail->getDateEnvoi()->format("H:i:s d/m/Y"); ?> </td>
             <td> <small><?php echo implode("<br/>",explode(",",$mail->getDestinatires())); ?></small> </td>
-            <td> <?php echo htmlRedirection($mail->isRedirection()); ?> </td>
+            <td>
+                <?php if ($mail->getMailtypeId()) : ?>
+                    <span class="icon ok" style="color:darkgreen;" data-toggle="tooltip" data-html="true" title="<?php echo $typeListe[$mail->getMailtypeId()]; ?>"></span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($mail->isRedirection()) : ?>
+                    <span class="icon ok" style="color:darkgreen;" data-toggle="tooltip" data-html="true" title="A été redirigé"></span>
+                <?php else : ?>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($mail->getAttachementType()) : ?>
+                    <span class="icon ok" style="color:darkgreen;" data-toggle="tooltip" data-html="true" title="Lié à <?php echo $mail->getAttachementType(); ?>-<?php echo $mail->getAttachementId(); ?>"></span>
+                <?php else : ?>
+                <?php endif; ?>
+            </td>
             <td> <small><?php echo $mail->getSujet(); ?> </small> </td>
             <td>
                 <?php if ($canAfficher) : ?>

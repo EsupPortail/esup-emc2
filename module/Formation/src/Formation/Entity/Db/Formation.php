@@ -5,14 +5,17 @@ namespace Formation\Entity\Db;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Application\Entity\Db\Traits\HasSourceTrait;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasSourceInterface
 {
+    use HasSourceTrait;
     use HistoriqueAwareTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;

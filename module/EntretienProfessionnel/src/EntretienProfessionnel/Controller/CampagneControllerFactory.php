@@ -6,6 +6,7 @@ use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CampagneControllerFactory extends AbstractActionController {
@@ -19,9 +20,11 @@ class CampagneControllerFactory extends AbstractActionController {
         /**
          * @var CampagneService $campagneService
          * @var MailingService $mailingService
+         * @var ParametreService $parametreService
          */
         $campagneService = $container->get(CampagneService::class);
         $mailingService = $container->get(MailingService::class);
+        $parametreService = $container->get(ParametreService::class);
 
         /**
          * @var CampagneForm $campagneForm
@@ -32,6 +35,7 @@ class CampagneControllerFactory extends AbstractActionController {
 
         $controller->setCampagneService($campagneService);
         $controller->setMailingService($mailingService);
+        $controller->setParametreService($parametreService);
 
         $controller->setCampagneForm($campagneForm);
 

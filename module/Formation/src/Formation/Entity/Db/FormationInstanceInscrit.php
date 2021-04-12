@@ -3,6 +3,8 @@
 namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Application\Entity\Db\Traits\HasSourceTrait;
 use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
@@ -11,8 +13,9 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, ResourceInterface
+class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasSourceInterface, ResourceInterface
 {
+    use HasSourceTrait;
     use HistoriqueAwareTrait;
 
     public function getResourceId()

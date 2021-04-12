@@ -65,6 +65,13 @@ return array(
 
                     ],
                 ],
+                [
+                    'controller' => MailingController::class,
+                    'action'     => [
+                        'rechercher-adresse',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -123,6 +130,17 @@ return array(
                     ],
                 ],
                 'child_routes'  => [
+                    'rechercher-adresse' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-adresse',
+                            'defaults' => [
+                                'controller' => MailingController::class,
+                                'action'     => 'rechercher-adresse',
+                            ],
+                        ],
+                    ],
                     'mail-test' => [
                         'type' => Literal::class,
                         'may_terminate' => true,

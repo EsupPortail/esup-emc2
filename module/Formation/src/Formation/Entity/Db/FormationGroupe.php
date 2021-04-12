@@ -2,12 +2,15 @@
 
 namespace Formation\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Application\Entity\Db\Traits\HasSourceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FormationGroupe implements HistoriqueAwareInterface
+class FormationGroupe implements HistoriqueAwareInterface, HasSourceInterface
 {
+    use HasSourceTrait;
     use HistoriqueAwareTrait;
 
     /** @var integer */

@@ -115,6 +115,34 @@ class FicheMetierService {
     }
 
     /**
+     * @param array $filtre
+     * @param string $champ
+     * @param string $ordre
+     * @return FicheMetier[]
+     */
+    public function getFichesMetiersWithFiltre(array $filtre, string $champ = 'id', string $ordre = 'DESC') : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->orderBy('ficheMetier.' . $champ, $ordre);
+        ;
+        if (isset($filtre['expertise']) AND $filtre['expertise'] != '') {
+            $expertise = null;
+            if ($filtre['expertise'] == "1") $expertise = true;
+            if ($filtre['expertise'] == "0") $expertise = false;
+            if ($expertise !== null) $qb = $qb->andWhere('ficheMetier.hasExpertise = :expertise')->setParameter('expertise', $expertise);
+        }
+        if (isset($filtre['etat']) AND $filtre['etat'] != '') {
+            $qb = $qb->andWhere('etat.id = :etat')->setParameter('etat', $filtre['etat']);
+        }
+        if (isset($filtre['domaine']) AND $filtre['domaine'] != '') {
+            $qb = $qb->andWhere('domaine.id = :domaine')->setParameter('domaine', $filtre['domaine']);
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param int $niveau
      * @return FicheMetier[]
      */
