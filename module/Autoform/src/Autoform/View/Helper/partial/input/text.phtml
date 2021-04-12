@@ -9,16 +9,18 @@ use Autoform\Entity\Db\Champ;
 $options = explode(';', $champ->getOptions());
 ?>
 
-<!--<div class="row">-->
-<!--    <div class="form-group">-->
-        <label for="text_<?php echo $champ->getId()?>" class="col-sm-2 control-label">
-            <?php echo $champ->getLibelle()?>&nbsp;:
-        </label>
+<div class="row">
+    <div class="form-group">
+        <?php if (trim($champ->getLibelle()) !== 'empty') : ?>
+            <label for="text_<?php echo $champ->getId()?>" class="col-sm-3 control-label">
+                <?php echo $champ->getLibelle()?>&nbsp;:
+            </label>
+        <?php endif; ?>
         <div class="col-sm-9">
             <input class="form-control" type="text"
                    id="text_<?php echo $champ->getId()?>" name="<?php echo $champ->getId()?>"
                    value="<?php echo trim($reponse); ?>"
             />
         </div>
-<!--    </div>-->
-<!--</div>-->
+    </div>
+</div>

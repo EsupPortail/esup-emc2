@@ -38,7 +38,8 @@ class ChampAsInputHelper extends AbstractHelper
         switch($champ->getElement()) {
 
             case Champ::TYPE_LABEL :
-                $texte .= '<h4>'.$champ->getLibelle().'</h4>' . '<p>' . $champ->getTexte() . '</p>';
+                if ($champ->getLibelle() !== 'empty') $texte .= '<h4>'.$champ->getLibelle().'</h4>';
+                $texte .= '<p>' . $champ->getTexte() . '</p>';
                 break;
 
             case Champ::TYPE_SPACER :

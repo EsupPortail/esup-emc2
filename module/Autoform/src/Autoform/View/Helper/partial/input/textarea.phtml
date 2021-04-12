@@ -11,7 +11,9 @@ $options = explode(';', $champ->getOptions());
 
 <div class="row">
     <div class="form-group">
-        <label for="textarea_<?php echo $champ->getId(); ?>"><?php echo $champ->getLibelle(); ?></label>
+        <?php if (trim($champ->getLibelle()) !== 'empty') : ?>
+            <label for="textarea_<?php echo $champ->getId(); ?>"><?php echo $champ->getLibelle(); ?></label>
+        <?php endif; ?>
         <div class="col-sm-12">
             <textarea class="form-control autoform-textarea" id="textarea_<?php echo $champ->getId(); ?>" name="<?php echo $champ->getId(); ?>" ><?php echo trim($reponse); ?></textarea>
         </div>
