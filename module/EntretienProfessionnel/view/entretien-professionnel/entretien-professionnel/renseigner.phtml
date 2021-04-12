@@ -105,11 +105,6 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
         <div class="tab-content">
 
-            <span style="color:darkred;">
-                L'enregistrement des données saisies dans le formulaire
-                est fait <strong>QUE LORS</strong> du clic sur le bouton 'Valider le formulaire'.
-            </span>
-
             <div id="formulaire" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
             </div>
