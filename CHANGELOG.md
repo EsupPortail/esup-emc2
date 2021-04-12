@@ -11,12 +11,11 @@ Version 1.1.3
 + [Correction bug] Ajout d'un message d'alerte lorsque un mail lié à une campagne d'entretien professionnel n'a pu être envoyé
 + [Interface] filtre pour les mails envoyés
 + [Interface] filtre pour les fiches métiers
-+ [Qualité de vie] Adresse électronique de diffusion lié à la création de campagne d'entretien professionnel devenu un paramètre.
++ [Qualité de vie] Les adresses électroniques de diffusion liées à la création de campagne d'entretien professionnel devenu un paramètre.
 + Suppression du rôle de responsable d'entretien professionnaire au profit des rôles de gestionnaire/responsable de structures
 + Ajout du mailtype dans les mails pour savoir si un mail est issue d'un mail type
 + Ajout d'une source et d'un id source dans les formations et les actions de formations
   
-
 Version 1.1.2
 -------------
 + Ajout de niveau de maîtrise pour les compétences et de compétences clefs + gestion de leur affection au niveau des ``CompetenceElement``.

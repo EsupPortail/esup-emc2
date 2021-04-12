@@ -46,7 +46,7 @@ use UnicaenEtat\Entity\Db\Etat;
                                 <option
                                         value="<?php echo $etat->getId(); ?>"
                                         data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
-                                    <?php if ($etat->getId() == $params['etat']) echo " selected "; ?>
+                                    <?php if ($etat->getId() === $params['etat']) echo " selected "; ?>
                                 >
                                     <?php echo $etat->getLibelle(); ?>
                                 </option>
