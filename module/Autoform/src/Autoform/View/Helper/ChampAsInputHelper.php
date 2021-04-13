@@ -53,6 +53,9 @@ class ChampAsInputHelper extends AbstractHelper
             case Champ::TYPE_TEXT :
                 $texte .= $view->partial('input/text', ['champ' => $champ, 'reponse' => $reponse]);
                 break;
+            case Champ::TYPE_MULTIPLE_TEXT :
+                $texte .= $view->partial('input/multiple_text', ['champ' => $champ, 'reponse' => $reponse]);
+                break;
 
             case Champ::TYPE_NOMBRE :
                 $texte .= $view->partial('input/nombre', ['champ' => $champ, 'reponse' => $reponse]);
@@ -91,7 +94,9 @@ class ChampAsInputHelper extends AbstractHelper
                 $options = $this->getChampService()->getAllInstance($champ->getOptions());
                 $texte .= $view->partial('input/entity-multiple', ['champ' => $champ, 'options' => $options, 'reponse' => $reponse]);
                 break;
-
+            case Champ::TYPE_CUSTOM :
+                $texte .= $view->partial('input/custom', ['champ' => $champ, 'reponse' => $reponse]);
+                break;
             default :
                 $texte .= 'Type ['. $champ->getElement() .'] inconnu !';
                 break;

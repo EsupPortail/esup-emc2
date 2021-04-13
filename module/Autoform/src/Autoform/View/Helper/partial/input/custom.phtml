@@ -1,0 +1,60 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $reponse
+ */
+
+use Autoform\Entity\Db\Champ;
+
+$options = explode(';', $champ->getOptions());
+$reponses = explode(';', $reponse);
+?>
+
+<div class="row">
+    <div class="form-group">
+        <?php if (trim($champ->getLibelle()) !== 'empty') : ?>
+            <label for="text_<?php echo $champ->getId()?>" class="col-sm-3 control-label">
+                <?php echo $champ->getLibelle()?>&nbsp;:
+            </label>
+        <?php endif; ?>
+        <div class="col-sm-9">
+            <?php $options = explode(";",$champ->getOptions()); ?>
+            <?php $position = 0; ?>
+            <?php foreach ($options as $option) : ?>
+                <?php
+                    $params = explode("|", $option);
+                    $found = false;
+                ?>
+                <label for="<?php echo $champ->getId(); ?>_<?php echo $position; ?>">
+                    <?php echo $params[1]; ?>
+                </label>
+                <?php if ($params[0] === 'texte court') : ?>
+                    <?php $found = true; ?>
+                    <input class="form-control" type="text"
+                           id="<?php echo $champ->getId()?>_<?php echo $position; ?>" name="<?php echo $champ->getId()?>_<?php echo $position; ?>"
+                           value="<?php echo trim($reponses[$position]); ?>"
+                    />
+                <?php endif; ?>
+                <?php if ($params[0] === 'texte long') : ?>
+                    <?php $found = true; ?>
+                    <textarea class="form-control autoform-textarea"
+                              id="<?php echo $champ->getId(); ?>_<?php echo $position; ?>" name="<?php echo $champ->getId(); ?>_<?php echo $position; ?>"
+                    ><?php echo trim($reponses[$position]); ?></textarea>
+                <?php endif; ?>
+                <?php if ($params[0] === 'select') : ?>
+                    <?php $found = true; ?>
+                    <select class="form-control selectpicker"
+                            id="<?php echo $champ->getId(); ?>_<?php echo $position; ?>" name="<?php echo $champ->getId(); ?>_<?php echo $position; ?>"
+                    >
+                            <?php for ($param_position = 2; $param_position < count($params) ; $param_position++) : ?>
+                                <option value="<?php echo $params[$param_position]; ?>" <?php if ($params[$param_position]===$reponses[$position]) echo " selected "; ?>>
+                                    <?php echo $params[$param_position]; ?>
+                                </option>
+                            <?php endfor; ?>
+                    </select>
+                <?php endif; ?>
+                <?php $position++; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>

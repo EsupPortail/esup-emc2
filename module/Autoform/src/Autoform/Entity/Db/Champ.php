@@ -7,19 +7,21 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 class Champ {
     use HistoriqueAwareTrait;
 
-    const TYPE_SPACER       = "Spacer";
-    const TYPE_LABEL        = "Label";
-    const TYPE_TEXT         = "Text";
-    const TYPE_TEXTAREA     = "Textarea";
-    const TYPE_CHECKBOX     = "Checkbox";
-    const TYPE_SELECT       = "Select";
-    const TYPE_PERIODE      = "Periode";
-    const TYPE_FORMATION    = "Formation";
-    const TYPE_ANNEE        = "Annee";
-    const TYPE_NOMBRE       = "Number";
-    const TYPE_MULTIPLE     = "Multiple";
-    const TYPE_ENTITY       = "Entity";
-    const TYPE_ENTITY_MULTI = "Entity Multiple";
+    const TYPE_SPACER           = "Spacer";
+    const TYPE_LABEL            = "Label";
+    const TYPE_TEXT             = "Text";
+    const TYPE_MULTIPLE_TEXT    = "Multiple Text";
+    const TYPE_TEXTAREA         = "Textarea";
+    const TYPE_CHECKBOX         = "Checkbox";
+    const TYPE_SELECT           = "Select";
+    const TYPE_PERIODE          = "Periode";
+    const TYPE_FORMATION        = "Formation";
+    const TYPE_ANNEE            = "Annee";
+    const TYPE_NOMBRE           = "Number";
+    const TYPE_MULTIPLE         = "Multiple";
+    const TYPE_ENTITY           = "Entity";
+    const TYPE_ENTITY_MULTI     = "Entity Multiple";
+    const TYPE_CUSTOM           = "Multiple champs paramètrables";
 
 
     /** @var integer */

@@ -73,15 +73,18 @@ $canDetruireChamp           = $this->isAllowed(ChampPrivileges::getResourceId(Ch
 
 
     <?php foreach($categories as $categorie) : ?>
-        <div class="panel panel-info">
+        <div class="panel <?php echo ($categorie->estHistorise())?"panel-default":"panel-info"; ?>">
             <div class="panel-heading">
                 <div class="row">
                 <div class="col-md-10">
                     <?php echo $categorie->getLibelle(); ?>
+                    <?php if ($categorie->estHistorise()) : ?>
+                        <small>(<?php echo count($categorie->getChamps()); ?> champs)</small>
+                    <?php endif; ?>
                 </div>
                 <div class="col-md-2">
 
-                    <?php if ($canModifierCategorie) : ?>
+                    <?php if ($canModifierCategorie AND !$categorie->estHistorise()) : ?>
                         <a
                             <?php /** @see \Autoform\Controller\FormulaireController::modifierCategorieAction() */ ?>
                             href="<?php echo $this->url('autoform/formulaire/modifier/modifier-categorie', ['formulaire' => $formulaire->getId(), 'categorie' => $categorie->getId()], [], true); ?>"
@@ -125,7 +128,7 @@ $canDetruireChamp           = $this->isAllowed(ChampPrivileges::getResourceId(Ch
                 </div>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="<?php if ($categorie->estHistorise()) echo  "display:none;"; ?>">
                 <?php if ($canAjouterChamp) : ?>
                     <a
                         <?php /** @see \Autoform\Controller\FormulaireController::ajouterChampAction() */ ?>

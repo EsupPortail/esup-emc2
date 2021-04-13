@@ -280,6 +280,20 @@ class FormulaireReponseService {
                 }
                 return implode(";", $values);
                 break;
+            case Champ::TYPE_MULTIPLE_TEXT :
+                $options = explode(";", $champ->getOptions());
+                $values = [];
+                $hasData = false;
+                for ($position = 0; $position < count($options) ; $position++) {
+                    $tmp = "";
+                    if (isset($data[$champ->getId()."_".$position]) AND trim($data[$champ->getId()."_".$position]) !== "") {
+                        $tmp = $data[$champ->getId()."_".$position];
+                        $hasData = true;
+                    }
+                    $values[] = $tmp;
+                }
+                return ($hasData)?implode(";", $values):null;
+                break;
             case Champ::TYPE_PERIODE :
                 $select = $data['select_'.$champ->getId()];
                 if ($select === 'null')    return null;
@@ -303,6 +317,19 @@ class FormulaireReponseService {
                 }
                 return null;
                 break;
+            case Champ::TYPE_CUSTOM :
+                $nbOptions = count(explode(";", $champ->getOptions()));
+                $hasData = false;
+                $values = [];
+                for ($position = 0 ; $position < $nbOptions ; $position++) {
+                    $tmp = "";
+                    if (isset($data[$champ->getId()."_".$position]) AND trim($data[$champ->getId()."_".$position]) !== "") {
+                        $tmp = trim($data[$champ->getId()."_".$position]);
+                        $hasData = true;
+                    }
+                    $values[] = $tmp;
+                }
+                return ($hasData)?implode(";", $values):null;
             default:
                 return null;
                 break;

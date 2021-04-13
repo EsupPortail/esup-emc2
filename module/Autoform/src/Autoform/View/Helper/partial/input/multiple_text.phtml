@@ -1,0 +1,35 @@
+<?php
+/**
+ * @var Champ $champ
+ * @var string $reponse
+ */
+
+use Autoform\Entity\Db\Champ;
+
+$options = explode(';', $champ->getOptions());
+$reponses = explode(';', $reponse);
+?>
+
+<div class="row">
+    <div class="form-group">
+        <?php if (trim($champ->getLibelle()) !== 'empty') : ?>
+            <label for="text_<?php echo $champ->getId()?>" class="col-sm-3 control-label">
+                <?php echo $champ->getLibelle()?>&nbsp;:
+            </label>
+        <?php endif; ?>
+        <div class="col-sm-9">
+            <?php $libelles = explode(";",$champ->getOptions()); ?>
+            <?php $position = 0; ?>
+            <?php foreach ($libelles as $libelle) : ?>
+                <label for="double_text_<?php echo $champ->getId()?>_<?php echo $position; ?>">
+                    <?php echo $libelles[$position]; ?> :
+                </label>
+                <input class="form-control" type="text"
+                   id="double_text_<?php echo $champ->getId()?>_<?php echo $position; ?>" name="<?php echo $champ->getId()?>_<?php echo $position; ?>"
+                   value="<?php echo trim($reponses[$position]); ?>"
+                />
+                <?php $position++; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
