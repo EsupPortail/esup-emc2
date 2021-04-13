@@ -254,7 +254,7 @@ class FormulaireController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('autoform/default/default-form');
+        $vm->setTemplate('autoform/formulaire/modifier-champ');
         $vm->setVariables([
             'title' => 'Ajouter un champ',
             'form' => $form,
@@ -283,7 +283,7 @@ class FormulaireController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('autoform/default/default-form');
+        $vm->setTemplate('autoform/formulaire/modifier-champ');
         $vm->setVariables([
             'title' => 'Modifier un champ',
             'form' => $form,

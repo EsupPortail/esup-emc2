@@ -39,7 +39,7 @@ class ChampForm extends Form {
                 ],
             ],
             'attributes' => [
-                'id' => 'element',
+                'id' => 'type',
             ],
         ]);
         //libelle
