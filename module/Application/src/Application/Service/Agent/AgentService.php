@@ -285,25 +285,32 @@ class AgentService {
         $today = $this->getDateTime();
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->addSelect('grade')->join('agent.grades', 'grade')
+            //AFFECTATION
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->addSelect('structure')->join('grade.structure', 'structure')
-            ->addSelect('ggrade')->join('grade.grade', 'ggrade')
-            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
-            ->andWhere('statut.dispo = :false')
-//            ->andWhere('statut.administratif = :true')
-            ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
-//            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
+            ->addSelect('astructure')->join('affectation.structure', 'astructure')
             ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
+            ->andWhere('affectation.dateDebut <= :today')
             ->andWhere('affectation.principale = :true')
+            //STATUS
+            ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('statut.debut <= :today')
+            ->andWhere('statut.dispo = :false')
+            ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
+            //GRADE
+            ->addSelect('grade')->join('agent.grades', 'grade')
+            ->addSelect('gstructure')->join('grade.structure', 'gstructure')
+            ->addSelect('ggrade')->join('grade.grade', 'ggrade')
+            ->addSelect('gcorrespondance')->leftjoin('grade.bap', 'gcorrespondance')
+            ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
+            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
+            ->andWhere('grade.dateDebut <= :today')
+            //FICHE DE POSTE
+            ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
+
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
-
-            ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
-            ->addSelect('poste')->leftJoin('ficheposte.poste', 'poste')
             ->andWhere('agent.delete IS NULL')
         ;
 
@@ -341,7 +348,6 @@ class AgentService {
 
     /** AgentFormation ************************************************************************************************/
 
-
     /**
      * @param Agent $agent
      * @param string $annee
@@ -349,7 +355,6 @@ class AgentService {
      */
     public function getFormationsSuiviesByAnnee(Agent $agent, string $annee)
     {
-
         $result = [];
         $formations = $agent->getFormationListe();
         foreach ($formations as $formation) {

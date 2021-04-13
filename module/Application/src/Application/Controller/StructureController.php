@@ -132,7 +132,6 @@ class StructureController extends AbstractActionController {
             'last' => $last,
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
-
         ]);
     }
 

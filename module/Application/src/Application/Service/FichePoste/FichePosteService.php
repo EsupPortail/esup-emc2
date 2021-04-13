@@ -291,6 +291,8 @@ class FichePosteService {
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('fichemetier')->leftJoin('fiche.fichesMetiers', 'fichemetier')
+            ->addSelect('fichemetiertype')->leftJoin('fichemetier.ficheType', 'fichemetiertype')
+            ->addSelect('metier')->leftJoin('fichemetiertype.metier', 'metier')
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
             ->andWhere('statut.dispo = :false')

@@ -50,5 +50,10 @@
         <one-to-many target-entity="Application\Entity\Db\Structure" mapped-by="parent" field="enfants"/>
 
         <field name="histo"     type="datetime"                 column="histo"/>
+
+        <field name="importationCreation"           type="datetime"                 column="created_on"/>
+        <field name="importationModification"       type="datetime"                 column="updated_on"/>
+        <field name="importationHistorisation"      type="datetime"                 column="deleted_on"/>
+
     </entity>
 </doctrine-mapping>

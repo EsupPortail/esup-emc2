@@ -74,7 +74,11 @@ class CampagneService {
     {
         $qb = $this->getEntityManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
             ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
-            ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien');
+            ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien')
+            ->addSelect('sursis')->leftJoin('entretien.sursis', 'sursis')
+            ->addSelect('etat')->leftJoin('entretien.etat', 'etat')
+            ->addSelect('etattype')->leftJoin('etat.type', 'etattype')
+        ;
 
         return $qb;
     }

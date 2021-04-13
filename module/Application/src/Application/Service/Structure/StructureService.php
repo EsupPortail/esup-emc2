@@ -47,9 +47,10 @@ class StructureService
     public function createQueryBuilder() {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+            ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
             ->addSelect('type')->join('structure.type', 'type')
             ->addSelect('poste')->leftJoin('structure.postes', 'poste')
-            ->addSelect('ficheposte')->leftJoin('poste.fichePoste', 'ficheposte')
+            //->addSelect('ficheposte')->leftJoin('poste.fichePoste', 'ficheposte')
             ->addSelect('mission')->leftJoin('structure.missions', 'mission')
             ->orderBy('structure.code')
             ->andWhere("structure.histo IS NULL")
@@ -180,7 +181,8 @@ class StructureService
             ->andWhere('structure.parent = :structure')
             ->setParameter('structure', $structure)
             ->orderBy('structure.code')
-            ->andWhere("structure.histo IS NULL");
+            ->andWhere("structure.histo IS NULL")
+            ->andWhere("structure.importationHistorisation IS NULL");
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
         $result = $qb->getQuery()->getResult();
 

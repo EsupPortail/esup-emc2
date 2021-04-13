@@ -7,7 +7,7 @@ Version 1.2.0 *Module de formation*
 
 Version 1.1.3
 -------------
-+ [Correction bug] Ajout d'une garde pour les entretiens professionnels d'agent sans fiche de poste
++ [Correction bug] Ajout d'une garde pour les entretiens professionnels d'a gent sans fiche de poste
 + [Correction bug] Ajout d'un message d'alerte lorsque un mail lié à une campagne d'entretien professionnel n'a pu être envoyé
 + [Interface] filtre pour les mails envoyés
 + [Interface] filtre pour les fiches métiers

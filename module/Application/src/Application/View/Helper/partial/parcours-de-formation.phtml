@@ -61,10 +61,7 @@ usort($formationArray,
 
 <div class="parcours">
 
-    <div class="row">
-        <div class="col-md-<?php echo ($mode === 'creation')?8:12; ?> titre">
-            <h3> <?php echo $parcours->getLibelle(); ?> </h3>
-        </div>
+    <?php if ($mode === 'creation') : ?>
         <div class="pull-right">
             <?php if ($canModifier AND $mode === 'creation') : ?>
                 <?php /** @see \Application\Controller\ParcoursDeFormationController::ajouterFormationAction() */?>
@@ -73,7 +70,7 @@ usort($formationArray,
                     <span class="icon ajouter"></span>Ajouter des formations </a>
             <?php endif; ?>
         </div>
-    </div>
+    <?php endif; ?>
 
 
     <div class="listing">
