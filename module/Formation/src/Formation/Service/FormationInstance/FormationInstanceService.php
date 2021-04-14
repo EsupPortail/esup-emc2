@@ -160,4 +160,22 @@ class FormationInstanceService
 
         return $result;
     }
+
+    public function getFormationInstanceBySource(string $source, string $idSource)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('Finstance.source = :source')
+            ->andWhere('Finstance.idSource = :idSource')
+            ->setParameter('source', $source)
+            ->setParameter('idSource', $idSource)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FormationInstance partagent le même idSource [" . $source . "-" . $idSource . "]", 0, $e);
+        }
+        return $result;
+
+    }
+
 }

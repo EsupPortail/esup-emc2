@@ -26,7 +26,7 @@
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
-        <field name="idSource"          type="integer"                  column="id_source"          nullable="true"/>
+        <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

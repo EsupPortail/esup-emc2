@@ -93,6 +93,7 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
         <thead>
             <tr>
                 <th> Id </th>
+                <th> Source </th>
                 <th> Début </th>
                 <th> Fin </th>
                 <th> #Jour </th>
@@ -105,6 +106,11 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
         <?php foreach ($instances as $instance) : ?>
             <tr <?php if ($instance->estHistorise()) echo 'class="historise"'; ?> >
                 <td> <?php echo $instance->getId(); ?> </td>
+                <td>
+                    <span class="badge source" id="<?php echo $instance->getSource(); ?>">
+                        <?php echo $instance->getSource(); ?>
+                        <?php echo $instance->getIdSource(); ?>
+                    </span> </td>
                 <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
                 <td> <?php echo ($instance->getFin())?:"???"; ?></td>
                 <td> <?php echo ($instance->getJournees())?count($instance->getJournees()):"???"; ?></td>

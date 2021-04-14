@@ -6,7 +6,7 @@ trait HasSourceTrait {
 
     /** @var string */
     private $source;
-    /** @var int */
+    /** @var string */
     private $idSource;
 
     /**
@@ -18,9 +18,9 @@ trait HasSourceTrait {
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getIdSource() : ?int
+    public function getIdSource() : ?string
     {
         return $this->idSource;
     }
@@ -36,10 +36,10 @@ trait HasSourceTrait {
     }
 
     /**
-     * @param int|null $id
+     * @param string|null $id
      * @return self
      */
-    public function setIdSource(?int $id) : self
+    public function setIdSource(?string $id) : self
     {
         $this->idSource = $id;
         return $this;

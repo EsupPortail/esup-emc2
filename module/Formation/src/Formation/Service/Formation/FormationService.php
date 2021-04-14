@@ -131,6 +131,28 @@ class FormationService
     }
 
     /**
+     * @param string $source
+     * @param string $id
+     * @return Formation|null
+     */
+    public function getFormationBySource(string $source, string $id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formation.source = :source')
+            ->andWhere('formation.idSource = :id')
+            ->setParameter('source', $source)
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Formation partagent la même source [".$source. "-". $id ."]");
+        }
+        return $result;
+    }
+
+    /**
      * @return array
      */
     public function getFormationsAsOptions()
@@ -250,5 +272,4 @@ class FormationService
         $this->update($formation);
         return $formation;
     }
-
 }

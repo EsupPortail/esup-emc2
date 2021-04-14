@@ -148,4 +148,24 @@ class FormationGroupeService
         $result = $this->getFormationGroupe($id);
         return $result;
     }
+
+    /**
+     * @param string|null $libelle
+     * @return FormationGroupe|null
+     */
+    public function getFormationGroupeByLibelle(?string $libelle)
+    {
+        if ($libelle === null) return null;
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('groupe.libelle = :libelle')
+            ->setParameter('libelle', $libelle)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FormationGroupe partagent le même libellé [".$libelle."].");
+        }
+        return $result;
+    }
 }

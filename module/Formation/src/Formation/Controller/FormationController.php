@@ -36,7 +36,7 @@ class FormationController extends AbstractActionController
     public function indexAction()
     {
         $formations = $this->getFormationService()->getFormations('libelle');
-        $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
+        $groupes = $this->getFormationGroupeService()->getFormationsGroupes('libelle');
         $themes = $this->getFormationThemeService()->getFormationsThemes();
 
         return new ViewModel([

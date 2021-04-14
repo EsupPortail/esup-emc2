@@ -610,3 +610,17 @@ div.listing  td.action {
     padding-left: 1rem;
     /*background: lightgreen;*/
 }
+
+/** SOURCE **/
+
+span.badge.source {
+    width:15rem;
+}
+
+span.badge#EMC2 {
+    background: #123456;
+}
+
+span.badge#LAGAF {
+    background: crimson;
+}

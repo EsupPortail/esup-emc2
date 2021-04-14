@@ -163,10 +163,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
     }
 
     /**
-     * @param string $lieu
+     * @param string|null $lieu
      * @return FormationInstance
      */
-    public function setLieu(string $lieu): FormationInstance
+    public function setLieu(?string $lieu): FormationInstance
     {
         $this->lieu = $lieu;
         return $this;

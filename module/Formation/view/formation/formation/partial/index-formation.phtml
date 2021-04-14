@@ -107,29 +107,29 @@ $this->headTitle("Index des formations");
 
 <script>
     $(document).ready(function() {
-        let groupColumn = 1;
+    //     let groupColumn = 1;
         $('#formations').DataTable({
-            "sorting" : false,
+    //         "sorting" : false,
             paging:false,
-            "columnDefs": [
-                { "visible": false, "targets": groupColumn }
-            ],
-            // "order": [[ groupColumn, 'asc' ]],
-            "drawCallback": function () {
-                let api = this.api();
-                let rows = api.rows( {page:'current'} ).nodes();
-                let last = null;
-
-                api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-                    if ( last !== group ) {
-                        $(rows).eq( i ).before(
-                            '<tr class="group"><td colspan="3"> Groupe : '+group+'</td></tr>'
-                        );
-
-                        last = group;
-                    }
-                } );
-            }
+    //         "columnDefs": [
+    //             { "visible": false, "targets": groupColumn }
+    //         ],
+    //         // "order": [[ groupColumn, 'asc' ]],
+    //         "drawCallback": function () {
+    //             let api = this.api();
+    //             let rows = api.rows( {page:'current'} ).nodes();
+    //             let last = null;
+    //
+    //             api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+    //                 if ( last !== group ) {
+    //                     $(rows).eq( i ).before(
+    //                         '<tr class="group"><td colspan="3"> Groupe : '+group+'</td></tr>'
+    //                     );
+    //
+    //                     last = group;
+    //                 }
+    //             } );
+    //         }
         } );
     } );
 </script>

@@ -43,6 +43,7 @@ use Formation\Entity\Db\FormationGroupe;
     <tr>
         <th> Libellé </th>
         <th style="width: 12rem;"> #Formation </th>
+        <th style="width: 12rem;"> Source </th>
         <th style="width: 12rem;"> Action </th>
     </tr>
     </thead>
@@ -51,6 +52,7 @@ use Formation\Entity\Db\FormationGroupe;
         <tr id="<?php echo $groupe->getId(); ?>"  class="<?php if ($groupe->estHistorise()) echo "historise"; ?>">
             <td> <?php echo $groupe->getLibelle(); ?> </td>
             <td> <?php echo count($groupe->getFormations()); ?> </td>
+            <td> <span class="badge source" id="<?php echo $groupe->getSource(); ?>"><?php echo $groupe->getSource(); ?></span> </td>
             <td>
                 <?php if ($canAfficher) : ?>
                     <a  <?php /** @see FormationGroupeController::afficherGroupeAction() */ ?>

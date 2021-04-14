@@ -20,6 +20,11 @@ use Formation\Entity\Db\FormationGroupe;
         <br/>
         <?php echo $groupe->getHistoModification()->format('d/m/Y à H:i:s'); ?>
     </dd>
+    <dt> Source </dt>
+    <dd>
+        <?php echo $groupe->getSource(); ?> -
+        <?php echo $groupe->getIdSource(); ?>
+    </dd>
     <dt>
         Liste des formations
         <span class="badge"> <?php echo count($groupe->getFormations()); ?></span>
