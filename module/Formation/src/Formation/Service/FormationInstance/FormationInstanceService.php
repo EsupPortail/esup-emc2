@@ -87,7 +87,7 @@ class FormationInstanceService
     /**
      * @param string $champ
      * @param string $ordre
-     * @return void
+     * @return FormationInstance[]
      */
     public function getFormationsInstances($champ = 'id', $ordre = 'ASC')
     {

@@ -5,6 +5,8 @@ namespace Formation;
 use Formation\Controller\FormationController;
 use Formation\Controller\ImportationLagafController;
 use Formation\Controller\ImportationLagafControllerFactory;
+use Formation\Service\Stagiaire\StagiaireService;
+use Formation\Service\Stagiaire\StagiaireServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -20,6 +22,9 @@ return [
                         'action',
                         'session',
                         'seance',
+                        'stagiaire',
+                        'inscription',
+                        'presence',
                     ],
                     'roles' => [
                         "Administrateur technique",
@@ -83,6 +88,36 @@ return [
                                     ]
                                 ],
                             ],
+                            'stagiaire' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/stagiaire[/:id]',
+                                    'defaults' => [
+                                        'controller' => ImportationLagafController::class,
+                                        'action' => 'stagiaire',
+                                    ]
+                                ],
+                            ],
+                            'inscription' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/inscription[/:id]',
+                                    'defaults' => [
+                                        'controller' => ImportationLagafController::class,
+                                        'action' => 'inscription',
+                                    ]
+                                ],
+                            ],
+                            'presence' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/presence[/:id]',
+                                    'defaults' => [
+                                        'controller' => ImportationLagafController::class,
+                                        'action' => 'presence',
+                                    ]
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -91,7 +126,9 @@ return [
     ],
 
     'service_manager' => [
-        'factories' => [],
+        'factories' => [
+            StagiaireService::class => StagiaireServiceFactory::class,
+        ],
     ],
     'controllers'     => [
         'factories' => [

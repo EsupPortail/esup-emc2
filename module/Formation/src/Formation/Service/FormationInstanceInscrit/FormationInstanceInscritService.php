@@ -91,7 +91,7 @@ class FormationInstanceInscritService
      */
     public function getFormationsInstancesInscrits($champ = 'id', $ordre = 'ASC')
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
             ->orderBy('inscrit.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;

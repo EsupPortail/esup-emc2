@@ -150,6 +150,16 @@ class FormationInstancePresenceService
 
     }
 
+    /**
+     * @return FormationInstancePresence[]
+     */
+    public function getFormationsInstancesPresences()
+    {
+        $qb = $this->getEntityManager()->getRepository(FormationInstancePresence::class)->createQueryBuilder('presence');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /** FONCTIONS UTILITAIRES ******************************************************************************************/
 
 }

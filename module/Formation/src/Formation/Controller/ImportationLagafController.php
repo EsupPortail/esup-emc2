@@ -2,15 +2,24 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\Agent;
 use DateTime;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceFrais;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\FormationInstancePresence;
+use Formation\Entity\Db\LAGAFStagiaire;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
+use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;
+use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -19,6 +28,10 @@ class ImportationLagafController extends AbstractActionController {
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
+    use FormationInstanceInscritServiceAwareTrait;
+    use FormationInstanceFraisServiceAwareTrait;
+    use FormationInstancePresenceAwareTrait;
+    use StagiaireServiceAwareTrait;
 
     public function indexAction()
     {
@@ -201,6 +214,14 @@ class ImportationLagafController extends AbstractActionController {
         $position_lieu_5        = array_search('VilleL', $array[0]);
         $position_responsable   = array_search('Responsable', $array[0]);
 
+        /** recherche du groupe de formation */
+        $instances_tmp = $this->getFormationInstanceService()->getFormationsInstances();
+        $instances = [];
+        foreach ($instances_tmp as $instance) {
+            if ($instance->getSource() === 'LAGAF') {
+                $instances[$instance->getIdSource()] = $instance;
+            }
+        }
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Action Id</th><th>Session Id</th><th>Seance Id</th><th>Date</th><th>Debut</th><th>Fin</th><th>Lieu</th><th>Responsable</th></tr></thead>";
@@ -228,8 +249,7 @@ class ImportationLagafController extends AbstractActionController {
             $report .= "<td>"        . $st_responsable . "</td>";
             $report .= "</tr>";
 
-            /** recherche du groupe de formation */
-            $instance = $this->getFormationInstanceService()->getFormationInstanceBySource('LAGAF', $st_action_id."-".$st_session_id);
+            $instance = isset($instances[$st_action_id . "-" . $st_session_id])?$instances[$st_action_id . "-" . $st_session_id]:null;
             if ($instance !== null) {
                 $st_id_source = $st_seance_id . "-" . $st_plage_id;
                 $journee = $this->getFormationInstanceJourneeService()->getFormationInstanceJourneeBySource('LAGAF', $st_id_source);
@@ -257,6 +277,260 @@ class ImportationLagafController extends AbstractActionController {
         return new ViewModel([
             'report' => $report,
             'instances' => $instances,
+            'problemes' => $problemes,
+        ]);
+    }
+
+    public function stagiaireAction()
+    {
+        $report = "";
+        $stagiaires = [];
+        $problemes = [];
+
+        $file_path = "/tmp/TStagiaire.csv";
+        $handle = fopen($file_path, "r");
+        $array = [];
+        while ($content = fgetcsv ( $handle, 0, ";" , '"')) {
+            $array[] = $content;
+        }
+
+        $nbLine = count($array);
+        $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
+
+        $position_stagiaire_id     = array_search('NStagiaire', $array[0]);
+        $position_harp_id          = array_search('NumStagiaire', $array[0]);
+        $position_nom              = array_search('PatronymeS', $array[0]);
+        $position_prenom           = array_search('PrénomS', $array[0]);
+        $position_annee            = array_search('AnnéeNaiss', $array[0]);
+
+
+        $report .= "<table class='table table-condensed'>";
+        $report .= "<thead><tr><th>Stagiaire Id</th><th>Nom</th><th>Prenom</th><th>Année</th><th>harp</th><th>octopus</th></tr></thead>";
+        $report .= "<tbody>";
+        for($position = 1 ; $position < $nbLine; $position++) {
+            $data = $array[$position];
+            $st_stagiaire_id = $data[$position_stagiaire_id];
+            $st_harp_id = (trim($data[$position_harp_id]) !== '')?trim($data[$position_harp_id]):null ;
+            $st_nom = (trim($data[$position_nom]) !== '')?trim($data[$position_nom]):null ;
+            $st_prenom = (trim($data[$position_prenom]) !== '')?trim($data[$position_prenom]):null ;
+            $st_annee = (trim($data[$position_annee]) !== '')?trim($data[$position_annee]):null ;
+
+            $stagiaire = new LAGAFStagiaire();
+            $stagiaire->setNStagiaire($st_stagiaire_id);
+            $stagiaire->setNom($st_nom);
+            $stagiaire->setPrenom($st_prenom);
+            $stagiaire->setAnnee($st_annee);
+            $stagiaire->setHarpId($st_harp_id);
+
+            /** @var Agent $agent */
+            $agent = null;
+            if ($st_harp_id === null) {
+                $agent = $this->getStagiaireService()->getAgentService()->getAgentByIdentification($st_prenom, $st_nom, $st_annee);
+                if ($agent !== null) {
+                        //$stagiaire->setHarpId($agent->getHarpId());
+                        $stagiaire->setOctopusId($agent->getId());
+                }
+            } else {
+                $agent = $this->getStagiaireService()->getAgentService()->getAgentByHarp($st_harp_id);
+                if ($agent !== null) $stagiaire->setOctopusId($agent->getId());
+            }
+            $this->getStagiaireService()->create($stagiaire);
+            $stagiaires[] = $stagiaire;
+
+            $report .= "<tr>";
+            $report .= "<td>"        . $st_stagiaire_id . "</td>";
+            $report .= "<td>"        . $st_nom . "</td>";
+            $report .= "<td>"        . $st_prenom . "</td>";
+            $report .= "<td>"        . $st_annee . "</td>";
+            $report .= "<td>"        . $stagiaire->getHarpId() . "</td>";
+            $report .= "<td>"        . $stagiaire->getOctopusId() . "</td>";
+            $report .= "</tr>";
+
+        }
+        $report .= "</tbody>";
+        $report .= "</table>";
+
+        return new ViewModel([
+            'report' => $report,
+            'instances' => $stagiaires,
+            'problemes' => $problemes,
+        ]);
+    }
+
+    public function inscriptionAction()
+    {
+        $report = "";
+        $inscriptions = [];
+        $problemes = [];
+
+        $file_path = "/tmp/TInscription.csv";
+        $handle = fopen($file_path, "r");
+        $array = [];
+        while ($content = fgetcsv($handle, 0, ";", '"')) {
+            $array[] = $content;
+        }
+
+        $nbLine = count($array);
+        $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
+
+        $position_stagiaire_id     = array_search('N3Stagiaire', $array[0]);
+        $position_action_id        = array_search('N3Action', $array[0]);
+        $position_session_id       = array_search('N2Session', $array[0]);
+        $position_FRepas           = array_search('FRepas', $array[0]);
+        $position_FHebergement     = array_search('FHebergement', $array[0]);
+        $position_FTransport       = array_search('FTransport', $array[0]);
+
+        $instances_tmp = $this->getFormationInstanceService()->getFormationsInstances();
+        $instances = [];
+        foreach ($instances_tmp as $instance) {
+            if ($instance->getSource() === 'LAGAF') {
+                $instances[$instance->getIdSource()] = $instance;
+            }
+        }
+        $agents = [];
+        $agents_tmp = $this->getStagiaireService()->getAgentService()->getAgents();
+        foreach ($agents_tmp as $agent) $agents[$agent->getId()] = $agent;
+        $stagiaires_tmp = $this->getStagiaireService()->getStagiaires();
+        $stagiaires = [];
+        foreach ($stagiaires_tmp as $stagiaire) {
+            $stagiaires[$stagiaire->getNStagiaire()] = $stagiaire;
+        }
+
+        $report .= "<table class='table table-condensed'>";
+        $report .= "<thead><tr><th>Stagiaire </th><th>Session</th><th>FRepas</th><th>FTransport</th><th>FHebergement</th></tr></thead>";
+        $report .= "<tbody>";
+
+        for($position = 1 ; $position < $nbLine; $position++) {
+
+            $data = $array[$position];
+            $st_nstagiaire = $data[$position_stagiaire_id];
+            $st_instance = $data[$position_action_id] . "-" . $data[$position_session_id];
+
+            $instance = (isset($instances[$st_instance]))?$instances[$st_instance]:null;
+            $stagiaire = (isset($stagiaires[$st_nstagiaire]))?$stagiaires[$st_nstagiaire]:null;
+            $agent = ($stagiaire !== null AND isset($agents[$stagiaire->getOctopusId()]))?$agents[$stagiaire->getOctopusId()]:null;
+
+            if ($agent !== null AND $instance !== null) {
+                $inscription = new FormationInstanceInscrit();
+                $inscription->setInstance($instance);
+                $inscription->setAgent($agent);
+                $inscription->setListe("principale");
+                $inscription->setSource('LAGAF');
+                $inscription->setIdSource($st_instance . "-" . $st_nstagiaire);
+                $this->getFormationInstanceInscritService()->create($inscription);
+                $inscriptions[] = $inscription;
+
+                $st_frepas = trim($data[$position_FRepas]);
+                $st_ftransport = trim($data[$position_FTransport]);
+                $st_fhebergement = trim($data[$position_FHebergement]);
+
+                if ($st_frepas !== "" OR $st_ftransport !== "" OR $st_fhebergement !== "") {
+                    $frais = new FormationInstanceFrais();
+                    if ($st_frepas !== "") $frais->setFraisRepas($st_frepas);
+                    if ($st_ftransport !== "") $frais->setFraisTransport($st_ftransport);
+                    if ($st_fhebergement !== "") $frais->setFraisHebergement($st_fhebergement);
+                    $frais->setInscrit($inscription);
+                    $frais->setSource("LAGAF");
+                    $frais->setIdSource($st_instance . "-" . $st_nstagiaire);
+                    $this->getFormationInstanceFraisService()->create($frais);
+                }
+            } else {
+                $problemes[] = $data;
+            }
+        }
+
+        $report .= "</tbody></table>";
+
+
+        return new ViewModel([
+            'report' => $report,
+            'instances' => $inscriptions,
+            'problemes' => $problemes,
+        ]);
+    }
+
+    public function presenceAction()
+    {
+        $report = "";
+        $presences = [];
+        $problemes = [];
+
+        $file_path = "/tmp/TPrésence.csv";
+        $handle = fopen($file_path, "r");
+        $array = [];
+        while ($content = fgetcsv($handle, 0, ";", '"')) {
+            $array[] = $content;
+        }
+
+        $nbLine = count($array);
+        $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
+
+        $position_stagiaire_id     = array_search('NStagiaire', $array[0]);
+        $position_action_id        = array_search('NAction', $array[0]);
+        $position_session_id       = array_search('NSession', $array[0]);
+        $position_seance_id        = array_search('NSéance', $array[0]);
+        $position_plage_id         = array_search('NPlage', $array[0]);
+        $position_presence         = array_search('Présence', $array[0]);
+
+
+        $journees_tmp = $this->getFormationInstanceJourneeService()->getFormationsInstancesJournees();
+        $journees = [];
+        foreach ($journees_tmp as $journee) {
+            if ($journee->getSource() === 'LAGAF') {
+                $journees[$journee->getIdSource()] = $journee;
+            }
+        }
+        $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsInstancesInscrits();
+        $inscrits = [];
+        foreach ($inscrits_tmp as $inscrit) {
+            if ($inscrit->getSource() === 'LAGAF') {
+                $inscrits[$inscrit->getIdSource()] = $inscrit;
+            }
+        }
+
+        $presences_tmp = $this->getFormationInstancePresenceService()->getFormationsInstancesPresences();
+        $olds = [];
+        foreach ($presences_tmp as $presence) {
+            if ($presence->getSource() === 'LAGAF') {
+                $olds[$presence->getIdSource()] = $presence;
+            }
+        }
+
+        $report .= "<table class='table table-condensed'>";
+        $report .= "<thead><tr><th>Stagiaire </th><th>Session</th><th>FRepas</th><th>FTransport</th><th>FHebergement</th></tr></thead>";
+        $report .= "<tbody>";
+
+        for($position = 1 ; $position < $nbLine; $position++) {
+
+            $data = $array[$position];
+            $st_journee = $data[$position_seance_id] . "-" . $data[$position_plage_id];
+            $st_inscrit = $data[$position_action_id] . "-" . $data[$position_session_id] . "-" . $data[$position_stagiaire_id];
+
+            $journee = (isset($journees[$st_journee]))?$journees[$st_journee]:null;
+            $inscrit = (isset($inscrits[$st_inscrit]))?$inscrits[$st_inscrit]:null;
+
+            if ($journee !== null AND $inscrit !== null) {
+                if (!isset($olds[$st_journee . "-" . $st_inscrit])) {
+                    $presence = new FormationInstancePresence();
+                    $presence->setJournee($journee);
+                    $presence->setInscrit($inscrit);
+                    $presence->setPresent($data[$position_presence] === "1");
+                    $presence->setSource('LAGAF');
+                    $presence->setIdSource($st_journee . "-" . $st_inscrit);
+                    $this->getFormationInstancePresenceService()->create($presence);
+                    $presences[] = $presence;
+                }
+            } else {
+                $problemes[] = $data;
+            }
+        }
+
+        $report .= "</tbody></table>";
+
+
+        return new ViewModel([
+            'report' => $report,
+            'instances' => $presences,
             'problemes' => $problemes,
         ]);
     }

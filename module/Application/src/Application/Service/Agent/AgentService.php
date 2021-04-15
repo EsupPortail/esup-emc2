@@ -324,6 +324,46 @@ class AgentService {
         return $result;
     }
 
+    public function getAgentByHarp(string $st_harp_id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agent.harpId = :harp_id')
+            ->setParameter('harp_id', $st_harp_id);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs agents partagent le même harp_id [".$st_harp_id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param $st_prenom
+     * @param $st_nom
+     * @param $st_annee
+     * @return Agent|null
+     */
+    public function getAgentByIdentification($st_prenom, $st_nom, $st_annee)
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent');
+
+        if ($st_prenom !== null) {
+            $qb = $qb->andWhere('LOWER(agent.prenom) = LOWER(:prenom)')
+                ->setParameter("prenom", $st_prenom);
+        }
+        if ($st_nom !== null) {
+            $qb = $qb->andWhere('LOWER(agent.nomUsuel) = LOWER(:nom)')
+                ->setParameter("nom", $st_nom);
+        }
+//        if ($st_annee !== null) {
+//            $qb = $qb->andWhere('LOWER(agent.nom) = LOWER(:nom)')
+//                ->setParameter("prenom", $st_nom);
+//        }
+        $result = $qb->getQuery()->getResult();
+        if (count($result) === 1) return $result[0];
+        return null;
+    }
+
     /**
      * @param Agent $agent
      * @return User[]|null
@@ -469,4 +509,6 @@ class AgentService {
         });
         return $result;
     }
+
+
 }
