@@ -65,7 +65,6 @@ class AgentService {
             //formations liées à l'agent
             ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
             ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
-            ->addSelect('formation_theme')->leftJoin('formation.theme', 'formation_theme')
             ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
             //missions spécifiques
 //            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')

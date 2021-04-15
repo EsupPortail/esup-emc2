@@ -79,7 +79,7 @@ class FormationInstanceInscritService
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->addSelect('finstance')->join('inscrit.instance', 'finstance')
-            ->addSelect('etat')->join('finstance.etat', 'etat')
+            ->addSelect('etat')->leftjoin('finstance.etat', 'etat')
             ->addSelect('formation')->join('finstance.formation', 'formation');
         return $qb;
     }

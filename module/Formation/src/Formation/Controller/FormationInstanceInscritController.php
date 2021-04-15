@@ -138,7 +138,7 @@ class FormationInstanceInscritController extends AbstractActionController
     public function listeFormationsInstancesAction()
     {
         $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_OUVERTE);
-        $instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
+        //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
         $utilisateur = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
 
