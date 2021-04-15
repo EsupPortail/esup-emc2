@@ -52,7 +52,6 @@ $this->headTitle("Index des formations");
         <tr>
             <th> Libellé </th>
             <th> Groupe </th>
-            <th> Thème </th>
             <th> Source </th>
             <th style="width:12rem;"> Action </th>
         </tr>
@@ -62,7 +61,6 @@ $this->headTitle("Index des formations");
         <tr>
             <td> <?php echo $formation->getLibelle(); ?> </td>
             <td> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Sans groupe ..."; ?> </td>
-            <td> <?php echo ($formation->getTheme())?$formation->getTheme()->getLibelle():""; ?> </td>
             <td>
                 <span class="badge source <?php echo $formation->getSource(); ?>">
                     <?php echo $formation->getSource(); ?>  <?php echo ($formation->getIdSource())?:$formation->getId(); ?>

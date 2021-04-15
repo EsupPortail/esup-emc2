@@ -13,7 +13,6 @@ use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -24,7 +23,6 @@ class FormationController extends AbstractActionController
     use EtatServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
-    use FormationThemeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use FormationFormAwareTrait;
 
@@ -37,12 +35,10 @@ class FormationController extends AbstractActionController
     {
         $formations = $this->getFormationService()->getFormations('libelle');
         $groupes = $this->getFormationGroupeService()->getFormationsGroupes('libelle');
-        $themes = $this->getFormationThemeService()->getFormationsThemes();
 
         return new ViewModel([
             'formations' => $formations,
             'groupes' => $groupes,
-            'themes' => $themes,
             'etatService' => $this->getEtatService(),
         ]);
     }

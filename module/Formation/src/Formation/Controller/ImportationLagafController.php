@@ -5,6 +5,7 @@ namespace Formation\Controller;
 use Application\Entity\Db\Agent;
 use DateTime;
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceFrais;
@@ -19,6 +20,7 @@ use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareT
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;
+use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -32,6 +34,7 @@ class ImportationLagafController extends AbstractActionController {
     use FormationInstanceFraisServiceAwareTrait;
     use FormationInstancePresenceAwareTrait;
     use StagiaireServiceAwareTrait;
+    use HasFormationCollectionServiceAwareTrait;
 
     public function indexAction()
     {
@@ -532,6 +535,33 @@ class ImportationLagafController extends AbstractActionController {
             'report' => $report,
             'instances' => $presences,
             'problemes' => $problemes,
+        ]);
+    }
+
+    public function elementAction() {
+
+        $nbElement = 0;
+        $formations = $this->getFormationService()->getFormations();
+        foreach ($formations as $formation) {
+            if ($formation->getSource() === 'LAGAF') {
+                foreach ($formation->getInstances() as $instance) {
+                    foreach ($instance->getInscrits() as $inscrit) {
+                        $agent = $inscrit->getAgent();
+                        if (!$agent->hasFormation($formation)) {
+                            $formationElement = new FormationElement();
+                            $formationElement->setFormation($formation);
+                            $formationElement->setCommentaire("LAGAF");
+                            $this->getHasFormationCollectionService()->addFormation($agent, $formationElement);
+                            $nbElement++;
+                        }
+                    }
+                }
+            }
+        }
+        return new ViewModel([
+            "report" => $nbElement,
+            "instances" => [],
+            "problemes" => [],
         ]);
     }
 }

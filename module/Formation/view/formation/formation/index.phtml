@@ -5,7 +5,6 @@
  *
  * @var Formation[] $formations
  * @var FormationGroupe[] $groupes
- * @var FormationTheme[] $themes
  * @var EtatService $etatService (deplacer dans workflow stuff)
  */
 
@@ -55,15 +54,6 @@ $droits = [
                 </span>
             </a>
         </li>
-        <li>
-            <a href="#theme" aria-controls="theme" role="tab" data-toggle="tabz">
-                Thèmes &nbsp;
-                <span class="badge">
-                    <?php echo count($themes); ?>
-                </span>
-            </a>
-        </li>
-
         <li class="pull-right">
             <a href="#workflow" aria-controls="workflow" role="tab" data-toggle="tabz"  style="margin-right: 1rem;">
                 Workflow
@@ -79,11 +69,6 @@ $droits = [
     <div class="main-with-tab">
 
         <div class="tab-content">
-
-            <div id="theme" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-theme', ['themes' => $themes, 'droits' => $droits], [], true); ?>
-            </div>
-
             <div id="groupe" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/index-groupe', ['groupes' => $groupes, 'droits' => $droits], [], true); ?>
             </div>

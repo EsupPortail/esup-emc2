@@ -8,7 +8,6 @@
 
         <field name="libelle"       column="libelle"        type="string"       length="256"   />
 
-       <one-to-many target-entity="Formation\Entity\Db\Formation" mapped-by="theme" field="formations"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

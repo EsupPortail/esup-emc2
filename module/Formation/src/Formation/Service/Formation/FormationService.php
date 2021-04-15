@@ -6,14 +6,12 @@ use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
-use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationService
 {
     use GestionEntiteHistorisationTrait;
-    use FormationThemeServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -190,40 +188,6 @@ class FormationService
         }
 
         return Formation::generateOptions($result);
-    }
-
-    /** FORMATION THEME ***********************************************************************************************/
-
-    /**
-     * @return array
-     */
-    public function getFormationsThemesAsGroupOptions()
-    {
-        $formations = $this->getFormations();
-        $dictionnaire = [];
-        foreach ($formations as $formation) {
-            $libelle = ($formation->getTheme()) ? $formation->getTheme()->getLibelle() : "Sans Thèmes";
-            $dictionnaire[$libelle][] = $formation;
-        }
-        ksort($dictionnaire);
-
-        $options = [];
-        foreach ($dictionnaire as $clef => $listing) {
-            $optionsoptions = [];
-            usort($listing, function (Formation $a, Formation $b) {
-                return $a->getLibelle() > $b->getLibelle();
-            });
-
-            foreach ($listing as $formation) {
-                $optionsoptions[$formation->getId()] = $formation->getLibelle();
-            }
-
-            $options[] = [
-                'label' => $clef,
-                'options' => $optionsoptions,
-            ];
-        }
-        return $options;
     }
 
     /**

@@ -25,6 +25,7 @@ return [
                         'stagiaire',
                         'inscription',
                         'presence',
+                        'element',
                     ],
                     'roles' => [
                         "Administrateur technique",
@@ -115,6 +116,16 @@ return [
                                     'defaults' => [
                                         'controller' => ImportationLagafController::class,
                                         'action' => 'presence',
+                                    ]
+                                ],
+                            ],
+                            'element' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/element[/:id]',
+                                    'defaults' => [
+                                        'controller' => ImportationLagafController::class,
+                                        'action' => 'element',
                                     ]
                                 ],
                             ],

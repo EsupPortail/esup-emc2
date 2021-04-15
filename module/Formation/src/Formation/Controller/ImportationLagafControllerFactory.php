@@ -9,6 +9,7 @@ namespace Formation\Controller;
  use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
  use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
  use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
+ use Formation\Service\HasFormationCollection\HasFormationCollectionService;
  use Formation\Service\Stagiaire\StagiaireService;
  use Interop\Container\ContainerInterface;
 
@@ -28,6 +29,7 @@ namespace Formation\Controller;
           * @var FormationInstanceInscritService $formationInstanceInscritService
           * @var FormationInstanceFraisService $formationInstanceFraisService
           * @var FormationInstancePresenceService $formationInstancePresenceService
+          * @var HasFormationCollectionService $hasFormationCollectionService
           * @var StagiaireService $stagiaireService
           */
          $formationService = $container->get(FormationService::class);
@@ -37,6 +39,7 @@ namespace Formation\Controller;
          $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
          $formationInstanceFraisService = $container->get(FormationInstanceFraisService::class);
          $formationInstancePresenceService = $container->get(FormationInstancePresenceService::class);
+         $hasFormationCollectionService = $container->get(HasFormationCollectionService::class);
          $stagiaireService = $container->get(StagiaireService::class);
 
          $controller = new ImportationLagafController();
@@ -47,6 +50,7 @@ namespace Formation\Controller;
          $controller->setFormationInstanceInscritService($formationInstanceInscritService);
          $controller->setFormationInstanceFraisService($formationInstanceFraisService);
          $controller->setFormationInstancePresenceService($formationInstancePresenceService);
+         $controller->setHasFormationCollectionService($hasFormationCollectionService);
          $controller->setStagiaireService($stagiaireService);
          return $controller;
      }
