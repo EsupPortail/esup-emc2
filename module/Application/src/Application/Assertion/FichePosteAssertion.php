@@ -37,6 +37,7 @@ class FichePosteAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
                     case RoleConstant::OBSERVATEUR:
+                    case RoleConstant::DRH:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
                     case RoleConstant::RESPONSABLE:
@@ -52,6 +53,7 @@ class FichePosteAssertion extends AbstractAssertion {
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
+                    case RoleConstant::DRH:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
                     case RoleConstant::RESPONSABLE:
@@ -63,6 +65,7 @@ class FichePosteAssertion extends AbstractAssertion {
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
+                    case RoleConstant::DRH:
                         return true;
                     default:
                         return false;
