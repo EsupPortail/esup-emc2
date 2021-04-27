@@ -81,7 +81,6 @@ return [
                                 'label' => 'Postes',
                                 'route' => 'poste',
                                 'resource' => PrivilegeController::getResourceId(PosteController::class, 'index') ,
-                                'dropdown-header' => true,
                             ],
                         ],
                     ],

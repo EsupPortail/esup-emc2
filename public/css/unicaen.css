@@ -109,18 +109,22 @@ a.navbar-brand h1 {
 
 /** menu ----------------------------------------------------------------------------------------------------------- **/
 
-.navbar .nav > li.dropdown {
+.navbar .nav > li {
     border-right: 2px solid var(--header-color);
 }
 
-.navbar .nav > li.dropdown:first-child {
+.navbar .nav > li:first-child {
     border-left: 2px solid var(--header-color);
 }
-.navbar .nav > li.dropdown:hover {
+.navbar .nav > li:hover {
+    background: var(--header-background-hover);
+}
+.navbar .nav > li.dropdown.open {
     background: var(--header-background-hover);
 }
 
-.navbar .nav > li.dropdown > a {
+
+.navbar .nav > li > a {
     padding-top: 0;
     text-transform: uppercase;
     background: none;
@@ -274,6 +278,9 @@ div#contenu-principal {
     min-height: calc(100vh - var(--header-height) - var(--footer-height) - 25px);
 }
 
+div#contenu-principal div.row {
+    margin: 0;
+}
 
 footer {
     height: var(--footer-height);

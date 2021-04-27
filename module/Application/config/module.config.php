@@ -299,7 +299,7 @@ return [
             '996_' => 'css/icon.css',
             '997_' => 'css/highlight.css',
             '998_' => 'css/tooltip.css',
-            '999_' => 'css/app.css',
+            '999z_' => 'css/app.css',
         ],
         'images' => [
             '100_' => 'img/PrEECoG.svg',
