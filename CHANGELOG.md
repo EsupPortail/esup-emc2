@@ -8,6 +8,7 @@ Version 1.2.0 *Module de formation*
 Version 1.1.4
 -------------
 + [Base de données] Reprise des données de LAGAF (1er batch)
++ Réactivation des indicateurs + nouveaux types : Libre, Adaptatif
 
 
 Version 1.1.3

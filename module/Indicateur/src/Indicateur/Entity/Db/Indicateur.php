@@ -9,6 +9,8 @@ class Indicateur {
 
     const ENTITY_AGENT = 'Agent';
     const ENTITY_STRUCTURE = 'Structure';
+    const ENTITY_LIBRE = 'Libre';
+    const ENTITY_ADAPTATIF = 'Adaptatif';
 
     /** @var integer */
     private $id;
