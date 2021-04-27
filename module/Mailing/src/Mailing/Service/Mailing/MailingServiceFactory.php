@@ -5,6 +5,8 @@ namespace Mailing\Service\Mailing;
 use Doctrine\ORM\EntityManager;
 use Mailing\Service\MailType\MailTypeService;
 use UnicaenApp\Options\ModuleOptions;
+use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenUtilisateur\Service\User\UserService;
 use Zend\Mail\Transport\Smtp;
 use Zend\Mail\Transport\SmtpOptions;
 use Zend\Mail\Transport\TransportInterface;
@@ -27,14 +29,20 @@ class MailingServiceFactory {
         /**
          * @var EntityManager $entityManager
          * @var MailTypeService $mailTypeService
+         * @var ParametreService $parametreService
+         * @var UserService $userService
          */
         $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
         $mailTypeService = $serviceLocator->get(MailTypeService::class);
+        $parametreService = $serviceLocator->get(ParametreService::class);
+        $userService = $serviceLocator->get(UserService::class);
 
         /** @var MailingService $service */
         $service = new MailingService($transport, $mailOptions['redirect_to'], $mailOptions['do_not_send']);
         $service->setEntityManager($entityManager);
         $service->setMailTypeService($mailTypeService);
+        $service->setParametreService($parametreService);
+        $service->setUserService($userService);
         $service->rendererService = $rendererService;
 
         return $service;

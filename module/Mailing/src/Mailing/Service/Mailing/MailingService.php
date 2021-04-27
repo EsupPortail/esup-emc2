@@ -13,8 +13,10 @@ use Mailing\Model\Db\Mail;
 use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
@@ -26,6 +28,8 @@ class MailingService
 {
     use EntityManagerAwareTrait;
     use MailTypeServiceAwareTrait;
+    use ParametreServiceAwareTrait;
+    use UserServiceAwareTrait;
     use DateTimeAwareTrait;
 
     /** @var TransportInterface */
@@ -224,7 +228,16 @@ class MailingService
     public function sendMail($to, $subject, $texte, $attachement_path = null)
     {
         $message = (new Message())->setEncoding('UTF-8');
-        $message->setFrom('ne-pas-repondre@unicaen.fr', "EMC2");
+
+        $email = 'ne-pas-repondre@unicaen.fr';
+        if ($this->getParametreService()->getParametreByCode('GLOBAL','EMAIL') AND $this->getParametreService()->getParametreByCode('GLOBAL','EMAIL')->getValeur() !== null) {
+            $email = $this->getParametreService()->getParametreByCode('GLOBAL','EMAIL')->getValeur();
+        }
+        $name = $this->appName;
+        if ($this->getParametreService()->getParametreByCode('GLOBAL','NAME') AND $this->getParametreService()->getParametreByCode('GLOBAL','NAME')->getValeur() !== null) {
+            $name = $this->getParametreService()->getParametreByCode('GLOBAL','NAME')->getValeur();
+        }
+        $message->setFrom($email, $name);
         if (!is_array($to)) $to = [$to];
         if ($this->doNotSend) {
             $message->addTo($this->redirectTo);
@@ -286,6 +299,13 @@ class MailingService
         $this->transport->send($message);
 
         $this->changerStatus($mail, Mail::SUCCESS);
+        return $mail;
+    }
+
+    public function sendTestMail()
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $mail = $this->sendMail($user->getEmail(), "Ceci est un test", "Ceci est un test");
         return $mail;
     }
 

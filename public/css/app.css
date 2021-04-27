@@ -31,7 +31,8 @@ div.modal div.modal-footer {
 button,
 input[type=button],
 input[type=submit],
-a.btn
+a.btn,
+span.btn
 {
     width:25rem;
     margin:1rem;
