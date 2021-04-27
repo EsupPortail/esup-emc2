@@ -97,6 +97,7 @@ img.navbar-logo-unicaen {
 div.navbar-appname {
     float: left;
     max-width: 40rem;
+    min-width: 10rem;
 }
 
 a.navbar-brand h1 {
@@ -151,6 +152,14 @@ a.navbar-brand h1 {
 header ul.dropdown-menu > li a:hover {
     background: darkred;
 }
+
+.navbar .nav >  li:hover {
+    background: var(--header-background-hover);
+}
+.navbar .nav >  li.open a, a:hover {
+    background: var(--header-background-hover);
+}
+
 
 .navbar .nav .dropdown-menu > li.active  a {
     color: var(--header-color);
