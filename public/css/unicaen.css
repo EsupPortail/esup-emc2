@@ -13,11 +13,6 @@
     --body-background: var(--color-light);
     --body-color: var(--color-dark);
 
-    --sidebar-background: var(--color-dark);
-    --sidebar-background-hover: var(--color-dark-bis);
-    --sidebar-color: var(--color-light);
-    --sidebar-color-hover: var(--color-light);
-
     --content-background: var(--color-light-bis);
     --content-color: var(--color-dark);
 
@@ -25,125 +20,265 @@
     --footer-color: var(--color-dark);
     --footer-border-color: var(--color-medium);
 
-    --font : Ubuntu;
+    --font-principal : Ubuntu, sans-serif;
+    --font-secondaire : Raleway, serif;
+
+    --default-background : var(--header-background);
+    --default-background-hover : var(--header-background-hover);
+    --primary-background : var(--header-background);
+    --primary-background-hover : var(--header-background-hover);
+    --information-background : #000050;
+    --information-background-back : #d0e7ff;
+    --information-background-hover : #00278b;
+    --success-background-hover : #008b00;
+    --success-background : #005000;
+    --success-background-back : #c1ffc1;
+    --danger-background-hover : #8b0000;
+    --danger-background : #500000;
+    --danger-background-back : #ffafaf;
+    --warning-background-hover : #e78615;
+    --warning-background : #bf7012;
+    --warning-background-back : #ffd3ae;
+}
+
+:root {
+    --header-height: 70px;
+    --footer-height: 200px;
+    --width:1200px;
 }
 
 /** GENERAL ***********************************************************************************************************/
 
 body {
+    background-image: none;
     color: var(--body-color);
     background: var(--body-background);
-    background-image: none;
-    font-family: Ubuntu, sans-serif;
-}
-
-div {
+    font-family: var(--font-principal);
     border-radius: 0;
+    border: 0;
 }
 
 /** NAVBAR --------------------------------------------------------------------------------------------------------- **/
+
+div.navbar {
+    position: fixed;
+    z-index: 1030;
+    background: var(--header-background);
+    color: var(--header-color);
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    height: var(--header-height);
+    font-family: Raleway, sans-serif;
+    text-shadow: none;
+}
+
+div.navbar a {
+    color: var(--header-color);
+    font-weight: bold;
+}
+
+/** image unicaen -------------------------------------------------------------------------------------------------- **/
+
+div.navbar-element#navbar-logo {
+    display: inline-block;
+    float:left;
+}
+
+img.navbar-logo-unicaen {
+    display: inline-block;
+    height: calc(var(--header-height) - 2*5px);
+    margin: 5px 5px;
+}
+
+/** appname -------------------------------------------------------------------------------------------------------- **/
+
+div.navbar-appname {
+    float: left;
+    max-width: 40rem;
+}
+
+a.navbar-brand h1 {
+    margin: 0;
+    text-align: left;
+    text-transform: uppercase;
+    font: normal normal bold 18px/21px Raleway;
+    letter-spacing: 0.15rem;
+}
+
+/** menu ----------------------------------------------------------------------------------------------------------- **/
+
+.navbar .nav > li.dropdown {
+    border-right: 2px solid var(--header-color);
+}
+
+.navbar .nav > li.dropdown:first-child {
+    border-left: 2px solid var(--header-color);
+}
+.navbar .nav > li.dropdown:hover {
+    background: var(--header-background-hover);
+}
+
+.navbar .nav > li.dropdown > a {
+    padding-top: 0;
+    text-transform: uppercase;
+    background: none;
+    height: var(--header-height);
+    line-height: var(--header-height);
+}
+.navbar .nav > li.open {
+    background: var(--header-background-hover);
+}
+
+.navbar .nav .dropdown-menu {
+    font-size: 14px;
+    background: var(--header-background-hover);
+}
+
+.navbar .nav .dropdown-menu > li > a {
+    color: var(--color-medium);
+    padding: 4px 15px;
+}
+.navbar .nav .dropdown-menu > li > a:focus, .navbar .nav .dropdown-menu > li > a:hover {
+    color: var(--header-color);
+    background-color: var(--header-background);
+}
+header ul.dropdown-menu > li a:hover {
+    background: darkred;
+}
+
+.navbar .nav .dropdown-menu > li.active  a {
+    color: var(--header-color);
+    background-color: var(--header-background);
+}
+.navbar .nav .dropdown-menu > li.dropdown-header {
+    font-size: 14px;
+    color: var(--content-background);
+    font-weight: bold;
+    font-variant: small-caps;
+    text-decoration: underline;
+}
+
+/** connection  ---------------------------------------------------------------------------------------------------- **/
+
+div.navbar-connection {
+    float: right;
+    white-space: nowrap;
+    text-align: right;
+    margin-top: calc(var(--header-height)/4);
+}
 
 div.navbar .popover {
     color: var(--header-background-hover);
 }
 
-div.navbar {
-    position: absolute;
-    top:0;
-    background: var(--header-background);
-    color: var(--header-color);
-    width: 100%;
-    border-radius: 0;
+/** FOOTER ************************************************************************************************/
+
+footer {
+    text-align: center;
+    background: var(--footer-background);
+    border-top: 6px solid var(--footer-border-color);
+    height: var(--footer-height);
+    line-height: var(--footer-height);
 }
 
-div.navbar a {
-    color: var(--header-color);
+footer ul li{
+    display: inline-block;
+    font: normal normal normal 14px/33px Ubuntu;
+    letter-spacing: 0.05rem;
+    padding: 0 1em;
+    text-transform: uppercase;
+    color: var(--footer-color);
+
 }
 
-div.navbar h1 {
+footer ul li.menu ul.navigation li:first-child{
+    border-left: none;
+}
+
+footer ul li.menu ul.navigation li{
+    border-left: 1px gray solid;
+}
+
+footer ul li a {
+    color: var(--footer-color);
+    text-decoration: none;
+}
+
+footer ul li a:hover {
+    color: var(--footer-color);
+    text-decoration: none;
+}
+
+img.footer-logo-republique-francaise {
+    display: inline-block;
+    height: 85px;
+    margin: 5px 20px;
+}
+
+
+img.footer-logo-unicaen {
+    display: inline-block;
+    height: 85px;
+    margin: 5px 20px;
+}
+
+img.footer-logo-normandie-universite {
+        display: inline-block;
+        height: 85px;
+        margin: 5px 20px;
+    }
+
+/**********************************************************************************************************/
+
+@media (max-width: 1199px) {
+    div#menu-lateral-gauche,
+    div#menu-lateral-droit {
+        display: none;
+    }
+
+    div#contenu-principal {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1199px) {
+    a.navbar-brand h1 {
+        text-transform: uppercase;
+        font: normal normal bold 15px/18px Raleway;
+        letter-spacing: 0.10rem;
+    }
+
+    .navbar .nav > li.dropdown,
+    div.navbar-connection
+    {
+        font-size: 12px;
+    }
+}
+
+
+@media (max-width: 799px) {
+    a.navbar-brand h1 {
+        text-transform: uppercase;
+        font: normal normal bold 12px/15px Raleway;
+        letter-spacing: 0.10rem;
+    }
+}
+
+div#contenu-principal {
+    width: var(--width);
+    margin-top: var(--header-height);
+    padding-top: 1rem;
+    background: var(--content-background);
+    min-height: calc(100vh - var(--header-height) - var(--footer-height) - 25px);
+}
+
+
+footer {
+    height: var(--footer-height);
     margin: 0;
 }
 
-div.navbar-element {
-    display: inline-block;
-}
-
-div.navbar-appname {
-    float: left;
-    /*width:auto;*/
-}
-
-a.navbar-brand h1 {
-    text-align: left;
-    text-transform: uppercase;
-    height: auto;
-}
-
-a.navbar-brand h1 > span {
-    text-transform: initial;
-    display: block;
-}
-
-div.navbar-menu {
-    float: left;
-    border-left: 1px solid var(--header-color);
-    border-right: 1px solid var(--header-color);
-}
-
-div.navbar-menu ul li{
-    display: inline;
-}
-
-div.navbar-menu ul li a {
-    color: var(--header-color);
-    text-transform: uppercase;
-    opacity: 1;
-    border-left: 1px solid var(--header-color);
-    border-right: 1px solid var(--header-color);
-}
-
-div.navbar-menu ul li a:hover {
-    background: var(--header-background-hover);
-}
-
-div.navbar-menu ul li a:focus {
-    background: var(--header-background-hover);
-}
-
-div.navbar-connection {
-    margin-top: 1rem;
-    margin-bottom: auto;
-    float: right;
-    white-space: nowrap;
-}
-
-/** SIDEBAR -------------------------------------------------------------------------------------------------------- **/
-
-div.sidebar ul li a {
-    color:var(--sidebar-color);
-    background: var(--sidebar-background);
-}
-
-div.sidebar ul li:hover a {
-    background: var(--sidebar-background-hover);
-    color:var(--sidebar-color);
-}
-
-div.sidebar ul li.active a{
-    background: var(--sidebar-background-hover);
-    color:var(--sidebar-color);
-}
-
-div.sidebar ul li.active:hover a{
-    background: var(--sidebar-background-hover);
-    color:var(--sidebar-color);
-}
-
-/** CONTENT -------------------------------------------------------------------------------------------------------- **/
-
-div#contenu-principal {
-    background: var(--content-background);
-}
 
 /** FOOTER --------------------------------------------------------------------------------------------------------- **/
 
@@ -153,29 +288,7 @@ div#contenu-principal {
     right:50px;
 }
 
-footer {
-    width:100%;
-}
-#footer {
-    text-align: center;
-    background-color: var(--footer-background);
-    border-top: 6px solid var(--footer-border-color);
-    width:100%;
-}
-
-#footer a {
-    color: var(--footer-color);
-}
-
-#footer ul.navigation {
-    text-transform: uppercase;
-}
-
-#footer ul.navigation > li {
-    border-left: 1px var(--footer-color) solid;
-}
-
-/** AUTRE ---------------------------------------------------------------------------------------------------------- **/
+/*!** AUTRE ---------------------------------------------------------------------------------------------------------- **!*/
 
 span.version.test {
     background: darkblue;
@@ -189,232 +302,178 @@ span.version.inconnue {
     background: darkgoldenrod;
 }
 
-label {
-    /** bricolage pour le changement de rôle */
-    color:black;
+/** TITRE *****/
+
+h1 {
+    font-size: 30px;
+    line-height: 34px;
 }
 
-div.row {
-    margin: 0;
+h2 {
+    font-size: 25px;
+    line-height: 28px;
 }
 
-#footer {
-    height: var(--footer-height);
+h3 {
+    font-size: 20px;
+    line-height: 23px;
 }
 
-#footer ul.navigation > li {
-    display: inline;
-    padding: 0 2em;
+h1.page-header {
+    margin: 0 0 5px 0;
+    padding: 0 0 5px 20px;
+    border-bottom:1px solid var(--body-background);
 }
 
-#footer ul.navigation > li:first-child {
+/** BUTTON ************************************************************************************************************/
+
+button,
+input[type=button],
+input[type=submit],
+a.btn
+{
+    font-family: Raleway, sans-serif;
+    font-size: 14px;
+    border: none;
+    border-radius: 0;
+    font-weight: bold;
+}
+
+.btn-default                            { background: var(--content-background); }
+.btn-default:hover, .btn-default:focus  { background: var(--body-background); }
+.btn-info                               { background: var(--information-background); }
+.btn-info:hover, .btn-info:focus        { background: var(--information-background-hover); }
+.btn-primary                            { background: var(--primary-background); }
+.btn-primary:hover, .btn-primary:focus  { background: var(--primary-background-hover); }
+.btn-success                            { background: var(--success-background); }
+.btn-success:hover, .btn-success:focus  { background: var(--success-background-hover); }
+.btn-danger                             { background: var(--danger-background); }
+.btn-danger:hover, .btn-danger:focus    { background: var(--danger-background-hover); }
+.btn-warning                            { background: var(--warning-background); }
+.btn-warning:hover, .btn-warning:focus  { background: var(--warning-background-hover); }
+
+/** ALERT / PANEL *************************************************************************************************************/
+
+div.alert {
+    border-radius: 0;
+}
+
+div.alert.alert-info {
+    background: var(--information-background-back);
+    border-color:  var(--information-background);
+    color:  var(--information-background);
+}
+
+div.alert.alert-warning {
+    background: var(--warning-background-back);
+    border-color:  var(--warning-background);
+    color:  var(--warning-background);
+}
+
+div.alert.alert-danger {
+    background: var(--danger-background-back);
+    border-color:  var(--danger-background);
+    color:  var(--danger-background);
+}
+
+div.alert.alert-success {
+    background: var(--success-background-back);
+    border-color:  var(--success-background);
+    color:  var(--success-background);
+}
+
+div.panel {
+    border-radius: 0;
+}
+
+div.panel.panel-info {
+    border-color:  var(--information-background);
+    color:  var(--information-background);
+}
+
+div.panel.panel-info div.panel-heading{
+    background: var(--information-background-back);
+    border-color:  var(--information-background);
+    color:  var(--information-background);
+}
+
+div.panel.panel-warning {
+    border-color:  var(--warning-background);
+    color:  var(--warning-background);
+}
+
+div.panel.panel-warning div.panel-heading{
+    background: var(--warning-background-back);
+    border-color:  var(--warning-background);
+    color:  var(--warning-background);
+}
+
+div.panel.panel-danger {
+    border-color:  var(--danger-background);
+    color:  var(--danger-background);
+}
+
+div.panel.panel-danger div.panel-heading{
+    background: var(--danger-background-back);
+    border-color:  var(--danger-background);
+    color:  var(--danger-background);
+}
+
+div.panel.panel-success {
+    border-color:  var(--success-background);
+    color:  var(--success-background);
+}
+
+div.panel.panel-success div.panel-heading{
+    background: var(--success-background-back);
+    border-color:  var(--success-background);
+    color:  var(--success-background);
+}
+
+/** TABLE *************************************************************************************************************/
+
+table.table thead {
+    background: var(--header-background);
+    color: var(--content-background);
+}
+
+table.table thead tr th {
     border: none;
 }
 
-#footer {
-    padding: calc(var(--footer-height) / 4) 0; /** 50 pour 200 **/
-    margin: 0;
+table.table tbody tr td {
+    border-top: none;
+    border-bottom: 1px solid var(--content-color);
 }
 
-#footer ul {
-    width: 100%;
-    margin: auto;
+/** ONGLET ************************************************************************************************************/
+
+ul.nav-tabs {
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    border-bottom: 1px solid var(--content-color);
 }
 
-
-#footer ul li {
-    display: inline;
-    padding: 0 1em;
-    border-left: 1px gray solid;
+ul.nav-tabs li a, ul.nav-tabs li a:hover {
+    border: 1px solid var(--color-medium-bis);
+    border-bottom: none;
+    border-radius: 0;
+    color: var(--body-color);
 }
 
-
-#footer ul > li {
-    border: 0;
-    padding: 0;
+ul.nav-tabs li a:hover {
+    border: 1px solid var(--content-color);
+    border-bottom: none;
 }
 
-#footer ul.navigation {
-    display: inline;
-    width: 100%;
-    margin: auto;
-    padding: 0;
+ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover {
+    border: 1px solid var(--content-color);
+    border-bottom: none;
+    border-radius: 0;
+    color: var(--body-color);
 }
 
-#footer ul.navigation {
-    font: normal normal normal var(--font-size-subtitle)/26px var(--font);
-    letter-spacing: var(--letter-spacing);
-}
+/** BRICOLAGE *********************************************************************************************************/
 
-@media (min-width: 769px) {
-
-    :root {
-        --header-height: 90px; /** 90px **/
-        --footer-height: 10.42vh; /** 200 px **/
-        --font-size: 15px;
-        --font-size-title: 18px;
-        --font-size-subtitle: 16px;
-        --letter-spacing: 0.48px;
-    }
-
-    div.navbar {
-        height: var(--header-height);
-    }
-
-    div.navbar-appname {
-        height: var(--header-height);
-        padding-top: calc((var(--header-height) )/ 3 - var(--font-size-title));
-    }
-
-    a.navbar-brand h1 {
-        font: normal normal bold var(--font-size-title) var(--font);
-        letter-spacing: var(--letter-spacing);
-    }
-
-    a.navbar-brand h1 > span {
-        font: normal var(--font-size-subtitle) var(--font);
-        padding-top: calc((var(--header-height) )/ 9);
-    }
-
-    div.navbar-menu ul li a {
-        height: var(--header-height);
-        padding-top: calc( (var(--header-height) - var(--font-size)) / 2);
-        letter-spacing: var(--letter-spacing);
-    }
-
-    div.navbar-menu ul li.active {
-        background: var(--header-background-hover);
-    }
-
-    div.navbar-connection {
-        height: var(--header-height);
-        line-height: var(--header-height);
-    }
-
-    body {
-        padding-top: var(--header-height);
-        margin-top: 0;
-        font-size: var(--font-size);
-    }
-
-    div.container#contenu-principal {
-        width:100%;
-        padding: 0 0 0 0;
-        margin-top: 0;
-        min-height:calc((100vh - 3vh) - var(--header-height) - var(--footer-height));
-    }
-
-    div.container div.row {
-        margin-top: 0;
-    }
-
-    div.sidebar {
-        margin-top: 5rem;
-        margin-bottom: 5rem;
-        margin-left: 1rem;
-    }
-
-    div#contenu-principal {
-        padding-top: 1rem;
-    }
-
-    /** FOOTER **/
-    img.footer-logo-republique-francaise {
-        display: inline-block;
-        width: 5.21vw;
-        height: 4.69vw;
-        margin: 0 2.083vw;
-    }
-
-    img.footer-logo-unicaen {
-        display: inline-block;
-        width: 6.875vw;
-        height: 3.68vw;
-    }
-
-    a.footer-logo-normandie-universite {
-        display: inline-block;
-        width: 4.84vw;
-        height: 2.86vw;
-        margin-right: 1.56vw;
-    }
-
-    #footer ul > li {
-        font-size: 0.85vw ;
-    }
-}
-
-@media (min-width: 0) and (max-width: 768px) {
-    :root {
-        --header-height: 90px; /** 90px **/
-        --footer-height: 50px; /** 200 px **/
-        --font-size: 12px;
-        --font-size-title: 18px;
-        --font-size-subtitle: 16px;
-        --letter-spacing: 0.9px;
-    }
-    body {
-        /*font-size: var(--font-size);*/
-    }
-
-    div.container#contenu-principal {
-        width: 100%;
-        padding: 0;
-        min-height:calc(100vh - var(--header-height) - var(--footer-height));
-    }
-
-    .navbar-appname {
-        width: 10rem;
-    }
-
-    .navbar-appname h1 {
-        display:none;
-    }
-
-    .navbar-appname h1::before {
-        content:"C";
-    }
-
-    div.navbar-connection {
-        /*width: auto;*/
-    }
-
-    span.version {
-        display: none;
-    }
-
-    /** FOOTER **/
-    #footer li.footer-large {
-        display: none;
-    }
-    #footer ul.navigation {
-        font: normal normal normal calc(var(--font-size-subtitle)/2)/16px var(--font);
-        letter-spacing: var(--letter-spacing);
-    }
-
-    img.footer-logo-republique-francaise {
-        display: inline-block;
-        width: 50px;
-        height: 45px;
-        margin: 0 20px;
-    }
-
-    img.footer-logo-unicaen {
-        display: inline-block;
-        width: 76px;
-        height: 35px;
-    }
-
-    a.footer-logo-normandie-universite {
-        display: inline-block;
-        width: 46px;
-        height: 27px;
-        margin-right: 15px;
-    }
-}
-
-/** TABLEAU ********/
-
-thead {
-    font-weight: bold;
+div.div-connexion {
+    margin-top: 25px;
 }
