@@ -10,19 +10,19 @@ trait AbonnementServiceAwareTrait {
     /**
      * @return AbonnementService
      */
-    public function getAbonnementService()
+    public function getAbonnementService() : AbonnementService
     {
         return $this->abonnementService;
     }
 
     /**
      * @param AbonnementService $abonnementService
-     * @return AbonnementServiceAwareTrait
+     * @return AbonnementService
      */
-    public function setAbonnementService($abonnementService)
+    public function setAbonnementService(AbonnementService $abonnementService) : AbonnementService
     {
         $this->abonnementService = $abonnementService;
-        return $this;
+        return $this->abonnementService;
     }
 
 

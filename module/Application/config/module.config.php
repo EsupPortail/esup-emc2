@@ -294,10 +294,12 @@ return [
             '112_' => 'vendor/font-awesome-5.15.2/css/all.min.css',
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
             '990_' => 'css/ubuntu.css',
+            '991_' => 'css/raleway.css',
             '995_' => 'css/unicaen.css',
             '996_' => 'css/icon.css',
             '997_' => 'css/highlight.css',
             '998_' => 'css/tooltip.css',
+            '999_' => 'css/app.css',
         ],
         'images' => [
             '100_' => 'img/PrEECoG.svg',

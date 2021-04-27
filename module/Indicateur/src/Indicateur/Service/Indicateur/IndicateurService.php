@@ -7,7 +7,6 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\DBAL\Driver\Exception as DBA_Driver_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Indicateur\Entity\Db\Indicateur;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -77,7 +76,7 @@ class IndicateurService {
         }
         try {
             $query->execute();
-            $array = $query->fetchAllAssociative();
+            $array = $query->fetchAll();
         } catch (DBA_Driver_Exception $e) {
             throw new RuntimeException("Un problème est survenu lors de la récupération de des données de l'indicateur.", 0, $e);
         }

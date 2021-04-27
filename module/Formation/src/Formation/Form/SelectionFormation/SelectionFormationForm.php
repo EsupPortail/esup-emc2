@@ -22,7 +22,7 @@ class SelectionFormationForm extends Form
             'options' => [
                 'label' => "Formations associées :",
                 'empty_option' => "Sélectionner la ou les formations ...",
-                'value_options' => $this->getFormationService()->getFormationsThemesAsGroupOptions(),
+                'value_options' => $this->getFormationService()->getFormationsGroupesAsGroupOptions(),
             ],
             'attributes' => [
                 'id' => 'formations',
