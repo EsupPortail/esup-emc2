@@ -63,6 +63,7 @@ body {
 div.navbar {
     position: fixed;
     z-index: 1030;
+    top: 0;
     background: var(--header-background);
     color: var(--header-color);
     width: 100%;
