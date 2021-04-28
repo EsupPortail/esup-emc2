@@ -10,6 +10,7 @@
  * @var ParcoursDeFormation $parcours
  * @var User $connectedUser
  * @var Mail[] $mails
+ * @var string[] $documents
  */
 
 use Application\Entity\Db\Agent;
@@ -59,7 +60,7 @@ $droits = [
 </h1>
 
 <?php
-echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
 ?>
 
 <div role="tabpanel">

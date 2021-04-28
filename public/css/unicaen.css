@@ -495,3 +495,8 @@ ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover {
 div.div-connexion {
     margin-top: 25px;
 }
+
+button.dropdown-toggle {
+    height: 3rem;
+    margin-top: 0;
+}

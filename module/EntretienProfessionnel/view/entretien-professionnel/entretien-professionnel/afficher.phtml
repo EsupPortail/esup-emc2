@@ -8,6 +8,7 @@
  * @var FichePoste $fichesposte
  * @var FicheMetier[] $fichesmetiers
  * @var Mail[] $mails
+ * @var string[] $documents
  */
 
 use Application\Entity\Db\Agent;
@@ -31,7 +32,7 @@ $droits = [
 </h1>
 
 <?php
-echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $fichesposte, 'fichesmetiers' => $fichesmetiers], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $fichesposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
 ?>
 
 <div role="tabpanel">
