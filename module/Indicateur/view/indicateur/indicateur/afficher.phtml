@@ -94,4 +94,22 @@ use Mailing\Model\Db\Mail;
             }
         });
     } );
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "indicateur";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
 </script>
