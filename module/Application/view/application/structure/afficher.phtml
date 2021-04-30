@@ -12,9 +12,11 @@
  * @var Agent[] $agents
  * @var Agent[] $agentsForces
  * @var FicheProfil[] $profils
+ * @var FormationInstanceInscrit[] $inscriptions
  *
  * @var Campagne $last
  * @var Campagne[] $campagnes
+
  */
 
 use Application\Entity\Db\Agent;
@@ -25,6 +27,7 @@ use Application\Entity\Db\Poste;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use Formation\Entity\Db\FormationInstanceInscrit;
 
 $this->headTitle($structure->getLibelleLong());
 
@@ -110,6 +113,12 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                     </a>
                 </li>
 
+                <li>
+                    <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz" >
+                        Demande de <br/> Formation
+                    </a>
+                </li>
+
                 <li role="extraction">
                     <a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tabz" >
                         Extractions  <br/> &nbsp;
@@ -180,6 +189,11 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <!-- Profil de recrutement ------------------------------->
                 <div id="profil" class="tab-pane " role="tabpanel">
                     <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils]); ?>
+                </div>
+
+                <!-- Demande de formation ------------------------------->
+                <div id="formation" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptions]); ?>
                 </div>
 
                 <!-- Extraction ------------------------------------------------------------------------------------->
