@@ -3,7 +3,9 @@
 namespace Formation\Service\FormationInstanceInscrit;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
@@ -14,6 +16,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class FormationInstanceInscritService
 {
     use GestionEntiteHistorisationTrait;
+    use StructureServiceAwareTrait;
 
     /** GESTION ENTITES ****************************************************************************************/
 
@@ -139,6 +142,28 @@ class FormationInstanceInscritService
             ->setParameter('code', FormationInstance::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param bool $avecStructuresFilles
+     * @return FormationInstanceInscrit[]
+     */
+    public function getInscriptionsByStructure(Structure $structure, bool $avecStructuresFilles = true) : array
+    {
+        $structures = [];
+        $structures[] = $structure;
+
+        if ($avecStructuresFilles === true) {
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+        }
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('affectation.structure in (:structures)')
+            ->setParameter('structures', $structures);
 
         $result = $qb->getQuery()->getResult();
         return $result;

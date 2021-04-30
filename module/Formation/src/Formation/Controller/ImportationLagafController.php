@@ -22,10 +22,12 @@ use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAw
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ImportationLagafController extends AbstractActionController {
+    use EtatServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
@@ -398,6 +400,7 @@ class ImportationLagafController extends AbstractActionController {
         foreach ($stagiaires_tmp as $stagiaire) {
             $stagiaires[$stagiaire->getNStagiaire()] = $stagiaire;
         }
+        $validee = $this->getEtatService()->getEtatByCode('VALIDATION_INSCRIPTION');
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Stagiaire </th><th>Session</th><th>FRepas</th><th>FTransport</th><th>FHebergement</th></tr></thead>";
@@ -419,6 +422,7 @@ class ImportationLagafController extends AbstractActionController {
                 $inscription->setAgent($agent);
                 $inscription->setListe("principale");
                 $inscription->setSource('LAGAF');
+                $inscription->setEtat($validee);
                 $inscription->setIdSource($st_instance . "-" . $st_nstagiaire);
                 $this->getFormationInstanceInscritService()->create($inscription);
                 $inscriptions[] = $inscription;

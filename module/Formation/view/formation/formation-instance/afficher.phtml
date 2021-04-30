@@ -12,14 +12,21 @@ use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
+use Mailing\Model\Db\Mail;
+use Mailing\Provider\Privilege\MailingPrivileges;
 
 /**
  * @see FormationInstanceController::afficherAction()
  * @var FormationInstance $instance
+ * @var Mail[] $mails
  */
 
-$canInformation = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+$canInformation     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+$canAfficherMail    = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER));
+$canReEnvoyerMail   = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_REENVOI));
+$canValiderDrh      = true;
 
+$retour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
 
 /** @var Formation $formation */
 $formation = $instance->getFormation();
@@ -95,7 +102,30 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         </div>
     </div>
 
-    <div class="row">
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li>
+                <a href="#information" aria-controls="information" role="tab" data-toggle="tabz">
+                    Information sur la session
+                </a>
+            </li>
+            <li>
+                <a href="#inscriptions" aria-controls="inscriptions" role="tab" data-toggle="tabz">
+                    Inscription et listes
+                </a>
+            </li>
+            <li class="pull-right">
+                <a href="#mails" aria-controls="mails" role="tab" data-toggle="tabz" >
+                    Mails
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+
+        <div id="information" class="tab-pane " role="tabpanel">
+            <div class="row">
         <h2> Action de formation</h2>
         <div class="col-sm-6 col-md-8">
             <?php echo $this->formationInstanceInformations($instance); ?>
@@ -117,106 +147,110 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                 </a>
             </div>
         <?php endif; ?>
-    </div>
+            </div>
 
-    <div class="row">
-        <div class="col-sm-6 col-md-8">
-            <h3>Formateurs <span class="badge"><?php echo count($formateurs); ?></span> </h3>
-        </div>
-        <div class="pull-right">
-            <?php if ($canFormateurModifier) : ?>
-                <?php /** @see FormationInstanceFormateurController::ajouterFormateurAction() */?>
-                <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()],[], true); ?>"
-                   class="action btn btn-primary ajax-modal" data-event="modification"
-               >
-                    <span class="icon ajouter"></span>
-                    Ajouter un formateur
-                </a>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <table id="formateurs" class="datatable table table-condensed">
-        <thead>
-        <tr>
-            <th> Dénomination </th>
-            <th> Structure de rattachement </th>
-            <th> Volume </th>
-            <th> Action </th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($formateurs as $formateur) : ?>
-            <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
-                <td> <?php echo $formateur->getPrenom(); ?> <?php echo $formateur->getNom(); ?> </td>
-                <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
-                <td> <?php echo ($formateur->getVolume())?:"Non renseigné"; ?> </td>
-                <td>
+            <div class="row">
+                <div class="col-sm-6 col-md-8">
+                    <h3>Formateurs <span class="badge"><?php echo count($formateurs); ?></span> </h3>
+                </div>
+                <div class="pull-right">
                     <?php if ($canFormateurModifier) : ?>
-                        <a  <?php /** @see FormationInstanceFormateurController::modifierFormateurAction() */ ?>
-                            href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon editer"></span></a>
-                        <?php if ($formateur->estNonHistorise()) : ?>
-                            <a      <?php /** @see FormationInstanceFormateurController::historiserFormateurAction() */ ?>
-                                    href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
-                            <span class="icon historiser"></span></a>
-                        <?php else : ?>
-                            <a      <?php /** @see FormationInstanceFormateurController::restaurerFormateurAction() */ ?>
-                                    href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
-                                <span class="icon restaurer"></span></a>
-                        <?php endif; ?>
-                        <a      <?php /** @see FormationInstanceFormateurController::supprimerFormateurAction() */ ?>
-                                href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon detruire"></span></a>
+                        <?php /** @see FormationInstanceFormateurController::ajouterFormateurAction() */?>
+                        <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()],[], true); ?>"
+                           class="action btn btn-primary ajax-modal" data-event="modification"
+                       >
+                            <span class="icon ajouter"></span>
+                            Ajouter un formateur
+                        </a>
                     <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-    <?php if ($canJourneeModifier) : ?>
-        <strong>Volume horaire sommé :</strong> <?php echo $instance->getVolumeHoraireSomme(); ?> heures.
-    <?php endif; ?>
+                </div>
+            </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <h3>
-                Journée(s) de formation
-                <span class="badge"> <?php echo count($journees); ?></span>
-            </h3>
-
-            <dl class="dl-horizontal">
-                <dt>Durée de la formation</dt>
-                <dd><?php echo $instance->getDuree(); ?></dd>
-            </dl>
-
-        </div>
-        <div class="pull-right">
-            <?php if ($canJourneeModifier): ?>
-                <?php /** @see FormationInstanceJourneeController::ajouterJourneeAction() */?>
-                <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
-                        class="btn btn-primary action ajax-modal" data-event="modification">
-                    <span class="icon ajouter"></span>
-                    Ajouter une journée de formation
-                </a>
-            <br/>
-                <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */?>
-                <a      href="<?php echo $this->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], [], true); ?>"
-                        class="btn btn-primary action" target="_blank">
-                    <span class="icon pdf"></span>
-                    Exporter les émargements
-                </a>
+            <table id="formateurs" class="datatable table table-condensed">
+                <thead>
+                <tr>
+                    <th> Dénomination </th>
+                    <th> Structure de rattachement </th>
+                    <th> Volume </th>
+                    <th> Action </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($formateurs as $formateur) : ?>
+                    <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
+                        <td> <?php echo $formateur->getPrenom(); ?> <?php echo $formateur->getNom(); ?> </td>
+                        <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
+                        <td> <?php echo ($formateur->getVolume())?:"Non renseigné"; ?> </td>
+                        <td>
+                            <?php if ($canFormateurModifier) : ?>
+                                <a  <?php /** @see FormationInstanceFormateurController::modifierFormateurAction() */ ?>
+                                    href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                                    class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon editer"></span></a>
+                                <?php if ($formateur->estNonHistorise()) : ?>
+                                    <a      <?php /** @see FormationInstanceFormateurController::historiserFormateurAction() */ ?>
+                                            href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
+                                    <span class="icon historiser"></span></a>
+                                <?php else : ?>
+                                    <a      <?php /** @see FormationInstanceFormateurController::restaurerFormateurAction() */ ?>
+                                            href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
+                                        <span class="icon restaurer"></span></a>
+                                <?php endif; ?>
+                                <a      <?php /** @see FormationInstanceFormateurController::supprimerFormateurAction() */ ?>
+                                        href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                                   class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon detruire"></span></a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php if ($canJourneeModifier) : ?>
+                <strong>Volume horaire sommé :</strong> <?php echo $instance->getVolumeHoraireSomme(); ?> heures.
             <?php endif; ?>
-            <br/>
-            <br/>
-        </div>
-    </div>
 
-    <table id="journees" class="datatable table table-condensed">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>
+                        Journée(s) de formation
+                        <span class="badge"> <?php echo count($journees); ?></span>
+                    </h3>
+
+                    <dl class="dl-horizontal">
+                        <dt>Première plage </dt>
+                        <dd><?php echo $instance->getDebut(); ?></dd>
+                        <dt>Dernière plage </dt>
+                        <dd><?php echo $instance->getFin(); ?></dd>
+                        <dt>Durée de la formation</dt>
+                        <dd><?php echo $instance->getDuree(); ?></dd>
+                    </dl>
+
+                </div>
+                <div class="pull-right">
+                    <?php if ($canJourneeModifier): ?>
+                        <?php /** @see FormationInstanceJourneeController::ajouterJourneeAction() */?>
+                        <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
+                                class="btn btn-primary action ajax-modal" data-event="modification">
+                            <span class="icon ajouter"></span>
+                            Ajouter une journée de formation
+                        </a>
+                    <br/>
+                        <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */?>
+                        <a      href="<?php echo $this->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], [], true); ?>"
+                                class="btn btn-primary action" target="_blank">
+                            <span class="icon pdf"></span>
+                            Exporter les émargements
+                        </a>
+                    <?php endif; ?>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+
+            <table id="journees" class="datatable table table-condensed">
         <thead>
             <tr>
                 <th> Jour </th>
@@ -266,12 +300,12 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             <?php endforeach; ?>
         </tbody>
     </table>
-
+        </div>
+        <div id="inscriptions" class="tab-pane " role="tabpanel">
 
     <div class="row">
         <div class="col-md-8">
-            <h3> Agent(s) inscrit(s)
-            </h3>
+            <h3> Agent(s) inscrit(s) </h3>
         </div>
 
         <?php if ($canInscritModifier AND (count($principales) < $instance->getNbPlacePrincipale() OR count($complementaires) < $instance->getNbPlaceComplementaire())) : ?>
@@ -293,7 +327,40 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         $liste = $instance->getListeDisponible();
         $principaleComplete = $instance->isListePrincipaleComplete();
         $complementaireComplete = $instance->isListeComplementaireComplete();
+        $inscriptions = $instance->getInscrits();
     ?>
+
+    <h3> Inscriptions
+        <span class="badge"><?php echo count($inscriptions); ?></span>
+    </h3>
+
+    <table id="agents" class="datatable table table-condensed">
+        <thead>
+        <tr>
+            <th style="width:40rem;"> Dénomination </th>
+            <th> Affection principale </th>
+            <th style="width:13rem;"> Date de demande </th>
+            <th style="width:13rem;"> État </th>
+            <th style="width:15rem;"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($inscriptions as $inscrit) : ?>
+        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+            <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
+            <td> <?php echo $this->etatbadge($inscrit->getEtat()); ?> </td>
+            <td>
+                <?php if ($canValiderDrh AND $inscrit->getEtat() !== null AND $inscrit->getEtat()->getCode() === FormationInstanceInscrit::ETAT_VALIDATION_RESPONSABLE) : ?>
+                    <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification">Gérer la demande d'inscription</a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
     <h4>
         Liste principale
         <span class="badge"><?php echo count($principales); ?></span>
@@ -307,7 +374,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <tr>
             <th style="width:40rem;"> Dénomination </th>
             <th> Affection principale </th>
-            <th style="width:13rem;"> Date d'ajout </th>
             <th style="width:15rem;"> Action </th>
         </tr>
         </thead>
@@ -316,7 +382,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
                 <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
                 <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
-                <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
                 <td>
                     <?php if ($canInscritModifier) : ?>
                         <?php /** @see AgentController::afficherAction() */?>
@@ -388,7 +453,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <tr>
             <th style="width:50rem;"> Dénomination </th>
             <th> Affection principale </th>
-            <th style="width:13rem;"> Date d'ajout </th>
             <th style="width:13rem;"> Action </th>
         </tr>
         </thead>
@@ -397,7 +461,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
                 <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
                 <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
-                <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
                 <td>
                     <?php if ($canInscritModifier) : ?>
                         <?php /** @see AgentController::afficherAction() */?>
@@ -442,7 +505,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <tr>
             <th style="width:50rem;"> Dénomination </th>
             <th> Affection principale </th>
-            <th style="width:13rem;"> Date d'ajout </th>
             <th style="width:13rem;"> Action </th>
         </tr>
         </thead>
@@ -451,7 +513,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
                 <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
                 <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
-                <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
                 <td>
                     <?php if ($canInscritModifier) : ?>
                         <?php /** @see AgentController::afficherAction() */?>
@@ -480,11 +541,65 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         </tbody>
     </table>
 
+        </div>
+        <div id="mails" class="tab-pane " role="tabpanel">
+    <h2> Mails envoyés </h2>
 
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th> Date d'envoi </th>
+            <th> Destinataire </th>
+            <th> Sujet </th>
+            <th style="width:8rem;"> État </th>
+            <th style="width:8rem;"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($mails as $mail) : ?>
+            <tr>
+                <td> <?php echo $mail->getDateEnvoi()->format('d/m/Y à H:i:s'); ?> </td>
+                <td> <?php echo $mail->getDestinatires(); ?> </td>
+                <td> <?php echo $mail->getSujet(); ?> </td>
+                <td style="text-align: center;"> <?php echo $this->etatbadge($mail->getStatusEnvoi()); ?> </td>
+                <td style="text-align: right;">
+                    <?php if($canAfficherMail) : ?>
+                        <a <?php /** @see \Mailing\Controller\MailingController::afficherAction() */?>
+                                href="<?php echo $this->url('mailing/afficher',  ['id' => $mail->getId()], [], true); ?>"
+                                class="ajax-modal"
+                                title="Affichage du mail" data-toggle="tooltip" data-html="true"
+                        >
+                            <span class="icon voir"></span></a>
+                    <?php endif; ?>
+                    <?php if($canReEnvoyerMail) : ?>
+                        <a <?php /** @see \Mailing\Controller\MailingController::reEnvoiAction() */?>
+                                href="<?php echo $this->url('mailing/re-envoi',  ['id' => $mail->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                                title="Re-envoi du mail" data-toggle="tooltip" data-html="true"
+                        >
+                            <span class="icon courrier"></span></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    </div>
+</div>
 </div>
 
 <script>
     $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "information";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             tinyMCE.editors=[];

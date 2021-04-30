@@ -4,6 +4,7 @@
  * @var string $title
  * @var string $text
  * @var string $action
+ * @var bool $complement
  */
 
 ?>
@@ -12,26 +13,63 @@
 <?php echo $text; ?>
 </p>
 
+
 <table>
     <tr><td>
-<form method="post" action="<?php echo $action; ?>">
-    <input type="hidden" name="reponse" value="oui">
-    <input type="submit" name="reponse" class="btn btn-success action" value="Oui, je suis sûr&middot;e">
-</form>
-        </td><td>
-<form method="post" action="<?php echo $action; ?>">
-    <input type="hidden" name="reponse" value="non">
-    <input type="submit" id="non" name="reponse" class="btn btn-danger action"  value="Non, je ne veux pas">
-</form>
+            <form method="post" action="<?php echo $action; ?>">
+                <input type="hidden" name="reponse" value="oui">
+                <input type="submit" name="reponse" class="btn btn-success action" value="Oui, je suis sûr&middot;e">
+            </form>
+        </td></tr>
+</table>
+<table>
+    <tr><td>
+            <form method="post" action="<?php echo $action; ?>">
+                <input type="hidden" name="reponse" value="non">
+                <input type="submit" id="non" name="reponse" class="btn btn-danger action"  value="Non, je ne veux pas">
+                <?php if ($complement === true) : ?>
+        </td></tr><tr></tr><td>
+                    <label for="complement">Motivations liées au refus</label>
+                    <textarea id="complement" name="complement" class="type2 form-control" style="width: 100%;">À renseigner en cas de refus</textarea>
+                <?php endif; ?>
+            </form>
         </td></tr>
 </table>
 
-<script>
-    $(function() {
-        $("input#non").click(function(e){
-            $('div.modal').modal('hide');
-            e.preventDefault(e);
+<?php if ($complement !== true) : ?>
+    <script>
+        $(function() {
+            $("input#non").click(function(e){
+                $('div.modal').modal('hide');
+                e.preventDefault(e);
+            });
         });
-    });
-</script>
+    </script>
+<?php else : ?>
+    <script>
+        $(document).ready(function() {
+            tinymce.remove();
+            tinymce.init({
+                selector: '.type2',
+                toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+                resize: true,
+                language: 'fr_FR',
+                plugins: 'lists',
+                statusbar: true,
+                browser_spellcheck : true,
+                branding: false,
+                menu: {},
+                body_id: 'complement',
+                setup: function (editor) {
+                    editor.on("focusout", function () {
+                        console.log(tinymce.get('complement').getContent());
+                        $('textarea').val(tinymce.get('complement').getContent());
+                    });
+                }
+            });
+        });
+
+        $('select').selectpicker();
+    </script>
+<?php endif; ?>
 

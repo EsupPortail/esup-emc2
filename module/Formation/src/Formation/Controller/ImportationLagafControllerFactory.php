@@ -12,6 +12,7 @@ namespace Formation\Controller;
  use Formation\Service\HasFormationCollection\HasFormationCollectionService;
  use Formation\Service\Stagiaire\StagiaireService;
  use Interop\Container\ContainerInterface;
+ use UnicaenEtat\Service\Etat\EtatService;
 
  class ImportationLagafControllerFactory {
 
@@ -22,6 +23,7 @@ namespace Formation\Controller;
      public function __invoke(ContainerInterface $container)
      {
          /**
+          * @var EtatService $etatService
           * @var FormationService $formationService
           * @var FormationGroupeService $formationGroupeService
           * @var FormationInstanceService $formationInstanceService
@@ -32,6 +34,7 @@ namespace Formation\Controller;
           * @var HasFormationCollectionService $hasFormationCollectionService
           * @var StagiaireService $stagiaireService
           */
+         $etatService = $container->get(FormationService::class);
          $formationService = $container->get(FormationService::class);
          $formationGroupeService = $container->get(FormationGroupeService::class);
          $formationInstanceService = $container->get(FormationInstanceService::class);
@@ -43,6 +46,7 @@ namespace Formation\Controller;
          $stagiaireService = $container->get(StagiaireService::class);
 
          $controller = new ImportationLagafController();
+         $controller->setEtatService($etatService);
          $controller->setFormationService($formationService);
          $controller->setFormationGroupeService($formationGroupeService);
          $controller->setFormationInstanceService($formationInstanceService);

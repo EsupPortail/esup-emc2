@@ -13,6 +13,7 @@ use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -28,20 +29,27 @@ class FormationInstanceController extends AbstractActionController
     use FormationInstanceInscritServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use MailingServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
 
+
+    /** NB: par defaut les instances de formation sont toutes en autoinscription **************************************/
 
     public function ajouterAction()
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
         $instance = new FormationInstance();
+        $instance->setAutoInscription(true);
         $instance->setNbPlacePrincipale(0);
         $instance->setNbPlaceComplementaire(0);
         $instance->setFormation($formation);
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_CREATION_EN_COURS));
 
         $this->getFormationInstanceService()->create($instance);
+        $instance->setSource("EMC2");
+        $instance->setIdSource(($formation->getIdSource())?(($formation->getIdSource())."-".$instance->getId()):($formation->getId()."-".$instance->getId()));
+        $this->getFormationInstanceService()->update($instance);
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
@@ -49,10 +57,12 @@ class FormationInstanceController extends AbstractActionController
     public function afficherAction()
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $mails = $this->getMailingService()->getMailsByAttachement(FormationInstance::class, $instance->getId());
 
         return new ViewModel([
             'instance' => $instance,
             'mode' => "affichage",
+            'mails' => $mails,
         ]);
     }
 
@@ -156,7 +166,11 @@ class FormationInstanceController extends AbstractActionController
         if ($instance->getEtat()->getCode() === FormationInstance::ETAT_CREATION_EN_COURS) {
             $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
             $this->getFormationInstanceService()->update($instance);
-            $this->getMailingService()->sendMailType("FORMATION_INSCRIPTION_OUVERTE", ['formation-instance' => $instance, 'mailing' => 'ZZZunicaen-biats@unicaen.fr']);
+            $email = $this->getParametreService()->getParametreByCode('FORMATION', 'MAIL_LISTE_BIATS');
+            $mail = $this->getMailingService()->sendMailType("FORMATION_INSCRIPTION_OUVERTE", ['formation-instance' => $instance, 'mailing' => $email]);
+            $mail->setAttachementType(FormationInstance::class);
+            $mail->setAttachementId($instance->getId());
+            $this->getMailingService()->update($mail);
         }
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
@@ -170,10 +184,16 @@ class FormationInstanceController extends AbstractActionController
             $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
             $this->getFormationInstanceService()->update($instance);
             foreach ($instance->getListePrincipale() as $inscrit) {
-                $this->getMailingService()->sendMailType("FORMATION_LISTE_PRINCIPALE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+                $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_PRINCIPALE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+                $mail->setAttachementType(FormationInstance::class);
+                $mail->setAttachementId($instance->getId());
+                $this->getMailingService()->update($mail);
             }
             foreach ($instance->getListeComplementaire() as $inscrit) {
-                $this->getMailingService()->sendMailType("FORMATION_LISTE_SECONDAIRE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+                $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_SECONDAIRE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+                $mail->setAttachementType(FormationInstance::class);
+                $mail->setAttachementId($instance->getId());
+                $this->getMailingService()->update($mail);
             }
         }
 
