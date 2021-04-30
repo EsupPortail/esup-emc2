@@ -138,6 +138,7 @@ class FicheProfilService {
 
         if ($avecSousStructure === true) {
             $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
         }
 
         $qb = $this->createQueryBuilder()
