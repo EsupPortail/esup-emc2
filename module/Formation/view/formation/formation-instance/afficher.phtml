@@ -353,7 +353,8 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             <td> <?php echo $this->etatbadge($inscrit->getEtat()); ?> </td>
             <td>
                 <?php if ($canValiderDrh AND $inscrit->getEtat() !== null AND $inscrit->getEtat()->getCode() === FormationInstanceInscrit::ETAT_VALIDATION_RESPONSABLE) : ?>
-                    <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification">Gérer la demande d'inscription</a>
+                    <a      <?php /** @see \Formation\Controller\FormationInstanceInscritController::validerDrhAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon validation-do"> Gérer la demande</a>
                 <?php endif; ?>
             </td>
         </tr>

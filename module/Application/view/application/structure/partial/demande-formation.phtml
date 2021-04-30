@@ -51,7 +51,8 @@ foreach ($inscriptions as $inscription) {
                 <?php echo $this->etatbadge($inscription->getEtat()); ?>
                 <?php echo $inscription->getAgent()->getDenomination(); ?>
                 <?php if ($canValiderResponsable AND $inscription->getEtat() !== null AND $inscription->getEtat()->getCode() === FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION) : ?>
-                    <a href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification">Gérer la demande d'inscription</a>
+                    <a  <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do"> Gérer la demande</a>
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>

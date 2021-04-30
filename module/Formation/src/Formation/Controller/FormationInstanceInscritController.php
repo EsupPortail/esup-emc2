@@ -226,7 +226,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
         $vm = new ViewModel([
             'title' => "Validation par le responsable hiérarchique",
-            'text' => "Je valide l'inscription de ". $denomination ."à la formation ". $intitule ." du ". $periode.".",
+            'text' => "Je valide l'inscription de ". $denomination ." à la formation ". $intitule ." du ". $periode.".",
             'action' => $this->url()->fromRoute('formation-instance/valider-responsable', ["isncrit" => $inscrit->getId()], [], true),
             'complement' => true,
         ]);
@@ -269,7 +269,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
         $vm = new ViewModel([
             'title' => "Validation par la direction des ressources humaines",
-            'text' => "Je valide l'inscription de ". $denomination ."à la formation ". $intitule ." du ". $periode.".",
+            'text' => "Je valide l'inscription de ". $denomination ." à la formation ". $intitule ." du ". $periode.".",
             'action' => $this->url()->fromRoute('formation-instance/valider-drh', ["isncrit" => $inscrit->getId()], [], true),
             'complement' => true,
         ]);

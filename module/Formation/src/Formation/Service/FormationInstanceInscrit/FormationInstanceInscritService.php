@@ -82,7 +82,8 @@ class FormationInstanceInscritService
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->addSelect('finstance')->join('inscrit.instance', 'finstance')
-            ->addSelect('etat')->leftjoin('finstance.etat', 'etat')
+            ->addSelect('instanceetat')->leftjoin('finstance.etat', 'instanceetat')
+            ->addSelect('inscritetat')->leftjoin('inscrit.etat', 'inscritetat')
             ->addSelect('formation')->join('finstance.formation', 'formation');
         return $qb;
     }
@@ -138,7 +139,7 @@ class FormationInstanceInscritService
         $qb = $this->createQueryBuilder()
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('etat.code <> :code')
+            ->andWhere('instanceetat.code <> :code')
             ->setParameter('code', FormationInstance::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
@@ -159,11 +160,15 @@ class FormationInstanceInscritService
 
         if ($avecStructuresFilles === true) {
             $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
         }
 
         $qb = $this->createQueryBuilder()
             ->andWhere('affectation.structure in (:structures)')
-            ->setParameter('structures', $structures);
+            ->setParameter('structures', $structures)
+            ->andWhere('inscritetat.code = :demandevalidation')
+            ->setParameter('demandevalidation', FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION)
+        ;
 
         $result = $qb->getQuery()->getResult();
         return $result;

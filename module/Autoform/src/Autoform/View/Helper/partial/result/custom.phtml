@@ -10,7 +10,7 @@ use Autoform\Entity\Db\Champ;
 <?php if ($data !== null && $data != '') : ?>
     <?php $splits = explode(";", (string) $data); ?>
     <?php echo $champ->getLibelle(); ?>&nbsp;:
-    <?php echo $libelles = explode(';',$champ->getOptions()); ?>
+    <?php $libelles = explode(';',$champ->getOptions()); ?>
     <?php $size = max(count($libelles), count($splits)); ?>
     <ul>
         <?php for($position = 0 ; $position < $size ; $position ++) : ?>
@@ -18,7 +18,7 @@ use Autoform\Entity\Db\Champ;
                 <?php $sub = explode("|", $libelles[$position]); ?>
                 <?php echo $sub[1] ?> :
                 <?php
-                    $resplits = str_replace("_"," ",substr($splits[$position],3));
+                    $resplits = str_replace("_"," ",substr($splits[$position],0));
                     echo $resplits;
                 ?>
             </li>
