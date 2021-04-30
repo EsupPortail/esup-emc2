@@ -15,6 +15,7 @@ use Application\Service\Structure\StructureService;
 use Application\Service\StructureAgentForce\StructureAgentForceService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenUtilisateur\Service\User\UserService;
@@ -29,6 +30,7 @@ class StructureControllerFactory {
          * @var CampagneService $campagneService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
+         * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var PosteService $posteService
          * @var RoleService $roleService
@@ -41,6 +43,7 @@ class StructureControllerFactory {
         $campagneService = $container->get(CampagneService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
+        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $posteService = $container->get(PosteService::class);
         $roleService = $container->get(RoleService::class);
@@ -67,6 +70,7 @@ class StructureControllerFactory {
         $controller->setCampagneService($campagneService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
+        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setPosteService($posteService);
         $controller->setRoleService($roleService);

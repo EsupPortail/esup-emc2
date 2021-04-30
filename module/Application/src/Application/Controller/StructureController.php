@@ -21,6 +21,7 @@ use Application\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait
 use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
@@ -34,6 +35,7 @@ class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
+    use FormationInstanceInscritServiceAwareTrait;
     use MissionSpecifiqueAffectationServiceAwareTrait;
     use PosteServiceAwareTrait;
     use RoleServiceAwareTrait;
@@ -115,6 +117,9 @@ class StructureController extends AbstractActionController {
         $campagnes = $this->getCampagneService()->getCampagnesActives();
         $entretiens = [];
 
+        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure);
+        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
+
         return new ViewModel([
             'selecteur' => $selecteur,
 
@@ -124,7 +129,8 @@ class StructureController extends AbstractActionController {
             'missions' => $missionsSpecifiques,
             'fichesCompletes' => $fichesCompletes,
             'fichesIncompletes' => $fichesIncompletes,
-            'profils' => $this->getFicheProfilService()->getFichesPostesByStructure($structure),
+            'profils' => $profils,
+            'inscriptions' => $inscriptions,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'postes' => $postes,

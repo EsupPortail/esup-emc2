@@ -100,7 +100,7 @@ trait AgentMacroTrait
             $grade_bap = ($grade->getBap() !== null)?$grade->getBap()->getCategorie():"";
             $texte .= $grade_libelle . " ". $grade_bap;
             $texte .= " (";
-            if($grade->getDateFin()) {
+            if($grade->estFini()) {
                 $texte .= "du " . $grade->getDateDebut()->format('d/m/Y') . " au " . $grade->getDateFin()->format('d/m/Y');
             } else {
                 $texte .= "depuis le " . $grade->getDateDebut()->format('d/m/Y');

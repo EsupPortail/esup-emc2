@@ -294,7 +294,7 @@ class FichePosteService {
             ->addSelect('fichemetiertype')->leftJoin('fichemetier.ficheType', 'fichemetiertype')
             ->addSelect('metier')->leftJoin('fichemetiertype.metier', 'metier')
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('statut.dispo = :false')
             ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
             //->andWhere('statut.administratif = :true')

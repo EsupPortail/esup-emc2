@@ -106,8 +106,8 @@ class AgentService {
             ->andWhere('agent.delete IS NULL')
 
             ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-            ->andWhere('statut.debut <= :NOW')
-            ->andWhere('statut.fin >= :NOW OR statut.fin IS NULL')
+            ->andWhere('statut.dateDebut <= :NOW')
+            ->andWhere('statut.dateFin >= :NOW OR statut.dateFin IS NULL')
             ->setParameter('NOW', $this->getDateTime())
         ;
 
@@ -242,7 +242,7 @@ class AgentService {
             ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('fiche')->leftJoin('agent.fiches', 'fiche')
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
 //            ->andWhere('statut.administratif = :true')
             ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND statut.heberge = :false AND statut.auditeurLibre = :false')
@@ -292,8 +292,8 @@ class AgentService {
             ->andWhere('affectation.principale = :true')
             //STATUS
             ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
-            ->andWhere('statut.debut <= :today')
+            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
+            ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
             ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
             //GRADE
@@ -311,6 +311,8 @@ class AgentService {
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
             ->andWhere('agent.delete IS NULL')
+
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 
         if ($structures !== null) {

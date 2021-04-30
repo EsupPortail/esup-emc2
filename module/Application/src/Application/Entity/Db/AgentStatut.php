@@ -2,16 +2,16 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
-use DateTime;
-use Exception;
-use UnicaenApp\Exception\RuntimeException;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 
 /**
  * Données synchronisées depuis Octopus :
  * - pas de setter sur les données ainsi remontées
  */
-class AgentStatut {
+class AgentStatut implements HasPeriodeInterface {
+    use HasPeriodeTrait;
     use DbImportableAwareTrait;
 
     /** @var string */
@@ -26,10 +26,6 @@ class AgentStatut {
     private $agent;
     /** @var Structure */
     private $structure;
-    /** @var DateTime */
-    private $debut;
-    /** @var DateTime */
-    private $fin;
 
     /** @var boolean */
     private $titulaire;
@@ -159,43 +155,6 @@ class AgentStatut {
     public function setStructure($structure)
     {
         $this->structure = $structure;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDateDebut()
-    {
-        return $this->debut;
-    }
-
-
-    /**
-     * @param DateTime|null $debut
-     * @return AgentStatut
-     */
-    public function setDateDebut(?DateTime $debut)
-    {
-        $this->debut = $debut;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDateFin()
-    {
-        return $this->fin;
-    }
-
-    /**
-     * @param DateTime|null $fin
-     * @return AgentStatut
-     */
-    public function setDateFin(?DateTime $fin)
-    {
-        $this->fin = $fin;
         return $this;
     }
 
@@ -486,21 +445,4 @@ class AgentStatut {
         $this->retraite = $retraite;
         return $this;
     }
-
-    /**
-     * @return bool
-     */
-    public function isActif()
-    {
-        if ($this->fin === null) return true;
-
-        try {
-            $today = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException('Problème de récupération de la date');
-
-        }
-        return $today < $this->fin;
-    }
-
 }

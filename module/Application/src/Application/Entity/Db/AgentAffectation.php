@@ -2,17 +2,19 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
-use DateTime;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 
 /**
  * Données synchronisées depuis Octopus :
  * - pas de setter sur les données ainsi remontées
  */
-class AgentAffectation {
+class AgentAffectation implements HasPeriodeInterface {
     use DateTimeAwareTrait;
     use DbImportableAwareTrait;
+    use HasPeriodeTrait;
 
     /** @var integer */
     private $id;
@@ -20,10 +22,6 @@ class AgentAffectation {
     private $agent;
     /** @var Structure */
     private $structure;
-    /** @var DateTime */
-    private $dateDebut;
-    /** @var DateTime */
-    private $dateFin;
     /** @var string */
     private $idOrig;
     /** @var string */
@@ -54,22 +52,6 @@ class AgentAffectation {
     }
 
     /**
-     * @return DateTime
-     */
-    public function getDateDebut()
-    {
-        return $this->dateDebut;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDateFin()
-    {
-        return $this->dateFin;
-    }
-
-    /**
      * @return string
      */
     public function getIdOrig()
@@ -84,16 +66,5 @@ class AgentAffectation {
     {
         return ($this->principale === 'O');
     }
-
-    /**
-     * @param DateTime $date
-     * @return bool
-     */
-    public function isActive($date = null)
-    {
-        if ($date === null) $date = $this->getDateTime();
-        return ($this->dateDebut <= $date AND ($this->dateFin === null OR $this->dateFin >= $date));
-    }
-
 
 }

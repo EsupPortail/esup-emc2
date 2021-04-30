@@ -5,6 +5,7 @@ namespace Application\Service\FicheProfil;
 use Application\Entity\Db\FicheProfil;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -12,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class FicheProfilService {
     use GestionEntiteHistorisationTrait;
+    use StructureServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -135,7 +137,7 @@ class FicheProfilService {
         $structures[] = $structure;
 
         if ($avecSousStructure === true) {
-            //TODO avoir une fonction dans StructureService pour récupérer la liste des sous-structures
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
         }
 
         $qb = $this->createQueryBuilder()
