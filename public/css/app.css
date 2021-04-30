@@ -307,3 +307,19 @@ span.badge#EMC2 {
 span.badge#LAGAF {
     background: crimson;
 }
+
+span.ok {
+    color:darkgreen;
+    font-weight: bold;
+}
+
+span.ko {
+    color:darkred;
+    font-weight: bold;
+}
+
+th.cell-etat,
+td.cell-etat
+{
+  width:6rem;
+}

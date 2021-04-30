@@ -304,11 +304,10 @@ class Agent implements
      */
     public function getGradesActifs()
     {
-        $now = $this->getDateTime();
         $grades = [];
         /** @var AgentGrade $grade */
         foreach ($this->getGrades() as $grade) {
-            if (!$grade->estFini()) $grades[] = $grade;
+            if ($grade->estEnCours()) $grades[] = $grade;
         }
         return $grades;
     }

@@ -75,20 +75,6 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     <?php echo $grade->getGrade()->getLibelleCourt(); ?>
                 <?php endforeach; ?>
             </td>
-<!--            <td>-->
-<!--                --><?php //$posteA = $agent->getPosteActif(); ?>
-<!--                --><?php //if ($posteA != null ) : ?>
-<!--                    <span-->
-<!--                        class="icon ok" style="color:darkgreen;"-->
-<!--                        data-toggle="tooltip" data-html="true"-->
-<!--                        title="--><?php //echo $posteA->getNumeroPoste(); ?><!--"-->
-<!--                    >-->
-<!---->
-<!--                                    </span>-->
-<!--                --><?php //else : ?>
-<!--                    <span class="icon ko" style="color:darkred;"></span>-->
-<!--                --><?php //endif; ?>
-<!--            </td>-->
             <td>
                 <?php $fiche = $agent->getFichePosteActif(); ?>
                 <?php if ($fiche !== null) : ?>

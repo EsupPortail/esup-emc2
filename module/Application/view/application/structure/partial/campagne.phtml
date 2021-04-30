@@ -62,7 +62,13 @@ $enCours = $campagne->estEnCours();
     <dt> Fin de la campagne </dt>
     <dd> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
     <dt> En cours </dt>
-    <dd> <?php echo $enCours?"<span class='ok'>Oui</span>":"<span class='ko'>Non</span>"; ?></dd>
+    <dd>
+        <?php if ($enCours) : ?>
+            <span class='ok'><span class="icon ok"></span>Oui</span>
+        <?php else : ?>
+            <span class='ko'><span class="icon ko"></span>Non</span>
+        <?php endif; ?>
+    </dd>
 </dl>
 
 <?php echo $this->portenote('StructureController::afficherAction()>entretien', '', []); ?>

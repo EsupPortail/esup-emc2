@@ -64,7 +64,7 @@ trait HasPeriodeTrait {
     public function estFini(?DateTime $date = null) : bool
     {
         if ($date === null) $date = new DateTime();
-        return ($this->dateFin === null OR ($this->dateFin <= $date)) ;
+        return ($this->dateFin !== null AND $this->dateFin < $date) ;
     }
 
     /**
