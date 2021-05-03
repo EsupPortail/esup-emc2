@@ -5,4 +5,4 @@ Description=Exécute les fonctions associées à la gestion des formations : not
 Nice=19
 IOSchedulingClass=2
 IOSchedulingPriority=7
-ExecStart=/bin/bash /var/www/html/script/gerer-formation.sh
+ExecStart=/bin/bash /var/www/html/script/gerer-formations.sh
