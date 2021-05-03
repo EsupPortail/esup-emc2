@@ -106,7 +106,7 @@ class FormationConsoleController extends AbstractActionController {
     /**
      * @throws Exception
      */
-    public function cloturerSessionAction()
+    public function cloturerSessionsAction()
     {
         echo (new DateTime())->format('d/m/y à H:i:s') . "\n";
         echo "Clotûre des sessions" . "\n";
