@@ -233,7 +233,7 @@ class MailingService
         if ($this->getParametreService()->getParametreByCode('GLOBAL','EMAIL') AND $this->getParametreService()->getParametreByCode('GLOBAL','EMAIL')->getValeur() !== null) {
             $email = $this->getParametreService()->getParametreByCode('GLOBAL','EMAIL')->getValeur();
         }
-        $name = $this->appName;
+        $name = 'Application';
         if ($this->getParametreService()->getParametreByCode('GLOBAL','NAME') AND $this->getParametreService()->getParametreByCode('GLOBAL','NAME')->getValeur() !== null) {
             $name = $this->getParametreService()->getParametreByCode('GLOBAL','NAME')->getValeur();
         }
