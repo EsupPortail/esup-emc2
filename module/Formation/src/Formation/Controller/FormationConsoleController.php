@@ -29,7 +29,7 @@ class FormationConsoleController extends AbstractActionController {
     {
         $this->notifierConvocationAction();
         $this->notifierQuestionnaireAction();
-        $this->cloturerSessionAction();
+        $this->cloturerSessionsAction();
     }
 
     /** Notifie les convocations et passe la session a débuter
