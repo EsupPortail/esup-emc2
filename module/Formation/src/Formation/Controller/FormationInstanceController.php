@@ -166,7 +166,7 @@ class FormationInstanceController extends AbstractActionController
         if ($instance->getEtat()->getCode() === FormationInstance::ETAT_CREATION_EN_COURS) {
             $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
             $this->getFormationInstanceService()->update($instance);
-            $email = $this->getParametreService()->getParametreByCode('FORMATION', 'MAIL_LISTE_BIATS');
+            $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS');
             $mail = $this->getMailingService()->sendMailType("FORMATION_INSCRIPTION_OUVERTE", ['formation-instance' => $instance, 'mailing' => $email]);
             $mail->setAttachementType(FormationInstance::class);
             $mail->setAttachementId($instance->getId());
