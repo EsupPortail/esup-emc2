@@ -2,7 +2,6 @@
 
 namespace Formation;
 
-use Application\Controller\EtudiantController;
 use Formation\Controller\FormationConsoleController;
 use Formation\Controller\FormationConsoleControllerFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -17,7 +16,10 @@ return [
                 [
                     'controller' => FormationConsoleController::class,
                     'action' => [
+                        'gerer-formations',
                         'notifier-convocation',
+                        'notifier-questionnaire',
+                        'cloturer-sessions',
                     ],
                     'roles' => [],
                 ],
@@ -28,13 +30,43 @@ return [
     'console' => [
         'router' => [
             'routes' => [
-                'etudiant-refresh' => [
+                'gerer-formations' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'formation-gerer-formations',
+                        'defaults' => [
+                            'controller' => FormationConsoleController::class,
+                            'action' => 'gerer-formations'
+                        ],
+                    ],
+                ],
+                'notifier-convocation' => [
                     'type' => Simple::class,
                     'options' => [
                         'route' => 'formation-notifier-convocation',
                         'defaults' => [
                             'controller' => FormationConsoleController::class,
                             'action' => 'notifier-convocation'
+                        ],
+                    ],
+                ],
+                'notifier-questionnaire' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'formation-notifier-questionnaire',
+                        'defaults' => [
+                            'controller' => FormationConsoleController::class,
+                            'action' => 'notifier-questionnaire'
+                        ],
+                    ],
+                ],
+                'cloturer-sessions' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'formation-cloturer-sessions',
+                        'defaults' => [
+                            'controller' => FormationConsoleController::class,
+                            'action' => 'cloturer-sessions'
                         ],
                     ],
                 ],
