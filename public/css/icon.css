@@ -300,3 +300,11 @@ span.icon.aucune:before {
 span.icon.star:before {
     content: "\f005";
 }
+
+span.icon.convoquer:before {
+    content: "\f4ad";
+}
+
+span.icon.cloturer:before {
+    content: "\f28d";
+}

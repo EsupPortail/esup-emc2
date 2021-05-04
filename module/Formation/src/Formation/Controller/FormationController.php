@@ -33,7 +33,7 @@ class FormationController extends AbstractActionController
 
     public function indexAction()
     {
-        $formations = $this->getFormationService()->getFormations('libelle');
+        $formations = $this->getFormationService()->getFormations();
         $groupes = $this->getFormationGroupeService()->getFormationsGroupes('libelle');
 
         return new ViewModel([
@@ -57,6 +57,9 @@ class FormationController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFormationService()->create($formation);
+                $formation->setSource(Formation::SOURCE_EMC2);
+                $formation->setIdSource($formation->getId());
+                $this->getFormationService()->update($formation);
                 exit;
             }
         }

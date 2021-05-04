@@ -44,7 +44,7 @@ $canInscrire = true;
                     <?php endif; ?>
                 <?php endif; ?>
             <?php endif; ?>
-            <?php if ($instance->getEtat() === FormationInstance::ETAT_FORMATION_CONVOCATION) : ?>
+            <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_FORMATION_CONVOCATION) : ?>
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
                         href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"

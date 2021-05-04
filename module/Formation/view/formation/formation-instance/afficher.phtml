@@ -98,6 +98,33 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                         Fermer les inscriptions
                     </a>
                 <?php endif; ?>
+                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_INSCRIPTION_FERMEE) : ?>
+                    <br/>
+                    <a      <?php /** @see FormationInstanceController::envoyerConvocationAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/envoyer-convocation', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-primary action">
+                        <span class="icon convoquer"></span>
+                        Convoquer les inscrits
+                    </a>
+                <?php endif; ?>
+                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_FORMATION_CONVOCATION) : ?>
+                    <br/>
+                    <a      <?php /** @see FormationInstanceController::demanderRetourAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/demander-retour', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-primary action">
+                        <span class="icon convoquer"></span>
+                        Demander les retours
+                    </a>
+                <?php endif; ?>
+                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_ATTENTE_RETOURS) : ?>
+                    <br/>
+                    <a      <?php /** @see FormationInstanceController::cloturerAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-primary action">
+                        <span class="icon cloturer"></span>
+                        Clotûrer la session
+                    </a>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>

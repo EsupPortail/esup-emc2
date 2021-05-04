@@ -7,12 +7,18 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
+use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceService
 {
     use GestionEntiteHistorisationTrait;
+    use EtatServiceAwareTrait;
+    use MailingServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -175,7 +181,91 @@ class FormationInstanceService
             throw new RuntimeException("Plusieurs FormationInstance partagent le même idSource [" . $source . "-" . $idSource . "]", 0, $e);
         }
         return $result;
-
     }
 
+    /** Fonctions associées aux états de l'instance *******************************************************************/
+
+    /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
+    public function ouvrirInscription(FormationInstance $instance) : FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
+        $this->update($instance);
+        $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS');
+        $mail = $this->getMailingService()->sendMailType("FORMATION_INSCRIPTION_OUVERTE", ['formation-instance' => $instance, 'mailing' => $email]);
+        $mail->setAttachementType(FormationInstance::class);
+        $mail->setAttachementId($instance->getId());
+        $this->getMailingService()->update($mail);
+        return $instance;
+    }
+
+    /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
+    public function fermerInscription(FormationInstance $instance) : FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
+        $this->update($instance);
+        foreach ($instance->getListePrincipale() as $inscrit) {
+            $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_PRINCIPALE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+            $mail->setAttachementType(FormationInstance::class);
+            $mail->setAttachementId($instance->getId());
+            $this->getMailingService()->update($mail);
+        }
+        foreach ($instance->getListeComplementaire() as $inscrit) {
+            $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_SECONDAIRE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
+            $mail->setAttachementType(FormationInstance::class);
+            $mail->setAttachementId($instance->getId());
+            $this->getMailingService()->update($mail);
+        }
+        return $instance;
+    }
+
+    /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
+    public function envoyerConvocation(FormationInstance $instance) : FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
+        $this->update($instance);
+        foreach ($instance->getListePrincipale() as $inscrit) {
+            $mail = $this->getMailingService()->sendMailType('FORMATION_CONVOCATION', ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);
+            $mail->setAttachementType(FormationInstance::class);
+            $mail->setAttachementId($instance->getId());
+            $this->getMailingService()->update($mail);
+        }
+        return $instance;
+    }
+
+    /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
+    public function demanderRetour(FormationInstance $instance) : FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_ATTENTE_RETOURS));
+        $this->update($instance);
+        foreach ($instance->getListePrincipale() as $inscrit) {
+            $mail = $this->getMailingService()->sendMailType('FORMATION_RETOUR', ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);
+            $mail->setAttachementType(FormationInstance::class);
+            $mail->setAttachementId($instance->getId());
+            $this->getMailingService()->update($mail);
+        }
+        return $instance;
+    }
+
+    /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
+    public function cloturer(FormationInstance $instance) : FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_CLOTURE_INSTANCE));
+        $this->update($instance);
+        return $instance;
+    }
 }

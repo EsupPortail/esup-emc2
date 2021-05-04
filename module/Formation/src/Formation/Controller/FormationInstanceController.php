@@ -162,81 +162,35 @@ class FormationInstanceController extends AbstractActionController
     public function ouvrirInscriptionAction()
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-
-        if ($instance->getEtat()->getCode() === FormationInstance::ETAT_CREATION_EN_COURS) {
-            $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
-            $this->getFormationInstanceService()->update($instance);
-            $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS');
-            $mail = $this->getMailingService()->sendMailType("FORMATION_INSCRIPTION_OUVERTE", ['formation-instance' => $instance, 'mailing' => $email]);
-            $mail->setAttachementType(FormationInstance::class);
-            $mail->setAttachementId($instance->getId());
-            $this->getMailingService()->update($mail);
-        }
-
+        $this->getFormationInstanceService()->ouvrirInscription($instance);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
     public function fermerInscriptionAction()
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-
-        if ($instance->getEtat()->getCode() === FormationInstance::ETAT_INSCRIPTION_OUVERTE) {
-            $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
-            $this->getFormationInstanceService()->update($instance);
-            foreach ($instance->getListePrincipale() as $inscrit) {
-                $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_PRINCIPALE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
-                $mail->setAttachementType(FormationInstance::class);
-                $mail->setAttachementId($instance->getId());
-                $this->getMailingService()->update($mail);
-            }
-            foreach ($instance->getListeComplementaire() as $inscrit) {
-                $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_SECONDAIRE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
-                $mail->setAttachementType(FormationInstance::class);
-                $mail->setAttachementId($instance->getId());
-                $this->getMailingService()->update($mail);
-            }
-        }
-
+        $this->getFormationInstanceService()->fermerInscription($instance);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function convoquerAction()
+    public function envoyerConvocationAction()
     {
-        $go = (new DateTime())->sub(new DateInterval('P2D'));
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_FERMEE);
-        foreach ($instances as $instance) {
-            if ($instance->getDebut() < $go ) {
-                $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_FORMATION_CONVOCATION));
-                $this->getFormationInstanceService()->update($instance);
-                foreach ($instance->getListePrincipale() as $inscrit) {
-                    $this->getMailingService()->sendMailType("FORMATION_CONVOCATION", ['formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);
-                }
-                echo "Action de formation #" . $instance->getId() ." - " . $instance->getFormation()->getLibelle() . " : Envoi des convocations.\n";
-                $this->getMailingService()->sendMailType("FORMATION_EMARGEMENT", ['formation-instance' => $instance, 'users' => array_map(function (FormationInstanceFormateur $a) { return $a->getEmail(); }, $instance->getFormateurs())]);
-                echo "Action de formation #" . $instance->getId() ." - " . $instance->getFormation()->getLibelle() . " : Envoi des listes d'émargement.\n";
-
-            }
-        }
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $this->getFormationInstanceService()->envoyerConvocation($instance);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function questionnerAction()
+    public function demanderRetourAction()
     {
-        $go = (new DateTime())->sub(new DateInterval('P2D'));
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_FORMATION_CONVOCATION);
-        foreach ($instances as $instance) {
-            if ($instance->getFin() > $go ) {
-                $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_ATTENTE_RETOURS));
-                $this->getFormationInstanceService()->update($instance);
-                foreach ($instance->getListePrincipale() as $inscrit) {
-                    $this->getMailingService()->sendMailType("FORMATION_RETOURS", ['formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);
-                }
-                echo "Action de formation #" . $instance->getId() ." - " . $instance->getFormation()->getLibelle() . " : Attente des retours.\n";
-            }
-        }
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $this->getFormationInstanceService()->demanderRetour($instance);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function formationConsoleAction() {
-        $this->convoquerAction();
-        $this->questionnerAction();
+    public function cloturerAction()
+    {
+          $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+          $this->getFormationInstanceService()->cloturer($instance);
+          return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 }

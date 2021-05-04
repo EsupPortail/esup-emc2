@@ -107,11 +107,13 @@ class FormationGroupeService
     }
 
     /**
+     * @param string $champ
+     * @param string $ordre
      * @return array
      */
-    public function getFormationsGroupesAsOption()
+    public function getFormationsGroupesAsOption($champ = 'libelle', $ordre = 'ASC') : array
     {
-        $groupes = $this->getFormationsGroupes();
+        $groupes = $this->getFormationsGroupes($champ, $ordre);
         $array = [];
         foreach ($groupes as $groupe) {
             $option = $this->optionify($groupe);

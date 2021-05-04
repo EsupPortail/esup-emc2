@@ -76,8 +76,7 @@ class FormationService
 //            ->addSelect('createur')->join('formation.histoCreateur', 'createur')
 //            ->addSelect('modificateur')->join('formation.histoModificateur', 'modificateur')
 //            ->addSelect('destructeur')->leftjoin('formation.histoDestructeur', 'destructeur')
-//            ->addSelect('theme')->leftJoin('formation.theme', 'theme')
-//            ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
+            ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
 //            ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
 //            ->addSelect('journee')->leftJoin('finstance.journees', 'journee')
 //            ->addSelect('inscrit')->leftJoin('finstance.inscrits', 'inscrit')
@@ -93,7 +92,7 @@ class FormationService
     public function getFormations($champ = 'libelle', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('formation.' . $champ, $ordre);
+            ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
     }

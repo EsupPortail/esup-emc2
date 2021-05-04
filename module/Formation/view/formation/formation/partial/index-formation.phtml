@@ -13,19 +13,12 @@ $canAjouterInstance = $droits['ajouter'];
 $canHistoriser = $droits['historiser'];
 $canDetruire = $droits['detruire'];
 
-usort($formations, function(Formation $a, Formation $b) {
-    $oga = ($a->getGroupe())?$a->getGroupe()->getOrdre():999999;
-    $ogb = ($b->getGroupe())?$b->getGroupe()->getOrdre():999999;
-    return $oga > $ogb;
-});
-
-$this->headTitle("Index des formations");
 ?>
 
 <div class="row">
     <div class="col-md-8">
         <h2>
-            Formations
+            Actions de formation
         </h2>
     </div>
     <div class="col-md-4">
@@ -39,7 +32,7 @@ $this->headTitle("Index des formations");
                 class="btn btn-primary action ajax-modal"
                 data-event="modification">
                 <span class="icon ajouter"></span>
-                Ajouter une formation
+                Ajouter une action de formation
             </a>
         <?php endif; ?>
     </div>
@@ -50,10 +43,10 @@ $this->headTitle("Index des formations");
 <table class="datatable" id="formations" style="width:100%;">
     <thead>
         <tr>
-            <th> Libellé </th>
-            <th> Groupe </th>
-            <th> Source </th>
-            <th style="width:12rem;"> Action </th>
+            <th class="col-md-6 nosort"> Libellé </th>
+            <th class="col-md-3 nosort"> Groupe </th>
+            <th class="col-md-2 nosort"> Source </th>
+            <th class="col-md-1 nosort"> Action </th>
         </tr>
     </thead>
     <tbody>
@@ -105,49 +98,19 @@ $this->headTitle("Index des formations");
 
 <script>
     $(document).ready(function() {
-    //     let groupColumn = 1;
-        $('#formations').DataTable({
-    //         "sorting" : false,
-            paging:false,
-    //         "columnDefs": [
-    //             { "visible": false, "targets": groupColumn }
-    //         ],
-    //         // "order": [[ groupColumn, 'asc' ]],
-    //         "drawCallback": function () {
-    //             let api = this.api();
-    //             let rows = api.rows( {page:'current'} ).nodes();
-    //             let last = null;
-    //
-    //             api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-    //                 if ( last !== group ) {
-    //                     $(rows).eq( i ).before(
-    //                         '<tr class="group"><td colspan="3"> Groupe : '+group+'</td></tr>'
-    //                     );
-    //
-    //                     last = group;
-    //                 }
-    //             } );
-    //         }
+        let table = $('#formations').DataTable({
+            "pageLength": 25,
+            "sorting": false,
+            "columnDefs": [
+                {"targets": ['nosort'], "orderable": false},
+            ],
+            "language": {
+                "search": "Filtre : _INPUT_",
+                'infoFiltered': "<small class=\"text-highlight\">(_MAX_ &eacute;l&eacute;ments au total)</small>",
+                'emptyTable': "Aucune donnée disponible",
+                'zeroRecords': "Aucun enregistrement trouvé",
+            },
         } );
     } );
 </script>
 
-<style>
-    table#formations thead tr th {
-        height: 5rem;
-    }
-    tr.group {
-        background: linear-gradient(to right, lightgrey, white);
-        color: #3c6c8b;
-    }
-
-    span.badge.source.EMC2 {
-        background: #123456;
-    }
-    span.badge.source.FauxLAGAF {
-        background: crimson;
-    }
-    span.badge.source.LAGAF {
-        background: darkred;
-    }
-</style>

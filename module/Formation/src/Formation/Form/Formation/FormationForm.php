@@ -40,7 +40,8 @@ class FormationForm extends Form
                 'value_options' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
             ],
             'attributes' => [
-                'class' => 'description form-control',
+                'class' => 'description form-control show-tick',
+                'data-live-search'  => 'true',
                 'style' => 'height:300px;',
             ]
         ]);

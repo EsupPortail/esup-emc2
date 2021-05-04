@@ -34,7 +34,7 @@ input[type=submit],
 a.btn,
 span.btn
 {
-    width:25rem;
+    width:27rem;
     margin:1rem;
 }
 
@@ -166,9 +166,19 @@ span.probleme {
 /*** Datatable ******/
 
 table.datatable thead {
-    background-color: var(--color-medium-bis);
-    border-color: var(--color-medium);
+    background-color: var(--header-background);
+    border: none;
     color: var(--header-color);
+}
+
+table.datatable thead tr th {
+    height: 4rem;
+    padding: 5px;
+}
+
+table.datatable tbody tr td {
+    border-bottom: 1px solid var(--header-background-hover);
+    padding: 5px;
 }
 
 /** AUTRES MISE ENFORME ***********************************************************************************************/
@@ -300,12 +310,12 @@ span.badge.source {
     width:15rem;
 }
 
-span.badge#EMC2 {
+span.badge.EMC2 {
     background: #123456;
 }
 
-span.badge#LAGAF {
-    background: crimson;
+span.badge.LAGAF {
+    background: darkred;
 }
 
 span.ok {

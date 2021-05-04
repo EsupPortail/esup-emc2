@@ -25,7 +25,6 @@ class FormationInstanceInscritController extends AbstractActionController
     use FormationInstanceInscritServiceAwareTrait;
     use MailingServiceAwareTrait;
     use UserServiceAwareTrait;
-
     use SelectionAgentFormAwareTrait;
 
 
@@ -48,6 +47,7 @@ class FormationInstanceInscritController extends AbstractActionController
             if ($form->isValid()) {
                 if (!$instance->hasAgent($inscrit->getAgent())) {
                     $inscrit->setListe($instance->getListeDisponible());
+                    $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_INSCRIPTION));
                     $this->getFormationInstanceInscritService()->create($inscrit);
 
                     $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
