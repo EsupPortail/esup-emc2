@@ -222,7 +222,7 @@ foreach ($responses as $response) {
             <?php endif; ?>
         </td>
         <td>
-            <?php if ($entretien->getValidationResponsable()) : ?>
+            <?php if ($entretien->getValidationDRH()) : ?>
                 <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?> <br/>
                 <?php echo $entretien->getValidationDRH()->getHistoModification()->format('d/m/Y'); ?>
             <?php else : ?>
