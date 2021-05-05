@@ -381,7 +381,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     case 'Responsable' :
                         $entretien->setValidationResponsable($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
-                        $mail1 = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getUtilisateur()->getEmail()]);
+                        $mail1 = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getEmail()]);
                         $this->getMailingService()->addAttachement($mail1, EntretienProfessionnel::class, $entretien->getId());
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
