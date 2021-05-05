@@ -22,7 +22,9 @@ class FicheProfilController extends AbstractActionController {
     public function ajouterAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures([$structure], true);
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
 
         $ficheprofil = new FicheProfil();
         $ficheprofil->setVancanceEmploi(false);
@@ -59,7 +61,9 @@ class FicheProfilController extends AbstractActionController {
     {
         $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
         $structure = $ficheprofil->getStructure();
-        $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures([$structure], true);
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
 
         $form = $this->getFicheProfilForm();
         $form->setStructure($structure);

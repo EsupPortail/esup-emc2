@@ -56,6 +56,7 @@ body {
     font-family: var(--font-principal);
     border-radius: 0;
     border: 0;
+    padding-top: 0;
 }
 
 /** NAVBAR --------------------------------------------------------------------------------------------------------- **/
@@ -159,7 +160,6 @@ header ul.dropdown-menu > li a:hover {
 .navbar .nav >  li.open a, a:hover {
     background: var(--header-background-hover);
 }
-
 
 .navbar .nav .dropdown-menu > li.active  a {
     color: var(--header-color);
@@ -270,7 +270,6 @@ img.footer-logo-normandie-universite {
     }
 }
 
-
 @media (max-width: 799px) {
     a.navbar-brand h1 {
         text-transform: uppercase;
@@ -295,7 +294,6 @@ footer {
     height: var(--footer-height);
     margin: 0;
 }
-
 
 /** FOOTER --------------------------------------------------------------------------------------------------------- **/
 

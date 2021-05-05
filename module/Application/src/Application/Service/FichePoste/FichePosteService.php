@@ -289,7 +289,6 @@ class FichePosteService {
             ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
             ->addSelect('statut')->join('agent.statuts', 'statut')
             ->addSelect('grade')->join('agent.grades', 'grade')
-            ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('fichemetier')->leftJoin('fiche.fichesMetiers', 'fichemetier')
             ->addSelect('fichemetiertype')->leftJoin('fichemetier.ficheType', 'fichemetiertype')
             ->addSelect('metier')->leftJoin('fichemetiertype.metier', 'metier')
@@ -297,21 +296,19 @@ class FichePosteService {
             ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('statut.dispo = :false')
             ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
-            //->andWhere('statut.administratif = :true')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
-            ->andWhere('affectation.principale = :true')
+
 
             ->setParameter('today', $today)
             //->setParameter('noEnd', $noEnd)
-            ->setParameter('true', 'O')
-                ->setParameter('false', 'N')
+            ->setParameter('false', 'N')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
 
         if ($sousstructure) {
             $qb = $qb
-                ->andWhere('statut.structure IN (:structures)')
+                ->andWhere('affectation.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
 

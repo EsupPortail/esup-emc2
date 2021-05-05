@@ -31,6 +31,12 @@ class FicheProfilForm extends Form {
 
     public function init()
     {
+        $structures = null;
+        if ($this->structure) {
+            $structures = $this->getStructureService()->getStructuresFilles($this->structure);
+            $structures[] = $this->structure;
+        }
+
         $this->add([
             'type' => Checkbox::class,
             'name' => 'vacance_emploi',
@@ -73,7 +79,7 @@ class FicheProfilForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner une fiche de poste ... ",
-                'value_options' => ($this->structure)?$this->getFichePosteService()->getFichesPostesByStructuresAsOptions([$this->structure], true):null,
+                'value_options' => ($this->structure AND $structures !== null)?$this->getFichePosteService()->getFichesPostesByStructuresAsOptions($structures, true):null,
             ],
             'attributes' => [
                 'id'                => 'competence',
