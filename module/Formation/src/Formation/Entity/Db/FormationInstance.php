@@ -532,5 +532,4 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
         $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
     }
-
 }

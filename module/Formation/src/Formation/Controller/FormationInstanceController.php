@@ -3,10 +3,7 @@
 namespace Formation\Controller;
 
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use DateInterval;
-use DateTime;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceFormateur;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
@@ -177,6 +174,7 @@ class FormationInstanceController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->envoyerConvocation($instance);
+        $this->getFormationInstanceService()->envoyerEmargement($instance);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 

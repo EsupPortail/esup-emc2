@@ -53,6 +53,9 @@ class FormationConsoleController extends AbstractActionController {
                 $this->getFormationInstanceService()->envoyerConvocation($session);
                 echo (new DateTime())->format('d/m/y à H:i:s') . "\n";
                 echo "Envoi des convocations effectué pour la session de formation " . $session->getFormation()->getLibelle() . " - " . $session->getId() . "\n";
+                $this->getFormationInstanceService()->envoyerEmargement($session);
+                echo (new DateTime())->format('d/m/y à H:i:s') . "\n";
+                echo "Envoi des émargements effectué pour la session de formation " . $session->getFormation()->getLibelle() . " - " . $session->getId() . "\n";
             }
 
         }

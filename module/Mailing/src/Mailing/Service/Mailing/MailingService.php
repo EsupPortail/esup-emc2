@@ -502,6 +502,10 @@ class MailingService
                 $url = $this->rendererService->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
                 $intitule = $instance->getFormation()->getLibelle() ."(#". $instance->getId() .")";
                 return '<a href="'.$url.'">'.$intitule.'</a>';
+            case 'VAR[FORMATION#Emargements]' :
+                $instance = $variables['formation-instance'];
+                $url = $this->rendererService->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
+                return "Liste de émargements : <a href='".$url."'> PDF des émargements </a>";
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

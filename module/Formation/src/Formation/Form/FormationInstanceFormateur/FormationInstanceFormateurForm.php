@@ -35,6 +35,17 @@ class FormationInstanceFormateurForm extends Form
                 'id' => 'nom',
             ],
         ]);
+        //nom
+        $this->add([
+            'type' => Text::class,
+            'name' => 'email',
+            'options' => [
+                'label' => "Adresse électronique * :",
+            ],
+            'attributes' => [
+                'id' => 'email',
+            ],
+        ]);
         //attachement
         $this->add([
             'type' => Text::class,
@@ -88,6 +99,7 @@ class FormationInstanceFormateurForm extends Form
         $this->setInputFilter((new Factory())->createInputFilter([
             'prenom' => ['required' => true],
             'nom' => ['required' => true],
+            'email' => ['required' => true],
             'attachement' => ['required' => false],
             'volume' => [
                 'required' => false,

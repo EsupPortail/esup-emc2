@@ -17,6 +17,8 @@ class FormationInstanceFormateur implements HistoriqueAwareInterface
     private $prenom;
     /** @var string */
     private $nom;
+    /** @var string|null */
+    private $email;
     /** @var string */
     private $attachement;
     /** @var float */
@@ -74,6 +76,24 @@ class FormationInstanceFormateur implements HistoriqueAwareInterface
     public function getNom(): ?string
     {
         return $this->nom;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     * @return FormationInstanceFormateur
+     */
+    public function setEmail(?string $email): FormationInstanceFormateur
+    {
+        $this->email = $email;
+        return $this;
     }
 
     /**

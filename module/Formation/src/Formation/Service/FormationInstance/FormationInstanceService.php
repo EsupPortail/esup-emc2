@@ -248,6 +248,24 @@ class FormationInstanceService
      * @param FormationInstance $instance
      * @return FormationInstance
      */
+    public function envoyerEmargement(FormationInstance $instance) : FormationInstance
+    {
+        $this->update($instance);
+        $mails = [];
+        foreach ($instance->getFormateurs() as $formateur) {
+            $mails[] = $formateur->getEmail();
+        }
+        $mail = $this->getMailingService()->sendMailType('FORMATION_EMARGEMENT', ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'mailing' => implode(",", $mails)]);
+        $mail->setAttachementType(FormationInstance::class);
+        $mail->setAttachementId($instance->getId());
+        $this->getMailingService()->update($mail);
+        return $instance;
+    }
+
+    /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
     public function demanderRetour(FormationInstance $instance) : FormationInstance
     {
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_ATTENTE_RETOURS));
