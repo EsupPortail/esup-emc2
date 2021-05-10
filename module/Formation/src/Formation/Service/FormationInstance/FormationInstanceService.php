@@ -83,10 +83,13 @@ class FormationInstanceService
             ->addSelect('formation')->join('Finstance.formation', 'formation')
             ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
             ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
+            ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
             ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
-            ->addSelect('etat')->leftjoin('Finstance.etat', 'etat');
+            ->addSelect('etat')->leftjoin('Finstance.etat', 'etat')
+            ->addSelect('etype')->leftjoin('etat.type', 'etype')
+        ;
         return $qb;
     }
 
@@ -230,7 +233,7 @@ class FormationInstanceService
      */
     public function envoyerConvocation(FormationInstance $instance) : FormationInstance
     {
-        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
+        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_FORMATION_CONVOCATION));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
             $mail = $this->getMailingService()->sendMailType('FORMATION_CONVOCATION', ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);

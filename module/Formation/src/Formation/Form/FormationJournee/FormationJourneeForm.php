@@ -3,8 +3,7 @@
 namespace Formation\Form\FormationJournee;
 
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Date;
-use Zend\Form\Element\DateTime as DateTimeElement;
+use Zend\Form\Element\DateTime;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
@@ -16,10 +15,11 @@ class FormationJourneeForm extends Form
     {
         //jour
         $this->add([
-            'type' => Date::class,
+            'type' => DateTime::class,
             'name' => 'jour',
             'options' => [
                 'label' => "Jour de la formation * :",
+                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'jour',
@@ -27,7 +27,7 @@ class FormationJourneeForm extends Form
         ]);
         //debut
         $this->add([
-            'type' => DateTimeElement::class,
+            'type' => DateTime::class,
             'name' => 'debut',
             'options' => [
                 'label' => "Début de la journée * :",
@@ -39,7 +39,7 @@ class FormationJourneeForm extends Form
         ]);
         //fin
         $this->add([
-            'type' => DateTimeElement::class,
+            'type' => DateTime::class,
             'name' => 'fin',
             'options' => [
                 'label' => "Fin de la journée * :",

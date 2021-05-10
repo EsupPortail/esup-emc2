@@ -13,6 +13,7 @@ use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -21,6 +22,7 @@ use Zend\View\Model\ViewModel;
 class FormationController extends AbstractActionController
 {
     use EtatServiceAwareTrait;
+    use FormationInstanceServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
@@ -91,11 +93,14 @@ class FormationController extends AbstractActionController
             }
         }
 
+        $instances = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
+
         $vm = new ViewModel();
         $vm->setTemplate('formation/formation/modifier');
         $vm->setVariables([
             'title' => 'Edition d\'une formation',
             'formation' => $formation,
+            'instances' => $instances,
             'form' => $form,
         ]);
         return $vm;

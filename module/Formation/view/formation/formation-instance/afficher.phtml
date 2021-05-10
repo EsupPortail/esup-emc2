@@ -56,11 +56,11 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
 ?>
 
 <h1 class="page-header">
-    Instance de formation
+    Session de formation
 </h1>
 
 <div class="main">
-    <h2> Formation </h2>
+    <h2> Action de formation </h2>
     <div class="row">
         <div class="col-sm-6 col-md-8">
             <?php echo $this->formationInformations($formation); ?>
@@ -70,7 +70,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
                     class="btn btn-info action">
                 <span class="icon retour"></span>
-                Retour à la formation associée
+                Retour à l'action formation
             </a>
             <br/>
             <a      <?php /** @see FormationController::indexAction() */ ?>
@@ -80,7 +80,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                 Retour à l'index des formations
             </a>
             <?php if ($canGererInscription) : ?>
-                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_CREATION_EN_COURS) : ?>
+                <?php if ($instance->isEtat(FormationInstance::ETAT_CREATION_EN_COURS) AND $instance->hasJournee())  : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::ouvrirInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/ouvrir-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -89,7 +89,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                         Ouvrir les inscriptions
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_INSCRIPTION_OUVERTE) : ?>
+                <?php if ($instance->isEtat(FormationInstance::ETAT_INSCRIPTION_OUVERTE)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::fermerInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/fermer-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -98,7 +98,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                         Fermer les inscriptions
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_INSCRIPTION_FERMEE) : ?>
+                <?php if ($instance->isEtat(FormationInstance::ETAT_INSCRIPTION_FERMEE)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::envoyerConvocationAction() */ ?>
                             href="<?php echo $this->url('formation-instance/envoyer-convocation', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -107,7 +107,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                         Convoquer les inscrits
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_FORMATION_CONVOCATION) : ?>
+                <?php if ($instance->isEtat(FormationInstance::ETAT_FORMATION_CONVOCATION)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::demanderRetourAction() */ ?>
                             href="<?php echo $this->url('formation-instance/demander-retour', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -116,7 +116,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                         Demander les retours
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_ATTENTE_RETOURS) : ?>
+                <?php if ($instance->isEtat(FormationInstance::ETAT_ATTENTE_RETOURS)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::cloturerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -242,14 +242,14 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             <div class="row">
                 <div class="col-md-8">
                     <h3>
-                        Journée(s) de formation
+                        Scéance(s) de formation
                         <span class="badge"> <?php echo count($journees); ?></span>
                     </h3>
 
                     <dl class="dl-horizontal">
-                        <dt>Première plage </dt>
+                        <dt>Première scéance </dt>
                         <dd><?php echo $instance->getDebut(); ?></dd>
-                        <dt>Dernière plage </dt>
+                        <dt>Dernière scéance </dt>
                         <dd><?php echo $instance->getFin(); ?></dd>
                         <dt>Durée de la formation</dt>
                         <dd><?php echo $instance->getDuree(); ?></dd>
@@ -262,7 +262,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                         <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
                                 class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon ajouter"></span>
-                            Ajouter une journée de formation
+                            Ajouter une scéance de formation
                         </a>
                     <br/>
                         <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */?>
@@ -298,28 +298,28 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     <?php if ($canJourneeModifier) : ?>
                         <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
-                                data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la journée de formation" target="_blank">
+                                data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la scéance de formation" target="_blank">
                             <span class="icon pdf"></span><span class="lettrine">E</span></a>
                         <?php /** @see FormationInstanceJourneeController::modifierJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
-                                data-toggle="tooltip" data-html="true" title="Modifier l'émargement de la journée de formation">
+                                data-toggle="tooltip" data-html="true" title="Modifier l'émargement de la scéance de formation">
                             <span class="icon editer"></span></a>
                         <?php if ($journee->estNonHistorise()) : ?>
                             <?php /** @see FormationInstanceJourneeController::historiserJourneeAction() */?>
                             <a      href="<?php echo $this->url('formation-instance/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    data-toggle="tooltip" data-html="true" title="Historiser l'émargement de la journée de formation">
+                                    data-toggle="tooltip" data-html="true" title="Historiser l'émargement de la scéance de formation">
                                 <span class="icon historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see FormationInstanceJourneeController::restaurerJourneeAction() */?>
                             <a      href="<?php echo $this->url('formation-instance/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    data-toggle="tooltip" data-html="true" title="Restaurer l'émargement de la journée de formation">
+                                    data-toggle="tooltip" data-html="true" title="Restaurer l'émargement de la scéance de formation">
                                 <span class="icon restaurer"></span></a>
                         <?php endif; ?>
                         <?php /** @see FormationInstanceJourneeController::supprimerJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
-                                data-toggle="tooltip" data-html="true" title="Supprimer définitivement l'émargement de la journée de formation">
+                                data-toggle="tooltip" data-html="true" title="Supprimer définitivement l'émargement de la scéance de formation">
                             <span class="icon detruire"></span></a>
                     <?php endif; ?>
                 </td>

@@ -32,7 +32,6 @@ class FormationInstanceController extends AbstractActionController
     use ParametreServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
 
-
     /** NB: par defaut les instances de formation sont toutes en autoinscription **************************************/
 
     public function ajouterAction()
@@ -40,6 +39,7 @@ class FormationInstanceController extends AbstractActionController
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
         $instance = new FormationInstance();
+        $instance->setType(FormationInstance::TYPE_INTERNE);
         $instance->setAutoInscription(true);
         $instance->setNbPlacePrincipale(0);
         $instance->setNbPlaceComplementaire(0);

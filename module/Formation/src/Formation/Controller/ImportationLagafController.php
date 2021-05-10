@@ -554,7 +554,7 @@ class ImportationLagafController extends AbstractActionController {
                         if (!$agent->hasFormation($formation)) {
                             $formationElement = new FormationElement();
                             $formationElement->setFormation($formation);
-                            $formationElement->setCommentaire("LAGAF");
+                            $formationElement->setCommentaire($instance->getDebut() . " - LAGAF");
                             $this->getHasFormationCollectionService()->addFormation($agent, $formationElement);
                             $nbElement++;
                         }

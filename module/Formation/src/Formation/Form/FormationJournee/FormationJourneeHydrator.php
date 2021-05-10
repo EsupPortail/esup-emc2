@@ -15,7 +15,7 @@ class FormationJourneeHydrator implements HydratorInterface
      */
     public function extract($object)
     {
-        $jour = ($object->getJour())?$object->getJour()->format('Y-m-d'):null;
+        $jour = ($object->getJour())?$object->getJour()->format('d/m/Y'):null;
         $data = [
             'jour' => $jour,
             'debut' => $object->getDebut(),
@@ -32,7 +32,7 @@ class FormationJourneeHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
-        $jour = (isset($data['jour'])) ? DateTime::createFromFormat('Y-m-d',$data['jour']) : null;
+        $jour = (isset($data['jour'])) ? DateTime::createFromFormat('d/m/Y',$data['jour']) : null;
         $debut = (isset($data['debut'])) ? $data['debut'] : null;
         $fin = (isset($data['fin'])) ? $data['fin'] : null;
         $lieu = (isset($data['lieu'])) ? $data['lieu'] : null;

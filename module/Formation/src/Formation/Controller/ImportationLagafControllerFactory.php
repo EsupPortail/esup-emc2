@@ -34,7 +34,7 @@ namespace Formation\Controller;
           * @var HasFormationCollectionService $hasFormationCollectionService
           * @var StagiaireService $stagiaireService
           */
-         $etatService = $container->get(FormationService::class);
+         $etatService = $container->get(EtatService::class);
          $formationService = $container->get(FormationService::class);
          $formationGroupeService = $container->get(FormationGroupeService::class);
          $formationInstanceService = $container->get(FormationInstanceService::class);

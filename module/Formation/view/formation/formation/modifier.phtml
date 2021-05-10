@@ -8,6 +8,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
 /**
  * @see FormationController::editerAction()
  * @var Formation $formation
+ * @var FormationInstance[] $instances
  * @var string $mode
  */
 
@@ -16,9 +17,6 @@ $canAfficherInstance        = $this->isAllowed(FormationinstancePrivileges::getR
 $canAjouterInstance         = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AJOUTER));
 $canHistoriserInstance      = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_HISTORISER));
 $canSupprimerInstance       = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_SUPPRIMER));
-
-/** @var FormationInstance[] $instances */
-$instances = $formation->getInstances();
 
 $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLibelle());
 ?>
@@ -70,7 +68,7 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
     <div class="row">
         <div class="col-sm-6 col-md-8">
             <h2>
-                Actions de formation
+                Sessions de formation
                 <span class="badge"><?php echo count($instances); ?></span>
             </h2>
         </div>
@@ -81,7 +79,7 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
                         class="btn btn-primary action"
                 >
                     <span class="icon ajouter"></span>
-                    Ajouter une action de formation
+                    Ajouter une session de formation
                 </a>
             <?php endif; ?>
             <br/>
@@ -93,10 +91,9 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
         <thead>
             <tr>
                 <th> Id </th>
-                <th> Source </th>
                 <th> Début </th>
                 <th> Fin </th>
-                <th> #Jour </th>
+                <th> #Plage </th>
                 <th> #Inscrit </th>
                 <th> État </th>
                 <th> Action</th>
@@ -105,9 +102,8 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
         <tbody>
         <?php foreach ($instances as $instance) : ?>
             <tr <?php if ($instance->estHistorise()) echo 'class="historise"'; ?> >
-                <td> <?php echo $instance->getId(); ?> </td>
                 <td>
-                    <span class="badge source" id="<?php echo $instance->getSource(); ?>">
+                    <span class="badge source <?php echo $instance->getSource(); ?>">
                         <?php echo $instance->getSource(); ?>
                         <?php echo $instance->getIdSource(); ?>
                     </span> </td>
@@ -134,22 +130,19 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
                     <?php if ($canAfficherInstance) : ?>
                         <?php /** @see FormationInstanceController::afficherAction() */ ?>
                         <a  href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
-                            data-toogle="tooltip" data-html="true" title="Afficher/Modifier l'instance de formation">
+                            data-toogle="tooltip" data-html="true" title="Afficher/Modifier la session de formation">
                             <span class="icon voir"></span></a>
-                    <?php endif; ?>
-                    <?php if ($canAfficherInstance) : ?>
-                            <span class="icon pdf"></span>
                     <?php endif; ?>
                     <?php if ($canHistoriserInstance) : ?>
                         <?php if ($instance->estNonHistorise()) : ?>
                             <?php /** @see FormationInstanceController::historiserAction() */ ?>
                             <a   href="<?php echo $this->url('formation-instance/historiser', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                 data-toogle="tooltip" data-html="true" title="Historiser l'instance de formation">
+                                 data-toogle="tooltip" data-html="true" title="Historiser la session de formation">
                                 <span class="icon historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see FormationInstanceController::restaurerAction() */ ?>
                             <a   href="<?php echo $this->url('formation-instance/restaurer', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                 data-toogle="tooltip" data-html="true" title="Restaurer l'instance de formation">
+                                 data-toogle="tooltip" data-html="true" title="Restaurer la session de formation">
                                 <span class="icon restaurer"></span></a>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -157,7 +150,7 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
                         <?php /** @see FormationInstanceController::supprimerAction() */ ?>
                         <a   href="<?php echo $this->url('formation-instance/supprimer', ['formation-instance' => $instance->getId()], [], true); ?>"
                              class="ajax-modal" data-event="modification"
-                             data-toogle="tooltip" data-html="true" title="Supprimer l'instance de formation">
+                             data-toogle="tooltip" data-html="true" title="Supprimer la session de formation">
                             <span class="icon detruire"></span></a>
                     <?php endif; ?>
                 </td>

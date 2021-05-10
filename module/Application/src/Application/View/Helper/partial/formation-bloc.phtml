@@ -112,6 +112,7 @@ ksort($groupes);
                     </td>
                     <td class="niveau">
                         <?php if ($entite instanceof FormationElement) : ?>
+<!--                            --><?php //echo $entite->getHistoCreation()->format('Y'); ?>
                             <?php echo explode(" - ",$entite->getCommentaire())[0]; ?>
                         <?php endif; ?>
                     </td>
