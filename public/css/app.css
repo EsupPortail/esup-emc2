@@ -333,3 +333,12 @@ td.cell-etat
 {
   width:6rem;
 }
+
+a:hover {
+    background: #9eabb6;
+    color: #1c70b8;
+}
+
+ul.ui-autocomplete a:hover {
+    background: #e6e6e6;
+}
