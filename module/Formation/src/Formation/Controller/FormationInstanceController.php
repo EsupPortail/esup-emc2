@@ -133,7 +133,7 @@ class FormationInstanceController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Modification des informations de l'instance",
+            'title' => "Modification des informations de la session",
             'form' => $form,
         ]);
         return $vm;

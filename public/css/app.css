@@ -67,13 +67,6 @@ span.fiche-metier {
     font-variant-position: super;
 }
 
-span.agent {
-    font-weight: bolder;
-    color: #ff00e5;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
 span.raison.formation {
     font-weight: bolder;
     color: #ffb700;
@@ -316,16 +309,6 @@ span.badge.EMC2 {
 
 span.badge.LAGAF {
     background: darkred;
-}
-
-span.ok {
-    color:darkgreen;
-    font-weight: bold;
-}
-
-span.ko {
-    color:darkred;
-    font-weight: bold;
 }
 
 th.cell-etat,

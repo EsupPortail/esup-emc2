@@ -1,7 +1,5 @@
 <?php
-
-use Formation\Entity\Db\FormationInstance;
-
+    use Formation\Entity\Db\FormationInstance;
 ?>
 
 <dl>
@@ -28,7 +26,7 @@ use Formation\Entity\Db\FormationInstance;
     <dd>
         <ol>
             <li> Formation instance reçoit
-                état <?php echo $this->etatbadge($etatService->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE)); ?> </li>
+                état <?php echo $this->etatbadge(FormationInstance::ETAT_INSCRIPTION_OUVERTE); ?> </li>
             <li> Notification des agents de l'ouverture de l'instance de formation grâce au mail <span
                     class="mail"><span class="icon courrier"></span>FORMATION_INSCRIPTION_OUVERTE</span></li>
         </ol>

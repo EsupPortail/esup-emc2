@@ -1,3 +1,7 @@
+<?php
+    use Formation\Entity\Db\FormationInstance;
+?>
+
 <dl>
     <dt> Qui</dt>
     <dd>
@@ -15,7 +19,7 @@
     </dd>
     <dt> Comment</dt>
     <dd> Clique sur le bouton
-        <button class="label btn-primary"><span class="icon ajouter"></span> Ajouter une action de formation
+        <button class="label btn-primary"><span class="icon ajouter"></span> Ajouter une session de formation
         </button>
     </dd>
     <dt> Que se passe t'il</dt>
@@ -24,8 +28,7 @@
             <li> Creation d'une <span class="classe"><span class="icon code"></span>FormationInstance</span>
                 associé à l'action
             </li>
-            <li> Formation instance reçoit
-                état <?php echo $this->etatbadge($etatService->getEtatByCode('FORMATION_EN_CREATION')); ?> </li>
+            <li> La session est initialisé avec comme état <?php echo $this->etatbadge(FormationInstance::ETAT_CREATION_EN_COURS); ?> </li>
         </ol>
     </dd>
 </dl>

@@ -14,14 +14,12 @@ use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class FormationController extends AbstractActionController
 {
-    use EtatServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
@@ -41,7 +39,6 @@ class FormationController extends AbstractActionController
         return new ViewModel([
             'formations' => $formations,
             'groupes' => $groupes,
-            'etatService' => $this->getEtatService(),
         ]);
     }
 

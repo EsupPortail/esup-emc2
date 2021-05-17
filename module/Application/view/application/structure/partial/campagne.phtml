@@ -64,9 +64,9 @@ $enCours = $campagne->estEnCours();
     <dt> En cours </dt>
     <dd>
         <?php if ($enCours) : ?>
-            <span class='ok'><span class="icon ok"></span>Oui</span>
+            <span style="color:darkgreen;"><span class="icon ok"></span>Oui</span>
         <?php else : ?>
-            <span class='ko'><span class="icon ko"></span>Non</span>
+            <span style="color:darkred;"><span class="icon ko"></span>Non</span>
         <?php endif; ?>
     </dd>
 </dl>

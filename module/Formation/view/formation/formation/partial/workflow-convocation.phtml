@@ -1,7 +1,5 @@
 <?php
-
-use Formation\Entity\Db\FormationInstance;
-
+    use Formation\Entity\Db\FormationInstance;
 ?>
 
 <dl>
@@ -12,13 +10,13 @@ use Formation\Entity\Db\FormationInstance;
     <dt> Comment</dt>
     <dd>
         Toutes les nuits en jour ouvré (<i>serai mieux reste à voir comment</i>). <br/>
-        Envoie au formation ayant l'état <?php echo $this->etatbadge($etatService->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE)); ?> et dont la date de début et dans moins de 2 jours.
+        Envoie au formation ayant l'état <?php echo $this->etatbadge(FormationInstance::ETAT_INSCRIPTION_FERMEE); ?> et dont la date de début et dans moins de 2 jours.
     </dd>
     <dt> Que se passe t'il</dt>
     <dd>
         <ol>
             <li> Formation instance reçoit
-                état <?php echo $this->etatbadge($etatService->getEtatByCode(FormationInstance::ETAT_FORMATION_CONVOCATION)); ?> </li>
+                état <?php echo $this->etatbadge(FormationInstance::ETAT_FORMATION_CONVOCATION); ?> </li>
             <li> Notification des agents en liste principale grâce au mail <span class="mail"><span
                         class="icon courrier"></span>FORMATION_CONVOCATION</span></li>
             <li> Notification des formateurs des listes d'émargements <span class="mail"><span

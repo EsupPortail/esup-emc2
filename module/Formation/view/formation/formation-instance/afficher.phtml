@@ -141,6 +141,11 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     Inscription et listes
                 </a>
             </li>
+            <li>
+                <a href="#presences" aria-controls="presences" role="tab" data-toggle="tabz">
+                    Présences aux scéances
+                </a>
+            </li>
             <li class="pull-right">
                 <a href="#mails" aria-controls="mails" role="tab" data-toggle="tabz" >
                     Mails
@@ -153,27 +158,31 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
 
         <div id="information" class="tab-pane " role="tabpanel">
             <div class="row">
-        <h2> Action de formation</h2>
-        <div class="col-sm-6 col-md-8">
-            <?php echo $this->formationInstanceInformations($instance); ?>
-        </div>
-        <?php if ($canInformation) : ?>
-            <div class="pull-right">
-                <?php /** @see FormationInstanceController::modifierInformationsAction() */ ?>
-                <a href="<?php echo $this->url('formation-instance/modifier-informations', ['formation-instance' => $instance->getId()], [], true); ?>"
-                   class="btn btn-primary action ajax-modal" data-event="modification">
-                    <span class="icon editer"></span>
-                    Modifier l'action de information
-                </a>
-                <br/>
-                <?php /** @see \Application\Controller\FormationInstanceController::renseignerPresencesAction() */ ?>
-                <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['formation-instance' => $instance->getId()], [], true); ?>"
-                   class="btn btn-primary action">
-                    <span class="icon ok"></span>
-                    <?php echo ($canPresenceModifier)?"Renseigner":"Voir"; ?> les présences
-                </a>
-            </div>
-        <?php endif; ?>
+                <h2> Session de formation</h2>
+
+                <div class="col-sm-6 col-md-8">
+                    <?php echo $this->formationInstanceInformations($instance); ?>
+                </div>
+
+                <?php if ($canInformation) : ?>
+                    <div class="pull-right">
+                        <?php /** @see FormationInstanceController::modifierInformationsAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/modifier-informations', ['formation-instance' => $instance->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal" data-event="modification">
+                            <span class="icon editer"></span>
+                            Modifier les informations<!-- de la session -->
+                        </a>
+                        <br/>
+                        <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_ATTENTE_RETOURS) : ?>
+                            <?php /** @see FormationInstancePresenceController::renseignerPresencesAction() */ ?>
+                            <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['formation-instance' => $instance->getId()], [], true); ?>"
+                               class="btn btn-primary action">
+                                <span class="icon ok" ></span>
+                                <?php echo ($canPresenceModifier)?"Renseigner":"Voir"; ?> les présences
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="row">
@@ -328,8 +337,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         </tbody>
     </table>
         </div>
-        <div id="inscriptions" class="tab-pane " role="tabpanel">
-
+    <div id="inscriptions" class="tab-pane " role="tabpanel">
     <div class="row">
         <div class="col-md-8">
             <h3> Agent(s) inscrit(s) </h3>
@@ -612,6 +620,13 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         </tbody>
     </table>
     </div>
+
+    <div id="presences" class="tab-pane " role="tabpanel">
+        <h2> Présence aux scéances</h2>
+
+        <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'titre' => false], [], true); ?>
+    </div>
+
 </div>
 </div>
 

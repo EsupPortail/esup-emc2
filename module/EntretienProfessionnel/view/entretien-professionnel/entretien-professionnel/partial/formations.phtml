@@ -70,7 +70,7 @@ $date_depassee = $now > $date;
 
 <!-- Formulaire ------------------------------------------------------------------------------------------------------->
 
-<h3> Formations survies durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
+<h3> Formations suivies durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
 
 <?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
 
