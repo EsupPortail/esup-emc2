@@ -281,7 +281,7 @@ class Agent implements
         $statuts = [];
         /** @var AgentStatut $statut */
         foreach ($this->getStatuts() as $statut) {
-            if ($statut->estFini($now)) $statuts[] = $statut;
+            if ($statut->estEnCours($now)) $statuts[] = $statut;
         }
         return $statuts;
     }
