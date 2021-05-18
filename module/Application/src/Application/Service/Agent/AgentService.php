@@ -39,33 +39,34 @@ class AgentService {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             //quotite de l'agent
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
-            //status de l'agent
+//            //status de l'agent
             ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
             ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
-            //grade de l'agent
+//            //grade de l'agent
             ->addSelect('grade')->leftJoin('agent.grades', 'grade')
             ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
             ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
             ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
             ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
 
-            //applications liées à l'agent
-            ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
-            ->addSelect('application')->leftJoin('agentapplication.application', 'application')
-            ->addSelect('application_niveau')->leftJoin('agentapplication.niveau', 'application_niveau')
-            ->addSelect('application_groupe')->leftJoin('application.groupe', 'application_groupe')
-            ->addSelect('fapplication')->leftJoin('agentapplication.validation', 'fapplication')
-            //competences liées à l'agent
-            ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
-            ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
-            ->addSelect('competence_niveau')->leftJoin('agentcompetence.niveau', 'competence_niveau')
-            ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
-            ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
-            ->addSelect('fcompetence')->leftJoin('agentcompetence.validation', 'fcompetence')
-            //formations liées à l'agent
-            ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
-            ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
-            ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
+//            //applications liées à l'agent
+//            ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
+//            ->addSelect('application')->leftJoin('agentapplication.application', 'application')
+//            ->addSelect('application_niveau')->leftJoin('agentapplication.niveau', 'application_niveau')
+//            ->addSelect('application_groupe')->leftJoin('application.groupe', 'application_groupe')
+//            ->addSelect('fapplication')->leftJoin('agentapplication.validation', 'fapplication')
+//            //competences liées à l'agent
+//            ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
+//            ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
+//            ->addSelect('competence_niveau')->leftJoin('agentcompetence.niveau', 'competence_niveau')
+//            ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
+//            ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
+//            ->addSelect('fcompetence')->leftJoin('agentcompetence.validation', 'fcompetence')
+//            //formations liées à l'agent
+//            ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
+//            ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
+//            ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
+
             //missions spécifiques
 //            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
 //            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
@@ -79,13 +80,13 @@ class AgentService {
 //
 
 
-            ->addSelect('entretien')->leftJoin('agent.entretiens', 'entretien')
-            ->addSelect('entretienValidationAgent')->leftJoin('entretien.validationAgent', 'entretienValidationAgent')
-//            ->addSelect('evaModificateur')->leftJoin('entretienValidationAgent.histoModificateur', 'evaModificateur')
-            ->addSelect('entretienValidationResponsable')->leftJoin('entretien.validationResponsable', 'entretienValidationResponsable')
-//            ->addSelect('evrModificateur')->leftJoin('entretienValidationResponsable.histoModificateur', 'evrModificateur')
-
-            ->addSelect('fichier')->leftJoin('agent.fichiers', 'fichier')
+//            ->addSelect('entretien')->leftJoin('agent.entretiens', 'entretien')
+//            ->addSelect('entretienValidationAgent')->leftJoin('entretien.validationAgent', 'entretienValidationAgent')
+////            ->addSelect('evaModificateur')->leftJoin('entretienValidationAgent.histoModificateur', 'evaModificateur')
+//            ->addSelect('entretienValidationResponsable')->leftJoin('entretien.validationResponsable', 'entretienValidationResponsable')
+////            ->addSelect('evrModificateur')->leftJoin('entretienValidationResponsable.histoModificateur', 'evrModificateur')
+//
+//            ->addSelect('fichier')->leftJoin('agent.fichiers', 'fichier')
 
 
 
@@ -159,10 +160,10 @@ class AgentService {
     }
 
     /**
-     * @param integer|null $id
+     * @param string|null $id
      * @return Agent
      */
-    public function getAgent(?int $id)
+    public function getAgent(?string $id)
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
