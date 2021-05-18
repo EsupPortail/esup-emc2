@@ -88,7 +88,7 @@ class AgentController extends AbstractActionController
 
     public function afficherAction()
     {
-        $agent = $this->getAgentService()->getAgent(8486);
+//        $agent = $this->getAgentService()->getAgent(8486);
 //        $agent = $this->getAgentService()->getRequestedAgent($this);
 //        $connectedUser = $this->getUserService()->getConnectedUser();
 //        $connectedAgent = $this->getAgentService()->getAgentByUser($connectedUser);
