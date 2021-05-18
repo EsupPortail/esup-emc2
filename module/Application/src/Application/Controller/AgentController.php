@@ -88,7 +88,7 @@ class AgentController extends AbstractActionController
 
     public function afficherAction()
     {
-//        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
 //        $connectedUser = $this->getUserService()->getConnectedUser();
 //        $connectedAgent = $this->getAgentService()->getAgentByUser($connectedUser);
 //        $connectedRole = $this->getUserService()->getConnectedRole();
@@ -103,8 +103,8 @@ class AgentController extends AbstractActionController
 //        $missions = $agent->getMissionsSpecifiques();
 
         return new ViewModel([
-//            'title' => 'Afficher l\'agent',
-//            'agent' => $agent,
+            'title' => 'Afficher l\'agent',
+            'agent' => $agent,
 //            'entretiens' => $entretiens,
 //            'responsables' => $responsables,
 //            'parcoursArray' => $parcoursArray,
