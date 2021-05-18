@@ -88,30 +88,29 @@ class AgentController extends AbstractActionController
 
     public function afficherAction()
     {
-//        $agent = $this->getAgentService()->getAgent(8486);
-//        $agent = $this->getAgentService()->getRequestedAgent($this);
-//        $connectedUser = $this->getUserService()->getConnectedUser();
-//        $connectedAgent = $this->getAgentService()->getAgentByUser($connectedUser);
-//        $connectedRole = $this->getUserService()->getConnectedRole();
-//        if ($agent !== $connectedAgent AND ($connectedRole->getRoleId() === RoleConstant::PERSONNEL OR $agent === null)) {
-//            return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [] , true);
-//        }
-//        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
-//        $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
-//        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
-//
-//        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
-//        $missions = $agent->getMissionsSpecifiques();
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $connectedUser = $this->getUserService()->getConnectedUser();
+        $connectedAgent = $this->getAgentService()->getAgentByUser($connectedUser);
+        $connectedRole = $this->getUserService()->getConnectedRole();
+        if ($agent !== $connectedAgent AND ($connectedRole->getRoleId() === RoleConstant::PERSONNEL OR $agent === null)) {
+            return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [] , true);
+        }
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
+        $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
+        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
+
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+        $missions = $agent->getMissionsSpecifiques();
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
-//            'entretiens' => $entretiens,
-//            'responsables' => $responsables,
-//            'parcoursArray' => $parcoursArray,
-//
-//            'fichespostes' => $fichespostes,
-//            'missions' => $missions,
+            'entretiens' => $entretiens,
+            'responsables' => $responsables,
+            'parcoursArray' => $parcoursArray,
+
+            'fichespostes' => $fichespostes,
+            'missions' => $missions,
         ]);
     }
 
