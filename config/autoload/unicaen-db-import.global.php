@@ -187,7 +187,7 @@ return [
                 'name' => 'Import_GRADE',
                 'source' => [
                     'name'               => 'Grades des agents remonté depuis OCTOPUS',
-                    'select'             => 'SELECT ID, C_GRADE AS CODE, LIB_COURT, LIB_LONG, HISTO_DESTRUCTION AS HISTO FROM GRADE',
+                    'select'             => 'SELECT ID, C_GRADE AS CODE, LIB_COURT, LIB_LONG, HISTO_DESTRUCTION AS HISTO FROM GRADE WHERE HISTO_DESTRUCTION IS NULL',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                     'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'HISTO'],

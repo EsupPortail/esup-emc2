@@ -67,11 +67,19 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
 
             <dt> Corps </dt>
             <dd>
-                <?php echo $grade->getCorps()->getLibelleLong(); ?>
+                <?php if ($grade->getCorps() !== null) : ?>
+                    <?php echo $grade->getCorps()->getLibelleLong(); ?>
+                <?php else : ?>
+                    Corps inconnu
+                <?php endif; ?>
             </dd>
                 <dt> Grade </dt>
                 <dd>
-                    <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                    <?php if ($grade->getGrade() !== null) : ?>
+                        <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                    <?php else : ?>
+                        Grade inconnu
+                    <?php endif; ?>
                 </dd>
             <dt> Correspondance </dt>
             <dd>
