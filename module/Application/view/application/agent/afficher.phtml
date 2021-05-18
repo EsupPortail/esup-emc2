@@ -17,35 +17,36 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentMissionSpecifique[] missions
  */
 
-$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
-$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
-$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
-$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
-$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
-$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
-$canInfoSource  = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_INFO_SOURCE));
+if ($agent !== null) {
+    $canVoir = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+    $canAjouter = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+    $canModifier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
+    $canHistoriser = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+    $canDetruire = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
+    $canValider = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+    $canInfoSource = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_INFO_SOURCE));
 
-$droits = [
-    'afficher'        =>      $canVoir,
-    'voir'            =>      $canVoir,
-    'ajouter'         =>      $canAjouter,
-    'modifier'        =>      $canModifier,
-    'historiser'      =>      $canHistoriser,
-    'detruire'        =>      $canDetruire,
-    'valider'         =>      $canValider,
-    'voirHistorique'  =>      $canDetruire,
-];
+    $droits = [
+        'afficher' => $canVoir,
+        'voir' => $canVoir,
+        'ajouter' => $canAjouter,
+        'modifier' => $canModifier,
+        'historiser' => $canHistoriser,
+        'detruire' => $canDetruire,
+        'valider' => $canValider,
+        'voirHistorique' => $canDetruire,
+    ];
 
-$options  = [];
-$options['texte'] = true;
-$options['droits'] = $droits;
-$options['retour'] = $this->url('agent/afficher', ['agent' => $agent->getId()], [], true);
-$options['actions'] = [
-    'afficher' => true, 'ajouter' => $canAjouter, 'modifier' => $canModifier, 'supprimer' => $canDetruire, 'valider' => $canValider
-];
+    $options = [];
+    $options['texte'] = true;
+    $options['droits'] = $droits;
+    $options['retour'] = $this->url('agent/afficher', ['agent' => $agent->getId()], [], true);
+    $options['actions'] = [
+        'afficher' => true, 'ajouter' => $canAjouter, 'modifier' => $canModifier, 'supprimer' => $canDetruire, 'valider' => $canValider
+    ];
 
-$this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
-
+    $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
+}
 ?>
 
 <?php if ($agent !== null) : ?>
