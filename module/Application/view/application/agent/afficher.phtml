@@ -92,16 +92,14 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
 <div>
     <div class="tab-content">
         <div id="informations" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'responsables' => $responsables, 'canInfoSource' => $canInfoSource]); ?>
+            <?php //echo $this->partial('partial/informations-generales', ['agent' => $agent, 'responsables' => $responsables, 'canInfoSource' => $canInfoSource]); ?>
         </div>
         <div id="fiches" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>
-            <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits], []); ?>
+            <?php //echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>
+            <?php //echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits], []); ?>
         </div>
         <div id="entretiens" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/entretien-professionnel',
-                ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits]
-                , []); ?>
+            <?php //echo $this->partial('partial/entretien-professionnel', ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits], []); ?>
         </div>
         <div id="parcours" class="tab-pane " role="tabpanel">
             <h2>
@@ -113,9 +111,7 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
                 Il est possible qu'un domaine ou un métier ne possède pas de parcours.
             </div>
 
-            <?php
-            echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true);
-            ?>
+            <?php //echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true); ?>
         </div>
         <div id="acquis" class="tab-pane " role="tabpanel">
             <h2> Applications, compétences et formations</h2>
@@ -126,16 +122,16 @@ $this->headTitle("Affichage de l'agent : " . $agent->getDenomination());
             </div>
 
             <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
-            <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
+            <?php //echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
 
             <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
-            <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
+            <?php //echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
 
             <!-- FORMATION ------------------------------------------------------------------------------------------------------->
-            <?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
+            <?php //echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
         </div>
         <div id="portfolio" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
+            <?php //echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
         </div>
     </div>
 </div>
