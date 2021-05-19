@@ -29,6 +29,7 @@ use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauForm;
 use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauFormFactory;
 use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauHydrator;
 use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauHydratorFactory;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
@@ -78,7 +79,6 @@ return [
                         'ajouter',
                         'ajouter-competence-type',
                         'ajouter-competence-theme',
-                        'ajouter-competence-element',
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_AJOUTER,
@@ -150,6 +150,15 @@ return [
                     ],
                     'privileges' => [
                         CompetencePrivileges::COMPETENCE_EFFACER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceController::class,
+                    'action' => [
+                        'ajouter-competence-element',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                     ],
                 ],
             ],

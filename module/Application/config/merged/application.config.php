@@ -19,6 +19,7 @@ use Application\Form\ApplicationGroupe\ApplicationGroupeHydratorFactory;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
 use Application\Form\SelectionApplication\SelectionApplicationHydrator;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Service\Application\ApplicationGroupeService;
 use Application\Service\Application\ApplicationGroupeServiceFactory;
@@ -74,7 +75,6 @@ return [
                     'action' => [
                         'creer',
                         'ajouter-groupe',
-                        'ajouter-application-element',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AJOUTER,
@@ -90,7 +90,17 @@ return [
                         ApplicationPrivileges::APPLICATION_EFFACER,
                     ],
                 ],
+                [
+                  'controller' => ApplicationController::class,
+                  'action' => [
+                      'ajouter-application-element',
+                  ],
+                  'privileges' => [
+                    AgentPrivileges::AGENT_ACQUIS_MODIFIER,
+                  ],
+                ],
             ],
+
         ],
     ],
 
