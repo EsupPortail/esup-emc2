@@ -96,10 +96,10 @@ class AgentMissionSpecifique implements HistoriqueAwareInterface, HasAgentInterf
     }
 
     /**
-     * @param float $decharge
+     * @param float|null $decharge
      * @return AgentMissionSpecifique
      */
-    public function setDecharge(float $decharge) : AgentMissionSpecifique
+    public function setDecharge(?float $decharge) : AgentMissionSpecifique
     {
         $this->decharge = $decharge;
         return $this;
