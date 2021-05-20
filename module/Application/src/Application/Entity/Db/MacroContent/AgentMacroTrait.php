@@ -103,7 +103,7 @@ trait AgentMacroTrait
             if($grade->estFini()) {
                 $texte .= "du " . $grade->getDateDebut()->format('d/m/Y') . " au " . $grade->getDateFin()->format('d/m/Y');
             } else {
-                $texte .= "depuis le " . $grade->getDateDebut()->format('d/m/Y');
+                $texte .= "depuis le " . (($grade->getDateDebut() !== null)?$grade->getDateDebut()->format('d/m/Y'):"---");
             }
             $texte .= " - " . $grade->getStructure()->getLibelleCourt() .")";
             $texte .= "</span>";
