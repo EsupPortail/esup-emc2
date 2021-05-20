@@ -5,7 +5,6 @@ namespace Application\Form\AgentMissionSpecifique;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Date;
 use Zend\Form\Element\DateTime;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
@@ -83,7 +82,7 @@ class AgentMissionSpecifiqueForm extends Form {
 
         //Debut
         $this->add([
-            'type' => Date::class,
+            'type' => DateTime::class,
             'name' => 'debut',
             'options' => [
                 'label' => "Date de début* :",
@@ -93,10 +92,9 @@ class AgentMissionSpecifiqueForm extends Form {
                 'id' => 'debut',
             ],
         ]);
-
         //Fin
         $this->add([
-            'type' => Date::class,
+            'type' => DateTime::class,
             'name' => 'fin',
             'options' => [
                 'label' => "Date de fin :",
@@ -140,7 +138,7 @@ class AgentMissionSpecifiqueForm extends Form {
             'structure'         => [ 'required' => false, ],
             'debut'             => [ 'required' => true,  ],
             'fin'               => [ 'required' => false, ],
-            'decharge'               => [ 'required' => false, ],
+            'decharge'          => [ 'required' => false, ],
         ]));
     }
 }
