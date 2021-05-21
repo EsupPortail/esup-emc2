@@ -79,6 +79,7 @@ class IndicateurForm extends Form {
                 ],
             ],
             'attributes' => [
+                'id' => 'requete',
                 'class' => 'form-control',
                 'style' => 'min-height:250px;',
             ]
