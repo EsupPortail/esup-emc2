@@ -37,6 +37,9 @@ class AgentService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            //affectations
+            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+            ->addSelect('affectation_structure')->leftJoin('affectation.structure', 'affectation_structure')
             //quotite de l'agent
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
 //            //status de l'agent
@@ -147,10 +150,10 @@ class AgentService {
         if ($structures !== null) {
             $date = $this->getDateTime();
             $qb = $qb
-                ->andWhere('grade.dateDebut <= :date')
-                ->andWhere('grade.dateFin IS NULL OR grade.dateFin >= :date')
+                ->andWhere('affectation.dateDebut <= :date OR affectation.dateDebut IS NULL')
+                ->andWhere('affectation.dateFin >= :date OR affectation.dateFin IS NULL')
                 ->setParameter('date', $date)
-                ->addSelect('structure')->join('grade.structure', 'structure')
+                ->addSelect('structure')->join('affectation.structure', 'structure')
                 ->andWhere('structure IN (:structures)')
                 ->setParameter('structures', $structures)
             ;
