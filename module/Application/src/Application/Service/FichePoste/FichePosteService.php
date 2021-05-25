@@ -10,13 +10,13 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\Structure;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -24,6 +24,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class FichePosteService {
     use GestionEntiteHistorisationTrait;
     use StructureServiceAwareTrait;
+    use AgentServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -277,41 +278,17 @@ class FichePosteService {
      */
     public function getFichesPostesByStructures(array $structures = [], bool $sousstructure = true)
     {
-        try {
-            $today = new DateTime();
-            //$noEnd = DateTime::createFromFormat('d/m/Y H:i:s', '31/12/1999 00:00:00');
-        } catch (Exception $e) {
-            throw new RuntimeException("Problème lors de la création des dates");
-        }
+        $agentsStd  = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentForcees = $this->getAgentService()->getAgentsForcesByStructures($structures);
+        $agents = array_merge($agentsStd, $agentForcees);
 
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+            ->andWhere('fiche.agent in (:agents)')
+            ->setParameter('agents', $agents)
             ->addSelect('agent')->join('fiche.agent', 'agent')
-            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
-            ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->addSelect('grade')->join('agent.grades', 'grade')
-            ->addSelect('fichemetier')->leftJoin('fiche.fichesMetiers', 'fichemetier')
-            ->addSelect('fichemetiertype')->leftJoin('fichemetier.ficheType', 'fichemetiertype')
-            ->addSelect('metier')->leftJoin('fichemetiertype.metier', 'metier')
-            ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
-            ->andWhere('statut.dispo = :false')
-            ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
-            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-            ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
-
-
-            ->setParameter('today', $today)
-            //->setParameter('noEnd', $noEnd)
-            ->setParameter('false', 'N')
-            ->orderBy('agent.nomUsuel, agent.prenom')
-        ;
-
-        if ($sousstructure) {
-            $qb = $qb
-                ->andWhere('affectation.structure IN (:structures)')
-                ->setParameter('structures', $structures);
-        }
-
+            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+            ->orderBy('agent.nomUsuel, agent.prenom');
         $result = $qb->getQuery()->getResult();
         return $result;
     }

@@ -294,15 +294,15 @@ class AgentService {
             ->andWhere('affectation.dateDebut <= :today')
             ->andWhere('affectation.principale = :true')
             //STATUS
-            ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
             ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
-            ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
+            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false)')
             //GRADE
-            ->addSelect('grade')->join('agent.grades', 'grade')
-            ->addSelect('gstructure')->join('grade.structure', 'gstructure')
-            ->addSelect('ggrade')->join('grade.grade', 'ggrade')
+            ->addSelect('grade')->leftjoin('agent.grades', 'grade')
+            ->addSelect('gstructure')->leftjoin('grade.structure', 'gstructure')
+            ->addSelect('ggrade')->leftjoin('grade.grade', 'ggrade')
             ->addSelect('gcorrespondance')->leftjoin('grade.bap', 'gcorrespondance')
             ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
@@ -320,6 +320,26 @@ class AgentService {
 
         if ($structures !== null) {
             $qb = $qb->andWhere('affectation.structure IN (:structures)')
+                ->setParameter('structures', $structures);
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @return Agent[]
+     */
+    public function getAgentsForcesByStructures(array $structures)
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->addSelect('forcage')->join('agent.structuresForcees', 'forcage')
+            ->andWhere('forcage.histoDestruction IS NULL');
+
+        if ($structures !== null) {
+            $qb = $qb->andWhere('forcage.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
 
