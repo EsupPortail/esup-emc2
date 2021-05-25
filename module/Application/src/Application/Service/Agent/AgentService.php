@@ -108,21 +108,20 @@ class AgentService {
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.delete IS NULL')
-
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-            ->andWhere('statut.dateDebut <= :NOW')
-            ->andWhere('statut.dateFin >= :NOW OR statut.dateFin IS NULL')
+            ->andWhere('affectation.dateDebut <= :NOW')
+            ->andWhere('affectation.dateFin >= :NOW OR affectation.dateFin IS NULL')
             ->setParameter('NOW', $this->getDateTime())
         ;
 
-        $tmp = [];
+        $tmp = ['statut IS NULL'];
         foreach ($temoins as $temoin => $value) {
             if ($value) $tmp[] = 'statut.'. $temoin .' = :TRUE';
         }
         if (!empty($tmp)) {
             $qb = $qb->andWhere(implode(" OR ",$tmp))
-                ->setParameter('TRUE', 'O')
-            ;
+                ->setParameter('TRUE', 'O');
         }
 
         if ($order !== null) {
