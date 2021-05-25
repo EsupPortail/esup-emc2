@@ -23,6 +23,8 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Mailing\Model\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\User;
 
+$displayParcours = false;
+$displayAcquis = false;
 
 $this->headTitle('Modification de l\'entretien professionnel');
 
@@ -75,16 +77,20 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
                 Compte-rendu <br/> d'évaluation <br/> de formation &nbsp;
             </a>
         </li>
-        <li>
-            <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
-                Parcours de <br/> formation et <br/> logiciels metiers
-            </a>
-        </li>
+        <?php if ($displayParcours === true) : ?>
+            <li>
+                <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
+                    Parcours de <br/> formation et <br/> logiciels metiers
+                </a>
+            </li>
+        <?php endif; ?>
+        <?php if ($displayAcquis === true) : ?>
         <li>
             <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
                 Acquis de <br/> l'agent <br/> &nbsp;
             </a>
         </li>
+        <?php endif ?>
         <li>
             <a href="#avis" aria-controls="avis" role="tab" data-toggle="tabz" >
                 <br/> &nbsp; Observations <br/> &nbsp;
@@ -111,14 +117,19 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
             </div>
 
             <div id="formations" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+                <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
             </div>
-            <div id="parcours" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'modification', 'modification' => true, 'droits' => $droits], 'source' => 'renseignerAction']); ?>
-            </div>
+
+            <?php if ($displayParcours === true) : ?>
+                <div id="parcours" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'modification', 'modification' => true, 'droits' => $droits], 'source' => 'renseignerAction']); ?>
+                </div>
+            <?php endif; ?>
+            <?php if ($displayAcquis === true) : ?>
             <div id="acquis" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
             </div>
+            <?php endif; ?>
 
             <div id="avis" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>

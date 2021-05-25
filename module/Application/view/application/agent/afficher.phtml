@@ -17,6 +17,9 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentMissionSpecifique[] $missions
  */
 
+$displayParcours = false;
+$displayAcquis = false;
+
 if ($agent !== null) {
     $canVoir = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
     $canAjouter = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
@@ -74,11 +77,13 @@ if ($agent !== null) {
                     professionnels
                 </a>
             </li>
+            <?php if ($displayParcours === true) : ?>
             <li>
                 <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
                     Parcours de formation<br/> et logiciels metiers
                 </a>
             </li>
+            <?php endif; ?>
             <li>
                 <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
                     Acquis de l'agent <br/> &nbsp;
@@ -104,6 +109,8 @@ if ($agent !== null) {
             <div id="entretiens" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/entretien-professionnel', ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits], []); ?>
             </div>
+
+            <?php if ($displayParcours === true) : ?>
             <div id="parcours" class="tab-pane " role="tabpanel">
                 <h2>
                     Parcours de formation
@@ -116,6 +123,7 @@ if ($agent !== null) {
 
                 <?php echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true); ?>
             </div>
+            <?php endif; ?>
             <div id="acquis" class="tab-pane " role="tabpanel">
                 <h2> Applications, compétences et formations</h2>
 
@@ -124,11 +132,13 @@ if ($agent !== null) {
                     Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
                 </div>
 
-                <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
-                <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
+                <?php if ($displayAcquis === true) : ?>
+                    <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
+                    <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
 
-                <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
-                <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
+                    <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
+                    <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
+                <?php endif; ?>
 
                 <!-- FORMATION ------------------------------------------------------------------------------------------------------->
                 <?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>

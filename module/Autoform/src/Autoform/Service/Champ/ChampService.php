@@ -2,20 +2,16 @@
 
 namespace Autoform\Service\Champ;
 
+use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ChampService {
-    use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
-    use DateTimeAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -23,7 +19,7 @@ class ChampService {
      * @param Champ $champ
      * @return Champ
      */
-    public function create($champ)
+    public function create(Champ $champ) : Champ
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = $this->getDateTime();
