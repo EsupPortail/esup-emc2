@@ -7,6 +7,10 @@ use Interop\Container\ContainerInterface;
 
 class IndicateurServiceFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return IndicateurService
+     */
     public function __invoke(ContainerInterface $container)
     {
         /**

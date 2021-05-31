@@ -30,6 +30,8 @@ return [
                 'allow' => [
                     [
                         'privileges' => [
+                            EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
+                            EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH,

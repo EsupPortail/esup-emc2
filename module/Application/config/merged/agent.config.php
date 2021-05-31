@@ -94,6 +94,7 @@ return [
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_EDITER,
+                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
                     ],
                 ],
                 [
@@ -226,7 +227,6 @@ return [
                             ],
                         ],
                     ],
-
 
                     /** AUTRE  ****************************************************************************************/
 

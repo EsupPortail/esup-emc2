@@ -21,10 +21,13 @@
         <one-to-one target-entity="Autoform\Entity\Db\FormulaireInstance"  field="questionnaire">
             <join-column name="questionnaire_id" referenced-column-name="id"/>
         </one-to-one>
+        <many-to-one target-entity="UnicaenEtat\Entity\Db\Etat"  field="etat">
+            <join-column name="etat_id" referenced-column-name="id"/>
+        </many-to-one>
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
-        <field name="idSource"          type="integer"                  column="id_source"          nullable="true"/>
+        <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

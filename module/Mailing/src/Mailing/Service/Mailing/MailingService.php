@@ -2,6 +2,7 @@
 
 namespace Mailing\Service\Mailing;
 
+use Application\Entity\Db\Agent;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -13,8 +14,10 @@ use Mailing\Model\Db\Mail;
 use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
@@ -26,6 +29,8 @@ class MailingService
 {
     use EntityManagerAwareTrait;
     use MailTypeServiceAwareTrait;
+    use ParametreServiceAwareTrait;
+    use UserServiceAwareTrait;
     use DateTimeAwareTrait;
 
     /** @var TransportInterface */
@@ -224,7 +229,16 @@ class MailingService
     public function sendMail($to, $subject, $texte, $attachement_path = null)
     {
         $message = (new Message())->setEncoding('UTF-8');
-        $message->setFrom('ne-pas-repondre@unicaen.fr', "EMC2");
+
+        $email = 'ne-pas-repondre@unicaen.fr';
+        if ($this->getParametreService()->getParametreByCode('GLOBAL','EMAIL') AND $this->getParametreService()->getParametreByCode('GLOBAL','EMAIL')->getValeur() !== null) {
+            $email = $this->getParametreService()->getParametreByCode('GLOBAL','EMAIL')->getValeur();
+        }
+        $name = 'Application';
+        if ($this->getParametreService()->getParametreByCode('GLOBAL','NAME') AND $this->getParametreService()->getParametreByCode('GLOBAL','NAME')->getValeur() !== null) {
+            $name = $this->getParametreService()->getParametreByCode('GLOBAL','NAME')->getValeur();
+        }
+        $message->setFrom($email, $name);
         if (!is_array($to)) $to = [$to];
         if ($this->doNotSend) {
             $message->addTo($this->redirectTo);
@@ -286,6 +300,13 @@ class MailingService
         $this->transport->send($message);
 
         $this->changerStatus($mail, Mail::SUCCESS);
+        return $mail;
+    }
+
+    public function sendTestMail()
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $mail = $this->sendMail($user->getEmail(), "Ceci est un test", "Ceci est un test");
         return $mail;
     }
 
@@ -400,6 +421,7 @@ class MailingService
     private function getReplacementText(string $identifier, array $variables) : string
     {
         /**
+         * @var Agent $agent
          * @var Campagne $campagne
          * @var EntretienProfessionnel $entretien
          * @var FormationInstance $instance
@@ -416,8 +438,12 @@ class MailingService
                 $lien = '<strong>EMC2</strong>';
                 return $lien;
             case 'VAR[EMC2#lien]' :
-                $lien = '<a href="' . 'https://preecog.unicaen.fr' . '">EMC2</a>';
+                $lien = '<a href="' . 'https://emc2.unicaen.fr' . '">EMC2</a>';
                 return $lien;
+            /** AGENT *************************************************************************************************/
+            case 'VAR[Agent#Denomination]' :
+                $agent = $variables['agent'];
+                return $agent->getDenomination();
             /** CAMPAGNE **********************************************************************************************/
             case 'VAR[CAMPAGNE#annee]' :
                 $campagne = $variables['campagne'];
@@ -453,20 +479,33 @@ class MailingService
                 return '<a href="'.$this->rendererService->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['force_canonical' => true], true).'">Accéder à l\'entretien professionnel</a>';
             /** FORMATION **************************************************************************************************/
             case 'VAR[FORMATION#instance_id]' :
-                $instance = $variables['instance'];
+                $instance = $variables['formation-instance'];
                 return $instance->getId();
             case 'VAR[FORMATION#libelle]' :
-                $instance = $variables['instance'];
+                $instance = $variables['formation-instance'];
                 return $instance->getFormation()->getLibelle();
             case 'VAR[FORMATION#debut]' :
-                $instance = $variables['instance'];
+                $instance = $variables['formation-instance'];
                 return $instance->getDebut();
             case 'VAR[FORMATION#fin]' :
-                $instance = $variables['instance'];
+                $instance = $variables['formation-instance'];
                 return $instance->getFin();
+            case 'VAR[FORMATION#Periode]' :
+                $instance = $variables['formation-instance'];
+                if ($instance->getDebut() === $instance->getFin()) return $instance->getDebut();
+                return $instance->getDebut() ." au ". $instance->getFin();
             case 'VAR[FORMATION#inscription]' :
-                $instance = $variables['instance'];
+                $instance = $variables['formation-instance'];
                 return ($instance->isAutoInscription())?"libre":"manuelle";
+            case 'VAR[FORMATION#lien_session]' :
+                $instance = $variables['formation-instance'];
+                $url = $this->rendererService->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
+                $intitule = $instance->getFormation()->getLibelle() ."(#". $instance->getId() .")";
+                return '<a href="'.$url.'">'.$intitule.'</a>';
+            case 'VAR[FORMATION#Emargements]' :
+                $instance = $variables['formation-instance'];
+                $url = $this->rendererService->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
+                return "Liste de émargements : <a href='".$url."'> PDF des émargements </a>";
         }
         return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
     }

@@ -73,16 +73,16 @@ class AgentController extends AbstractActionController
     public function indexAction()
     {
         $fromQueries = $this->params()->fromQuery();
-        $filtres = [];
-        $clefs = ['titulaire', 'cdi', 'cdd', 'administratif', 'chercheur', 'enseignant', 'vacataire'];
-        foreach ($clefs as $clef) {
-            if (empty($fromQueries) or $fromQueries[$clef] === 'on') $filtres[$clef] = true;
-        }
-
-        $agents = $this->getAgentService()->getAgents($filtres);
+//        $filtres = [];
+//        $clefs = ['titulaire', 'cdi', 'cdd', 'administratif', 'chercheur', 'enseignant', 'vacataire'];
+//        foreach ($clefs as $clef) {
+//            if (empty($fromQueries) or $fromQueries[$clef] === 'on') $filtres[$clef] = true;
+//        }
+//        $agents = $this->getAgentService()->getAgents($filtres);
+        $agents = $this->getAgentService()->getAgents();
         return new ViewModel([
             'agents' => $agents,
-            'filtres' => $filtres,
+//            'filtres' => $filtres,
         ]);
     }
 

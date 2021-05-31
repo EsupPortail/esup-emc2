@@ -2,13 +2,16 @@
 
 namespace Formation\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Application\Entity\Db\Traits\HasSourceTrait;
 use DateTime;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FormationInstanceJournee implements HistoriqueAwareInterface
+class FormationInstanceJournee implements HistoriqueAwareInterface, HasSourceInterface
 {
     use HistoriqueAwareTrait;
+    use HasSourceTrait;
 
     /** @var integer */
     private $id;
@@ -78,10 +81,10 @@ class FormationInstanceJournee implements HistoriqueAwareInterface
     }
 
     /**
-     * @param string $debut
+     * @param string|null $debut
      * @return FormationInstanceJournee
      */
-    public function setDebut(string $debut)
+    public function setDebut(?string $debut)
     {
         $this->debut = $debut;
         return $this;
@@ -96,10 +99,10 @@ class FormationInstanceJournee implements HistoriqueAwareInterface
     }
 
     /**
-     * @param string $fin
+     * @param string|null $fin
      * @return FormationInstanceJournee
      */
-    public function setFin(string $fin)
+    public function setFin(?string $fin)
     {
         $this->fin = $fin;
         return $this;
@@ -114,10 +117,10 @@ class FormationInstanceJournee implements HistoriqueAwareInterface
     }
 
     /**
-     * @param string $lieu
+     * @param string|null $lieu
      * @return FormationInstanceJournee
      */
-    public function setLieu(string $lieu)
+    public function setLieu(?string $lieu)
     {
         $this->lieu = $lieu;
         return $this;
@@ -132,10 +135,10 @@ class FormationInstanceJournee implements HistoriqueAwareInterface
     }
 
     /**
-     * @param string $remarque
+     * @param string|null $remarque
      * @return FormationInstanceJournee
      */
-    public function setRemarque(string $remarque)
+    public function setRemarque(?string $remarque)
     {
         $this->remarque = $remarque;
         return $this;

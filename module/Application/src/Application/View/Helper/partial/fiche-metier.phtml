@@ -35,6 +35,8 @@ if (isset($options['activite-liste'])) {
 
 $sansTitre = (isset($options['sans-titre']) AND $options['sans-titre']);
 $mode = $options['mode'];
+
+if ($options['popup']) $options['actions']['afficher'] = false;
 ?>
 
 <?php /** Watermark de l'identifiant de la fiche qui peut être utilisée pour des redirections **********************/ ?>
@@ -235,19 +237,23 @@ $mode = $options['mode'];
                                     Ajouter une compétence
                                 </a>
                         <?php endif; ?>
-                            <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
-                            <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
-                               class="btn btn-primary action ajax-modal"
-                            >
-                                <span class="icon graphique"></span>
-                                Afficher les compétences
-                            </a>
+                            <?php if ($options['popup'] !== true) : ?>
+                                <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
+                                   class="btn btn-primary action ajax-modal"
+                                >
+                                    <span class="icon graphique"></span>
+                                    Afficher les compétences
+                                </a>
+                            <?php endif; ?>
                         </div>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="col-md-1"></div>
-                <div class="col-md-10"><?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => $options['actions']]); ?></div>
+                <div class="col-md-10"><?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier,
+                        ['display' => ['titre' => false, 'validation' => false],
+                        'actions' => $options['actions']]); ?></div>
             </div>
         </div>
         <?php endif; ?>
@@ -283,13 +289,15 @@ $mode = $options['mode'];
                                 Ajouter une application
                             </a>
                             <?php endif; ?>
-                            <?php /** @see FicheMetierController::graphiqueApplicationsAction() */ ?>
-                            <a href="<?php echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
-                               class="btn btn-primary action ajax-modal"
-                            >
-                                <span class="icon graphique"></span>
-                                Afficher les applications
-                            </a>
+                            <?php if ($options['popup'] !== true) : ?>
+                                <?php /** @see FicheMetierController::graphiqueApplicationsAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?>"
+                                   class="btn btn-primary action ajax-modal"
+                                >
+                                    <span class="icon graphique"></span>
+                                    Afficher les applications
+                                </a>
+                            <?php endif; ?>
                         </div>
 
                     </div>
@@ -297,7 +305,9 @@ $mode = $options['mode'];
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-1"></div>
-                        <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier, ['display' => ['titre' => false, 'validation' => false], 'actions' => $options['actions']]); ?></div>
+                        <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier,
+                                ['display' => ['titre' => false, 'validation' => false],
+                                    'actions' => $options['actions']]); ?></div>
                     </div>
                 </div>
             </div>

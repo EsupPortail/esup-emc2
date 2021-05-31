@@ -4,11 +4,13 @@
  * @var Indicateur $indicateur
  * @var array $header
  * @var array $data
+ * @var Mail $mail
  *
  * @see IndicateurController::afficherAction()
  */
 
 use Indicateur\Entity\Db\Indicateur;
+use Mailing\Model\Db\Mail;
 
 ?>
 
@@ -17,53 +19,72 @@ use Indicateur\Entity\Db\Indicateur;
     <?php echo $indicateur->getTitre(); ?>
 </h1>
 
-<div class="main">
+<div class="row">
+    <?php /** @see IndicateurController::exportAction() */ ?>
+    <a href="<?php echo $this->url('indicateur/exporter', ['indicateur' => $indicateur->getId()], [], true); ?>"
+       class="btn btn-primary action"
+    >
+        <span class="icon exporter"></span>
+        Exporter l'indicateur
+    </a>
 
-    <div class="row">
-        <?php /** @see IndicateurController::exportAction() */ ?>
-        <a href="<?php echo $this->url('indicateur/exporter', ['indicateur' => $indicateur->getId()], [], true); ?>"
-           class="btn btn-primary action"
-        >
-            <span class="icon exporter"></span>
-            Exporter l'indicateur
-        </a>
+    <?php /** @see IndicateurController::rafraichirAction() */?>
+    <a href="<?php echo $this->url('indicateur/rafraichir', ['indicateur' => $indicateur->getId()], [], true); ?>"
+       class="btn btn-primary action"
+    >
+        <span class="icon synchoniser"></span>
+        Rafraichir l'indicateur
+    </a>
 
-        <?php /** @see IndicateurController::rafraichirAction() */?>
-        <a href="<?php echo $this->url('indicateur/rafraichir', ['indicateur' => $indicateur->getId()], [], true); ?>"
-           class="btn btn-primary action"
-        >
-            <span class="icon synchoniser"></span>
-            Rafraichir l'indicateur
-        </a>
-
-        <small>dernier rafraichissement le <?php echo ($indicateur->getDernierRafraichissement()?$indicateur->getDernierRafraichissement()->format('d/m/Y à H:i:s'):"---"); ?></small>
-    </div>
-
-    <br/>
-
-    <div class="alert alert-info">
-        <?php echo $indicateur->getDescription(); ?>
-    </div>
-
-    <table id="datatable" class="table table-extra-condensed">
-        <thead>
-        <tr>
-            <?php foreach ($header as $item) : ?>
-                <th> <?php echo $item; ?> </th>
-            <?php endforeach; ?>
-        </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($data as $item) : ?>
-                <tr>
-                    <?php foreach ($item as $value) : ?>
-                        <td><?php echo $value; ?></td>
-                    <?php endforeach; ?>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+    <small>dernier rafraichissement le <?php echo ($indicateur->getDernierRafraichissement()?$indicateur->getDernierRafraichissement()->format('d/m/Y à H:i:s'):"---"); ?></small>
 </div>
+
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li>
+            <a href="#indicateur" aria-controls="indicateur" role="tab" data-toggle="tabz">
+                Indicateur
+            </a>
+        </li>
+        <li class="pull-right">
+            <a href="#mail" aria-controls="mail" role="tab" data-toggle="tabz">
+                Mail
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="tab-content">
+
+    <div id="indicateur" class="tab-pane " role="indicateur">
+        <p class="lead">
+            <?php echo $indicateur->getDescription(); ?>
+        </p>
+
+        <table id="datatable" class="table table-extra-condensed">
+            <thead>
+            <tr>
+                <?php foreach ($header as $item) : ?>
+                    <th> <?php echo $item; ?> </th>
+                <?php endforeach; ?>
+            </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($data as $item) : ?>
+                    <tr>
+                        <?php foreach ($item as $value) : ?>
+                            <td><?php echo $value; ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="mail" class="tab-pane " role="mail">
+    </div>
+</div>
+
 
 <script>
     $(document).ready(function() {
@@ -73,4 +94,22 @@ use Indicateur\Entity\Db\Indicateur;
             }
         });
     } );
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "indicateur";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
 </script>

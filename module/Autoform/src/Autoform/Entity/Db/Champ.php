@@ -21,7 +21,7 @@ class Champ {
     const TYPE_MULTIPLE         = "Multiple";
     const TYPE_ENTITY           = "Entity";
     const TYPE_ENTITY_MULTI     = "Entity Multiple";
-    const TYPE_CUSTOM           = "Multiple champs paramètrables";
+    const TYPE_CUSTOM           = "Multiple_champs_paramètrables";
 
 
     /** @var integer */

@@ -1,7 +1,5 @@
 <?php
-
-use Formation\Entity\Db\FormationInstance;
-
+    use Formation\Entity\Db\FormationInstance;
 ?>
 
 <dl>
@@ -28,18 +26,11 @@ use Formation\Entity\Db\FormationInstance;
     <dd>
         <ol>
             <li> Formation instance reçoit
-                état <?php echo $this->etatbadge($etatService->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE)); ?> </li>
+                état <?php echo $this->etatbadge(FormationInstance::ETAT_INSCRIPTION_FERMEE); ?> </li>
             <li> Notification des agents en liste principale grâce au mail <span class="mail"><span
                         class="icon courrier"></span>FORMATION_LISTE_PRINCIPALE</span></li>
             <li> Notification des agents en liste secondaire grâce au mail <span class="mail"><span
                         class="icon courrier"></span>FORMATION_LISTE_SECONDAIRE</span></li>
         </ol>
-    </dd>
-    <dt>Reste à faire </dt>
-    <dd>
-        <ul>
-            <li> Rédaction du mail <span class="mail"><span class="icon courrier"></span>FORMATION_LISTE_PRINCIPALE</span>.</li>
-            <li> Rédaction du mail <span class="mail"><span class="icon courrier"></span>FORMATION_LISTE_SECONDAIRE</span>.</li>
-        </ul>
     </dd>
 </dl>

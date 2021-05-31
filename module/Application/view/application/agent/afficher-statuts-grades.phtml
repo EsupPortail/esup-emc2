@@ -28,13 +28,17 @@ $this->headTitle($title)
     <div class="col-md-3">
         <h2> Statuts </h2>
         <?php foreach ($statuts as $statut) : ?>
-            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php if ($statut->estEnCours()) : ?>
+                <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php endif; ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">
         <h2> Grades </h2>
         <?php foreach ($grades as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php if ($grade->estEnCours()) : ?>
+                <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php endif; ?>
         <?php endforeach; ?>
     </div>
 </div>

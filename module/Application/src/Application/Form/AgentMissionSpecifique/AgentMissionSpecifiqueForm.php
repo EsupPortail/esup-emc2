@@ -92,7 +92,6 @@ class AgentMissionSpecifiqueForm extends Form {
                 'id' => 'debut',
             ],
         ]);
-
         //Fin
         $this->add([
             'type' => DateTime::class,
@@ -139,7 +138,7 @@ class AgentMissionSpecifiqueForm extends Form {
             'structure'         => [ 'required' => false, ],
             'debut'             => [ 'required' => true,  ],
             'fin'               => [ 'required' => false, ],
-            'decharge'               => [ 'required' => false, ],
+            'decharge'          => [ 'required' => false, ],
         ]));
     }
 }

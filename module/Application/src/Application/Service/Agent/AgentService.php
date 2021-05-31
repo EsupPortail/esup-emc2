@@ -37,36 +37,39 @@ class AgentService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            //affectations
+            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+            ->addSelect('affectation_structure')->leftJoin('affectation.structure', 'affectation_structure')
             //quotite de l'agent
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
-            //status de l'agent
+//            //status de l'agent
             ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
             ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
-            //grade de l'agent
+//            //grade de l'agent
             ->addSelect('grade')->leftJoin('agent.grades', 'grade')
             ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
             ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
             ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
             ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
 
-            //applications liées à l'agent
-            ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
-            ->addSelect('application')->leftJoin('agentapplication.application', 'application')
-            ->addSelect('application_niveau')->leftJoin('agentapplication.niveau', 'application_niveau')
-            ->addSelect('application_groupe')->leftJoin('application.groupe', 'application_groupe')
-            ->addSelect('fapplication')->leftJoin('agentapplication.validation', 'fapplication')
-            //competences liées à l'agent
-            ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
-            ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
-            ->addSelect('competence_niveau')->leftJoin('agentcompetence.niveau', 'competence_niveau')
-            ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
-            ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
-            ->addSelect('fcompetence')->leftJoin('agentcompetence.validation', 'fcompetence')
-            //formations liées à l'agent
-            ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
-            ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
-            ->addSelect('formation_theme')->leftJoin('formation.theme', 'formation_theme')
-            ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
+//            //applications liées à l'agent
+//            ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
+//            ->addSelect('application')->leftJoin('agentapplication.application', 'application')
+//            ->addSelect('application_niveau')->leftJoin('agentapplication.niveau', 'application_niveau')
+//            ->addSelect('application_groupe')->leftJoin('application.groupe', 'application_groupe')
+//            ->addSelect('fapplication')->leftJoin('agentapplication.validation', 'fapplication')
+//            //competences liées à l'agent
+//            ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
+//            ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
+//            ->addSelect('competence_niveau')->leftJoin('agentcompetence.niveau', 'competence_niveau')
+//            ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
+//            ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
+//            ->addSelect('fcompetence')->leftJoin('agentcompetence.validation', 'fcompetence')
+//            //formations liées à l'agent
+//            ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
+//            ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
+//            ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
+
             //missions spécifiques
 //            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
 //            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
@@ -80,13 +83,13 @@ class AgentService {
 //
 
 
-            ->addSelect('entretien')->leftJoin('agent.entretiens', 'entretien')
-            ->addSelect('entretienValidationAgent')->leftJoin('entretien.validationAgent', 'entretienValidationAgent')
-//            ->addSelect('evaModificateur')->leftJoin('entretienValidationAgent.histoModificateur', 'evaModificateur')
-            ->addSelect('entretienValidationResponsable')->leftJoin('entretien.validationResponsable', 'entretienValidationResponsable')
-//            ->addSelect('evrModificateur')->leftJoin('entretienValidationResponsable.histoModificateur', 'evrModificateur')
-
-            ->addSelect('fichier')->leftJoin('agent.fichiers', 'fichier')
+//            ->addSelect('entretien')->leftJoin('agent.entretiens', 'entretien')
+//            ->addSelect('entretienValidationAgent')->leftJoin('entretien.validationAgent', 'entretienValidationAgent')
+////            ->addSelect('evaModificateur')->leftJoin('entretienValidationAgent.histoModificateur', 'evaModificateur')
+//            ->addSelect('entretienValidationResponsable')->leftJoin('entretien.validationResponsable', 'entretienValidationResponsable')
+////            ->addSelect('evrModificateur')->leftJoin('entretienValidationResponsable.histoModificateur', 'evrModificateur')
+//
+//            ->addSelect('fichier')->leftJoin('agent.fichiers', 'fichier')
 
 
 
@@ -105,22 +108,22 @@ class AgentService {
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.delete IS NULL')
-
-            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-            ->andWhere('statut.debut <= :NOW')
-            ->andWhere('statut.fin >= :NOW OR statut.fin IS NULL')
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
+            ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
+//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+            ->andWhere('affectation.dateDebut <= :NOW')
+            ->andWhere('affectation.dateFin >= :NOW OR affectation.dateFin IS NULL')
             ->setParameter('NOW', $this->getDateTime())
         ;
 
-        $tmp = [];
-        foreach ($temoins as $temoin => $value) {
-            if ($value) $tmp[] = 'statut.'. $temoin .' = :TRUE';
-        }
-        if (!empty($tmp)) {
-            $qb = $qb->andWhere(implode(" OR ",$tmp))
-                ->setParameter('TRUE', 'O')
-            ;
-        }
+//        $tmp = ['statut IS NULL'];
+//        foreach ($temoins as $temoin => $value) {
+//            if ($value) $tmp[] = 'statut.'. $temoin .' = :TRUE';
+//        }
+//        if (!empty($tmp)) {
+//            $qb = $qb->andWhere(implode(" OR ",$tmp))
+//                ->setParameter('TRUE', 'O');
+//        }
 
         if ($order !== null) {
             $qb = $qb->orderBy('agent.' . $order);
@@ -147,10 +150,10 @@ class AgentService {
         if ($structures !== null) {
             $date = $this->getDateTime();
             $qb = $qb
-                ->andWhere('grade.dateDebut <= :date')
-                ->andWhere('grade.dateFin IS NULL OR grade.dateFin >= :date')
+                ->andWhere('affectation.dateDebut <= :date OR affectation.dateDebut IS NULL')
+                ->andWhere('affectation.dateFin >= :date OR affectation.dateFin IS NULL')
                 ->setParameter('date', $date)
-                ->addSelect('structure')->join('grade.structure', 'structure')
+                ->addSelect('structure')->join('affectation.structure', 'structure')
                 ->andWhere('structure IN (:structures)')
                 ->setParameter('structures', $structures)
             ;
@@ -160,10 +163,10 @@ class AgentService {
     }
 
     /**
-     * @param integer|null $id
+     * @param string|null $id
      * @return Agent
      */
-    public function getAgent(?int $id)
+    public function getAgent(?string $id)
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -243,7 +246,7 @@ class AgentService {
             ->addSelect('structure')->join('grade.structure', 'structure')
             ->addSelect('fiche')->leftJoin('agent.fiches', 'fiche')
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
+            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
 //            ->andWhere('statut.administratif = :true')
             ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND statut.heberge = :false AND statut.auditeurLibre = :false')
@@ -292,19 +295,19 @@ class AgentService {
             ->andWhere('affectation.dateDebut <= :today')
             ->andWhere('affectation.principale = :true')
             //STATUS
-            ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->andWhere('statut.fin >= :today OR statut.fin IS NULL')
-            ->andWhere('statut.debut <= :today')
+            ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
+            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
+            ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
-            ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false')
+            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false)')
             //GRADE
-            ->addSelect('grade')->join('agent.grades', 'grade')
-            ->addSelect('gstructure')->join('grade.structure', 'gstructure')
-            ->addSelect('ggrade')->join('grade.grade', 'ggrade')
+            ->addSelect('grade')->leftjoin('agent.grades', 'grade')
+            ->addSelect('gstructure')->leftjoin('grade.structure', 'gstructure')
+            ->addSelect('ggrade')->leftjoin('grade.grade', 'ggrade')
             ->addSelect('gcorrespondance')->leftjoin('grade.bap', 'gcorrespondance')
             ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-            ->andWhere('grade.dateDebut <= :today')
+            ->andWhere('grade.dateDebut <= :today OR grade.dateDebut IS NULL')
             //FICHE DE POSTE
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
 
@@ -312,6 +315,8 @@ class AgentService {
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
             ->andWhere('agent.delete IS NULL')
+
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 
         if ($structures !== null) {
@@ -322,6 +327,66 @@ class AgentService {
         $result = $qb->getQuery()->getResult();
 
         return $result;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @return Agent[]
+     */
+    public function getAgentsForcesByStructures(array $structures)
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->addSelect('forcage')->join('agent.structuresForcees', 'forcage')
+            ->andWhere('forcage.histoDestruction IS NULL');
+
+        if ($structures !== null) {
+            $qb = $qb->andWhere('forcage.structure IN (:structures)')
+                ->setParameter('structures', $structures);
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    public function getAgentByHarp(string $st_harp_id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agent.harpId = :harp_id')
+            ->setParameter('harp_id', $st_harp_id);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs agents partagent le même harp_id [".$st_harp_id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param $st_prenom
+     * @param $st_nom
+     * @param $st_annee
+     * @return Agent|null
+     */
+    public function getAgentByIdentification($st_prenom, $st_nom, $st_annee)
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent');
+
+        if ($st_prenom !== null) {
+            $qb = $qb->andWhere('LOWER(agent.prenom) = LOWER(:prenom)')
+                ->setParameter("prenom", $st_prenom);
+        }
+        if ($st_nom !== null) {
+            $qb = $qb->andWhere('LOWER(agent.nomUsuel) = LOWER(:nom)')
+                ->setParameter("nom", $st_nom);
+        }
+//        if ($st_annee !== null) {
+//            $qb = $qb->andWhere('LOWER(agent.nom) = LOWER(:nom)')
+//                ->setParameter("prenom", $st_nom);
+//        }
+        $result = $qb->getQuery()->getResult();
+        if (count($result) === 1) return $result[0];
+        return null;
     }
 
     /**
@@ -469,4 +534,6 @@ class AgentService {
         });
         return $result;
     }
+
+
 }

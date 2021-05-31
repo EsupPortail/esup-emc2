@@ -3,6 +3,7 @@
 /**
  * @var EntretienProfessionnel $entretien
  * @var ParcoursDeFormation $parcours
+ * @var User $connectedUser
  * @var array $options
  * @var string $source
  */
@@ -11,9 +12,11 @@ use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use UnicaenUtilisateur\Entity\Db\User;
 
 $agent = $entretien->getAgent();
 
+$isAgent        = $entretien->getAgent()->getUtilisateur() === $connectedUser;
 $canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
 $canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
 $canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
@@ -47,7 +50,7 @@ $date = $entretien->getMaxSaisiEntretien();
 $res = ($now <= $date);
 
 $has_validation_responsable = $entretien->getValidationResponsable();
-$date_depassee = $now > $date;
+$date_depassee = ($isAgent)?($now > $date):false;
 ?>
 
 <h2 class="page-header-tab"> Compte-rendu d'entretien de formation </h2>
@@ -70,7 +73,7 @@ $date_depassee = $now > $date;
 
 <!-- Formulaire ------------------------------------------------------------------------------------------------------->
 
-<h3> Formations survies durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
+<h3> Formations suivies durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
 
 <?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
 
@@ -88,7 +91,7 @@ foreach ($reponses as $reponse) {
 ?>
 
 <?php if ($canRenseigner) : ?>
-    <?php if ($res AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
+    <?php if (!$date_depassee AND ($entretien->getValidationResponsable() === null OR $entretien->getValidationResponsable()->estHistorise())) : ?>
         <?php
         /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
         $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);

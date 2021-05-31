@@ -34,7 +34,7 @@ $this->headTitle("Index des agents")
 
 <div class="main">
 
-    <?php echo $this->partial('partial/filtre_statut', ['url' => $this->url('agent'), 'filtres' => $filtres]); ?>
+<!--    --><?php //echo $this->partial('partial/filtre_statut', ['url' => $this->url('agent'), 'filtres' => $filtres]); ?>
 
     <?php if (count($agents) > 0) : ?>
         <table id="agents" class="datatable table table-condensed">

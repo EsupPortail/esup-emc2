@@ -119,4 +119,21 @@ class FormationInstanceJourneeService
         $result = $this->getFormationInstanceJournee($id);
         return $result;
     }
+
+    public function getFormationInstanceJourneeBySource(string $source, string $idSource)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('journee.source = :source')
+            ->andWhere('journee.idSource = :idSource')
+            ->setParameter('source', $source)
+            ->setParameter('idSource', $idSource)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FormationInstanceJournee partagent le même idSource [" . $source . "-" . $idSource . "]", 0, $e);
+        }
+        return $result;
+
+    }
 }

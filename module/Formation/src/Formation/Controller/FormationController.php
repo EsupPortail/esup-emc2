@@ -13,18 +13,16 @@ use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class FormationController extends AbstractActionController
 {
-    use EtatServiceAwareTrait;
+    use FormationInstanceServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
-    use FormationThemeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use FormationFormAwareTrait;
 
@@ -35,15 +33,12 @@ class FormationController extends AbstractActionController
 
     public function indexAction()
     {
-        $formations = $this->getFormationService()->getFormations('libelle');
-        $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
-        $themes = $this->getFormationThemeService()->getFormationsThemes();
+        $formations = $this->getFormationService()->getFormations();
+        $groupes = $this->getFormationGroupeService()->getFormationsGroupes('libelle');
 
         return new ViewModel([
             'formations' => $formations,
             'groupes' => $groupes,
-            'themes' => $themes,
-            'etatService' => $this->getEtatService(),
         ]);
     }
 
@@ -61,6 +56,9 @@ class FormationController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFormationService()->create($formation);
+                $formation->setSource(Formation::SOURCE_EMC2);
+                $formation->setIdSource($formation->getId());
+                $this->getFormationService()->update($formation);
                 exit;
             }
         }
@@ -92,11 +90,14 @@ class FormationController extends AbstractActionController
             }
         }
 
+        $instances = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
+
         $vm = new ViewModel();
         $vm->setTemplate('formation/formation/modifier');
         $vm->setVariables([
             'title' => 'Edition d\'une formation',
             'formation' => $formation,
+            'instances' => $instances,
             'form' => $form,
         ]);
         return $vm;

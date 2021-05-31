@@ -34,24 +34,24 @@ return array(
         ],
     ],
 
-//    'navigation'      => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'indicateurs' => [
-//                                'label'    => 'Indicateur',
-//                                'route'    => 'indicateurs',
-//                                'resource' => IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER),
-//                                'order'    => 1000,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'indicateurs' => [
+                                'label'    => 'Indicateur',
+                                'route'    => 'indicateurs',
+                                'resource' => IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER),
+                                'order'    => 1000,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

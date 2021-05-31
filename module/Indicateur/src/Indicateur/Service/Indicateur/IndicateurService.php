@@ -3,10 +3,10 @@
 namespace Indicateur\Service\Indicateur;
 
 use DateTime;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBA_Exception;
+use Doctrine\DBAL\Driver\Exception as DBA_Driver_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Indicateur\Entity\Db\Indicateur;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -15,51 +15,14 @@ use Zend\Mvc\Controller\AbstractActionController;
 class IndicateurService {
     use EntityManagerAwareTrait;
 
-    /**
-     * @param string $attribut
-     * @param string $ordre
-     * @return Indicateur[]
-     */
-    public function getIndicateurs($attribut = 'id', $ordre = 'ASC') {
-        $qb = $this->getEntityManager()->getRepository(Indicateur::class)->createQueryBuilder('indicateur')
-            ->orderBy('indicateur.' . $attribut, $ordre);
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param integer $id
-     * @return Indicateur
-     */
-    public function getIndicateur($id) {
-        $qb = $this->getEntityManager()->getRepository(Indicateur::class)->createQueryBuilder('indicateur')
-            ->andWhere('indicateur.id = :id')
-            ->setParameter('id', $id);
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Indicateur partagent le même id [".$id."]", $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return Indicateur
-     */
-    public function getRequestedIndicateur($controller, $paramName = "indicateur") {
-        $id = $controller->params()->fromRoute($paramName);
-        return $this->getIndicateur($id);
-    }
+/** GESTION DES ENTITES ***********************************************************************************************/
 
     /**
      * @param Indicateur $indicateur
      * @return Indicateur
      */
-    public function create($indicateur) {
+    public function create(Indicateur $indicateur) : Indicateur
+    {
         try {
             $this->getEntityManager()->persist($indicateur);
             $this->getEntityManager()->flush($indicateur);
@@ -73,7 +36,8 @@ class IndicateurService {
      * @param Indicateur $indicateur
      * @return Indicateur
      */
-    public function update($indicateur) {
+    public function update(Indicateur $indicateur) : Indicateur
+    {
         try {
             $this->getEntityManager()->flush($indicateur);
         } catch (ORMException $e) {
@@ -86,10 +50,8 @@ class IndicateurService {
      * @param Indicateur $indicateur
      * @return Indicateur
      */
-    public function delete($indicateur) {
-
-
-
+    public function delete(Indicateur $indicateur) : Indicateur
+    {
         try {
             $this->getEntityManager()->remove($indicateur);
             $this->getEntityManager()->flush($indicateur);
@@ -99,18 +61,24 @@ class IndicateurService {
         return $indicateur;
     }
 
+    /** GESTION DES VUES **********************************************************************************************/
+
     /**
      * @param Indicateur $indicateur
      * @return array
      */
-    public function fetch($indicateur) {
+    public function fetch(Indicateur $indicateur) : array {
+        $sql = "SELECT * FROM " . $indicateur->getViewId();
         try {
-            $sql = "SELECT * FROM " . $indicateur->getViewId();
             $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de la session.", 0, $e);
+        }
+        try {
             $query->execute();
             $array = $query->fetchAll();
-        } catch (DBALException $e) {
-            throw new RuntimeException("Un problème est survenue durant la récupération de l'indicateur [".$indicateur->getTitre()."]", $e);
+        } catch (DBA_Driver_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de des données de l'indicateur.", 0, $e);
         }
         return $array;
     }
@@ -118,79 +86,142 @@ class IndicateurService {
     /**
      * @param Indicateur $indicateur
      */
-    public function refresh($indicateur) {
-        try {
-            $sql = "REFRESH MATERIALIZED VIEW " . $indicateur->getViewId();
-            $query = $this->getEntityManager()->getConnection()->prepare($sql);
-            $query->execute();
-        } catch (DBALException $e) {
-            throw new RuntimeException("Un problème est survenue durant le rafraichissement de l'indicateur [".$indicateur->getTitre()."]", $e);
-        }
-
-        try {
-            $date = new DateTime();
-        } catch(Exception $e) {
-            throw new RuntimeException("Un problème est survenue durant la récupération de la date", $e);
-        }
-        $indicateur->setDernierRafraichissement($date);
-        $this->update($indicateur);
-    }
-
-    /**
-     * @param Indicateur $indicateur
-     */
-    public function dropView($indicateur) {
-        try {
-            $sql = "DROP MATERIALIZED VIEW " . $indicateur->getViewId();
-            $query = $this->getEntityManager()->getConnection()->prepare($sql);
-            $query->execute();
-        } catch (DBALException $e) {
-            throw new RuntimeException("Un problème est survenue durant le drop de la vue de l'indicateur [".$indicateur->getTitre()."]", $e);
-        }
-    }
-
-    /**
-     * @param Indicateur $indicateur
-     */
-    public function createView($indicateur)
+    public function refresh(Indicateur $indicateur)
     {
+        $sql = "REFRESH MATERIALIZED VIEW " . $indicateur->getViewId();
         try {
-            $sql = "CREATE MATERIALIZED VIEW ".$indicateur->getViewId(). " AS ".$indicateur->getRequete();
             $query = $this->getEntityManager()->getConnection()->prepare($sql);
-            $query->execute();
-        } catch (DBALException $e) {
-            throw new RuntimeException("Un problème est survenue durant le création de la vue de l'indicateur [".$indicateur->getTitre()."]", $e);
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de la session.", 0, $e);
         }
-
         try {
-            $date = new DateTime();
-        } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération de la date.", $e);
+            $query->execute();
+        } catch (DBA_Driver_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de des données de l'indicateur.", 0, $e);
         }
-        $indicateur->setDernierRafraichissement($date);
+        $indicateur->setDernierRafraichissement(new DateTime());
         $this->update($indicateur);
     }
 
     /**
      * @param Indicateur $indicateur
      */
-    public function updateView($indicateur)
+    public function dropView(Indicateur $indicateur)
+    {
+        $sql = "DROP MATERIALIZED VIEW " . $indicateur->getViewId();
+        try {
+            $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de la session.", 0, $e);
+        }
+        try {
+            $query->execute();
+        } catch (DBA_Driver_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de des données de l'indicateur.", 0, $e);
+        }
+    }
+
+    /**
+     * @param Indicateur $indicateur
+     */
+    public function createView(Indicateur $indicateur)
+    {
+        $sql = "CREATE MATERIALIZED VIEW ".$indicateur->getViewId(). " AS ".$indicateur->getRequete();
+        try {
+            $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de la session.", 0, $e);
+        }
+        try {
+            $query->execute();
+        } catch (DBA_Driver_Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération de des données de l'indicateur.", 0, $e);
+        }
+        $indicateur->setDernierRafraichissement(new DateTime());
+        $this->update($indicateur);
+    }
+
+    /**
+     * @param Indicateur $indicateur
+     */
+    public function updateView(Indicateur $indicateur)
     {
         $this->dropView($indicateur);
         $this->createView($indicateur);
     }
+
+    /** REQUETAGE *****************************************************************************************************/
+
+    /**
+     * @param string $attribut
+     * @param string $ordre
+     * @return Indicateur[]
+     */
+    public function getIndicateurs(string $attribut = 'id', string $ordre = 'ASC') : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Indicateur::class)->createQueryBuilder('indicateur')
+            ->orderBy('indicateur.' . $attribut, $ordre);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param int|null $id
+     * @return Indicateur|null
+     */
+    public function getIndicateur(?int $id) : ?Indicateur
+    {
+        if ($id === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(Indicateur::class)->createQueryBuilder('indicateur')
+            ->andWhere('indicateur.id = :id')
+            ->setParameter('id', $id);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Indicateur partagent le même id [".$id."]", $e);
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $paramName
+     * @return Indicateur|null
+     */
+    public function getRequestedIndicateur(AbstractActionController $controller, string $paramName = "indicateur") : ?Indicateur
+    {
+        $id = $controller->params()->fromRoute($paramName);
+        return $this->getIndicateur($id);
+    }
+
+    /** RECUPERATION DONNEES *****************************************************************************************
+     * @param Indicateur $indicateur
+     * @return array
+     */
 
     public function getIndicateurData(Indicateur $indicateur)
     {
         $rawdata = $this->fetch($indicateur);
         $rubriques = [];
 
+        if ($indicateur->getEntity() === Indicateur::ENTITY_LIBRE) {
+            if (!empty($rawdata)) {
+                foreach ($rawdata[0] as $key => $value) $rubriques[] = $key;
+            }
+        }
+        if ($indicateur->getEntity() === Indicateur::ENTITY_ADAPTATIF) {
+            if (!empty($rawdata)) {
+                foreach ($rawdata[0] as $key => $value) $rubriques[] = $key;
+            }
+        }
         if ($indicateur->getEntity() === Indicateur::ENTITY_STRUCTURE) {
             $rubriques = [
-            'Code'                  => 'code',
-            'Libelle'               => 'libelle_court',
-            'Libelle long'          => 'libelle_long',
-            'Type'                  => 'type',
+                'Code'                  => 'code',
+                'Libelle'               => 'libelle_court',
+                'Libelle long'          => 'libelle_long',
+                'Type'                  => 'type',
 
             ];
         }
@@ -214,4 +245,6 @@ class IndicateurService {
 
         return [$rubriques, $data];
     }
+
+
 }

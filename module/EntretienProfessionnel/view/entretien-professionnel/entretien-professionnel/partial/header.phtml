@@ -5,6 +5,7 @@
  * @var Agent $agent
  * @var FichePoste $ficheposte
  * @var FicheMetier[] $fichesmetiers
+ * @var string[] $documents
  */
 
 use Application\Entity\Db\Agent;
@@ -110,30 +111,9 @@ $sursis = $entretien->getSursisActif();
             </div>
             <div class="panel-body">
                 <ul>
-                    <li>
-                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1417615828609&LANGUE=0" target="_blank">
-                            Guide de l'entretien professionnel
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://www.unicaen.fr/intranet/ressources-humaines/biatss/les-outils-de-l-entretien-professionnel-615681.kjsp" target="_blank">
-                            Outils de l'entretien professionnel
-                        </a>
-                    </li><li>
-                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461231853773&LANGUE=0" target="_blank">
-                            Grille d'entretien
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461232125307&LANGUE=0" target="_blank">
-                            Compétence
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://www.unicaen.fr/jsp/saisie/liste_fichiergw.jsp?OBJET=DOCUMENT&CODE=1461232163617&LANGUE=0" target="_blank">
-                            Définitions
-                        </a>
-                    </li>
+                    <?php foreach ($documents as $document) : ?>
+                        <li> <?php echo $document; ?></li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
         </div>

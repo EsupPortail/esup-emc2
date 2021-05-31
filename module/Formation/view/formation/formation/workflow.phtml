@@ -1,25 +1,14 @@
-<?php
-
-/**
- * @var EtatService $etatService
- */
-
-use Formation\Entity\Db\FormationInstance;
-use UnicaenEtat\Service\Etat\EtatService;
-
-?>
-
 <h2> Workflow associé aux actions de formation </h2>
 
 <div class="panel panel-default etape">
     <div class="panel-heading">
-        ETAPE I : Creation d'une action
+        ETAPE I : Creation d'une session de formation
         <div class="pull-right">
             <span class="icon ok" style="color:darkgreen"></span>
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->partial('partial/workflow-creation', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-creation'); ?>
     </div>
 </div>
 
@@ -31,7 +20,7 @@ use UnicaenEtat\Service\Etat\EtatService;
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->partial('partial/workflow-informations', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-informations'); ?>
     </div>
 </div>
 
@@ -43,7 +32,7 @@ use UnicaenEtat\Service\Etat\EtatService;
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->partial('partial/workflow-inscription-ouverture', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-inscription-ouverture'); ?>
     </div>
 </div>
 
@@ -55,7 +44,7 @@ use UnicaenEtat\Service\Etat\EtatService;
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->partial('partial/workflow-inscription', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-inscription'); ?>
     </div>
 </div>
 
@@ -63,11 +52,11 @@ use UnicaenEtat\Service\Etat\EtatService;
     <div class="panel-heading">
         ETAPE V : Fermeture des inscriptions
         <div class="pull-right">
-            <span class="icon attente" style="color:darkblue"></span>
+            <span class="icon ok" style="color:darkgreen"></span>
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->partial('partial/workflow-inscription-fermeture', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-inscription-fermeture'); ?>
     </div>
 </div>
 
@@ -75,11 +64,11 @@ use UnicaenEtat\Service\Etat\EtatService;
     <div class="panel-heading">
         ETAPE VI : Envoie des convocations et des listes d'emargement
         <div class="pull-right">
-            <span class="icon attente" style="color:darkblue"></span>
+            <span class="icon ok" style="color:darkgreen"></span>
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->partial('partial/workflow-convocation', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-convocation'); ?>
     </div>
 </div>
 
@@ -87,11 +76,11 @@ use UnicaenEtat\Service\Etat\EtatService;
     <div class="panel-heading">
         ETAPE VII : Demande des retours sur la formation
         <div class="pull-right">
-            <span class="icon attente" style="color:darkblue"></span>
+            <span class="icon ok" style="color:darkgreen"></span>
         </div>
     </div>
     <div class="panel-body">
-        <?php echo $this->partial('partial/workflow-retours', ['etatService' => $etatService]); ?>
+        <?php echo $this->partial('partial/workflow-retours'); ?>
     </div>
 </div>
 
@@ -103,7 +92,7 @@ use UnicaenEtat\Service\Etat\EtatService;
         </div>
     </div>
     <div class="panel-body">
-        <?php //echo $this->partial('partial/workflow-inscription-fermeture', ['etatService' => $etatService]); ?>
+        <?php //echo $this->partial('partial/workflow-inscription-fermeture'); ?>
     </div>
 </div>
 
@@ -115,7 +104,7 @@ use UnicaenEtat\Service\Etat\EtatService;
         </div>
     </div>
     <div class="panel-body">
-        <?php //echo $this->partial('partial/workflow-inscription-fermeture', ['etatService' => $etatService]); ?>
+        <?php //echo $this->partial('partial/workflow-inscription-fermeture'); ?>
     </div>
 </div>
 

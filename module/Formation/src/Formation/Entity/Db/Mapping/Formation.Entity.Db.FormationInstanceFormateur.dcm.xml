@@ -12,6 +12,7 @@
 
         <field name="prenom"              column="prenom"           type="string"  length="256"    nullable="false"/>
         <field name="nom"                 column="nom"              type="string"  length="256"    nullable="false"/>
+        <field name="email"               column="email"            type="string"  length="1024"   nullable="false"/>
         <field name="attachement"         column="attachement"      type="string"  length="1024"   nullable="true"/>
         <field name="volume"              column="volume"           type="float"                   nullable="true"/>
         <field name="montant"             column="montant"          type="float"                   nullable="true"/>

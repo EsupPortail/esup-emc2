@@ -3,7 +3,6 @@
 namespace Formation\Form\Formation;
 
 use Formation\Service\FormationGroupe\FormationGroupeService;
-use Formation\Service\FormationTheme\FormationThemeService;
 use Interop\Container\ContainerInterface;
 
 class FormationHydratorFactory
@@ -13,14 +12,11 @@ class FormationHydratorFactory
     {
         /**
          * @var FormationGroupeService $formationGroupeService
-         * @var FormationThemeService $formationThemeService
          */
-        $formationThemeService = $container->get(FormationThemeService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
 
         /** @var FormationHydrator $hydrator */
         $hydrator = new FormationHydrator();
-        $hydrator->setFormationThemeService($formationThemeService);
         $hydrator->setFormationGroupeService($formationGroupeService);
         return $hydrator;
     }

@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @see \Formation\Controller\ImportationLagafController::sessionAction()
+ * @var string $report
+ * @var FormationInstance[] $instances
+ * @var array $problemes
+ */
+
+use Formation\Entity\Db\FormationInstance;
+
+?>
+
+<h1 class="page-header">
+    Importation des sessions de formation depuis LAGAF
+</h1>
+
+<div class="report">
+    <h2> Nouveaux éléments</h2>
+    <dl>
+        <dt> #Instances </dt>
+        <dd> <?php echo count($instances); ?> </dd>
+        <dt> #Problèmes </dt>
+        <dd> <?php echo count($problemes); ?> </dd>
+    </dl>
+
+    <h2> Report </h2>
+
+    <span class="verbatim">
+        <?php echo $report; ?>
+    </span>
+</div>
+
+
+<style>
+    span.verbatim {
+        white-space: pre-line;
+    }
+</style>

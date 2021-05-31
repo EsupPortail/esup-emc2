@@ -218,7 +218,7 @@ class Agent implements
         $affectations = array_filter($affectations, function (AgentAffectation $aa) { return !$aa->isDeleted();});
         if ($date !== null) {
             $affectations = array_filter($affectations, function (AgentAffectation $aa) use ($date) {
-                return (($aa->getDateDebut() <= $date) AND ($aa->getDateFin() === null OR $aa->getDateFin() >= $date));
+                return ($aa->estEnCours($date));
             });
         }
         usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
@@ -235,7 +235,7 @@ class Agent implements
         $structure = null;
         /** @var AgentAffectation $affectation */
         foreach ($this->getAffectations() as $affectation) {
-            if ($affectation->isPrincipale() and $affectation->isActive()) {
+            if ($affectation->isPrincipale() and $affectation->estEnCours()) {
                 return $affectation;
             }
         }
@@ -252,7 +252,7 @@ class Agent implements
         $affectations = [];
         /** @var AgentAffectation $affectation */
         foreach ($this->getAffectations() as $affectation) {
-            if ($affectation->isActive($date)) $affectations[] = $affectation;
+            if ($affectation->estEnCours($date)) $affectations[] = $affectation;
         }
         return $affectations;
     }
@@ -281,7 +281,7 @@ class Agent implements
         $statuts = [];
         /** @var AgentStatut $statut */
         foreach ($this->getStatuts() as $statut) {
-            if ($statut->getDateFin() === null or $statut->getDateFin() > $now) $statuts[] = $statut;
+            if ($statut->estEnCours($now)) $statuts[] = $statut;
         }
         return $statuts;
     }
@@ -304,11 +304,10 @@ class Agent implements
      */
     public function getGradesActifs()
     {
-        $now = $this->getDateTime();
         $grades = [];
         /** @var AgentGrade $grade */
         foreach ($this->getGrades() as $grade) {
-            if ($grade->getDateFin() === null or $grade->getDateFin() > $now) $grades[] = $grade;
+            if ($grade->estEnCours()) $grades[] = $grade;
         }
         return $grades;
     }

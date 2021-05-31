@@ -38,9 +38,9 @@ class CampagneController extends AbstractActionController {
             if ($form->isValid()) {
                 $this->getCampagneService()->create($campagne);
                 try {
-                    $mail_DAC = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_DAC')->getValeur();
+                    $mail_DAC = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_DAC')->getValeur();
                     $mail1 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_DAC", ['campagne' => $campagne, 'mailing' => $mail_DAC]);
-                    $mail_BIATS = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_BIATS')->getValeur();
+                    $mail_BIATS = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_BIATS')->getValeur();
                     $mail2 = $this->getMailingService()->sendMailType("CAMPAGNE_OUVERTURE_BIATSS", ['campagne' => $campagne, 'mailing' => $mail_BIATS]);
                     $this->getMailingService()->addAttachement($mail1, Campagne::class, $campagne->getId());
                     $this->getMailingService()->addAttachement($mail2, Campagne::class, $campagne->getId());

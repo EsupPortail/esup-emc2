@@ -96,6 +96,7 @@ class FicheMetierController extends AbstractActionController
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche, true);
+        $popup = ($this->params()->fromQuery('popup') === 'true');
 
         return new ViewModel([
             'title' => "Visualisation d'une fiche métier",
@@ -103,6 +104,7 @@ class FicheMetierController extends AbstractActionController
             'competences' => $competences,
             'applications' => $applications,
             'parcours' => $parcours,
+            'popup' => $popup,
         ]);
     }
 

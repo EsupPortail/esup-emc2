@@ -90,7 +90,6 @@ return [
                                 'label' => 'Familles, domaines et métiers',
                                 'route' => 'metier',
                                 'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
-                                'dropdown-header' => true,
                                 'pages' => [
                                     [
                                         'route' => 'ressource-rh/cartographie',

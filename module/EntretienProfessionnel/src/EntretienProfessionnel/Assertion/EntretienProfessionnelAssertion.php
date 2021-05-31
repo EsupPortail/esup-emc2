@@ -41,6 +41,32 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         }
 
         switch($privilege) {
+            case EntretienproPrivileges::ENTRETIENPRO_AFFICHER :
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                    case RoleConstant::DRH:
+                        return true;
+                    case RoleConstant::PERSONNEL:
+                        return $entity->getAgent()->getUtilisateur() === $user;
+                    case RoleConstant::GESTIONNAIRE:
+                    case RoleConstant::RESPONSABLE:
+                        return $entity->getResponsable() === $user;
+                    default:
+                        return false;
+                }
+            case EntretienproPrivileges::ENTRETIENPRO_HISTORISER :
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                    case RoleConstant::DRH:
+                        return true;
+                    case RoleConstant::GESTIONNAIRE:
+                    case RoleConstant::RESPONSABLE:
+                        return $entity->getResponsable() === $user;
+                    default:
+                        return false;
+            }
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:

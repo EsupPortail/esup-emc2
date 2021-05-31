@@ -57,6 +57,9 @@ return [
                     'action' => [
                         'ouvrir-inscription',
                         'fermer-inscription',
+                        'envoyer-convocation',
+                        'demander-retour',
+                        'cloturer',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -192,6 +195,36 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'fermer-inscription',
+                            ],
+                        ],
+                    ],
+                    'envoyer-convocation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/envoyer-convocation/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'envoyer-convocation',
+                            ],
+                        ],
+                    ],
+                    'demander-retour' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/demander-retour/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'demander-retour',
+                            ],
+                        ],
+                    ],
+                    'cloturer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/cloturer/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'cloturer',
                             ],
                         ],
                     ],

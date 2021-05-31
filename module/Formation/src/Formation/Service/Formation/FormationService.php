@@ -6,14 +6,12 @@ use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
-use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationService
 {
     use GestionEntiteHistorisationTrait;
-    use FormationThemeServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -75,14 +73,12 @@ class FormationService
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
-            ->addSelect('createur')->join('formation.histoCreateur', 'createur')
-            ->addSelect('modificateur')->join('formation.histoModificateur', 'modificateur')
-            ->addSelect('destructeur')->leftjoin('formation.histoDestructeur', 'destructeur')
-            ->addSelect('theme')->leftJoin('formation.theme', 'theme')
             ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
-            ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
-            ->addSelect('journee')->leftJoin('finstance.journees', 'journee')
-            ->addSelect('inscrit')->leftJoin('finstance.inscrits', 'inscrit');
+            ->addSelect('competence')->leftJoin('formation.competences', 'competence')
+            ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
+            ->addSelect('application')->leftJoin('formation.applications', 'application')
+            ->addSelect('niveau_a')->leftJoin('application.niveau', 'niveau_a')
+            ;
         return $qb;
     }
 
@@ -94,7 +90,7 @@ class FormationService
     public function getFormations($champ = 'libelle', $ordre = 'ASC')
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('formation.' . $champ, $ordre);
+            ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -128,6 +124,28 @@ class FormationService
         $id = $controller->params()->fromRoute($paramName);
         $activite = $this->getFormation($id);
         return $activite;
+    }
+
+    /**
+     * @param string $source
+     * @param string $id
+     * @return Formation|null
+     */
+    public function getFormationBySource(string $source, string $id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formation.source = :source')
+            ->andWhere('formation.idSource = :id')
+            ->setParameter('source', $source)
+            ->setParameter('id', $id)
+        ;
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Formation partagent la même source [".$source. "-". $id ."]");
+        }
+        return $result;
     }
 
     /**
@@ -167,40 +185,6 @@ class FormationService
         }
 
         return Formation::generateOptions($result);
-    }
-
-    /** FORMATION THEME ***********************************************************************************************/
-
-    /**
-     * @return array
-     */
-    public function getFormationsThemesAsGroupOptions()
-    {
-        $formations = $this->getFormations();
-        $dictionnaire = [];
-        foreach ($formations as $formation) {
-            $libelle = ($formation->getTheme()) ? $formation->getTheme()->getLibelle() : "Sans Thèmes";
-            $dictionnaire[$libelle][] = $formation;
-        }
-        ksort($dictionnaire);
-
-        $options = [];
-        foreach ($dictionnaire as $clef => $listing) {
-            $optionsoptions = [];
-            usort($listing, function (Formation $a, Formation $b) {
-                return $a->getLibelle() > $b->getLibelle();
-            });
-
-            foreach ($listing as $formation) {
-                $optionsoptions[$formation->getId()] = $formation->getLibelle();
-            }
-
-            $options[] = [
-                'label' => $clef,
-                'options' => $optionsoptions,
-            ];
-        }
-        return $options;
     }
 
     /**
@@ -250,5 +234,4 @@ class FormationService
         $this->update($formation);
         return $formation;
     }
-
 }

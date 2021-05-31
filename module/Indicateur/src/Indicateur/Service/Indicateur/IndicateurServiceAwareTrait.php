@@ -10,7 +10,7 @@ trait IndicateurServiceAwareTrait {
     /**
      * @return IndicateurService
      */
-    public function getIndicateurService()
+    public function getIndicateurService() : IndicateurService
     {
         return $this->indicateurService;
     }
@@ -19,7 +19,7 @@ trait IndicateurServiceAwareTrait {
      * @param IndicateurService $indicateurService
      * @return IndicateurService
      */
-    public function setIndicateurService($indicateurService)
+    public function setIndicateurService(IndicateurService $indicateurService) : IndicateurService
     {
         $this->indicateurService = $indicateurService;
         return $this->indicateurService;

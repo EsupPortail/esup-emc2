@@ -18,7 +18,7 @@ use Autoform\Entity\Db\Champ;
                 <?php $sub = explode("|", $libelles[$position]); ?>
                 <?php echo $sub[1] ?> :
                 <?php
-                    $resplits = str_replace("_"," ",substr($splits[$position],3));
+                    $resplits = str_replace("_"," ",$splits[$position]);
                     echo $resplits;
                 ?>
             </li>

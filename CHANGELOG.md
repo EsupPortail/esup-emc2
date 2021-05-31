@@ -5,6 +5,12 @@ Version 1.3.0 *Module de bourse emploi*
 Version 1.2.0 *Module de formation*
 -------------
 
+Version 1.1.4
+-------------
++ [Base de données] Reprise des données de LAGAF (1er batch)
++ Réactivation des indicateurs + nouveaux types : Libre, Adaptatif
+
+
 Version 1.1.3
 -------------
 + [Correction bug] Ajout d'une garde pour les entretiens professionnels d'a gent sans fiche de poste

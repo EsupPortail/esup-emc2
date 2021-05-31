@@ -1,27 +1,25 @@
 <?php
 
-namespace Formation\Service\FormationTheme;
+namespace Formation\Service\Stagiaire;
 
+use Application\Service\Agent\AgentService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;
 
-class FormationThemeServiceFactory
-{
+class StagiaireServiceFactory {
 
     public function __invoke(ContainerInterface $container)
     {
         /**
          * @var EntityManager $entityManager
-         * @var UserService $userService
+         * @var AgentService $agentService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
+        $agentService = $container->get(AgentService::class);
 
-        /** @var FormationThemeService $service */
-        $service = new FormationThemeService();
+        $service = new StagiaireService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
+        $service->setAgentService($agentService);
         return $service;
     }
 }

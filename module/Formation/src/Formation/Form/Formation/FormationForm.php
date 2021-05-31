@@ -3,7 +3,6 @@
 namespace Formation\Form\Formation;
 
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Formation\Service\FormationTheme\FormationThemeServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
@@ -13,7 +12,6 @@ use Zend\InputFilter\Factory;
 class FormationForm extends Form
 {
     use FormationGroupeServiceAwareTrait;
-    use FormationThemeServiceAwareTrait;
 
     public function init()
     {
@@ -29,23 +27,6 @@ class FormationForm extends Form
                 'id' => 'libelle',
             ],
         ]);
-        //theme
-        $this->add([
-            'name' => 'theme',
-            'type' => Select::class,
-            'options' => [
-                'label' => 'Thème de la formation : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-                'empty_option' => 'Sélectionner un thème ...',
-                'value_options' => $this->getFormationThemeService()->getFormationsThemesAsOptions(),
-            ],
-            'attributes' => [
-                'class' => 'description form-control',
-                'style' => 'height:300px;',
-            ]
-        ]);
         //groupe
         $this->add([
             'name' => 'groupe',
@@ -59,7 +40,8 @@ class FormationForm extends Form
                 'value_options' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
             ],
             'attributes' => [
-                'class' => 'description form-control',
+                'class' => 'description form-control show-tick',
+                'data-live-search'  => 'true',
                 'style' => 'height:300px;',
             ]
         ]);
@@ -108,7 +90,6 @@ class FormationForm extends Form
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
             'groupe' => ['required' => false,],
-            'theme' => ['required' => false,],
             'description' => ['required' => false,],
             'lien' => ['required' => false,],
         ]));

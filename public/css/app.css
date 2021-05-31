@@ -1,19 +1,4 @@
-:root {
-    --color-default: #555555;
-    --background-default: #aaaaaa;
 
-    --color-success: #318b22;
-    --background-success: #92c197;
-
-    --color-info: #3c6c8b;
-    --background-info: #c2e3ff;
-
-    --color-warning: #8a6d3b ;
-    --background-warning: #e8dcb8;
-
-    --color-danger: darkred ;
-    --background-danger: #d99b9b;
-}
 /** MODAL *************************************************************************************************************/
 
 div.modal div.modal-dialog {
@@ -41,161 +26,18 @@ div.modal div.modal-footer {
     display: none;
 }
 
-/** ONGLET TABULATION *************************************************************************************************/
-
-ul.nav-tabs {
-    padding-left: 1rem;
-}
-.nav-tabs li a {
-    background-color: var(--color-light);
-    border: 1px solid #ddd;
-}
-
-.nav-tabs li a:hover {
-    background-color: #f0f0f0;
-    border-left-color: #286090;
-    border-top-color: #286090;
-    border-right-color: #286090;
-}
-
-/*li.pull-right {*/
-/*    margin-right: 1rem;*/
-/*}*/
-
 /** ACTION et autre semantique de lien ********************************************************************************/
 
-.action {
-    width:25rem;
-    margin:0.5rem;
+button,
+input[type=button],
+input[type=submit],
+a.btn,
+span.btn
+{
+    width:27rem;
+    margin:1rem;
 }
 
-button.btn.dropdown-toggle.btn-default{
-    height: 3.5rem;
-}
-
-/** ALERT *************************************************************************************************************/
-
-div.alert {
-    margin: 0.1rem;
-    padding: 0.5rem;
-    /*text-align: justify;*/
-}
-div.alert-info {
-    color: var(--color-info);
-    border-color: var(--color-info);
-    background: var(--background-info);
-}
-
-div.alert-warning {
-    color: var(--color-warning);
-    border-color: var(--color-warning);
-    background: var(--background-warning);
-}
-
-div.alert-danger {
-    color: var(--color-danger);
-    border-color: var(--color-danger);
-    background: var(--background-danger);
-}
-
-/** PANEL *************************************************************************************************************/
-
-div.panel-heading {
-    font-size: large;
-    font-weight: bold;
-    font-variant: small-caps;
-    border-radius: 0;
-}
-
-div.panel-body {
-    background: var(--footer-background);
-    border-radius: 0;
-}
-
-div.panel-info {
-    border-color: var(--color-info);
-    border-left: 0.5rem var(--color-info) solid;
-    border-radius: 0;
-}
-
-div.panel-info div.panel-heading {
-    border-color: var(--color-info);
-    color: var(--color-info);
-    background: var(--background-info);
-}
-
-div.panel-info div.panel-body {
-    border-color: var(--color-info);
-}
-
-div.panel-default {
-    border-color: var(--color-default);
-    border-left: 0.5rem var(--color-default) solid;
-    border-radius: 0;
-}
-
-div.panel-default div.panel-heading {
-    border-color: var(--color-default);
-    color: var(--color-default);
-    background: var(--background-default);
-}
-
-div.panel-default div.panel-body {
-    border-color: var(--color-default);
-}
-
-div.panel-success {
-    border-color: var(--color-success);
-    border-left: 0.5rem var(--color-success) solid;
-    border-radius: 0;
-}
-
-div.panel-success div.panel-heading {
-    border-color: var(--color-success);
-    color: var(--color-success);
-    background: var(--background-success);
-}
-
-div.panel-success div.panel-body {
-    border-color: var(--color-success);
-}
-
-div.panel a.btn {
-    font-variant: none;
-}
-/** TITRE (A BOUGER ?) ************************************************************************************************/
-
-body {
-    font-size: 10pt;
-}
-
-h1 {
-    font-size: 20pt;
-}
-h2 {
-    font-size: 16pt;
-}
-h3 {
-     font-size: 12pt;
- }
-h4 {
-    font-size: 11pt;
-}
-
-h1.title {
-    /*color:#19bd81;*/
-}
-
-h1.title span {
-    color:white;
-}
-h1.page-header {
-    padding-left: 1rem;
-}
-
-h1.page-header strong {
-    color: var(--color-info);
-}
 
 div.bloc {
     margin:1rem;
@@ -208,135 +50,6 @@ dl.dl-horizontal dt {
     margin-right: 1rem;
     width: 20rem;
 }
-
-
-/*div.main-with-tab {*/
-/*    background-color: white;*/
-/*    -moz-border-radius-bottomleft: 5px;*/
-/*    -moz-border-radius-bottomright: 5px;*/
-/*    border-left: 1px solid #ddd;*/
-/*    border-right: 1px solid #ddd;*/
-/*    border-bottom: 1px solid #ddd;*/
-/*    padding: 2rem;*/
-/*}*/
-
-/*h1 strong {*/
-/*    font-weight: 500;*/
-/*    color: #31708f;*/
-/*}*/
-
-/*!** AUTRE *************************************************************************************************************!*/
-
-/*div.fichier-view-helper {*/
-/*    border: 2px black dashed;*/
-/*    border-radius: 1rem;*/
-/*    padding: 1rem;*/
-/*    margin: 1rem;*/
-/*}*/
-
-
-
-/*div.jumbotron#preecog {*/
-/*    background-color: white;*/
-/*}*/
-
-/*p {*/
-/*    text-align: justify;*/
-/*}*/
-
-/*p.noindent {*/
-/*    text-indent: 0em;*/
-/*}*/
-
-/*div.panel h2 {*/
-/*    font-weight: bold;*/
-/*    font-size: x-large;*/
-/*    margin: 5px;*/
-/*}*/
-
-/*div.panel h3 {*/
-/*    !*font-weight: bold;*!*/
-/*    !*font-size: large;*!*/
-/*    !*margin: 5px 0px 5px 5px;*!*/
-/*    !*padding: 5px 0px 5px 5px;*!*/
-/*    !*background-color: lightblue;*!*/
-/*    !*color: #123456;*!*/
-/*    !*border-radius: 5px 5px 0px 0px;*!*/
-/*}*/
-
-/*div.panel h4 {*/
-/*    font-weight: bold;*/
-/*    font-size: medium;*/
-/*    margin: 5px;*/
-/*    padding-top: 5px;*/
-/*    padding-left: 15px;*/
-/*    text-decoration: underline lightblue;*/
-/*}*/
-
-/*dl.dl-horizontal dt {*/
-/*    width:25%;*/
-/*    margin-right: 5px;*/
-/*}*/
-
-/*dl.dl-horizontal dt:after {*/
-/*    content: " : ";*/
-/*}*/
-
-/*a.mini {*/
-/*    width: 4em;*/
-/*    margin:5px;*/
-/*    padding:5px;*/
-/*    text-indent: 0em;*/
-/*    background-color: #ececec;*/
-/*}*/
-
-/*.pointer:hover {*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*div.preview {*/
-/*    !*background-color: #fffee8;*!*/
-/*    !*border: 2px solid #ffc681;*!*/
-/*    !*border-radius: 5px;*!*/
-/*    padding: 2px;*/
-/*}*/
-
-/*span.octopus:after {*/
-/*    content: "octopus";*/
-/*    color: pink;*/
-/*    font-size: x-small;*/
-/*}*/
-
-/*span.explication {*/
-/*    font-family: monospace;*/
-/*    font-variant-position: super;*/
-/*    font-weight: bold;*/
-/*}*/
-
-/*span.explication.fiche {*/
-/*    color: #000091;*/
-/*}*/
-
-/*span.explication.activite {*/
-/*    color: #910000;*/
-/*}*/
-
-/*!** ACTIVITE *************************************************************************!*/
-
-/*div.activite h3 {*/
-/*    font-weight: bold;*/
-/*    font-size: large;*/
-/*    margin: 5px 0px 5px 5px;*/
-/*    padding: 5px 0px 5px 5px;*/
-/*    background-color: lightblue;*/
-/*    color: #123456;*/
-/*    border-radius: 5px 5px 0px 0px;*/
-/*}*/
-
-/*.modal-dialog {*/
-/*    width: 1000px;*/
-/*    margin: 30px auto;*/
-/*}*/
 
 /*!** BADGE STRUCTURE ********************************************************************!*/
 
@@ -354,13 +67,6 @@ span.fiche-metier {
     font-variant-position: super;
 }
 
-span.agent {
-    font-weight: bolder;
-    color: #ff00e5;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
 span.raison.formation {
     font-weight: bolder;
     color: #ffb700;
@@ -409,36 +115,6 @@ span.todo:before {
     text-decoration: underline;
 }
 
-/*div.validation {*/
-/*    border: 1px grey solid;*/
-/*    background-color: lightgray;*/
-/*    border-radius: 5px;*/
-/*    padding: 0.5rem;*/
-/*    margin: 0.5rem;*/
-/*}*/
-
-/*div.validation-valider {*/
-/*    border: 1px darkgreen solid;*/
-/*    background-color: lightgreen;*/
-/*}*/
-
-/*div.validation-refuser {*/
-/*    border: 1px darkred solid;*/
-/*    background-color: lightcoral;*/
-/*}*/
-
-/*tr.historise td {*/
-/*    color:lightslategray;*/
-/*    background: #d9d9d9;*/
-/*    !*text-decoration: line-through;*!*/
-/*}*/
-
-/*span.ferme {*/
-/*    color:darkred;*/
-/*    font-variant-caps: small-caps;*/
-/*    font-variant-position: super;*/
-/*    font-weight: bold;*/
-/*}*/
 
 table.elements {
     width:100%;
@@ -483,17 +159,27 @@ span.probleme {
 /*** Datatable ******/
 
 table.datatable thead {
-    background-color: var(--color-medium-bis);
-    border-color: var(--color-medium);
+    background-color: var(--header-background);
+    border: none;
     color: var(--header-color);
+}
+
+table.datatable thead tr th {
+    height: 4rem;
+    padding: 5px;
+}
+
+table.datatable tbody tr td {
+    border-bottom: 1px solid var(--header-background-hover);
+    padding: 5px;
 }
 
 /** AUTRES MISE ENFORME ***********************************************************************************************/
 
 .page-header-tab {
-    border-bottom: 1px solid var(--color-info);
+    border-bottom: 1px solid var(--information-background);
     font-variant: small-caps;
-    color: var(--color-info);
+    color: var(--information-background);
     padding-left: 1rem;
     margin-left: 0.5rem;
     margin-right: 1.5rem;
@@ -609,4 +295,33 @@ div.listing  td.action {
     text-align: right;
     padding-left: 1rem;
     /*background: lightgreen;*/
+}
+
+/** SOURCE **/
+
+span.badge.source {
+    width:15rem;
+}
+
+span.badge.EMC2 {
+    background: #123456;
+}
+
+span.badge.LAGAF {
+    background: darkred;
+}
+
+th.cell-etat,
+td.cell-etat
+{
+  width:6rem;
+}
+
+a:hover {
+    background: #9eabb6;
+    color: #1c70b8;
+}
+
+ul.ui-autocomplete a:hover {
+    background: #e6e6e6;
 }

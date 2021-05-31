@@ -116,6 +116,16 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
         return $this;
     }
 
+    /**
+     * @param string $etatCode
+     * @return boolean
+     */
+    public function isEtat(string $etatCode) : bool
+    {
+        if ($this->etat === null) return false;
+        return ($this->etat->getCode() === $etatCode);
+    }
+
     /** PLACE SUR LISTE  **********************************************************************************************/
 
     /**
@@ -163,10 +173,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
     }
 
     /**
-     * @param string $lieu
+     * @param string|null $lieu
      * @return FormationInstance
      */
-    public function setLieu(string $lieu): FormationInstance
+    public function setLieu(?string $lieu): FormationInstance
     {
         $this->lieu = $lieu;
         return $this;
@@ -285,6 +295,17 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
         return $maximum;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasJournee() : bool
+    {
+        /** @var FormationInstanceJournee $journee */
+        foreach ($this->journees as $journee) {
+            if ($journee->estNonHistorise()) return true;
+        }
+        return false;
+    }
     /** INSCRIT *******************************************************************************************************/
 
     /**

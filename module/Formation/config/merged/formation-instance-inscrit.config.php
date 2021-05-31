@@ -41,6 +41,16 @@ return [
                         'Agent',
                     ],
                 ],
+                [
+                    'controller' => FormationInstanceInscritController::class,
+                    'action' => [
+                        'valider-responsable',
+                        'valider-drh',
+                    ],
+                    'roles' => [
+                        'Administrateur technique',
+                    ],
+                ],
             ],
         ],
     ],
@@ -91,6 +101,26 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceInscritController::class,
                                 'action'     => 'desinscription',
+                            ],
+                        ],
+                    ],
+                    'valider-responsable' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/valider-responsable/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'valider-responsable',
+                            ],
+                        ],
+                    ],
+                    'valider-drh' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/valider-drh/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'valider-drh',
                             ],
                         ],
                     ],

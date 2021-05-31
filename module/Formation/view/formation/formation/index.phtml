@@ -5,13 +5,11 @@
  *
  * @var Formation[] $formations
  * @var FormationGroupe[] $groupes
- * @var FormationTheme[] $themes
  * @var EtatService $etatService (deplacer dans workflow stuff)
  */
 
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
-use Formation\Entity\Db\FormationTheme;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenEtat\Service\Etat\EtatService;
 
@@ -21,7 +19,7 @@ $canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivil
 $canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_HISTORISER));
 $canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_SUPPRIMER));
 
-$this->headTitle("Index des formations");
+$this->headTitle("Index des actions de formation");
 
 $droits = [
     'afficher' => $canAfficher,
@@ -33,15 +31,14 @@ $droits = [
 ?>
 
 <h1 class="page-header">
-    Index des formations
+    Index des actions de formation
 </h1>
-
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
         <li>
             <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz">
-                Formations &nbsp;
+                Actions de formation &nbsp;
                 <span class="badge">
                     <?php echo count($formations); ?>
                 </span>
@@ -49,21 +46,12 @@ $droits = [
         </li>
         <li>
             <a href="#groupe" aria-controls="groupe" role="tab" data-toggle="tabz">
-                Groupes &nbsp;
+                Groupes de formations &nbsp;
                 <span class="badge">
                     <?php echo count($groupes); ?>
                 </span>
             </a>
         </li>
-        <li>
-            <a href="#theme" aria-controls="theme" role="tab" data-toggle="tabz">
-                Thèmes &nbsp;
-                <span class="badge">
-                    <?php echo count($themes); ?>
-                </span>
-            </a>
-        </li>
-
         <li class="pull-right">
             <a href="#workflow" aria-controls="workflow" role="tab" data-toggle="tabz"  style="margin-right: 1rem;">
                 Workflow
@@ -79,11 +67,6 @@ $droits = [
     <div class="main-with-tab">
 
         <div class="tab-content">
-
-            <div id="theme" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-theme', ['themes' => $themes, 'droits' => $droits], [], true); ?>
-            </div>
-
             <div id="groupe" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/index-groupe', ['groupes' => $groupes, 'droits' => $droits], [], true); ?>
             </div>

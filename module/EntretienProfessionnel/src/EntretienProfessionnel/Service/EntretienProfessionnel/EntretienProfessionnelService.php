@@ -15,6 +15,7 @@ use Exception;
 use Ramsey\Uuid\Uuid;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\Etat;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -22,6 +23,7 @@ class EntretienProfessionnelService {
     use GestionEntiteHistorisationTrait;
     use ConfigurationServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -356,5 +358,21 @@ class EntretienProfessionnelService {
             }
         }
         return $entretien;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDocumentsUtiles() : array
+    {
+        $liste = ['GUIDE_EPRO', 'OUTILS_EPRO', 'GRILLE_EPRO', 'COMPETENCE_EPRO', 'DEFINITIONS_EPRO'];
+        $documents = [];
+        foreach ($liste as $item) {
+            if ($this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', $item)
+                and $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', $item)->getValeur() !== null)
+                $documents[] = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', $item)->getValeur();
+        }
+
+        return $documents;
     }
 }

@@ -3,7 +3,9 @@
 namespace Formation\Service\FormationInstanceInscrit;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
@@ -14,6 +16,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class FormationInstanceInscritService
 {
     use GestionEntiteHistorisationTrait;
+    use StructureServiceAwareTrait;
 
     /** GESTION ENTITES ****************************************************************************************/
 
@@ -79,7 +82,8 @@ class FormationInstanceInscritService
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->addSelect('finstance')->join('inscrit.instance', 'finstance')
-            ->addSelect('etat')->join('finstance.etat', 'etat')
+            ->addSelect('instanceetat')->leftjoin('finstance.etat', 'instanceetat')
+            ->addSelect('inscritetat')->leftjoin('inscrit.etat', 'inscritetat')
             ->addSelect('formation')->join('finstance.formation', 'formation');
         return $qb;
     }
@@ -91,7 +95,7 @@ class FormationInstanceInscritService
      */
     public function getFormationsInstancesInscrits($champ = 'id', $ordre = 'ASC')
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
             ->orderBy('inscrit.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -135,10 +139,36 @@ class FormationInstanceInscritService
         $qb = $this->createQueryBuilder()
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('etat.code <> :code')
+            ->andWhere('instanceetat.code <> :code')
             ->setParameter('code', FormationInstance::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param bool $avecStructuresFilles
+     * @return FormationInstanceInscrit[]
+     */
+    public function getInscriptionsByStructure(Structure $structure, bool $avecStructuresFilles = true) : array
+    {
+        $structures = [];
+        $structures[] = $structure;
+
+        if ($avecStructuresFilles === true) {
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
+        }
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('affectation.structure in (:structures)')
+            ->setParameter('structures', $structures)
+            ->andWhere('inscritetat.code = :demandevalidation')
+            ->setParameter('demandevalidation', FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION)
+        ;
 
         $result = $qb->getQuery()->getResult();
         return $result;

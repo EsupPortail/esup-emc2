@@ -27,7 +27,7 @@ use Zend\Form\Form;
             setup: function (editor) {
                 editor.on("focusout", function () {
                     console.log(tinymce.get('description').getContent());
-                    $('textarea').val(tinymce.get('description').getContent());
+                    $('textarea#description').val(tinymce.get('description').getContent());
                 });
             }
         });

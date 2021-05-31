@@ -7,7 +7,9 @@ use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\View\Helper\CompetenceBlocViewHelper;
 use Formation\Entity\Db\Formation;
 
@@ -34,11 +36,21 @@ use Formation\Entity\Db\Formation;
  *  ]
  */
 
-$canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher'));
-$canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter'));
-$canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier'));
-$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer'));
-$canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'valider'));
+$canAcquisAfficher = false;
+$canAcquisModifier = false;
+if ($objet instanceof FicheMetier) {
+    $canAcquisAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+    $canAcquisModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+} else {
+    $canAcquisAfficher = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_AFFICHER);
+    $canAcquisModifier = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+}
+
+$canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher')  AND $canAcquisAfficher);
+$canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter')   AND $canAcquisModifier);
+$canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier')  AND $canAcquisModifier);
+$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer') AND $canAcquisModifier);
+$canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'valider')   AND $canAcquisModifier);
 
 $displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
 $displayValidation  = CompetenceBlocViewHelper::isDisplayed($options,'validation');

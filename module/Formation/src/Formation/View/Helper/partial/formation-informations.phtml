@@ -15,10 +15,6 @@ use Formation\Entity\Db\Formation;
     <dl class="dl-horizontal">
         <dt> Libellé </dt>
         <dd> <?php echo $formation->getLibelle(); ?> </dd>
-        <?php if ($formation->getTheme() !== null) : ?>
-            <dt> Thème </dt>
-            <dd> <?php echo $formation->getTheme()->getLibelle(); ?> </dd>
-        <?php endif; ?>
         <?php if ($formation->getGroupe() !== null) : ?>
             <dt> Groupe </dt>
             <dd> <?php echo $formation->getGroupe()->getLibelle(); ?> </dd>

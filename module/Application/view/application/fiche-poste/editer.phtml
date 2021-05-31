@@ -174,7 +174,7 @@ $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
             <?php //echo $this->competenceBloc($competences, $fiche->getAgent()); ?>
             <?php echo $this->partial('partial/competences',  ['fiche' => $fiche, 'competences' => $competences,   'mode' => 'edition'], [], true); ?>
             <?php echo $this->partial('partial/applications', ['fiche' => $fiche, 'applications' => $applications, 'mode' => 'edition'], [], true); ?>
-            <?php echo $this->partial('partial/parcours-de-formation',  ['parcours' => $parcours, 'agent' => $agent, 'fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
+            <?php //echo $this->partial('partial/parcours-de-formation',  ['parcours' => $parcours, 'agent' => $agent, 'fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
         </div>
     </div>
 

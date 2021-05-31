@@ -120,10 +120,5 @@ $this->headTitle("Missions spécifiques");
             // No e.preventDefault() here
             $(this).tab('show');
         });
-
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
-        });
     });
 </script>

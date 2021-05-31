@@ -14,8 +14,8 @@
         <many-to-one target-entity="Application\Entity\Db\Structure"  field="structure">
             <join-column name="structure_id" referenced-column-name="id"/>
         </many-to-one>
-        <field name="debut"         type="datetime"                     column="d_debut"                   nullable="false"/>
-        <field name="fin"           type="datetime"                     column="d_fin"                     nullable="true"/>
+        <field name="dateDebut"         type="datetime"                     column="d_debut"                   nullable="false"/>
+        <field name="dateFin"           type="datetime"                     column="d_fin"                     nullable="true"/>
 
         <field name="titulaire"     type="string" length="1"            column="t_titulaire"               nullable="true"/>
         <field name="cdi"           type="string" length="1"            column="t_cdi"                     nullable="true"/>

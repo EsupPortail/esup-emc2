@@ -1,0 +1,8 @@
+[Unit]
+Description=Exécute les fonctions associées à la gestion des formations : notification et cloture.
+
+[Timer]
+OnCalendar=daily
+
+[Install]
+WantedBy=timers.target

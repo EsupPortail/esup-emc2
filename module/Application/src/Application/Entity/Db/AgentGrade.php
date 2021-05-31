@@ -2,15 +2,17 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
-use DateTime;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 
 /**
  * Données synchronisées depuis Octopus :
  * - pas de setter sur les données ainsi remontées
  */
-class AgentGrade {
+class AgentGrade implements HasPeriodeInterface {
     use DbImportableAwareTrait;
+    use HasPeriodeTrait;
 
     /** @var string */
     private $id;
@@ -24,15 +26,11 @@ class AgentGrade {
     private $grade;
     /** @var Correspondance */
     private $bap;
-    /** @var DateTime */
-    private $dateDebut;
-    /** @var DateTime */
-    private $dateFin;
 
     /**
      * @return string
      */
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
@@ -40,7 +38,7 @@ class AgentGrade {
     /**
      * @return Agent
      */
-    public function getAgent()
+    public function getAgent() : Agent
     {
         return $this->agent;
     }
@@ -49,16 +47,16 @@ class AgentGrade {
      * @param Agent $agent
      * @return AgentGrade
      */
-    public function setAgent($agent)
+    public function setAgent(Agent $agent) : AgentGrade
     {
         $this->agent = $agent;
         return $this;
     }
 
     /**
-     * @return Structure
+     * @return Structure|null
      */
-    public function getStructure()
+    public function getStructure() : ?Structure
     {
         return $this->structure;
     }
@@ -67,16 +65,16 @@ class AgentGrade {
      * @param Structure $structure
      * @return AgentGrade
      */
-    public function setStructure($structure)
+    public function setStructure(Structure $structure) : AgentGrade
     {
         $this->structure = $structure;
         return $this;
     }
 
     /**
-     * @return Corps
+     * @return Corps|null
      */
-    public function getCorps()
+    public function getCorps() : ?Corps
     {
         return $this->corps;
     }
@@ -85,16 +83,16 @@ class AgentGrade {
      * @param Corps $corps
      * @return AgentGrade
      */
-    public function setCorps($corps)
+    public function setCorps(Corps $corps) : AgentGrade
     {
         $this->corps = $corps;
         return $this;
     }
 
     /**
-     * @return Grade
+     * @return Grade|null
      */
-    public function getGrade()
+    public function getGrade() : ?Grade
     {
         return $this->grade;
     }
@@ -103,16 +101,16 @@ class AgentGrade {
      * @param Grade $grade
      * @return AgentGrade
      */
-    public function setGrade($grade)
+    public function setGrade(Grade $grade) : AgentGrade
     {
         $this->grade = $grade;
         return $this;
     }
 
     /**
-     * @return Correspondance
+     * @return Correspondance|null
      */
-    public function getBap()
+    public function getBap() : ?Correspondance
     {
         return $this->bap;
     }
@@ -121,45 +119,9 @@ class AgentGrade {
      * @param Correspondance $bap
      * @return AgentGrade
      */
-    public function setBap($bap)
+    public function setBap(Correspondance $bap) : AgentGrade
     {
         $this->bap = $bap;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDateDebut()
-    {
-        return $this->dateDebut;
-    }
-
-    /**
-     * @param DateTime $dateDebut
-     * @return AgentGrade
-     */
-    public function setDateDebut($dateDebut)
-    {
-        $this->dateDebut = $dateDebut;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDateFin()
-    {
-        return $this->dateFin;
-    }
-
-    /**
-     * @param DateTime $dateFin
-     * @return AgentGrade
-     */
-    public function setDateFin($dateFin)
-    {
-        $this->dateFin = $dateFin;
         return $this;
     }
 

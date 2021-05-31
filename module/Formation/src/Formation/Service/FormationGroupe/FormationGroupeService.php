@@ -107,11 +107,13 @@ class FormationGroupeService
     }
 
     /**
+     * @param string $champ
+     * @param string $ordre
      * @return array
      */
-    public function getFormationsGroupesAsOption()
+    public function getFormationsGroupesAsOption($champ = 'libelle', $ordre = 'ASC') : array
     {
-        $groupes = $this->getFormationsGroupes();
+        $groupes = $this->getFormationsGroupes($champ, $ordre);
         $array = [];
         foreach ($groupes as $groupe) {
             $option = $this->optionify($groupe);
@@ -146,6 +148,26 @@ class FormationGroupeService
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationGroupe($id);
+        return $result;
+    }
+
+    /**
+     * @param string|null $libelle
+     * @return FormationGroupe|null
+     */
+    public function getFormationGroupeByLibelle(?string $libelle)
+    {
+        if ($libelle === null) return null;
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('groupe.libelle = :libelle')
+            ->setParameter('libelle', $libelle)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FormationGroupe partagent le même libellé [".$libelle."].");
+        }
         return $result;
     }
 }

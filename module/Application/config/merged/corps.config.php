@@ -88,7 +88,6 @@ return [
                                 'label' => 'Catégories, corps, grades et correspondances',
                                 'route' => 'corps',
                                 'resource' => PrivilegeController::getResourceId(CorpsController::class, 'index') ,
-                                'dropdown-header' => true,
                             ],
                         ],
                     ],

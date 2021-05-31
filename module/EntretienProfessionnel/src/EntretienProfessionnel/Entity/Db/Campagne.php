@@ -2,22 +2,20 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
-use DateTime;
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Campagne implements HistoriqueAwareInterface {
+class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
+    use HasPeriodeTrait;
     use HistoriqueAwareTrait;
 
     /** @var integer */
     private $id;
     /** @var string */
     private $annee;
-    /** @var DateTime */
-    private $dateDebut;
-    /** @var DateTime */
-    private $dateFin;
     /** @var Campagne */
     private $precede;
     /** @var ArrayCollection (EntretienProfessionnel) */
@@ -50,42 +48,6 @@ class Campagne implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return DateTime|null
-     */
-    public function getDateDebut() : ?DateTime
-    {
-        return $this->dateDebut;
-    }
-
-    /**
-     * @param DateTime|null $dateDebut
-     * @return Campagne
-     */
-    public function setDateDebut(?DateTime $dateDebut) : Campagne
-    {
-        $this->dateDebut = $dateDebut;
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getDateFin() : ?DateTime
-    {
-        return $this->dateFin;
-    }
-
-    /**
-     * @param DateTime|null $dateFin
-     * @return Campagne
-     */
-    public function setDateFin(?DateTime $dateFin) : Campagne
-    {
-        $this->dateFin = $dateFin;
-        return $this;
-    }
-
-    /**
      * @return Campagne|null
      */
     public function getPrecede() : ?Campagne
@@ -110,6 +72,5 @@ class Campagne implements HistoriqueAwareInterface {
     {
         return $this->entretiens->toArray();
     }
-
 
 }

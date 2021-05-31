@@ -9,6 +9,7 @@ use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -17,6 +18,11 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
 {
     use HasSourceTrait;
     use HistoriqueAwareTrait;
+
+    const ETAT_DEMANDE_INSCRIPTION      = 'DEMANDE_INSCRIPTION';
+    const ETAT_VALIDATION_RESPONSABLE   = 'VALIDATION_RESPONSABLE';
+    const ETAT_VALIDATION_INSCRIPTION   = 'VALIDATION_INSCRIPTION';
+    const ETAT_REFUS_INSCRIPTION        = 'REFUS_INSCRIPTION';
 
     public function getResourceId()
     {
@@ -40,6 +46,8 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $frais;
     /** @var FormulaireInstance */
     private $questionnaire;
+    /** @var Etat|null */
+    private $etat;
 
     /**
      * @return int
@@ -176,4 +184,23 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
     }
+
+    /**
+     * @return Etat|null
+     */
+    public function getEtat(): ?Etat
+    {
+        return $this->etat;
+    }
+
+    /**
+     * @param Etat|null $etat
+     * @return FormationInstanceInscrit
+     */
+    public function setEtat(?Etat $etat): FormationInstanceInscrit
+    {
+        $this->etat = $etat;
+        return $this;
+    }
+
 }

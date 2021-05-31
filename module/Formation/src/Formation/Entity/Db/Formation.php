@@ -20,6 +20,9 @@ class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInt
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
+    const SOURCE_EMC2 = 'EMC2';
+    const SOURCE_LAGAF = 'LAGAF';
+
     /** @var integer */
     private $id;
     /** @var string */
@@ -30,8 +33,6 @@ class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInt
     private $lien;
     /** @var FormationGroupe */
     private $groupe;
-    /** @var FormationTheme */
-    private $theme;
 
     /** @var ArrayCollection */
     private $missions;
@@ -125,24 +126,6 @@ class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInt
     }
 
     /**
-     * @return FormationTheme|null
-     */
-    public function getTheme() : ?FormationTheme
-    {
-        return $this->theme;
-    }
-
-    /**
-     * @param FormationTheme|null $theme
-     * @return Formation
-     */
-    public function setTheme(?FormationTheme $theme) : Formation
-    {
-        $this->theme = $theme;
-        return $this;
-    }
-
-    /**
      * @return Activite[]
      */
     public function getMissions() : array
@@ -176,11 +159,11 @@ class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInt
      */
     public static function generateOptions(array $formations) : array
     {
-        $themes = [];
-        foreach ($formations as $formation) $themes[($formation->getTheme()) ? $formation->getTheme()->getLibelle() : "Sans thème"][] = $formation;
+        $groupes = [];
+        foreach ($formations as $formation) $groupes[($formation->getGroupe()) ? $formation->getGroupe()->getLibelle() : "Sans groupe"][] = $formation;
 
         $options = [];
-        foreach ($themes as $libelle => $liste) {
+        foreach ($groupes as $libelle => $liste) {
             $optionsoptions = [];
             usort($liste, function (Formation $a, Formation $b) {
                 return $a->getLibelle() > $b->getLibelle();

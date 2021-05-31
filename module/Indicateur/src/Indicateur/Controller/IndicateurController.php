@@ -7,6 +7,7 @@ use Indicateur\Entity\Db\Indicateur;
 use Indicateur\Form\Indicateur\IndicateurFormAwareTrait;
 use Indicateur\Service\Abonnement\AbonnementServiceAwareTrait;
 use Indicateur\Service\Indicateur\IndicateurServiceAwareTrait;
+use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
@@ -17,6 +18,7 @@ class IndicateurController extends AbstractActionController {
     use IndicateurServiceAwareTrait;
     use UserServiceAwareTrait;
     use AbonnementServiceAwareTrait;
+    use MailingServiceAwareTrait;
 
     use IndicateurFormAwareTrait;
 
@@ -41,11 +43,13 @@ class IndicateurController extends AbstractActionController {
     {
         $indicateur = $this->getIndicateurService()->getRequestedIndicateur($this);
         $result = $this->getIndicateurService()->getIndicateurData($indicateur);
+        $mails = $this->getMailingService()->getMailsByAttachement(Indicateur::class, $indicateur->getId());
 
         return new ViewModel([
             'indicateur' => $indicateur,
             'header' => $result[0],
             'data' => $result[1],
+            'mails' => $mails,
         ]);
     }
 
