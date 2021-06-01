@@ -5,6 +5,7 @@ namespace Application\Form\FicheProfil;
 use Application\Entity\Db\Structure;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
@@ -89,14 +90,26 @@ class FicheProfilForm extends Form {
         ]);
         //date
         $this->add([
-            'type' => Date::class,
+            'type' => DateTime::class,
             'name' => 'date',
             'options' => [
                 'label' => "Date de fin * :",
+                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id' => 'date',
 //                'min' => $this->getDateTime(),
+            ],
+        ]);
+        //structure (non editable)
+        $this->add([
+            'type' => Text::class,
+            'name' => 'adresse',
+            'options' => [
+                'label' => "Adresse électronique de contact * :",
+            ],
+            'attributes' => [
+                'id' => 'adresse',
             ],
         ]);
         $this->add([
@@ -198,6 +211,7 @@ class FicheProfilForm extends Form {
             'structure'               => [ 'required' => true,  ],
             'ficheposte'              => [ 'required' => true,  ],
             'date'                    => [ 'required' => true,  ],
+            'adresse'                 => [ 'required' => true,  ],
             'lieu'                    => [ 'required' => false,  ],
             'contexte'                => [ 'required' => false,  ],
             'mission'                 => [ 'required' => false,  ],

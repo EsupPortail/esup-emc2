@@ -1,7 +1,10 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -15,6 +18,9 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var array $parcoursArray
  * @var FichePoste[] $fichespostes
  * @var AgentMissionSpecifique[] $missions
+ * @var AgentAffectation[] $affectations
+ * @var AgentStatut[] $statuts
+ * @var AgentGrade[] $grades
  */
 
 $displayParcours = false;
@@ -100,7 +106,7 @@ if ($agent !== null) {
     <div>
         <div class="tab-content">
             <div id="informations" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'responsables' => $responsables, 'canInfoSource' => $canInfoSource]); ?>
+                <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'affectations' => $affectations, 'statuts' => $statuts, 'grades' => $grades, 'responsables' => $responsables, 'canInfoSource' => $canInfoSource]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>
