@@ -35,6 +35,8 @@ class FicheProfil implements HistoriqueAwareInterface {
     private $renumeration;
     /** @var DateTime */
     private $date;
+    /** @var string|null */
+    private $adresse;
 
     /**
      * @return int
@@ -243,6 +245,25 @@ class FicheProfil implements HistoriqueAwareInterface {
         $this->date = $date;
         return $this;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    /**
+     * @param string|null $adresse
+     * @return FicheProfil
+     */
+    public function setAdresse(?string $adresse): FicheProfil
+    {
+        $this->adresse = $adresse;
+        return $this;
+    }
+
 
     /** Predicat ******************************************************************************************************/
 

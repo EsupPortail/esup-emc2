@@ -1,11 +1,17 @@
 <?php
 /**
  * @var Agent $agent
+ * @var AgentStatut[] $statuts
+ * @var AgentAffectation[] $affectations
+ * @var AgentGrade[] $grades
  * @var User[] $responsables
  * @var bool $canInfoSource
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\AgentStatut;
 use UnicaenUtilisateur\Entity\Db\User;
 
 ?>
@@ -78,19 +84,19 @@ use UnicaenUtilisateur\Entity\Db\User;
 <div class="row">
     <div class="col-md-3">
         <h2>Affectation(s)</h2>
-        <?php foreach ($agent->getAffectationsActifs() as $affectation) : ?>
+        <?php foreach ($affectations as $affectation) : ?>
             <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-3">
         <h2>Statut(s)</h2>
-        <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
+        <?php foreach ($statuts as $statut) : ?>
             <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">
         <h2>Grade(s)</h2>
-        <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+        <?php foreach ($grades as $grade) : ?>
             <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>

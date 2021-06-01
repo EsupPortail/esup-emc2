@@ -23,6 +23,7 @@
         <field name="contrat"               column="contrat"                type="string"   length="4096"   nullable="true"/>
         <field name="renumeration"          column="renumeration"           type="string"   length="4096"   nullable="true"/>
         <field name="date"                  column="date"                   type="datetime"                 nullable="false"/>
+        <field name="adresse"               column="adresse"                type="string"   length="4096"   nullable="true"/>
 
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

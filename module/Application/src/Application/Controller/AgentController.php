@@ -89,6 +89,9 @@ class AgentController extends AbstractActionController
     public function afficherAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        $agentStatuts = $this->getAgentService()->getAgentStatutsByAgent($agent, true);
+        $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, true);
+        $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, true);
         $connectedUser = $this->getUserService()->getConnectedUser();
         $connectedAgent = $this->getAgentService()->getAgentByUser($connectedUser);
         $connectedRole = $this->getUserService()->getConnectedRole();
@@ -102,9 +105,12 @@ class AgentController extends AbstractActionController
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
         $missions = $agent->getMissionsSpecifiques();
 
-        return new ViewModel([
+         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
+            'affectations' => $agentAffectations,
+            'statuts' => $agentStatuts,
+            'grades' => $agentGrades,
             'entretiens' => $entretiens,
             'responsables' => $responsables,
             'parcoursArray' => $parcoursArray,
@@ -118,16 +124,16 @@ class AgentController extends AbstractActionController
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
-        $affectations = $agent->getAffectations();
-        $grades = $agent->getGrades();
-        $statuts = $agent->getStatuts();
+        $agentStatuts = $this->getAgentService()->getAgentStatutsByAgent($agent, false);
+        $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, false);
+        $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, false);
 
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
             'agent' => $agent,
-            'affectations' => $affectations,
-            'statuts' => $statuts,
-            'grades' => $grades,
+            'affectations' => $agentAffectations,
+            'statuts' => $agentStatuts,
+            'grades' => $agentGrades,
         ]);
     }
 
