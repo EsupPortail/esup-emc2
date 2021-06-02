@@ -28,13 +28,13 @@ class FicheProfil implements HistoriqueAwareInterface {
     /** @var string */
     private $niveau;
     /** @var string */
-    private $contraintes;
-    /** @var string */
     private $contrat;
     /** @var string */
     private $renumeration;
-    /** @var DateTime */
-    private $date;
+    /** @var DateTime|null */
+    private $dateDossier;
+    /** @var DateTime|null */
+    private $dateAudition;
     /** @var string|null */
     private $adresse;
 
@@ -177,24 +177,6 @@ class FicheProfil implements HistoriqueAwareInterface {
     /**
      * @return string|null
      */
-    public function getContraintes(): ?string
-    {
-        return $this->contraintes;
-    }
-
-    /**
-     * @param string|null $contraintes
-     * @return FicheProfil
-     */
-    public function setContraintes(?string $contraintes): FicheProfil
-    {
-        $this->contraintes = $contraintes;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getContrat(): ?string
     {
         return $this->contrat;
@@ -229,24 +211,6 @@ class FicheProfil implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return DateTime|null
-     */
-    public function getDate(): ?DateTime
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param DateTime $date
-     * @return FicheProfil
-     */
-    public function setDate(DateTime $date): FicheProfil
-    {
-        $this->date = $date;
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
     public function getAdresse(): ?string
@@ -264,6 +228,41 @@ class FicheProfil implements HistoriqueAwareInterface {
         return $this;
     }
 
+    /**
+     * @return DateTime|null
+     */
+    public function getDateDossier(): ?DateTime
+    {
+        return $this->dateDossier;
+    }
+
+    /**
+     * @param DateTime|null $dateDossier
+     * @return FicheProfil
+     */
+    public function setDateDossier(?DateTime $dateDossier): FicheProfil
+    {
+        $this->dateDossier = $dateDossier;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getDateAudition(): ?DateTime
+    {
+        return $this->dateAudition;
+    }
+
+    /**
+     * @param DateTime|null $dateAudition
+     * @return FicheProfil
+     */
+    public function setDateAudition(?DateTime $dateAudition): FicheProfil
+    {
+        $this->dateAudition = $dateAudition;
+        return $this;
+    }
 
     /** Predicat ******************************************************************************************************/
 
@@ -274,7 +273,7 @@ class FicheProfil implements HistoriqueAwareInterface {
     public function estEnCours(DateTime $date = null) : bool
     {
         if ($date === null) $date = $this->getDateTime();
-        return ($this->date >= $date);
+        return (($this->dateAudition AND $this->dateAudition >= $date) OR ($this->dateDossier >= $date));
     }
 
     /** Fonction de mise en forme pour edition pdf ********************************************************************/
@@ -282,7 +281,7 @@ class FicheProfil implements HistoriqueAwareInterface {
     public function getLieuAffichage()
     {
         if ($this->lieu === null) return null;
-        $texte  = '<h2> Lieu </h2>';
+        $texte  = '<h2> Lieu de travail</h2>';
         $texte .= $this->lieu;
         return $texte;
     }
@@ -306,16 +305,11 @@ class FicheProfil implements HistoriqueAwareInterface {
     public function getNiveauAffichage()
     {
         if ($this->niveau === null) return null;
-        $texte  = '<h2> Niveau requis </h2>';
+        $texte  = "";
+        $texte .= "<div class='information'>";
+        $texte .= '<strong> Niveau requis </strong> : ';
         $texte .= $this->niveau;
-        return $texte;
-    }
-
-    public function getContraintesAffichage()
-    {
-        if ($this->contraintes === null) return null;
-        $texte  = '<h2> Contraintes liées au poste </h2>';
-        $texte .= $this->contraintes;
+        $texte .= "</div>";
         return $texte;
     }
 
@@ -342,9 +336,21 @@ class FicheProfil implements HistoriqueAwareInterface {
         return $texte;
     }
 
-    public function getDateAffichage()
+    public function getDateDossierAffichage()
     {
-        if ($this->date === null) return "N.C.";
-        return  $this->date->format('d/m/Y');
+        if ($this->dateDossier === null) return "N.C.";
+        return  $this->dateDossier->format('d/m/Y');
+    }
+
+    public function getDateAuditionAffichage()
+    {
+        if ($this->dateAudition === null) return "";
+        return  "<p>Les auditions se dérouleront à la date prévisionnelle du <strong>" . $this->dateAudition->format('d/m/Y') . "</strong>.</p>";
+    }
+
+    public function getEmailAffichage()
+    {
+        if ($this->adresse === null) return "N.C.";
+        return $this->adresse;
     }
 }

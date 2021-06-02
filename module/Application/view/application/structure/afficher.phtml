@@ -134,7 +134,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <!-- Informations ------------------------------------------------------------------------------------->
                 <div id="informations" class="tab-pane " role="tabpanel">
 
-                    <?php echo $this->partial('partial/fiches-postes', ['fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
+                    <?php echo $this->partial('partial/fiches-postes', ['structure' => $structure, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes, 'fichesRecrutements' => $structure->getFichesPostesRecrutements()]); ?>
 
                     <?php echo $this->portenote('StructureController::indexAction()>Agents', '', []); ?>
                     <div class="row">

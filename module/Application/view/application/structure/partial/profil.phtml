@@ -62,7 +62,13 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
                         <span class="icon ko" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
                     <?php endif; ?>
                 </td>
-                <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
+                <td>
+                    Dossier : <?php echo $profil->getDateDossier()->format('d/m/Y'); ?>
+                    <?php if ($profil->getDateAudition()) : ?>
+                        <br/>
+                        Audition : <?php echo $profil->getDateAudition()->format('d/m/Y'); ?>
+                    <?php endif; ?>
+                </td>
                 <td>
                     <?php if ($canExporter) : ?>
                         <?php /** @see \Application\Controller\FicheProfilController::exporterAction() */?>

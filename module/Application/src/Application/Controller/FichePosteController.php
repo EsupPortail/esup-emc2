@@ -167,6 +167,10 @@ class FichePosteController extends AbstractActionController {
     public function afficherAction()
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+
+        $structureId = $this->params()->fromQuery('structure');
+        $structure = $this->getStructureService()->getStructure($structureId);
+
         $titre = 'Fiche de poste <br/>';
         $titre .= '<strong>';
         if ($fiche->getFicheTypeExternePrincipale()) {
@@ -195,6 +199,7 @@ class FichePosteController extends AbstractActionController {
             'formations' => $formations,
             'activites' => $activites,
             'parcours' => $parcours,
+            'structure' => $structure,
         ]);
     }
 

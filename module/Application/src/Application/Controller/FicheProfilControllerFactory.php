@@ -8,6 +8,7 @@ use Application\Service\FicheProfil\FicheProfilService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use UnicaenDocument\Service\Exporter\ExporterService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 
 class FicheProfilControllerFactory {
 
@@ -21,11 +22,13 @@ class FicheProfilControllerFactory {
          * @var ExporterService $exporterService
          * @var FicheProfilService $ficheProfilService
          * @var FichePosteService $fichePosteService
+         * @var ParametreService $parametreService
          * @var StructureService $structureService
          */
         $exporterService = $container->get(ExporterService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $fichePosteService = $container->get(FichePosteService::class);
+        $parametreService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
 
         /**
@@ -37,6 +40,7 @@ class FicheProfilControllerFactory {
         $controller->setExporterService($exporterService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setFichePosteService($fichePosteService);
+        $controller->setParametreService($parametreService);
         $controller->setStructureService($structureService);
         $controller->setFicheProfilForm($ficheProfilForm);
         return $controller;

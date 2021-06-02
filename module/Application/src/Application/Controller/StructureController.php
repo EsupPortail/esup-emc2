@@ -401,6 +401,21 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
+    /** FiCHE DE POSTE RECRUTEMENT ************************************************************************************/
+
+    public function ajouterFichePosteRecrutementAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $fiche = new FichePoste();
+        $this->getFichePosteService()->create($fiche);
+
+        $structure->addFichePosteRecrutement($fiche);
+        $this->getStructureService()->update($structure);
+
+        /** @see FichePosteController::editerAction() */
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+    }
+
     /** EXTRACTIONS ***************************************************************************************************/
 
     /**

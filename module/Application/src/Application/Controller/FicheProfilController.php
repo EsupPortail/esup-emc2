@@ -8,6 +8,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -18,6 +19,7 @@ class FicheProfilController extends AbstractActionController {
     use FicheProfilServiceAwareTrait;
     use StructureServiceAwareTrait;
     use FicheProfilFormAwareTrait;
+    use ParametreServiceAwareTrait;
 
     public function ajouterAction()
     {
@@ -26,15 +28,18 @@ class FicheProfilController extends AbstractActionController {
         $structures[] = $structure;
         $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
 
+        $adresse = $this->getParametreService()->getParametreByCode('PROFIL_DE_RECRUTEMENT', 'ADRESSE_DEFAUT')->getValeur();
+
         $ficheprofil = new FicheProfil();
+        $ficheprofil->setAdresse($adresse);
         $ficheprofil->setVancanceEmploi(false);
         $ficheprofil->setStructure($structure);
 
         $form = $this->getFicheProfilForm();
         $form->setStructure($structure);
         $form->setAttribute('action', $this->url()->fromRoute('fiche-profil/ajouter', ['structure' => $structure->getId()], [], true));
-        $form->bind($ficheprofil);
         $form->init();
+        $form->bind($ficheprofil);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -65,6 +70,7 @@ class FicheProfilController extends AbstractActionController {
         $structures[] = $structure;
         $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
 
+        $adresse = $this->getParametreService()->getParametreByCode('PROFIL_DE_RECRUTEMENT', 'ADRESSE_DEFAUT')->getValeur();
         $form = $this->getFicheProfilForm();
         $form->setStructure($structure);
         $form->init();

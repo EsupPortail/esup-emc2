@@ -56,6 +56,8 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
 
     /** @var ArrayCollection (StructureAgentForce) */
     private $agentsForces;
+    /** @var ArrayCollection (FichePoste) */
+    private $fichesPostesRecrutements;
 
     public function __construct()
     {
@@ -64,6 +66,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
         $this->postes = new ArrayCollection();
         $this->enfants = new ArrayCollection();
         $this->agentsForces = new ArrayCollection();
+        $this->fichesPostesRecrutements = new ArrayCollection();
     }
 
     /**
@@ -349,6 +352,37 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
 
         return $result;
     }
+
+    /** FICHES POSTES RECRUTEMENTS ************************************************************************************/
+
+    /**
+     * @return FichePoste[]
+     */
+    public function getFichesPostesRecrutements()
+    {
+        return $this->fichesPostesRecrutements->toArray();
+    }
+
+    /**
+     * @var FichePoste|null $fiche
+     * @return Structure
+     */
+    public function addFichePosteRecrutement(?FichePoste $fiche) : Structure
+    {
+        $this->fichesPostesRecrutements->add($fiche);
+        return $this;
+    }
+
+    /**
+     * @var FichePoste|null $fiche
+     * @return Structure
+     */
+    public function removeFichePosteRecrutement(?FichePoste $fiche) : Structure
+    {
+        $this->fichesPostesRecrutements->removeElement($fiche);
+        return $this;
+    }
+
 
     /**
      * @return string
