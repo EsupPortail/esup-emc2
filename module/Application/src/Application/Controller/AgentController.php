@@ -89,6 +89,16 @@ class AgentController extends AbstractActionController
     public function afficherAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        /** si pas d'agent de specifier récupérer l'agent lié au compte de la personne connectée */
+        if ($agent === null) {
+            $utilisateur = $this->getUserService()->getConnectedUser();
+            if ($utilisateur !== null) $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+        }
+
+        /** si pas d'agent throw exception */
+        if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
+
         $agentStatuts = $this->getAgentService()->getAgentStatutsByAgent($agent, true);
         $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, true);
         $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, true);

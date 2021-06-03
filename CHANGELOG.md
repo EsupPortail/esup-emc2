@@ -5,6 +5,12 @@ Version 1.3.0 *Module de bourse emploi*
 Version 1.2.0 *Module de formation*
 -------------
 
+Version 1.1.5
+-------------
+- [Correction bug] l'encart Mes données ne marchait plus faute d'agent fourni
+- Parametrage et ajout d'une adresse par défaut pour les profils de recrutement
+- Refonte macro pour le profil
+
 Version 1.1.4
 -------------
 + [Base de données] Reprise des données de LAGAF (1er batch)
