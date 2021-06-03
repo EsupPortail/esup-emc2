@@ -89,10 +89,10 @@ class AgentController extends AbstractActionController
     public function afficherAction()
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
+        $utilisateur = $this->getUserService()->getConnectedUser();
 
         /** si pas d'agent de specifier récupérer l'agent lié au compte de la personne connectée */
         if ($agent === null) {
-            $utilisateur = $this->getUserService()->getConnectedUser();
             if ($utilisateur !== null) $agent = $this->getAgentService()->getAgentByUser($utilisateur);
         }
 
@@ -102,10 +102,10 @@ class AgentController extends AbstractActionController
         $agentStatuts = $this->getAgentService()->getAgentStatutsByAgent($agent, true);
         $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, true);
         $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, true);
-        $connectedUser = $this->getUserService()->getConnectedUser();
-        $connectedAgent = $this->getAgentService()->getAgentByUser($connectedUser);
+
+        $connectedAgent = $this->getAgentService()->getAgentByUser($utilisateur);
         $connectedRole = $this->getUserService()->getConnectedRole();
-        if ($agent !== $connectedAgent AND ($connectedRole->getRoleId() === RoleConstant::PERSONNEL OR $agent === null)) {
+        if ($connectedAgent !== $agent AND ($connectedRole->getRoleId() === RoleConstant::PERSONNEL OR $agent === null)) {
             return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [] , true);
         }
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
