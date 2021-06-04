@@ -80,7 +80,7 @@ class FicheProfilForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner une fiche de poste ... ",
-                'value_options' => ($this->structure AND $structures !== null)?$this->getFichePosteService()->getFichesPostesByStructuresAsOptions($structures, true):null,
+                'value_options' => ($this->structure AND $structures !== null)?$this->getFichePosteService()->getFichesPostesRecrutementByStructuresAsOptions($structures, true):null,
             ],
             'attributes' => [
                 'id'                => 'competence',

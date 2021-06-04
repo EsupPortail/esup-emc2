@@ -5,6 +5,7 @@ use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
+ * @see \Application\View\Helper\FichesPostesAsArrayViewHelper
  * @var FichePoste[] $fiches
  * @var boolean[] $displays
  * @var Structure|null $structure
@@ -28,6 +29,9 @@ if ($retour)    $query['retour'] = $retour;
 <table class="table table-condensed datatable">
     <thead>
     <tr>
+        <?php if ($displays['id']) : ?>
+            <th> Id </th>
+        <?php endif; ?>
         <?php if ($displays['agent']) : ?>
             <th> Agent </th>
         <?php endif; ?>
@@ -51,6 +55,11 @@ if ($retour)    $query['retour'] = $retour;
     <tbody>
     <?php foreach ($fiches as $fiche) : ?>
         <tr <?php if ($fiche->estHistorise()) echo 'class="historise"'; ?>>
+            <?php if ($displays['id']) : ?>
+                <td>
+                    <?php echo $fiche->getId(); ?>
+                </td>
+            <?php endif; ?>
             <?php if ($displays['agent']) : ?>
                 <td>
                     <?php if ($fiche->getAgent() !== null) : ?>

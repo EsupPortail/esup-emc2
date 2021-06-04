@@ -26,6 +26,7 @@ $canModifier = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofil
 $canHistoriser = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_HISTORISER));
 $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_SUPPRIMER));
 
+ksort($fichesRecrutements)
 ?>
 
 <div class="row">
@@ -55,7 +56,7 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
     </div>
 </div>
 
-<?php echo $this->fichesPostesAsArray($fichesRecrutements, $structure); ?>
+<?php echo $this->fichesPostesAsArray($fichesRecrutements, $structure, ['displays' => ['id' => true, 'structure' => false]]); ?>
 
 <div class="row">
     <div class="col-md-6">

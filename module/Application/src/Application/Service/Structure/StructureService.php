@@ -2,6 +2,7 @@
 
 namespace Application\Service\Structure;
 
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -290,5 +291,19 @@ class StructureService
             return strcmp($a['label'], $b['label']);
         });
         return $result;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @return FichePoste[]
+     */
+    public function getFichesPostesRecrutementsByStructures(array $structures) : array
+    {
+        $fiches = [];
+        foreach ($structures as $structure) {
+            $fps = $structure->getFichesPostesRecrutements();
+            foreach ($fps as $fp) $fiches[$fp->getId()] = $fp;
+        }
+        return $fiches;
     }
 }

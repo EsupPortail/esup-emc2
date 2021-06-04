@@ -707,6 +707,24 @@ class FichePosteService {
     public function getFichesPostesByStructuresAsOptions(array $structures, bool $soustructure)
     {
         $fichespostes = $this->getFichesPostesByStructures($structures, $soustructure);
+        $options = [];
+        foreach ($fichespostes as $ficheposte) {
+            $label = $ficheposte->getLibelleMetierPrincipal();
+            if ($ficheposte->getAgent() !== null) $label .= " (".$ficheposte->getAgent()->getDenomination().")";
+            $options[$ficheposte->getId()] = $label;
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @param bool $soustructure
+     * @return array
+     */
+    public function getFichesPostesRecrutementByStructuresAsOptions(array $structures, bool $soustructure)
+    {
+        $fichespostes = [];
         foreach ($structures as $structure) {
             $fichespostes_tmp = $structure->getFichesPostesRecrutements();
             foreach ($fichespostes_tmp as $ficheposte) {

@@ -8,6 +8,7 @@
  * @var AgentMissionSpecifique[] $missions
  * @var FichePoste[] $fichesCompletes
  * @var FichePoste[] $fichesIncompletes
+ * @var FichePoste[] $fichesRecrutements
  * @var Poste[] $postes
  * @var Agent[] $agents
  * @var Agent[] $agentsForces
@@ -200,7 +201,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <!-- Profil de recrutement ------------------------------->
                 <div id="profil" class="tab-pane " role="tabpanel">
-                    <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $structure->getFichesPostesRecrutements()]); ?>
+                    <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $fichesRecrutements]); ?>
                 </div>
 
                 <!-- Demande de formation ------------------------------->

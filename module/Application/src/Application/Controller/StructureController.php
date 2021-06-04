@@ -10,7 +10,6 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
-use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -109,6 +108,7 @@ class StructureController extends AbstractActionController {
                 $fichesIncompletes[] = $fichePoste;
             }
         }
+        $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
@@ -132,6 +132,7 @@ class StructureController extends AbstractActionController {
             'missions' => $missionsSpecifiques,
             'fichesCompletes' => $fichesCompletes,
             'fichesIncompletes' => $fichesIncompletes,
+            'fichesRecrutements' => $fichesRecrutements,
             'profils' => $profils,
             'inscriptions' => $inscriptions,
             'agents' => $agents,

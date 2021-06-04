@@ -365,8 +365,6 @@ class FichePosteController extends AbstractActionController {
             } else {
                 if ($form->isValid()) {
                     $this->getFichePosteService()->update($fiche);
-
-                    //todo retirer des listes pour recrutement ...
                     $structure->removeFichePosteRecrutement($fiche);
                     $this->getStructureService()->update($structure);
                 }
