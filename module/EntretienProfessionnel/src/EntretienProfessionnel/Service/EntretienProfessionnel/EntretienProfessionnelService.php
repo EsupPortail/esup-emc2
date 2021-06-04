@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Application\Service\DecoratorTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -24,6 +25,7 @@ class EntretienProfessionnelService {
     use ConfigurationServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use DecoratorTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -87,21 +89,19 @@ class EntretienProfessionnelService {
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
             ->addSelect('agent')->join('entretien.agent', 'agent')
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
+            ->addSelect('astructure')->join('affectation.structure', 'astructure')
+
             ->addSelect('responsable')->join('entretien.responsable', 'responsable')
             ->addSelect('campagne')->join('entretien.campagne', 'campagne')
-            ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
-            ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
-            ->addSelect('formulaire')->join('formulaireInstance.formulaire', 'formulaire')
-            ->addSelect('categorie')->join('formulaire.categories', 'categorie')
-            ->addSelect('champ')->join('categorie.champs', 'champ')
-
             ->addSelect('etat')->leftjoin('entretien.etat', 'etat')
             ->addSelect('etattype')->leftjoin('etat.type', 'etattype')
-
             ->addSelect('validationResponsable')->leftjoin('entretien.validationResponsable','validationResponsable')
             ->addSelect('validationAgent')->leftjoin('entretien.validationAgent','validationAgent')
             ->addSelect('validationDRH')->leftjoin('entretien.validationDRH','validationDRH')
         ;
+
+        $qb = $this->decorateWithActif($qb, 'affectation');
         return $qb;
     }
 
@@ -223,6 +223,11 @@ class EntretienProfessionnelService {
     public function getEntretienProfessionnel(int $id) : ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder()
+            ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
+            ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
+            ->addSelect('formulaire')->join('formulaireInstance.formulaire', 'formulaire')
+            ->addSelect('categorie')->join('formulaire.categories', 'categorie')
+            ->addSelect('champ')->join('categorie.champs', 'champ')
             ->andWhere('entretien.id = :id')
             ->setParameter('id', $id);
         try {
