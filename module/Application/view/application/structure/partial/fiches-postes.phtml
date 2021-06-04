@@ -5,7 +5,6 @@
  * @var Structure $structure
  * @var FichePoste[] $fichesCompletes
  * @var FichePoste[] $fichesIncompletes
- * @var FichePoste[] $fichesRecrutements
  */
 
 use Application\Entity\Db\FichePoste;
@@ -38,26 +37,4 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
 </h2>
 
 <?php echo $this->fichesPostesAsArray($fichesIncompletes); ?>
-
-<div class="row">
-    <div class="col-md-8">
-        <h2>
-            Fiches de postes pour profils de recrutement
-            <span class="badge">
-                    <?php echo count($fichesRecrutements); ?>
-            </span>
-        </h2>
-    </div>
-    <div class="pull-right">
-        <a
-            <?php /** @see \Application\Controller\StructureController::ajouterFichePosteRecrutementAction() */?>
-            href="<?php echo $this->url('structure/ajouter-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true); ?>"
-            class="btn btn-primary">
-            <span class="icon ajouter"></span>
-            Ajouter une fiche
-        </a>
-    </div>
-</div>
-
-<?php echo $this->fichesPostesAsArray($fichesRecrutements); ?>
 

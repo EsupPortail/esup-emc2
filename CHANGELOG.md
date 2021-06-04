@@ -7,9 +7,12 @@ Version 1.2.0 *Module de formation*
 
 Version 1.1.5
 -------------
-- [Correction bug] l'encart Mes données ne marchait plus faute d'agent fourni
-- Parametrage et ajout d'une adresse par défaut pour les profils de recrutement
-- Refonte macro pour le profil
++ [Correction bug] l'encart Mes données ne marchait plus faute d'agent fourni
++ [Qualité de vie] Ajout d'un onglet agent sur les structures pour clarifier  
++ Parametrage et ajout d'une adresse par défaut pour les profils de recrutement
++ Refonte macro pour le profil
++ Fiche de poste pour recrutement + modification de l'association d'agent
+
 
 Version 1.1.4
 -------------

@@ -1,11 +1,13 @@
 <?php
 
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
  * @var FichePoste[] $fiches
  * @var boolean[] $displays
+ * @var Structure|null $structure
  */
 
 $canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
@@ -138,7 +140,7 @@ if ($retour)    $query['retour'] = $retour;
                     <?php if ($canEditer) : ?>
                         <a
                             <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
-                                href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                                href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ['query' => ['structure' => $structure?$structure->getId():null]], true); ?>"
                                 target="_blank"
                         ><span class="icon editer"
                                data-toggle="tooltip" data-html="true"

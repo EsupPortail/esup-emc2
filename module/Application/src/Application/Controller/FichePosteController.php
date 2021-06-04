@@ -344,7 +344,7 @@ class FichePosteController extends AbstractActionController {
 
         /** @var AssocierAgentForm $form */
         $form = $this->getAssocierAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-agent', ['fiche-poste' => $fiche->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-agent', ['fiche-poste' => $fiche->getId()], ['query' => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true));
 
         if ($structure !== null) {
             $form = $form->reinitWithStructure($structure, $sousstructure);
@@ -365,6 +365,10 @@ class FichePosteController extends AbstractActionController {
             } else {
                 if ($form->isValid()) {
                     $this->getFichePosteService()->update($fiche);
+
+                    //todo retirer des listes pour recrutement ...
+                    $structure->removeFichePosteRecrutement($fiche);
+                    $this->getStructureService()->update($structure);
                 }
             }
         }

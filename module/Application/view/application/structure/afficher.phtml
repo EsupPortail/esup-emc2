@@ -175,7 +175,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <!-- Informations ------------------------------------------------------------------------------------->
                 <div id="informations" class="tab-pane " role="tabpanel">
 
-                    <?php echo $this->partial('partial/fiches-postes', ['structure' => $structure, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes, 'fichesRecrutements' => $structure->getFichesPostesRecrutements()]); ?>
+                    <?php echo $this->partial('partial/fiches-postes', ['structure' => $structure, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
 
 
                 </div>
@@ -200,7 +200,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <!-- Profil de recrutement ------------------------------->
                 <div id="profil" class="tab-pane " role="tabpanel">
-                    <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils]); ?>
+                    <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $structure->getFichesPostesRecrutements()]); ?>
                 </div>
 
                 <!-- Demande de formation ------------------------------->

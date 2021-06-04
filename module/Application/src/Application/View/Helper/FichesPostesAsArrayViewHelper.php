@@ -18,7 +18,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($fiches, $options = [])
+    public function __invoke($fiches, $structure = null, $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
@@ -34,6 +34,6 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
             'action' => true,
         ];
 
-        return $view->partial('fiches-postes-as-table', ['fiches' => $fiches, 'displays' => $displays, 'options' => $options]);
+        return $view->partial('fiches-postes-as-table', ['fiches' => $fiches, 'structure' => $structure, 'displays' => $displays, 'options' => $options]);
     }
 }

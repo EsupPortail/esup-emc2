@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @var FichePoste[] $fichespostes
+ * @var string $url
+ */
+
+use Application\Entity\Db\FichePoste;
+
+?>
+
+<form method="post" action="<?php echo $url; ?>">
+    <div class="form-group">
+    <label for="fiche">Fiche à dupliquer </label>
+    <select id="fiche" name="fiche" class="selectpicker" data-live-search="true">
+        <option value="">Aucune fiche</option>
+        <?php foreach ($fichespostes as $fichesposte) : ?>
+            <option value="<?php echo $fichesposte->getId(); ?>">
+                <?php
+                    $metier = $fichesposte->getLibelleMetierPrincipal();
+                    echo ($metier === null)?"Aucun métier principal":$metier; ?>
+                -
+                (<?php echo ($fichesposte->getAgent())?$fichesposte->getAgent()->getDenomination():"Recrutement #" . $fichesposte->getId(); ?>)
+            </option>
+        <?php endforeach; ?>
+    </select>
+    </div>
+    <input type="submit" value="Dupliquer la fiche" class="btn btn-primary"/>
+</form>
+
+<script>
+    $('select').selectpicker();
+</script>

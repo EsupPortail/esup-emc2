@@ -58,6 +58,7 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'ajouter-fiche-poste-recrutement',
+                        'dupliquer-fiche-poste-recrutement',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION,
                 ],
@@ -166,6 +167,17 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'ajouter-fiche-poste-recrutement',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'dupliquer-fiche-poste-recrutement' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/dupliquer-fiche-poste-recrutement/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'dupliquer-fiche-poste-recrutement',
                             ],
                         ],
                         'may_terminate' => true,

@@ -10,12 +10,14 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
+use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Application\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use DateTime;
@@ -42,6 +44,7 @@ class StructureController extends AbstractActionController {
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use UserServiceAwareTrait;
+    use SpecificitePosteServiceAwareTrait;
 
     use EntretienProfessionnelServiceAwareTrait;
     use CampagneServiceAwareTrait;
@@ -414,6 +417,57 @@ class StructureController extends AbstractActionController {
 
         /** @see FichePosteController::editerAction() */
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
+    }
+
+    public function dupliquerFichePosteRecrutementAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $fiche = $this->getFichePosteService()->getFichePoste($data['fiche']);
+
+            if ($fiche != null) {
+                $nouvelleFiche = new FichePoste();
+                $nouvelleFiche->setLibelle($fiche->getLibelle());
+                if ($fiche->getSpecificite()) {
+                    $specifite = $fiche->getSpecificite()->clone_it();
+                    $this->getSpecificitePosteService()->create($specifite);
+                    $nouvelleFiche->setSpecificite($specifite);
+                }
+                $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
+
+                //dupliquer fiche metier externe
+                foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {
+                    $nouvelleFicheMetier = $ficheMetierExterne->clone_it();
+                    $nouvelleFicheMetier->setFichePoste($nouvelleFiche);
+                    $this->getFichePosteService()->createFicheTypeExterne($nouvelleFicheMetier);
+                }
+
+                $structure->addFichePosteRecrutement($nouvelleFiche);
+                $this->getStructureService()->update($structure);
+            }
+
+
+        }
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] = $structure;
+        $fichesPostesAgent = $this->getFichePosteService()->getFichesPostesByStructures($structures);
+        $fichesPostesRecrutement = $structure->getFichesPostesRecrutements();
+
+        $fichespostes = [];
+        foreach ($fichesPostesAgent as $fichePoste) $fichespostes[$fichePoste->getId()] = $fichePoste;
+        foreach ($fichesPostesRecrutement as $fichePoste) $fichespostes[$fichePoste->getId()] = $fichePoste;
+
+        $vm =  new ViewModel([
+            'title' => 'Sélectionner la fiche de poste à dupliquer',
+            'fichespostes' => $fichespostes,
+            'url' => $this->url()->fromRoute('structure/dupliquer-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true),
+        ]);
+        $vm->setTemplate('application/structure/dupliquer-fiche-poste');
+        return $vm;
     }
 
     /** EXTRACTIONS ***************************************************************************************************/
