@@ -77,19 +77,24 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
         <div role="tabpanel">
             <ul class="nav nav-tabs" role="tablist">
 
-                <li role="informations">
+                <li role="presentation">
+                    <a href="#agents" aria-controls="agents" role="tab" data-toggle="tabz">
+                        Agents <br/> &nbsp;
+                    </a>
+                </li>
+                <li role="presentation">
                     <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz">
                         Fiches de  <br/> poste
                     </a>
                 </li>
-                <li role="missions">
+                <li role="presentation">
                     <a href="#missions" aria-controls="missions" role="tab" data-toggle="tabz">
                         Missions <br/> spécifiques
                     </a>
                 </li>
 
                 <?php if ($last !== null) : ?>
-                    <li role="campagne_<?php echo $last->getId(); ?>">
+                    <li role="presentation">
                         <a href="#campagne_<?php echo $last->getId(); ?>" aria-controls="campagne_<?php echo $last->getId(); ?>" role="tab" data-toggle="tabz">
                             Entretien professionnel  <br/>
                             <strong><?php echo $last->getAnnee(); ?></strong>
@@ -98,7 +103,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <?php endif; ?>
 
                 <?php foreach ($campagnes as $campagne) : ?>
-                    <li role="campagne_<?php echo $campagne->getId(); ?>">
+                    <li role="presentation">
                         <a href="#campagne_<?php echo $campagne->getId(); ?>" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab" data-toggle="tabz">
                             Entretien professionnel <br/>
                             <strong><?php echo $campagne->getAnnee(); ?></strong>
@@ -106,20 +111,20 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                     </li>
                 <?php endforeach;?>
 
-                <li role="profil">
+                <li role="presentation">
                     <a href="#profil" aria-controls="profil" role="tab" data-toggle="tabz" >
                         Profil de  <br/>
                         recrutement
                     </a>
                 </li>
 
-                <li>
+                <li role="presentation">
                     <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz" >
                         Demande de <br/> Formation
                     </a>
                 </li>
 
-                <li role="extraction">
+                <li role="presentation">
                     <a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tabz" >
                         Extractions  <br/> &nbsp;
                     </a>
@@ -132,9 +137,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
             <div class="tab-content">
 
                 <!-- Informations ------------------------------------------------------------------------------------->
-                <div id="informations" class="tab-pane " role="tabpanel">
-
-                    <?php echo $this->partial('partial/fiches-postes', ['structure' => $structure, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes, 'fichesRecrutements' => $structure->getFichesPostesRecrutements()]); ?>
+                <div id="agents" class="tab-pane " role="tabpanel">
 
                     <?php echo $this->portenote('StructureController::indexAction()>Agents', '', []); ?>
                     <div class="row">
@@ -166,6 +169,15 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                         </div>
                     </div>
                     <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true]]); ?>
+
+                </div>
+
+                <!-- Informations ------------------------------------------------------------------------------------->
+                <div id="informations" class="tab-pane " role="tabpanel">
+
+                    <?php echo $this->partial('partial/fiches-postes', ['structure' => $structure, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes, 'fichesRecrutements' => $structure->getFichesPostesRecrutements()]); ?>
+
+
                 </div>
 
                 <!-- Missions spécifique ------------------------------------------------------------------------------------->
@@ -214,7 +226,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "informations";
+        if (name === undefined || name === "") name = "agents";
 
         $('a[aria-controls=' + name + ']').tab('show');
 
