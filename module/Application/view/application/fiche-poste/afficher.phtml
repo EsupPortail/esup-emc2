@@ -6,12 +6,14 @@
  * @var array $parcours
  * @var Competence[] $competences
  * @var Application[] $applications
+ * @var Structure $structure
  */
 
 use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 $date = new DateTime();
@@ -77,7 +79,7 @@ $canExport   = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
         </div>
     </div>
 
-    <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'mode' => 'affichage']); ?>
+    <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'structure' => $structure, 'mode' => 'affichage']); ?>
 
     <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
 

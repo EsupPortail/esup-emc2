@@ -3,8 +3,10 @@
 /**
  * @var Structure $structure
  * @var FicheProfil[] $profils
+ * @var FichePoste[] $fichesRecrutements
  */
 
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheProfil;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FicheprofilPrivileges;
@@ -24,28 +26,63 @@ $canModifier = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofil
 $canHistoriser = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_HISTORISER));
 $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(FicheprofilPrivileges::FICHEPROFIL_SUPPRIMER));
 
+ksort($fichesRecrutements)
 ?>
 
-<?php /** @see \Application\Controller\FicheProfilController::ajouterAction() */ ?>
-<a class="btn btn-primary action"
-   href="<?php echo $this->url('fiche-profil/ajouter', ['structure' => $structure->getId()], [], true); ?>"
->
-    <span class="icon ajouter"> Ajouter un profil de recrutement</span>
-</a>
+<div class="row">
+    <div class="col-md-6">
+        <h2>
+            Fiches de postes pour profils de recrutement
+            <span class="badge">
+                    <?php echo count($fichesRecrutements); ?>
+            </span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <a
+            <?php /** @see \Application\Controller\StructureController::ajouterFichePosteRecrutementAction() */?>
+                href="<?php echo $this->url('structure/ajouter-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true); ?>"
+                class="btn btn-primary">
+            <span class="icon ajouter"></span>
+            Ajouter une fiche
+        </a>
+        <a
+            <?php /** @see \Application\Controller\StructureController::dupliquerFichePosteRecrutementAction() */?>
+                href="<?php echo $this->url('structure/dupliquer-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true); ?>"
+                class="btn btn-primary ajax-modal" data-event="modification">
+            <span class="icon cloner"></span>
+            Dupliquer une fiche
+        </a>
+    </div>
+</div>
 
-<h2>
-    Profil de recutement (en cours)
-    <span class="badge">
-        <?php echo count($profils_encours); ?>
-    </span>
-</h2>
+<?php echo $this->fichesPostesAsArray($fichesRecrutements, $structure, ['displays' => ['id' => true, 'structure' => false]]); ?>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>
+            Profil de recutement (en cours)
+            <span class="badge">
+                <?php echo count($profils_encours); ?>
+            </span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php /** @see \Application\Controller\FicheProfilController::ajouterAction() */ ?>
+        <a class="btn btn-primary action"
+           href="<?php echo $this->url('fiche-profil/ajouter', ['structure' => $structure->getId()], [], true); ?>"
+        >
+            <span class="icon ajouter"> Ajouter un profil de recrutement</span>
+        </a>
+    </div>
+</div>
 
     <table class="datatable table table-condensed">
         <thead>
             <tr>
                 <th style="width: 45%;"> Fiche de poste </th>
                 <th> Structure </th>
-                <th> Vacance d'emploi</th>
+                <th style="width: 10rem;"> Vacance d'emploi</th>
                 <th style="width: 15rem;"> Fin de dépôt </th>
                 <th style="width: 10rem;"> Action</th>
             </tr>
@@ -62,7 +99,13 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
                         <span class="icon ko" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
                     <?php endif; ?>
                 </td>
-                <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
+                <td>
+                    Dossier : <?php echo $profil->getDateDossier()->format('d/m/Y'); ?>
+                    <?php if ($profil->getDateAudition()) : ?>
+                        <br/>
+                        Audition : <?php echo $profil->getDateAudition()->format('d/m/Y'); ?>
+                    <?php endif; ?>
+                </td>
                 <td>
                     <?php if ($canExporter) : ?>
                         <?php /** @see \Application\Controller\FicheProfilController::exporterAction() */?>
@@ -109,7 +152,7 @@ $canSupprimer = $this->isAllowed(FicheprofilPrivileges::getResourceId(Ficheprofi
     <tr>
         <th style="width: 45%;"> Fiche de poste </th>
         <th> Structure </th>
-        <th> Vacance d'emploi</th>
+        <th style="width: 10rem;"> Vacance d'emploi</th>
         <th style="width: 15rem;"> Fin de dépôt </th>
         <th style="width: 10rem;"> Action</th>
     </tr>

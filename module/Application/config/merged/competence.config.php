@@ -31,6 +31,7 @@ use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauHydrator;
 use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\Competence\CompetenceService;
 use Application\Service\Competence\CompetenceServiceFactory;
 use Application\Service\CompetenceElement\CompetenceElementService;
@@ -159,6 +160,7 @@ return [
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ACQUIS_MODIFIER,
+                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
                     ],
                 ],
             ],

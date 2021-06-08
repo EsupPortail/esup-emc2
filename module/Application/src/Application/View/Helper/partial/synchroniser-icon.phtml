@@ -1,5 +1,15 @@
+<?php
+
+/**
+ * @var bool $infos;
+ */
+
+?>
+
 <span class="icon synchoniser"
-      title="<span class='icon synchroniser' style='float:left;color:#31708f'></span> <span style='text-align:justify'>Éléments synchronisé depuis <strong>Octopus</strong> journalièrement</span>"
-      data-toggle="tooltip" data-html="true"
+      <?php if ($infos) : ?>
+          title="<span class='icon synchroniser' style='float:left;color:#31708f'></span> <span style='text-align:justify'>Éléments synchronisé depuis <strong>Octopus</strong> journalièrement</span>"
+          data-toggle="tooltip" data-html="true"
+      <?php endif; ?>
 >
 </span>

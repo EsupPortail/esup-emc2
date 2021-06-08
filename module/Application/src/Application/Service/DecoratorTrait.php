@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
+use UnicaenEtat\Entity\Db\Etat;
 
 trait DecoratorTrait {
 
@@ -58,6 +59,26 @@ trait DecoratorTrait {
         if ($structure !== null) {
             $qb = $qb->andWhere($alias . '.structure = :structure')
                 ->setParameter('structure', $structure);
+        }
+        return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $alias
+     * @param Etat|null $etat
+     * @return QueryBuilder
+     */
+    public function decorateWithEtat(QueryBuilder $qb, string $alias, ?Etat $etat = null) : QueryBuilder
+    {
+        $qb = $qb
+            ->addSelect('etat')->join($alias.'.etat', 'etat')
+            ->addSelect('etattype')->leftjoin('etat.type', 'etattype')
+        ;
+
+        if ($etat !== null) {
+            $qb = $qb->andWhere($alias . '.etat = :etat')
+                ->setParameter('etat', $etat);
         }
         return $qb;
     }

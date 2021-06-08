@@ -80,7 +80,7 @@ class FicheProfilForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner une fiche de poste ... ",
-                'value_options' => ($this->structure AND $structures !== null)?$this->getFichePosteService()->getFichesPostesByStructuresAsOptions($structures, true):null,
+                'value_options' => ($this->structure AND $structures !== null)?$this->getFichePosteService()->getFichesPostesRecrutementByStructuresAsOptions($structures, true):null,
             ],
             'attributes' => [
                 'id'                => 'competence',
@@ -91,17 +91,29 @@ class FicheProfilForm extends Form {
         //date
         $this->add([
             'type' => DateTime::class,
-            'name' => 'date',
+            'name' => 'date_dossier',
             'options' => [
-                'label' => "Date de fin * :",
+                'label' => "Date de fin de dépôt des dossiers * :",
                 'format' => 'd/m/Y'
             ],
             'attributes' => [
-                'id' => 'date',
+                'id' => 'date_dossier',
 //                'min' => $this->getDateTime(),
             ],
         ]);
-        //structure (non editable)
+        $this->add([
+            'type' => DateTime::class,
+            'name' => 'date_audition',
+            'options' => [
+                'label' => "Date prévisionnelle d'audition :",
+                'format' => 'd/m/Y'
+            ],
+            'attributes' => [
+                'id' => 'date_audition',
+//                'min' => $this->getDateTime(),
+            ],
+        ]);
+        //email
         $this->add([
             'type' => Text::class,
             'name' => 'adresse',
@@ -110,6 +122,7 @@ class FicheProfilForm extends Form {
             ],
             'attributes' => [
                 'id' => 'adresse',
+                'value' => $adresse,
             ],
         ]);
         $this->add([
@@ -149,21 +162,10 @@ class FicheProfilForm extends Form {
             'type' => Textarea::class,
             'name' => 'niveau',
             'options' => [
-                'label' => "Niveau requis :",
+                'label' => "Niveau requis * :",
             ],
             'attributes' => [
                 'id' => 'niveau',
-                'class' => 'tinymce',
-            ],
-        ]);
-        $this->add([
-            'type' => Textarea::class,
-            'name' => 'contraintes',
-            'options' => [
-                'label' => "Contraintes liées au poste :",
-            ],
-            'attributes' => [
-                'id' => 'contraintes',
                 'class' => 'tinymce',
             ],
         ]);
@@ -210,13 +212,13 @@ class FicheProfilForm extends Form {
             'vacance_emploi'          => [ 'required' => true,  ],
             'structure'               => [ 'required' => true,  ],
             'ficheposte'              => [ 'required' => true,  ],
-            'date'                    => [ 'required' => true,  ],
+            'date_dossier'            => [ 'required' => true,  ],
+            'date_audition'           => [ 'required' => false,  ],
             'adresse'                 => [ 'required' => true,  ],
             'lieu'                    => [ 'required' => false,  ],
             'contexte'                => [ 'required' => false,  ],
             'mission'                 => [ 'required' => false,  ],
-            'niveau'                  => [ 'required' => false,  ],
-            'contraintes'             => [ 'required' => false,  ],
+            'niveau'                  => [ 'required' => true,  ],
             'contrat'                 => [ 'required' => false,  ],
             'remuneration'            => [ 'required' => false,  ],
         ]));

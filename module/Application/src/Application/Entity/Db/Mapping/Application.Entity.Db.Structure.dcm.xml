@@ -40,6 +40,16 @@
             </join-table>
         </many-to-many>
 
+        <many-to-many field="fichesPostesRecrutements" target-entity="Application\Entity\Db\FichePoste" inversed-by="structure" fetch="LAZY">
+            <join-table name="structure_ficheposte">
+                <join-columns>
+                    <join-column name="structure_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="ficheposte_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
         <one-to-many target-entity="Application\Entity\Db\Poste" mapped-by="structure" field="postes"/>
         <one-to-many target-entity="Application\Entity\Db\AgentMissionSpecifique" mapped-by="structure" field="missions"/>
 

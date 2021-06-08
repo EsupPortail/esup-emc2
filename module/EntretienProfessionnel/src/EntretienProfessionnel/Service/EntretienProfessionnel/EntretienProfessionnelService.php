@@ -94,14 +94,13 @@ class EntretienProfessionnelService {
 
             ->addSelect('responsable')->join('entretien.responsable', 'responsable')
             ->addSelect('campagne')->join('entretien.campagne', 'campagne')
-            ->addSelect('etat')->leftjoin('entretien.etat', 'etat')
-            ->addSelect('etattype')->leftjoin('etat.type', 'etattype')
             ->addSelect('validationResponsable')->leftjoin('entretien.validationResponsable','validationResponsable')
             ->addSelect('validationAgent')->leftjoin('entretien.validationAgent','validationAgent')
             ->addSelect('validationDRH')->leftjoin('entretien.validationDRH','validationDRH')
         ;
 
         $qb = $this->decorateWithActif($qb, 'affectation');
+        $qb = $this->decorateWithEtat($qb, 'entretien');
         return $qb;
     }
 

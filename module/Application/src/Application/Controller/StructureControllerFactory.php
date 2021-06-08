@@ -11,6 +11,7 @@ use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\Poste\PosteService;
+use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Application\Service\StructureAgentForce\StructureAgentForceService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
@@ -34,6 +35,7 @@ class StructureControllerFactory {
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var PosteService $posteService
          * @var RoleService $roleService
+         * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
          * @var UserService $userService
@@ -47,6 +49,7 @@ class StructureControllerFactory {
         $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $posteService = $container->get(PosteService::class);
         $roleService = $container->get(RoleService::class);
+        $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
         $userService = $container->get(UserService::class);
@@ -74,6 +77,7 @@ class StructureControllerFactory {
         $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setPosteService($posteService);
         $controller->setRoleService($roleService);
+        $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
         $controller->setUserService($userService);

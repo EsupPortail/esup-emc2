@@ -27,7 +27,9 @@ use Application\Form\FicheProfil\FicheProfilForm;
     <?php echo $this->formControlGroup($form->get('structure')); ?>
     <?php echo $this->formControlGroup($form->get('structure_id')); ?>
     <?php echo $this->formControlGroup($form->get('ficheposte')); ?>
-    <?php echo $this->formControlGroup($form->get('date')); ?>
+    <?php echo $this->formControlGroup($form->get('date_dossier')); ?>
+    <?php echo $this->formControlGroup($form->get('date_audition')); ?>
+    <?php echo $this->formControlGroup($form->get('adresse')); ?>
     <?php echo $this->formControlGroup($form->get('lieu')); ?>
     <?php echo $this->formControlGroup($form->get('vacance_emploi')); ?>
 </div>
@@ -36,7 +38,6 @@ use Application\Form\FicheProfil\FicheProfilForm;
     <?php echo $this->formControlGroup($form->get('contexte')); ?>
     <?php echo $this->formControlGroup($form->get('mission')); ?>
     <?php echo $this->formControlGroup($form->get('niveau')); ?>
-    <?php echo $this->formControlGroup($form->get('contraintes')); ?>
 </div>
 <div>
     <h2> Contrat et rénumération </h2>

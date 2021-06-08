@@ -59,51 +59,7 @@ trait FichePosteMacroTrait {
         return $texte;
     }
 
-    /**
-     * @return string
-     */
-    public function toStringSpecificite() : string
-    {
-        /** @var FichePoste $ficheposte */
-        $ficheposte = $this;
-        $specificite = $ficheposte->getSpecificite();
-
-        $texte  = "";
-        if ($specificite !== null) {
-            if ($specificite->getSpecificite() !== null and trim($specificite->getSpecificite()) !== '') {
-                $texte .= "<h3> Spécificités du poste </h3>";
-                $texte .= trim($specificite->getSpecificite());
-            }
-            if ($specificite->getEncadrement() !== null and trim($specificite->getEncadrement()) !== '') {
-                $texte .= "<h3> Encadrement </h3>";
-                $texte .= trim($specificite->getEncadrement());
-            }
-            if ($specificite->getRelationsInternes() !== null and trim($specificite->getRelationsInternes()) !== '') {
-                $texte .= "<h3> Relations internes à l'unicaen </h3>";
-                $texte .= trim($specificite->getRelationsInternes());
-            }
-            if ($specificite->getRelationsExternes() !== null and trim($specificite->getRelationsExternes()) !== '') {
-                $texte .= "<h3> Relations externes à l'unicaen </h3>";
-                $texte .= trim($specificite->getRelationsExternes());
-            }
-            if ($specificite->getContraintes() !== null and trim($specificite->getContraintes()) !== '') {
-                $texte .= "<h3> Sujétions ou conditions particulières </h3>";
-                $texte .= trim($specificite->getContraintes());
-            }
-            if ($specificite->getMoyens() !== null and trim($specificite->getMoyens()) !== '') {
-                $texte .= "<h3> Moyens et outils mis à disposition </h3>";
-                $texte .= trim($specificite->getMoyens());
-            }
-            if ($specificite->getFormations() !== null and trim($specificite->getFormations()) !== '') {
-                $texte .= "<h3> Formations et qualifications nécessaires </h3>";
-                $texte .= trim($specificite->getFormations());
-            }
-        }
-        if ($texte !== "") return $texte;
-        return "Aucune spécificité décrite.";
-    }
-
-    /**
+        /**
      * @return string
      */
     public function toStringApplications() : string
@@ -312,7 +268,10 @@ trait FichePosteMacroTrait {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $texte .= "<h3>";
             $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
+            $texte .= " (".$supplement.")";
             $references = $ficheMetier->getMetier()->getReferences();
+
             if ($references !== null AND !empty($references)) {
                 $texte .= "<br/><small>";
                 /** @var Reference $reference */
@@ -345,4 +304,244 @@ trait FichePosteMacroTrait {
         }
         return $texte;
     }
+
+    /**
+     * @return string
+     */
+    public function toStringFichesMetiersCourt() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $descriptionsRetirees = array_map(function ($a) { return $a->getDescription()->getId(); }, $ficheposte->getDescriptionsRetirees()->toArray());
+
+        $texte = "";
+        foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
+            $ficheMetier = $ficheTypeExterne->getFicheType();
+            $texte .= "<h3>";
+            $texte .= $ficheMetier->getMetier()->getLibelleGenre($ficheposte->getAgent());
+            $supplement = (($ficheTypeExterne->getPrincipale())?"Principal - ":"") . $ficheTypeExterne->getQuotite() . "%";
+            $texte .= " (".$supplement.")";
+            $references = $ficheMetier->getMetier()->getReferences();
+
+            if ($references !== null AND !empty($references)) {
+                $texte .= "<br/><small>";
+                /** @var Reference $reference */
+                foreach ($references as $reference) {
+                    $texte .= " <a href='".$reference->getUrl()."'>".$reference->getReferentiel()->getLibelleCourt() . "-" . $reference->getCode()."</a>";
+                }
+                $texte.="</small>";
+            }
+            $texte .= "</h3>";
+
+            $ids = explode(";",$ficheTypeExterne->getActivites());
+            foreach ($ids as $id) {
+                $texte .= "<ul>";
+                foreach ($ficheMetier->getActivites() as $activiteType) {
+                    $activite = $activiteType->getActivite();
+
+                    if ($activite->getId() === (int) $id) {
+
+                        $texte .= "<li>";
+                        $texte .= "<span class='activite-libelle'>". $activite->getLibelle() . "</span>";
+                        $texte .= "</li>";
+
+                        break;
+                    }
+                }
+                $texte .= "</ul>";
+            }
+        }
+        return $texte;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringCadre() : string
+    {
+        $metier = null;
+
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+
+        foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
+            $tmp = $ficheTypeExterne->getFicheType()->getMetier();
+            if ($metier === null OR $metier->getNiveau() < $tmp->getNiveau()) $metier = $tmp;
+        }
+
+        $texte = "";
+        if ($metier === null) return $texte;
+        if ($metier->getCategorie())            $texte .= "Catégorie : " . $metier->getCategorie()->getCode() . "<br/>";
+        if (true /**$metier->getNiveau()**/)    $texte .= "Corps : " . "Lien manquant" . "<br/>";
+        if (true /**$metier->getBap()**/)       $texte .= "BAP : " . "Lien manquant" . "<br/>";
+        return $texte;
+    }
+
+    //Specificite ------------------------------------------------------------------------------------------------------
+
+
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteComplete() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $specificite = $ficheposte->getSpecificite();
+
+        $texte  = "";
+        if ($specificite !== null) {
+            if ($specificite->getSpecificite() !== null and trim($specificite->getSpecificite()) !== '') {
+                $texte .= "<h3> Spécificités du poste </h3>";
+                $texte .= trim($specificite->getSpecificite());
+            }
+            if ($specificite->getEncadrement() !== null and trim($specificite->getEncadrement()) !== '') {
+                $texte .= "<h3> Encadrement </h3>";
+                $texte .= trim($specificite->getEncadrement());
+            }
+            if ($specificite->getRelationsInternes() !== null and trim($specificite->getRelationsInternes()) !== '') {
+                $texte .= "<h3> Relations internes à l'unicaen </h3>";
+                $texte .= trim($specificite->getRelationsInternes());
+            }
+            if ($specificite->getRelationsExternes() !== null and trim($specificite->getRelationsExternes()) !== '') {
+                $texte .= "<h3> Relations externes à l'unicaen </h3>";
+                $texte .= trim($specificite->getRelationsExternes());
+            }
+            if ($specificite->getContraintes() !== null and trim($specificite->getContraintes()) !== '') {
+                $texte .= "<h3> Sujétions ou conditions particulières </h3>";
+                $texte .= trim($specificite->getContraintes());
+            }
+            if ($specificite->getMoyens() !== null and trim($specificite->getMoyens()) !== '') {
+                $texte .= "<h3> Moyens et outils mis à disposition </h3>";
+                $texte .= trim($specificite->getMoyens());
+            }
+            if ($specificite->getFormations() !== null and trim($specificite->getFormations()) !== '') {
+                $texte .= "<h3> Formations et qualifications nécessaires </h3>";
+                $texte .= trim($specificite->getFormations());
+            }
+        }
+        if ($texte !== "") return $texte;
+        return "Aucune spécificité décrite.";
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteSpecificite() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $specificite = $ficheposte->getSpecificite()->getSpecificite();
+
+        $texte = "";
+        if ($specificite) {
+            $texte .= "<div class='information'>";
+            $texte .= "<h2>Spécificité du poste</h2>";
+            $texte .=  $specificite;
+            $texte .= "</div>";
+        }
+        return $texte;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteEncadrement() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $encadrement = $ficheposte->getSpecificite()->getEncadrement();
+
+        $texte = "";
+        if ($encadrement) {
+            $texte .= "<div class='information'>";
+            $texte .= "<h2>Encadrement</h2>";
+            $texte .=  $encadrement;
+            $texte .= "</div>";
+        }
+        return $texte;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteRelations() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $relationsInternes = $ficheposte->getSpecificite()->getRelationsInternes();
+        $relationsExternes = $ficheposte->getSpecificite()->getRelationsExternes();
+
+        $texte = "";
+        if ($relationsInternes OR $relationsExternes) {
+            $texte .= "<div class='information'>";
+            $texte .= "<h2>Champs des relations</h2>";
+            if ($relationsInternes) {
+                $texte .= "<strong>Relations internes :</strong>" . $relationsInternes;
+            }
+            if ($relationsExternes) {
+                $texte .= "<strong>Relations externes :</strong>" . $relationsExternes;
+            }
+            $texte .= "</div>";
+        }
+        return $texte;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteContraintes() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $contraintes = $ficheposte->getSpecificite()->getContraintes();
+
+        $texte = "";
+        if ($contraintes) {
+            $texte .= "<div class='information'>";
+            $texte .= "<h2>Conditions d'exercice</h2>";
+            $texte .=  $contraintes;
+            $texte .= "</div>";
+        }
+        return $texte;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteMoyens() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $moyens = $ficheposte->getSpecificite()->getMoyens();
+
+        $texte = "";
+        if ($moyens) {
+            $texte .= "<div class='information'>";
+            $texte .= "<h2>Moyens mis à disposition</h2>";
+            $texte .=  $moyens;
+            $texte .= "</div>";
+        }
+        return $texte;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteFormations() : string
+    {
+        /** @var FichePoste $ficheposte */
+        $ficheposte = $this;
+        $formations = $ficheposte->getSpecificite()->getFormations();
+
+        $texte = "";
+        if ($formations) {
+            $texte .= "<div class='information'>";
+            $texte .= "<h2>Formations et qualifications nécessaires</h2>";
+            $texte .=  $formations;
+            $texte .= "</div>";
+        }
+        return $texte;
+    }
+
 }

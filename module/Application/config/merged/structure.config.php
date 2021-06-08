@@ -57,6 +57,14 @@ return [
                 [
                     'controller' => StructureController::class,
                     'action' => [
+                        'ajouter-fiche-poste-recrutement',
+                        'dupliquer-fiche-poste-recrutement',
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION,
+                ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
                         'rechercher',
                         'rechercher-gestionnaires',
                         'rechercher-with-structure-mere',
@@ -151,6 +159,28 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [],
+                    ],
+                    'ajouter-fiche-poste-recrutement' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-fiche-poste-recrutement/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'ajouter-fiche-poste-recrutement',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'dupliquer-fiche-poste-recrutement' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/dupliquer-fiche-poste-recrutement/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'dupliquer-fiche-poste-recrutement',
+                            ],
+                        ],
+                        'may_terminate' => true,
                     ],
                     'graphe' => [
                         'type'  => Segment::class,

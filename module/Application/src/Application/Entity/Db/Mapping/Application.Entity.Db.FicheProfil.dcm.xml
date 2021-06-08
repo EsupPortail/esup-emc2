@@ -19,10 +19,10 @@
         <field name="contexte"              column="contexte"               type="string"   length="4096"   nullable="true"/>
         <field name="mission"               column="mission"                type="string"   length="4096"   nullable="true"/>
         <field name="niveau"                column="niveau"                 type="string"   length="4096"   nullable="true"/>
-        <field name="contraintes"           column="contraintes"            type="string"   length="4096"   nullable="true"/>
         <field name="contrat"               column="contrat"                type="string"   length="4096"   nullable="true"/>
         <field name="renumeration"          column="renumeration"           type="string"   length="4096"   nullable="true"/>
-        <field name="date"                  column="date"                   type="datetime"                 nullable="false"/>
+        <field name="dateDossier"           column="date_dossier"           type="datetime"                 nullable="false"/>
+        <field name="dateAudition"          column="date_audition"          type="datetime"                 nullable="false"/>
         <field name="adresse"               column="adresse"                type="string"   length="4096"   nullable="true"/>
 
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

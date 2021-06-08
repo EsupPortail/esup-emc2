@@ -2,11 +2,13 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 /**
  * @var FichePoste $fiche
  * @var Agent $agent
+ * @var Structure|null $structure
  * @var string mode
  */
 
@@ -36,19 +38,30 @@ $poste = $fiche->getPoste();
         </div>
     </div>
     <div class="panel-body">
-        <?php $structures = $agent->getStructures(); ?>
-        <?php foreach ($structures as $structure) : ?>
-            <h4> <?php echo $structure->getLibelleLong(); ?> </h4>
+        <?php
+            $structures = [];
+            if ($agent !== null) $structures = $agent->getStructures();
+            else if ($structure !== null) $structures[] = $structure;
+        ?>
+        <?php if (empty($structures)) : ?>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aucune structure.
+            </div>
+        <?php else: ?>
+            <?php foreach ($structures as $structure) : ?>
+                <h4> <?php echo $structure->getLibelleLong(); ?> </h4>
 
-            <?php if ($structure->getDescription() !== null) :?>
-                <?php echo $structure->getDescription(); ?>
-            <?php else: ?>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Aucune description de fournie pour l'affectation <em><?php echo $structure->getLibelleCourt(); ?></em>.
-                </div>
-            <?php endif; ?>
-        <?php endforeach; ?>
+                <?php if ($structure->getDescription() !== null) :?>
+                    <?php echo $structure->getDescription(); ?>
+                <?php else: ?>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Aucune description de fournie pour l'affectation <em><?php echo $structure->getLibelleCourt(); ?></em>.
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
         <!--        <h3> Positionnement dans l'établissement</h3>-->
 <!--        --><?php //if ($poste === null) : ?>
