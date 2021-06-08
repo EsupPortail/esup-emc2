@@ -431,6 +431,7 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
+        if ($ficheposte->getSpecificite() === null) return '';
         $specificite = $ficheposte->getSpecificite()->getSpecificite();
 
         $texte = "";
@@ -450,6 +451,7 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
+        if ($ficheposte->getSpecificite() === null) return '';
         $encadrement = $ficheposte->getSpecificite()->getEncadrement();
 
         $texte = "";
@@ -469,6 +471,7 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
+        if ($ficheposte->getSpecificite() === null) return '';
         $relationsInternes = $ficheposte->getSpecificite()->getRelationsInternes();
         $relationsExternes = $ficheposte->getSpecificite()->getRelationsExternes();
 
@@ -494,6 +497,7 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
+        if ($ficheposte->getSpecificite() === null) return '';
         $contraintes = $ficheposte->getSpecificite()->getContraintes();
 
         $texte = "";
@@ -513,6 +517,7 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
+        if ($ficheposte->getSpecificite() === null) return '';
         $moyens = $ficheposte->getSpecificite()->getMoyens();
 
         $texte = "";
@@ -532,6 +537,7 @@ trait FichePosteMacroTrait {
     {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
+        if ($ficheposte->getSpecificite() === null) return '';
         $formations = $ficheposte->getSpecificite()->getFormations();
 
         $texte = "";
