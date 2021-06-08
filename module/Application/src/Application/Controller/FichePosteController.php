@@ -365,8 +365,14 @@ class FichePosteController extends AbstractActionController {
             } else {
                 if ($form->isValid()) {
                     $this->getFichePosteService()->update($fiche);
-                    $structure->removeFichePosteRecrutement($fiche);
-                    $this->getStructureService()->update($structure);
+
+                    /**  !Attention! la fiche peut-être dans une sous-structure **/
+                    $structures = $this->getStructureService()->getStructuresFilles($structure);
+                    $structures[] = $structure;
+                    foreach ($structures as $structureTMP) {
+                        $structureTMP->removeFichePosteRecrutement($fiche);
+                        $this->getStructureService()->update($structureTMP);
+                    }
                 }
             }
         }

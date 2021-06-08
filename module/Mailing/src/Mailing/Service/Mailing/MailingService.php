@@ -257,7 +257,7 @@ class MailingService
         $this->create($mail);
 
 
-        $sujet = '[EMC2] ' . $subject;
+        $sujet = '['.$name.'] ' . $subject;
         if ($this->doNotSend) {
             $sujet .= ' {REDIR}';
         }

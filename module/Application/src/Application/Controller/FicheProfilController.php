@@ -70,9 +70,14 @@ class FicheProfilController extends AbstractActionController {
     {
         $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
         $structure = $ficheprofil->getStructure();
+
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] = $structure;
-        $fichespostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
+
+        $fichespostes = [];
+        foreach ($structures as $structure) {
+            foreach ($structure->getFichesPostesRecrutements() as $fichePoste) $fichespostes[$fichePoste->getId()] = $fichePoste;
+        }
 
         $adresse = $this->getParametreService()->getParametreByCode('PROFIL_DE_RECRUTEMENT', 'ADRESSE_DEFAUT')->getValeur();
         $form = $this->getFicheProfilForm();
