@@ -10,6 +10,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\View\Helper\CompetenceBlocViewHelper;
 use Formation\Entity\Db\Formation;
+use Formation\Provider\Privilege\FormationPrivileges;
 
 /**
  * @see \Application\View\Helper\ApplicationBlocViewHelper
@@ -40,8 +41,13 @@ if ($objet instanceof FicheMetier) {
     $canAcquisAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
     $canAcquisModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 } else {
-    $canAcquisAfficher = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_AFFICHER);
-    $canAcquisModifier = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+    if ($objet instanceof Formation) {
+        $canAcquisAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+        $canAcquisModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+    } else {
+        $canAcquisAfficher = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_AFFICHER);
+        $canAcquisModifier = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+    }
 }
 
 $canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher')  AND $canAcquisAfficher);
