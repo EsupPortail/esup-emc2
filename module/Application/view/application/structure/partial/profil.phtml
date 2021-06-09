@@ -169,7 +169,7 @@ ksort($fichesRecrutements)
                     <span class="icon ko" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
                 <?php endif; ?>
             </td>
-            <td> <?php echo $profil->getDate()->format('d/m/Y'); ?> </td>
+            <td> <?php echo $profil->getDateDossier()->format('d/m/Y'); ?> </td>
             <td>
                 <?php if ($canExporter) : ?>
                     <?php /** @see \Application\Controller\FicheProfilController::exporterAction() */?>
