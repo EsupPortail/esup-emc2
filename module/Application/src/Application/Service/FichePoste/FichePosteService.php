@@ -467,6 +467,10 @@ class FichePosteService {
                 if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
                 if ($this->getStructureService()->isResponsable($structure, $user)) return true;
             }
+            foreach ($fiche->getAgent()->getStructuresForcees() as $structureForcee) {
+                if ($this->getStructureService()->isGestionnaire($structureForcee->getStructure(), $user)) return true;
+                if ($this->getStructureService()->isResponsable($structureForcee->getStructure(), $user)) return true;
+            }
         }
         return false;
     }
