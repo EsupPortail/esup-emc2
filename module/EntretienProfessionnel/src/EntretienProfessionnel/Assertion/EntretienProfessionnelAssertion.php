@@ -3,6 +3,7 @@
 namespace EntretienProfessionnel\Assertion;
 
 use Application\Constant\RoleConstant;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -12,6 +13,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class EntretienProfessionnelAssertion extends AbstractAssertion {
 
+    use AgentServiceAwareTrait;
     use UserServiceAwareTrait;
     use StructureServiceAwareTrait;
 
@@ -38,6 +40,12 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 $isResponsable = $this->getStructureService()->isResponsable($structure, $user);
                 if ($isResponsable) break;
             }
+        }
+
+        $isHierarchie = false;
+        $hierarchies = $this->getAgentService()->getResponsablesHierarchiques($entity->getAgent());
+        foreach ($hierarchies as $hierarchie) {
+            if ($hierarchie === $user) $isHierarchie = true;
         }
 
         switch($privilege) {
@@ -94,7 +102,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::DRH:
                         return true;
                     case RoleConstant::RESPONSABLE:
-                        return $isResponsable;
+                        return $isHierarchie;
                     default:
                         return false;
                 }

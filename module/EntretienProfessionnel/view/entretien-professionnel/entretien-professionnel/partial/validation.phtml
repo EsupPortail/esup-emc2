@@ -15,7 +15,7 @@ $now = new DateTime();
 $dateOk = ($now > $entretien->getDateEntretien());
 $hasValidationResponsable = $entretien->getValidationResponsable();
 $hasValidationAgent = $entretien->getValidationAgent();
-$hasValidationDRH = $entretien->getValidationDRH();
+$hasValidationDRH = ($entretien->getValidationDRH());
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>
