@@ -128,6 +128,7 @@ class FicheMetierController extends AbstractActionController
                 $this->getFicheMetierService()->create($fiche);
                 $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
                 $this->getFicheMetierService()->update($fiche);
+
             }
         }
 

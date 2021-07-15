@@ -174,10 +174,10 @@ class FicheMetierService {
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @return FicheMetier
      */
-    public function getFicheMetier(int $id)
+    public function getFicheMetier(?int $id) : ?FicheMetier
     {
         $qb = $this->createQueryBuilder()
             ->addSelect('fmactivite')->leftJoin('ficheMetier.activites', 'fmactivite')
