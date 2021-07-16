@@ -195,4 +195,25 @@ class MetierController extends AbstractActionController {
         $vm->setTemplate('metier/default/default-form');
         return $vm;
     }
+
+    public function initialiserNiveauxAction()
+    {
+        $metiers = $this->getMetierService()->getMetiers();
+        foreach ($metiers as $metier) {
+            $niveau = $metier->getNiveau();
+            if ($metier->getNiveaux() === null AND $niveau !== null) {
+                $niveaux = new MetierNiveau();
+                $niveaux->setMetier($metier);
+                $niveaux->setBorneInferieure($niveau);
+                $niveaux->setBorneSuperieure($niveau);
+                $niveaux->setValeurRecommandee($niveau);
+                $niveaux->setDescription("Recupérer de l'ancien système de niveau");
+                $this->getMetierNiveauService()->create($niveaux);
+                $metier->setNiveaux($niveaux);
+                $this->getMetierService()->update($metier);
+            }
+        }
+
+        return $this->redirect()->toRoute('metier');
+    }
 }

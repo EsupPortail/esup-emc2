@@ -81,20 +81,6 @@ class MetierForm extends Form {
                 //'data-live-search'  => 'true',
             ],
         ]);
-        //niveau :: number
-        $this->add([
-            'type' => Number::class,
-            'name' => 'niveau',
-            'options' => [
-                'label' => "Niveau :",
-            ],
-            'attributes' => [
-                'id' => 'niveau',
-                'min'  => '1',
-                'max'  => '10',
-                'step' => '1',
-            ],
-        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -118,7 +104,6 @@ class MetierForm extends Form {
             'libelle_feminin'   => [ 'required' => false, ],
             'libelle_masculin'  => [ 'required' => false, ],
             'categorie'         => [ 'required' => false, ],
-            'niveau'            => [ 'required' => false, ],
         ]));
     }
 }

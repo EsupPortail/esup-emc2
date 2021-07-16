@@ -50,6 +50,7 @@ return [
                     'action' => [
                         'modifier',
                         'modifier-niveaux',
+                        'initialiser-niveaux',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_MODIFIER,
@@ -174,6 +175,16 @@ return [
                             'defaults' => [
                                 'controller' => MetierController::class,
                                 'action'     => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'initialiser-niveaux' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/initialiser-niveaux',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'initialiser-niveaux',
                             ],
                         ],
                     ],
