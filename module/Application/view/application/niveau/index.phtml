@@ -1,0 +1,63 @@
+<?php
+
+use Application\Entity\Db\Niveau;
+
+/**
+ * @see \Application\Controller\NiveauController::indexAction()
+ * @var Niveau[] $niveaux
+ */
+
+$this->headTitle('Index des niveaux');
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="page-header">
+            Index des niveaux
+        </h1>
+    </div>
+    <div class="pull-right">
+        <a href=""
+           class="ajax-modal btn btn-primary" data-event="modification"
+        >
+            <span class="icon ajouter"></span>
+            Ajouter un niveau
+        </a>
+    </div>
+</div>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th> Niveau </th>
+            <th> Libelle </th>
+            <th> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($niveaux as $niveau) : ?>
+            <tr>
+                <td> <?php echo $niveau->getNiveau(); ?> </td>
+                <td>
+                    <?php echo $niveau->getLibelle(); ?>
+                    <?php if ($niveau->getDescription()) : ?>
+                        <span class="icon information" title="<?php echo $niveau->getDescription(); ?> "
+                              data-toggle="tooltip" data-html="true";
+                        ></span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <span class="icon editer"></span>
+                    <?php if($niveau->estHistorise()) : ?>
+                        <span class="icon historiser"></span>
+                    <?php else : ?>
+                        <span class="icon restaurer"></span>
+                    <?php endif; ?>
+                    <span class="icon detruire"></span>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
