@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Metier\Entity\Db\MetierReference;
+use Metier\Entity\Db\Reference;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
@@ -132,7 +133,7 @@ class AjouterFicheMetierForm extends Form {
             /** @var FicheMetier $fiche */
             foreach ($listing as $fiche) {
                 $references = [];
-                /** @var MetierReference $reference */
+                /** @var Reference $reference */
                 foreach ($fiche->getMetier()->getReferences() as $reference) {
                     $references[] = $reference->getTitre();
                 }
@@ -170,7 +171,7 @@ class AjouterFicheMetierForm extends Form {
         if ($niveau === null) return;
 
         /** @var array $fiches */
-        $fiches = $this->getFicheMetierService()->getFichesMetiersWithNiveau($niveau - 1);
+        $fiches = $this->getFicheMetierService()->getFichesMetiersWithNiveau($niveau);
 
         $options = [];
         $dictionnaire = [];
@@ -186,13 +187,17 @@ class AjouterFicheMetierForm extends Form {
             $optionsoptions = [];
             /** @var FicheMetier $fiche */
             foreach ($listing as $fiche) {
+                $metier = $fiche->getMetier();
                 $references = [];
-                /** @var MetierReference $reference */
-                foreach ($fiche->getMetier()->getReferences() as $reference) {
+                /** @var Reference $reference */
+                foreach ($metier->getReferences() as $reference) {
                     $references[] = $reference->getTitre();
                 }
                 $str_references = implode(", ", $references);
-                $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . (!empty($references)?" (".$str_references.")":"") ;
+                $niveaux = "";
+//                if ($metier->getNiveaux()) $niveaux .= " [".$metier->getNiveaux()->getBorneInferieure().":".$metier->getNiveaux()->getBorneSuperieure()."]";
+//                $niveaux .= " >>> ".$agent->getMeilleurNiveau();
+                $optionsoptions[$fiche->getId()] = $metier->getLibelle() . (!empty($references)?" (".$str_references.")":"") . $niveaux;
             }
             $array = [
                 'label' => $clef,

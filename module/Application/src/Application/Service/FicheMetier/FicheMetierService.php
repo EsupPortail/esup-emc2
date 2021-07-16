@@ -91,6 +91,7 @@ class FicheMetierService {
             ->addSelect('domaine')->join('metier.domaines', 'domaine')
             ->addSelect('famille')->join('domaine.famille', 'famille')
             ->addSelect('etat')->join('ficheMetier.etat', 'etat')
+            ->addSelect('niveaux')->join('metier.niveaux', 'niveaux')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
             ;
@@ -149,8 +150,12 @@ class FicheMetierService {
     public function getFichesMetiersWithNiveau(int $niveau)
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('metier.niveau IS NULL or metier.niveau >= :niveau')
+            ->andWhere('niveaux.borneInferieure >= :niveau')
+            ->andWhere('niveaux.borneSuperieure <= :niveau')
             ->setParameter('niveau', $niveau)
+            ->andWhere('ficheMetier.histoDestruction IS NULL')
+            ->andWhere('etat.code = :ok')
+            ->setParameter('ok', FicheMetier::ETAT_VALIDE);
         ;
 
         $result = $qb->getQuery()->getResult();
