@@ -7,6 +7,7 @@ use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
+use Zend\Validator\Callback;
 
 class MetierNiveauForm extends Form {
 
@@ -87,9 +88,54 @@ class MetierNiveauForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'metier'                => [ 'required' => true,  ],
-            'borne_inferieure'      => [ 'required' => true,  ],
-            'borne_superieure'      => [ 'required' => true,  ],
-            'valeur_recommandee'    => [ 'required' => true,  ],
+            'borne_inferieure'      => [
+                'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "La borne inférieure est incompatible avec la borne supérieure",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            return ((int) $context["borne_inferieure"]) >= ((int) $context["borne_superieure"]);
+                        },
+                    ],
+                ]],
+            ],
+            'borne_superieure'      => [
+                'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "La borne supérieure est incompatible avec la borne inférieure",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            return ((int) $context["borne_inferieure"]) >= ((int) $context["borne_superieure"]);
+                        },
+                    ],
+                ]],
+            ],
+            'valeur_recommandee'    => [
+                'required' => true,
+                'validators' => [[
+                    'name' => Callback::class,
+                    'options' => [
+                        'messages' => [
+                            Callback::INVALID_VALUE => "La valeur recommandée doit être comprise entre la borne inférieure et la borne supérieure",
+                        ],
+                        'callback' => function ($value, $context = []) {
+                            $mini = min(((int) $context["borne_inferieure"]), ((int) $context["borne_superieure"]));
+                            $maxi = max(((int) $context["borne_inferieure"]), ((int) $context["borne_superieure"]));
+                            return (
+                                    $maxi>= ((int) $context["valeur_recommandee"])
+                                AND
+                                    $mini <= ((int) $context["valeur_recommandee"])
+                            );
+                        },
+                    ],
+                ]],
+            ],
             'description'           => [ 'required' => false,  ],
         ]));
     }
