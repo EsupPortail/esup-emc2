@@ -7,10 +7,11 @@
 
 use Metier\Entity\Db\Metier;
 
-$canAjouter        = $droits["ajouter"];
-$canEditer         = $droits["editer"];
-$canHistoriser     = $droits["historiser"];
-$canEffacer        = $droits["effacer"];
+$canAjouter                 = $droits["ajouter"];
+$canEditer                  = $droits["editer"];
+$canModifierNiveaux         = $droits["editer"];
+$canHistoriser              = $droits["historiser"];
+$canEffacer                 = $droits["effacer"];
 
 ?>
 <div class="row">
@@ -42,6 +43,7 @@ $canEffacer        = $droits["effacer"];
         <th> Références </th>
         <th> Catégorie </th>
         <th> Niveau </th>
+        <th> Niveaux </th>
         <th class="cell-action"> Action </th>
     </tr>
     </thead>
@@ -96,6 +98,16 @@ $canEffacer        = $droits["effacer"];
             </td>
             <td>
                 <?php echo ($metier->getNiveau())?$metier->getNiveau():""; ?>
+            </td>
+            <td>
+                <?php echo $this->metierNiveau($metier->getNiveaux()) ?>
+                <?php if ($canModifierNiveaux) : ?>
+                    <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                    <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon editer"</a>
+                <?php endif; ?>
             </td>
             <td>
                 <?php if ($canEditer) : ?>

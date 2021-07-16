@@ -9,9 +9,16 @@ use Metier\Form\Metier\MetierForm;
 use Metier\Form\Metier\MetierFormFactory;
 use Metier\Form\Metier\MetierHydrator;
 use Metier\Form\Metier\MetierHydratorFactory;
+use Metier\Form\MetierNiveau\MetierNiveauForm;
+use Metier\Form\MetierNiveau\MetierNiveauFormFactory;
+use Metier\Form\MetierNiveau\MetierNiveauHydrator;
+use Metier\Form\MetierNiveau\MetierNiveauHydratorFactory;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceFactory;
+use Metier\Service\MetierNiveau\MetierNiveauService;
+use Metier\Service\MetierNiveau\MetierNiveauServiceFactory;
+use Metier\View\Helper\MetierNiveauViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -42,6 +49,7 @@ return [
                     'controller' => MetierController::class,
                     'action' => [
                         'modifier',
+                        'modifier-niveaux',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_MODIFIER,
@@ -169,6 +177,16 @@ return [
                             ],
                         ],
                     ],
+                    'modifier-niveaux' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-niveaux/:metier',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'modifier-niveaux',
+                            ],
+                        ],
+                    ],
 
                     /** CARTOGRAPHIE **********************************************************************************/
 
@@ -191,6 +209,7 @@ return [
     'service_manager' => [
         'factories' => [
             MetierService::class => MetierServiceFactory::class,
+            MetierNiveauService::class => MetierNiveauServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -201,15 +220,18 @@ return [
     'form_elements' => [
         'factories' => [
             MetierForm::class => MetierFormFactory::class,
+            MetierNiveauForm::class => MetierNiveauFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,
+            MetierNiveauHydrator::class => MetierNiveauHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
         'invokables' => [
+            'metierNiveau' => MetierNiveauViewHelper::class,
             'typefonction' => TypeFonctionViewHelper::class,
         ],
     ],

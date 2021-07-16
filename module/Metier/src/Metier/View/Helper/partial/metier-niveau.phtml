@@ -1,0 +1,20 @@
+<?php
+
+use Metier\Entity\Db\MetierNiveau;
+
+/**
+ * @see \Metier\View\Helper\MetierNiveauViewHelper
+ * @var MetierNiveau|null $metierniveau
+ * @var array $options
+ */
+
+?>
+
+<?php if ($metierniveau === null) : ?>
+    Non&nbsp;précisé
+<?php else: ?>
+    [<?php echo $metierniveau->getBorneInferieure(); ?>:<?php echo $metierniveau->getBorneSuperieure(); ?>]<br/>
+    Recommandé&nbsp;<?php echo $metierniveau->getValeurRecommandee(); ?>
+<?php endif; ?>
+
+

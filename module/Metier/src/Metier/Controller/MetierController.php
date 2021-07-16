@@ -3,10 +3,14 @@
 namespace Metier\Controller;
 
 use Metier\Entity\Db\Metier;
+use Metier\Entity\Db\MetierNiveau;
 use Metier\Form\Metier\MetierFormAwareTrait;
+use Metier\Form\MetierNiveau\MetierNiveauFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
+use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Metier\Service\MetierNiveau\MetierNiveauServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -16,9 +20,11 @@ class MetierController extends AbstractActionController {
     use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
+    use MetierNiveauServiceAwareTrait;
     use ReferentielServiceAwareTrait;
 
     use MetierFormAwareTrait;
+    use MetierNiveauFormAwareTrait;
 
     public function indexAction() {
         $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
@@ -149,5 +155,44 @@ class MetierController extends AbstractActionController {
         return new ViewModel([
             'results' => $results,
         ]);
+    }
+
+    /** NIVEAUX *******************************************************************************************************/
+
+    public function modifierNiveauxAction()
+    {
+        $metier = $this->getMetierService()->getRequestedMetier($this);
+
+        $niveaux = $metier->getNiveaux();
+        if ($niveaux === null) {
+            $niveaux = new MetierNiveau();
+            $niveaux->setMetier($metier);
+        }
+
+        $form = $this->getMetierNiveauForm();
+        $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true));
+        $form->bind($niveaux);
+
+        $request = $this->getRequest();
+        if($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($niveaux->getHistoCreation()) {
+                    $this->getMetierNiveauService()->update($niveaux);
+                } else {
+                    $this->getMetierNiveauService()->create($niveaux);
+                    $metier->setNiveaux($niveaux);
+                    $this->getMetierService()->update($metier);
+                }
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier les niveaux du métier [".MetierService::computeEcritureInclusive($metier->getLibelleFeminin(), $metier->getLibelleMasculin())."]",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('metier/default/default-form');
+        return $vm;
     }
 }
