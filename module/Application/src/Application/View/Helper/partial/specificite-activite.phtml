@@ -1,0 +1,77 @@
+<?php
+
+use Application\Entity\Db\ActiviteDescription;
+use Application\Entity\Db\SpecificiteActivite;
+use Application\Provider\Privilege\FichePostePrivileges;
+
+/**
+ * @see \Application\View\Helper\SpecificitePosteViewHelper;
+ * @var SpecificiteActivite $specificiteActivite
+ * @var array $options
+ */
+
+$activite = $specificiteActivite->getActivite();
+$mode = 'affichage';
+if (isset($options["mode"])) $mode = $options["mode"];
+$mode = 'edition';
+
+$descriptions = $activite->getDescriptions();
+usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre() > $b->getOrdre();});
+
+$retrait = explode(";",$specificiteActivite->getRetrait());
+$retraits = [];
+foreach ($retrait as $item) $retraits[$item] = true;
+
+$canRetirerActivite = $this->isAllowed($specificiteActivite->getSpecificite()->getFiche(), FichePostePrivileges::FICHEPOSTE_MODIFIER);
+$canGererActivite = $canRetirerActivite;
+?>
+
+<div class="specificite-activite">
+    <div class="activite-titre">
+        <div class="row">
+            <div class="col-md-10">
+                <h3><?php echo $activite->getLibelle(); ?></h3>
+            </div>
+            <?php if($mode === 'edition') : ?>
+                <div class="pull-right activite-action">
+                    <?php if ($canGererActivite) : ?>
+                        <?php /** @see \Application\Controller\SpecificiteController::gererActiviteAction() */ ?>
+                        <a href="<?php echo $this->url('specificite/gerer-activite', ['specificite-activite' => $specificiteActivite->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon listing"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canRetirerActivite) : ?>
+                        <?php /** @see \Application\Controller\SpecificiteController::retirerActiviteAction() */ ?>
+                        <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $specificiteActivite->getId()], [], true); ?>">
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="activite-description">
+        <ul>
+            <?php foreach ($descriptions as $description) : ?>
+                <?php if (!isset($retraits[$description->getId()])) : ?>
+                    <li>
+                        <?php echo $description->getLibelle(); ?>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+
+<style>
+    div.specificite-activite div.activite-titre {
+        border: 1px solid black;
+        padding-left: 2rem;
+    }
+
+    div.specificite-activite div.activite-action {
+        padding-top: 2rem;
+        padding-right: 1rem;
+    }
+</style>

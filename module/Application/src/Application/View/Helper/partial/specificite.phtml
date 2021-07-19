@@ -1,11 +1,24 @@
 <?php
 
 /**
+ * @see \Application\View\Helper\SpecificitePosteViewHelper
  * @var SpecificitePoste $specificite
+ * @var array $options
  */
 
+use Application\Entity\Db\SpecificiteActivite;
 use Application\Entity\Db\SpecificitePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
 
+$mode = "affichage";
+if (isset($options["mode"])) $mode = $options["affichage"];
+//todo remove
+$mode = "edition";
+
+$canAjouterActivite = $this->isAllowed($specificite->getFiche(), FichePostePrivileges::FICHEPOSTE_MODIFIER);
+
+$activites = $specificite->getActivites();
+usort($activites, function (SpecificiteActivite $a, SpecificiteActivite $b) { return $a->getActivite()->getLibelle() > $b->getActivite()->getLibelle();});
 ?>
 
 <?php if ($specificite->getSpecificite()) : ?>
@@ -41,4 +54,27 @@ use Application\Entity\Db\SpecificitePoste;
 <?php if ($specificite->getFormations()) : ?>
     <h3> Formations ou qualifations nécessaires </h3>
     <?php echo $specificite->getFormations(); ?>
+<?php endif; ?>
+
+
+<?php if ($mode === 'edition' OR !empty(count($specificite->getActivites()))) : ?>
+    <div class="row">
+        <div class="col-md-6">
+            <h3> Activité spécifique au poste </h3>
+        </div>
+        <div class="pull-right">
+            <?php if ($mode === 'edition' AND $canAjouterActivite) : ?>
+                <?php /** @see \Application\Controller\SpecificiteController::ajouterActiviteAction() */ ?>
+                <a href="<?php echo $this->url('specificite/ajouter-activite', ['specificite-poste' => $specificite->getId()], [], true); ?>"
+                   class="btn btn-primary action ajax-modal" data-event="modification">
+                    <span class="icon ajouter"></span>
+                    Ajouter une activité spécifique
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php foreach ($activites as $activite) : ?>
+        <?php echo $this->specificiteActivite($activite, $options); ?>
+    <?php endforeach; ?>
 <?php endif; ?>

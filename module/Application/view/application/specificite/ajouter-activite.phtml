@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @see \Application\Controller\SpecificiteController::ajouterActiviteAction()
+ * @var \Application\Entity\Db\SpecificitePoste $specificite
+ * @var \Application\Entity\Db\Activite[] $activites
+ * @var \Application\Entity\Db\SpecificiteActivite[] $alreadyIn
+ */
+
+$options = [];
+foreach ($activites as $activite) {
+    if ($activite->estNonHistorise() AND !isset($alreadyIn[$activite->getId()])) $options[$activite->getId()] = $activite->getLibelle();
+}
+?>
+
+<form
+    method="post"
+    action="<?php echo $this->url("specificite/ajouter-activite", ["specificite-poste" => $specificite->getId()], [], true); ?>"
+>
+    <label for="activite">Activité à ajouter comme spécificité du poste : </label>
+    <select id="activite" name="activite" class="selectpicker form-control" data-live-search="true">
+        <option>Sélectionner une activité ... </option>
+        <?php foreach ($options as $id => $libelle) : ?>
+            <option value="<?php echo $id; ?>"><?php echo $libelle; ?></option>
+        <?php endforeach; ?>
+    </select>
+    <input type="submit" class="btn btn-primary" value="Enregistrer l'ajout">
+
+</form>
+
+<script>
+    $('select').selectpicker();
+</script>

@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @see \Application\Controller\SpecificiteController::gererActiviteAction()
+ * @var SpecificiteActivite $specificiteActivite
+ * @var ActiviteDescription[] $descriptions
+ */
+
+use Application\Entity\Db\ActiviteDescription;
+use Application\Entity\Db\SpecificiteActivite;
+
+usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre()>$b->getOrdre();});
+
+$retrait = explode(";",$specificiteActivite->getRetrait());
+$retraits = [];
+foreach ($retrait as $item) $retraits[(int) $item] = true;
+?>
+
+<form
+    method="post"
+    action="<?php echo $this->url("specificite/gerer-activite", ["specificite-activite" => $specificiteActivite->getId()], [], true); ?>"
+>
+    <?php foreach ($descriptions as $description) : ?>
+        <input type="checkbox" id="<?php echo $description->getId(); ?>" name="<?php echo $description->getId(); ?>"
+               <?php if (!isset($retraits[$description->getId()])) echo " checked "; ?>
+        >
+        <label for="<?php echo $description->getId(); ?>"><?php echo $description->getLibelle(); ?></label>
+        <br/>
+    <?php endforeach; ?>
+    <input type="submit" class="btn btn-primary" value="Enregistrer">
+</form>

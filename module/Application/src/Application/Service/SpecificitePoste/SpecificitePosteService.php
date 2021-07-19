@@ -3,9 +3,12 @@
 namespace Application\Service\SpecificitePoste;
 
 use Application\Entity\Db\SpecificitePoste;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class SpecificitePosteService {
     use EntityManagerAwareTrait;
@@ -54,4 +57,46 @@ class SpecificitePosteService {
         }
     }
 
+    /** REQUETAGE ***************************************************************************************************/
+
+    /**
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder() : QueryBuilder
+    {
+        $qb = $this->getEntityManager()->getRepository(SpecificitePoste::class)->createQueryBuilder('specificite')
+            ->leftJoin('specificite.activites', 'activite')->addSelect('specificite')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param int|null $id
+     * @return SpecificitePoste|null
+     */
+    public function getSpecificitePoste(?int $id) : ?SpecificitePoste
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('specificite.id = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs SpecificitePoste partagent le même id [".$id."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param AbstractActionController $controller
+     * @param string $param
+     * @return SpecificitePoste|null
+     */
+    public function getRequestedSpecificitePoste(AbstractActionController $controller, string $param="specificite-poste") : ?SpecificitePoste
+    {
+        $id = $controller->params()->fromRoute($param);
+        $result = $this->getSpecificitePoste($id);
+        return $result;
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class SpecificitePoste {
 
     /** @var integer */
@@ -23,6 +25,8 @@ class SpecificitePoste {
     private $moyens;
     /** @var string */
     private $formations;
+    /** @var ArrayCollection (SpecificiteActivite) */
+    private $activites;
 
     /**
      * @return int
@@ -167,15 +171,26 @@ class SpecificitePoste {
     }
 
     /**
-     * @param string $formations
+     * @param string|null $formations
      * @return SpecificitePoste
      */
-    public function setFormations($formations)
+    public function setFormations(?string $formations) : SpecificitePoste
     {
         $this->formations = $formations;
         return $this;
     }
 
+    /**
+     * @return SpecificiteActivite[]
+     */
+    public function getActivites(): array
+    {
+        $result = [];
+        foreach ($this->activites as $activite) {
+            $result[$activite->getId()] = $activite;
+        }
+        return $result;
+    }
 
     /** @return SpecificitePoste */
     public function clone_it()
@@ -188,6 +203,7 @@ class SpecificitePoste {
         $result->setContraintes($this->getContraintes());
         $result->setMoyens($this->getMoyens());
         $result->setFormations($this->getFormations());
+        //todo clone activite
         return $result;
     }
 
