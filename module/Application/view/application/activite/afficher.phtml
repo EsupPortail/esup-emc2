@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Provider\Privilege\ActivitePrivileges;
 
 /**
  * @see \Application\Controller\ActiviteController::afficherAction()
@@ -9,6 +10,8 @@ use Application\Entity\Db\FicheMetierTypeActivite;
  * @var Activite $activite
  * @var string $mode
  */
+
+$canModifierEnveloppe = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_MODIFIER));
 
 $competences    = $activite->getCompetences();
 $formations      = $activite->getFormations();
@@ -33,6 +36,28 @@ $this->headTitle($titre  . " : " .$activite->getCurrentActiviteLibelle()->getLib
     /** @var FicheMetierTypeActivite[] $ficheMetiers */
     $ficheMetiers = $activite->getFichesMetiers()->toArray();
 ?>
+
+<h2> Enveloppe de niveaux associé </h2>
+
+<?php echo $this->niveauEnveloppe($activite->getNiveaux()); ?>
+<?php if ($canModifierEnveloppe) : ?>
+    <?php if ($activite->getNiveaux() === null) : ?>
+        <?php /** @see \Application\Controller\ActiviteController::ajouterNiveauxAction() */ ?>
+        <a href="<?php echo $this->url('activite/ajouter-niveaux', ['activite' => $activite->getId()], [], true); ?>"
+           class="ajax-modal" data-event="modification">
+        <span class="icon ajouter"></span></a>
+    <?php else : ?>
+        <?php /** @see \Application\Controller\ActiviteController::modifierNiveauxAction() */ ?>
+        <a href="<?php echo $this->url('activite/modifier-niveaux', ['activite' => $activite->getId()], [], true); ?>"
+           class="ajax-modal" data-event="modification">
+            <span class="icon editer"></span></a>
+        <?php /** @see \Application\Controller\ActiviteController::retirerNiveauxAction() */ ?>
+        <a href="<?php echo $this->url('activite/retirer-niveaux', ['activite' => $activite->getId()], [], true); ?>"
+           >
+            <span class="icon detruire"></span></a>
+    <?php endif; ?>
+<?php endif; ?>
+
 <h2>
     Fiches métiers associées
     <span class="badge">

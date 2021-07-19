@@ -24,13 +24,20 @@ foreach ($retrait as $item) $retraits[$item] = true;
 
 $canRetirerActivite = $this->isAllowed($specificiteActivite->getSpecificite()->getFiche(), FichePostePrivileges::FICHEPOSTE_MODIFIER);
 $canGererActivite = $canRetirerActivite;
+
+$agent = $specificiteActivite->getSpecificite()->getFiche()->getAgent();
+$delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($agent):null;
 ?>
 
 <div class="specificite-activite">
-    <div class="activite-titre">
+    <div class="activite-titre delta_<?php echo $delta; ?>">
         <div class="row">
             <div class="col-md-10">
-                <h3><?php echo $activite->getLibelle(); ?></h3>
+                <h3><?php echo $activite->getLibelle(); ?>
+                    <?php if ($delta AND $delta !== 0) : ?>
+                        <span class="icon attention" title="Il existe un écart de <?php echo $delta; ?> niveau(x) entre l'agent et l'activité"></span>
+                    <?php endif; ?>
+                </h3>
             </div>
             <?php if($mode === 'edition') : ?>
                 <div class="pull-right activite-action">
@@ -73,5 +80,21 @@ $canGererActivite = $canRetirerActivite;
     div.specificite-activite div.activite-action {
         padding-top: 2rem;
         padding-right: 1rem;
+    }
+
+    div.delta_1 {
+        background: #ffffbf;
+    }
+
+    div.delta_2 {
+        background: #fdc075;
+    }
+
+    div.delta_3 {
+        background: #f09a80;
+    }
+
+    div.delta_4 {
+        background: #f08080;
     }
 </style>

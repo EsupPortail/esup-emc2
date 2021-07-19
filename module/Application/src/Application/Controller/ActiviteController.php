@@ -4,14 +4,17 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
+use Application\Entity\Db\NiveauEnveloppe;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\ModifierDescription\ModifierDescriptionFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
+use Application\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use Application\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
@@ -25,10 +28,12 @@ class ActiviteController  extends AbstractActionController {
     use ActiviteDescriptionServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
+    use NiveauEnveloppeServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use ModifierDescriptionFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
+    use NiveauEnveloppeFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionFormationFormAwareTrait;
@@ -365,4 +370,68 @@ class ActiviteController  extends AbstractActionController {
         return new ViewModel();
     }
 
+    /** ENVELOPPE DE NIVEAUX ******************************************************************************************/
+
+    public function ajouterNiveauxAction()
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+
+        $niveauEnveloppe = new NiveauEnveloppe();
+        $form = $this->getNiveauEnveloppeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('activite/ajouter-niveaux', ['activite' => $activite->getId()], [], true));
+        $form->bind($niveauEnveloppe);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getNiveauEnveloppeService()->create($niveauEnveloppe);
+                $activite->setNiveaux($niveauEnveloppe);
+                $this->getActiviteService()->update($activite);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Ajouter une enveloppe de niveau",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('application/default/default-form');
+        return $vm;
+    }
+
+    public function modifierNiveauxAction()
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+        $niveauEnveloppe = $activite->getNiveaux();
+
+        $form = $this->getNiveauEnveloppeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('activite/modifier-niveaux', ['activite' => $activite->getId()], [], true));
+        $form->bind($niveauEnveloppe);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getNiveauEnveloppeService()->update($niveauEnveloppe);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier l'enveloppe de niveau",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('application/default/default-form');
+        return $vm;
+    }
+
+    public function retirerNiveauxAction()
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+        $this->getNiveauEnveloppeService()->delete($activite->getNiveaux());
+
+        return $this->redirect()->toRoute('activite/afficher', ['activite' => $activite->getId()], [], true);
+
+    }
 }

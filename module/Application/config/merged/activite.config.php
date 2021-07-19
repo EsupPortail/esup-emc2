@@ -65,6 +65,10 @@ return [
                         'modifier-description',
                         'supprimer-description',
                         'update-ordre-description',
+
+                        'ajouter-niveaux',
+                        'modifier-niveaux',
+                        'retirer-niveaux',
                     ],
                     'privileges' => [
                         ActivitePrivileges::ACTIVITE_MODIFIER,
@@ -290,6 +294,37 @@ return [
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'supprimer-description',
+                            ],
+                        ],
+                    ],
+                    /** GESTION DES ENVELOPPES DE NIVEAUX *****************/
+                    'ajouter-niveaux' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-niveaux/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'ajouter-niveaux',
+                            ],
+                        ],
+                    ],
+                    'modifier-niveaux' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-niveaux/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'modifier-niveaux',
+                            ],
+                        ],
+                    ],
+                    'retirer-niveaux' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-niveaux/:activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'retirer-niveaux',
                             ],
                         ],
                     ],

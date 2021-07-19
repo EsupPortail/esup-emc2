@@ -29,6 +29,9 @@ class Activite implements HistoriqueAwareInterface,
     /** @var ArrayCollection (FicheMetier) */
     private $fiches;
 
+    /** @var NiveauEnveloppe|null */
+    private $niveaux;
+
     public function __construct()
     {
         $this->libelles = new ArrayCollection();
@@ -176,5 +179,27 @@ class Activite implements HistoriqueAwareInterface,
     {
         return $this->fiches;
     }
+
+    /** ENVELOPPE DE NIVEAUX ******************************************************************************************/
+
+    /**
+     * @return NiveauEnveloppe|null
+     */
+    public function getNiveaux(): ?NiveauEnveloppe
+    {
+        return $this->niveaux;
+    }
+
+    /**
+     * @param NiveauEnveloppe|null $niveaux
+     * @return Activite
+     */
+    public function setNiveaux(?NiveauEnveloppe $niveaux): Activite
+    {
+        $this->niveaux = $niveaux;
+        return $this;
+    }
+
+
 
 }
