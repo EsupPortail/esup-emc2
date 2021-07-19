@@ -9,6 +9,11 @@ use Application\Entity\Db\Niveau;
 
 $this->headTitle('Index des niveaux');
 
+$canAjouterNiveau = true;
+$canModifierNiveau = true;
+$canHistoriserNiveau = true;
+$canSupprimerNiveau = true;
+
 ?>
 
 <div class="row">
@@ -18,12 +23,15 @@ $this->headTitle('Index des niveaux');
         </h1>
     </div>
     <div class="pull-right">
-        <a href=""
-           class="ajax-modal btn btn-primary" data-event="modification"
-        >
-            <span class="icon ajouter"></span>
-            Ajouter un niveau
-        </a>
+        <?php if ($canAjouterNiveau) : ?>
+            <?php /** @see \Application\Controller\NiveauController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('niveau/ajouter', [], [], true); ?>"
+               class="ajax-modal btn btn-primary" data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter un niveau
+            </a>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -31,6 +39,7 @@ $this->headTitle('Index des niveaux');
     <thead>
         <tr>
             <th> Niveau </th>
+            <th> Étiquette </th>
             <th> Libelle </th>
             <th> Action </th>
         </tr>
@@ -39,6 +48,7 @@ $this->headTitle('Index des niveaux');
         <?php foreach ($niveaux as $niveau) : ?>
             <tr>
                 <td> <?php echo $niveau->getNiveau(); ?> </td>
+                <td> <?php echo $niveau->getEtiquette(); ?> </td>
                 <td>
                     <?php echo $niveau->getLibelle(); ?>
                     <?php if ($niveau->getDescription()) : ?>
@@ -48,16 +58,48 @@ $this->headTitle('Index des niveaux');
                     <?php endif; ?>
                 </td>
                 <td>
-                    <span class="icon editer"></span>
-                    <?php if($niveau->estHistorise()) : ?>
-                        <span class="icon historiser"></span>
-                    <?php else : ?>
-                        <span class="icon restaurer"></span>
+                    <?php if ($canModifierNiveau) : ?>
+                        <?php /** @see \Application\Controller\NiveauController::modifierAction() */?>
+                        <a href="<?php echo $this->url('niveau/modifier', ['niveau' => $niveau->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                           data-toogle="tooltip" data-html="true" title="Modifier le niveau <?php echo $niveau->getEtiquette(); ?>"
+                        >
+                            <span class="icon editer"></span></a>
                     <?php endif; ?>
-                    <span class="icon detruire"></span>
+                    <?php if ($canHistoriserNiveau) : ?>
+                        <?php if($niveau->estNonHistorise()) : ?>
+                            <?php /** @see \Application\Controller\NiveauController::historiserAction() */?>
+                            <a href="<?php echo $this->url('niveau/historiser', ['niveau' => $niveau->getId()], [], true); ?>"
+                               data-toogle="tooltip" data-html="true" title="Historiser le niveau <?php echo $niveau->getEtiquette(); ?>"
+                            >
+                                <span class="icon historiser"></span></a>
+                        <?php else : ?>
+                            <?php /** @see \Application\Controller\NiveauController::restaurerAction() */?>
+                            <a href="<?php echo $this->url('niveau/restaurer', ['niveau' => $niveau->getId()], [], true); ?>"
+                               data-toogle="tooltip" data-html="true" title="Rstaurer le niveau <?php echo $niveau->getEtiquette(); ?>"
+                            >
+                                <span class="icon restaurer"></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canSupprimerNiveau) : ?>
+                        <?php /** @see \Application\Controller\NiveauController::supprimerAction() */?>
+                        <a href="<?php echo $this->url('niveau/supprimer', ['niveau' => $niveau->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                           data-toogle="tooltip" data-html="true" title="Supprimer le niveau <?php echo $niveau->getEtiquette(); ?>"
+                        >
+                            <span class="icon detruire"></span></a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

@@ -2,14 +2,18 @@
 
 namespace Metier\Form\MetierNiveau;
 
+use Application\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Hidden;
-use Zend\Form\Element\Number;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 use Zend\Validator\Callback;
 
 class MetierNiveauForm extends Form {
+    use NiveauServiceAwareTrait;
+
+    public $niveaux;
 
     public function init()
     {
@@ -18,42 +22,45 @@ class MetierNiveauForm extends Form {
             'name' => 'metier',
         ]);
         $this->add([
-            'type' => Number::class,
+            'type' => Select::class,
             'name' => 'borne_inferieure',
             'options' => [
                 'label' => "Niveau le plus bas * :",
+                'empty_option' => 'Sélectionner le niveau le plus bas ...',
+                'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
                 'id' => 'borne_inferieure',
-                'min'  => '1',
-                'max'  => '5',
-                'step' => '1',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         $this->add([
-            'type' => Number::class,
+            'type' => Select::class,
             'name' => 'borne_superieure',
             'options' => [
-                'label' => "Niveau le plus élévé * :",
+                'label' => "Niveau le plus bas * :",
+                'empty_option' => 'Sélectionner le niveau le plus élevé ...',
+                'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
                 'id' => 'borne_superieure',
-                'min'  => '1',
-                'max'  => '5',
-                'step' => '1',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         $this->add([
-            'type' => Number::class,
+            'type' => Select::class,
             'name' => 'valeur_recommandee',
             'options' => [
-                'label' => "Valeur recommandée * :",
+                'label' => "Niveau le plus bas * :",
+                'empty_option' => 'Sélectionner le niveau recommandé ...',
+                'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
                 'id' => 'valeur_recommandee',
-                'min'  => '1',
-                'max'  => '5',
-                'step' => '1',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         // description
@@ -97,7 +104,9 @@ class MetierNiveauForm extends Form {
                             Callback::INVALID_VALUE => "La borne inférieure est incompatible avec la borne supérieure",
                         ],
                         'callback' => function ($value, $context = []) {
-                            return ((int) $context["borne_inferieure"]) >= ((int) $context["borne_superieure"]);
+                            $niveau_bas = $this->niveaux[((int) $context["borne_inferieure"])]->getNiveau();
+                            $niveau_haut = $this->niveaux[((int) $context["borne_superieure"])]->getNiveau();
+                            return ($niveau_bas >= $niveau_haut);
                         },
                     ],
                 ]],
@@ -111,7 +120,9 @@ class MetierNiveauForm extends Form {
                             Callback::INVALID_VALUE => "La borne supérieure est incompatible avec la borne inférieure",
                         ],
                         'callback' => function ($value, $context = []) {
-                            return ((int) $context["borne_inferieure"]) >= ((int) $context["borne_superieure"]);
+                            $niveau_bas = $this->niveaux[((int) $context["borne_inferieure"])]->getNiveau();
+                            $niveau_haut = $this->niveaux[((int) $context["borne_superieure"])]->getNiveau();
+                            return ($niveau_bas >= $niveau_haut);
                         },
                     ],
                 ]],
@@ -125,12 +136,15 @@ class MetierNiveauForm extends Form {
                             Callback::INVALID_VALUE => "La valeur recommandée doit être comprise entre la borne inférieure et la borne supérieure",
                         ],
                         'callback' => function ($value, $context = []) {
-                            $mini = min(((int) $context["borne_inferieure"]), ((int) $context["borne_superieure"]));
-                            $maxi = max(((int) $context["borne_inferieure"]), ((int) $context["borne_superieure"]));
+                            $niveau_bas = $this->niveaux[((int) $context["borne_inferieure"])]->getNiveau();
+                            $niveau_haut = $this->niveaux[((int) $context["borne_superieure"])]->getNiveau();
+                            $niveau_rec = $this->niveaux[((int) $context["valeur_recommandee"])]->getNiveau();
+                            $mini = min($niveau_bas, $niveau_haut);
+                            $maxi = max($niveau_bas, $niveau_haut);
                             return (
-                                    $maxi>= ((int) $context["valeur_recommandee"])
+                                    $maxi >= $niveau_rec
                                 AND
-                                    $mini <= ((int) $context["valeur_recommandee"])
+                                    $mini <= $niveau_rec
                             );
                         },
                     ],

@@ -2,6 +2,7 @@
 
 namespace Metier\Entity\Db;
 
+use Application\Entity\Db\Niveau;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -12,11 +13,11 @@ class MetierNiveau implements HistoriqueAwareInterface {
     private $id;
     /** @var Metier */
     private $metier;
-    /** @var int */
+    /** @var Niveau */
     private $borneInferieure;
-    /** @var int */
+    /** @var Niveau */
     private $borneSuperieure;
-    /** @var int */
+    /** @var Niveau */
     private $valeurRecommandee;
     /** @var string|null */
     private $description;
@@ -48,54 +49,54 @@ class MetierNiveau implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return int|null
+     * @return Niveau|null
      */
-    public function getBorneInferieure(): ?int
+    public function getBorneInferieure(): ?Niveau
     {
         return $this->borneInferieure;
     }
 
     /**
-     * @param int $borneInferieure
+     * @param Niveau $borneInferieure
      * @return MetierNiveau
      */
-    public function setBorneInferieure(int $borneInferieure): MetierNiveau
+    public function setBorneInferieure(Niveau $borneInferieure): MetierNiveau
     {
         $this->borneInferieure = $borneInferieure;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return Niveau|null
      */
-    public function getBorneSuperieure(): ?int
+    public function getBorneSuperieure(): ?Niveau
     {
         return $this->borneSuperieure;
     }
 
     /**
-     * @param int $borneSuperieure
+     * @param Niveau $borneSuperieure
      * @return MetierNiveau
      */
-    public function setBorneSuperieure(int $borneSuperieure): MetierNiveau
+    public function setBorneSuperieure(Niveau $borneSuperieure): MetierNiveau
     {
         $this->borneSuperieure = $borneSuperieure;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return Niveau|null
      */
-    public function getValeurRecommandee(): ?int
+    public function getValeurRecommandee(): ?Niveau
     {
         return $this->valeurRecommandee;
     }
 
     /**
-     * @param int $valeurRecommandee
+     * @param Niveau $valeurRecommandee
      * @return MetierNiveau
      */
-    public function setValeurRecommandee(int $valeurRecommandee): MetierNiveau
+    public function setValeurRecommandee(Niveau $valeurRecommandee): MetierNiveau
     {
         $this->valeurRecommandee = $valeurRecommandee;
         return $this;

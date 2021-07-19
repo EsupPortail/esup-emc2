@@ -27,6 +27,16 @@ class NiveauForm extends Form {
             ],
         ]);
         //libelle
+        $this->add([
+            'type' => Text::class,
+            'name' => 'etiquette',
+            'options' => [
+                'label' => "Etiquette * :",
+            ],
+            'attributes' => [
+                'id' => 'etiquette',
+            ],
+        ]);
         //niveau
         $this->add([
             'type' => Text::class,
@@ -70,6 +80,7 @@ class NiveauForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'niveau'                => [ 'required' => true,  ],
+            'etiquette'             => [ 'required' => true,  ],
             'libelle'               => [ 'required' => true,  ],
             'description'           => [ 'required' => false,  ],
         ]));

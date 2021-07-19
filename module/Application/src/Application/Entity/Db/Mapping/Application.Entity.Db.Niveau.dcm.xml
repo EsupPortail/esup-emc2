@@ -7,8 +7,9 @@
         </id>
 
         <field name="niveau"      type="integer"                 column="niveau"      nullable="false"/>
+        <field name="etiquette"   type="string" length="64"      column="label"       nullable="false"/>
         <field name="libelle"     type="string" length="1024"    column="libelle"     nullable="false"/>
-        <field name="description" type="string" length="9999"    column="description" nullable="false"/>
+        <field name="description" type="string" length="9999"    column="description" nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

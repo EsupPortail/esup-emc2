@@ -13,6 +13,8 @@ class Niveau implements HistoriqueAwareInterface {
     /** @var int */
     private $niveau;
     /** @var string */
+    private $etiquette;
+    /** @var string */
     private $libelle;
     /** @var string|null */
     private $description;
@@ -23,6 +25,24 @@ class Niveau implements HistoriqueAwareInterface {
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEtiquette(): ?string
+    {
+        return $this->etiquette;
+    }
+
+    /**
+     * @param string $etiquette
+     * @return Niveau
+     */
+    public function setEtiquette(string $etiquette): Niveau
+    {
+        $this->etiquette = $etiquette;
+        return $this;
     }
 
     /**
@@ -39,7 +59,7 @@ class Niveau implements HistoriqueAwareInterface {
      */
     public function setNiveau(int $niveau): Niveau
     {
-        $this->niveau = $niveaux;
+        $this->niveau = $niveau;
         return $this;
     }
 

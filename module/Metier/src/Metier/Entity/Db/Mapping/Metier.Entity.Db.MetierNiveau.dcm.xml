@@ -9,10 +9,15 @@
         <one-to-one target-entity="Metier\Entity\Db\Metier" field="metier">
             <join-column name="metier_id" referenced-column-name="id" />
         </one-to-one>
-
-        <field name="borneInferieure"   type="integer"                    column="borne_inferieure_id"    nullable="false"  />
-        <field name="borneSuperieure"   type="integer"                    column="borne_superieure_id"    nullable="false"  />
-        <field name="valeurRecommandee" type="integer"                    column="valeur_recommandee_id"  nullable="false"  />
+        <many-to-one target-entity="Application\Entity\Db\Niveau"  field="borneInferieure">
+            <join-column name="borne_inferieure_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Niveau"  field="borneSuperieure">
+            <join-column name="borne_superieure_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Application\Entity\Db\Niveau"  field="valeurRecommandee">
+            <join-column name="valeur_recommandee_id" referenced-column-name="id"/>
+        </many-to-one>
         <field name="description"       type="string"   length="9999"     column="description"            nullable="true"  />
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

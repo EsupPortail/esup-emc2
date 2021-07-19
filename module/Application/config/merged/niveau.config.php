@@ -27,7 +27,7 @@ return [
                         'modifier',
                         'historiser',
                         'restaurer',
-                        'detruire',
+                        'supprimer',
                     ],
                     'privileges' => [
                         MetierPrivileges::METIER_AFFICHER,
@@ -77,6 +77,46 @@ return [
                             'defaults' => [
                                 'controller' => NiveauController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                    ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:niveau',
+                            'defaults' => [
+                                'controller' => NiveauController::class,
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                    ],
+                    'historiser' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser/:niveau',
+                            'defaults' => [
+                                'controller' => NiveauController::class,
+                                'action'     => 'historiser',
+                            ],
+                        ],
+                    ],
+                    'restaurer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer/:niveau',
+                            'defaults' => [
+                                'controller' => NiveauController::class,
+                                'action'     => 'restaurer',
+                            ],
+                        ],
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:niveau',
+                            'defaults' => [
+                                'controller' => NiveauController::class,
+                                'action'     => 'supprimer',
                             ],
                         ],
                     ],

@@ -90,7 +90,7 @@ class NiveauService {
         $niveaux = $this->getNiveaux($champs, $ordre);
         $options = [];
         foreach ($niveaux as $niveau) {
-            $options[$niveau->getId()] = "" . $niveau->getNiveau() . " - " . $niveau->getLibelle();
+            $options[$niveau->getId()] = "" . $niveau->getEtiquette() . " - " . $niveau->getLibelle();
         }
         return $options;
     }

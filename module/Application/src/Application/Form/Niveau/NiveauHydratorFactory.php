@@ -12,7 +12,7 @@ class NiveauHydratorFactory {
      */
     public function __invoke(ContainerInterface $container)
     {
-        $hydrator = $container->get('HydratorManager')->get(NiveauHydrator::class);
+        $hydrator = new NiveauHydrator();
         return $hydrator;
     }
 }

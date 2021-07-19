@@ -13,8 +13,8 @@ use Metier\Entity\Db\MetierNiveau;
 <?php if ($metierniveau === null) : ?>
     Non&nbsp;précisé
 <?php else: ?>
-    [<?php echo $metierniveau->getBorneInferieure(); ?>:<?php echo $metierniveau->getBorneSuperieure(); ?>]<br/>
-    Recommandé&nbsp;<?php echo $metierniveau->getValeurRecommandee(); ?>
+    [<?php echo $metierniveau->getBorneInferieure()->getEtiquette(); ?>:<?php echo $metierniveau->getBorneSuperieure()->getEtiquette(); ?>]<br/>
+    Recommandé&nbsp;<?php echo $metierniveau->getValeurRecommandee()->getEtiquette(); ?>
 <?php endif; ?>
 
 
