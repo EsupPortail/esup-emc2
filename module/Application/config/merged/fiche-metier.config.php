@@ -53,6 +53,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'ajouter',
+                        'dupliquer',
 //                        'ajouter-terminer',
                         'ajouter-avec-metier',
                     ],
@@ -198,6 +199,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'dupliquer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/dupliquer/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'dupliquer',
                             ],
                         ],
                         'may_terminate' => true,

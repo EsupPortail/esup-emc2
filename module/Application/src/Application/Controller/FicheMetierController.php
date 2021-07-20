@@ -141,6 +141,17 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
+    public function dupliquerAction()
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        if ($fiche !== null) {
+            $duplicata = $this->getFicheMetierService()->dupliquerFicheMetier($fiche);
+            return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $duplicata->getId()], [], true);
+        }
+        exit();
+    }
+
     public function editerAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);

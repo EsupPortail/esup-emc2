@@ -2,7 +2,12 @@
 
 namespace Application\Service\FicheMetier;
 
+use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Competence;
+use Application\Entity\Db\CompetenceElement;
+use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Metier\Entity\Db\Domaine;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Application\Entity\Db\FicheMetier;
@@ -17,11 +22,15 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractController;
 
 class FicheMetierService {
     use ApplicationServiceAwareTrait;
+    use ApplicationElementServiceAwareTrait;
     use CompetenceServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
+    use EtatServiceAwareTrait;
     use FormationServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
 
@@ -310,7 +319,6 @@ class FicheMetierService {
      */
     public function updateFormations(FicheMetier $fiche, array $data)
     {
-
         $formationIds = [];
         if (isset($data['formations'])) $formationIds = $data['formations'];
 
@@ -461,6 +469,70 @@ class FicheMetierService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @param FicheMetier $fiche
+     * @return FicheMetier
+     */
+    public function dupliquerFicheMetier(FicheMetier $fiche) : FicheMetier
+    {
+        $duplicata = new FicheMetier();
+        //base
+        $duplicata->setMetier($fiche->getMetier());
+        $duplicata->setExpertise($fiche->hasExpertise());
+        $this->create($duplicata);
+
+        //missions principales
+        /** @var FicheMetierTypeActivite $activite */
+        foreach ($fiche->getActivites() as $activite) {
+            $activiteDuplicata = new FicheMetierTypeActivite();
+            $activiteDuplicata->setActivite($activite->getActivite());
+            $activiteDuplicata->setPosition($activite->getPosition());
+            $activiteDuplicata->setFiche($duplicata);
+            try {
+                $this->getEntityManager()->persist($activiteDuplicata);
+                $this->getEntityManager()->flush($activiteDuplicata);
+            } catch (ORMException $e) {
+                throw new RuntimeException("Un problème est survenu lors de la duplication d'un activité");
+            }
+        }
+
+        //applications
+        /** @var ApplicationElement $application */
+        foreach ($fiche->getApplicationCollection() as $application) {
+            $element = new ApplicationElement();
+            $element->setApplication($application->getApplication());
+            $element->setCommentaire($application->getCommentaire());
+            $element->setClef($application->isClef());
+            $this->getApplicationElementService()->create($element);
+            if ($application->estHistorise()) {
+                $this->getApplicationElementService()->historise($element);
+                $this->getApplicationElementService()->update($element);
+            }
+            $duplicata->addApplicationElement($element);
+        }
+
+        //compétences
+        /** @var CompetenceElement $competence */
+        foreach ($fiche->getCompetenceCollection() as $competence) {
+            $element = new CompetenceElement();
+            $element->setCompetence($competence->getCompetence());
+            $element->setCommentaire($competence->getCommentaire());
+            $element->setClef($competence->isClef());
+            $this->getCompetenceElementService()->create($element);
+            if ($competence->estHistorise()) {
+                $this->getCompetenceElementService()->historise($element);
+                $this->getCompetenceElementService()->update($element);
+            }
+            $duplicata->addCompetenceElement($element);
+        }
+
+        //etat
+        $duplicata->setEtat($this->getEtatService()->getEtatByCode(FicheMetier::ETAT_REDACTION));
+        $this->update($duplicata);
+
+        return $duplicata;
     }
 
 }

@@ -91,6 +91,11 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                        title="Modifier la fiche metier">
                         <span class="icon editer"></span></a>
                 <?php endif; ?>
+                <?php if ($canEditer) : ?>
+                    <a href="<?php echo $this->url('fiche-metier-type/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
+                       title="Dupliquer la fiche metier">
+                        <span class="icon cloner"></span></a>
+                <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if($fiche->estNonHistorise()) :?>
                         <a href="<?php echo $this->url('fiche-metier-type/historiser', ['id' => $fiche->getId()], [], true); ?>"
