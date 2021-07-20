@@ -146,8 +146,6 @@ class ConfigurationService {
                 $this->getCompetenceElementService()->create($competenceElement);
                 $this->getHasCompetenceCollectionService()->addCompetence($fiche,$competenceElement);
             }
-            if ($ajout->getEntityType() === Formation::class   AND !$fiche->hasFormation($ajout->getEntity()))
-                $this->getFicheMetierService()->addFormation($fiche, $ajout->getEntity(), $fiche->getHistoCreation());
         }
         $this->getFicheMetierService()->update($fiche);
         return $fiche;

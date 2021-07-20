@@ -7,7 +7,6 @@ use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Formation\Entity\Db\Formation;
 use Metier\Entity\Db\Metier;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
@@ -35,29 +34,26 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
 
     /** @var ArrayCollection */
     private $activites;
-    /** @var ArrayCollection */
-    private $formations;
 
     public function __construct()
     {
         $this->activites = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
-        $this->formations = new ArrayCollection();
     }
 
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
     /**
-     * @return Metier
+     * @return Metier|null
      */
-    public function getMetier()
+    public function getMetier() : ?Metier
     {
         return $this->metier;
     }
@@ -66,7 +62,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
      * @param Metier|null $metier
      * @return FicheMetier
      */
-    public function setMetier(?Metier $metier)
+    public function setMetier(?Metier $metier) : FicheMetier
     {
         $this->metier = $metier;
         return $this;
@@ -75,7 +71,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     /**
      * @return bool
      */
-    public function hasExpertise() {
+    public function hasExpertise() : bool
+    {
         return $this->hasExpertise;
     }
 
@@ -83,7 +80,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
      * @param bool $has
      * @return $this
      */
-    public function setExpertise(bool $has) {
+    public function setExpertise(bool $has) : FicheMetier
+    {
         $this->hasExpertise = $has;
         return $this;
     }
@@ -91,7 +89,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
      /**
      * @return string
      */
-    public function getMissionsPrincipales()
+    public function getMissionsPrincipales() : string
     {
         $texte = '<ul>';
         $activites = $this->getActivites();
@@ -109,75 +107,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
      * Pour simplifier le tri selon la position est fait à ce niveau
      * @return FicheMetierTypeActivite[]
      */
-    public function getActivites()
+    public function getActivites() : array
     {
         $activites =  $this->activites->toArray();
         usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() > $b->getPosition();});
         return $activites;
-    }
-
-    /**
-     * @param FicheMetierTypeActivite $activite
-     * @return FicheMetier
-     */
-    public function addActivite(FicheMetierTypeActivite $activite)
-    {
-        $this->activites->add($activite);
-        return $this;
-    }
-
-    /**
-     * @param FicheMetierTypeActivite $activite
-     * @return FicheMetier
-     */
-    public function removeActivite(FicheMetierTypeActivite $activite)
-    {
-        $this->activites->removeElement($activite);
-        return $this;
-    }
-
-    /** FORMATION *****************************************************************************************************/
-
-    /**
-     * @return Formation[]
-     */
-    public function getFormations()
-    {
-        return $this->formations->toArray();
-    }
-
-    /**
-     * @param Formation $formation
-     * @return FicheMetier
-     */
-    public function addFormation(Formation $formation)
-    {
-        $this->formations->add($formation);
-        return $this;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return FicheMetier
-     */
-    public function removeFormation(Formation $formation)
-    {
-        $this->formations->removeElement($formation);
-        return $this;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return boolean
-     */
-    public function hasFormation(Formation $formation)
-    {
-        return $this->formations->contains($formation);
-    }
-
-    public function clearFormations()
-    {
-        $this->formations->clear();
     }
 
     /** FONCTION POUR MACRO *******************************************************************************************/
@@ -185,7 +119,8 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     /**
      * @return string
      */
-    public function getIntitule() {
+    public function getIntitule() : string
+    {
         $metier = $this->getMetier();
         if ($metier === null) return "Aucun métier est associé.";
         return $metier->getLibelle();
@@ -194,7 +129,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     /**
      * @return string
      */
-    public function getMissions()
+    public function getMissions() : string
     {
         $texte = "";
         foreach ($this->getActivites() as $activite) {
@@ -212,7 +147,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
         return $texte;
     }
 
-    public function getCompetences() {
+    /**
+     * @return string
+     */
+    public function getCompetences() : string
+    {
         $competences = $this->getCompetenceListe();
 
         $texte = "";
@@ -271,7 +210,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
         return $this->getComptencesByType(CompetenceType::CODE_COMPORTEMENTALE);
     }
 
-    public function getApplicationsAffichage() {
+    /**
+     * @return string
+     */
+    public function getApplicationsAffichage() : string
+    {
         $applications = $this->getApplicationListe();
 
         $texte = "";

@@ -302,51 +302,6 @@ class FicheMetierService {
     }
 
     /**
-     * //TODO remove that after implementing FormationElement
-     * @param FicheMetier $fiche
-     * @param Formation $formation
-     * @param DateTime|null $date
-     */
-    public function addFormation(FicheMetier $fiche, Formation $formation, ?DateTime $date = null)
-    {
-        $fiche->addFormation($formation);
-    }
-
-    /**
-     * @param FicheMetier $fiche
-     * @param array $data
-     * @return FicheMetier
-     */
-    public function updateFormations(FicheMetier $fiche, array $data)
-    {
-        $formationIds = [];
-        if (isset($data['formations'])) $formationIds = $data['formations'];
-
-        foreach ($formationIds as $formationId) {
-            $formation = $this->getFormationService()->getFormation($formationId);
-            if (!$fiche->hasFormation($formation)) {
-                $fiche->addFormation($formation);
-            }
-        }
-
-        $formations = $fiche->getFormations();
-        /** @var Formation $formation */
-        foreach ($formations as $formation) {
-            if (array_search($formation->getId(), $formationIds) === false) {
-                $fiche->removeFormation($formation);
-            }
-        }
-
-        try {
-            $this->getEntityManager()->flush($fiche);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
-        }
-
-        return $fiche;
-    }
-
-    /**
      * @param FicheMetier $fiche
      * @param array $data
      * @return FicheMetier

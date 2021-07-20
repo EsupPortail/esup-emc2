@@ -585,14 +585,6 @@ class FichePosteService {
             }
         }
 
-        foreach ($fichesMetiers as $ficheMetier) {
-            foreach ($ficheMetier->getFormations() as $formation) {
-                $dictionnaire[$formation->getId()]["object"] = $formation;
-                $dictionnaire[$formation->getId()]["raison"][] = $ficheMetier;
-                $dictionnaire[$formation->getId()]["conserve"] = true;
-            }
-        }
-
         foreach ($activites as $activite) {
             foreach ($activite->getFormations() as $formation) {
                 $dictionnaire[$formation->getId()]["object"] = $formation;
