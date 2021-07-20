@@ -69,6 +69,7 @@ return [
                         'ajouter-niveaux',
                         'modifier-niveaux',
                         'retirer-niveaux',
+                        'initialiser-niveaux',
                     ],
                     'privileges' => [
                         ActivitePrivileges::ACTIVITE_MODIFIER,
@@ -325,6 +326,16 @@ return [
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'retirer-niveaux',
+                            ],
+                        ],
+                    ],
+                    'initialiser-niveaux' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/initialiser-niveaux',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'initialiser-niveaux',
                             ],
                         ],
                     ],

@@ -2,15 +2,16 @@
 
 namespace Metier\Controller;
 
+use Application\Entity\Db\NiveauEnveloppe;
+use Application\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
+use Application\Service\Niveau\NiveauServiceAwareTrait;
+use Application\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use Metier\Entity\Db\Metier;
-use Metier\Entity\Db\MetierNiveau;
 use Metier\Form\Metier\MetierFormAwareTrait;
-use Metier\Form\MetierNiveau\MetierNiveauFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use Metier\Service\MetierNiveau\MetierNiveauServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -20,11 +21,12 @@ class MetierController extends AbstractActionController {
     use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
-    use MetierNiveauServiceAwareTrait;
+    use NiveauServiceAwareTrait;
+    use NiveauEnveloppeServiceAwareTrait;
     use ReferentielServiceAwareTrait;
 
     use MetierFormAwareTrait;
-    use MetierNiveauFormAwareTrait;
+    use NiveauEnveloppeFormAwareTrait;
 
     public function indexAction() {
         $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
@@ -165,11 +167,10 @@ class MetierController extends AbstractActionController {
 
         $niveaux = $metier->getNiveaux();
         if ($niveaux === null) {
-            $niveaux = new MetierNiveau();
-            $niveaux->setMetier($metier);
+            $niveaux = new NiveauEnveloppe();
         }
 
-        $form = $this->getMetierNiveauForm();
+        $form = $this->getNiveauEnveloppeForm();
         $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true));
         $form->bind($niveaux);
 
@@ -179,9 +180,9 @@ class MetierController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 if ($niveaux->getHistoCreation()) {
-                    $this->getMetierNiveauService()->update($niveaux);
+                    $this->getNiveauEnveloppeService()->update($niveaux);
                 } else {
-                    $this->getMetierNiveauService()->create($niveaux);
+                    $this->getNiveauEnveloppeService()->create($niveaux);
                     $metier->setNiveaux($niveaux);
                     $this->getMetierService()->update($metier);
                 }
@@ -200,15 +201,14 @@ class MetierController extends AbstractActionController {
     {
         $metiers = $this->getMetierService()->getMetiers();
         foreach ($metiers as $metier) {
-            $niveau = $metier->getNiveau();
+            $niveau = $this->getNiveauService()->getNiveau($metier->getNiveau());
             if ($metier->getNiveaux() === null AND $niveau !== null) {
-                $niveaux = new MetierNiveau();
-                $niveaux->setMetier($metier);
+                $niveaux = new NiveauEnveloppe();
                 $niveaux->setBorneInferieure($niveau);
                 $niveaux->setBorneSuperieure($niveau);
                 $niveaux->setValeurRecommandee($niveau);
                 $niveaux->setDescription("Recupérer de l'ancien système de niveau");
-                $this->getMetierNiveauService()->create($niveaux);
+                $this->getNiveauEnveloppeService()->create($niveaux);
                 $metier->setNiveaux($niveaux);
                 $this->getMetierService()->update($metier);
             }

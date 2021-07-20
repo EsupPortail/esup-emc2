@@ -2,13 +2,14 @@
 
 namespace Metier\Controller;
 
+use Application\Form\NiveauEnveloppe\NiveauEnveloppeForm;
+use Application\Service\Niveau\NiveauService;
+use Application\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Interop\Container\ContainerInterface;
 use Metier\Form\Metier\MetierForm;
-use Metier\Form\MetierNiveau\MetierNiveauForm;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Metier\Service\Metier\MetierService;
-use Metier\Service\MetierNiveau\MetierNiveauService;
 use Metier\Service\Referentiel\ReferentielService;
 
 class MetierControllerFactory {
@@ -23,31 +24,34 @@ class MetierControllerFactory {
          * @var DomaineService $domaineService
          * @var FamilleProfessionnelleService $familleService
          * @var MetierService $metierService
-         * @var MetierNiveauService $metierNiveauService
+         * @var NiveauService $niveauService
+         * @var NiveauEnveloppeService $niveauEnveloppeService
          * @var ReferentielService $referentielService
          */
         $domaineService = $container->get(DomaineService::class);
         $familleService = $container->get(FamilleProfessionnelleService::class);
         $metierService = $container->get(MetierService::class);
-        $metierNiveauService = $container->get(MetierNiveauService::class);
+        $niveauService = $container->get(NiveauService::class);
+        $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
         $referentielService = $container->get(ReferentielService::class);
 
         /**
          * @var MetierForm $metierForm
-         * @var MetierNiveauForm $metierNiveauForm
+         * @var NiveauEnveloppeForm $niveauEnveloppeForm
          */
         $metierForm = $container->get('FormElementManager')->get(MetierForm::class);
-        $metierNiveauForm = $container->get('FormElementManager')->get(MetierNiveauForm::class);
+        $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
 
         /** @var MetierController $controller */
         $controller = new MetierController();
         $controller->setDomaineService($domaineService);
         $controller->setFamilleProfessionnelleService($familleService);
         $controller->setMetierService($metierService);
-        $controller->setMetierNiveauService($metierNiveauService);
+        $controller->setNiveauService($niveauService);
+        $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setReferentielService($referentielService);
         $controller->setMetierForm($metierForm);
-        $controller->setMetierNiveauForm($metierNiveauForm);
+        $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
 
         return $controller;
     }

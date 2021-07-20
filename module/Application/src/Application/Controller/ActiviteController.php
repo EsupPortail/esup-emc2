@@ -4,6 +4,8 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\NiveauEnveloppe;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
@@ -433,5 +435,35 @@ class ActiviteController  extends AbstractActionController {
 
         return $this->redirect()->toRoute('activite/afficher', ['activite' => $activite->getId()], [], true);
 
+    }
+
+    public function initialiserNiveauxAction()
+    {
+        $activites = $this->getActiviteService()->getActivites();
+        foreach ($activites as $activite) {
+            if ($activite->getNiveaux() === null) {
+                $inferieure = null;
+                $superieure = null;
+                /** @var FicheMetierTypeActivite $ficheMetier */
+                foreach ($activite->getFichesMetiers() as $ficheMetier) {
+                    $niveaux = $ficheMetier->getFiche()->getMetier()->getNiveaux();
+                    if ($niveaux) {
+                        if ($inferieure === null OR $niveaux->getBorneInferieure() < $inferieure) $inferieure = $niveaux->getBorneInferieure();
+                        if ($superieure === null OR $niveaux->getBorneSuperieure() > $superieure) $superieure = $niveaux->getBorneSuperieure();
+                    }
+                }
+                if ($inferieure !== null AND $superieure !== null) {
+                    $niveaux = new NiveauEnveloppe();
+                    $niveaux->setBorneInferieure($inferieure);
+                    $niveaux->setBorneSuperieure($superieure);
+                    $niveaux->setDescription("Recupérer de l'ancien système de niveau");
+                    $this->getNiveauEnveloppeService()->create($niveaux);
+                    $activite->setNiveaux($niveaux);
+                    $this->getActiviteService()->update($activite);
+                }
+            }
+        }
+
+        return $this->redirect()->toRoute('activite');
     }
 }

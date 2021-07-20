@@ -11,7 +11,7 @@
         <field name="libelleMasculin"   type="string"   length="128"      column="libelle_masculin"                nullable="false"  />
 
         <field name="niveau"            type="integer"                    column="niveau"                 nullable="false"  />
-        <one-to-one target-entity="Metier\Entity\Db\MetierNiveau" field="niveaux"/>
+        <one-to-one target-entity="Application\Entity\Db\NiveauEnveloppe" field="niveaux"/>
 
         <one-to-many target-entity="Metier\Entity\Db\Reference" mapped-by="metier" field="references"/>
 

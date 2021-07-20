@@ -69,9 +69,9 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function hasExpertise() : bool
+    public function hasExpertise() : ?bool
     {
         return $this->hasExpertise;
     }

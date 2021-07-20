@@ -24,7 +24,6 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
     <tr>
         <th> Libellé </th>
         <th> Domaine </th>
-        <th class="cell-expertise"> Expertise </th>
         <th  style="width:8rem;"> État </th>
         <th  style="width:14rem;"> Action </th>
     </tr>
@@ -38,6 +37,9 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                 >
                     <?php echo $fiche->getMetier()->getLibelle(true); ?>
                 </span>
+                <?php if ($fiche->hasExpertise() === true) : ?>
+                    <span class="label" style="background: lightskyblue;">Expertise</span>
+                <?php endif; ?>
             </td>
             <td>
                 <ul>
@@ -48,11 +50,6 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         </li>
                     <?php endforeach; ?>
                 </ul>
-            </td>
-            <td class="cell-expertise">
-                <?php if ($fiche->hasExpertise()) : ?>
-                    <span class="icon ok" style="color:darkgreen;"></span>
-                <?php endif; ?>
             </td>
             <td class="cell-etat">
                 <?php if ($canEditer) : ?>
@@ -92,6 +89,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         <span class="icon editer"></span></a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
+                    <?php /** @see \Application\Controller\FicheMetierController::dupliquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier-type/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                        title="Dupliquer la fiche metier">
                         <span class="icon cloner"></span></a>

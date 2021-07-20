@@ -81,6 +81,8 @@ class FicheMetierController extends AbstractActionController
         $domaines = $this->getDomaineService()->getDomaines();
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
+//        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersForIndex();
+
 
         return new ViewModel([
             'params' => $params,
@@ -93,6 +95,8 @@ class FicheMetierController extends AbstractActionController
     public function afficherAction()
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
+
+        $missions = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche, true);

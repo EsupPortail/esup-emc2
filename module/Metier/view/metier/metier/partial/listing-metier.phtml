@@ -96,7 +96,7 @@ $canEffacer                 = $droits["effacer"];
                 <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
             </td>
             <td>
-                <?php echo $this->metierNiveau($metier->getNiveaux()) ?>
+                <?php echo $this->niveauEnveloppe($metier->getNiveaux()) ?>
                 <?php if ($canModifierNiveaux) : ?>
                     <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
                     <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"

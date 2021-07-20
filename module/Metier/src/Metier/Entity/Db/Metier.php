@@ -4,6 +4,8 @@ namespace Metier\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Categorie;
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Service\Metier\MetierService;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
@@ -24,7 +26,7 @@ class Metier implements HistoriqueAwareInterface {
     private $categorie;
     /** @var integer */
     private $niveau;
-    /** @var MetierNiveau|null */
+    /** @var NiveauEnveloppe|null */
     private $niveaux;
 
     /** @var ArrayCollection (Domaine) */
@@ -44,7 +46,7 @@ class Metier implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -53,7 +55,7 @@ class Metier implements HistoriqueAwareInterface {
      * @param bool $inclusif
      * @return string
      */
-    public function getLibelle(bool $inclusif = true)
+    public function getLibelle(bool $inclusif = true) : string
     {
         if ($inclusif === false) return $this->libelle;
         if ($this->libelleFeminin !== null AND $this->libelleMasculin !== null) {
@@ -65,10 +67,12 @@ class Metier implements HistoriqueAwareInterface {
 
     /**
      * @param string|null $libelle
+     * @return Metier
      */
-    public function setLibelle(?string $libelle)
+    public function setLibelle(?string $libelle) : Metier
     {
         $this->libelle = $libelle;
+        return $this;
     }
 
     /**
@@ -114,17 +118,17 @@ class Metier implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return ArrayCollection
+     * @return FicheMetier[]
      */
-    public function getFichesMetiers()
+    public function getFichesMetiers() : array
     {
-        return $this->fichesMetiers;
+        return $this->fichesMetiers->toArray();
     }
 
     /**
      * @return Reference[]
      */
-    public function getReferences()
+    public function getReferences() : array
     {
         return $this->references->toArray();
     }
@@ -132,16 +136,17 @@ class Metier implements HistoriqueAwareInterface {
     /**
      * @return Domaine[]
      */
-    public function getDomaines()
+    public function getDomaines() : array
     {
         $domaines =  $this->domaines->toArray();
         usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle();});
         return $domaines;
     }
 
-    public function clearDomaines()
+    public function clearDomaines() : Metier
     {
         $this->domaines->clear();
+        return $this;
     }
 
     public function addDomaine(Domaine $domaine)
@@ -150,9 +155,9 @@ class Metier implements HistoriqueAwareInterface {
     }
 
     /**
-     * @return Categorie
+     * @return Categorie|null
      */
-    public function getCategorie()
+    public function getCategorie() : ?Categorie
     {
         return $this->categorie;
     }
@@ -161,16 +166,16 @@ class Metier implements HistoriqueAwareInterface {
      * @param Categorie|null $categorie
      * @return Metier
      */
-    public function setCategorie(?Categorie $categorie)
+    public function setCategorie(?Categorie $categorie) : Metier
     {
         $this->categorie = $categorie;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getNiveau()
+    public function getNiveau() : ?int
     {
         return $this->niveau;
     }
@@ -179,25 +184,25 @@ class Metier implements HistoriqueAwareInterface {
      * @param int|null $niveau
      * @return Metier
      */
-    public function setNiveau(?int $niveau)
+    public function setNiveau(?int $niveau) : Metier
     {
         $this->niveau = $niveau;
         return $this;
     }
 
     /**
-     * @return MetierNiveau|null
+     * @return NiveauEnveloppe |null
      */
-    public function getNiveaux(): ?MetierNiveau
+    public function getNiveaux(): ?NiveauEnveloppe
     {
         return $this->niveaux;
     }
 
     /**
-     * @param MetierNiveau|null $niveaux
+     * @param NiveauEnveloppe |null $niveaux
      * @return Metier
      */
-    public function setNiveaux(?MetierNiveau $niveaux): Metier
+    public function setNiveaux(?NiveauEnveloppe $niveaux): Metier
     {
         $this->niveaux = $niveaux;
         return $this;
@@ -206,7 +211,7 @@ class Metier implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function generateTooltip()
+    public function generateTooltip() : string
     {
         $html  = '';
         /** ligne sur le metier **/
@@ -218,8 +223,6 @@ class Metier implements HistoriqueAwareInterface {
             $html .= '<li>'.$domaine->getLibelle().'</li>';
         }
         $html .= '</ul>';
-        /** ligne sur l'expertise */
-        //TODO statuer sur ce qui est expert ou pas
         /** ligne sur les refs */
         $html .= '<strong>Références</strong> :';
         foreach ($this->getReferences() as $reference) {
@@ -230,7 +233,7 @@ class Metier implements HistoriqueAwareInterface {
 
     /** Fonctions pour affichage **************************************************************************************/
 
-    public function getReferencesAffichage()
+    public function getReferencesAffichage() : string
     {
         $texte = "";
         /** @var Reference $reference */
@@ -242,7 +245,7 @@ class Metier implements HistoriqueAwareInterface {
         return $texte;
     }
 
-    public function getDomaineAndFamille()
+    public function getDomaineAndFamille() : string
     {
         $texte = "";
         /** @var Domaine $domaine */
@@ -254,7 +257,7 @@ class Metier implements HistoriqueAwareInterface {
         return $texte;
     }
 
-    public function getLibelleGenre(?Agent $agent)
+    public function getLibelleGenre(?Agent $agent) : string
     {
         if ($agent === null) return $this->getLibelle();
         if ($agent->isHomme() AND $this->libelleMasculin !== null) return $this->getLibelleMasculin();
