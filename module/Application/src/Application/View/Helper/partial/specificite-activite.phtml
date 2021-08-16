@@ -13,7 +13,6 @@ use Application\Provider\Privilege\FichePostePrivileges;
 $activite = $specificiteActivite->getActivite();
 $mode = 'affichage';
 if (isset($options["mode"])) $mode = $options["mode"];
-$mode = 'edition';
 
 $descriptions = $activite->getDescriptions();
 usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre() > $b->getOrdre();});
