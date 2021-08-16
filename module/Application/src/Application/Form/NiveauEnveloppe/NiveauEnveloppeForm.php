@@ -34,7 +34,7 @@ class NiveauEnveloppeForm extends Form {
             'type' => Select::class,
             'name' => 'borne_superieure',
             'options' => [
-                'label' => "Niveau le plus bas * :",
+                'label' => "Niveau le plus haut * :",
                 'empty_option' => 'Sélectionner le niveau le plus élevé ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],

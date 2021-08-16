@@ -186,7 +186,8 @@ class SpecificitePoste {
     public function getActivites(): array
     {
         $result = [];
-        foreach ($this->activites as $activite) {
+        $activites = ($this->activites === null) ? [] : $this->activites->toArray();
+        foreach ($activites as $activite) {
             $result[$activite->getId()] = $activite;
         }
         return $result;

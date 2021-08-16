@@ -2,10 +2,12 @@
 
 /**
  * @see \Application\View\Helper\SpecificitePosteViewHelper
- * @var SpecificitePoste $specificite
+ * @var FichePoste $fichePoste
+ * @var SpecificitePoste|null $specificite
  * @var array $options
  */
 
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\SpecificiteActivite;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
@@ -14,48 +16,58 @@ $mode = "affichage";
 if (isset($options["mode"])) $mode = $options["affichage"];
 //todo remove
 $mode = "edition";
-
-$canAjouterActivite = $this->isAllowed($specificite->getFiche(), FichePostePrivileges::FICHEPOSTE_MODIFIER);
-
-$activites = $specificite->getActivites();
-usort($activites, function (SpecificiteActivite $a, SpecificiteActivite $b) { return $a->getActivite()->getLibelle() > $b->getActivite()->getLibelle();});
 ?>
 
-<?php if ($specificite->getSpecificite()) : ?>
-    <h3> Spécificités du poste </h3>
-    <?php echo $specificite->getSpecificite(); ?>
+<!-- PARTIE SPECIFITE PURE -------------------------------------------------------------------------------------------->
+<?php if ($specificite) : ?>
+    <?php if ($specificite->getSpecificite()) : ?>
+        <h3> Spécificités du poste </h3>
+        <?php echo $specificite->getSpecificite(); ?>
+    <?php endif; ?>
+
+    <?php if ($specificite->getEncadrement()) : ?>
+        <h3> Encadrement </h3>
+        <?php echo $specificite->getEncadrement(); ?>
+    <?php endif; ?>
+
+    <?php if ($specificite->getRelationsInternes()) : ?>
+        <h3> Relations internes à l'unicaen </h3>
+        <?php echo $specificite->getRelationsInternes(); ?>
+    <?php endif; ?>
+
+    <?php if ($specificite->getRelationsExternes()) : ?>
+        <h3> Relations externes à l'unicaen </h3>
+        <?php echo $specificite->getRelationsExternes(); ?>
+    <?php endif; ?>
+
+    <?php if ($specificite->getContraintes()) : ?>
+        <h3>  Sujétions ou conditions particulières </h3>
+        <?php echo $specificite->getContraintes(); ?>
+    <?php endif; ?>
+
+    <?php if ($specificite->getMoyens()) : ?>
+        <h3> Moyens et outils mis à disposition </h3>
+        <?php echo $specificite->getMoyens(); ?>
+    <?php endif; ?>
+
+    <?php if ($specificite->getFormations()) : ?>
+        <h3> Formations ou qualifations nécessaires </h3>
+        <?php echo $specificite->getFormations(); ?>
+    <?php endif; ?>
+<?php else : ?>
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            Aucune spécificité attachée à ce poste.
+        </div>
 <?php endif; ?>
 
-<?php if ($specificite->getEncadrement()) : ?>
-    <h3> Encadrement </h3>
-    <?php echo $specificite->getEncadrement(); ?>
-<?php endif; ?>
+<?php
 
-<?php if ($specificite->getRelationsInternes()) : ?>
-    <h3> Relations internes à l'unicaen </h3>
-    <?php echo $specificite->getRelationsInternes(); ?>
-<?php endif; ?>
-
-<?php if ($specificite->getRelationsExternes()) : ?>
-    <h3> Relations externes à l'unicaen </h3>
-    <?php echo $specificite->getRelationsExternes(); ?>
-<?php endif; ?>
-
-<?php if ($specificite->getContraintes()) : ?>
-    <h3>  Sujétions ou conditions particulières </h3>
-    <?php echo $specificite->getContraintes(); ?>
-<?php endif; ?>
-
-<?php if ($specificite->getMoyens()) : ?>
-    <h3> Moyens et outils mis à disposition </h3>
-    <?php echo $specificite->getMoyens(); ?>
-<?php endif; ?>
-
-<?php if ($specificite->getFormations()) : ?>
-    <h3> Formations ou qualifations nécessaires </h3>
-    <?php echo $specificite->getFormations(); ?>
-<?php endif; ?>
-
+    $canAjouterActivite = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+    $activites = [];
+    if ($specificite) $activites = $specificite->getActivites();
+    usort($activites, function (SpecificiteActivite $a, SpecificiteActivite $b) { return $a->getActivite()->getLibelle() > $b->getActivite()->getLibelle();});
+?>
 
 <?php if ($mode === 'edition' OR !empty(count($specificite->getActivites()))) : ?>
     <div class="row">
@@ -65,7 +77,7 @@ usort($activites, function (SpecificiteActivite $a, SpecificiteActivite $b) { re
         <div class="pull-right">
             <?php if ($mode === 'edition' AND $canAjouterActivite) : ?>
                 <?php /** @see \Application\Controller\SpecificiteController::ajouterActiviteAction() */ ?>
-                <a href="<?php echo $this->url('specificite/ajouter-activite', ['specificite-poste' => $specificite->getId()], [], true); ?>"
+                <a href="<?php echo $this->url('specificite/ajouter-activite', ['fiche-poste' => $fichePoste->getId(), 'specificite-poste' => ($specificite)?$specificite->getId():null], [], true); ?>"
                    class="btn btn-primary action ajax-modal" data-event="modification">
                     <span class="icon ajouter"></span>
                     Ajouter une activité spécifique
@@ -73,6 +85,7 @@ usort($activites, function (SpecificiteActivite $a, SpecificiteActivite $b) { re
             <?php endif; ?>
         </div>
     </div>
+
 
     <?php foreach ($activites as $activite) : ?>
         <?php echo $this->specificiteActivite($activite, $options); ?>

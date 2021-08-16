@@ -46,7 +46,7 @@ return [
                     'ajouter-activite' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-activite/:specificite-poste',
+                            'route'    => '/ajouter-activite/:fiche-poste[/:specificite-poste]',
                             'defaults' => [
                                 'controller' => SpecificiteController::class,
                                 'action'     => 'ajouter-activite',

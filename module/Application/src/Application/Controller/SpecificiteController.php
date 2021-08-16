@@ -3,14 +3,18 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\SpecificiteActivite;
+use Application\Entity\Db\SpecificitePoste;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificiteActivite\SpecificiteActiviteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class SpecificiteController extends AbstractActionController {
+class SpecificiteController extends AbstractActionController
+{
     use ActiviteServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
     use SpecificiteActiviteServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
 
@@ -18,7 +22,18 @@ class SpecificiteController extends AbstractActionController {
 
     public function ajouterActiviteAction()
     {
+        $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this);
         $specificite = $this->getSpecificitePosteService()->getRequestedSpecificitePoste($this);
+        if ($specificite === null) $specificite = $fichePoste->getSpecificite();
+
+        if ($specificite === null) {
+            $specificite = new SpecificitePoste();
+            $specificite->setFiche($fichePoste);
+            $this->getSpecificitePosteService()->create($specificite);
+            $fichePoste->setSpecificite($specificite);
+            $this->getFichePosteService()->update($fichePoste);
+        }
+
         $alreadyIn = [];
         foreach ($specificite->getActivites() as $activite) {
             $alreadyIn[$activite->getActivite()->getId()] = $activite;
@@ -28,7 +43,7 @@ class SpecificiteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $activite = $this->getActiviteService()->getActivite((int) $data['activite']);
+            $activite = $this->getActiviteService()->getActivite((int)$data['activite']);
             if ($activite !== null) {
                 $specificiteActivite = new SpecificiteActivite();
                 $specificiteActivite->setActivite($activite);
@@ -39,6 +54,7 @@ class SpecificiteController extends AbstractActionController {
 
         $vm = new ViewModel([
             'title' => "Ajout d'une activité spécifique au poste",
+            'fichePoste' => $fichePoste,
             'specificite' => $specificite,
             'activites' => $activites,
             'alreadyIn' => $alreadyIn,
@@ -55,7 +71,7 @@ class SpecificiteController extends AbstractActionController {
         $this->getSpecificiteActiviteService()->delete($specificiteActivite);
 
         if ($retour) return $this->redirect()->toRoute($retour);
-        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $specificiteActivite->getSpecificite()->getFiche()->getId()], [] ,true);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $specificiteActivite->getSpecificite()->getFiche()->getId()], [], true);
     }
 
     public function gererActiviteAction()
@@ -63,14 +79,16 @@ class SpecificiteController extends AbstractActionController {
         $specificiteActivite = $this->getSpecificiteActiviteService()->getRequestSpecificiteActivite($this);
 
         $descriptions = $specificiteActivite->getActivite()->getDescriptions();
-        $descriptions = array_filter($descriptions, function ($a) { return $a->estNonHistorise();});
+        $descriptions = array_filter($descriptions, function ($a) {
+            return $a->estNonHistorise();
+        });
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $toRemove = [];
             foreach ($descriptions as $description) {
-                if (!isset($data["".$description->getId()]) OR $data["".$description->getId()] !== "on") $toRemove[] = $description->getId();
+                if (!isset($data["" . $description->getId()]) or $data["" . $description->getId()] !== "on") $toRemove[] = $description->getId();
             }
             $retrait = implode(";", $toRemove);
             $specificiteActivite->setRetrait($retrait);

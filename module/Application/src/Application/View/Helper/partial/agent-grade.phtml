@@ -2,6 +2,7 @@
 
 
 /**
+ * @see \Application\View\Helper\AgentGradeViewHelper
  * @var AgentGrade $grade
  * @var array $options
  */
@@ -67,8 +68,16 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
 
             <dt> Corps </dt>
             <dd>
-                <?php if ($grade->getCorps() !== null) : ?>
-                    <?php echo $grade->getCorps()->getLibelleLong(); ?>
+                <?php $corps = $grade->getCorps(); ?>
+                <?php if ($corps !== null) : ?>
+                    <?php $niveau = $corps->getNiveau(); ?>
+                    <?php if ($niveau) : ?>
+                        <span data-toggle="tooltip" data-html="true" title="<?php echo $niveau->getLibelle(); ?> <strong><?php echo $niveau->getNiveau(); ?></strong>">
+                    <?php endif; ?>
+                    <?php echo $corps->getLibelleLong(); ?>
+                    <?php if ($niveau) : ?>
+                        </span>
+                    <?php endif; ?>
                 <?php else : ?>
                     Corps inconnu
                 <?php endif; ?>
