@@ -13,9 +13,7 @@ use Application\Entity\Db\SpecificitePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 $mode = "affichage";
-if (isset($options["mode"])) $mode = $options["affichage"];
-//todo remove
-$mode = "edition";
+if (isset($options["mode"])) $mode = $options["mode"];
 ?>
 
 <!-- PARTIE SPECIFITE PURE -------------------------------------------------------------------------------------------->
