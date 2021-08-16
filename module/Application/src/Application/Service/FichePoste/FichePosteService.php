@@ -302,14 +302,14 @@ class FichePosteService {
     public function getFichesPostesByStructuresAndAgent(array $structures = [], bool $sousstructure = false, Agent $agent = null)
     {
         $fiches = $this->getFichesPostesByStructures($structures, $sousstructure);
-        $niveau = $agent->getMeilleurNiveau();
+        $niveau = $agent->getMeilleurNiveau()->getNiveau();
 
         if ($niveau === null) return $fiches;
 
         $result = [];
         foreach ($fiches as $fiche) {
             if ($fiche->isComplete()) {
-                $niveauA = $fiche->getAgent()->getMeilleurNiveau();
+                $niveauA = $fiche->getAgent()->getMeilleurNiveau()->getNiveau();
                 if ($niveauA === null or $niveauA >= ($niveau - 1)) $result[] = $fiche;
             }
         }

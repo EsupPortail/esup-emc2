@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
-use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\NiveauEnveloppe;
 use Application\Form\Activite\ActiviteForm;

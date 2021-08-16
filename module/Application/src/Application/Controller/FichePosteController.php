@@ -14,6 +14,7 @@ use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
 use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
+use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\Expertise\ExpertiseFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
@@ -307,7 +308,7 @@ class FichePosteController extends AbstractActionController {
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
 
-        /** @var AssocierAgentForm $form */
+        /** @var AssocierTitreForm $form */
         $form = $this->getAssocierTitreForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-titre', ['fiche-poste' => $fiche->getId()], [], true));
         $form->bind($fiche);

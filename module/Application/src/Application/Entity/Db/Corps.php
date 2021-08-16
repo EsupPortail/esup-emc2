@@ -21,7 +21,7 @@ class Corps
     private $categorie;
     /** @var DateTime */
     private $histo;
-    /** @var integer */
+    /** @var Niveau */
     private $niveau;
 
     /** @var ArrayCollection (AgentGrade) */
@@ -136,7 +136,7 @@ class Corps
     }
 
     /**
-     * @return int
+     * @return Niveau
      */
     public function getNiveau()
     {
@@ -144,7 +144,7 @@ class Corps
     }
 
     /**
-     * @param int $niveau
+     * @param Niveau $niveau
      * @return Corps
      */
     public function setNiveau($niveau)

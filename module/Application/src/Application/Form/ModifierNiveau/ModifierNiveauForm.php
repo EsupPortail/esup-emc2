@@ -2,27 +2,29 @@
 
 namespace Application\Form\ModifierNiveau;
 
+use Application\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class ModifierNiveauForm extends Form {
+    use NiveauServiceAwareTrait;
 
     public function init()
     {
         //niveau :: number
         $this->add([
-            'type' => Number::class,
+            'type' => Select::class,
             'name' => 'niveau',
             'options' => [
                 'label' => "Niveau :",
+                'empty_option' => "Sélectionner un niveau",
+                'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
             'attributes' => [
                 'id' => 'niveau',
-                'min'  => '1',
-                'max'  => '10',
-                'step' => '1',
             ],
         ]);
         //button

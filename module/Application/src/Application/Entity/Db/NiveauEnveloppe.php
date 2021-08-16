@@ -106,7 +106,7 @@ class NiveauEnveloppe implements HistoriqueAwareInterface {
     public function getDeltaWithAgent(?Agent $agent = null) : ?int
     {
         if ($agent === null) { return null; }
-        $niveauAgent = $agent->getMeilleurNiveau();
+        $niveauAgent = $agent->getMeilleurNiveau()->getNiveau();
         $niveauSup = $this->getBorneSuperieure()->getNiveau();
         $niveauInf = $this->getBorneInferieure()->getNiveau();
 

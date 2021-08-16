@@ -485,7 +485,7 @@ class Agent implements
     }
 
     /**
-     * @return int
+     * @return Niveau
      */
     public function getMeilleurNiveau()
     {

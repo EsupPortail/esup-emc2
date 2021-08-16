@@ -3,10 +3,12 @@
 namespace Application\Form\ModifierNiveau;
 
 use Application\Entity\Db\Corps;
+use Application\Service\Niveau\NiveauServiceAwareTrait;
 use Metier\Entity\Db\Metier;
 use Zend\Hydrator\HydratorInterface;
 
 class ModifierNiveauHydrator implements HydratorInterface {
+    use NiveauServiceAwareTrait;
 
     /**
      * @param Corps|Metier $object
@@ -15,7 +17,7 @@ class ModifierNiveauHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'niveau' => $object->getNiveau(),
+            'niveau' => ($object->getNiveau())?$object->getNiveau()->getId():null,
         ];
         return $data;
     }
@@ -27,7 +29,7 @@ class ModifierNiveauHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $niveau = (isset($data['niveau']) AND trim($data['niveau']) !== "")?$data['niveau']:null;
+        $niveau = (isset($data['niveau']) AND trim($data['niveau']) !== "")?$this->getNiveauService()->getNiveau($data['niveau']):null;
         $object->setNiveau($niveau);
         return $object;
     }

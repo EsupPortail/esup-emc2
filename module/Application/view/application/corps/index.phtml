@@ -31,17 +31,17 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
 
-        <li role="categorie">
+        <li>
             <a href="#categorie" aria-controls="categorie" role="tab" data-toggle="tabz">
                 Catégories
                 <span class="badge">
                     <?php echo count($categories); ?>
                 </span>
-                <span style="color:white;" ?><?php echo $this->synchroniserIcon(false); ?></span>
+                <span style="color:white;"><?php echo $this->synchroniserIcon(false); ?></span>
             </a>
         </li>
 
-        <li role="corps">
+        <li>
             <a href="#corps" aria-controls="corps" role="tab" data-toggle="tabz">
                 Corps
                 <span class="badge">
@@ -51,7 +51,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
             </a>
         </li>
 
-        <li role="grade">
+        <li>
             <a href="#grade" aria-controls="grade" role="tab" data-toggle="tabz">
                 Grades &nbsp;
                 <span class="badge">
@@ -61,7 +61,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
             </a>
         </li>
 
-        <li role="correspondance">
+        <li>
             <a href="#correspondance" aria-controls="correspondance" role="tab" data-toggle="tabz" >
                 Correspondances &nbsp;
                 <span class="badge">

@@ -3,24 +3,24 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
-use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\Corps\CorpsServiceAwareTrait;
 use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Application\Service\Grade\GradeServiceAwareTrait;
+use Application\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class CorpsController extends AbstractActionController {
-    use AgentServiceAwareTrait;
     use CategorieServiceAwareTrait;
     use CorpsServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use GradeServiceAwareTrait;
+    use NiveauServiceAwareTrait;
     use ModifierNiveauFormAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $categories = $this->getCategorieService()->getCategories();
         $corps = $this->getCorpsService()->getCorps();
@@ -35,7 +35,7 @@ class CorpsController extends AbstractActionController {
         ]);
     }
 
-    public function modifierNiveauAction()
+    public function modifierNiveauAction() : ViewModel
     {
         $corps = $this->getCorpsService()->getRequestedCorps($this);
 
@@ -62,7 +62,8 @@ class CorpsController extends AbstractActionController {
         return $vm;
     }
 
-    public function afficherAgentsAvecCorpsAction() {
+    public function afficherAgentsAvecCorpsAction() : ViewModel
+    {
         $corps = $this->getCorpsService()->getRequestedCorps($this);
 
         return new ViewModel([
@@ -70,7 +71,8 @@ class CorpsController extends AbstractActionController {
             'corps' => $corps,
         ]);
     }
-    public function afficherAgentsAvecGradeAction() {
+    public function afficherAgentsAvecGradeAction() : ViewModel
+    {
         $grade = $this->getGradeService()->getRequestedGrade($this);
 
         return new ViewModel([
@@ -79,7 +81,8 @@ class CorpsController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAgentsAvecCorrespondanceAction() {
+    public function afficherAgentsAvecCorrespondanceAction() : ViewModel
+    {
         $correspondance = $this->getCorrespondanceService()->getRequestedCorrespondance($this);
 
         return new ViewModel([

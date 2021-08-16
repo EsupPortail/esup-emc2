@@ -33,7 +33,11 @@ use Application\Entity\Db\Corps;
             </td>
             <td> <?php echo count($corp->getAgentGrades()); ?> </td>
             <td> <?php echo $corp->getCategorie(); ?> </td>
-            <td> <?php echo $corp->getNiveau(); ?></td>
+            <td> <?php if ($corp->getNiveau()) : ?>
+                    <?php echo $corp->getNiveau()->getLibelle(); ?>
+                    <strong><?php echo $corp->getNiveau()->getNiveau(); ?></strong>
+                <?php endif; ?>
+            </td>
             <td>
                 <?php if ($canModifier) : ?>
                     <a
