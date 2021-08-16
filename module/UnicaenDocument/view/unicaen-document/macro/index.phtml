@@ -3,15 +3,17 @@
 /**
  * @see \UnicaenDocument\Controller\MacroController::indexAction()
  * @var Macro[] $macros
+ * @var string[] $variables
+ * @var string $variable
  */
 
 use UnicaenDocument\Entity\Db\Macro;
 use UnicaenDocument\Provider\Privilege\DocumentmacroPrivileges;
 
-$canAjouter = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_AJOUTER));
-$canModifier = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_MODIFIER));
+$canAjouter    = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_AJOUTER));
+$canModifier   = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_MODIFIER));
 $canHistoriser = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_HISTORISER));
-$canSupprimer = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_SUPPRIMER));
+$canSupprimer  = $this->isAllowed(DocumentmacroPrivileges::getResourceId(DocumentmacroPrivileges::DOCUMENTMACRO_SUPPRIMER));
 
 $this->headTitle("Index des macros");
 ?>
@@ -21,6 +23,7 @@ $this->headTitle("Index des macros");
 </h1>
 
 <div class="main">
+    <?php echo $this->partial('partial/filtre', ['variables' => $variables, 'params' => ['variable' => $variable]]); ?>
 
     <?php if ($canAjouter) : ?>
         <a href="<?php echo $this->url('contenu/macro/ajouter', [], [], true); ?>" class="btn btn-primary action ajax-modal" data-event="modification">

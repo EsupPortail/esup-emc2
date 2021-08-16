@@ -15,11 +15,22 @@ class MacroController extends AbstractActionController {
     use MacroFormAwareTrait;
 
     public function indexAction() {
-        $macros = $this->getMacroService()->getMacros();
+        $macrosAll = $this->getMacroService()->getMacros();
+        $variable = $this->params()->fromQuery('variable');
 
+        $macros = [];
+        $variables = [];
+        foreach ($macrosAll as $macro) {
+            $variables[$macro->getVariable()] = $macro->getVariable();
+            if ($variable === null OR $variable ==='' OR $macro->getVariable() === $variable) {
+                $macros[] = $macro;
+            }
+        }
 
         return new ViewModel([
             'macros' => $macros,
+            'variables' => $variables,
+            'variable' => $variable,
         ]);
     }
 
