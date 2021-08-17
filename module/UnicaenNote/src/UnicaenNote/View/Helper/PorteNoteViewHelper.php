@@ -13,6 +13,9 @@ class PorteNoteViewHelper extends AbstractHelper
 {
     use PorteNoteServiceAwareTrait;
 
+    public $canVoir;
+    public $canModifier;
+
     /**
      * @param PorteNote|string|null $portenote
      * @param string $mode
@@ -35,6 +38,7 @@ class PorteNoteViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
+        $options['canModifier'] = $this->canModifier;
         return $view->partial('portenote', ['portenote' => $portenote, 'mode' => $mode, 'options' => $options]);
     }
 }

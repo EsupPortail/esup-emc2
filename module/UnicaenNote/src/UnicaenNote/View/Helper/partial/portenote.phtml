@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @see \UnicaenNote\View\Helper\PorteNoteViewHelper
  * @var PorteNote $portenote
  * @var string $mode  ('affichage', ...)
  * @var array $options
@@ -10,6 +11,7 @@ use UnicaenNote\Entity\Db\PorteNote;
 use UnicaenNote\Provider\Privilege\NotePrivileges;
 
 $canAjouter = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOTE_AJOUTER));
+//$canAjouter = $options['canModifier'];
 ?>
 
 <?php if ($portenote !== null) : ?>

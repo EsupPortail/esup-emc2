@@ -503,7 +503,7 @@ class Agent implements
     /**
      * @return AgentQuotite[]
      */
-    public function getQuotites() {
+    public function getQuotites() : array {
         $quotites = $this->quotites->toArray();
         array_filter($quotites, function (AgentQuotite $q) { return $q->getImportationHistorisation(); });
         usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDebut() > $b->getDebut();});
@@ -514,10 +514,10 @@ class Agent implements
      * @param DateTime|null $date
      * @return AgentQuotite|null
      */
-    public function getQuotiteCourante(?DateTime $date = null) {
+    public function getQuotiteCourante(?DateTime $date = null) : ?AgentQuotite {
         /** @var AgentQuotite $quotite */
         foreach ($this->quotites as $quotite) {
-            if ($quotite->isEnCours($date)) return $quotite;
+            if ($quotite->getImportationHistorisation() === null AND $quotite->isEnCours($date)) return $quotite;
         }
         return null;
     }
