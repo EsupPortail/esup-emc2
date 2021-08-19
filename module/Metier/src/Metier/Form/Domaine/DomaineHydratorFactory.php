@@ -7,7 +7,11 @@ use Interop\Container\ContainerInterface;
 
 class DomaineHydratorFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return DomaineHydrator
+     */
+    public function __invoke(ContainerInterface $container) : DomaineHydrator
     {
         /**
          * @var FamilleProfessionnelleService $familleService

@@ -2,6 +2,7 @@
 
 /**
  * @see \Application\Controller\FichePosteController::editerAction()
+ * @var Agent $agent
  * @var FichePoste $fiche
  * @var Structure $structure
  * @var boolean $sousstructure
@@ -12,6 +13,7 @@
 
 $sousstructure = true;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\Structure;
@@ -100,7 +102,6 @@ $this->headTitle("Modification de la fiche de poste #".$fiche->getId());
         <div class="panel-body">
 
 
-            <?php $agent = $fiche->getAgent(); ?>
 
             <?php if($agent === null) : ?>
                 <div class="alert alert-warning">

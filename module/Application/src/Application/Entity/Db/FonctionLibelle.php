@@ -2,8 +2,10 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
+
 class FonctionLibelle {
-    use ImportableAwareTrait;
+    use DbImportableAwareTrait;
 
     /** @var string */
     private $id;

@@ -2,10 +2,12 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Metier\Entity\Db\Domaine;
 
 class Fonction {
-   use ImportableAwareTrait;
+   use DbImportableAwareTrait;
 
    /** @var string */
    private $id;

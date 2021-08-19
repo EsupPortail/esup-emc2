@@ -12,7 +12,7 @@ class ReferenceServiceFactory {
      * @param ContainerInterface $container
      * @return ReferenceService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ReferenceService
     {
         /**
          * @var EntityManager $entityManager

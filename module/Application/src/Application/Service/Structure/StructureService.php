@@ -183,7 +183,7 @@ class StructureService
             ->setParameter('structure', $structure)
             ->orderBy('structure.code')
             ->andWhere("structure.histo IS NULL")
-            ->andWhere("structure.importationHistorisation IS NULL");
+            ->andWhere("structure.deleted_on IS NULL");
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
         $result = $qb->getQuery()->getResult();
 

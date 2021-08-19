@@ -2,11 +2,12 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class Correspondance  {
-    use ImportableAwareTrait;
+    use DbImportableAwareTrait;
 
     /** @var integer */
     private $source_id;

@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 
@@ -11,7 +12,7 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
  */
 class AgentQuotite
 {
-    use ImportableAwareTrait;
+    use DbImportableAwareTrait;
     use DateTimeAwareTrait;
 
     /** @var int */

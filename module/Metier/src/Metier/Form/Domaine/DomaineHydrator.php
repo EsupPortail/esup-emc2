@@ -13,7 +13,7 @@ class DomaineHydrator implements HydratorInterface {
      * @param Domaine $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object)  : array
     {
         $data = [
             'libelle' => $object->getLibelle(),
@@ -28,7 +28,7 @@ class DomaineHydrator implements HydratorInterface {
      * @param Domaine $object
      * @return Domaine
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : Domaine
     {
         $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($data['famille']);
 

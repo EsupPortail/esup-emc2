@@ -6,7 +6,6 @@ use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Application\Service\Validation\ValidationDemandeServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -23,7 +22,6 @@ class IndexController extends AbstractActionController
     use UserServiceAwareTrait;
     use UserContextServiceAwareTrait;
 
-    use ValidationDemandeServiceAwareTrait;
 
     public function indexAction()
     {
@@ -74,30 +72,17 @@ class IndexController extends AbstractActionController
         ]);
     }
 
-    public function indexValidateurAction()
-    {
-        /** @var User $user */
-        $user = $this->getUserService()->getConnectedUser();
-        $demandes = $this->getValidationDemandeService()->getValidationsDemandesByValidateur($user);
-
-        return new ViewModel([
-            'em' => $this->getValidationDemandeService()->getEntityManager(),
-            'user' => $user,
-            'demandes' => $demandes,
-        ]);
-    }
-
-    public function indexRessourcesAction()
+    public function indexRessourcesAction() : ViewModel
     {
         return new ViewModel();
     }
 
-    public function indexGestionAction()
+    public function indexGestionAction() : ViewModel
     {
         return new ViewModel();
     }
 
-    public function indexAdministrationAction()
+    public function indexAdministrationAction() : ViewModel
     {
         return new ViewModel();
     }

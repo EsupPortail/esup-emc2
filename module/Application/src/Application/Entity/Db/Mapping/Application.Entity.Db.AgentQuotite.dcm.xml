@@ -12,10 +12,10 @@
         <field name="fin"       type="datetime"                 column="fin"       nullable="false"/>
         <field name="quotite"   type="integer"                      column="quotite"   nullable="false"/>
 
-        <!-- DB - IMPORT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="importationCreation"         type="datetime"           column="created_on"     nullable="false"/>
-        <field name="importationModification"     type="datetime"           column="updated_on"     nullable="false"/>
-        <field name="importationHistorisation"    type="datetime"           column="deleted_on"     nullable="false"/>
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
 
     </entity>
 </doctrine-mapping>

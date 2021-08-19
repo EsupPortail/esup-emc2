@@ -32,7 +32,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function create(FichePoste $fiche)
+    public function create(FichePoste $fiche) : FichePoste
     {
         $this->createFromTrait($fiche);
         return $fiche;
@@ -42,7 +42,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function update(FichePoste $fiche)
+    public function update(FichePoste $fiche) : FichePoste
     {
         $this->updateFromTrait($fiche);
         return $fiche;
@@ -52,7 +52,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function historise(FichePoste $fiche)
+    public function historise(FichePoste $fiche) : FichePoste
     {
         $this->historiserFromTrait($fiche);
         return $fiche;
@@ -62,7 +62,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function restore(FichePoste $fiche)
+    public function restore(FichePoste $fiche) : FichePoste
     {
         $this->restoreFromTrait($fiche);
         return $fiche;
@@ -72,7 +72,7 @@ class FichePosteService {
      * @param FichePoste $fiche
      * @return FichePoste
      */
-    public function delete(FichePoste $fiche)
+    public function delete(FichePoste $fiche) : FichePoste
     {
         $this->deleteFromTrait($fiche);
         return $fiche;
@@ -89,20 +89,20 @@ class FichePosteService {
             // AGENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
             //status de l'agent
-            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-            ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
+//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+//            ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
             //grade de l'agent
-            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
-            ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
-            ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
-            ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
-            ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
+//            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+//            ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
+//            ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
+//            ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
+//            ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
             //missions spécifiques
-            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
-            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
-            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
-            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
-            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
+//            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
+//            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
+//            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+//            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
+//            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
 
 
 

@@ -22,7 +22,9 @@ class CorrespondanceService {
      * @return QueryBuilder
      */
     public function createQueryBuilder() {
-        $qb = $this->getEntityManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance');
+        $qb = $this->getEntityManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance')
+            ->andWhere('correspondance.deleted_on IS NULL')
+        ;
         return $qb;
     }
 
@@ -41,7 +43,8 @@ class CorrespondanceService {
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
-                ->andWhere('agent.delete IS NULL')
+                ->andWhere('agent.deleted_on IS NULL')
+                ->andWhere('agentGrade.deleted_on IS NULL')
             ;
         }
 
@@ -80,7 +83,7 @@ class CorrespondanceService {
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('correspondance.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
-                ->andWhere('agent.delete IS NULL')
+                ->andWhere('agent.deleted_on IS NULL')
             ;
         }
 

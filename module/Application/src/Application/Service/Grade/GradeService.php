@@ -13,7 +13,6 @@ class GradeService {
     use EntityManagerAwareTrait;
 
     /** GESTION DES ENITIES *******************************************************************************************/
-
     // les grades sont importés et ne sont pas gérés dans l'application
 
     /** REQUETAGE *****************************************************************************************************/
@@ -21,9 +20,26 @@ class GradeService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade');
+        $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
+            ->andWhere('grade.deleted_on IS NULL')
+        ;
+        return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @return QueryBuilder
+     */
+    public function decorateWithAgent(QueryBuilder $qb) : QueryBuilder
+    {
+        $qb = $qb
+            ->join('grade.agentGrades', 'agentGrade')->addSelect('agentGrade')
+            ->join('agentGrade.agent','agent')->addSelect('agent')
+            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('agentGrade.deleted_on IS NULL')
+        ;
         return $qb;
     }
 
@@ -33,35 +49,14 @@ class GradeService {
      * @param bool $avecAgent
      * @return Grade[]
      */
-    public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true)
+    public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("grade.histo IS NULL")
             ->orderBy('grade.' . $champ, $ordre)
         ;
+        if ($avecAgent) $qb = $this->decorateWithAgent($qb);
 
-        if ($avecAgent) {
-            $qb = $qb->addSelect('agentGrade')->join('grade.agentGrades', 'agentGrade')
-                ->addSelect('agent')->join('agentGrade.agent','agent')
-                ->andWhere('agent.delete IS NULL')
-            ;
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Grade[]
-     */
-    public function getGradesHistorises(string $champ = 'libelleLong', string $ordre ='ASC')
-    {
-        $qb = $this->createQueryBuilder()
-            ->andWhere("grade.histo IS NOT NULL")
-            ->orderBy('grade.' . $champ, $ordre)
-        ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -71,7 +66,7 @@ class GradeService {
      * @param string $ordre
      * @return array
      */
-    public function getGradesAsOptions(string $champ = 'libelleLong', string $ordre ='ASC')
+    public function getGradesAsOptions(string $champ = 'libelleLong', string $ordre ='ASC') : array
     {
         $grades = $this->getGrades($champ, $ordre);
 
@@ -85,20 +80,15 @@ class GradeService {
     /**
      * @param integer $id
      * @param bool $avecAgent
-     * @return Grade
+     * @return Grade|null
      */
-    public function getGrade(int $id, bool $avecAgent = true)
+    public function getGrade(int $id, bool $avecAgent = true) : ?Grade
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('grade.id = :id')
             ->setParameter('id', $id)
         ;
-
-        if ($avecAgent) {
-            $qb = $qb->addSelect('agentGrade')->join('grade.agentGrades', 'agentGrade')
-                ->addSelect('agent')->join('agentGrade.agent','agent')
-            ;
-        }
+        if ($avecAgent) $qb = $this->decorateWithAgent($qb);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -111,9 +101,9 @@ class GradeService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return Grade
+     * @return Grade|null
      */
-    public function getRequestedGrade(AbstractActionController $controller, string $param = "grade")
+    public function getRequestedGrade(AbstractActionController $controller, string $param = "grade") : ?Grade
     {
         $id = $controller->params()->fromRoute($param);
         $grade = $this->getGrade($id);

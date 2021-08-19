@@ -36,6 +36,7 @@ class CorpsService {
      */
     public function createQueryBuilder() {
         $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+            ->andWhere('corps.deleted_on IS NULL')
         ;
         return $qb;
     }
@@ -55,7 +56,8 @@ class CorpsService {
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('corps.agentGrades', 'agentGrade')
                      ->addSelect('agent')->join('agentGrade.agent','agent')
-                    ->andWhere('agent.delete IS NULL')
+                    ->andWhere('agent.deleted_on IS NULL')
+                    ->andWhere('agentGrade.deleted_on IS NULL')
             ;
         }
 
@@ -78,7 +80,7 @@ class CorpsService {
         if ($avecAgent) {
             $qb = $qb->addSelect('agentGrade')->join('corps.agentGrades', 'agentGrade')
                 ->addSelect('agent')->join('agentGrade.agent','agent')
-                ->andWhere('agent.delete IS NULL')
+                ->andWhere('agent.deleted_on IS NULL')
             ;
         }
 

@@ -13,8 +13,9 @@
         <field name="genre"                     column="genre"              type="string" length="1"/>
         <field name="defaut"                    column="defaut"             type="string" length="1"/>
 
-        <field name="importationCreation"       column="created_on"         type="datetime"  />
-        <field name="importationModification"   column="updated_on"         type="datetime"  />
-        <field name="importationHistorisation"  column="deleted_on"         type="datetime"  />
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
     </entity>
 </doctrine-mapping>

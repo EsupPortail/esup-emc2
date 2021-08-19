@@ -5,12 +5,14 @@
  * @var AgentAffectation[] $affectations
  * @var AgentGrade[] $grades
  * @var User[] $responsables
+ * @var AgentQuotite $quotite
  * @var bool $canInfoSource
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStatut;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -32,7 +34,7 @@ use UnicaenUtilisateur\Entity\Db\User;
             </dd>
             <dt> Quotité travaillée </dt>
             <dd>
-                <?php if($quotite = $agent->getQuotiteCourante()) : ?>
+                <?php if($quotite) : ?>
                     <?php echo $quotite->getQuotite(); ?>%
                 <?php else: ?>
                     100%

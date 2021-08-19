@@ -2,6 +2,8 @@
 
 namespace Metier\Service\Referentiel;
 
+use Metier\Service\Reference\ReferenceService;
+
 trait ReferentielServiceAwareTrait {
 
     /** @var ReferentielService */
@@ -10,7 +12,7 @@ trait ReferentielServiceAwareTrait {
     /**
      * @return ReferentielService
      */
-    public function getReferentielService()
+    public function getReferentielService() : ReferentielService
     {
         return $this->referentielService;
     }
@@ -19,7 +21,7 @@ trait ReferentielServiceAwareTrait {
      * @param ReferentielService $referentielService
      * @return ReferentielService
      */
-    public function setReferentielService(ReferentielService $referentielService)
+    public function setReferentielService(ReferentielService $referentielService) : ReferentielService
     {
         $this->referentielService = $referentielService;
         return $this->referentielService;

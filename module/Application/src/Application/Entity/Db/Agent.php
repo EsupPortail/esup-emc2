@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -23,7 +24,7 @@ class Agent implements
     ResourceInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface
 {
-    use ImportableAwareTrait;
+    use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
     use DateTimeAwareTrait;
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
@@ -505,7 +506,7 @@ class Agent implements
      */
     public function getQuotites() : array {
         $quotites = $this->quotites->toArray();
-        array_filter($quotites, function (AgentQuotite $q) { return $q->getImportationHistorisation(); });
+        array_filter($quotites, function (AgentQuotite $q) { return !$q->isDeleted(); });
         usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDebut() > $b->getDebut();});
         return $quotites;
     }
@@ -517,7 +518,7 @@ class Agent implements
     public function getQuotiteCourante(?DateTime $date = null) : ?AgentQuotite {
         /** @var AgentQuotite $quotite */
         foreach ($this->quotites as $quotite) {
-            if ($quotite->getImportationHistorisation() === null AND $quotite->isEnCours($date)) return $quotite;
+            if (!$quotite->isDeleted() AND $quotite->isEnCours($date)) return $quotite;
         }
         return null;
     }

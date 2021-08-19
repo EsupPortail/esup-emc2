@@ -7,7 +7,7 @@ use Interop\Container\ContainerInterface;
 
 class DomaineFormFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : DomaineForm
     {
         /**
          * @var FamilleProfessionnelleService $familleService

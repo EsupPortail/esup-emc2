@@ -18,7 +18,7 @@ class NiveauService {
      * @param Niveau $niveau
      * @return Niveau
      */
-    public function create(Niveau $niveau)
+    public function create(Niveau $niveau) : Niveau
     {
         $this->createFromTrait($niveau);
         return $niveau;
@@ -28,7 +28,7 @@ class NiveauService {
      * @param Niveau $niveau
      * @return Niveau
      */
-    public function update(Niveau $niveau)
+    public function update(Niveau $niveau) : Niveau
     {
         $this->updateFromTrait($niveau);
         return $niveau;
@@ -38,7 +38,7 @@ class NiveauService {
      * @param Niveau $niveau
      * @return Niveau
      */
-    public function historise(Niveau $niveau)
+    public function historise(Niveau $niveau) : Niveau
     {
         $this->historiserFromTrait($niveau);
         return $niveau;
@@ -48,7 +48,7 @@ class NiveauService {
      * @param Niveau $niveau
      * @return Niveau
      */
-    public function restore(Niveau $niveau)
+    public function restore(Niveau $niveau) : Niveau
     {
         $this->restoreFromTrait($niveau);
         return $niveau;
@@ -118,7 +118,7 @@ class NiveauService {
      * @param string $param
      * @return Niveau|null
      */
-    public function getRequestedNiveau(AbstractActionController $controller, $param='niveau') : ?Niveau
+    public function getRequestedNiveau(AbstractActionController $controller, string $param='niveau') : ?Niveau
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getNiveau($id);

@@ -121,10 +121,10 @@ class AgentController extends AbstractActionController
             'affectations' => $agentAffectations,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
+            'quotite' => $this->getAgentService()->getAgentQuotite($agent),
             'entretiens' => $entretiens,
             'responsables' => $responsables,
             'parcoursArray' => $parcoursArray,
-
             'fichespostes' => $fichespostes,
             'missions' => $missions,
         ]);

@@ -19,7 +19,7 @@ class ReferenceService
      * @param Reference $referentiel
      * @return Reference
      */
-    public function create(Reference $referentiel)
+    public function create(Reference $referentiel) : Reference
     {
         $this->createFromTrait($referentiel);
         return $referentiel;
@@ -29,7 +29,7 @@ class ReferenceService
      * @param Reference $referentiel
      * @return Reference
      */
-    public function update(Reference $referentiel)
+    public function update(Reference $referentiel) : Reference
     {
         $this->updateFromTrait($referentiel);
         return $referentiel;
@@ -39,7 +39,7 @@ class ReferenceService
      * @param Reference $referentiel
      * @return Reference
      */
-    public function historise(Reference $referentiel)
+    public function historise(Reference $referentiel) : Reference
     {
         $this->historiserFromTrait($referentiel);
         return $referentiel;
@@ -49,7 +49,7 @@ class ReferenceService
      * @param Reference $referentiel
      * @return Reference
      */
-    public function restore(Reference $referentiel)
+    public function restore(Reference $referentiel) : Reference
     {
         $this->restoreFromTrait($referentiel);
         return $referentiel;
@@ -59,7 +59,7 @@ class ReferenceService
      * @param Reference $referentiel
      * @return Reference
      */
-    public function delete(Reference $referentiel)
+    public function delete(Reference $referentiel) : Reference
     {
         $this->deleteFromTrait($referentiel);
         return $referentiel;
@@ -70,7 +70,7 @@ class ReferenceService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Reference::class)->createQueryBuilder('reference')
             ->addSelect('metier')->join('reference.metier', 'metier')
@@ -85,7 +85,7 @@ class ReferenceService
      * @param string $ordre
      * @return Reference[]
      */
-    public function getReferences($champ = 'code', $ordre = 'ASC')
+    public function getReferences(string $champ = 'code', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('reference.' . $champ, $ordre);
@@ -97,7 +97,7 @@ class ReferenceService
     /**
      * @return array
      */
-    public function getReferencesAsOptions()
+    public function getReferencesAsOptions() : array
     {
         $references = $this->getReferences();
         $array = [];
@@ -113,7 +113,7 @@ class ReferenceService
      * @param integer $id
      * @return Reference
      */
-    public function getReference(int $id)
+    public function getReference(int $id) : Reference
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('reference.id = :id')
@@ -132,7 +132,7 @@ class ReferenceService
      * @param string $param
      * @return Reference
      */
-    public function getRequestedReference(AbstractActionController $controller, string $param = "reference")
+    public function getRequestedReference(AbstractActionController $controller, string $param = "reference") : Reference
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getReference($id);

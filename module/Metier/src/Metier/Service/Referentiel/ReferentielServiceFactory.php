@@ -12,7 +12,7 @@ class ReferentielServiceFactory {
      * @param ContainerInterface $container
      * @return ReferentielService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ReferentielService
     {
         /**
          * @var EntityManager $entityManager

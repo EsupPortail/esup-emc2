@@ -6,13 +6,16 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\Structure;
 use Application\Service\DecoratorTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationElement;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -29,7 +32,7 @@ class AgentService {
      * @param Agent $agent
      * @return Agent
      */
-    public function update(Agent $agent)
+    public function update(Agent $agent) : Agent
     {
         try {
             $this->getEntityManager()->flush($agent);
@@ -39,7 +42,7 @@ class AgentService {
         return $agent;
     }
 
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             //affectations
@@ -48,50 +51,8 @@ class AgentService {
             //quotite de l'agent
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
 
-
-//            //applications liées à l'agent
-//            ->addSelect('agentapplication')->leftJoin('agent.applications', 'agentapplication')
-//            ->addSelect('application')->leftJoin('agentapplication.application', 'application')
-//            ->addSelect('application_niveau')->leftJoin('agentapplication.niveau', 'application_niveau')
-//            ->addSelect('application_groupe')->leftJoin('application.groupe', 'application_groupe')
-//            ->addSelect('fapplication')->leftJoin('agentapplication.validation', 'fapplication')
-//            //competences liées à l'agent
-//            ->addSelect('agentcompetence')->leftJoin('agent.competences', 'agentcompetence')
-//            ->addSelect('competence')->leftJoin('agentcompetence.competence', 'competence')
-//            ->addSelect('competence_niveau')->leftJoin('agentcompetence.niveau', 'competence_niveau')
-//            ->addSelect('competence_theme')->leftJoin('competence.theme', 'competence_theme')
-//            ->addSelect('competence_type')->leftJoin('competence.type', 'competence_type')
-//            ->addSelect('fcompetence')->leftJoin('agentcompetence.validation', 'fcompetence')
-//            //formations liées à l'agent
-//            ->addSelect('agentformation')->leftJoin('agent.formations', 'agentformation')
-//            ->addSelect('formation')->leftJoin('agentformation.formation', 'formation')
-//            ->addSelect('fvalidation')->leftJoin('agentformation.validation', 'fvalidation')
-
-            //missions spécifiques
-//            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
-//            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
-//            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
-//            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
-//            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
-
-//            ->addSelect('fichePoste')->leftJoin('agent.fiches','fichePoste')
-//            ->addSelect('fpPoste')->leftJoin('fichePoste.poste', 'fpPoste')
-//            ->addSelect('structure')->leftJoin('fichePoste.structure', 'structure')
-//
-
-
-//            ->addSelect('entretien')->leftJoin('agent.entretiens', 'entretien')
-//            ->addSelect('entretienValidationAgent')->leftJoin('entretien.validationAgent', 'entretienValidationAgent')
-////            ->addSelect('evaModificateur')->leftJoin('entretienValidationAgent.histoModificateur', 'evaModificateur')
-//            ->addSelect('entretienValidationResponsable')->leftJoin('entretien.validationResponsable', 'entretienValidationResponsable')
-////            ->addSelect('evrModificateur')->leftJoin('entretienValidationResponsable.histoModificateur', 'evrModificateur')
-//
-//            ->addSelect('fichier')->leftJoin('agent.fichiers', 'fichier')
-
-
-
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
-            ->andWhere('agent.delete IS NULL')
+            ->andWhere('agent.deleted_on IS NULL')
         ;
         return $qb;
     }
@@ -101,10 +62,10 @@ class AgentService {
      * @param string|null $order
      * @return Agent[]
      */
-    public function getAgents(array $temoins = [], ?string $order = null)
+    public function getAgents(array $temoins = [], ?string $order = null) : array
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->andWhere('agent.delete IS NULL')
+            ->andWhere('agent.deleted_on IS NULL')
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
 //            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
@@ -137,7 +98,7 @@ class AgentService {
      * @param Structure[]|null $structures
      * @return Agent[]
      */
-    public function getAgentsByTerm(?string $term, ?array $structures = null)
+    public function getAgentsByTerm(?string $term, ?array $structures = null) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
@@ -161,9 +122,9 @@ class AgentService {
 
     /**
      * @param string|null $id
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent(?string $id)
+    public function getAgent(?string $id) : ?Agent
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -182,9 +143,9 @@ class AgentService {
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return Agent
+     * @return Agent|null
      */
-    public function getRequestedAgent(AbstractActionController $controller, $paramName = 'agent')
+    public function getRequestedAgent(AbstractActionController $controller, string $paramName = 'agent') : ?Agent
     {
         $id = $controller->params()->fromRoute($paramName);
         $agent = $this->getAgent($id);
@@ -193,9 +154,9 @@ class AgentService {
 
     /**
      * @param User $user
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgentByUser(User $user)
+    public function getAgentByUser(User $user) : ?Agent
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.utilisateur = :user')
@@ -211,9 +172,9 @@ class AgentService {
 
     /**
      * @param int $supannId
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgentBySupannId(int $supannId)
+    public function getAgentBySupannId(int $supannId) : ?Agent
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.harpId = :supannId')
@@ -232,7 +193,7 @@ class AgentService {
      * @param boolean $sousstructure
      * @return Agent[]
      */
-    public function getAgentsSansFichePosteByStructure(?Structure $structure = null, bool $sousstructure = false)
+    public function getAgentsSansFichePosteByStructure(?Structure $structure = null, bool $sousstructure = false) : array
     {
         $today = $this->getDateTime();
 
@@ -254,7 +215,7 @@ class AgentService {
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
             ->orderBy('agent.nomUsuel, agent.prenom')
-            ->andWhere('agent.delete IS NULL');
+            ->andWhere('agent.deleted_on IS NULL');
 
         if ($structure !== null && $sousstructure === true) {
             $qb1 = $qb1->andWhere('grade.structure = :structure OR structure.parent = :structure')
@@ -280,7 +241,7 @@ class AgentService {
      * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsByStructures(array $structures)
+    public function getAgentsByStructures(array $structures) : array
     {
         $today = $this->getDateTime();
 
@@ -311,7 +272,7 @@ class AgentService {
             ->setParameter('today', $today)
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
-            ->andWhere('agent.delete IS NULL')
+            ->andWhere('agent.deleted_on IS NULL')
 
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
@@ -330,7 +291,7 @@ class AgentService {
      * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsForcesByStructures(array $structures)
+    public function getAgentsForcesByStructures(array $structures) : array
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('forcage')->join('agent.structuresForcees', 'forcage')
@@ -365,7 +326,7 @@ class AgentService {
      * @param $st_annee
      * @return Agent|null
      */
-    public function getAgentByIdentification($st_prenom, $st_nom, $st_annee)
+    public function getAgentByIdentification($st_prenom, $st_nom, $st_annee) : ?Agent
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent');
 
@@ -390,7 +351,8 @@ class AgentService {
      * @param Agent $agent
      * @return User[]|null
      */
-    public function getResponsablesHierarchiques(Agent $agent) {
+    public function getResponsablesHierarchiques(Agent $agent) : ?array
+    {
         $affectationPrincipale = $agent->getAffectationPrincipale();
         if ($affectationPrincipale === null) return null;
         $structure = $affectationPrincipale->getStructure();
@@ -415,7 +377,7 @@ class AgentService {
      * @param string $annee
      * @return FormationElement[]
      */
-    public function getFormationsSuiviesByAnnee(Agent $agent, string $annee)
+    public function getFormationsSuiviesByAnnee(Agent $agent, string $annee) : array
     {
         $result = [];
         $formations = $agent->getFormationListe();
@@ -431,9 +393,9 @@ class AgentService {
 
     /**
      * @param integer $id
-     * @return AgentMissionSpecifique
+     * @return AgentMissionSpecifique|null
      */
-    public function getAgentMissionSpecifique(int $id)
+    public function getAgentMissionSpecifique(int $id) : ?AgentMissionSpecifique
     {
         $qb = $this->getEntityManager()->getRepository(AgentMissionSpecifique::class)->createQueryBuilder('mission')
             ->andWhere('mission.id = :id')
@@ -450,9 +412,9 @@ class AgentService {
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return AgentMissionSpecifique
+     * @return AgentMissionSpecifique|null
      */
-    public function getRequestedAgentMissionSpecifique(AbstractActionController $controller, $paramName = 'agent-mission-specifique')
+    public function getRequestedAgentMissionSpecifique(AbstractActionController $controller, string $paramName = 'agent-mission-specifique') : ?AgentMissionSpecifique
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getAgentMissionSpecifique($id);
@@ -463,7 +425,7 @@ class AgentService {
      * @param AgentMissionSpecifique $agentMissionSpecifique
      * @return AgentMissionSpecifique
      */
-    public function createAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
+    public function createAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
         $this->createFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
@@ -473,7 +435,7 @@ class AgentService {
      * @param AgentMissionSpecifique $agentMissionSpecifique
      * @return AgentMissionSpecifique
      */
-    public function updateAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
+    public function updateAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
         $this->updateFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
@@ -483,7 +445,7 @@ class AgentService {
      * @param AgentMissionSpecifique $agentMissionSpecifique
      * @return AgentMissionSpecifique
      */
-    public function historiserAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
+    public function historiserAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
         $this->historiserFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
@@ -493,7 +455,7 @@ class AgentService {
      * @param AgentMissionSpecifique $agentMissionSpecifique
      * @return AgentMissionSpecifique
      */
-    public function restoreAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
+    public function restoreAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
         $this->restoreFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
@@ -503,7 +465,7 @@ class AgentService {
      * @param AgentMissionSpecifique $agentMissionSpecifique
      * @return AgentMissionSpecifique
      */
-    public function deleteAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique)
+    public function deleteAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
         $this->deleteFromTrait($agentMissionSpecifique);
         return $agentMissionSpecifique;
@@ -513,7 +475,7 @@ class AgentService {
      * @param Agent[] $agents
      * @return array
      */
-    public function formatAgentJSON(array $agents)
+    public function formatAgentJSON(array $agents) : array
     {
         $result = [];
         /** @var Agent[] $agents */
@@ -675,6 +637,55 @@ class AgentService {
             $qb = $this->decorateWithActif($qb, 'agentgrade');
         }
 
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** QUOTITE *******************************************************************************************************/
+
+    /**
+     * @param Agent $agent
+     * @param DateTime|null $date
+     * @return AgentQuotite|null
+     */
+    public function getAgentQuotite(Agent $agent, ?DateTime $date = null) : ?AgentQuotite
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->getEntityManager()->getRepository(AgentQuotite::class)->createQueryBuilder('quotite')
+            ->andWhere('quotite.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('quotite.debut <= :date')
+            ->andWhere('quotite.fin IS NULL OR quotite.fin >= :date')
+            ->setParameter('date', $date)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs AgentQuotite de retournées pour l'agent [".$agent->getId()."] en date du [".$date->format('d/m/Y')."]",0,$e);
+        }
+        return $result;
+    }
+
+    /** STATUTS *******************************************************************************************************/
+
+    /**
+     * @param Agent $agent
+     * @param DateTime|null $date
+     * @return AgentStatut[]
+     */
+    public function getAgentStatuts(Agent $agent, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->getEntityManager()->getRepository(AgentStatut::class)->createQueryBuilder('astatut')
+            ->leftjoin('astatut.structure', 'structure')->addSelect('structure')
+            ->andWhere('astatut.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('astatut.dateDebut <= :date')
+            ->andWhere('astatut.dateFin IS NULL OR astatut.dateFin >= :date')
+            ->setParameter('date', $date)
+        ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }

@@ -15,9 +15,6 @@ use Application\Entity\Db\FicheTypeExterne;
  * @var array $options
  */
 
-
-//var_dump($options['actions']);
-
 $metier = $fichemetier->getMetier();
 $agent = ($ficheposte)?$ficheposte->getAgent():null;
 
@@ -171,10 +168,8 @@ if ($options['popup']) $options['actions']['afficher'] = false;
             <div>
                 <div class="row">
                     <div class="col-md-8">
-                        <h2>
                         Missions principales
                         <span class="badge"> <?php echo count($activitesRestantes); ?>/<?php echo count($activites); ?> </span>
-                        </h2>
                     </div>
                     <div class="pull-right">
                         <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
@@ -218,13 +213,11 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>
                                 <span class="icon competence"></span>
                                 Compétences
                                 <span class="badge">
                                     <?php echo count($dictionnaireCompetence); ?>
                                 </span>
-                            </h2>
                          </div>
                         <div class="col-md-3" style="margin-right:1rem;">
                         <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
@@ -250,12 +243,10 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                 </div>
             </div>
             <div class="panel-body">
-                <div class="col-md-1"></div>
-                <div class="col-md-10"><?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier,
+                <?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier,
                         ['display' => ['titre' => false, 'validation' => false],
-                        'actions' => $options['actions']]); ?></div>
+                        'actions' => $options['actions']]); ?>
             </div>
-        </div>
         <?php endif; ?>
 
         <!-- APPLICATION -------------------------------------------------------------------------------------------------->
@@ -270,13 +261,11 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>
                                 <span class="icon application"></span>
                                 Applications
                                 <span class="badge">
                                     <?php echo count($dictionnaireApplication); ?>
                                 </span>
-                            </h2>
                         </div>
                         <div class="col-md-3" style="margin-right:1rem;">
                             <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
@@ -303,12 +292,9 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-1"></div>
-                        <div class="col-md-10"><?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier,
-                                ['display' => ['titre' => false, 'validation' => false],
-                                    'actions' => $options['actions']]); ?></div>
-                    </div>
+                    <?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier,
+                            ['display' => ['titre' => false, 'validation' => false],
+                            'actions' => $options['actions']]); ?></div>
                 </div>
             </div>
         <?php endif; ?>

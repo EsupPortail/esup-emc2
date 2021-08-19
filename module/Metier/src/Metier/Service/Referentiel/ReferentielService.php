@@ -69,7 +69,7 @@ class ReferentielService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Referentiel::class)->createQueryBuilder('referentiel')
             ;
@@ -82,7 +82,7 @@ class ReferentielService {
      * @param string $ordre
      * @return Referentiel[]
      */
-    public function getReferentiels($champ = 'libelleCourt', $ordre = 'ASC')
+    public function getReferentiels(string $champ = 'libelleCourt', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('referentiel.' . $champ, $ordre);
@@ -94,7 +94,7 @@ class ReferentielService {
     /**
      * @return array
      */
-    public function getReferentielsAsOptions()
+    public function getReferentielsAsOptions() : array
     {
         $referentiels = $this->getReferentiels();
         $array = [];
@@ -108,9 +108,9 @@ class ReferentielService {
 
     /**
      * @param int|null $id
-     * @return Referentiel
+     * @return Referentiel|null
      */
-    public function getReferentiel(?int $id)
+    public function getReferentiel(?int $id) : ?Referentiel
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('referentiel.id = :id')
@@ -128,9 +128,9 @@ class ReferentielService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return Referentiel
+     * @return Referentiel|null
      */
-    public function getRequestedReferentiel(AbstractActionController $controller, $param = "referentiel")
+    public function getRequestedReferentiel(AbstractActionController $controller, string $param = "referentiel") : ?Referentiel
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getReferentiel($id);

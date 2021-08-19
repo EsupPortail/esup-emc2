@@ -8,7 +8,11 @@ use UnicaenUtilisateur\Service\User\UserService;
 
 class DomaineServiceFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return DomaineService
+     */
+    public function __invoke(ContainerInterface $container) : DomaineService
     {
         /**
          * @var EntityManager $entityManager

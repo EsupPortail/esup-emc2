@@ -204,7 +204,7 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    public function editerAction()
+    public function editerAction() : ViewModel
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
@@ -223,6 +223,7 @@ class FichePosteController extends AbstractActionController {
 
         return new ViewModel([
             'fiche' => $fiche,
+            'agent' => $this->getAgentService()->getAgent($fiche->getAgent()->getId()),
             'structure' => $structure,
             'applications' => $applications,
             'competences' => $competences,

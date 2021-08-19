@@ -4,6 +4,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
@@ -21,6 +22,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentAffectation[] $affectations
  * @var AgentStatut[] $statuts
  * @var AgentGrade[] $grades
+ * @var AgentQuotite|null $quotite
  */
 
 $displayParcours = false;
@@ -106,7 +108,7 @@ if ($agent !== null) {
     <div>
         <div class="tab-content">
             <div id="informations" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'affectations' => $affectations, 'statuts' => $statuts, 'grades' => $grades, 'responsables' => $responsables, 'canInfoSource' => $canInfoSource]); ?>
+                <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'affectations' => $affectations, 'statuts' => $statuts, 'grades' => $grades, 'responsables' => $responsables, 'quotite' => $quotite,  'canInfoSource' => $canInfoSource]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>

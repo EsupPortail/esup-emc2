@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\Db\MacroContent\StructureMacroTrait;
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\SynchroAwareInterface;
 use Application\Entity\SynchroAwareTrait;
 use DateTime;
@@ -11,7 +12,7 @@ use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class Structure implements ResourceInterface, SynchroAwareInterface {
-    use ImportableAwareTrait;
+    use DbImportableAwareTrait;
     use SynchroAwareTrait;
     use StructureMacroTrait;
 

@@ -2,12 +2,13 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class Corps
 {
-    use ImportableAwareTrait;
+    use DbImportableAwareTrait;
 
     /** @var integer */
     private $id;

@@ -120,8 +120,7 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        $texte  = "";
-        $texte .= ($agent->getQuotiteCourante())?$agent->getQuotiteCourante()->getQuotite()."%":"100%";
+        $texte = ($agent->getQuotiteCourante())?$agent->getQuotiteCourante()->getQuotite()."%":"100%";
         return $texte;
     }
     /**

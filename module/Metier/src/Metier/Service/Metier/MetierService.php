@@ -77,6 +77,10 @@ class MetierService {
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
+            ->addSelect('niveaux')->leftJoin('metier.niveaux', 'niveaux')
+//            ->addSelect('bas')->leftJoin('niveaux.borneInferieure', 'bas')
+//            ->addSelect('haut')->leftJoin('niveaux.borneSuperieure', 'haut')
+//            ->addSelect('rec')->leftJoin('niveaux.valeurRecommandee', 'rec')
         ;
         return $qb;
     }
@@ -127,10 +131,10 @@ class MetierService {
     }
 
     /**
-     * @param false $historiser
+     * @param bool $historiser
      * @return array
      */
-    public function getMetiersTypesAsMultiOptions($historiser = false) : array
+    public function getMetiersTypesAsMultiOptions(bool $historiser = false) : array
     {
         /** @var Metier[] $metiers */
         $metiers = $this->getMetiers();
@@ -176,7 +180,6 @@ class MetierService {
 
         $results = [];
         foreach($metiers as $metier) {
-
             $references = [];
             foreach ($metier->getReferences() as $reference) {
                 $references[] = $reference->getTitre();
@@ -187,16 +190,16 @@ class MetierService {
 
             foreach ($domaines as $domaine) {
                 $famille = ($domaine) ? $domaine->getFamille() : null;
-                $fonction =  ($domaine) ? $domaine->getTypeFonction() : null;
+                $fonction = ($domaine) ? $domaine->getTypeFonction() : null;
 
                 $entry = [
-                    'metier'     => ($metier) ? $metier->__toString() : "---",
-                    'niveau'     => ($metier) ? $metier->getNiveau() : "---",
+                    'metier' => $metier->__toString(),
+                    'niveau' => $metier->getNiveau(),
                     'références' => implode("<br/>", $references),
-                    'domaine'    => ($domaine) ? $domaine->__toString() : "---",
-                    'fonction'   => ($fonction) ? $fonction : "---",
-                    'famille'    => ($famille) ? $famille->__toString() : "---",
-                    'nbFiche'    => count($metier->getFichesMetiers()),
+                    'domaine' => ($domaine) ? $domaine->__toString() : "---",
+                    'fonction' => ($fonction) ?: "---",
+                    'famille' => ($famille) ? $famille->__toString() : "---",
+                    'nbFiche' => count($metier->getFichesMetiers()),
                 ];
                 $results[] = $entry;
             }
@@ -217,7 +220,7 @@ class MetierService {
      * @param string $masculin
      * @return string|null
      */
-    public static function computeEcritureInclusive(string $feminin, string $masculin)
+    public static function computeEcritureInclusive(string $feminin, string $masculin) : ?string
     {
         $split_inclusif = [];
         $split_feminin = explode(" ",$feminin);

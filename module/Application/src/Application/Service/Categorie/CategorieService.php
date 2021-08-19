@@ -19,7 +19,7 @@ class CategorieService
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function create(Categorie $categorie)
+    public function create(Categorie $categorie) : Categorie
     {
         $this->createFromTrait($categorie);
         return $categorie;
@@ -29,7 +29,8 @@ class CategorieService
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function update(Categorie $categorie)
+    public function update(Categorie $categorie) : Categorie
+
     {
         $this->updateFromTrait($categorie);
         return $categorie;
@@ -39,7 +40,7 @@ class CategorieService
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function historise(Categorie $categorie)
+    public function historise(Categorie $categorie) : Categorie
     {
         $this->historiserFromTrait($categorie);
         return $categorie;
@@ -49,7 +50,7 @@ class CategorieService
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function restore(Categorie $categorie)
+    public function restore(Categorie $categorie) : Categorie
     {
         $this->restoreFromTrait($categorie);
         return $categorie;
@@ -59,7 +60,7 @@ class CategorieService
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function delete(Categorie $categorie)
+    public function delete(Categorie $categorie) : Categorie
     {
         $this->deleteFromTrait($categorie);
         return $categorie;
@@ -70,7 +71,7 @@ class CategorieService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuider()
+    public function createQueryBuider() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Categorie::class)->createQueryBuilder('categorie')
             ;
@@ -82,7 +83,7 @@ class CategorieService
      * @param string $ordre
      * @return Categorie[]
      */
-    public function getCategories($champ='libelle', $ordre='ASC')
+    public function getCategories(string $champ='libelle', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuider()
             ->orderBy('categorie.' . $champ, $ordre);
@@ -91,11 +92,13 @@ class CategorieService
     }
 
     /**
+     * @param string $champ
+     * @param string $ordre
      * @return array
      */
-    public function getCategorieAsOption()
+    public function getCategorieAsOption(string $champ='libelle', string $ordre='ASC') : array
     {
-        $categories = $this->getCategories();
+        $categories = $this->getCategories($champ,$ordre);
         $array = [];
         foreach ($categories as $categorie) {
             $array[$categorie->getId()] = $categorie->getCode() ." - ".$categorie->getLibelle();
@@ -104,10 +107,10 @@ class CategorieService
     }
 
     /**
-     * @param $id
-     * @return Categorie
+     * @param int|null $id
+     * @return Categorie|null
      */
-    public function getCategorie($id)
+    public function getCategorie(?int $id) : ?Categorie
     {
         $qb = $this->createQueryBuider()
             ->andWhere('categorie.id = :id')
@@ -125,9 +128,9 @@ class CategorieService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return Categorie
+     * @return Categorie|null
      */
-    public function getRequestedCategorie(AbstractActionController $controller, $param='categorie')
+    public function getRequestedCategorie(AbstractActionController $controller, string $param='categorie') : ?Categorie
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCategorie($id);
@@ -136,9 +139,9 @@ class CategorieService
 
     /**
      * @param string $code
-     * @return Categorie
+     * @return Categorie|null
      */
-    public function getCategorieByCode(string $code)
+    public function getCategorieByCode(string $code) : ?Categorie
     {
         $qb = $this->createQueryBuider()
             ->andWhere('categorie.code = :code')
