@@ -7,9 +7,6 @@ use Application\Entity\Db\ActiviteLibelle;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
-use Application\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\Competence\CompetenceServiceAwareTrait;
-use Formation\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -20,17 +17,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 class ActiviteService {
     use GestionEntiteHistorisationTrait;
 
-    use ApplicationServiceAwareTrait;
-    use CompetenceServiceAwareTrait;
-    use FormationServiceAwareTrait;
-
     /** GESTION DES ENTITÉS *******************************************************************************************/
 
     /**
      * @param Activite $activite
      * @return Activite
      */
-    public function create(Activite $activite)
+    public function create(Activite $activite) : Activite
     {
         $this->createFromTrait($activite);
         return $activite;
@@ -40,7 +33,7 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function update(Activite $activite)
+    public function update(Activite $activite) : Activite
     {
         $this->updateFromTrait($activite);
         return $activite;
@@ -50,7 +43,7 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function historise(Activite $activite)
+    public function historise(Activite $activite) : Activite
     {
         $this->historiserFromTrait($activite);
         return $activite;
@@ -60,7 +53,7 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function restore(Activite $activite)
+    public function restore(Activite $activite) : Activite
     {
         $this->restoreFromTrait($activite);
         return $activite;
@@ -70,7 +63,7 @@ class ActiviteService {
      * @param Activite $activite
      * @return Activite
      */
-    public function delete(Activite $activite)
+    public function delete(Activite $activite) : Activite
     {
         $this->deleteFromTrait($activite);
         return $activite;
@@ -81,7 +74,8 @@ class ActiviteService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() {
+    public function createQueryBuilder() : QueryBuilder
+    {
         $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
             ->addSelect('createur')->join('activite.histoCreateur', 'createur')
             ->addSelect('modificateur')->join('activite.histoModificateur', 'modificateur')
@@ -103,7 +97,7 @@ class ActiviteService {
      * @param string $ordre
      * @return Activite[]
      */
-    public function getActivites($champ = 'id', $ordre = 'ASC')
+    public function getActivites(string $champ = 'id', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->addOrderBy('activite.' . $champ, $ordre)
@@ -116,7 +110,7 @@ class ActiviteService {
      * @param FicheMetier|null $ficheMetier
      * @return array
      */
-    public function getActivitesAsOptions(FicheMetier $ficheMetier = null)
+    public function getActivitesAsOptions(FicheMetier $ficheMetier = null) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.histoDestruction IS NULL')
@@ -140,10 +134,10 @@ class ActiviteService {
         return $options;
     }
     /**
-     * @param int $id
-     * @return Activite mixed
+     * @param int|null $id
+     * @return Activite|null
      */
-    public function getActivite(int $id)
+    public function getActivite(?int $id) : ?Activite
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('activite.id = :id')
@@ -161,9 +155,9 @@ class ActiviteService {
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return Activite
+     * @return Activite|null
      */
-    public function getRequestedActivite(AbstractActionController $controller, $paramName = 'activite')
+    public function getRequestedActivite(AbstractActionController $controller, string $paramName = 'activite') : ?Activite
     {
         $id = $controller->params()->fromRoute($paramName);
         $activite = $this->getActivite($id);
@@ -172,9 +166,9 @@ class ActiviteService {
 
     /**
      * @param int $id
-     * @return FicheMetierTypeActivite
+     * @return FicheMetierTypeActivite|null
      */
-    public function getFicheMetierTypeActivite(int $id)
+    public function getFicheMetierTypeActivite(int $id) : ?FicheMetierTypeActivite
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetierTypeActivite::class)->createQueryBuilder('activite')
             ->andWhere('activite.id = :id')
@@ -193,7 +187,7 @@ class ActiviteService {
      * @param FicheMetier $fiche
      * @return FicheMetierTypeActivite[]
      */
-    public function getActivitesByFicheMetierType(FicheMetier $fiche)
+    public function getActivitesByFicheMetierType(FicheMetier $fiche) : array
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetierTypeActivite::class)->createQueryBuilder('couple')
             ->addSelect('fiche')
@@ -279,7 +273,7 @@ class ActiviteService {
      * @param Activite $activite
      * @return FicheMetierTypeActivite
      */
-    public function createFicheMetierTypeActivite(FicheMetier $fiche, Activite $activite)
+    public function createFicheMetierTypeActivite(FicheMetier $fiche, Activite $activite) : FicheMetierTypeActivite
     {
         $activites = $this->getActivitesByFicheMetierType($fiche);
 
@@ -301,7 +295,7 @@ class ActiviteService {
      * @param FicheMetierTypeActivite $couple
      * @return FicheMetierTypeActivite
      */
-    public function updateFicheMetierTypeActivite(FicheMetierTypeActivite $couple)
+    public function updateFicheMetierTypeActivite(FicheMetierTypeActivite $couple) : FicheMetierTypeActivite
     {
         try {
             $this->getEntityManager()->flush($couple);
@@ -332,7 +326,7 @@ class ActiviteService {
      * @param array
      * @return Activite
      */
-    public function updateLibelle(Activite $activite,  $data)
+    public function updateLibelle(Activite $activite,  $data) : Activite
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = $this->getDateTime();
