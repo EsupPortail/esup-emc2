@@ -13,7 +13,6 @@ $navigationHelper = $this->navigation('navigation');
 <?php echo $this->doctype(); ?>
 <html lang="fr">
 <head>
-    <title></title>
     <!-- Meta -->
     <meta charset="utf-8">
     <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -23,9 +22,9 @@ $navigationHelper = $this->navigation('navigation');
     <?php echo $this->headTitle($this->appInfos()->nom)->setSeparator(' - ')->setAutoEscape(false) ?>
     <!-- Links -->
     <?php echo $this->headLink(array(
-        'rel'  => 'shortcut icon',
-        'type' => 'image/vnd.microsoft.icon',
-        'href' => '//www.unicaen.fr/images/favicon.ico')) ?>
+        'rel'   => 'shortcut icon',
+        'type'  => 'image/vnd.microsoft.icon',
+        'href'  => '//www.unicaen.fr/favicon.ico')) ?>
     <!-- Scripts -->
     <?php echo $this->headScript(); ?>
 </head>

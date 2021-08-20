@@ -44,10 +44,10 @@ class AgentController extends AbstractActionController
     use AgentServiceAwareTrait;
 
     use ApplicationElementServiceAwareTrait;
-    use HasApplicationCollectionServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
-    use HasCompetenceCollectionServiceAwareTrait;
     use FormationElementServiceAwareTrait;
+    use HasApplicationCollectionServiceAwareTrait;
+    use HasCompetenceCollectionServiceAwareTrait;
     use HasFormationCollectionServiceAwareTrait;
 
     use EntretienProfessionnelServiceAwareTrait;
