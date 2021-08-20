@@ -2,6 +2,7 @@
 
 namespace Application\Form\MaitriseNiveau;
 
+use Application\Form\HasDescription\HasDescriptionFieldset;
 use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Hidden;
@@ -69,16 +70,10 @@ class MaitriseNiveauForm extends Form {
         ]);
         // description
         $this->add([
-            'name' => 'description',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
             'attributes' => [
-                'class' => 'type2 form-control',
+                'id' => 'description',
             ]
         ]);
         //type

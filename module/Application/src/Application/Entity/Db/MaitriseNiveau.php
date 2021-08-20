@@ -2,11 +2,14 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasDescriptionInterface;
+use Application\Entity\Db\Traits\HasDescriptionTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class MaitriseNiveau implements HistoriqueAwareInterface {
+class MaitriseNiveau implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;
+    use HasDescriptionTrait;
 
     /** @var integer */
     private $id;
@@ -16,8 +19,6 @@ class MaitriseNiveau implements HistoriqueAwareInterface {
     private $libelle;
     /** @var integer */
     private $niveau;
-    /** @var string */
-    private $description;
 
     /**
      * @return int
@@ -78,24 +79,6 @@ class MaitriseNiveau implements HistoriqueAwareInterface {
     public function setNiveau(?int $niveau): MaitriseNiveau
     {
         $this->niveau = $niveau;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string|null $description
-     * @return MaitriseNiveau
-     */
-    public function setDescription(?string $description): MaitriseNiveau
-    {
-        $this->description = $description;
         return $this;
     }
 
