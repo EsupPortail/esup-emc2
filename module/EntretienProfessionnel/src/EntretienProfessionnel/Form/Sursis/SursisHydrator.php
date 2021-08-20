@@ -16,7 +16,7 @@ class SursisHydrator implements HydratorInterface {
     {
         $data = [
             'date' => ($object->getSursis())?$object->getSursis()->format('Y-m-d'):null,
-            'description' => $object->getDescription(),
+            'HasDescription' => ['description' => $object->getDescription()],
         ];
         return $data;
     }
@@ -29,7 +29,7 @@ class SursisHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $date = (isset($data['date']))?DateTime::createFromFormat('Y-m-d H:i:s', $data['date']." 23:59:59"):null;
-        $description = (isset($data['description']) AND trim($data['description']) !== "")?trim($data['description']):null;
+        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
 
         $object->setSursis($date);
         $object->setDescription($description);

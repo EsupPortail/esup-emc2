@@ -2,8 +2,8 @@
 
 namespace EntretienProfessionnel\Form\Sursis;
 
+use Application\Form\HasDescription\HasDescriptionFieldset;
 use Zend\Form\Element\Date;
-use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
@@ -25,18 +25,11 @@ class SursisForm extends Form
         ]);
         //description
         $this->add([
-            'name' => 'description',
-            'type' => Textarea::class,
-            'options' => [
-                'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
             'attributes' => [
                 'id' => 'description',
-                'class' => 'description form-control',
-            ]
+            ],
         ]);
         //button
         $this->add([
@@ -51,7 +44,7 @@ class SursisForm extends Form
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
             'date'                  => [ 'required' => true,  ],
-            'description'           => [ 'required' => true,  ],
+            'description'           => [ 'required' => false,  ],
         ]));
     }
 }

@@ -2,12 +2,15 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasDescriptionInterface;
+use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Sursis implements HistoriqueAwareInterface {
+class Sursis implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;
+    use HasDescriptionTrait;
 
     /** @var integer */
     private $id;
@@ -15,8 +18,6 @@ class Sursis implements HistoriqueAwareInterface {
     private $entretien;
     /** @var DateTime */
     private $sursis;
-    /** @var string */
-    private $description;
 
     /**
      * @return int
@@ -62,25 +63,5 @@ class Sursis implements HistoriqueAwareInterface {
         $this->sursis = $sursis;
         return $this;
     }
-
-    /**
-     * @return string|null
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string|null $description
-     * @return Sursis
-     */
-    public function setDescription(?string $description): Sursis
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-
 
 }
