@@ -8,7 +8,6 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\NiveauEnveloppe;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
-use Application\Form\ModifierDescription\ModifierDescriptionFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -32,7 +31,6 @@ class ActiviteController  extends AbstractActionController {
     use NiveauEnveloppeServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
-    use ModifierDescriptionFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
     use SelectionApplicationFormAwareTrait;

@@ -56,7 +56,6 @@ class Activite implements HistoriqueAwareInterface,
      */
     public function getCurrentActiviteLibelle()
     {
-        $current = null;
         /** @var ActiviteLibelle $activiteLibelle */
         foreach ($this->libelles as $activiteLibelle) {
             if ($activiteLibelle->estNonHistorise()) return $activiteLibelle;

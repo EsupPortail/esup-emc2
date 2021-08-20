@@ -3,9 +3,6 @@
 namespace Application;
 
 use Application\Controller\IndexController;
-use Application\Form\ModifierDescription\ModifierDescriptionForm;
-use Application\Form\ModifierDescription\ModifierDescriptionFormFactory;
-use Application\Form\ModifierDescription\ModifierDescriptionHydrator;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
@@ -240,13 +237,11 @@ return [
     'form_elements' => [
         'factories' => [
             ModifierLibelleForm::class => ModifierLibelleFormFactory::class,
-            ModifierDescriptionForm::class => ModifierDescriptionFormFactory::class,
         ],
     ],
     'hydrators' => [
         'invokables' => [
             ModifierLibelleHydrator::class => ModifierLibelleHydrator::class,
-            ModifierDescriptionHydrator::class => ModifierDescriptionHydrator::class,
         ],
     ],
 
