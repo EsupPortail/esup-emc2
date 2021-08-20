@@ -2,6 +2,7 @@
 
 namespace Application\Form\Niveau;
 
+use Application\Form\HasDescription\HasDescriptionFieldset;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Text;
@@ -50,17 +51,11 @@ class NiveauForm extends Form {
         ]);
         // description
         $this->add([
-            'name' => 'description',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
             'attributes' => [
-                'class' => 'type2 form-control',
-            ]
+                'id' => 'description',
+            ],
         ]);
         //button
         $this->add([

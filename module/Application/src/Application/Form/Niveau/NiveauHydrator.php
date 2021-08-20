@@ -17,7 +17,9 @@ class NiveauHydrator implements HydratorInterface {
             'niveau' => $object->getNiveau(),
             'etiquette' => $object->getEtiquette(),
             'libelle' => $object->getLibelle(),
-            'description' => $object->getDescription(),
+            'HasDescription' => [
+                'description' => $object->getDescription()
+            ],
         ];
         return $data;
     }
@@ -32,7 +34,7 @@ class NiveauHydrator implements HydratorInterface {
         $niveau = isset($data['niveau'])?$data['niveau']:null;
         $etiquette = (isset($data['etiquette']) AND trim($data['etiquette']) !== '')?trim($data['etiquette']):null;
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
-        $description = (isset($data['description']) AND trim($data['description']) !== '')?trim($data['description']):null;
+        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
 
         $object->setNiveau((int) $niveau);
         $object->setEtiquette($etiquette);

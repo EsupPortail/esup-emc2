@@ -26,7 +26,9 @@ class HasDescriptionHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object) : object
     {
-        if (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && $data['HasDescription']['description'] != '') $object->setDescription($data['HasDescription']['description']);
+        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
+        $object->setDescription($description);
+
         return $object;
     }
 
