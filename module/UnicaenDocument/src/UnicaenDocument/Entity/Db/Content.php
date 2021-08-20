@@ -10,6 +10,7 @@ class Content implements HistoriqueAwareInterface {
 
     const TYPE_TXT = 'texte';
     const TYPE_PDF = 'pdf';
+    const TYPE_MAIL = 'mail';
 
     /** @var integer */
     private $id;

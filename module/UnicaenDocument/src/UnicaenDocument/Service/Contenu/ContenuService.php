@@ -20,7 +20,7 @@ class ContenuService {
      * @param Content $content
      * @return Content
      */
-    public function create(Content $content)
+    public function create(Content $content) : Content
     {
         $this->createFromTrait($content);
         return $content;
@@ -30,7 +30,7 @@ class ContenuService {
      * @param Content $content
      * @return Content
      */
-    public function update(Content $content)
+    public function update(Content $content) : Content
     {
         $this->updateFromTrait($content);
         return $content;
@@ -40,7 +40,7 @@ class ContenuService {
      * @param Content $content
      * @return Content
      */
-    public function historise(Content $content)
+    public function historise(Content $content) : Content
     {
         $this->historiserFromTrait($content);
         return $content;
@@ -50,7 +50,7 @@ class ContenuService {
      * @param Content $content
      * @return Content
      */
-    public function restore(Content $content)
+    public function restore(Content $content) : Content
     {
         $this->restoreFromTrait($content);
         return $content;
@@ -60,7 +60,7 @@ class ContenuService {
      * @param Content $content
      * @return Content
      */
-    public function delete(Content $content)
+    public function delete(Content $content) : Content
     {
         $this->deleteFromTrait($content);
         return $content;
@@ -71,7 +71,7 @@ class ContenuService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Content::class)->createQueryBuilder('contenu')
         ;
@@ -84,7 +84,7 @@ class ContenuService {
      * @param string $ordre
      * @return Content[]
      */
-    public function getContenus($champ = 'code', $ordre = 'ASC')
+    public function getContenus(string $champ = 'code', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('contenu.' . $champ, $ordre)
@@ -95,10 +95,10 @@ class ContenuService {
     }
 
     /**
-     * @param integer $id
-     * @return Content
+     * @param int|null $id
+     * @return Content|null
      */
-    public function getContenu(int $id)
+    public function getContenu(?int $id) : ?Content
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('contenu.id = :id')
@@ -115,9 +115,9 @@ class ContenuService {
 
     /**
      * @param string $code
-     * @return Content
+     * @return Content|null
      */
-    public function getContenuByCode(string $code)
+    public function getContenuByCode(string $code) : ?Content
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('contenu.code = :code')
@@ -135,9 +135,9 @@ class ContenuService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return Content
+     * @return Content|null
      */
-    public function getRequestedContenu(AbstractActionController $controller, string $param='contenu')
+    public function getRequestedContenu(AbstractActionController $controller, string $param='contenu') : ?Content
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getContenu($id);
@@ -152,10 +152,10 @@ class ContenuService {
      * @param array $variables
      * @return string
      */
-    private function replaceMacros($texteInitial, $variables)
+    private function replaceMacros(string $texteInitial, array $variables) : string
     {
         $matches = [];
-        preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);
+        preg_match_all('/VAR\[[a-zA-Z0-9_]*#[a-zA-Z0-9_]*\]/', $texteInitial, $matches);
 
         $patterns = array_unique($matches[0]);
         $replacements = [];
@@ -172,7 +172,7 @@ class ContenuService {
      * @param array $variables
      * @return string
      */
-    public function generateComplement($contenu, $variables)
+    public function generateComplement(Content $contenu, array $variables) : string
     {
         return $this->replaceMacros($contenu->getComplement(), $variables);
     }
@@ -182,10 +182,9 @@ class ContenuService {
      * @param array $variables
      * @return string
      */
-    public function generateContenu($contenu, $variables)
+    public function generateContenu(Content $contenu, array $variables) : string
     {
-        $texte = "";
-        $texte .= "<style>";
+        $texte = "<style>";
         $texte .= $contenu->getCss();
         $texte .= "</style>";
         $texte .= $this->replaceMacros($contenu->getContent(), $variables);
@@ -197,7 +196,7 @@ class ContenuService {
      * @param array $variables
      * @return string
      */
-    public function generateTitre($contenu, $variables)
+    public function generateTitre(Content $contenu, array $variables) : string
     {
         return $this->replaceMacros($contenu->getComplement(), $variables);
     }

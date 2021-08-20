@@ -18,7 +18,7 @@ class FormationHydrator implements HydratorInterface
     {
         $data = [
             'libelle' => $object->getLibelle(),
-            'description' => $object->getDescription(),
+            'HasDescription' => ['description' => $object->getDescription()],
             'lien' => $object->getLien(),
             'groupe' => ($object->getGroupe()) ? $object->getGroupe()->getId() : null,
         ];
@@ -34,8 +34,10 @@ class FormationHydrator implements HydratorInterface
     public function hydrate(array $data, $object)
     {
         $groupe = (isset($data['groupe']) && $data['groupe'] !== "") ? $this->getFormationGroupeService()->getFormationGroupe($data['groupe']) : null;
+        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
+
         $object->setLibelle($data['libelle']);
-        $object->setDescription($data['description']);
+        $object->setDescription($description);
         $object->setLien($data['lien']);
         $object->setGroupe($groupe);
         return $object;

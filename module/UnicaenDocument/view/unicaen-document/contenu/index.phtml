@@ -43,11 +43,11 @@ $this->headTitle("Index des contenus");
                 <td>
                     <?php echo $contenu->getCode(); ?>
                     <?php if ($contenu->getDescription() !== null) : ?>
-                        <span class="icon information" title="<?php echo $contenu->getDescription(); ?>"></span>
+                        <span class="icon information" title="<?php echo $contenu->getDescription(); ?>" data-toggle="tooltip" data-html="true"></span>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php echo $contenu->getType(); ?>
+                    <span class="icon <?php echo $contenu->getType(); ?>"></span>
                 </td>
                 <td>
                     <?php if ($canAfficher) : ?>

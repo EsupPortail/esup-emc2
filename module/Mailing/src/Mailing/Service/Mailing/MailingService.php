@@ -264,7 +264,7 @@ class MailingService
         $message->setSubject($sujet);
 
 
-        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application EMC2. </i></p>" . $texte;
+        $texte = "<p><i>Ce courrier électronique vous a été adressé <strong>automatiquement</strong> par l'application ".$name.". </i></p>" . $texte;
 
         if ($this->doNotSend) {
             $texte .= "<br/><br/><hr/><br/>";

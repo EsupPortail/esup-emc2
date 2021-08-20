@@ -2,7 +2,12 @@
 
 namespace Fichier\Entity\Db;
 
-class Nature {
+use Application\Entity\Db\Interfaces\HasDescriptionInterface;
+use Application\Entity\Db\Traits\HasDescriptionTrait;
+
+class Nature implements HasDescriptionInterface {
+    use HasDescriptionTrait;
+
     const CV        = 'CV';
     const MOTIV     = 'MOTIV';
     const FORMATION = 'FORMATION';
@@ -14,8 +19,6 @@ class Nature {
     private $code;
     /** @var string */
     private $libelle;
-    /** @var string */
-    private $description;
 
     /**
      * @return int
@@ -60,24 +63,4 @@ class Nature {
         $this->libelle = $libelle;
         return $this;
     }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     * @return Nature
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-
 }

@@ -269,8 +269,13 @@ span.icon.clef:before {
     content:"\f084";
 }
 
+span.icon.mail:before,
 span.icon.courrier:before {
     content:"\f0e0";
+}
+
+span.icon.texte:before {
+    content:"\f15c";
 }
 
 span.icon.code:before {

@@ -47,8 +47,6 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /** @var ArrayCollection (Structure) */
     private $enfants;
 
-    /** @var string */
-    private $description;
     /** @var ArrayCollection */
     private $gestionnaires;
     /** @var ArrayCollection */
@@ -76,7 +74,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return string
      */
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
@@ -84,7 +82,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return string
      */
-    public function getCode()
+    public function getCode() : string
     {
         return $this->code;
     }
@@ -92,7 +90,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return string
      */
-    public function getLibelleCourt()
+    public function getLibelleCourt() : string
     {
         return $this->libelleCourt;
     }
@@ -100,7 +98,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return string
      */
-    public function getLibelleLong()
+    public function getLibelleLong() : string
     {
         return $this->libelleLong;
     }
@@ -108,23 +106,23 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return StructureType
      */
-    public function getType()
+    public function getType() : StructureType
     {
         return $this->type;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getOuverture()
+    public function getOuverture() : ?DateTime
     {
         return $this->ouverture;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getFermeture()
+    public function getFermeture() : ?DateTime
     {
         return $this->fermeture;
     }
@@ -146,7 +144,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return User[]
      */
-    public function getGestionnaires()
+    public function getGestionnaires() : array
     {
         if ($this->gestionnaires === null) return [];
         return $this->gestionnaires->toArray();
@@ -156,7 +154,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param User $user
      * @return Structure
      */
-    public function addGestionnaire(User $user)
+    public function addGestionnaire(User $user) : Structure
     {
         $this->gestionnaires->add($user);
         return $this;
@@ -166,7 +164,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param User $user
      * @return Structure
      */
-    public function removeGestionnaire(User $user)
+    public function removeGestionnaire(User $user) : Structure
     {
         $this->gestionnaires->removeElement($user);
         return $this;
@@ -175,7 +173,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return User[]
      */
-    public function getResponsables()
+    public function getResponsables() : array
     {
         if ($this->responsables === null) return [];
         return $this->responsables->toArray();
@@ -185,7 +183,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param User $user
      * @return Structure
      */
-    public function addResponsable(User $user)
+    public function addResponsable(User $user) : Structure
     {
         $this->responsables->add($user);
         return $this;
@@ -195,7 +193,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param User $user
      * @return Structure
      */
-    public function removeResponsable(User $user)
+    public function removeResponsable(User $user) : Structure
     {
         $this->responsables->removeElement($user);
         return $this;
@@ -206,7 +204,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return Poste[]
      */
-    public function getPostes()
+    public function getPostes() : array
     {
         return $this->postes->toArray();
     }
@@ -215,7 +213,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param Poste $poste
      * @return Structure
      */
-    public function addPoste($poste)
+    public function addPoste(Poste $poste) : Structure
     {
         $this->postes->add($poste);
         return $this;
@@ -225,7 +223,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param Poste $poste
      * @return Structure
      */
-    public function removePoste($poste)
+    public function removePoste(Poste $poste) : Structure
     {
         $this->postes->removeElement($poste);
         return $this;
@@ -235,14 +233,14 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param Poste $poste
      * @return boolean
      */
-    public function hasPoste($poste)
+    public function hasPoste(Poste $poste) : bool
     {
         return $this->postes->contains($poste);
     }
     /**
      * @return AgentMissionSpecifique[]
      */
-    public function getMissions()
+    public function getMissions() : array
     {
         return $this->missions->toArray();
     }
@@ -251,7 +249,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param AgentMissionSpecifique $mission
      * @return Structure
      */
-    public function addMission($mission)
+    public function addMission(AgentMissionSpecifique $mission) : Structure
     {
         $this->missions->add($mission);
         return $this;
@@ -261,7 +259,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param AgentMissionSpecifique $mission
      * @return Structure
      */
-    public function removeMission($mission)
+    public function removeMission(AgentMissionSpecifique $mission) : Structure
     {
         $this->postes->removeElement($mission);
         return $this;
@@ -271,51 +269,31 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param AgentMissionSpecifique $mission
      * @return boolean
      */
-    public function hasMission($mission)
+    public function hasMission(AgentMissionSpecifique $mission) : bool
     {
         return $this->missions->contains($mission);
     }
 
     /**
-     * @return Structure
+     * @return Structure|null
      */
-    public function getParent()
+    public function getParent() : ?Structure
     {
         return $this->parent;
     }
 
     /**
-     * @param Structure $parent
-     * @return Structure
+     * @return Structure[]
      */
-    public function setParent($parent)
+    public function getEnfants() : array
     {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getEnfants()
-    {
-        return $this->enfants;
-    }
-
-    /**
-     * @param ArrayCollection $enfants
-     * @return Structure
-     */
-    public function setEnfants($enfants)
-    {
-        $this->enfants = $enfants;
-        return $this;
+        return $this->enfants->toArray();
     }
 
     /**
      * @return bool
      */
-    public function getRepriseResumeMere()
+    public function getRepriseResumeMere() : bool
     {
         return $this->repriseResumeMere;
     }
@@ -324,7 +302,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      * @param bool $repriseResumeMere
      * @return Structure
      */
-    public function setRepriseResumeMere($repriseResumeMere)
+    public function setRepriseResumeMere(bool $repriseResumeMere) : Structure
     {
         $this->repriseResumeMere = $repriseResumeMere;
         return $this;
@@ -351,7 +329,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return FichePoste[]
      */
-    public function getFichesPostesRecrutements()
+    public function getFichesPostesRecrutements() : array
     {
         return $this->fichesPostesRecrutements->toArray();
     }
@@ -380,10 +358,9 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
-        $text =  "";
-        $text .= "[".$this->getType()."] ";
+        $text = "[".$this->getType()."] ";
         $text .= $this->getLibelleCourt();
         return $text;
     }

@@ -5,7 +5,9 @@ namespace Formation\Entity\Db;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
@@ -13,8 +15,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasSourceInterface
+class Formation implements HistoriqueAwareInterface,
+    HasDescriptionInterface, HasSourceInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
 {
+    use HasDescriptionTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
     use HasApplicationCollectionTrait;
@@ -27,8 +32,6 @@ class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInt
     private $id;
     /** @var string */
     private $libelle;
-    /** @var string */
-    private $description;
     /** @var string */
     private $lien;
     /** @var FormationGroupe */
@@ -68,24 +71,6 @@ class Formation implements HistoriqueAwareInterface, HasApplicationCollectionInt
     public function setLibelle(?string $libelle) : Formation
     {
         $this->libelle = $libelle;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDescription() : ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string|null $description
-     * @return Formation
-     */
-    public function setDescription(?string $description) : Formation
-    {
-        $this->description = $description;
         return $this;
     }
 

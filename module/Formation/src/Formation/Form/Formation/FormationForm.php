@@ -2,6 +2,7 @@
 
 namespace Formation\Form\Formation;
 
+use Application\Form\HasDescription\HasDescriptionFieldset;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -45,19 +46,13 @@ class FormationForm extends Form
                 'style' => 'height:300px;',
             ]
         ]);
-        // description
+        //description
         $this->add([
-            'name' => 'description',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
             'attributes' => [
-                'class' => 'type2 form-control',
-            ]
+                'id' => 'description',
+            ],
         ]);
         //lien
         $this->add([

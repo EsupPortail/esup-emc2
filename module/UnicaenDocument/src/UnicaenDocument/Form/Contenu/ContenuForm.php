@@ -53,6 +53,7 @@ class ContenuForm extends Form {
                 'value_options' => [
                     Content::TYPE_PDF => "Fichier PDF",
                     Content::TYPE_TXT => "Contenu textuel",
+                    Content::TYPE_MAIL => "Courrier électronique",
                 ],
             ],
         ]);
