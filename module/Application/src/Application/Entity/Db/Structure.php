@@ -2,8 +2,10 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\MacroContent\StructureMacroTrait;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
+use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Application\Entity\SynchroAwareInterface;
 use Application\Entity\SynchroAwareTrait;
 use DateTime;
@@ -11,8 +13,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Structure implements ResourceInterface, SynchroAwareInterface {
+class Structure implements ResourceInterface, SynchroAwareInterface, HasDescriptionInterface {
     use DbImportableAwareTrait;
+    use HasDescriptionTrait;
     use SynchroAwareTrait;
     use StructureMacroTrait;
 
@@ -127,26 +130,15 @@ class Structure implements ResourceInterface, SynchroAwareInterface {
     }
 
     /**
-     * @param bool $avecReprise
      * @return string
      */
-    public function getDescription(bool $avecReprise = true)
+    public function getDescriptionComplete() : string
     {
         $text = "";
-        if ($avecReprise === true AND $this->getRepriseResumeMere() AND $this->parent !== null) {
+        if ($this->getRepriseResumeMere() AND $this->parent !== null) {
             $text .= $this->parent->getDescription() . "<br/>";
         }
         return $text . $this->description ;
-    }
-
-    /**
-     * @param string $description
-     * @return Structure
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-        return $this;
     }
 
     /** GESTIONNAIRES ET RESPONSABLES **************************************************************************/

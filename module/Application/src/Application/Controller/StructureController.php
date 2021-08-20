@@ -9,8 +9,8 @@ use Application\Entity\Db\StructureAgentForce;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
+use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
-use Application\Form\Structure\StructureFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
@@ -51,7 +51,7 @@ class StructureController extends AbstractActionController {
     use AgentMissionSpecifiqueFormAwareTrait;
     use AjouterGestionnaireFormAwareTrait;
     use SelectionAgentFormAwareTrait;
-    use StructureFormAwareTrait;
+    use HasDescriptionFormAwareTrait;
 
     public function indexAction()
     {
@@ -151,7 +151,7 @@ class StructureController extends AbstractActionController {
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
 
-        $form = $this->getStructureForm();
+        $form = $this->getHasDescriptionForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/editer-description', ['structure' => $structure->getId()], [] , true));
         $form->bind($structure);
 

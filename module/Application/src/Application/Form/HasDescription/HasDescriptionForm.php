@@ -1,34 +1,28 @@
 <?php
 
-namespace Application\Form\Structure;
+namespace Application\Form\HasDescription;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Form;
 
-class StructureForm extends Form {
-
+class HasDescriptionForm extends Form
+{
     public function init()
     {
         // description
         $this->add([
-            'name' => 'description',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
             'attributes' => [
-                'class' => 'type2 form-control',
-            ]
+                'id' => 'description',
+            ],
         ]);
         // button
         $this->add([
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer l\'application',
+                'label' => '<i class="fas fa-save"></i> Enregistrer',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

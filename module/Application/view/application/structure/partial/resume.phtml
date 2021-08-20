@@ -50,8 +50,8 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
                 Reprise du résumé de la structure mère.
             </div>
         <?php endif; ?>
-        <?php if ($structure->getDescription()) : ?>
-            <?php echo $structure->getDescription(); ?>
+        <?php if ($structure->getDescriptionComplete()) : ?>
+            <?php echo $structure->getDescriptionComplete(); ?>
         <?php else : ?>
             <span class="probleme"> <span class="icon attention"></span> Aucune description. </span>
         <?php endif; ?>

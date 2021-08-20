@@ -8,9 +8,6 @@ use Application\Controller\StructureController;
 use Application\Controller\StructureControllerFactory;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormFactory;
-use Application\Form\Structure\StructureForm;
-use Application\Form\Structure\StructureFormFactory;
-use Application\Form\Structure\StructureHydrator;
 use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\Structure\StructureService;
 use Application\Service\Structure\StructureServiceFactory;
@@ -381,13 +378,11 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            StructureForm::class => StructureFormFactory::class,
             AjouterGestionnaireForm::class => AjouterGestionnaireFormFactory::class,
         ],
     ],
     'hydrators' => [
-        'invokables' => [
-            StructureHydrator::class => StructureHydrator::class,
+        'factories' => [
         ],
     ]
 

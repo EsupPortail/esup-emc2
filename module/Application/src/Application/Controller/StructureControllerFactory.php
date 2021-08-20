@@ -4,8 +4,9 @@ namespace Application\Controller;
 
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
+use Application\Form\HasDescription\HasDescriptionForm;
+use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentForm;
-use Application\Form\Structure\StructureForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
@@ -58,12 +59,12 @@ class StructureControllerFactory {
          * @var AgentMissionSpecifiqueForm $affectationForm
          * @var AjouterGestionnaireForm $ajouterGestionnaire
          * @var SelectionAgentForm $selectionAgentForm
-         * @var StructureForm $structureForm
+         * @var HasDescriptionFormAwareTrait $hasDescriptionForm
          */
         $affectationForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
         $ajouterGestionnaire = $container->get('FormElementManager')->get(AjouterGestionnaireForm::class);
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
-        $structureForm = $container->get('FormElementManager')->get(StructureForm::class);
+        $hasDescriptionForm = $container->get('FormElementManager')->get(HasDescriptionForm::class);
 
         /** @var StructureController $controller */
         $controller = new StructureController();
@@ -85,7 +86,7 @@ class StructureControllerFactory {
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
         $controller->setAjouterGestionnaireForm($ajouterGestionnaire);
         $controller->setSelectionAgentForm($selectionAgentForm);
-        $controller->setStructureForm($structureForm);
+        $controller->setHasDescriptionForm($hasDescriptionForm);
 
         return $controller;
     }
