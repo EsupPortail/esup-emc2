@@ -15,7 +15,7 @@ class CampagneControllerFactory extends AbstractActionController {
      * @param ContainerInterface $container
      * @return CampagneController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CampagneController
     {
         /**
          * @var CampagneService $campagneService

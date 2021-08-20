@@ -10,7 +10,7 @@ trait CampagneServiceAwareTrait {
     /**
      * @return CampagneService
      */
-    public function getCampagneService()
+    public function getCampagneService() : CampagneService
     {
         return $this->campagneService;
     }

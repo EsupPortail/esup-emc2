@@ -10,6 +10,7 @@ use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -22,7 +23,7 @@ class CampagneController extends AbstractActionController {
 
     use CampagneFormAwareTrait;
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $campagne = new Campagne();
         $campagne->setAnnee($this->getAnneeScolaire());
@@ -65,7 +66,7 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
@@ -91,21 +92,21 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getCampagneService()->historise($campagne);
         return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getCampagneService()->restore($campagne);
         return $this->redirect()->toRoute('entretien-professionnel', [], ['fragment' => 'campagne'], true);
     }
 
-    public function detruireAction()
+    public function detruireAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 

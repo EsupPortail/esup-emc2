@@ -18,7 +18,8 @@ class SursisService {
      * @param Sursis $sursis
      * @return Sursis
      */
-    public function create(Sursis $sursis) {
+    public function create(Sursis $sursis) : Sursis
+    {
         $this->createFromTrait($sursis);
         return $sursis;
     }
@@ -27,7 +28,8 @@ class SursisService {
      * @param Sursis $sursis
      * @return Sursis
      */
-    public function update(Sursis $sursis) {
+    public function update(Sursis $sursis) : Sursis
+    {
         $this->updateFromTrait($sursis);
         return $sursis;
     }
@@ -36,7 +38,8 @@ class SursisService {
      * @param Sursis $sursis
      * @return Sursis
      */
-    public function historise(Sursis $sursis) {
+    public function historise(Sursis $sursis) : Sursis
+    {
         $this->historiserFromTrait($sursis);
         return $sursis;
     }
@@ -45,7 +48,8 @@ class SursisService {
      * @param Sursis $sursis
      * @return Sursis
      */
-    public function restore(Sursis $sursis) {
+    public function restore(Sursis $sursis) : Sursis
+    {
         $this->restoreFromTrait($sursis);
         return $sursis;
     }
@@ -54,7 +58,8 @@ class SursisService {
      * @param Sursis $sursis
      * @return Sursis
      */
-    public function delete(Sursis $sursis) {
+    public function delete(Sursis $sursis) : Sursis
+    {
         $this->deleteFromTrait($sursis);
         return $sursis;
     }

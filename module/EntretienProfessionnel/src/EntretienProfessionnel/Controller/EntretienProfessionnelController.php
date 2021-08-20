@@ -11,6 +11,7 @@ use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
@@ -339,20 +340,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $entityId = $entretien->getId();
 
-        $validationType = null;
-        $elementText = null;
-
-        switch ($type) {
-            case 'Agent' :
-                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("ENTRETIEN_AGENT");
-                break;
-            case 'Responsable' :
-                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("ENTRETIEN_RESPONSABLE");
-                break;
-            case 'DRH' :
-                $validationType = $this->getValidationTypeService()->getValidationTypeByCode("ENTRETIEN_DRH");
-                break;
-        }
+        $validationType = $this->getValidationTypeService()->getValidationTypeByCode($type);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -367,7 +355,7 @@ class EntretienProfessionnelController extends AbstractActionController
             }
             if ($validation !== null and $entretien !== null) {
                 switch ($type) {
-                    case 'Agent' :
+                    case EntretienProfessionnelConstant::VALIDATION_AGENT :
                         $entretien->setValidationAgent($validation);
                         $responsables = $this->getAgentService()->getResponsablesHierarchiques($entretien->getAgent());
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
@@ -378,14 +366,14 @@ class EntretienProfessionnelController extends AbstractActionController
                         $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
-                    case 'Responsable' :
+                    case EntretienProfessionnelConstant::VALIDATION_RESPONSABLE :
                         $entretien->setValidationResponsable($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
                         $mail1 = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getEmail()]);
                         $this->getMailingService()->addAttachement($mail1, EntretienProfessionnel::class, $entretien->getId());
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
-                    case 'DRH' :
+                    case EntretienProfessionnelConstant::VALIDATION_DRH :
                         $entretien->setValidationDRH($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));
                         $mail = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_DRH", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
@@ -421,15 +409,15 @@ class EntretienProfessionnelController extends AbstractActionController
         $entity = $this->getValidationInstanceService()->getEntity($validation);
 
         /** TODO c'est vraiment crado (faire mieux ...) */
-        if ($validation->getType()->getCode() === "ENTRETIEN_AGENT") {
+        if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_AGENT) {
             $entity->setValidationAgent(null);
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
         }
-        if ($validation->getType()->getCode() === "ENTRETIEN_RESPONSABLE") {
+        if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_RESPONSABLE) {
             $entity->setValidationResponsable(null);
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
         }
-        if ($validation->getType()->getCode() === "ENTRETIEN_DRH") {
+        if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_DRH) {
             $entity->setValidationDRH(null);
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
         }

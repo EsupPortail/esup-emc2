@@ -5,6 +5,7 @@
  */
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
@@ -64,7 +65,7 @@ $hasValidationDRH = ($entretien->getValidationDRH());
                     <?php else : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Responsable'], [], true); ?>"
+                                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_RESPONSABLE], [], true); ?>"
                                 class="btn btn-success action ajax-modal"
                                 data-event="modification"
                         >
@@ -124,7 +125,7 @@ $hasValidationDRH = ($entretien->getValidationDRH());
                     <?php else : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'Agent'], [], true); ?>"
+                                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_AGENT], [], true); ?>"
                                 class="btn btn-success action ajax-modal"
                                 data-event="modification"
                         >
@@ -180,7 +181,7 @@ $hasValidationDRH = ($entretien->getValidationDRH());
                     <?php else : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => 'DRH'], [], true); ?>"
+                                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_DRH], [], true); ?>"
                                 class="btn btn-success action ajax-modal"
                                 data-event="modification"
                         >

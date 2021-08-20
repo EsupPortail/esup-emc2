@@ -88,7 +88,7 @@ class CampagneService {
      * @param string $ordre
      * @return Campagne[]
      */
-    public function getCampagnes($champ='annee', $ordre='DESC') : array
+    public function getCampagnes(string $champ='annee', string $ordre='DESC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.' . $champ, $ordre);
@@ -102,7 +102,7 @@ class CampagneService {
      * @param string $ordre
      * @return array (id => string)
      */
-    public function getCampagnesAsOptions($champ='annee', $ordre='DESC') : array
+    public function getCampagnesAsOptions(string $champ='annee', string $ordre='DESC') : array
     {
         $campagnes = $this->getCampagnes($champ, $ordre);
 
@@ -163,7 +163,7 @@ class CampagneService {
      * @param DateTime|null $date
      * @return Campagne|null
      */
-    public function getLastCampagne($date = null) : ?Campagne
+    public function getLastCampagne(?DateTime $date = null) : ?Campagne
     {
         if ($date === null) $date = $this->getDateTime();
         $qb = $this->createQueryBuilder()
