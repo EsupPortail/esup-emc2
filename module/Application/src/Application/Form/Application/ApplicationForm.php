@@ -2,6 +2,7 @@
 
 namespace Application\Form\Application;
 
+use Application\Form\HasDescription\HasDescriptionFieldset;
 use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -46,17 +47,11 @@ class ApplicationForm extends Form {
         ]);
         // description
         $this->add([
-            'name' => 'description',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
             'attributes' => [
-                'class' => 'type2 form-control',
-            ]
+                'id' => 'description',
+            ],
         ]);
         // url
         $this->add([

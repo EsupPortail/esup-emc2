@@ -2,16 +2,17 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasDescriptionInterface;
+use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Application {
+class Application implements HasDescriptionInterface {
+    use HasDescriptionTrait;
 
     /** @var integer */
     private $id;
     /** @var string */
     private $libelle;
-    /** @var string */
-    private $description;
     /** @var string */
     private $url;
     /** @var boolean */
@@ -53,24 +54,6 @@ class Application {
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     * @return Application
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
         return $this;
     }
 

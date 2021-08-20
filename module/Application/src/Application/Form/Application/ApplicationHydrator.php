@@ -23,7 +23,9 @@ class ApplicationHydrator implements HydratorInterface {
         $data = [
             'libelle' => $object->getLibelle(),
             'groupe' => ($object->getGroupe())?$object->getGroupe()->getId():null,
-            'description' => $object->getDescription(),
+            'HasDescription' => [
+                'description' => $object->getDescription()
+            ],
             'url' => $object->getUrl(),
             'formations' => $formationIds,
         ];
@@ -48,11 +50,6 @@ class ApplicationHydrator implements HydratorInterface {
         $object->setGroupe($groupe);
 
         $object->setLibelle($data['libelle']);
-        if ($data['description'] === null || $data['description'] === '') {
-            $object->setDescription(null);
-        } else {
-            $object->setDescription($data['description']);
-        }
         if ($data['url'] === null || $data['url'] === '') {
             $object->setUrl(null);
         } else {
@@ -61,6 +58,9 @@ class ApplicationHydrator implements HydratorInterface {
 
         foreach ($object->getFormations() as $formation) $object->removeFormation($formation);
         foreach ($formations as $formation) $object->addFormation($formation);
+
+        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
+        $object->setDescription($description);
 
         return $object;
     }
