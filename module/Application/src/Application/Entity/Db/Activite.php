@@ -8,15 +8,18 @@ use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
+use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class Activite implements HistoriqueAwareInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface
 {
     use HistoriqueAwareTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
+    use HasFormationCollectionTrait;
 
     /** @var int */
     private $id;
@@ -24,8 +27,6 @@ class Activite implements HistoriqueAwareInterface,
     private $libelles;
     /** @var ArrayCollection */
     private $descriptions;
-    /** @var ArrayCollection */
-    private $formations;
     /** @var ArrayCollection (FicheMetier) */
     private $fiches;
 
@@ -44,7 +45,7 @@ class Activite implements HistoriqueAwareInterface,
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -52,9 +53,9 @@ class Activite implements HistoriqueAwareInterface,
     /** LIBELLE *******************************************************************************************************/
 
     /**
-     * @return ActiviteLibelle
+     * @return ActiviteLibelle|null
      */
-    public function getCurrentActiviteLibelle()
+    public function getCurrentActiviteLibelle() : ?ActiviteLibelle
     {
         /** @var ActiviteLibelle $activiteLibelle */
         foreach ($this->libelles as $activiteLibelle) {
@@ -66,7 +67,7 @@ class Activite implements HistoriqueAwareInterface,
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getLibelle() : string
     {
         $libelle = null;
         /** @var ActiviteLibelle $instance */
@@ -84,11 +85,10 @@ class Activite implements HistoriqueAwareInterface,
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription() : string
     {
         $desctiptions = $this->getDescriptions();
-        $desctiption = '';
-        $desctiption .= '<ul>';
+        $desctiption  = '<ul>';
         foreach ($desctiptions as $item) $desctiption .= '<li>' . $item->getLibelle() .'</li>';
         $desctiption .= '</ul>';
         return $desctiption;
@@ -97,7 +97,7 @@ class Activite implements HistoriqueAwareInterface,
     /**
      * @return ActiviteDescription[]
      */
-    public function getDescriptions()
+    public function getDescriptions() : array
     {
         $descriptions = [];
         /** @var ActiviteDescription $activiteDescription */
@@ -111,7 +111,7 @@ class Activite implements HistoriqueAwareInterface,
     /**
      * @return Activite
      */
-    public function clearDescriptions()
+    public function clearDescriptions() : Activite
     {
         $this->descriptions->clear();
         return $this;
@@ -119,55 +119,43 @@ class Activite implements HistoriqueAwareInterface,
 
     /** APPLICATIONS - VOIR HasApplicationCollectionTrait *************************************************************/
     /** COMPETENCES - VOIR HasCompetenceCollectionTrait ***************************************************************/
-
-    /**
-     * @return Competence[]
-     */
-    public function getCompetences()
-    {
-        $competences = [];
-        /** @var ActiviteCompetence $activiteCompetence */
-        foreach ($this->competences as $activiteCompetence) {
-            if ($activiteCompetence->estNonHistorise()) $competences[] = $activiteCompetence->getCompetence();
-        }
-        return $competences;
-    }
+    /** FORMATIONS - VOIR HasFormationCollectionTrait ***************************************************************/
 
     /** FORMATIONS ****************************************************************************************************/
-
-    /**
-     * @return ArrayCollection (ActiviteFormation)
-     */
-    public function getFormationsCollection()
-    {
-        return $this->formations;
-    }
-
-    /**
-     * @return Formation[]
-     */
-    public function getFormations()
-    {
-        $formations = [];
-        /** @var ActiviteFormation $activiteFormation */
-        foreach ($this->formations as $activiteFormation) {
-            if ($activiteFormation->estNonHistorise()) $formations[] = $activiteFormation->getFormation();
-        }
-        return $formations;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return boolean
-     */
-    public function hasFormation(Formation $formation)
-    {
-        /** @var ActiviteFormation $activiteFormation */
-        foreach ($this->formations as $activiteFormation) {
-            if ($activiteFormation->estNonHistorise() AND $activiteFormation->getFormation() === $formation) return true;
-        }
-        return false;
-    }
+//
+//    /**
+//     * @return ArrayCollection (ActiviteFormation)
+//     */
+//    public function getFormationsCollection()
+//    {
+//        return $this->formations;
+//    }
+//
+//    /**
+//     * @return Formation[]
+//     */
+//    public function getFormations()
+//    {
+//        $formations = [];
+//        /** @var ActiviteFormation $activiteFormation */
+//        foreach ($this->formations as $activiteFormation) {
+//            if ($activiteFormation->estNonHistorise()) $formations[] = $activiteFormation->getFormation();
+//        }
+//        return $formations;
+//    }
+//
+//    /**
+//     * @param Formation $formation
+//     * @return boolean
+//     */
+//    public function hasFormation(Formation $formation)
+//    {
+//        /** @var ActiviteFormation $activiteFormation */
+//        foreach ($this->formations as $activiteFormation) {
+//            if ($activiteFormation->estNonHistorise() AND $activiteFormation->getFormation() === $formation) return true;
+//        }
+//        return false;
+//    }
 
     /** FICHE METIER **************************************************************************************************/
 

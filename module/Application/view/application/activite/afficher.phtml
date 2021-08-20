@@ -13,9 +13,6 @@ use Application\Provider\Privilege\ActivitePrivileges;
 
 $canModifierEnveloppe = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_MODIFIER));
 
-$competences    = $activite->getCompetences();
-$formations      = $activite->getFormations();
-
 $action = ($mode === 'modifier-activite')?"Modification":"Affichage";
 $titre = $action . " de la mission ";
 $this->headTitle($titre  . " : " .$activite->getCurrentActiviteLibelle()->getLibelle());

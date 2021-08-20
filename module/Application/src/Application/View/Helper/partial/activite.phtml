@@ -10,6 +10,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
+use Formation\Entity\Db\FormationElement;
 
 /**
  * @see \Application\View\Helper\ActiviteViewHelper
@@ -43,8 +44,9 @@ $nbCompetence  = count($competencesListe);
 $applicationsListe  = $activite->getApplicationListe();
 usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) { return $a->getApplication()->getLibelle() > $b->getApplication()->getLibelle();});
 $nbApplication = count($applicationsListe);
-$formations    = $activite->getFormations();
-$nbFormation   = count($formations);
+$formationsListe    = $activite->getFormationListe();
+usort($formationsListe, function (FormationElement $a, FormationElement $b) { return $a->getFormation()->getLibelle() > $b->getFormation()->getLibelle();});
+$nbFormation   = count($formationsListe);
 
 $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
 ?>
@@ -258,9 +260,9 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
             </h4>
 
             <ul>
-                <?php foreach ($formations as $formation) : ?>
-                    <li>
-                        <?php echo $formation->getLibelle(); ?>
+                <?php foreach ($formationsListe as $formationElement) : ?>
+                    <li title="<?php if ($formationElement->getCommentaire()) echo $formationElement->getCommentaire(); ?>">
+                        <?php echo $formationElement->getFormation()->getLibelle(); ?>
                     </li>
                 <?php endforeach; ?>
             </ul>

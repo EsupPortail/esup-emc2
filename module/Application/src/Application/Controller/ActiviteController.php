@@ -18,6 +18,7 @@ use Application\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
+use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -28,6 +29,7 @@ class ActiviteController  extends AbstractActionController {
     use ActiviteDescriptionServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
+    use HasFormationCollectionServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
@@ -330,7 +332,7 @@ class ActiviteController  extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $this->getActiviteService()->updateFormations($activite, $data);
+            $this->getHasFormationCollectionService()->updateFormations($activite, $data);
             exit();
         }
 

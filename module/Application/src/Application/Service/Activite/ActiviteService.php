@@ -3,8 +3,6 @@
 namespace Application\Service\Activite;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\ActiviteCompetence;
-use Application\Entity\Db\ActiviteFormation;
 use Application\Entity\Db\ActiviteLibelle;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
@@ -327,106 +325,6 @@ class ActiviteService {
         }
 
         $this->compacting($couple->getFiche());
-    }
-
-    /**
-     * @param Activite $activite
-     * @param $data
-     * @return Activite
-     */
-    public function updateCompetences(Activite $activite, $data)
-    {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $competenceIds = [];
-        if (isset($data['competences'])) $competenceIds = $data['competences'];
-
-        /** @var ActiviteCompetence $activiteCompetence */
-        foreach ($activite->getCompetenceCollection() as $activiteCompetence) {
-            if ($activiteCompetence->estNonHistorise()) {
-                if (array_search($activiteCompetence->getCompetence()->getId(), $competenceIds) === false) {
-                    $activiteCompetence->setHistoDestructeur($user);
-                    $activiteCompetence->setHistoDestruction($date);
-                    try {
-                        $this->getEntityManager()->flush($activiteCompetence);
-                    } catch (ORMException $e) {
-                        throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
-                    }
-                }
-            }
-        }
-
-        foreach ($competenceIds as $competenceId) {
-            $competence = $this->getCompetenceService()->getCompetence($competenceId);
-            if ($competence !== null AND !$activite->hasCompetence($competence)) {
-                $activiteCompetence = new ActiviteCompetence();
-                $activiteCompetence->setActivite($activite);
-                $activiteCompetence->setCompetence($competence);
-                $activiteCompetence->setHistoCreateur($user);
-                $activiteCompetence->setHistoCreation($date);
-                $activiteCompetence->setHistoModificateur($user);
-                $activiteCompetence->setHistoModification($date);
-                try {
-                    $this->getEntityManager()->persist($activiteCompetence);
-                    $this->getEntityManager()->flush($activiteCompetence);
-                } catch (ORMException $e) {
-                    throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
-                }
-            }
-        }
-
-        return $activite;
-    }
-
-    /**
-     * @param Activite $activite
-     * @param array $data
-     * @return Activite
-     */
-    public function updateFormations(Activite $activite, array $data)
-    {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
-
-        $formationIds = [];
-        if (isset($data['formations'])) $formationIds = $data['formations'];
-
-        /** @var ActiviteFormation $activiteFormation */
-        foreach ($activite->getFormationsCollection() as $activiteFormation) {
-            if ($activiteFormation->estNonHistorise()) {
-                if (array_search($activiteFormation->getFormation()->getId(), $formationIds) === false) {
-                    $activiteFormation->setHistoDestructeur($user);
-                    $activiteFormation->setHistoDestruction($date);
-                    try {
-                        $this->getEntityManager()->flush($activiteFormation);
-                    } catch (ORMException $e) {
-                        throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
-                    }
-                }
-            }
-        }
-
-        foreach ($formationIds as $formationId) {
-            $formation = $this->getFormationService()->getFormation($formationId);
-            if ($formation !== null AND !$activite->hasFormation($formation)) {
-                $activiteFormation = new ActiviteFormation();
-                $activiteFormation->setActivite($activite);
-                $activiteFormation->setFormation($formation);
-                $activiteFormation->setHistoCreateur($user);
-                $activiteFormation->setHistoCreation($date);
-                $activiteFormation->setHistoModificateur($user);
-                $activiteFormation->setHistoModification($date);
-                try {
-                    $this->getEntityManager()->persist($activiteFormation);
-                    $this->getEntityManager()->flush($activiteFormation);
-                } catch (ORMException $e) {
-                    throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);
-                }
-            }
-        }
-
-        return $activite;
     }
 
     /**

@@ -13,6 +13,7 @@ use Application\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
+use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Interop\Container\ContainerInterface;
 
 class ActiviteControllerFactory {
@@ -24,12 +25,14 @@ class ActiviteControllerFactory {
          * @var ActiviteDescriptionService $activiteDescriptionService
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
+         * @var HasFormationCollectionService $hasFormationCollectionService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          */
         $activiteService = $container->get(ActiviteService::class);
         $activiteDescriptionService = $container->get(ActiviteDescriptionService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
+        $hasFormationCollectionService = $container->get(HasFormationCollectionService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
 
         /**
@@ -53,6 +56,7 @@ class ActiviteControllerFactory {
         $controller->setActiviteDescriptionService($activiteDescriptionService);
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
         $controller->setHasCompetenceCollectionService($hasCompetenceCollectionService);
+        $controller->setHasFormationCollectionService($hasFormationCollectionService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setActiviteForm($activiteForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
