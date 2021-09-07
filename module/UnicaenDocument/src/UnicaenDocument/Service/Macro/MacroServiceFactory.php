@@ -12,7 +12,7 @@ class MacroServiceFactory {
      * @param ContainerInterface $container
      * @return MacroService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : MacroService
     {
         /**
          * @var EntityManager $entityManager

@@ -5,6 +5,7 @@
  * @var FicheMetier $fiche
  * @var array $competences
  * @var array $applications
+ * @var array $missions
  * @var bool $popup
  * @var ParcoursDeFormation $parcours
  */
@@ -22,6 +23,7 @@ $this->headTitle('Affichage de la fiche métier #' . $fiche->getId(). " : " . $l
         'competences' => $competences,
         'applications' => $applications,
         'parcours' => $parcours,
+        'missions' => $missions,
         'popup' => $popup,
         'actions' => ['modifier' => false, 'supprimer' => false, 'valider' => false],
     ]);

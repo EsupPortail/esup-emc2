@@ -40,34 +40,26 @@ $navigationHelper = $this->navigation('navigation');
         >
             <img src='/img/unicaen-logo-blanc.svg' alt='Logo UniCaen' class='navbar-logo-unicaen' />
         </div>
-        <div class="navbar-element navbar-appname">
-                    <?php
-                    $version = null;
-                    switch(getenv('APPLICATION_ENV')) {
-                        case 'production' :
-                            break;
-                        case 'test' :
-//                            $version = "<span class='version test'>Version de test</span>";
-                            break;
-                        case 'development' :
-//                            $version = "<span class='version development'>Version de développement</span>";
-                            break;
-                        default :
-//                            $version = "<span class='version inconnue'>Version inconnue</span>";
-                            break;
-                    }
-                    echo $this->appLink($this->appInfos()->nom, $version);
-                    ?>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <?= $this->appLink($this->appInfos()->nom);?>
         </div>
+
         <div class="navbar-collapse bs-navbar-collapse collapse">
             <?php echo $navigationHelper
                 ->menu()
                 ->setUlClass('nav navbar-nav')
                 ->setPartial('layout/navigation-octopus.phtml');
             ?>
-            <div class="navbar-element navbar-connection">
+            <p class="navbar-element navbar-connection">
                 <?php echo $this->appConnection(); ?>
-            </div>
+            </p>
         </div>
 </div>
 </header>
@@ -78,25 +70,21 @@ $navigationHelper = $this->navigation('navigation');
     </div>
 </div>
 
-<footer>
-    <ul>
-        <li>
+    <footer>
+        <div>
             <a class="footer-logo-normandie-universite" target="_blank" href="http://normandie-univ.fr/">
                 <img src="/img/normandie-universite-logo.svg" alt="Logo Nomandie Université" class="footer-logo-normandie-universite" />
             </a>
-        </li>
-        <li class="menu">
-            <?php echo $navigationHelper->menuPiedDePage('navigation'); ?></li>
-        <li>
+            <div id="menu-footer">
+                <?php echo $navigationHelper->menuPiedDePage('navigation'); ?>
+            </div>
             <img src="/img/republique-francaise-logo.svg" alt="Logo République française" class="footer-logo-republique-francaise" />
-        </li>
-        <li>
             <a class="footer-logo-unicaen" target="_blank" href="http://www.unicaen.fr/">
                 <img src="/img/unicaen-logo-noir.svg" alt="Logo UniCaen" class="footer-logo-unicaen" />
             </a>
-        </li>
-    </ul>
-</footer>
+        </div>
+    </footer>
+
 
 <?php echo $this->inlineScript(); ?>
 

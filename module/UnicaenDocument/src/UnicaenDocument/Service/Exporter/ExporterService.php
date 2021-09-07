@@ -20,7 +20,7 @@ class ExporterService extends PdfExporter {
         $this->renderer = $renderer;
     }
 
-    public function setVars(array $vars)
+    public function setVars(array $vars) : ExporterService
     {
         $this->vars = $vars;
         $this->vars['exporter'] = $this;
@@ -34,7 +34,6 @@ class ExporterService extends PdfExporter {
         parent::__construct($renderer, $format, $orientationPaysage, $defaultFontSize);
         $resolver = $renderer->resolver();
         $resolver->attach(new TemplatePathStack(['script_paths' => [__DIR__]]));
-//        $resolver->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
     }
 
     /**

@@ -8,7 +8,7 @@ use Zend\View\Renderer\PhpRenderer;
 
 class ExporterServiceFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ExporterService
     {
         /**
          * @var ContenuService $contenuService
@@ -21,7 +21,6 @@ class ExporterServiceFactory {
          * @var ExporterService $service
          */
         $service = new ExporterService($renderer);
-//        $service->setRenderer($renderer);
         $service->setContenuService($contenuService);
 
         return $service;

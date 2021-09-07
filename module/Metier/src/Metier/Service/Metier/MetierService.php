@@ -2,6 +2,7 @@
 
 namespace Metier\Service\Metier;
 
+use Application\Service\Niveau\NiveauService;
 use Metier\Entity\Db\Metier;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -77,11 +78,8 @@ class MetierService {
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
-            ->addSelect('niveaux')->leftJoin('metier.niveaux', 'niveaux')
-//            ->addSelect('bas')->leftJoin('niveaux.borneInferieure', 'bas')
-//            ->addSelect('haut')->leftJoin('niveaux.borneSuperieure', 'haut')
-//            ->addSelect('rec')->leftJoin('niveaux.valeurRecommandee', 'rec')
         ;
+        $qb = NiveauService::decorateWithNiveau($qb, 'metier', 'niveaux');
         return $qb;
     }
 
@@ -220,7 +218,7 @@ class MetierService {
      * @param string $masculin
      * @return string|null
      */
-    public static function computeEcritureInclusive(string $feminin, string $masculin) : ?string
+        public static function computeEcritureInclusive(string $feminin, string $masculin) : ?string
     {
         $split_inclusif = [];
         $split_feminin = explode(" ",$feminin);

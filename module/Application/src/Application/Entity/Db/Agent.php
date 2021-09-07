@@ -9,6 +9,7 @@ use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -30,7 +31,7 @@ class Agent implements
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
     use AgentMacroTrait;
 
-    public function getResourceId()
+    public function getResourceId() : string
     {
         return 'Agent';
     }
@@ -72,8 +73,6 @@ class Agent implements
     private $missionsSpecifiques;
     /** @var ArrayCollection (Fichier) */
     private $fichiers;
-//    /** @var ArrayCollection (AgentFormation) */
-//    private $formations;
 
     /** @var ArrayCollection (StructureAgentForce) */
     private $structuresForcees;
@@ -93,7 +92,7 @@ class Agent implements
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -101,7 +100,7 @@ class Agent implements
     /**
      * @return string
      */
-    public function getPrenom()
+    public function getPrenom() : ?string
     {
         return $this->prenom;
     }
@@ -109,7 +108,7 @@ class Agent implements
     /**
      * @return string
      */
-    public function getNomUsuel()
+    public function getNomUsuel() : ?string
     {
         return $this->nomUsuel;
     }
@@ -151,7 +150,7 @@ class Agent implements
     /**
      * @return string
      */
-    public function getDenomination()
+    public function getDenomination() : ?string
     {
         return ucwords(strtolower($this->getPrenom()), "-") . ' ' . $this->getNomUsuel();
 
@@ -194,9 +193,9 @@ class Agent implements
     }
 
     /**
-     * @return integer
+     * @return int
      */
-    public function getHarpId()
+    public function getHarpId() : int
     {
         return $this->harpId;
     }
@@ -204,16 +203,11 @@ class Agent implements
 
     /** AFFECTATIONS **************************************************************************************************/
 
-    public function isIn(Structure $structure)
-    {
-        return true;
-    }
-
     /**
      * @param DateTime|null $date
      * @return AgentAffectation[]
      */
-    public function getAffectations(?DateTime $date = null)
+    public function getAffectations(?DateTime $date = null) : array
     {
         $affectations = $this->affectations->toArray();
         $affectations = array_filter($affectations, function (AgentAffectation $aa) { return !$aa->isDeleted();});
@@ -231,9 +225,8 @@ class Agent implements
     /**
      * @return AgentAffectation
      */
-    public function getAffectationPrincipale()
+    public function getAffectationPrincipale() : ?AgentAffectation
     {
-        $structure = null;
         /** @var AgentAffectation $affectation */
         foreach ($this->getAffectations() as $affectation) {
             if ($affectation->isPrincipale() and $affectation->estEnCours()) {
@@ -246,7 +239,7 @@ class Agent implements
     /**
      * @return AgentAffectation[]
      */
-    public function getAffectationsActifs()
+    public function getAffectationsActifs() : array
     {
         $date = $this->getDateTime();
 
@@ -263,7 +256,7 @@ class Agent implements
     /**
      * @return AgentStatut[]
      */
-    public function getStatuts()
+    public function getStatuts() : array
     {
         $statuts = $this->statuts->toArray();
         $statuts = array_filter($statuts, function (AgentStatut $as) { return !$as->isDeleted();});
@@ -276,7 +269,7 @@ class Agent implements
     /**
      * @return AgentStatut[]
      */
-    public function getStatutsActifs()
+    public function getStatutsActifs() : array
     {
         $now = $this->getDateTime();
         $statuts = [];
@@ -290,7 +283,7 @@ class Agent implements
     /** GRADES ********************************************************************************************************/
 
     /** @return AgentGrade[] */
-    public function getGrades()
+    public function getGrades() : array
     {
         $grades = $this->grades->toArray();
         $grades = array_filter($grades, function (AgentGrade $ag) { return !$ag->isDeleted();});
@@ -303,7 +296,7 @@ class Agent implements
     /**
      * @return AgentGrade[]
      */
-    public function getGradesActifs()
+    public function getGradesActifs() : array
     {
         $grades = [];
         /** @var AgentGrade $grade */
@@ -336,7 +329,7 @@ class Agent implements
     /**
      * @return User
      */
-    public function getUtilisateur()
+    public function getUtilisateur() : User
     {
         return $this->utilisateur;
     }
@@ -345,7 +338,7 @@ class Agent implements
      * @param User $utilisateur
      * @return Agent
      */
-    public function setUtilisateur(User $utilisateur)
+    public function setUtilisateur(User $utilisateur) : Agent
     {
         $this->utilisateur = $utilisateur;
         return $this;
@@ -354,7 +347,7 @@ class Agent implements
     /**
      * @return FichePoste[]
      */
-    public function getFiches()
+    public function getFiches() : array
     {
         return $this->fiches->toArray();
     }
@@ -362,7 +355,7 @@ class Agent implements
     /**
      * @return Fichier[]
      */
-    public function getFichiers()
+    public function getFichiers() : array
     {
         return $this->fichiers->toArray();
     }
@@ -371,7 +364,7 @@ class Agent implements
      * @param Fichier $fichier
      * @return Agent
      */
-    public function addFichier(Fichier $fichier)
+    public function addFichier(Fichier $fichier) : Agent
     {
         $this->fichiers->add($fichier);
         return $this;
@@ -381,7 +374,7 @@ class Agent implements
      * @param Fichier $fichier
      * @return Agent
      */
-    public function removeFichier(Fichier $fichier)
+    public function removeFichier(Fichier $fichier) : Agent
     {
         $this->fichiers->removeElement($fichier);
         return $this;
@@ -391,7 +384,7 @@ class Agent implements
      * @param string $nature
      * @return Fichier[]
      */
-    public function fetchFiles(string $nature)
+    public function fetchFiles(string $nature) : array
     {
         $fichiers = $this->getFichiers();
         $fichiers = array_filter($fichiers, function (Fichier $f) use ($nature) {
@@ -406,7 +399,7 @@ class Agent implements
     /**
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnels()
+    public function getEntretiensProfessionnels() : array
     {
         $entretiens = [];
         /** @var EntretienProfessionnel $entretien */
@@ -422,7 +415,7 @@ class Agent implements
      * @return MissionSpecifique[]
      */
     /** @return AgentMissionSpecifique[] */
-    public function getMissionsSpecifiques()
+    public function getMissionsSpecifiques() : array
     {
         $missions = [];
         /** @var AgentMissionSpecifique $mission */
@@ -446,7 +439,7 @@ class Agent implements
     /**
      * @return FichePoste
      */
-    public function getFichePosteActif()
+    public function getFichePosteActif() : ?FichePoste
     {
         $now = $this->getDateTime();
         $fiches = [];
@@ -464,20 +457,21 @@ class Agent implements
     /**
      * @return Poste
      */
-    public function getPosteActif()
+    public function getPosteActif() : ?Poste
     {
         $fiche = $this->getFichePosteActif();
         return ($fiche) ? $fiche->getPoste() : null;
     }
 
     /** Entretien dans moins de 15 jours */
-    public function hasEntretienEnCours() {
+    public function hasEntretienEnCours() : bool
+    {
         $now = $this->getDateTime();
         /** @var EntretienProfessionnel $entretien */
         foreach ($this->entretiens as $entretien) {
             if ($entretien->estNonHistorise()) {
                 $date_min = DateTime::createFromFormat('d/m/Y', $entretien->getDateEntretien()->format('d/m/y'));
-                $date_min = $date_min->sub(new \DateInterval('P15D'));
+                $date_min = $date_min->sub(new DateInterval('P15D'));
                 $date_max = DateTime::createFromFormat('d/m/Y', $entretien->getDateEntretien()->format('d/m/y'));
                 if ($now >= $date_min and $now <= $date_max) return true;
             }
@@ -488,7 +482,7 @@ class Agent implements
     /**
      * @return Niveau
      */
-    public function getMeilleurNiveau()
+    public function getMeilleurNiveau() : ?Niveau
     {
         $niveau = 999;
         $grades = $this->getGradesActifs();
@@ -504,7 +498,8 @@ class Agent implements
     /**
      * @return AgentQuotite[]
      */
-    public function getQuotites() : array {
+    public function getQuotites() : array
+    {
         $quotites = $this->quotites->toArray();
         array_filter($quotites, function (AgentQuotite $q) { return !$q->isDeleted(); });
         usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDebut() > $b->getDebut();});
@@ -515,7 +510,8 @@ class Agent implements
      * @param DateTime|null $date
      * @return AgentQuotite|null
      */
-    public function getQuotiteCourante(?DateTime $date = null) : ?AgentQuotite {
+    public function getQuotiteCourante(?DateTime $date = null) : ?AgentQuotite
+    {
         /** @var AgentQuotite $quotite */
         foreach ($this->quotites as $quotite) {
             if (!$quotite->isDeleted() AND $quotite->isEnCours($date)) return $quotite;
@@ -539,7 +535,7 @@ class Agent implements
     }
 
     /** Competence */
-    public function getCompetenceDictionnaireComplet()
+    public function getCompetenceDictionnaireComplet() : array
     {
         $dictionnaire = $this->getCompetenceDictionnaire();
         foreach ($this->getFormationDictionnaire() as $item) {
@@ -560,7 +556,7 @@ class Agent implements
         return $dictionnaire;
     }
 
-    public function getApplicationDictionnaireComplet()
+    public function getApplicationDictionnaireComplet() : array
     {
         $dictionnaire = $this->getApplicationDictionnaire();
         foreach ($this->getFormationDictionnaire() as $item) {

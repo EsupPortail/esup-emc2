@@ -30,6 +30,7 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'index',
+                        'index-n',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_INDEX,
@@ -136,6 +137,16 @@ return [
 
     'router'          => [
         'routes' => [
+            'fiche-metier' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/fiche-metier',
+                    'defaults' => [
+                        'controller' => FicheMetierController::class,
+                        'action'     => 'index-n',
+                    ],
+                ],
+            ],
             'fiche-metier-type' => [
                 'type'  => Literal::class,
                 'options' => [

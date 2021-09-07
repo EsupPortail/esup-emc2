@@ -3,9 +3,10 @@
 namespace Autoform\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FormulaireInstance {
+class FormulaireInstance implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */

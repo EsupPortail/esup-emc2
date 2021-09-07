@@ -10,7 +10,7 @@ trait MacroServiceAwareTrait {
     /**
      * @return MacroService
      */
-    public function getMacroService()
+    public function getMacroService() : MacroService
     {
         return $this->macroService;
     }
@@ -19,7 +19,7 @@ trait MacroServiceAwareTrait {
      * @param MacroService $macroService
      * @return MacroService
      */
-    public function setMacroService(MacroService $macroService)
+    public function setMacroService(MacroService $macroService) : MacroService
     {
         $this->macroService = $macroService;
         return $this->macroService;

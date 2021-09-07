@@ -2,22 +2,21 @@
 
 namespace Autoform\Service\Formulaire;
 
+use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireInstanceService {
     use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
     use FormulaireServiceAwareTrait;
     use FormulaireReponseServiceAwareTrait;
+    use GestionEntiteHistorisationTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -25,23 +24,9 @@ class FormulaireInstanceService {
      * @param FormulaireInstance $instance
      * @return FormulaireInstance
      */
-    public function create($instance)
+    public function create(FormulaireInstance $instance) : FormulaireInstance
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $instance->setHistoCreateur($user);
-        $instance->setHistoCreation($date);
-        $instance->setHistoModificateur($user);
-        $instance->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->persist($instance);
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème d'enregistrement en BD.", $e);
-        }
-
+        $this->createFromTrait($instance);
         return $instance;
     }
 
@@ -49,20 +34,9 @@ class FormulaireInstanceService {
      * @param FormulaireInstance $instance
      * @return FormulaireInstance
      */
-    public function update($instance)
+    public function update(FormulaireInstance $instance) : FormulaireInstance
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $instance->setHistoModificateur($user);
-        $instance->setHistoModification($date);
-
-        try {
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème d'enregistrement en BD.", $e);
-        }
-
+        $this->updateFromTrait($instance);
         return $instance;
     }
 
@@ -70,20 +44,9 @@ class FormulaireInstanceService {
      * @param FormulaireInstance $instance
      * @return FormulaireInstance
      */
-    public function historise($instance)
+    public function historise(FormulaireInstance $instance) : FormulaireInstance
     {
-        $date = $this->getDateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $instance->setHistoDestructeur($user);
-        $instance->setHistoDestruction($date);
-
-        try {
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème d'enregistrement en BD.", $e);
-        }
-
+        $this->historiserFromTrait($instance);
         return $instance;
     }
 
@@ -91,17 +54,9 @@ class FormulaireInstanceService {
      * @param FormulaireInstance $instance
      * @return FormulaireInstance
      */
-    public function restore($instance)
+    public function restore(FormulaireInstance $instance) : FormulaireInstance
     {
-        $instance->setHistoDestructeur(null);
-        $instance->setHistoDestruction(null);
-
-        try {
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème d'enregistrement en BD.", $e);
-        }
-
+        $this->restoreFromTrait($instance);
         return $instance;
     }
 
@@ -109,55 +64,20 @@ class FormulaireInstanceService {
      * @param FormulaireInstance $instance
      * @return FormulaireInstance
      */
-    public function delete($instance)
+    public function delete(FormulaireInstance $instance) : FormulaireInstance
     {
-
-        try {
-            $this->getEntityManager()->remove($instance);
-            $this->getEntityManager()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Problème d'enregistrement en BD.", $e);
-        }
-
+        $this->deleteFromTrait($instance);
         return $instance;
     }
-
-    /**
-     * @param string $code
-     * @return FormulaireInstance
-     */
-    public function createInstance($code)
-    {
-        $instance = new FormulaireInstance();
-        $formulaire = $this->getFormulaireService()->getFormulaireByCode($code);
-        $instance->setFormulaire($formulaire);
-        $this->create($instance);
-        return $instance;
-    }
-
 
     /** REQUETAGES ****************************************************************************************************/
 
     /**
-     * @param AbstractActionController $controller
-     * @param string $label
-     * @return FormulaireInstance
+     * @param int|null $id
+     * @return FormulaireInstance|null
      */
-    public function getRequestedFormulaireInstance($controller, $label)
+    public function getFormulaireInstance(?int $id) : ?FormulaireInstance
     {
-        $id = $controller->params()->fromRoute($label);
-        $instance = $this->getFormulaireInstance($id);
-        return $instance;
-    }
-
-    /**
-     * @param integer $id
-     * @return FormulaireInstance
-     */
-    public function getFormulaireInstance($id)
-    {
-        if ($id === null) return null;
-
         $qb = $this->getEntityManager()->getRepository(FormulaireInstance::class)->createQueryBuilder('formulaire_instance')
             ->andWhere('formulaire_instance.id = :id')
             ->addSelect('formulaire')->join('formulaire_instance.formulaire', 'formulaire')
@@ -176,10 +96,24 @@ class FormulaireInstanceService {
     }
 
     /**
+     * @param AbstractActionController $controller
+     * @param string $label
+     * @return FormulaireInstance|null
+     */
+    public function getRequestedFormulaireInstance(AbstractActionController $controller, string $label) : ?FormulaireInstance
+    {
+        $id = $controller->params()->fromRoute($label);
+        $instance = $this->getFormulaireInstance($id);
+        return $instance;
+    }
+
+    /** CREATION ET DUPLICATION ... ***********************************************************************************/
+
+    /**
      * @param FormulaireInstance $reference
      * @param FormulaireInstance $instance
      */
-    public function duplicate($reference, $instance)
+    public function duplicate(FormulaireInstance $reference, FormulaireInstance $instance)
     {
         foreach ($reference->getReponses() as $reponse) {
             $newReponse = new FormulaireReponse();
@@ -192,6 +126,12 @@ class FormulaireInstanceService {
         $this->update($instance);
     }
 
+    /**
+     * @param FormulaireInstance $instance1
+     * @param FormulaireInstance $instance2
+     * @param $champId1
+     * @param $champId2
+     */
     public function recopie(FormulaireInstance $instance1, FormulaireInstance $instance2, $champId1, $champId2) {
         $reponses = $instance1->getReponses();
         foreach ($reponses as $reponse) {
@@ -209,4 +149,16 @@ class FormulaireInstanceService {
         }
     }
 
+    /**
+     * @param string $code
+     * @return FormulaireInstance
+     */
+    public function createInstance($code)
+    {
+        $instance = new FormulaireInstance();
+        $formulaire = $this->getFormulaireService()->getFormulaireByCode($code);
+        $instance->setFormulaire($formulaire);
+        $this->create($instance);
+        return $instance;
+    }
 }

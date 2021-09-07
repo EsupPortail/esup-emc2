@@ -18,7 +18,7 @@ class MacroService {
      * @param Macro $macro
      * @return Macro
      */
-    public function create(Macro $macro)
+    public function create(Macro $macro) : Macro
     {
         $this->createFromTrait($macro);
         return $macro;
@@ -28,7 +28,7 @@ class MacroService {
      * @param Macro $macro
      * @return Macro
      */
-    public function update(Macro $macro)
+    public function update(Macro $macro) : Macro
     {
         $this->updateFromTrait($macro);
         return $macro;
@@ -38,7 +38,7 @@ class MacroService {
      * @param Macro $macro
      * @return Macro
      */
-    public function historise(Macro $macro)
+    public function historise(Macro $macro) : Macro
     {
         $this->historiserFromTrait($macro);
         return $macro;
@@ -48,7 +48,7 @@ class MacroService {
      * @param Macro $macro
      * @return Macro
      */
-    public function restore(Macro $macro)
+    public function restore(Macro $macro) : Macro
     {
         $this->restoreFromTrait($macro);
         return $macro;
@@ -58,7 +58,7 @@ class MacroService {
      * @param Macro $macro
      * @return Macro
      */
-    public function delete(Macro $macro)
+    public function delete(Macro $macro) : Macro
     {
         $this->deleteFromTrait($macro);
         return $macro;
@@ -69,7 +69,7 @@ class MacroService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Macro::class)->createQueryBuilder('macro')
             ->addSelect('createur')->join('macro.histoCreateur', 'createur')
@@ -84,7 +84,7 @@ class MacroService {
      * @param string $ordre
      * @return Macro[]
      */
-    public function getMacros(string $champ = 'code', string $ordre = 'ASC')
+    public function getMacros(string $champ = 'code', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('macro.' . $champ, $ordre)
@@ -98,7 +98,8 @@ class MacroService {
      * @param integer $id
      * @return Macro
      */
-    public function getMacro(int $id) {
+    public function getMacro(int $id) : ?Macro
+    {
         $qb = $this->createQueryBuilder()
             ->andWhere('macro.id = :id')
             ->setParameter('id', $id)
@@ -116,7 +117,8 @@ class MacroService {
      * @param string $code
      * @return Macro
      */
-    public function getMacroByCode(string $code) {
+    public function getMacroByCode(string $code) : ?Macro
+    {
         $qb = $this->createQueryBuilder()
             ->andWhere('macro.code = :code')
             ->setParameter('code', $code)
@@ -135,7 +137,7 @@ class MacroService {
      * @param string $param
      * @return Macro
      */
-    public function getRequestedMacro(AbstractActionController $controller, $param = 'macro')
+    public function getRequestedMacro(AbstractActionController $controller, string $param = 'macro') : ?Macro
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getMacro($id);
@@ -149,7 +151,7 @@ class MacroService {
      * @param array $variables
      * @return string
      */
-    public function getTexte(string $code, array $variables)
+    public function getTexte(string $code, array $variables) : string
     {
         $code = str_replace('VAR[','', $code);
         $code = str_replace(']','', $code);
@@ -171,7 +173,7 @@ class MacroService {
     /**
      * @return string
      */
-    public function generateJSON()
+    public function generateJSON() : string
     {
         $macros = $this->getMacros();
 

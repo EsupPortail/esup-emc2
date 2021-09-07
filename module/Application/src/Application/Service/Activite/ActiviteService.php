@@ -8,6 +8,7 @@ use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -88,6 +89,8 @@ class ActiviteService {
             ->addSelect('competence')->leftJoin('competenceelement.competence', 'competence')
             ->addSelect('formationelement')->leftJoin('activite.formations', 'formationelement')
             ->addSelect('formation')->leftJoin('formationelement.formation', 'formation')
+        ;
+        $qb = NiveauService::decorateWithNiveau($qb, 'activite', 'niveaux')
         ;
         return $qb;
     }

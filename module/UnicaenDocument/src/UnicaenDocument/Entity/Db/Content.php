@@ -8,8 +8,8 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 class Content implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    const TYPE_TXT = 'texte';
-    const TYPE_PDF = 'pdf';
+    const TYPE_TXT  = 'texte';
+    const TYPE_PDF  = 'pdf';
     const TYPE_MAIL = 'mail';
 
     /** @var integer */
@@ -26,10 +26,11 @@ class Content implements HistoriqueAwareInterface {
     private $content;
     /** @var string */
     private $css;
+
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -38,7 +39,7 @@ class Content implements HistoriqueAwareInterface {
      * @param int $id
      * @return Content
      */
-    public function setId(int $id)
+    public function setId(int $id) : Content
     {
         $this->id = $id;
         return $this;
@@ -47,16 +48,16 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getCode()
+    public function getCode() : ?string
     {
         return $this->code;
     }
 
     /**
-     * @param string $code
+     * @param string|null $code
      * @return Content
      */
-    public function setCode($code)
+    public function setCode(?string $code) : Content
     {
         $this->code = $code;
         return $this;
@@ -65,16 +66,16 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription() : ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      * @return Content
      */
-    public function setDescription($description)
+    public function setDescription(?string $description) : Content
     {
         $this->description = $description;
         return $this;
@@ -83,16 +84,16 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getType()
+    public function getType() : ?string
     {
         return $this->type;
     }
 
     /**
-     * @param string $type
+     * @param string|null $type
      * @return Content
      */
-    public function setType($type)
+    public function setType(?string $type) : Content
     {
         $this->type = $type;
         return $this;
@@ -101,16 +102,16 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getComplement()
+    public function getComplement() : ?string
     {
         return $this->complement;
     }
 
     /**
-     * @param string $complement
+     * @param string|null $complement
      * @return Content
      */
-    public function setComplement($complement)
+    public function setComplement(?string $complement) : Content
     {
         $this->complement = $complement;
         return $this;
@@ -119,16 +120,16 @@ class Content implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getContent()
+    public function getContent() : ?string
     {
         return $this->content;
     }
 
     /**
-     * @param string $content
+     * @param string|null $content
      * @return Content
      */
-    public function setContent($content)
+    public function setContent(?string $content) : Content
     {
         $this->content = $content;
         return $this;
@@ -151,7 +152,5 @@ class Content implements HistoriqueAwareInterface {
         $this->css = $css;
         return $this;
     }
-
-
 
 }

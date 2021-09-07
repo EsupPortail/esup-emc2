@@ -13,6 +13,7 @@ use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
+use Application\Service\Niveau\NiveauService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -99,10 +100,10 @@ class FicheMetierService {
             ->addSelect('famille')->join('domaine.famille', 'famille')
             ->addSelect('etat')->join('ficheMetier.etat', 'etat')
             ->addSelect('etype')->join('etat.type', 'etype')
-            ->addSelect('niveaux')->leftJoin('metier.niveaux', 'niveaux')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
             ;
+        $qb = NiveauService::decorateWithNiveau($qb,'metier','niveaux');
         return $qb;
     }
 

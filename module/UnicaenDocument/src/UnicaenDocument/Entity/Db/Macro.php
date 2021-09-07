@@ -22,34 +22,24 @@ class Macro implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     * @return Macro
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getCode()
+    public function getCode() : ?string
     {
         return $this->code;
     }
 
     /**
-     * @param string $code
+     * @param string|null $code
      * @return Macro
      */
-    public function setCode($code)
+    public function setCode(?string $code) : Macro
     {
         $this->code = $code;
         return $this;
@@ -67,7 +57,7 @@ class Macro implements HistoriqueAwareInterface {
      * @param string $variable
      * @return Macro
      */
-    public function setVariable($variable)
+    public function setVariable($variable) : Macro
     {
         $this->variable = $variable;
         return $this;
@@ -76,16 +66,16 @@ class Macro implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription() : ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      * @return Macro
      */
-    public function setDescription($description)
+    public function setDescription(?string $description) : Macro
     {
         $this->description = $description;
         return $this;
@@ -94,16 +84,16 @@ class Macro implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getMethode()
+    public function getMethode() : ?string
     {
         return $this->methode;
     }
 
     /**
-     * @param string $methode
+     * @param string|null $methode
      * @return Macro
      */
-    public function setMethode($methode)
+    public function setMethode(?string $methode) : Macro
     {
         $this->methode = $methode;
         return $this;

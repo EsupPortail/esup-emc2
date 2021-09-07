@@ -13,7 +13,7 @@ class ContenuServiceFactory {
      * @param ContainerInterface $container
      * @return ContenuService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ContenuService
     {
         /**
          * @var EntityManager $entityManager

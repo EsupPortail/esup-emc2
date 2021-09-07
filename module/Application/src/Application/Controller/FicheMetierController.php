@@ -67,6 +67,36 @@ class FicheMetierController extends AbstractActionController
 
     use ConfigurationServiceAwareTrait;
 
+    public function indexNAction()
+    {
+        $fromQueries  = $this->params()->fromQuery();
+        $etatId       = $fromQueries['etat'];
+        $domaineId    = $fromQueries['domaine'];
+        $expertise    = $fromQueries['expertise'];
+
+        $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
+        $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetier::TYPE_FICHEMETIER);
+        $etats = $this->getEtatService()->getEtatsByType($type);
+        $domaines = $this->getDomaineService()->getDomaines();
+
+        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
+        $dictionnaires = [];
+        foreach ($fichesMetiers as $fiche) {
+            $metier = $fiche->getMetier();
+            $dictionnaires[$metier->getId()]['metier'] = $metier;
+            $dictionnaires[$metier->getId()]['fiches'][] = $fiche;
+        }
+        usort($dictionnaires, function($a, $b) { return $a['metier']->getLibelle() > $b['metier']->getLibelle(); });
+
+        return new ViewModel([
+            'params' => $params,
+            'domaines' => $domaines,
+            'etats' => $etats,
+
+            'dictionnaires' => $dictionnaires,
+        ]);
+    }
+
     public function indexAction()
     {
         $fromQueries  = $this->params()->fromQuery();
@@ -109,6 +139,7 @@ class FicheMetierController extends AbstractActionController
             'applications' => $applications,
             'parcours' => $parcours,
             'popup' => $popup,
+            'missions' => $missions,
         ]);
     }
 
@@ -133,6 +164,10 @@ class FicheMetierController extends AbstractActionController
                 $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
                 $this->getFicheMetierService()->update($fiche);
 
+                $libelle = $this->getMetierService()->computeEcritureInclusive($fiche->getMetier()->getLibelleFeminin(), $fiche->getMetier()->getLibelleMasculin());
+                $this->flashMessenger()->addSuccessMessage(
+                    "Une nouvelle fiche métier vient d'être ajouter pour le métier <strong>".$libelle."</strong>.<br/> ".
+                    "Vous pouvez modifier celle-ci en utilisant le lien suivant : <a href='".$this->url()->fromRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true)."'>Modification de la fiche métier #". $fiche->getId()."</a>");
             }
         }
 

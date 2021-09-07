@@ -10,7 +10,7 @@ trait ContenuServiceAwareTrait {
     /**
      * @return ContenuService
      */
-    public function getContenuService()
+    public function getContenuService() : ContenuService
     {
         return $this->contenuService;
     }
@@ -19,7 +19,7 @@ trait ContenuServiceAwareTrait {
      * @param ContenuService $contenuService
      * @return ContenuService
      */
-    public function setContenuService(ContenuService $contenuService)
+    public function setContenuService(ContenuService $contenuService) : ContenuService
     {
         $this->contenuService = $contenuService;
         return $this->contenuService;

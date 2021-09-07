@@ -154,7 +154,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     {
         $competences = $this->getCompetenceListe();
 
-        $texte = "";
+        $texte  = "";
         $texte .= "<ul>";
         foreach ($competences as $competence) {
             $texte .= "<li>";

@@ -44,7 +44,6 @@
 :root {
     --header-height: 70px;
     --footer-height: 200px;
-    --width:1200px;
 }
 
 /** GENERAL ***********************************************************************************************************/
@@ -64,7 +63,6 @@ body {
 div.navbar {
     position: fixed;
     z-index: 1030;
-    top: 0;
     background: var(--header-background);
     color: var(--header-color);
     width: 100%;
@@ -98,7 +96,6 @@ img.navbar-logo-unicaen {
 div.navbar-appname {
     float: left;
     max-width: 40rem;
-    min-width: 10rem;
 }
 
 a.navbar-brand h1 {
@@ -111,20 +108,27 @@ a.navbar-brand h1 {
 
 /** menu ----------------------------------------------------------------------------------------------------------- **/
 
-.navbar .nav > li {
-    border-right: 2px solid var(--header-color);
+.navbar .nav > li.dropdown {
+    /*border-right: 2px solid var(--header-color);*/
 }
 
-.navbar .nav > li:first-child {
-    border-left: 2px solid var(--header-color);
+.navbar .nav > li.dropdown:first-child {
+    /*border-left: 2px solid var(--header-color);*/
 }
+
+.navbar .nav > li.active,
+.navbar .nav > li:focus,
 .navbar .nav > li:hover {
     background: var(--header-background-hover);
 }
-.navbar .nav > li.dropdown.open {
-    background: var(--header-background-hover);
-}
 
+.navbar .nav > li.dropdown > a {
+    padding-top: 0;
+    text-transform: uppercase;
+    background: none;
+    height: var(--header-height);
+    line-height: var(--header-height);
+}
 
 .navbar .nav > li > a {
     padding-top: 0;
@@ -132,7 +136,12 @@ a.navbar-brand h1 {
     background: none;
     height: var(--header-height);
     line-height: var(--header-height);
+    border-right: 2px solid var(--header-color);
 }
+.navbar .nav > li:first-child {
+    border-left: 2px solid var(--header-color);
+}
+
 .navbar .nav > li.open {
     background: var(--header-background-hover);
 }
@@ -154,13 +163,6 @@ header ul.dropdown-menu > li a:hover {
     background: darkred;
 }
 
-.navbar .nav >  li:hover {
-    background: var(--header-background-hover);
-}
-.navbar .nav >  li.open a, a:hover {
-    background: var(--header-background-hover);
-}
-
 .navbar .nav .dropdown-menu > li.active  a {
     color: var(--header-color);
     background-color: var(--header-background);
@@ -176,10 +178,14 @@ header ul.dropdown-menu > li a:hover {
 /** connection  ---------------------------------------------------------------------------------------------------- **/
 
 div.navbar-connection {
-    float: right;
-    white-space: nowrap;
     text-align: right;
     margin-top: calc(var(--header-height)/4);
+    background: var(--header-background);
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 10px;
+
 }
 
 div.navbar .popover {
@@ -196,54 +202,87 @@ footer {
     line-height: var(--footer-height);
 }
 
-footer ul li{
-    display: inline-block;
+footer div {
+    display: flex;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: calc((var(--footer-height) - 85px)/1.5) ;
+    /*background: darkred;*/
+}
+
+div#menu-footer {
     font: normal normal normal 14px/33px Ubuntu;
     letter-spacing: 0.05rem;
     padding: 0 1em;
     text-transform: uppercase;
-    color: var(--footer-color);
 
+    color: var(--footer-color);
 }
 
-footer ul li.menu ul.navigation li:first-child{
+footer div#menu-footer  ul li {
+    display: inline-block;
+    padding: 5px;
+}
+
+footer div#menu-footer  ul.navigation li:first-child{
     border-left: none;
 }
 
-footer ul li.menu ul.navigation li{
+footer div#menu-footer ul.navigation li{
     border-left: 1px gray solid;
 }
 
-footer ul li a {
+footer div#menu-footer a {
     color: var(--footer-color);
     text-decoration: none;
 }
 
-footer ul li a:hover {
-    color: var(--footer-color);
-    text-decoration: none;
-}
 
 img.footer-logo-republique-francaise {
-    display: inline-block;
     height: 85px;
-    margin: 5px 20px;
+    margin-top: -20px;
+    margin-right: 20px;
+    /*background: darkgreen;*/
 }
 
 
 img.footer-logo-unicaen {
-    display: inline-block;
     height: 85px;
-    margin: 5px 20px;
+    margin-top: -20px;
+    /*background: darkgreen;*/
 }
 
 img.footer-logo-normandie-universite {
-        display: inline-block;
-        height: 85px;
-        margin: 5px 20px;
-    }
+    height: 85px;
+    margin-top: -20px;
+    /*background: darkgreen;*/
+}
 
 /**********************************************************************************************************/
+
+/*img.footer-logo-republique-francaise {*/
+/*    display: inline-block;*/
+/*    height: calc(2 / 3 * 85px);*/
+/*    margin: 5px calc(2 / 3 * 20px);*/
+/*}*/
+
+
+/*img.footer-logo-unicaen {*/
+/*    display: inline-block;*/
+/*    height: calc(2 / 3 * 85px);*/
+/*    margin: 5px calc(2 / 3 * 20px);*/
+/*}*/
+
+/*img.footer-logo-normandie-universite {*/
+/*    display: inline-block;*/
+/*    height: calc(2 / 3 * 85px);*/
+/*    margin: 5px calc(2 / 3 * 20px);*/
+/*}*/
+
+/*footer ul li {*/
+/*    font: normal normal normal 12px/30px Ubuntu;*/
+/*}*/
 
 @media (max-width: 1199px) {
     div#menu-lateral-gauche,
@@ -253,6 +292,10 @@ img.footer-logo-normandie-universite {
 
     div#contenu-principal {
         width: 100%;
+    }
+
+    footer ul ul {
+        width:50%;
     }
 }
 
@@ -270,24 +313,59 @@ img.footer-logo-normandie-universite {
     }
 }
 
-@media (max-width: 799px) {
+@media (max-width: 899px) {
     a.navbar-brand h1 {
+        display: none;
+    }
+}
+
+@media (min-width: 800px) {
+    div#navbar-hamburger {
+        display: none;
+    }
+
+    p.navbar-connection {
+        position: absolute;
+        top :10px;
+        right :10px;
+    }
+}
+@media (max-width: 799px) {
+    .navbar .navbar-element#navbar-logo {
+        display: none;
+    }
+
+    .navbar-header a.navbar-brand h1 {
+        margin-top: 2px;
+    }
+
+    .navbar-toggle .icon-bar {
+        background-color: var(--header-color);
+    }
+
+    div.navbar-collapse {
+        background: var(--header-background);
+    }
+
+    div.navbar-collapse ul.nav > li.dropdown {
+        background: var(--header-background);
+    }
+
+    div.navbar-collapse ul.nav > li.dropdown > a {
         text-transform: uppercase;
-        font: normal normal bold 12px/15px Raleway;
-        letter-spacing: 0.10rem;
+        background: none;
+    }
+
+    div.navbar-collapse ul.nav li.dropdown > a:hover, div.navbar-collapse ul.nav li.dropdown > a:focus {
+        background: var(--header-background-hover);
     }
 }
 
 div#contenu-principal {
-    width: var(--width);
     margin-top: var(--header-height);
     padding-top: 1rem;
     background: var(--content-background);
     min-height: calc(100vh - var(--header-height) - var(--footer-height) - 25px);
-}
-
-div#contenu-principal div.row {
-    margin: 0;
 }
 
 footer {
@@ -345,8 +423,7 @@ h1.page-header {
 button,
 input[type=button],
 input[type=submit],
-a.btn,
-span.btn
+a.btn
 {
     font-family: Raleway, sans-serif;
     font-size: 14px;
@@ -400,10 +477,6 @@ div.alert.alert-success {
 
 div.panel {
     border-radius: 0;
-}
-
-div.panel div.panel-heading {
-    font-size: large;
 }
 
 div.panel.panel-info {
@@ -471,7 +544,6 @@ table.table tbody tr td {
 ul.nav-tabs {
     padding: 0.5rem 0.5rem 0 0.5rem;
     border-bottom: 1px solid var(--content-color);
-    margin-bottom: 2.5rem;
 }
 
 ul.nav-tabs li a, ul.nav-tabs li a:hover {
@@ -497,9 +569,4 @@ ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover {
 
 div.div-connexion {
     margin-top: 25px;
-}
-
-button.dropdown-toggle {
-    height: 3rem;
-    margin-top: 0;
 }

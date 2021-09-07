@@ -280,7 +280,6 @@ class EntretienProfessionnelController extends AbstractActionController
             $fichesmetiers[] = $fiche->getFicheType();
         }
 
-
         return new ViewModel([
             'entretien' => $entretien,
             'parcours' => $parcours,

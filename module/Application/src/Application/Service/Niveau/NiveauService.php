@@ -72,6 +72,17 @@ class NiveauService {
         return $qb;
     }
 
+    static public function decorateWithNiveau(QueryBuilder $qb, string $queryName, string $fieldName = 'niveaux') : QueryBuilder
+    {
+        $qb = $qb->addSelect($fieldName)->leftJoin($queryName.'.'.$fieldName, $fieldName)
+            ->addSelect($fieldName.'bas')->leftJoin($fieldName.'.borneInferieure', $fieldName.'bas')
+            ->addSelect($fieldName.'haut')->leftJoin($fieldName.'.borneSuperieure', $fieldName.'haut')
+            ->addSelect($fieldName.'rec')->leftJoin($fieldName.'.valeurRecommandee', $fieldName.'rec')
+        ;
+
+        return $qb;
+    }
+
     /**
      * @param string $champs
      * @param string $ordre

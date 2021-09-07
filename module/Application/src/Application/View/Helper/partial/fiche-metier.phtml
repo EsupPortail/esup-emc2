@@ -22,6 +22,7 @@ $agent = ($ficheposte)?$ficheposte->getAgent():null;
  * @var FicheMetierTypeActivite[] $activites
  */
 $activites = $fichemetier->getActivites();
+//$activites = $options['missions'];
 
 $activitesListe = [];
 if (isset($options['activite-liste'])) {
@@ -241,11 +242,12 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                             <?php endif; ?>
                         </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                <?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier,
-                        ['display' => ['titre' => false, 'validation' => false],
-                        'actions' => $options['actions']]); ?>
+                </div>
+                <div class="panel-body">
+                    <?php echo $this->competenceBloc($dictionnaireCompetence, $fichemetier,
+                            ['display' => ['titre' => false, 'validation' => false],
+                            'actions' => $options['actions']]); ?>
+                </div>
             </div>
         <?php endif; ?>
 
@@ -294,7 +296,7 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                 <div class="panel-body">
                     <?php echo $this->applicationBloc($dictionnaireApplication,$fichemetier,
                             ['display' => ['titre' => false, 'validation' => false],
-                            'actions' => $options['actions']]); ?></div>
+                            'actions' => $options['actions']]); ?>
                 </div>
             </div>
         <?php endif; ?>
