@@ -12,8 +12,6 @@ use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireInstanceService {
-    use DateTimeAwareTrait;
-    use EntityManagerAwareTrait;
     use FormulaireServiceAwareTrait;
     use FormulaireReponseServiceAwareTrait;
     use GestionEntiteHistorisationTrait;
