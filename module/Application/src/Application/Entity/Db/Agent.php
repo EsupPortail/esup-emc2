@@ -327,18 +327,18 @@ class Agent implements
     /** Éléments non importés *****************************************************************************************/
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getUtilisateur() : User
+    public function getUtilisateur() : ?User
     {
         return $this->utilisateur;
     }
 
     /**
-     * @param User $utilisateur
+     * @param User|null $utilisateur
      * @return Agent
      */
-    public function setUtilisateur(User $utilisateur) : Agent
+    public function setUtilisateur(?User $utilisateur) : Agent
     {
         $this->utilisateur = $utilisateur;
         return $this;
