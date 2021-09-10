@@ -14,7 +14,6 @@ use Application\Provider\Privilege\FichePostePrivileges;
 
 $this->headTitle('Index des fiches de postes');
 
-$canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
 $canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
 $canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
 $canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
@@ -29,50 +28,34 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
     </span>
 </h1>
 
-<div class="main">
+<?php echo $this->portenote('FichePosteController::indexAction()', '', []); ?>
 
-    <?php echo $this->portenote('FichePosteController::indexAction()', '', []); ?>
-
-    <?php if ($canAjouter) : ?>
-        <?php /** @see FichePosteController::ajouterAction() */ ?>
-        <a href="<?php echo $this->url('fiche-poste/ajouter', [], [], true); ?>"
-           class="btn btn-primary">
-            <span class="icon ajouter"></span>
-            Ajouter une fiche de poste
-        </a>
-    <?php endif; ?>
-
-    <h2>
-        Fiches complètes
-        <span class="badge">
+<h2>
+    Fiches complètes
+    <span class="badge">
         <?php echo count($fichesCompletes); ?>
     </span>
-    </h2>
+</h2>
 
-    <?php echo $this->fichesPostesAsArray($fichesCompletes); ?>
+<?php echo $this->fichesPostesAsArray($fichesCompletes); ?>
 
-    <h2>
-        Fiches incomplètes
-        <span class="badge">
-            <?php echo count($fichesIncompletes); ?>
-        </span>
-    </h2>
+<h2>
+    Fiches incomplètes
+    <span class="badge">
+        <?php echo count($fichesIncompletes); ?>
+    </span>
+</h2>
 
-    <?php echo $this->fichesPostesAsArray($fichesIncompletes); ?>
+<?php echo $this->fichesPostesAsArray($fichesIncompletes); ?>
 
-    <h2>
-        Fiches vides
-        <span class="badge">
-            <?php echo count($fichesVides); ?>
-        </span>
-    </h2>
+<h2>
+    Fiches vides
+    <span class="badge">
+        <?php echo count($fichesVides); ?>
+    </span>
+</h2>
 
-    <?php echo $this->fichesPostesAsArray($fichesVides); ?>
-</div>
-
-
-
-
+<?php echo $this->fichesPostesAsArray($fichesVides); ?>
 
 <script>
     $(function() {

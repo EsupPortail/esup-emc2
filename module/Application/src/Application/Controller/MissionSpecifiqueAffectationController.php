@@ -9,7 +9,6 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Mpdf\MpdfException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use Zend\Http\Request;
@@ -25,7 +24,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
     use AgentMissionSpecifiqueFormAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $fromQueries  = $this->params()->fromQuery();
         $agentId      = $fromQueries['agent'];
@@ -47,7 +46,8 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction() {
+    public function afficherAction() : ViewModel
+    {
         $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
 
         $vm = new ViewModel();
@@ -196,9 +196,6 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $vm;
     }
 
-    /**
-     * @throws MpdfException
-     */
     public function genererLettreTypeAction()
     {
         $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);

@@ -29,13 +29,14 @@ $displayParcours = false;
 $displayAcquis = false;
 
 if ($agent !== null) {
-    $canVoir = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
+    $canVoir = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
     $canAjouter = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
     $canModifier = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
     $canHistoriser = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
     $canDetruire = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
     $canValider = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
     $canInfoSource = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_INFO_SOURCE));
+    $canAfficherMission = $canVoir;
 
     $droits = [
         'afficher' => $canVoir,
@@ -46,6 +47,7 @@ if ($agent !== null) {
         'detruire' => $canDetruire,
         'valider' => $canValider,
         'voirHistorique' => $canDetruire,
+        'afficherMission' => $canAfficherMission,
     ];
 
     $options = [];
@@ -112,7 +114,7 @@ if ($agent !== null) {
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>
-                <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits], []); ?>
+                <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits, "options" => $options['actions']], []); ?>
             </div>
             <div id="entretiens" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/entretien-professionnel', ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits], []); ?>

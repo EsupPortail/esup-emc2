@@ -161,6 +161,7 @@ class MetierController extends AbstractActionController {
 
     /** NIVEAUX *******************************************************************************************************/
 
+
     public function modifierNiveauxAction()
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);

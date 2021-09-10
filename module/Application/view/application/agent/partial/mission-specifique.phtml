@@ -7,9 +7,11 @@ use Application\Entity\Db\AgentMissionSpecifique;
  * @var AgentMissionSpecifique[] $missions
  * @var Agent $agent
  * @var array $droits
+ * @var array $droits
  */
 
-$canVoirMission         = $droits['voir'];
+$canVoirMission         = $droits['afficherMission'];
+$canExporterMission     = $droits['afficherMission'];
 $canAjouterMission      = $droits['ajouter'];
 $canModifierMission     = $droits['modifier'];
 $canHistoriserMission   = $droits['historiser'];
@@ -83,7 +85,7 @@ $canDetruireMission     = $droits['detruire'];
                     >
                         <span class="icon voir"></span></a>
                 <?php endif; ?>
-                <?php if ($canVoirMission AND $mission->estEnCours()) : ?>
+                <?php if ($canExporterMission /**AND $mission->estEnCours()**/) : ?>
                     <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique/affectation/generer-lettre-type', ['affectation' => $mission->getId()], [], true); ?>"
                        target="_blank"

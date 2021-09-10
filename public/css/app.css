@@ -347,3 +347,8 @@ div.delta_4 {
 div.delta_5 {
     background: #c24040;
 }
+
+div.row {
+    margin-left: 0;
+    margin-right: 0;
+}

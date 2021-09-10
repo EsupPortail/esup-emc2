@@ -586,7 +586,7 @@ class FichePosteService {
         }
 
         foreach ($activites as $activite) {
-            foreach ($activite->getFormations() as $formation) {
+            foreach ($activite->getFormationListe() as $formation) {
                 $dictionnaire[$formation->getId()]["object"] = $formation;
                 $dictionnaire[$formation->getId()]["raison"][] = $activite;
                 $dictionnaire[$formation->getId()]["conserve"] = true;

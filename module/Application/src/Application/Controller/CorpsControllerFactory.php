@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierNiveau\ModifierNiveauForm;
-use Application\Service\Agent\AgentService;
 use Application\Service\Categorie\CategorieService;
 use Application\Service\Corps\CorpsService;
 use Application\Service\Correspondance\CorrespondanceService;

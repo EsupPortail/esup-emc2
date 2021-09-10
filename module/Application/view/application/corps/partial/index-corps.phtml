@@ -34,8 +34,11 @@ use Application\Entity\Db\Corps;
             <td> <?php echo count($corp->getAgentGrades()); ?> </td>
             <td> <?php echo $corp->getCategorie(); ?> </td>
             <td> <?php if ($corp->getNiveau()) : ?>
-                    <?php echo $corp->getNiveau()->getLibelle(); ?>
-                    <strong><?php echo $corp->getNiveau()->getNiveau(); ?></strong>
+                    <span
+                            data-toggle="tooltip" data-html="true"
+                            title="<?php echo $corp->getNiveau()->getLibelle(); ?> : Niveau <?php echo $corp->getNiveau()->getNiveau(); ?>">
+                    <?php echo $corp->getNiveau()->getEtiquette(); ?>
+                    </span>
                 <?php endif; ?>
             </td>
             <td>

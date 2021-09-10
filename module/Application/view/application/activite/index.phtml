@@ -12,6 +12,7 @@ $this->headTitle('Missions principales');
 $canVisualiser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_AFFICHER));
 $canAjouter     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_AJOUTER));
 $canEditer      = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_MODIFIER));
+$canModifierNiveaux      = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_MODIFIER));
 $canHistoriser  = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_HISTORISER));
 $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_DETRUIRE));
 ?>
@@ -38,6 +39,7 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
         <thead>
             <tr>
                 <th> Mission </th>
+                <th> Niveaux </th>
                 <th> Description </th>
                 <th> Modification </th>
                 <th style="width:10rem;"> Action </th>
@@ -48,6 +50,24 @@ $canEffacer     = $this->isAllowed(ActivitePrivileges::getResourceId(ActivitePri
                 <tr>
                     <td>
                         <?php echo $activite->getLibelle(); ?> <br/>
+                    </td>
+                    <td>
+                        <?php echo $this->niveauEnveloppe($activite->getNiveaux()) ?>
+                        <?php if ($canModifierNiveaux) : ?>
+                            <?php if ($activite->getNiveaux()) : ?>
+                                <?php /**  @see \Application\Controller\ActiviteController::modifierNiveauxAction() */ ?>
+                                <a href="<?php echo $this->url('activite/modifier-niveaux', ['activite' => $activite->getId()], [], true); ?>"
+                                   class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon editer"></span></a>
+                            <?php else : ?>
+                                <?php /**  @see \Application\Controller\ActiviteController::ajouterNiveauxAction() */ ?>
+                                <a href="<?php echo $this->url('activite/ajouter-niveaux', ['activite' => $activite->getId()], [], true); ?>"
+                                   class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon ajouter"></span></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </td>
                     <td>
                         #Desc: <?php echo count($activite->getDescriptions()); ?> <br/>

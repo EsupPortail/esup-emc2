@@ -16,12 +16,12 @@ $canSupprimer  = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::
 ?>
 
 <div class="row">
-<!--    <div class="col-md-10 --><?php //echo $note->getType()->getStyle(); ?><!--">-->
-    <div class="<?php echo ($note->getType())?$note->getType()->getStyle():""; ?>" style="width: 95%; display: inline-block;">
+    <div class="col-md-10 <?php echo $note->getType()->getStyle(); ?>">
+<!--    <div class="--><?php //echo ($note->getType())?$note->getType()->getStyle():""; ?><!--" style="width: 95%; display: inline-block;">-->
         <?php echo $note->getTexte(); ?>
     </div>
 <!--    <div class="col-md-1">-->
-    <div class="pull-right">
+    <div class="col-md-1 pull-right">
         <?php if ($canModifier) : ?>
             <a href="<?php echo $this->url('unicaen-note/note/modifier', ['note' => $note->getId()], [], true); ?>"
                class="ajax-modal" data-event="modification" title="Modifier la note"

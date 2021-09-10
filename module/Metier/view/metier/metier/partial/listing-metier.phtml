@@ -98,11 +98,19 @@ $canEffacer                 = $droits["effacer"];
             <td>
                 <?php echo $this->niveauEnveloppe($metier->getNiveaux()) ?>
                 <?php if ($canModifierNiveaux) : ?>
-                    <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
-                    <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon editer"</a>
+                    <?php if ($metier->getNiveaux()) : ?>
+                        <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                        <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon editer"></span></a>
+                    <?php else : ?>
+                        <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                        <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon ajouter"></span></a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </td>
             <td>
