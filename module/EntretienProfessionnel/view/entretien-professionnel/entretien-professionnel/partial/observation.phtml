@@ -28,11 +28,16 @@ $has_validation_agent = ($entretien->getValidationAgent() !== null AND $entretie
 
 <?php if (! $has_validation_responsable) : ?>
     <div class="alert alert-danger"> Aucune validation du responsable de l'entretien. Les observations ne peuvent être émises qu'après la validation de celui-ci.</div>
-<?php else : ?>
-    <?php if ($date_non_depassee === false) : ?>
-        <div class="alert alert-danger"> Date de dépôt des observations dépassée.</div>
-    <?php endif; ?>
 <?php endif; ?>
+
+<?php if ($has_validation_agent) : ?>
+    <div class="alert alert-danger"> Une validation du l'agent a été faite. Les observations ne peuvent être émises qu'avant la validation de celui-ci.</div>
+<?php endif; ?>
+
+<?php if ($date_non_depassee === false) : ?>
+    <div class="alert alert-danger"> Date de dépôt des observations dépassée.</div>
+<?php endif; ?>
+
 
 <?php if ($source !== 'afficherAction') : ?>
     <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
