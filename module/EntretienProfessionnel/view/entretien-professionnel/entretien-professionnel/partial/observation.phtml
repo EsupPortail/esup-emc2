@@ -26,6 +26,12 @@ $has_validation_agent = $entretien->hasValidationAgent();
 
 <h2 class="page-header-tab"> Observations liées à l'entretien professionnel</h2>
 
+<?php if (! $entretien->hasValidationResponsable()) : ?>
+    <div class="alert alert-danger"> Aucune validation du responsable de l'entretien. Les observations ne peuvent être émises qu'après la validation de celui-ci.</div>
+<?php else : ?>
+    ...
+<?php endif; ?>
+
 <?php if ($source !== 'afficherAction') : ?>
     <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
 <?php endif; ?>
