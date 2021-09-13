@@ -384,7 +384,11 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      */
     public function hasValidationResponsable() : bool
     {
-        return ($this->validationResponsable AND $this->validationResponsable->estNonHistorise());
+        $validation = $this->validationResponsable;
+        if ($validation === null) return false;
+        if ($validation->estHistorise())
+            return false;
+        return true;
     }
 
     /**

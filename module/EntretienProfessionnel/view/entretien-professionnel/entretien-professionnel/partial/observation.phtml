@@ -18,18 +18,20 @@ $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
 
 $date_non_depassee = ($date !== null AND $date >= $now);
-$has_validation_responsable = $entretien->hasValidationResponsable();
-$has_validation_agent = $entretien->hasValidationAgent();
+$has_validation_responsable = ($entretien->getValidationResponsable() !== null AND $entretien->getValidationResponsable()->getHistoDestruction() === null);
+$has_validation_agent = ($entretien->getValidationAgent() !== null AND $entretien->getValidationAgent()->getHistoDestruction() === null);
 ?>
 
 <!-- HEADER DE L'ONGLET ----------------------------------------------------------------------------------------------->
 
 <h2 class="page-header-tab"> Observations liées à l'entretien professionnel</h2>
 
-<?php if (! $entretien->hasValidationResponsable()) : ?>
+<?php if (! $has_validation_responsable) : ?>
     <div class="alert alert-danger"> Aucune validation du responsable de l'entretien. Les observations ne peuvent être émises qu'après la validation de celui-ci.</div>
 <?php else : ?>
-    ...
+    <?php if ($date_non_depassee === false) : ?>
+        <div class="alert alert-danger"> Date de dépôt des observations dépassée.</div>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?php if ($source !== 'afficherAction') : ?>
