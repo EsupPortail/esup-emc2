@@ -8,6 +8,7 @@ use Autoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
@@ -318,16 +319,17 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     }
 
-    // Max 8 jours après entretien (! au sursis)
-    public function getMaxSaisiObservation() {
-        $sursis = $this->getSursisActif();
-        $date = null;
-        if ($sursis === null) {
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
-        } else {
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $sursis->getSursis()->format('d/m/Y 23:59:59'));
+    public function getMaxSaisiObservation() : ?DateTime
+    {
+        $validation = $this->getValidationResponsable();
+        if ($validation === null) return null;
+
+        $date = $validation->getHistoCreation();
+        try {
+            $date->add(new DateInterval('P' . EntretienProfessionnel::DELAI_OBSERVATION . 'D'));
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème de création du DateInterval",0,$e);
         }
-        $date->add(new DateInterval('P'. EntretienProfessionnel::DELAI_OBSERVATION . 'D'));
         return $date;
     }
 

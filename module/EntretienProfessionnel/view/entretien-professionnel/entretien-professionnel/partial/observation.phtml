@@ -17,7 +17,7 @@ $canDetruireObservation = true;
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
 
-$date_non_depassee = ($date >= $now);
+$date_non_depassee = ($date !== null AND $date >= $now);
 $has_validation_responsable = $entretien->hasValidationResponsable();
 $has_validation_agent = $entretien->hasValidationAgent();
 ?>
