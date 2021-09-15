@@ -134,7 +134,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     {
         $text = "";
         if ($this->getRepriseResumeMere() AND $this->parent !== null) {
-            $text .= $this->parent->getDescription() . "<br/>";
+            $text .= $this->parent->getDescriptionComplete() . "<br/>";
         }
         return $text . $this->description ;
     }

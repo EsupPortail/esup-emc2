@@ -52,8 +52,8 @@ $poste = $fiche->getPoste();
             <?php foreach ($structures as $structure) : ?>
                 <h4> <?php echo $structure->getLibelleLong(); ?> </h4>
 
-                <?php if ($structure->getDescription() !== null) :?>
-                    <?php echo $structure->getDescription(); ?>
+                <?php if ($structure->getDescriptionComplete() !== null) :?>
+                    <?php echo $structure->getDescriptionComplete(); ?>
                 <?php else: ?>
                     <div class="alert alert-warning">
                         <i class="fas fa-exclamation-triangle"></i>
