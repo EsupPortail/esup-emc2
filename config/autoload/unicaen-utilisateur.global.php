@@ -1,5 +1,6 @@
 <?php
 
+use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenUtilisateurLdapAdapter\Service\LdapService;
 //use UnicaenUtilisateurOctopusAdapter\Service\OctopusService;
@@ -28,6 +29,22 @@ return [
             'app'       => UserService::class,
             'ldap'      => LdapService::class,
 //            'octopus'   => OctopusService::class,
+        ],
+    ],
+
+    // pour la mise a jour des champs d'historisation ...
+    'doctrine' => [
+        'eventmanager'  => [
+            'orm_default' => [
+                'subscribers' => [
+                    'UnicaenUtilisateur\HistoriqueListener',
+                ],
+            ],
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
+            'UnicaenUtilisateur\HistoriqueListener' => HistoriqueListenerFactory::class,
         ],
     ],
 ];

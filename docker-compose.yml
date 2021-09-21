@@ -3,6 +3,13 @@ version: '2'
 services:
   preecog:
     container_name: preecog
+    environment:
+      - http_proxy
+      - https_proxy
+      - no_proxy
+      - HTTP_PROXY
+      - HTTPS_PROXY
+      - NO_PROXY
     build:
       args:
         PHP_VERSION: 7.3

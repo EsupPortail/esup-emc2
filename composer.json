@@ -12,6 +12,8 @@
     "unicaen/auth": "^3.1",
     "unicaen/utilisateur": "dev-master",
     "unicaen/privilege": "dev-master",
+    "unicaen/renderer": "dev-master",
+    "unicaen/pdf": "dev-master",
     "unicaen/bjy-authorize": "^3.0",
     "unicaen/ldap": "^3.0",
     "unicaen/db-import": "3.0",
