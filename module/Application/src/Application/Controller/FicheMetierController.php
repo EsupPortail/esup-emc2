@@ -19,7 +19,6 @@ use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
-use Application\Service\Export\FicheMetier\FicheMetierPdfExporter;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
@@ -28,10 +27,11 @@ use Application\Service\RendererAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
@@ -46,6 +46,7 @@ class FicheMetierController extends AbstractActionController
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use ContenuServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
@@ -53,7 +54,6 @@ class FicheMetierController extends AbstractActionController
     use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use EtatServiceAwareTrait;
-    use ExporterServiceAwareTrait;
 
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
@@ -210,26 +210,35 @@ class FicheMetierController extends AbstractActionController
     public function exporterAction()
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-        $this->getExporterService()->setVars([
-            'type' => 'FICHE_METIER',
+
+        $contenu = $this->getContenuService()->getContenuByCode("FICHE_METIER");
+        $vars = [
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
             'parcours' => $this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()),
-        ]);
-        $this->getExporterService()->export('export.pdf');
-        exit;
+        ];
+        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
+        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
+        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+
+        $exporter = new PdfExporter();
+        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->setHeaderScript('');
+        $exporter->setFooterScript('');
+        $exporter->addBodyHtml($texte);
+        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
     }
 
-    public function exporterToutesAction()
-    {
-        $fiches = $this->getFicheMetierService()->getFichesMetiers();
-
-        $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
-        $exporter->setVars([]);
-        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_fiches_metiers.pdf";
-        $exporter->exportAll($fiches, $filemane);
-        exit;
-    }
+//    public function exporterToutesAction()
+//    {
+//        $fiches = $this->getFicheMetierService()->getFichesMetiers();
+//
+//        $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
+//        $exporter->setVars([]);
+//        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_fiches_metiers.pdf";
+//        $exporter->exportAll($fiches, $filemane);
+//        exit;
+//    }
 
     public function historiserAction()
     {

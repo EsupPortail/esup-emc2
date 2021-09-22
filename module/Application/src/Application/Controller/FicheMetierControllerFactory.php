@@ -18,23 +18,23 @@ use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
-use UnicaenDocument\Service\Exporter\ExporterService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenRenderer\Service\Contenu\ContenuService;
 use Zend\View\Renderer\PhpRenderer;
 
 class FicheMetierControllerFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : FicheMetierController
     {
         /**
          * @var ActiviteService $activiteService
          * @var AgentService $agentService;
+         * @var ContenuService $contenuService;
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
-         * @var ExporterService $exporterService
          * @var FicheMetierService $ficheMetierService
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
@@ -44,10 +44,10 @@ class FicheMetierControllerFactory {
          */
         $activiteService = $container->get(ActiviteService::class);
         $agentService = $container->get(AgentService::class);
+        $contenuService = $container->get(ContenuService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
-        $exporterService = $container->get(ExporterService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
@@ -81,10 +81,10 @@ class FicheMetierControllerFactory {
 
         $controller->setActiviteService($activiteService);
         $controller->setAgentService($agentService);
+        $controller->setContenuService($contenuService);
         $controller->setDomaineService($domaineService);
         $controller->setEtatService($etatService);
         $controller->setEtatTypeService($etatTypeService);
-        $controller->setExporterService($exporterService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
         $controller->setHasCompetenceCollectionService($hasCompetenceCollectionService);

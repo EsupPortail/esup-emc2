@@ -32,6 +32,8 @@ use Application\Service\RendererAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 //use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -58,6 +60,8 @@ class FichePosteController extends AbstractActionController {
     use SpecificitePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use RendererAwareTrait;
+
+    use ContenuServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -223,7 +227,8 @@ class FichePosteController extends AbstractActionController {
 
         return new ViewModel([
             'fiche' => $fiche,
-            'agent' => $this->getAgentService()->getAgent($fiche->getAgent()->getId()),
+//            'agent' => $this->getAgentService()->getAgent($fiche->getAgent()->getId()),
+            'agent' => $fiche->getAgent(),
             'structure' => $structure,
             'applications' => $applications,
             'competences' => $competences,
@@ -287,23 +292,29 @@ class FichePosteController extends AbstractActionController {
 
     public function exporterAction()
     {
-        exit;
-
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
+        $agent = $ficheposte->getAgent();
         $ficheposte->addDictionnaire('applications', $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('formations', $this->getFichePosteService()->getFormationsDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('parcours', $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($ficheposte));
 
-        $this->getExporterService()->setVars([
-            'type' => 'FICHE_DE_POSTE',
+        $contenu = $this->getContenuService()->getContenuByCode("FICHE_DE_POSTE");
+        $vars = [
             'ficheposte' => $ficheposte,
-            'agent' => $ficheposte->getAgent(),
-            //todo prendre la structure du poste une fois les postes remontés
-            'structure' => $ficheposte->getAgent()->getAffectationPrincipale()->getStructure(),
-        ]);
-        $this->getExporterService()->export('export.pdf');
-        exit;
+            'agent' => $agent,
+            'structure' => ($agent)?$agent->getAffectationPrincipale()->getStructure():null,
+        ];
+        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
+        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
+        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+
+        $exporter = new PdfExporter();
+        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->setHeaderScript('');
+        $exporter->setFooterScript('');
+        $exporter->addBodyHtml($texte);
+        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
     }
     /** TITRE *********************************************************************************************************/
 

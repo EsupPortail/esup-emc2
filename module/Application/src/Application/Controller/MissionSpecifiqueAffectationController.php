@@ -10,14 +10,15 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwa
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
-use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class MissionSpecifiqueAffectationController extends AbstractActionController {
     use AgentServiceAwareTrait;
-    use ExporterServiceAwareTrait;
+    use ContenuServiceAwareTrait;
     use MissionSpecifiqueServiceAwareTrait;
     use StructureServiceAwareTrait;
     use MissionSpecifiqueAffectationServiceAwareTrait;
@@ -200,14 +201,22 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
     {
         $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
 
-        $this->getExporterService()->setVars([
-            'type' => 'MISSION_SPECIFIQUE_LETTRE',
+        $contenu = $this->getContenuService()->getContenuByCode("MISSION_SPECIFIQUE_LETTRE");
+        $vars = [
             'agent' => $affectation->getAgent(),
             'mission' => $affectation->getMission(),
             'structure' => $affectation->getStructure(),
             'affectation' => $affectation,
-        ]);
-        $this->getExporterService()->export('export.pdf');
-        exit;
+        ];
+        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
+        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
+        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+
+        $exporter = new PdfExporter();
+        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->setHeaderScript('');
+        $exporter->setFooterScript('');
+        $exporter->addBodyHtml($texte);
+        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
     }
 }

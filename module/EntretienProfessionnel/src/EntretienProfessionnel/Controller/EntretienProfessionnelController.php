@@ -17,15 +17,15 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFor
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use EntretienProfessionnel\Service\Export\EntretienProfessionnel\EntretienProfessionnelPdfExporter;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use Mailing\Service\Mailing\MailingServiceAwareTrait;
-use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -52,6 +52,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use ContenuServiceAwareTrait;
 
 
     use EntretienProfessionnelFormAwareTrait;
@@ -435,22 +436,22 @@ class EntretienProfessionnelController extends AbstractActionController
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
 
-        $exporter = new EntretienProfessionnelPdfExporter($this->renderer, 'A4');
-        $exporter->setVars([
+        $contenu = $this->getContenuService()->getContenuByCode('ENTRETIEN_PROFESSIONNEL');
+        $vars= [
             'entretien' => $entretien,
+            'agent' => $entretien->getAgent(),
             'formations' => $formations,
-        ]);
+        ];
+        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
+        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
+        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
 
-        $agent = $entretien->getAgent()->getDenomination();
-        $date = $entretien->getDateEntretien()->format('Ymd');
-        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $agent) . '_' . $date . '.pdf';
-        try {
-            $exporter->getMpdf()->SetTitle("Entretien professionnel de " . $agent . " du " . $entretien->getDateEntretien()->format("d/m/Y"));
-        } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est survenu lors du changement de titre par MPDF.", 0, $e);
-        }
-        $exporter->export($filemane);
-        exit;
+        $exporter = new PdfExporter();
+        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->setHeaderScript('');
+        $exporter->setFooterScript('');
+        $exporter->addBodyHtml($texte);
+        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
     }
 
     public function accepterEntretienAction() {

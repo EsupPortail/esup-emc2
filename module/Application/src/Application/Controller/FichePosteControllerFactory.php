@@ -21,6 +21,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Contenu\ContenuService;
 use Zend\View\Renderer\PhpRenderer;
 
 class FichePosteControllerFactory {
@@ -35,8 +36,8 @@ class FichePosteControllerFactory {
          * @var ActivitesDescriptionsRetireesService $activitesDescriptionsRetireesSercice
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
+         * @var ContenuService $contenuService
          * @var ExpertiseService $expertiseService
-         * @var PdfExporter $exporterService
          * @var SpecificitePosteService $specificitePosteService
          * @var ParcoursDeFormationService $parcoursService
          */
@@ -48,8 +49,8 @@ class FichePosteControllerFactory {
         $activitesDescriptionsRetireesSercice = $container->get(ActivitesDescriptionsRetireesService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
+        $contenuService = $container->get(ContenuService::class);
         $expertiseService = $container->get(ExpertiseService::class);
-        //$exporterService = $container->get(PdfExporter::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
 
@@ -83,8 +84,8 @@ class FichePosteControllerFactory {
         $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesSercice);
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
+        $controller->setContenuService($contenuService);
         $controller->setExpertiseService($expertiseService);
-        //$controller->setPdf($exporterService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);
 

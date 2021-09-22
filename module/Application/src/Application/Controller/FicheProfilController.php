@@ -7,14 +7,15 @@ use Application\Form\FicheProfil\FicheProfilFormAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class FicheProfilController extends AbstractActionController {
-    use ExporterServiceAwareTrait;
+    use ContenuServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -112,14 +113,23 @@ class FicheProfilController extends AbstractActionController {
         $ficheposte = $ficheprofil->getFichePoste();
         $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
 
-        $this->getExporterService()->setVars([
-            'type' => 'PROFIL_DE_RECRUTMENT',
+        $contenu = $this->getContenuService()->getContenuByCode("PROFIL_DE_RECRUTEMENT");
+
+        $vars = [
             'ficheprofil' => $ficheprofil,
             'ficheposte' => $ficheposte,
             'structure' => $ficheprofil->getStructure(),
-        ]);
-        $this->getExporterService()->export('export.pdf');
-        exit;
+        ];
+        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
+        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
+        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+
+        $exporter = new PdfExporter();
+        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->setHeaderScript('');
+        $exporter->setFooterScript('');
+        $exporter->addBodyHtml($texte);
+        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
     }
 
     public function historiserAction()

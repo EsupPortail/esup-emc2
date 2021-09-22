@@ -18,6 +18,7 @@ use Interop\Container\ContainerInterface;
 use Mailing\Service\Mailing\MailingService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenRenderer\Service\Contenu\ContenuService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -25,10 +26,11 @@ use Zend\View\Renderer\PhpRenderer;
 
 class EntretienProfessionnelControllerFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : EntretienProfessionnelController
     {
         /**
          * @var AgentService $agentService
+         * @var ContenuService $contenuService
          * @var UserService $userService
          * @var ConfigurationService $configurationService
          * @var EntretienProfessionnelService $entretienProfesionnelService
@@ -45,6 +47,7 @@ class EntretienProfessionnelControllerFactory {
          * @var ValidationTypeService $validationTypeService
          */
         $agentService = $container->get(AgentService::class);
+        $contenuService = $container->get(ContenuService::class);
         $userService = $container->get(UserService::class);
         $configurationService = $container->get(ConfigurationService::class);
         $etatService = $container->get(EtatService::class);
@@ -79,6 +82,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setRenderer($renderer);
 
         $controller->setAgentService($agentService);
+        $controller->setContenuService($contenuService);
         $controller->setUserService($userService);
         $controller->setConfigurationService($configurationService);
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);
