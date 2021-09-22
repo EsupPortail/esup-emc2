@@ -20,7 +20,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
-use UnicaenDocument\Service\Exporter\ExporterService;
+use UnicaenPdf\Exporter\PdfExporter;
 use Zend\View\Renderer\PhpRenderer;
 
 class FichePosteControllerFactory {
@@ -36,7 +36,7 @@ class FichePosteControllerFactory {
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
          * @var ExpertiseService $expertiseService
-         * @var ExporterService $exporterService
+         * @var PdfExporter $exporterService
          * @var SpecificitePosteService $specificitePosteService
          * @var ParcoursDeFormationService $parcoursService
          */
@@ -49,7 +49,7 @@ class FichePosteControllerFactory {
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
         $expertiseService = $container->get(ExpertiseService::class);
-        $exporterService = $container->get(ExporterService::class);
+        //$exporterService = $container->get(PdfExporter::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
 
@@ -84,7 +84,7 @@ class FichePosteControllerFactory {
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
         $controller->setExpertiseService($expertiseService);
-        $controller->setExporterService($exporterService);
+        //$controller->setPdf($exporterService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);
 

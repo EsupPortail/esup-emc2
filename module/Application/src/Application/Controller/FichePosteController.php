@@ -31,7 +31,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait
 use Application\Service\RendererAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
+//use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -54,7 +54,7 @@ class FichePosteController extends AbstractActionController {
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
-    use ExporterServiceAwareTrait;
+    //use ExporterServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use RendererAwareTrait;
@@ -287,6 +287,8 @@ class FichePosteController extends AbstractActionController {
 
     public function exporterAction()
     {
+        exit;
+
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
         $ficheposte->addDictionnaire('applications', $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
