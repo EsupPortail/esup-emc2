@@ -144,4 +144,47 @@ class FormulaireInstance implements HistoriqueAwareInterface {
         return null;
     }
 
+    /**
+     * @param Champ $champ
+     * @return string|null
+     */
+    public function getReponseFor(Champ $champ) : ?string
+    {
+        /** @var FormulaireReponse $reponse */
+        foreach ($this->reponses as $reponse) {
+            if ($reponse->estNonHistorise() AND $reponse->getChamp()->getId() === $champ->getId())
+                return $reponse->getReponse();
+        }
+        return null;
+    }
+
+    public function prettyPrint() : string
+    {
+        $text = "";
+        $categories = $this->getFormulaire()->getCategories();
+        $categories = array_filter($categories, function (Categorie $a) { return $a->estNonHistorise(); });
+        usort($categories, function (Categorie $a, Categorie $b) { return $a->getOrdre() > $b->getOrdre(); });
+
+        foreach ($categories as $categorie) {
+            $as = false;
+            $subtext = "<h3>".$categorie->getLibelle()."</h3>";
+
+            $champs = $categorie->getChamps();
+            $champs = array_filter($champs, function (Champ $a) { return $a->estNonHistorise(); });
+            usort($champs, function (Champ $a, Champ $b) { return $a->getOrdre() > $b->getOrdre(); });
+
+            foreach ($champs as $champ) {
+                $reponse = $this->getReponseFor($champ);
+                //todo utiliser les VHs
+                if ($reponse !== null) {
+                    $subtext .= $champ->getLibelle() . " : ". $reponse . "<br>";
+                    $as = true;
+                }
+            }
+
+            if ($as) $text .= $subtext;
+        }
+        return $text;
+    }
+
 }

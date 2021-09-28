@@ -441,6 +441,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
             'formations' => $formations,
+            'campagne' => $entretien->getCampagne(),
         ];
         $titre = $this->getContenuService()->generateTitre($contenu, $vars);
         $texte = $this->getContenuService()->generateContenu($contenu, $vars);

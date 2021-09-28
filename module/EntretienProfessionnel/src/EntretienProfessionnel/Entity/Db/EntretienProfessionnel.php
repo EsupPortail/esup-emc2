@@ -4,10 +4,14 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
+use Autoform\Entity\Db\Categorie;
+use Autoform\Entity\Db\Champ;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
@@ -17,6 +21,7 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Zend\View\Helper\Url;
 
 class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatInterface {
     use HistoriqueAwareTrait;
@@ -471,5 +476,54 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function toStringResponsable() : string {
         if ($this->getResponsable() !== null) return $this->getResponsable()->getDisplayName();
         return "Aucun responsable d'entretien donné";
+    }
+
+    public function toStringLienConcovation() : string {
+        //TODO comment invoquer l'aide de vue URL initialiser ? (Solution temporaire de transition)
+        $url = 'http://emc2.unicaen.fr/entretien-professionnel/accepter-entretien/'.$this->getId().'/'.$this->getToken();
+        return '<a href="'.$url.'">Acceptation de l\'entretien professionnel</a>';
+    }
+
+    public function toStringLienEntretien() : string {
+        //TODO comment invoquer l'aide de vue URL initialiser ? (Solution temporaire de transition)
+        $url = 'https://localhost/entretien-professionnel/renseigner/'.$this->getId();
+        return '<a href="'.$url.'">Acceptation de l\'entretien professionnel</a>';
+    }
+
+    public function  toStringValidationAgent() : string {
+        if ($this->validationAgent !== null) {
+            return $this->validationAgent->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationAgent->getHistoCreateur()->getDisplayName();
+        }
+        return "Aucune validation de l'agent";
+    }
+
+    public function  toStringValidationResponsable() : string {
+        if ($this->validationResponsable !== null) {
+            return $this->validationResponsable->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationResponsable->getHistoCreateur()->getDisplayName();
+        }
+        return "Aucune validation du responsable d'entretien";
+    }
+
+    public function  toStringValidationHierarchie() : string {
+        if ($this->validationDRH !== null) {
+            return $this->validationDRH->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationDRH->getHistoCreateur()->getDisplayName();
+        }
+        return "Aucune validation du responsable hiérarchique";
+    }
+
+    public function toStringCR_Entretien() : string {
+
+        if ($this->formulaireInstance !== null) {
+            return $this->formulaireInstance->prettyPrint();
+        }
+        return "Aucune formulaire";
+    }
+
+    public function toStringCR_Formation() : string {
+
+        if ($this->formationInstance !== null) {
+            return $this->formationInstance->prettyPrint();
+        }
+        return "Aucune formulaire";
     }
 }

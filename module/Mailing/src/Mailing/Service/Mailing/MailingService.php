@@ -415,34 +415,7 @@ class MailingService
 //            case 'VAR[EMC2#lien]' :
 //                $lien = '<a href="' . 'https://emc2.unicaen.fr' . '">EMC2</a>';
 //                return $lien;
-//            /** AGENT *************************************************************************************************/
-//            case 'VAR[Agent#Denomination]' :
-//                $agent = $variables['agent'];
-//                return $agent->getDenomination();
-//            /** CAMPAGNE **********************************************************************************************/
-//            case 'VAR[CAMPAGNE#debut]' :
-//                $campagne = $variables['campagne'];
-//                return $campagne->getDateDebut()->format('d/m/Y');
-//            case 'VAR[CAMPAGNE#fin]' :
-//                $campagne = $variables['campagne'];
-//                return $campagne->getDateFin()->format('d/m/Y');
 //            /** ENTRETIEN *********************************************************************************************/
-////                {title: 'Entretien : date', description: 'Date de l\'entretien', content: 'VAR[ENTRETIEN#date]'},
-//            case 'VAR[ENTRETIEN#agent]' :
-//                $entretien = $variables['entretien'];
-//                return $entretien->getAgent()->getDenomination();
-//            case 'VAR[ENTRETIEN#responsable]' :
-//                $entretien = $variables['entretien'];
-//                return $entretien->getResponsable()->getDisplayName();
-//            case 'VAR[ENTRETIEN#date]' :
-//                $entretien = $variables['entretien'];
-//                return $entretien->getDateEntretien()->format('d/m/Y');
-//            case 'VAR[ENTRETIEN#heure]' :
-//                $entretien = $variables['entretien'];
-//                return $entretien->getDateEntretien()->format('H:i');
-//            case 'VAR[ENTRETIEN#lieu]' :
-//                $entretien = $variables['entretien'];
-//                return $entretien->getLieu();
 //            case 'VAR[ENTRETIEN#lien_accepter]' :
 //                $entretien = $variables['entretien'];
 //                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true).'">Acceptation de l\'entretien professionnel</a>';
