@@ -177,7 +177,7 @@ class FormulaireInstance implements HistoriqueAwareInterface {
                 $reponse = $this->getReponseFor($champ);
                 //todo utiliser les VHs
                 if ($reponse !== null) {
-                    $subtext .= $champ->getLibelle() . " : ". $reponse . "<br>";
+                    $subtext .= '<u>'.$champ->getLibelle() . " :</u> ". $reponse . "<br>";
                     $as = true;
                 }
             }
