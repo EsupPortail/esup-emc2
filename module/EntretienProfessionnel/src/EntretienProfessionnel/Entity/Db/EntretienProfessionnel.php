@@ -29,7 +29,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     const ETAT_VALIDATION_HIERARCHIE        = 'ENTRETIEN_VALIDATION_HIERARCHIE';
     const DELAI_OBSERVATION                 = 8;
 
-    public function getResourceId()
+    public function getResourceId() : string
     {
         return 'EntretienProfessionnel';
     }
@@ -70,7 +70,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -96,7 +96,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return User
      */
-    public function getResponsable()
+    public function getResponsable() : ?User
     {
         return $this->responsable;
     }
@@ -105,7 +105,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param User|null $responsable
      * @return EntretienProfessionnel
      */
-    public function setResponsable(?User $responsable)
+    public function setResponsable(?User $responsable) : EntretienProfessionnel
     {
         $this->responsable = $responsable;
         return $this;
@@ -114,7 +114,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return string
      */
-    public function getAnnee()
+    public function getAnnee() : string
     {
         if ($this->campagne === null) return "Aucune campagne";
         return $this->campagne->getAnnee();
@@ -141,7 +141,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return DateTime
      */
-    public function getDateEntretien()
+    public function getDateEntretien() : ?DateTime
     {
         return $this->dateEntretien;
     }
@@ -150,7 +150,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param DateTime|null $dateEntretien
      * @return EntretienProfessionnel
      */
-    public function setDateEntretien(?DateTime $dateEntretien)
+    public function setDateEntretien(?DateTime $dateEntretien) : EntretienProfessionnel
     {
         $this->dateEntretien = $dateEntretien;
         return $this;
@@ -159,7 +159,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return string
      */
-    public function getLieu()
+    public function getLieu() : string
     {
         return $this->lieu;
     }
@@ -168,7 +168,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param string|null $lieu
      * @return EntretienProfessionnel
      */
-    public function setLieu(?string $lieu)
+    public function setLieu(?string $lieu) : EntretienProfessionnel
     {
         $this->lieu = $lieu;
         return $this;
@@ -185,7 +185,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return FormulaireInstance
      */
-    public function getFormulaireInstance()
+    public function getFormulaireInstance() : ?FormulaireInstance
     {
         return $this->formulaireInstance;
     }
@@ -194,7 +194,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param FormulaireInstance|null $formulaireInstance
      * @return EntretienProfessionnel
      */
-    public function setFormulaireInstance(?FormulaireInstance $formulaireInstance)
+    public function setFormulaireInstance(?FormulaireInstance $formulaireInstance) : EntretienProfessionnel
     {
         $this->formulaireInstance = $formulaireInstance;
         return $this;
@@ -203,7 +203,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return FormulaireInstance
      */
-    public function getFormationInstance()
+    public function getFormationInstance() : FormulaireInstance
     {
         return $this->formationInstance;
     }
@@ -212,7 +212,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param FormulaireInstance|null $formationInstance
      * @return EntretienProfessionnel
      */
-    public function setFormationInstance(?FormulaireInstance $formationInstance)
+    public function setFormationInstance(?FormulaireInstance $formationInstance) : EntretienProfessionnel
     {
         $this->formationInstance = $formationInstance;
         return $this;
@@ -307,9 +307,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return DateTime
      */
-    public function getMaxSaisiEntretien() {
+    public function getMaxSaisiEntretien() : ?DateTime
+    {
         $sursis = $this->getSursisActif();
-        $date = null;
         if ($sursis === null) {
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
         } else {
@@ -419,7 +419,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return string
      */
-    public function getToken()
+    public function getToken() : ?string
     {
         return $this->token;
     }
@@ -428,7 +428,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param string|null $token
      * @return EntretienProfessionnel
      */
-    public function setToken(?string $token)
+    public function setToken(?string $token) : EntretienProfessionnel
     {
         $this->token = $token;
         return $this;
@@ -437,7 +437,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return DateTime
      */
-    public function getAcceptation()
+    public function getAcceptation() : ?DateTime
     {
         return $this->acceptation;
     }
@@ -446,9 +446,30 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param DateTime|null $acceptation
      * @return EntretienProfessionnel
      */
-    public function setAcceptation(?DateTime $acceptation)
+    public function setAcceptation(?DateTime $acceptation) : EntretienProfessionnel
     {
         $this->acceptation = $acceptation;
         return $this;
+    }
+
+    /** MACRO POUR CONTENU ****************************************************************************************/
+
+    public function toStringLieu() : string {
+        if ($this->lieu !== null) return $this->lieu;
+        return "Aucun lieu donné";
+    }
+
+    public function toStringDate() : string {
+        if ($this->getDateEntretien() !== null) return $this->dateEntretien->format('d/m/Y à H:i');
+        return "Aucune date donnée";
+    }
+
+    public function toStringAgent() : string {
+        if ($this->getAgent() !== null) return $this->getAgent()->getDenomination();
+        return "Aucun agent donné";
+    }
+    public function toStringResponsable() : string {
+        if ($this->getResponsable() !== null) return $this->getResponsable()->getDisplayName();
+        return "Aucun responsable d'entretien donné";
     }
 }

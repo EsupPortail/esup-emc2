@@ -7,6 +7,7 @@ use Interop\Container\ContainerInterface;
 use Mailing\Service\MailType\MailTypeService;
 use UnicaenApp\Options\ModuleOptions;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Contenu\ContenuService;
 use UnicaenUtilisateur\Service\User\UserService;
 use Zend\Mail\Transport\Smtp;
 use Zend\Mail\Transport\SmtpOptions;
@@ -24,11 +25,13 @@ class MailingServiceFactory {
 
         /**
          * @var EntityManager $entityManager
+         * @var ContenuService $contenuService
          * @var MailTypeService $mailTypeService
          * @var ParametreService $parametreService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $contenuService = $container->get(ContenuService::class);
         $mailTypeService = $container->get(MailTypeService::class);
         $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
@@ -36,6 +39,7 @@ class MailingServiceFactory {
         /** @var MailingService $service */
         $service = new MailingService($transport, $config['redirect_to'], $config['do_not_send']);
         $service->setEntityManager($entityManager);
+        $service->setContenuService($contenuService);
         $service->setMailTypeService($mailTypeService);
         $service->setParametreService($parametreService);
         $service->setUserService($userService);

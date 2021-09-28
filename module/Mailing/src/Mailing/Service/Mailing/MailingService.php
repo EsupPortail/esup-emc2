@@ -2,19 +2,16 @@
 
 namespace Mailing\Service\Mailing;
 
-use Application\Entity\Db\Agent;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use Formation\Entity\Db\FormationInstance;
 use Mailing\Model\Db\Mail;
 use Mailing\Service\MailType\MailTypeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -28,6 +25,7 @@ use Zend\View\Renderer\PhpRenderer;
 class MailingService
 {
     use EntityManagerAwareTrait;
+    use ContenuServiceAwareTrait;
     use MailTypeServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -354,23 +352,20 @@ class MailingService
      * @param array $variables
      * @return Mail|null
      */
-    public function sendMailType($code, array $variables) : ?Mail
+    public function sendMailType(string $code, array $variables) : ?Mail
     {
+        $contenu = $this->getContenuService()->getContenuByCode($code);
         $mailtype = $this->getMailTypeService()->getMailTypeByCode($code);
-        if ($mailtype === null) {
+        if ($mailtype === null OR $contenu === null) {
             throw new RuntimeException("Le mail type [" . $code . "] n'existe pas !", 0, null);
         }
 
         if ($mailtype->isActif()) {
-            $sujet = $mailtype->getSujet();
-            $sujet = $this->replaceMacros($sujet, $variables);
+            $sujet = $this->getContenuService()->generateComplement($contenu, $variables);
             $sujet = html_entity_decode(strip_tags($sujet));
-
-            $corps = $mailtype->getCorps();
-            $corps = $this->replaceMacros($corps, $variables);
+            $corps = $this->getContenuService()->generateContenu($contenu, $variables);
 
             $mails = [];
-
             if (isset($variables['mailing']) and $variables['mailing'] !== "") $mails[] = $variables['mailing'];
 
             if (isset($variables['user'])) {
@@ -394,119 +389,96 @@ class MailingService
     }
 
     /**
-     * @param string|null $texteInitial
-     * @param array $variables
-     * @return string
-     */
-    private function replaceMacros(?string $texteInitial, array $variables) : string
-    {
-        $matches = [];
-        preg_match_all('/VAR\[[a-z,A-Z,0-9,#,_]*\]/', $texteInitial, $matches);
-
-        $patterns = array_unique($matches[0]);
-        $replacements = [];
-        foreach ($patterns as $pattern) {
-            $replacements[] = $this->getReplacementText($pattern, $variables);
-        }
-        $text = str_replace($patterns, $replacements, $texteInitial);
-
-        return $text;
-    }
-
-    /**
      * @param string $identifier
      * @param array $variables
      * @return string
      */
-    private function getReplacementText(string $identifier, array $variables) : string
-    {
-        /**
-         * @var Agent $agent
-         * @var Campagne $campagne
-         * @var EntretienProfessionnel $entretien
-         * @var FormationInstance $instance
-         */
-
-        //TODO améliorant en récupérant le entre [] et puis en splittant avec # et tester récupération ou non de l'object ...
-        switch ($identifier) {
-            /** DATE **************************************************************************************************/
-            case 'VAR[DATE#aujourdhui]' :
-                $date = $this->getDateTime()->format('d/m/Y');
-                return $date;
-            /** APPLICATION *******************************************************************************************/
-            case 'VAR[EMC2#nom]' :
-                $lien = '<strong>EMC2</strong>';
-                return $lien;
-            case 'VAR[EMC2#lien]' :
-                $lien = '<a href="' . 'https://emc2.unicaen.fr' . '">EMC2</a>';
-                return $lien;
-            /** AGENT *************************************************************************************************/
-            case 'VAR[Agent#Denomination]' :
-                $agent = $variables['agent'];
-                return $agent->getDenomination();
-            /** CAMPAGNE **********************************************************************************************/
-            case 'VAR[CAMPAGNE#annee]' :
-                $campagne = $variables['campagne'];
-                return $campagne->getAnnee();
-            case 'VAR[CAMPAGNE#debut]' :
-                $campagne = $variables['campagne'];
-                return $campagne->getDateDebut()->format('d/m/Y');
-            case 'VAR[CAMPAGNE#fin]' :
-                $campagne = $variables['campagne'];
-                return $campagne->getDateFin()->format('d/m/Y');
-            /** ENTRETIEN *********************************************************************************************/
-//                {title: 'Entretien : date', description: 'Date de l\'entretien', content: 'VAR[ENTRETIEN#date]'},
-            case 'VAR[ENTRETIEN#agent]' :
-                $entretien = $variables['entretien'];
-                return $entretien->getAgent()->getDenomination();
-            case 'VAR[ENTRETIEN#responsable]' :
-                $entretien = $variables['entretien'];
-                return $entretien->getResponsable()->getDisplayName();
-            case 'VAR[ENTRETIEN#date]' :
-                $entretien = $variables['entretien'];
-                return $entretien->getDateEntretien()->format('d/m/Y');
-            case 'VAR[ENTRETIEN#heure]' :
-                $entretien = $variables['entretien'];
-                return $entretien->getDateEntretien()->format('H:i');
-            case 'VAR[ENTRETIEN#lieu]' :
-                $entretien = $variables['entretien'];
-                return $entretien->getLieu();
-            case 'VAR[ENTRETIEN#lien_accepter]' :
-                $entretien = $variables['entretien'];
-                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true).'">Acceptation de l\'entretien professionnel</a>';
-            case 'VAR[ENTRETIEN#lien_entretien]' :
-                $entretien = $variables['entretien'];
-                return '<a href="'.$this->rendererService->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['force_canonical' => true], true).'">Accéder à l\'entretien professionnel</a>';
-            /** FORMATION **************************************************************************************************/
-            case 'VAR[FORMATION#instance_id]' :
-                $instance = $variables['formation-instance'];
-                return $instance->getId();
-            case 'VAR[FORMATION#libelle]' :
-                $instance = $variables['formation-instance'];
-                return $instance->getFormation()->getLibelle();
-            case 'VAR[FORMATION#debut]' :
-                $instance = $variables['formation-instance'];
-                return $instance->getDebut();
-            case 'VAR[FORMATION#fin]' :
-                $instance = $variables['formation-instance'];
-                return $instance->getFin();
-            case 'VAR[FORMATION#Periode]' :
-                $instance = $variables['formation-instance'];
-                if ($instance->getDebut() === $instance->getFin()) return $instance->getDebut();
-                return $instance->getDebut() ." au ". $instance->getFin();
-            case 'VAR[FORMATION#inscription]' :
-                $instance = $variables['formation-instance'];
-                return ($instance->isAutoInscription())?"libre":"manuelle";
-            case 'VAR[FORMATION#lien_session]' :
-                $instance = $variables['formation-instance'];
-                $url = $this->rendererService->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
-                $intitule = $instance->getFormation()->getLibelle() ."(#". $instance->getId() .")";
-                return '<a href="'.$url.'">'.$intitule.'</a>';
-            case 'VAR[FORMATION#Emargements]' :
-                $instance = $variables['formation-instance'];
-                $url = $this->rendererService->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
-                return "Liste de émargements : <a href='".$url."'> PDF des émargements </a>";
-        }
-        return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
-    }
+//    private function getReplacementText(string $identifier, array $variables) : string
+//    {
+//        /**
+//         * @var Agent $agent
+//         * @var Campagne $campagne
+//         * @var EntretienProfessionnel $entretien
+//         * @var FormationInstance $instance
+//         */
+//
+//        //TODO améliorant en récupérant le entre [] et puis en splittant avec # et tester récupération ou non de l'object ...
+//        switch ($identifier) {
+//            /** DATE **************************************************************************************************/
+//            case 'VAR[DATE#aujourdhui]' :
+//                $date = $this->getDateTime()->format('d/m/Y');
+//                return $date;
+//            /** APPLICATION *******************************************************************************************/
+//            case 'VAR[EMC2#nom]' :
+//                $lien = '<strong>EMC2</strong>';
+//                return $lien;
+//            case 'VAR[EMC2#lien]' :
+//                $lien = '<a href="' . 'https://emc2.unicaen.fr' . '">EMC2</a>';
+//                return $lien;
+//            /** AGENT *************************************************************************************************/
+//            case 'VAR[Agent#Denomination]' :
+//                $agent = $variables['agent'];
+//                return $agent->getDenomination();
+//            /** CAMPAGNE **********************************************************************************************/
+//            case 'VAR[CAMPAGNE#debut]' :
+//                $campagne = $variables['campagne'];
+//                return $campagne->getDateDebut()->format('d/m/Y');
+//            case 'VAR[CAMPAGNE#fin]' :
+//                $campagne = $variables['campagne'];
+//                return $campagne->getDateFin()->format('d/m/Y');
+//            /** ENTRETIEN *********************************************************************************************/
+////                {title: 'Entretien : date', description: 'Date de l\'entretien', content: 'VAR[ENTRETIEN#date]'},
+//            case 'VAR[ENTRETIEN#agent]' :
+//                $entretien = $variables['entretien'];
+//                return $entretien->getAgent()->getDenomination();
+//            case 'VAR[ENTRETIEN#responsable]' :
+//                $entretien = $variables['entretien'];
+//                return $entretien->getResponsable()->getDisplayName();
+//            case 'VAR[ENTRETIEN#date]' :
+//                $entretien = $variables['entretien'];
+//                return $entretien->getDateEntretien()->format('d/m/Y');
+//            case 'VAR[ENTRETIEN#heure]' :
+//                $entretien = $variables['entretien'];
+//                return $entretien->getDateEntretien()->format('H:i');
+//            case 'VAR[ENTRETIEN#lieu]' :
+//                $entretien = $variables['entretien'];
+//                return $entretien->getLieu();
+//            case 'VAR[ENTRETIEN#lien_accepter]' :
+//                $entretien = $variables['entretien'];
+//                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true).'">Acceptation de l\'entretien professionnel</a>';
+//            case 'VAR[ENTRETIEN#lien_entretien]' :
+//                $entretien = $variables['entretien'];
+//                return '<a href="'.$this->rendererService->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['force_canonical' => true], true).'">Accéder à l\'entretien professionnel</a>';
+//            /** FORMATION **************************************************************************************************/
+//            case 'VAR[FORMATION#instance_id]' :
+//                $instance = $variables['formation-instance'];
+//                return $instance->getId();
+//            case 'VAR[FORMATION#libelle]' :
+//                $instance = $variables['formation-instance'];
+//                return $instance->getFormation()->getLibelle();
+//            case 'VAR[FORMATION#debut]' :
+//                $instance = $variables['formation-instance'];
+//                return $instance->getDebut();
+//            case 'VAR[FORMATION#fin]' :
+//                $instance = $variables['formation-instance'];
+//                return $instance->getFin();
+//            case 'VAR[FORMATION#Periode]' :
+//                $instance = $variables['formation-instance'];
+//                if ($instance->getDebut() === $instance->getFin()) return $instance->getDebut();
+//                return $instance->getDebut() ." au ". $instance->getFin();
+//            case 'VAR[FORMATION#inscription]' :
+//                $instance = $variables['formation-instance'];
+//                return ($instance->isAutoInscription())?"libre":"manuelle";
+//            case 'VAR[FORMATION#lien_session]' :
+//                $instance = $variables['formation-instance'];
+//                $url = $this->rendererService->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
+//                $intitule = $instance->getFormation()->getLibelle() ."(#". $instance->getId() .")";
+//                return '<a href="'.$url.'">'.$intitule.'</a>';
+//            case 'VAR[FORMATION#Emargements]' :
+//                $instance = $variables['formation-instance'];
+//                $url = $this->rendererService->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
+//                return "Liste de émargements : <a href='".$url."'> PDF des émargements </a>";
+//        }
+//        return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
+//    }
     }

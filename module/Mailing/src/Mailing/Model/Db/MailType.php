@@ -2,6 +2,7 @@
 
 namespace Mailing\Model\Db;
 
+use UnicaenRenderer\Entity\Db\Content;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class MailType {
@@ -17,6 +18,8 @@ class MailType {
     private $description;
     /** @var integer */
     private $actif;
+    /** @var Content */
+    private $contenu;
 
     /** @var string */
     private $sujet;
@@ -142,5 +145,24 @@ class MailType {
     public function isActif() {
         return ($this->actif === 1);
     }
+
+    /**
+     * @return Content|null
+     */
+    public function getContenu(): ?Content
+    {
+        return $this->contenu;
+    }
+
+    /**
+     * @param Content|null $contenu
+     * @return MailType
+     */
+    public function setContenu(?Content $contenu): MailType
+    {
+        $this->contenu = $contenu;
+        return $this;
+    }
+
 
 }

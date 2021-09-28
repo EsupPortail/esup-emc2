@@ -35,8 +35,6 @@ class ObservationController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getObservationService()->create($observation);
-                $mail = $this->getMailingService()->sendMailType("NOTIFICATION_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
-                $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
             }
         }
 

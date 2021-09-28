@@ -29,6 +29,7 @@ $canModifierContenu     = true;
             <th> Code </th>
             <th> Libellé</th>
             <th style="width: 5rem;"> Actif</th>
+            <th style="width: 5rem;"> Content</th>
             <th style="width: 11rem;"> Action </th>
         </tr>
     </thead>
@@ -52,6 +53,16 @@ $canModifierContenu     = true;
                     <?php else: ?>
                         <span class="badge" style="background-color: darkred;">&nbsp;</span>
                     <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($type->getContenu() !== null) : ?>
+                        <span class="badge" style="background-color: darkgreen;"
+                              title="<?php echo $type->getContenu()->getId(); ?> - <?php echo $type->getContenu()->getCode(); ?>"
+                        >&nbsp;</span>
+                    <?php else: ?>
+                        <span class="badge" style="background-color: darkred;">&nbsp;</span>
+                    <?php endif; ?>
+                </td>
                 <td>
                     <?php if ($canVoirType) : ?>
                         <a

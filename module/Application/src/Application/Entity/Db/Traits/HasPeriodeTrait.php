@@ -75,4 +75,16 @@ trait HasPeriodeTrait {
     {
         return ($this->estCommence($date) AND !$this->estFini($date));
     }
+
+    /** Fonctions pour les macros *************************************************************************************/
+
+    public function getDateDebutToString() : string
+    {
+        return ($this->dateDebut)?$this->dateDebut->format('d/m/Y'):"N.C.";
+    }
+
+    public function getDateFinToString() : string
+    {
+        return ($this->dateFin)?$this->dateFin->format('d/m/Y'):"N.C.";
+    }
 }
