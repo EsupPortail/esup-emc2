@@ -6,6 +6,10 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
+use Application\Form\AgentPPP\AgentPPPForm;
+use Application\Form\AgentPPP\AgentPPPFormFactory;
+use Application\Form\AgentPPP\AgentPPPHydrator;
+use Application\Form\AgentPPP\AgentPPPHydratorFactory;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Form\SelectionAgent\SelectionAgentFormFactory;
 use Application\Form\SelectionAgent\SelectionAgentHydrator;
@@ -13,6 +17,8 @@ use Application\Form\SelectionAgent\SelectionAgentHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
+use Application\Service\AgentPPP\AgentPPPService;
+use Application\Service\AgentPPP\AgentPPPServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
@@ -107,6 +113,20 @@ return [
                         AgentPrivileges::AGENT_ELEMENT_VALIDER,
                     ],
                     'assertion'  => AgentAssertion::class,
+                ],
+                /** NEW STUFFS CCC */
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'ajouter-ppp',
+                        'modifier-ppp',
+                        'historiser-ppp',
+                        'restaurer-ppp',
+                        'detruire-ppp',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_GESTION_CCC,
+                    ],
                 ],
             ],
         ],
@@ -260,6 +280,71 @@ return [
                             ],
                         ],
                     ],
+
+                    /** PPP *******************************************************************************************/
+
+                    'ppp' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ppp',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                            ],
+                        ],
+                        'may_terminate' => 'false',
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/ajouter/:agent',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'ajouter-ppp'
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:ppp',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'modifier-ppp'
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:ppp',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'historiser-ppp'
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:ppp',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'restaurer-ppp'
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/detruire/:ppp',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'detruire-ppp'
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -295,6 +380,7 @@ return [
         'factories' => [
             AgentAssertion::class => AgentAssertionFactory::class,
             AgentService::class => AgentServiceFactory::class,
+            AgentPPPService::class => AgentPPPServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -305,11 +391,13 @@ return [
     'form_elements' => [
         'factories' => [
             SelectionAgentForm::class => SelectionAgentFormFactory::class,
+            AgentPPPForm::class => AgentPPPFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
+            AgentPPPHydrator::class => AgentPPPHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

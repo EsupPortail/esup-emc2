@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @var Agent $agent
+ * @var AgentPPP[] $ppps
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentPPP;
+use Application\Provider\Privilege\AgentPrivileges;
+
+$canAjouterPPP      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_GESTION_CCC));
+$canModifierPPP     = $canAjouterPPP;
+$canHistoriserPPP   = $canAjouterPPP;
+$canDetruirePPP     = $canAjouterPPP;
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Demande de projets professionnels personnels
+            <span class="badge"><?php echo count($ppps); ?></span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterPPP) : ?>
+            <?php /** @see \Application\Controller\AgentController::ajouterPppAction() */ ?>
+            <a href="<?php echo $this->url('agent/ppp/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+               class="btn btn-primary action ajax-modal" data-event="modification"
+            >
+                <span class="icon ajouter"> </span>
+                Ajouter un PPP
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th> Type </th>
+        <th> Intitulé </th>
+        <th> Compléments </th>
+        <th> CPF et coûts </th>
+        <th> État </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($ppps as $ppp) : ?>
+        <tr <?php if ($ppp->estHistorise()) echo " class='historise' "; ?>>
+            <td> <?php echo $ppp->getType(); ?> </td>
+            <td> <?php echo $ppp->getLibelle(); ?> </td>
+            <td> <?php echo $ppp->getComplement(); ?> </td>
+            <td>
+                <dl class="dl-horizontal">
+                    <dt>CPF :</dt>
+                    <dd><?php echo ($ppp->getFormationCPF() !== null)? ($ppp->getFormationCPF() . " h."):"Aucun"; ?></dd>
+                    <dt>Coût :</dt>
+                    <dd><?php echo ($ppp->getFormationCout() !== null)? ($ppp->getFormationCout() . " €"):"Aucun"; ?></dd>
+                    <dt>Prise en charge :</dt>
+                    <dd><?php echo ($ppp->getFormationPriseEnCharge() !== null)? ($ppp->getFormationPriseEnCharge() . " €"):"Aucun"; ?></dd>
+                </dl>
+            </td>
+            <td> <?php echo $this->etatbadge($ppp->getEtat()); ?> </td>
+            <td>
+                <?php if ($canModifierPPP) : ?>
+                    <?php /** @see \Application\Controller\AgentController::modifierPppAction() */ ?>
+                    <a href="<?php echo $this->url('agent/ppp/modifier', ['ppp' => $ppp->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon editer"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriserPPP) : ?>
+                    <?php if ($ppp->estNonHistorise()) : ?>
+                        <?php /** @see \Application\Controller\AgentController::historiserPppAction() */ ?>
+                        <a href="<?php echo $this->url('agent/ppp/historiser', ['ppp' => $ppp->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser"></span></a>
+                    <?php else : ?>
+                        <?php /** @see \Application\Controller\AgentController::restaurerPppAction() */ ?>
+                        <a href="<?php echo $this->url('agent/ppp/restaurer', ['ppp' => $ppp->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruirePPP) : ?>
+                    <?php /** @see \Application\Controller\AgentController::detruirePppAction() */ ?>
+                    <a href="<?php echo $this->url('agent/ppp/detruire', ['ppp' => $ppp->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<h2> Demande de stages d'observation </h2>
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th> Type </th>
+        <th> Intitulé </th>
+        <th> Période </th>
+        <th> Compléments </th>
+        <th> État </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+</table>

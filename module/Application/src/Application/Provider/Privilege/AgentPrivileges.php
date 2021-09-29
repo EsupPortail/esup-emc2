@@ -25,4 +25,6 @@ class AgentPrivileges extends Privileges
 
     const AGENT_ACQUIS_AFFICHER = 'agent-agent_acquis_afficher';
     const AGENT_ACQUIS_MODIFIER = 'agent-agent_acquis_modifier';
+
+    const AGENT_GESTION_CCC = 'agent-agent_gestion_ccc';
 }

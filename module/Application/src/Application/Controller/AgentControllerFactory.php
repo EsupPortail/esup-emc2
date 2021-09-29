@@ -2,9 +2,11 @@
 
 namespace Application\Controller;
 
+use Application\Form\AgentPPP\AgentPPPForm;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\Application\ApplicationService;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\Categorie\CategorieService;
@@ -53,6 +55,9 @@ class AgentControllerFactory {
          * @var UserService $userService
          *
          * @var FichePosteService $fichePosteService
+         *
+         * @var AgentPPPService $agentPPPService
+         * @var AgentPPPForm $agentPPPForm
          */
         $agentService = $container->get(AgentService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
@@ -85,6 +90,9 @@ class AgentControllerFactory {
         $formationElementForm = $container->get('FormElementManager')->get(FormationElementForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
+        $agentPPPService = $container->get(AgentPPPService::class);
+        $agentPPPForm = $container->get('FormElementManager')->get(AgentPPPForm::class);
+
         /** @var AgentController $controller */
         $controller = new AgentController();
 
@@ -115,6 +123,8 @@ class AgentControllerFactory {
         $controller->setFormationElementForm($formationElementForm);
         $controller->setUploadForm($uploadForm);
 
+        $controller->setAgentPPPService($agentPPPService);
+        $controller->setAgentPPPForm($agentPPPForm);
         return $controller;
     }
 }
