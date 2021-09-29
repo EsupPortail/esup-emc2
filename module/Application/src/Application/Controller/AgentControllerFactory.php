@@ -3,10 +3,14 @@
 namespace Application\Controller;
 
 use Application\Form\AgentPPP\AgentPPPForm;
+use Application\Form\AgentStageObservation\AgentStageObservationForm;
+use Application\Form\AgentTutorat\AgentTutoratForm;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentPPP\AgentPPPService;
+use Application\Service\AgentStageObservation\AgentStageObservationService;
+use Application\Service\AgentTutorat\AgentTutoratService;
 use Application\Service\Application\ApplicationService;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\Categorie\CategorieService;
@@ -56,8 +60,6 @@ class AgentControllerFactory {
          *
          * @var FichePosteService $fichePosteService
          *
-         * @var AgentPPPService $agentPPPService
-         * @var AgentPPPForm $agentPPPForm
          */
         $agentService = $container->get(AgentService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
@@ -90,9 +92,6 @@ class AgentControllerFactory {
         $formationElementForm = $container->get('FormElementManager')->get(FormationElementForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
-        $agentPPPService = $container->get(AgentPPPService::class);
-        $agentPPPForm = $container->get('FormElementManager')->get(AgentPPPForm::class);
-
         /** @var AgentController $controller */
         $controller = new AgentController();
 
@@ -123,8 +122,27 @@ class AgentControllerFactory {
         $controller->setFormationElementForm($formationElementForm);
         $controller->setUploadForm($uploadForm);
 
+        /**
+         * @var AgentPPPService $agentPPPService
+         * @var AgentPPPForm $agentPPPForm
+         * @var AgentStageObservationService $agentStageObservationService
+         * @var AgentStageObservationForm $agentStageObservationForm
+         * @var AgentTutoratService $agentTutoratService
+         * @var AgentTutoratForm $agentTutoratForm
+         */
+        $agentPPPService = $container->get(AgentPPPService::class);
+        $agentPPPForm = $container->get('FormElementManager')->get(AgentPPPForm::class);
+        $agentStageObservationService = $container->get(AgentStageObservationService::class);
+        $agentStageObservationForm = $container->get('FormElementManager')->get(AgentStageObservationForm::class);
+        $agentTutoratService = $container->get(AgentTutoratService::class);
+        $agentTutoratForm = $container->get('FormElementManager')->get(AgentTutoratForm::class);
+
         $controller->setAgentPPPService($agentPPPService);
         $controller->setAgentPPPForm($agentPPPForm);
+        $controller->setAgentStageObservationService($agentStageObservationService);
+        $controller->setAgentStageObservationForm($agentStageObservationForm);
+        $controller->setAgentTutoratService($agentTutoratService);
+        $controller->setAgentTutoratForm($agentTutoratForm);
         return $controller;
     }
 }

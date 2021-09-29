@@ -6,7 +6,9 @@ use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentPPP;
 use Application\Entity\Db\AgentQuotite;
+use Application\Entity\Db\AgentStageObservation;
 use Application\Entity\Db\AgentStatut;
+use Application\Entity\Db\AgentTutorat;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -26,6 +28,8 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentQuotite|null $quotite
  *
  * @var AgentPPP[] $ppps
+ * @var AgentStageObservation[] $stages
+ * @var AgentTutorat[] $tutorats
  */
 
 $displayParcours = false;
@@ -170,10 +174,10 @@ if ($agent !== null) {
                 <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
             </div>
             <div id="ppp" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/ppp', ['agent' => $agent, 'ppps' => $ppps, 'droits' => $droits], []); ?>
+                <?php echo $this->partial('partial/ppp', ['agent' => $agent, 'ppps' => $ppps, 'stages' => $stages, 'droits' => $droits], []); ?>
             </div>
             <div id="tutorat" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/tutorat', ['agent' => $agent, 'droits' => $droits], []); ?>
+                <?php echo $this->partial('partial/tutorat', ['agent' => $agent, 'tutorats' => $tutorats, 'droits' => $droits], []); ?>
             </div>
         </div>
     </div>

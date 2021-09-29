@@ -306,4 +306,17 @@ class StructureService
         }
         return $fiches;
     }
+
+    /**
+     * @return array
+     */
+    public function getStructuresAsOptions() : array
+    {
+        $structures = $this->getStructures();
+        $options = [];
+        foreach ($structures as $structure) {
+            $options[$structure->getId()] = "[".$structure->getLibelleCourt()."] ".$structure->getLibelleLong();
+        }
+        return $options;
+    }
 }

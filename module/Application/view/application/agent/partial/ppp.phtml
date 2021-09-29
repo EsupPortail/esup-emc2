@@ -3,10 +3,12 @@
 /**
  * @var Agent $agent
  * @var AgentPPP[] $ppps
+ * @var AgentStageObservation[] $stages
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentPPP;
+use Application\Entity\Db\AgentStageObservation;
 use Application\Provider\Privilege\AgentPrivileges;
 
 $canAjouterPPP      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_GESTION_CCC));
@@ -41,6 +43,7 @@ $canDetruirePPP     = $canAjouterPPP;
     <tr>
         <th> Type </th>
         <th> Intitulé </th>
+        <th> Période </th>
         <th> Compléments </th>
         <th> CPF et coûts </th>
         <th> État </th>
@@ -52,6 +55,11 @@ $canDetruirePPP     = $canAjouterPPP;
         <tr <?php if ($ppp->estHistorise()) echo " class='historise' "; ?>>
             <td> <?php echo $ppp->getType(); ?> </td>
             <td> <?php echo $ppp->getLibelle(); ?> </td>
+            <td>
+                <?php echo $ppp->getDateDebutToString(); ?>
+                &rightarrow;
+                <?php echo $ppp->getDateFintoString(); ?>
+            </td>
             <td> <?php echo $ppp->getComplement(); ?> </td>
             <td>
                 <dl class="dl-horizontal">
@@ -98,17 +106,79 @@ $canDetruirePPP     = $canAjouterPPP;
     </tbody>
 </table>
 
-<h2> Demande de stages d'observation </h2>
+<div class="row">
+    <div class="col-md-8">
+        <h2>
+            Demande de stages d'observation
+            <span class="badge"><?php echo count($stages); ?></span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterPPP) : ?>
+            <?php /** @see \Application\Controller\AgentController::ajouterStageObservationAction() */ ?>
+            <a href="<?php echo $this->url('agent/stageobs/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+               class="btn btn-primary action ajax-modal" data-event="modification"
+            >
+                <span class="icon ajouter"> </span>
+                Ajouter un stage
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed">
     <thead>
     <tr>
-        <th> Type </th>
-        <th> Intitulé </th>
+        <th> Structure </th>
+        <th> Métier </th>
         <th> Période </th>
         <th> Compléments </th>
         <th> État </th>
         <th> Action </th>
     </tr>
     </thead>
+    <tbody>
+    <?php foreach ($stages as $stage) : ?>
+        <tr <?php if ($stage->estHistorise()) echo " class='historise' "; ?>>
+            <td> <?php echo ($stage->getStructure())?$stage->getStructure()->getLibelleCourt():"Aucune structure"; ?> </td>
+            <td> <?php echo ($stage->getMetier())?$stage->getMetier()->getLibelle():"Aucun métier"; ?> </td>
+            <td>
+                <?php echo $stage->getDateDebutToString(); ?>
+                &rightarrow;
+                <?php echo $stage->getDateFintoString(); ?>
+            </td>
+            <td> <?php echo $stage->getComplement(); ?> </td>
+            <td> <?php echo $this->etatbadge($stage->getEtat()); ?> </td>
+            <td>
+                <?php if ($canModifierPPP) : ?>
+                    <?php /** @see \Application\Controller\AgentController::modifierStageObservationAction() */ ?>
+                    <a href="<?php echo $this->url('agent/stageobs/modifier', ['stageobs' => $stage->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon editer"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriserPPP) : ?>
+                    <?php if ($stage->estNonHistorise()) : ?>
+                        <?php /** @see \Application\Controller\AgentController::historiserStageObservationAction() */ ?>
+                        <a href="<?php echo $this->url('agent/stageobs/historiser', ['stageobs' => $stage->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser"></span></a>
+                    <?php else : ?>
+                        <?php /** @see \Application\Controller\AgentController::restaurerStageObservationAction() */ ?>
+                        <a href="<?php echo $this->url('agent/stageobs/restaurer', ['stageobs' => $stage->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruirePPP) : ?>
+                    <?php /** @see \Application\Controller\AgentController::detruireStageObservationAction() */ ?>
+                    <a href="<?php echo $this->url('agent/stageobs/detruire', ['stageobs' => $stage->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
 </table>

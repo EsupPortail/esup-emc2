@@ -10,6 +10,14 @@ use Application\Form\AgentPPP\AgentPPPForm;
 use Application\Form\AgentPPP\AgentPPPFormFactory;
 use Application\Form\AgentPPP\AgentPPPHydrator;
 use Application\Form\AgentPPP\AgentPPPHydratorFactory;
+use Application\Form\AgentStageObservation\AgentStageObservationForm;
+use Application\Form\AgentStageObservation\AgentStageObservationFormFactory;
+use Application\Form\AgentStageObservation\AgentStageObservationHydrator;
+use Application\Form\AgentStageObservation\AgentStageObservationHydratorFactory;
+use Application\Form\AgentTutorat\AgentTutoratForm;
+use Application\Form\AgentTutorat\AgentTutoratFormFactory;
+use Application\Form\AgentTutorat\AgentTutoratHydrator;
+use Application\Form\AgentTutorat\AgentTutoratHydratorFactory;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Form\SelectionAgent\SelectionAgentFormFactory;
 use Application\Form\SelectionAgent\SelectionAgentHydrator;
@@ -19,6 +27,10 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentPPP\AgentPPPServiceFactory;
+use Application\Service\AgentStageObservation\AgentStageObservationService;
+use Application\Service\AgentStageObservation\AgentStageObservationServiceFactory;
+use Application\Service\AgentTutorat\AgentTutoratService;
+use Application\Service\AgentTutorat\AgentTutoratServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
@@ -123,6 +135,32 @@ return [
                         'historiser-ppp',
                         'restaurer-ppp',
                         'detruire-ppp',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_GESTION_CCC,
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'ajouter-stage-observation',
+                        'modifier-stage-observation',
+                        'historiser-stage-observation',
+                        'restaurer-stage-observation',
+                        'detruire-stage-observation',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_GESTION_CCC,
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'ajouter-tutorat',
+                        'modifier-tutorat',
+                        'historiser-tutorat',
+                        'restaurer-tutorat',
+                        'detruire-tutorat',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_GESTION_CCC,
@@ -345,6 +383,131 @@ return [
                             ],
                         ],
                     ],
+                    'stageobs' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/stage-observation',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                            ],
+                        ],
+                        'may_terminate' => 'false',
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/ajouter/:agent',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'ajouter-stage-observation'
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:stageobs',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'modifier-stage-observation'
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:stageobs',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'historiser-stage-observation'
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:stageobs',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'restaurer-stage-observation'
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/detruire/:stageobs',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'detruire-stage-observation'
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+
+                    'tutorat' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/stage-tutorat',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                            ],
+                        ],
+                        'may_terminate' => 'false',
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/ajouter/:agent',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'ajouter-tutorat'
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:tutorat',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'modifier-tutorat'
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:tutorat',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'historiser-tutorat'
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:tutorat',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'restaurer-tutorat'
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/detruire/:tutorat',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'detruire-tutorat'
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -381,6 +544,8 @@ return [
             AgentAssertion::class => AgentAssertionFactory::class,
             AgentService::class => AgentServiceFactory::class,
             AgentPPPService::class => AgentPPPServiceFactory::class,
+            AgentStageObservationService::class => AgentStageObservationServiceFactory::class,
+            AgentTutoratService::class => AgentTutoratServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -392,12 +557,16 @@ return [
         'factories' => [
             SelectionAgentForm::class => SelectionAgentFormFactory::class,
             AgentPPPForm::class => AgentPPPFormFactory::class,
+            AgentStageObservationForm::class => AgentStageObservationFormFactory::class,
+            AgentTutoratForm::class => AgentTutoratFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
             AgentPPPHydrator::class => AgentPPPHydratorFactory::class,
+            AgentStageObservationHydrator::class => AgentStageObservationHydratorFactory::class,
+            AgentTutoratHydrator::class => AgentTutoratHydratorFactory::class,
         ],
     ],
     'view_helpers' => [
