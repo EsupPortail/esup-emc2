@@ -81,8 +81,8 @@ class AgentTutoratForm extends Form
                 'label' => "L'agent a été formé pour faire ce tutorat",
                 'value_options' => [
                     null => "Information inconnue",
-                    true => "Oui, iel a été·e formé·e",
-                    false => "Non, iel n'a pas été·e formé·e",
+                    true => "Oui, iel a été·e formé",
+                    false => "Non, iel n'a pas été·e formé",
                 ],
             ],
             'attributes' => [
