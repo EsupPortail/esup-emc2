@@ -3,6 +3,7 @@
 namespace Application\Form\AgentPPP;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
@@ -60,8 +61,14 @@ class AgentPPPForm extends Form {
                 'id' => 'periode',
             ]
         ]);
-        // etat TODO
-        //$this->get('etat')->setValueOptions($this->getEtatService()->getEtatsAsOption($type));
+        /// etat
+        $this->add([
+            'name' => 'etat',
+            'type' => EtatFieldset::class,
+            'attributes' => [
+                'id' => 'etat',
+            ]
+        ]);
 
         // Utilisation du cpf
         $this->add([

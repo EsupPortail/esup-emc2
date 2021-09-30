@@ -24,7 +24,9 @@ class AgentPPPHydrator implements HydratorInterface {
                 'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format('d/m/Y'):null,
                 'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format('d/m/Y'):null,
             ],
-            'etat'              => ($object->getEtat())?$object->getEtat()->getId():null,
+            'etat'              => [
+                'etat' => ($object->getEtat())?$object->getEtat()->getId():null,
+            ],
             'cpf'               => $object->getFormationCPF(),
             'cout'              => $object->getFormationCout(),
             'priseencharge'     => $object->getFormationPriseEnCharge(),
@@ -45,7 +47,7 @@ class AgentPPPHydrator implements HydratorInterface {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
         $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
         $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;
-        $etat = (isset($data['etat']))?$this->getEtatService()->getEtat($data['etat']):null;
+        $etat = (isset($data['etat']) AND isset($data['etat']['etat']))?$this->getEtatService()->getEtat($data['etat']['etat']):null;
         $cpf = (isset($data['cpf']) AND trim($data['cpf']) !== '')?$data['cpf']:null;
         $cout = (isset($data['cout']) AND trim($data['cout']) !== '')?$data['cout']:null;
         $priseencharge = (isset($data['priseencharge']) AND trim($data['priseencharge']) !== '')?$data['priseencharge']:null;

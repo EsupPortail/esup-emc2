@@ -7,6 +7,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Corps\CorpsServiceAwareTrait;
 use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -71,8 +72,14 @@ class AgentAccompagnementForm extends Form
                 'id' => 'periode',
             ]
         ]);
-        // etat TODO
-        //$this->get('etat')->setValueOptions($this->getEtatService()->getEtatsAsOption($type));
+        // etat
+        $this->add([
+            'name' => 'etat',
+            'type' => EtatFieldset::class,
+            'attributes' => [
+                'id' => 'etat',
+            ]
+        ]);
 
         // complement
         $this->add([

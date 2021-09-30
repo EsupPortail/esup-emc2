@@ -6,6 +6,7 @@ use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -55,8 +56,14 @@ class AgentTutoratForm extends Form
                 'id' => 'periode',
             ]
         ]);
-        // etat TODO
-        //$this->get('etat')->setValueOptions($this->getEtatService()->getEtatsAsOption($type));
+        // etat
+        $this->add([
+            'name' => 'etat',
+            'type' => EtatFieldset::class,
+            'attributes' => [
+                'id' => 'etat',
+            ]
+        ]);
 
         // complement
         $this->add([

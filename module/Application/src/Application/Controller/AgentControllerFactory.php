@@ -31,6 +31,8 @@ use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Interop\Container\ContainerInterface;
+use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -151,6 +153,17 @@ class AgentControllerFactory {
         $controller->setAgentTutoratForm($agentTutoratForm);
         $controller->setAgentAccompagnementService($agentAccompagnementService);
         $controller->setAgentAccompagnementForm($agentAccompagnementForm);
+
+        /**
+         * @var EtatService $etatService
+         * @var EtatTypeService $etatTypeService
+         */
+        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
+
+        $controller->setEtatService($etatService);
+        $controller->setEtatTypeService($etatTypeService);
+
         return $controller;
     }
 }

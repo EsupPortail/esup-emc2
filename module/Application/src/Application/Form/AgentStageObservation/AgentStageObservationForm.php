@@ -5,6 +5,7 @@ namespace Application\Form\AgentStageObservation;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -55,8 +56,14 @@ class AgentStageObservationForm extends Form {
                 'id' => 'periode',
             ]
         ]);
-        // etat TODO
-        //$this->get('etat')->setValueOptions($this->getEtatService()->getEtatsAsOption($type));
+        // etat
+        $this->add([
+            'name' => 'etat',
+            'type' => EtatFieldset::class,
+            'attributes' => [
+                'id' => 'etat',
+            ]
+        ]);
 
         // complement
         $this->add([

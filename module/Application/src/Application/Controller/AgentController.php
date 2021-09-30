@@ -42,6 +42,8 @@ use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -90,6 +92,9 @@ class AgentController extends AbstractActionController
     use AgentTutoratFormAwareTrait;
     use AgentAccompagnementServiceAwareTrait;
     use AgentAccompagnementFormAwareTrait;
+
+    use EtatTypeServiceAwareTrait;
+    use EtatServiceAwareTrait;
 
     public function indexAction()
     {
@@ -393,6 +398,9 @@ class AgentController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('agent/ppp/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($ppp);
 
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('PPP');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -418,6 +426,9 @@ class AgentController extends AbstractActionController
         $form = $this->getAgentPPPForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/ppp/modifier', ['ppp' => $ppp->getId()], [], true));
         $form->bind($ppp);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('PPP');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -496,6 +507,10 @@ class AgentController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('agent/stageobs/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($stageObservation);
 
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('STAGE_OBSERVATION');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -521,6 +536,9 @@ class AgentController extends AbstractActionController
         $form = $this->getAgentStageObservationForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/stageobs/modifier', ['stageobs' => $stageObservation->getId()], [], true));
         $form->bind($stageObservation);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('STAGE_OBSERVATION');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -599,6 +617,10 @@ class AgentController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('agent/tutorat/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($tutorat);
 
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('TUTORAT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -624,6 +646,9 @@ class AgentController extends AbstractActionController
         $form = $this->getAgentTutoratForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/tutorat/modifier', ['tutorat' => $tutorat->getId()], [], true));
         $form->bind($tutorat);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('TUTORAT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -702,6 +727,9 @@ class AgentController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($accompagnement);
 
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('ACCOMPAGNEMENT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -727,6 +755,10 @@ class AgentController extends AbstractActionController
         $form = $this->getAgentAccompagnementForm();
         $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/modifier', ['accompagnement' => $accompagnement->getId()], [], true));
         $form->bind($accompagnement);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('ACCOMPAGNEMENT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
 
         $request = $this->getRequest();
         if ($request->isPost()) {

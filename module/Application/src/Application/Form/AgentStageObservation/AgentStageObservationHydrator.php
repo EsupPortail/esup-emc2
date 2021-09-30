@@ -28,7 +28,9 @@ class AgentStageObservationHydrator implements HydratorInterface {
                 'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format('d/m/Y'):null,
                 'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format('d/m/Y'):null,
             ],
-            'etat'              => ($object->getEtat())?$object->getEtat()->getId():null,
+            'etat'              => [
+                'etat' => ($object->getEtat())?$object->getEtat()->getId():null,
+            ],
             'complement'        => $object->getComplement(),
         ];
         return $data;
@@ -45,7 +47,7 @@ class AgentStageObservationHydrator implements HydratorInterface {
         $metier = (isset($data['metier']) AND trim($data['metier']) !== '')?$this->getMetierService()->getMetier($data['metier']):null;
         $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
         $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;
-        $etat = (isset($data['etat']))?$this->getEtatService()->getEtat($data['etat']):null;
+        $etat = (isset($data['etat']) AND isset($data['etat']['etat']))?$this->getEtatService()->getEtat($data['etat']['etat']):null;
         $complement = (isset($data['complement']) AND trim($data['complement']) !== '')?trim($data['complement']):null;
 
         $object->setStructure($structure);
