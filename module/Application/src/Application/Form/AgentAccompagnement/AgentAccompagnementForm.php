@@ -1,10 +1,11 @@
 <?php
 
-namespace Application\Form\AgentTutorat;
+namespace Application\Form\AgentAccompagnement;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Metier\Service\Metier\MetierServiceAwareTrait;
+use Application\Service\Corps\CorpsServiceAwareTrait;
+use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -12,10 +13,11 @@ use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class AgentTutoratForm extends Form
+class AgentAccompagnementForm extends Form
 {
     use AgentServiceAwareTrait;
-    use MetierServiceAwareTrait;
+    use CorrespondanceServiceAwareTrait;
+    use CorpsServiceAwareTrait;
     use EtatServiceAwareTrait;
 
     public $urlAgent;
@@ -35,14 +37,28 @@ class AgentTutoratForm extends Form
         $this->add($cible);
         $this->add([
             'type' => Select::class,
-            'name' => 'metier',
+            'name' => 'bap',
             'options' => [
-                'label' => "Métier observé :",
-                'empty_option' => 'Sélectionner un métier ...',
-                'value_options' => $this->getMetierService()->getMetiersTypesAsMultiOptions(),
+                'label' => "Bap concerné :",
+                'empty_option' => 'Sélectionner une bap ...',
+                'value_options' => $this->getCorrespondanceService()->getCorrespondancesAsOptions(),
             ],
             'attributes' => [
-                'id' => 'metier',
+                'id' => 'bap',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
+            ],
+        ]);
+        $this->add([
+            'type' => Select::class,
+            'name' => 'corps',
+            'options' => [
+                'label' => "Corps concerné :",
+                'empty_option' => 'Sélectionner un corps ...',
+                'value_options' => $this->getCorpsService()->getCorpsAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'corps',
                 'class' => 'bootstrap-selectpicker show-tick',
                 'data-live-search' => 'true',
             ],
@@ -73,20 +89,20 @@ class AgentTutoratForm extends Form
                 'id' => 'description',
             ]
         ]);
-        //formation
+        //resultat
         $this->add([
             'type' => Select::class,
-            'name' => 'formation',
+            'name' => 'resultat',
             'options' => [
-                'label' => "L'agent a été formé pour faire ce tutorat",
+                'label' => "L'agent accompagné a obtenu le concours",
                 'value_options' => [
                     null => "Information inconnue",
-                    true => "Oui, iel a été·e formé·e",
-                    false => "Non, iel n'a pas été·e formé·e",
+                    true => "Oui, iel a obtenu le concours",
+                    false => "Non, iel n'a pas obtenu le concours",
                 ],
             ],
             'attributes' => [
-                'id' => 'formation',
+                'id' => 'resultat',
             ],
         ]);
 
@@ -110,11 +126,12 @@ class AgentTutoratForm extends Form
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
             'cible' => ['required' => false,],
-            'metier' => ['required' => true,],
+            'bap' => ['required' => true,],
+            'corps' => ['required' => true,],
             'HasPeriode' => ['required' => false,],
             'etat' => ['required' => false,],
             'complement' => ['required' => false,],
-            'formation' => ['required' => false,],
+            'resultat' => ['required' => false,],
         ]));
     }
 }

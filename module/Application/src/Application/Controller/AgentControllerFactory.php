@@ -2,12 +2,14 @@
 
 namespace Application\Controller;
 
+use Application\Form\AgentAccompagnement\AgentAccompagnementForm;
 use Application\Form\AgentPPP\AgentPPPForm;
 use Application\Form\AgentStageObservation\AgentStageObservationForm;
 use Application\Form\AgentTutorat\AgentTutoratForm;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAccompagnement\AgentAccompagnementService;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
 use Application\Service\AgentTutorat\AgentTutoratService;
@@ -129,6 +131,8 @@ class AgentControllerFactory {
          * @var AgentStageObservationForm $agentStageObservationForm
          * @var AgentTutoratService $agentTutoratService
          * @var AgentTutoratForm $agentTutoratForm
+         * @var AgentAccompagnementService $agentAccompagnementService
+         * @var AgentAccompagnementForm $agentAccompagnementForm
          */
         $agentPPPService = $container->get(AgentPPPService::class);
         $agentPPPForm = $container->get('FormElementManager')->get(AgentPPPForm::class);
@@ -136,6 +140,8 @@ class AgentControllerFactory {
         $agentStageObservationForm = $container->get('FormElementManager')->get(AgentStageObservationForm::class);
         $agentTutoratService = $container->get(AgentTutoratService::class);
         $agentTutoratForm = $container->get('FormElementManager')->get(AgentTutoratForm::class);
+        $agentAccompagnementService = $container->get(AgentAccompagnementService::class);
+        $agentAccompagnementForm = $container->get('FormElementManager')->get(AgentAccompagnementForm::class);
 
         $controller->setAgentPPPService($agentPPPService);
         $controller->setAgentPPPForm($agentPPPForm);
@@ -143,6 +149,8 @@ class AgentControllerFactory {
         $controller->setAgentStageObservationForm($agentStageObservationForm);
         $controller->setAgentTutoratService($agentTutoratService);
         $controller->setAgentTutoratForm($agentTutoratForm);
+        $controller->setAgentAccompagnementService($agentAccompagnementService);
+        $controller->setAgentAccompagnementForm($agentAccompagnementForm);
         return $controller;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAccompagnement;
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
@@ -30,6 +31,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentPPP[] $ppps
  * @var AgentStageObservation[] $stages
  * @var AgentTutorat[] $tutorats
+ * @var AgentAccompagnement[] $accompagnements
  */
 
 $displayParcours = false;
@@ -177,7 +179,7 @@ if ($agent !== null) {
                 <?php echo $this->partial('partial/ppp', ['agent' => $agent, 'ppps' => $ppps, 'stages' => $stages, 'droits' => $droits], []); ?>
             </div>
             <div id="tutorat" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/tutorat', ['agent' => $agent, 'tutorats' => $tutorats, 'droits' => $droits], []); ?>
+                <?php echo $this->partial('partial/tutorat', ['agent' => $agent, 'tutorats' => $tutorats, 'accompagnements' => $accompagnements, 'droits' => $droits], []); ?>
             </div>
         </div>
     </div>

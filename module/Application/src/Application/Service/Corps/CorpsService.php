@@ -103,4 +103,20 @@ class CorpsService {
         $result = $this->getCorp($id);
         return $result;
     }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @param bool $avecAgent
+     * @return array
+     */
+    public function getCorpsAsOptions(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent=false)
+    {
+        $corps = $this->getCorps($champ, $ordre, $avecAgent);
+        $options = [];
+        foreach($corps as $corp) {
+            $options[$corp->getId()] = $corp->getLibelleCourt() . " - " . $corp->getLibelleLong();
+        }
+        return $options;
+    }
 }

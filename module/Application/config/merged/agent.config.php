@@ -6,6 +6,10 @@ use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
 use Application\Controller\AgentControllerFactory;
+use Application\Form\AgentAccompagnement\AgentAccompagnementForm;
+use Application\Form\AgentAccompagnement\AgentAccompagnementFormFactory;
+use Application\Form\AgentAccompagnement\AgentAccompagnementHydrator;
+use Application\Form\AgentAccompagnement\AgentAccompagnementHydratorFactory;
 use Application\Form\AgentPPP\AgentPPPForm;
 use Application\Form\AgentPPP\AgentPPPFormFactory;
 use Application\Form\AgentPPP\AgentPPPHydrator;
@@ -25,6 +29,8 @@ use Application\Form\SelectionAgent\SelectionAgentHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
+use Application\Service\AgentAccompagnement\AgentAccompagnementService;
+use Application\Service\AgentAccompagnement\AgentAccompagnementServiceFactory;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentPPP\AgentPPPServiceFactory;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
@@ -161,6 +167,19 @@ return [
                         'historiser-tutorat',
                         'restaurer-tutorat',
                         'detruire-tutorat',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_GESTION_CCC,
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'ajouter-accompagnement',
+                        'modifier-accompagnement',
+                        'historiser-accompagnement',
+                        'restaurer-accompagnement',
+                        'detruire-accompagnement',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_GESTION_CCC,
@@ -508,6 +527,69 @@ return [
                             ],
                         ],
                     ],
+
+                    'accompagnement' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/accompagnement',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                            ],
+                        ],
+                        'may_terminate' => 'false',
+                        'child_routes' => [
+                            'ajouter' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/ajouter/:agent',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'ajouter-accompagnement'
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/modifier/:accompagnement',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'modifier-accompagnement'
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/historiser/:accompagnement',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'historiser-accompagnement'
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/restaurer/:accompagnement',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'restaurer-accompagnement'
+                                    ],
+                                ],
+                            ],
+                            'detruire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/detruire/:accompagnement',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action' => 'detruire-accompagnement'
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -543,6 +625,7 @@ return [
         'factories' => [
             AgentAssertion::class => AgentAssertionFactory::class,
             AgentService::class => AgentServiceFactory::class,
+            AgentAccompagnementService::class => AgentAccompagnementServiceFactory::class,
             AgentPPPService::class => AgentPPPServiceFactory::class,
             AgentStageObservationService::class => AgentStageObservationServiceFactory::class,
             AgentTutoratService::class => AgentTutoratServiceFactory::class,
@@ -556,6 +639,7 @@ return [
     'form_elements' => [
         'factories' => [
             SelectionAgentForm::class => SelectionAgentFormFactory::class,
+            AgentAccompagnementForm::class => AgentAccompagnementFormFactory::class,
             AgentPPPForm::class => AgentPPPFormFactory::class,
             AgentStageObservationForm::class => AgentStageObservationFormFactory::class,
             AgentTutoratForm::class => AgentTutoratFormFactory::class,
@@ -564,6 +648,7 @@ return [
     'hydrators' => [
         'factories' => [
             SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
+            AgentAccompagnementHydrator::class => AgentAccompagnementHydratorFactory::class,
             AgentPPPHydrator::class => AgentPPPHydratorFactory::class,
             AgentStageObservationHydrator::class => AgentStageObservationHydratorFactory::class,
             AgentTutoratHydrator::class => AgentTutoratHydratorFactory::class,

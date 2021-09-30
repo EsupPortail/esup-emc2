@@ -3,10 +3,12 @@
 namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
+use Application\Entity\Db\AgentAccompagnement;
 use Application\Entity\Db\AgentPPP;
 use Application\Entity\Db\AgentStageObservation;
 use Application\Entity\Db\AgentTutorat;
 use Application\Entity\Db\ApplicationElement;
+use Application\Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
 use Application\Form\AgentPPP\AgentPPPFormAwareTrait;
 use Application\Form\AgentStageObservation\AgentStageObservationFormAwareTrait;
 use Application\Form\AgentTutorat\AgentTutoratFormAwareTrait;
@@ -14,6 +16,7 @@ use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
 use Application\Service\AgentPPP\AgentPPPServiceAwareTrait;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
 use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
@@ -85,6 +88,8 @@ class AgentController extends AbstractActionController
     use AgentStageObservationFormAwareTrait;
     use AgentTutoratServiceAwareTrait;
     use AgentTutoratFormAwareTrait;
+    use AgentAccompagnementServiceAwareTrait;
+    use AgentAccompagnementFormAwareTrait;
 
     public function indexAction()
     {
@@ -147,6 +152,7 @@ class AgentController extends AbstractActionController
             'ppps' => $this->getAgentPPPService()->getAgentPPPsByAgent($agent),
             'stages' => $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
             'tutorats' => $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
+            'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
         ]);
     }
 
@@ -678,6 +684,109 @@ class AgentController extends AbstractActionController
                 'title' => "Suppression du tutorat #" . $tutorat->getId(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('agent/tutorat/detruire', ["tutorat" => $tutorat->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** * * * * * * * **/
+
+    public function ajouterAccompagnementAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $accompagnement = new AgentAccompagnement();
+        $accompagnement->setAgent($agent);
+
+        $form = $this->getAgentAccompagnementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/ajouter', ['agent' => $agent->getId()], [], true));
+        $form->bind($accompagnement);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentAccompagnementService()->create($accompagnement);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajouter un accompagnement",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+
+        $form = $this->getAgentAccompagnementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/modifier', ['accompagnement' => $accompagnement->getId()], [], true));
+        $form->bind($accompagnement);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentAccompagnementService()->update($accompagnement);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier un accompagnement",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentAccompagnementService()->historise($accompagnement);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $accompagnement->getAgent()->getId()], ['fragment' => 'tutorat'], true);
+    }
+
+    public function restaurerAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentAccompagnementService()->restore($accompagnement);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $accompagnement->getAgent()->getId()], ['fragment' => 'tutorat'], true);
+    }
+
+    public function detruireAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentAccompagnementService()->delete($accompagnement);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($accompagnement !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'accompagnement #" . $accompagnement->getId(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/accompagnement/detruire', ["accompagnement" => $accompagnement->getId()], [], true),
             ]);
         }
         return $vm;
