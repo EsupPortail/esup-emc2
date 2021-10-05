@@ -2,9 +2,17 @@
 
 namespace Application\Controller;
 
+use Application\Form\AgentAccompagnement\AgentAccompagnementForm;
+use Application\Form\AgentPPP\AgentPPPForm;
+use Application\Form\AgentStageObservation\AgentStageObservationForm;
+use Application\Form\AgentTutorat\AgentTutoratForm;
 use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAccompagnement\AgentAccompagnementService;
+use Application\Service\AgentPPP\AgentPPPService;
+use Application\Service\AgentStageObservation\AgentStageObservationService;
+use Application\Service\AgentTutorat\AgentTutoratService;
 use Application\Service\Application\ApplicationService;
 use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\Categorie\CategorieService;
@@ -23,6 +31,8 @@ use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Interop\Container\ContainerInterface;
+use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -53,6 +63,7 @@ class AgentControllerFactory {
          * @var UserService $userService
          *
          * @var FichePosteService $fichePosteService
+         *
          */
         $agentService = $container->get(AgentService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
@@ -114,6 +125,44 @@ class AgentControllerFactory {
         $controller->setCompetenceElementForm($competenceElementForm);
         $controller->setFormationElementForm($formationElementForm);
         $controller->setUploadForm($uploadForm);
+
+        /**
+         * @var AgentPPPService $agentPPPService
+         * @var AgentPPPForm $agentPPPForm
+         * @var AgentStageObservationService $agentStageObservationService
+         * @var AgentStageObservationForm $agentStageObservationForm
+         * @var AgentTutoratService $agentTutoratService
+         * @var AgentTutoratForm $agentTutoratForm
+         * @var AgentAccompagnementService $agentAccompagnementService
+         * @var AgentAccompagnementForm $agentAccompagnementForm
+         */
+        $agentPPPService = $container->get(AgentPPPService::class);
+        $agentPPPForm = $container->get('FormElementManager')->get(AgentPPPForm::class);
+        $agentStageObservationService = $container->get(AgentStageObservationService::class);
+        $agentStageObservationForm = $container->get('FormElementManager')->get(AgentStageObservationForm::class);
+        $agentTutoratService = $container->get(AgentTutoratService::class);
+        $agentTutoratForm = $container->get('FormElementManager')->get(AgentTutoratForm::class);
+        $agentAccompagnementService = $container->get(AgentAccompagnementService::class);
+        $agentAccompagnementForm = $container->get('FormElementManager')->get(AgentAccompagnementForm::class);
+
+        $controller->setAgentPPPService($agentPPPService);
+        $controller->setAgentPPPForm($agentPPPForm);
+        $controller->setAgentStageObservationService($agentStageObservationService);
+        $controller->setAgentStageObservationForm($agentStageObservationForm);
+        $controller->setAgentTutoratService($agentTutoratService);
+        $controller->setAgentTutoratForm($agentTutoratForm);
+        $controller->setAgentAccompagnementService($agentAccompagnementService);
+        $controller->setAgentAccompagnementForm($agentAccompagnementForm);
+
+        /**
+         * @var EtatService $etatService
+         * @var EtatTypeService $etatTypeService
+         */
+        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
+
+        $controller->setEtatService($etatService);
+        $controller->setEtatTypeService($etatTypeService);
 
         return $controller;
     }

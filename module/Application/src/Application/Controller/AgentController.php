@@ -3,11 +3,23 @@
 namespace Application\Controller;
 
 use Application\Constant\RoleConstant;
+use Application\Entity\Db\AgentAccompagnement;
+use Application\Entity\Db\AgentPPP;
+use Application\Entity\Db\AgentStageObservation;
+use Application\Entity\Db\AgentTutorat;
 use Application\Entity\Db\ApplicationElement;
+use Application\Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
+use Application\Form\AgentPPP\AgentPPPFormAwareTrait;
+use Application\Form\AgentStageObservation\AgentStageObservationFormAwareTrait;
+use Application\Form\AgentTutorat\AgentTutoratFormAwareTrait;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
+use Application\Service\AgentPPP\AgentPPPServiceAwareTrait;
+use Application\Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
+use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
@@ -30,6 +42,8 @@ use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -70,6 +84,18 @@ class AgentController extends AbstractActionController
 
     use FichePosteServiceAwareTrait;
 
+    use AgentPPPServiceAwareTrait;
+    use AgentPPPFormAwareTrait;
+    use AgentStageObservationServiceAwareTrait;
+    use AgentStageObservationFormAwareTrait;
+    use AgentTutoratServiceAwareTrait;
+    use AgentTutoratFormAwareTrait;
+    use AgentAccompagnementServiceAwareTrait;
+    use AgentAccompagnementFormAwareTrait;
+
+    use EtatTypeServiceAwareTrait;
+    use EtatServiceAwareTrait;
+
     public function indexAction()
     {
         $fromQueries = $this->params()->fromQuery();
@@ -105,8 +131,8 @@ class AgentController extends AbstractActionController
 
         $connectedAgent = $this->getAgentService()->getAgentByUser($utilisateur);
         $connectedRole = $this->getUserService()->getConnectedRole();
-        if ($connectedAgent !== $agent AND ($connectedRole->getRoleId() === RoleConstant::PERSONNEL OR $agent === null)) {
-            return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [] , true);
+        if ($connectedAgent !== $agent and ($connectedRole->getRoleId() === RoleConstant::PERSONNEL or $agent === null)) {
+            return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [], true);
         }
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
@@ -115,7 +141,7 @@ class AgentController extends AbstractActionController
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
         $missions = $agent->getMissionsSpecifiques();
 
-         return new ViewModel([
+        return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
             'affectations' => $agentAffectations,
@@ -127,6 +153,11 @@ class AgentController extends AbstractActionController
             'parcoursArray' => $parcoursArray,
             'fichespostes' => $fichespostes,
             'missions' => $missions,
+
+            'ppps' => $this->getAgentPPPService()->getAgentPPPsByAgent($agent),
+            'stages' => $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
+            'tutorats' => $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
+            'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
         ]);
     }
 
@@ -352,6 +383,445 @@ class AgentController extends AbstractActionController
             return new JsonModel($result);
         }
         exit;
+    }
+
+    /** PARTIE ASSOCIEE AUX PPP, STAGE, TUTORAT, ACCOMPAGNEMENT *******************************************************/
+
+    public function ajouterPppAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $ppp = new AgentPPP();
+        $ppp->setAgent($agent);
+
+        $form = $this->getAgentPPPForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ppp/ajouter', ['agent' => $agent->getId()], [], true));
+        $form->bind($ppp);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('PPP');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentPPPService()->create($ppp);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajouter un projet professionnel personnel",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierPppAction()
+    {
+        $ppp = $this->getAgentPPPService()->getRequestedAgentPPP($this);
+
+        $form = $this->getAgentPPPForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/ppp/modifier', ['ppp' => $ppp->getId()], [], true));
+        $form->bind($ppp);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('PPP');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentPPPService()->update($ppp);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier un projet professionnel personnel",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserPppAction()
+    {
+        $ppp = $this->getAgentPPPService()->getRequestedAgentPPP($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentPPPService()->historise($ppp);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $ppp->getAgent()->getId()], ['fragment' => 'ppp'], true);
+    }
+
+    public function restaurerPppAction()
+    {
+        $ppp = $this->getAgentPPPService()->getRequestedAgentPPP($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentPPPService()->restore($ppp);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $ppp->getAgent()->getId()], ['fragment' => 'ppp'], true);
+    }
+
+    public function detruirePppAction()
+    {
+        $ppp = $this->getAgentPPPService()->getRequestedAgentPPP($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentPPPService()->delete($ppp);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($ppp !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du projet professionnel personnel #" . $ppp->getId(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/ppp/detruire', ["ppp" => $ppp->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** * * * * * * * **/
+
+    public function ajouterStageObservationAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $stageObservation = new AgentStageObservation();
+        $stageObservation->setAgent($agent);
+
+        $form = $this->getAgentStageObservationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/stageobs/ajouter', ['agent' => $agent->getId()], [], true));
+        $form->bind($stageObservation);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('STAGE_OBSERVATION');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentStageObservationService()->create($stageObservation);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajouter un stage d'observation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierStageObservationAction()
+    {
+        $stageObservation = $this->getAgentStageObservationService()->getRequestedAgentStageObservation($this);
+
+        $form = $this->getAgentStageObservationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/stageobs/modifier', ['stageobs' => $stageObservation->getId()], [], true));
+        $form->bind($stageObservation);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('STAGE_OBSERVATION');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentStageObservationService()->update($stageObservation);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier un stage d'observation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserStageObservationAction()
+    {
+        $stageObservation = $this->getAgentStageObservationService()->getRequestedAgentStageObservation($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentStageObservationService()->historise($stageObservation);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $stageObservation->getAgent()->getId()], ['fragment' => 'ppp'], true);
+    }
+
+    public function restaurerStageObservationAction()
+    {
+        $stageObservation = $this->getAgentStageObservationService()->getRequestedAgentStageObservation($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentStageObservationService()->restore($stageObservation);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $stageObservation->getAgent()->getId()], ['fragment' => 'ppp'], true);
+    }
+
+    public function detruireStageObservationAction()
+    {
+        $stageObservation = $this->getAgentStageObservationService()->getRequestedAgentStageObservation($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentStageObservationService()->delete($stageObservation);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($stageObservation !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du stage d'observation #" . $stageObservation->getId(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/stageobs/detruire', ["ppp" => $stageObservation->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** * * * * * * * **/
+
+    public function ajouterTutoratAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $tutorat = new AgentTutorat();
+        $tutorat->setAgent($agent);
+
+        $form = $this->getAgentTutoratForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/tutorat/ajouter', ['agent' => $agent->getId()], [], true));
+        $form->bind($tutorat);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('TUTORAT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentTutoratService()->create($tutorat);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajouter un tutorat",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierTutoratAction()
+    {
+        $tutorat = $this->getAgentTutoratService()->getRequestedAgentTutorat($this);
+
+        $form = $this->getAgentTutoratForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/tutorat/modifier', ['tutorat' => $tutorat->getId()], [], true));
+        $form->bind($tutorat);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('TUTORAT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentTutoratService()->update($tutorat);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier un tutorat",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserTutoratAction()
+    {
+        $tutorat = $this->getAgentTutoratService()->getRequestedAgentTutorat($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentTutoratService()->historise($tutorat);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $tutorat->getAgent()->getId()], ['fragment' => 'tutorat'], true);
+    }
+
+    public function restaurerTutoratAction()
+    {
+        $tutorat = $this->getAgentTutoratService()->getRequestedAgentTutorat($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentTutoratService()->restore($tutorat);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $tutorat->getAgent()->getId()], ['fragment' => 'tutorat'], true);
+    }
+
+    public function detruireTutoratAction()
+    {
+        $tutorat = $this->getAgentTutoratService()->getRequestedAgentTutorat($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentTutoratService()->delete($tutorat);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($tutorat !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression du tutorat #" . $tutorat->getId(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/tutorat/detruire', ["tutorat" => $tutorat->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
+    /** * * * * * * * **/
+
+    public function ajouterAccompagnementAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+
+        $accompagnement = new AgentAccompagnement();
+        $accompagnement->setAgent($agent);
+
+        $form = $this->getAgentAccompagnementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/ajouter', ['agent' => $agent->getId()], [], true));
+        $form->bind($accompagnement);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('ACCOMPAGNEMENT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentAccompagnementService()->create($accompagnement);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Ajouter un accompagnement",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function modifierAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+
+        $form = $this->getAgentAccompagnementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/modifier', ['accompagnement' => $accompagnement->getId()], [], true));
+        $form->bind($accompagnement);
+
+        $type = $this->getEtatTypeService()->getEtatTypeByCode('ACCOMPAGNEMENT');
+        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getAgentAccompagnementService()->update($accompagnement);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Modifier un accompagnement",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentAccompagnementService()->historise($accompagnement);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $accompagnement->getAgent()->getId()], ['fragment' => 'tutorat'], true);
+    }
+
+    public function restaurerAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+        $retour = $this->params()->fromQuery('retour');
+
+        $this->getAgentAccompagnementService()->restore($accompagnement);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('agent/afficher', ['agent' => $accompagnement->getAgent()->getId()], ['fragment' => 'tutorat'], true);
+    }
+
+    public function detruireAccompagnementAction()
+    {
+        $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentAccompagnementService()->delete($accompagnement);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($accompagnement !== null) {
+            $vm->setTemplate('application/default/confirmation');
+            $vm->setVariables([
+                'title' => "Suppression de l'accompagnement #" . $accompagnement->getId(),
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/accompagnement/detruire', ["accompagnement" => $accompagnement->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
 }

@@ -8,6 +8,8 @@ use UnicaenEtat\Form\Etat\EtatForm;
 use UnicaenEtat\Form\Etat\EtatFormFactory;
 use UnicaenEtat\Form\Etat\EtatHydrator;
 use UnicaenEtat\Form\Etat\EtatHydratorFactory;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldsetFactory;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormFactory;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatHydrator;
@@ -187,6 +189,7 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            EtatFieldset::class => EtatFieldsetFactory::class,
             EtatForm::class => EtatFormFactory::class,
             SelectionEtatForm::class => SelectionEtatFormFactory::class,
         ],
