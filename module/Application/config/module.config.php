@@ -290,11 +290,11 @@ return [
             '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
             '990_' => 'css/ubuntu.css',
             '991_' => 'css/raleway.css',
-            '995_' => 'css/unicaen.css',
+            '060_unicaen' => 'css/unicaen.css',
             '996_' => 'css/icon.css',
             '997_' => 'css/highlight.css',
             '998_' => 'css/tooltip.css',
-            '999z_' => 'css/app.css',
+            '070_app' => 'css/app.css',
         ],
         'images' => [
             '100_' => 'img/PrEECoG.svg',

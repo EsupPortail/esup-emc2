@@ -4,14 +4,10 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
-use Autoform\Entity\Db\Categorie;
-use Autoform\Entity\Db\Champ;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
-use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceFactory;
 use Exception;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
@@ -21,7 +17,6 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\View\Helper\Url;
 
 class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatInterface {
     use HistoriqueAwareTrait;
@@ -119,7 +114,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return string
      */
-    public function getAnnee() : string
+    public function getAnnee() : ?string
     {
         if ($this->campagne === null) return "Aucune campagne";
         return $this->campagne->getAnnee();
@@ -164,7 +159,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /**
      * @return string
      */
-    public function getLieu() : string
+    public function getLieu() : ?string
     {
         return $this->lieu;
     }

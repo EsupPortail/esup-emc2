@@ -22,7 +22,7 @@ class Sursis implements HistoriqueAwareInterface, HasDescriptionInterface {
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

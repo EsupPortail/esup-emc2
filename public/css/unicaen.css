@@ -16,7 +16,7 @@
     --content-background: var(--color-light-bis);
     --content-color: var(--color-dark);
 
-    --footer-background : var(--color-light);
+    --footer-background : var(--color-light-bis);
     --footer-color: var(--color-dark);
     --footer-border-color: var(--color-medium);
 
@@ -59,6 +59,10 @@ body {
 }
 
 /** NAVBAR --------------------------------------------------------------------------------------------------------- **/
+
+header {
+    height: var(--header-height);
+}
 
 div.navbar {
     position: fixed;
@@ -362,10 +366,9 @@ img.footer-logo-normandie-universite {
 }
 
 div#contenu-principal {
-    margin-top: var(--header-height);
     padding-top: 1rem;
     background: var(--content-background);
-    min-height: calc(100vh - var(--header-height) - var(--footer-height) - 25px);
+    min-height: calc(100vh - var(--header-height) - var(--footer-height) );
 }
 
 footer {

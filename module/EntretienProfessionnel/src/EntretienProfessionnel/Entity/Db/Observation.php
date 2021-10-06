@@ -20,7 +20,7 @@ class Observation implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -28,7 +28,7 @@ class Observation implements HistoriqueAwareInterface {
     /**
      * @return EntretienProfessionnel
      */
-    public function getEntretien() : EntretienProfessionnel
+    public function getEntretien() : ?EntretienProfessionnel
     {
         return $this->entretien;
     }

@@ -24,7 +24,7 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -68,7 +68,7 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     /**
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnels()
+    public function getEntretiensProfessionnels() : array
     {
         return $this->entretiens->toArray();
     }

@@ -181,7 +181,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
                 $this->getEntretienProfessionnelService()->create($entretien);
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
-                $mail = $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()]);
+                $mail = $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_ENVOI", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()]);
                 $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
             }
         }
@@ -198,7 +198,7 @@ class EntretienProfessionnelController extends AbstractActionController
     public function envoyerConvocationAction()
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()]);
+        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_ENVOI", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()]);
         $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
         return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
     }
@@ -464,7 +464,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $entretien->setAcceptation($this->getDateTime());
             $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
             $this->getEntretienProfessionnelService()->update($entretien);
-            $mail = $this->getMailingService()->sendMailType("ENTRETIEN_ACCEPTER_AGENT", ['entretien' => $entretien, 'agent' => $entretien->getAgent(), 'user' => $entretien->getResponsable()]);
+            $mail = $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_ACCEPTER", ['entretien' => $entretien, 'campagne' => $entretien->getCampagne(), 'agent' => $entretien->getAgent(), 'user' => $entretien->getResponsable()]);
             $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
         }
 

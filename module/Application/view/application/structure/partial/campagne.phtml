@@ -226,64 +226,66 @@ $enCours = $campagne->estEnCours();
     </tbody>
 </table>
 
-<?php if ($enCours) : ?>
-    <h2>
-        Agents sans entretien professionnel pour la campagne
-        <span class="badge">
-            <?php echo count($sans); ?>
-        </span>
-    </h2>
+<h2>
+    Agents sans entretien professionnel pour la campagne
+    <span class="badge">
+        <?php echo count($sans); ?>
+    </span>
+</h2>
 
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                   <th> Dénomination</th>
-                    <th> Structure </th>
-                   <th> Grade </th>
-                   <th style="width:13rem;"> Action </th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($sans as $denomination => $agent): ?>
-                    <tr>
-                        <td> <?php echo $denomination; ?> </td>
-                        <td>
-                            <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                                <?php echo $grade->getStructure()->getLibelleLong(); ?>
-                            <?php endforeach; ?>
-                        </td>
-                        <td>
-                            <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                                <?php echo $grade->getGrade()->getLibelleLong(); ?>
-                            <?php endforeach; ?>
-                        </td>
-                        <td>
-                            <?php if ($canVoirAgent) : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                    href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
-                                    target="_blank"
-                                    title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
-                                    data-toggle="tooltip" data-html="true"
-                                >
-                                    <span class="icon personnel"></span></a>
-                            <?php endif; ?>
-                            <?php if ($canAjouterEntretien) : ?>
-                                <a
-                                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
-                                    href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
-                                    title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
-                                    class="ajax-modal" data-event="entretien"
-                                    data-toggle="tooltip" data-html="true"
-                                >
-                                    <span class="icon ajouter"></span></a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-<?php endif; ?>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+           <th> Dénomination</th>
+           <th> Structure </th>
+           <th> Grade </th>
+           <?php if ($enCours === true) : ?>
+                <th style="width:13rem;"> Action </th>
+            <?php endif; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($sans as $denomination => $agent): ?>
+            <tr>
+                <td> <?php echo $denomination; ?> </td>
+                <td>
+                    <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+                        <?php echo $grade->getStructure()->getLibelleLong(); ?>
+                    <?php endforeach; ?>
+                </td>
+                <td>
+                    <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+                        <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                    <?php endforeach; ?>
+                </td>
+                <?php if ($enCours === true) : ?>
+                    <td>
+                        <?php if ($canVoirAgent) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
+                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                                target="_blank"
+                                title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
+                                data-toggle="tooltip" data-html="true"
+                            >
+                                <span class="icon personnel"></span></a>
+                        <?php endif; ?>
+                        <?php if ($canAjouterEntretien) : ?>
+                            <a
+                                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
+                                href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
+                                title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
+                                class="ajax-modal" data-event="entretien"
+                                data-toggle="tooltip" data-html="true"
+                            >
+                                <span class="icon ajouter"></span></a>
+                        <?php endif; ?>
+                    </td>
+                <?php endif; ?>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 
 <style>
     span.texte-sursis {
