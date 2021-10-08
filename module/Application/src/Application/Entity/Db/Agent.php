@@ -54,6 +54,8 @@ class Agent implements
     private $email;
     /** @var DateTime */
     private $delete;
+    /** @var string */
+    private $tContratLong;
 
     /** @var ArrayCollection (AgentQuotite) */
     private $quotites;
@@ -200,6 +202,21 @@ class Agent implements
         return $this->harpId;
     }
 
+    /**
+     * @return string
+     */
+    public function getTControatLong() : ?string
+    {
+        return $this->tContratLong;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isContratLong() : bool
+    {
+        return $this->getTControatLong() === 'O';
+    }
 
     /** AFFECTATIONS **************************************************************************************************/
 

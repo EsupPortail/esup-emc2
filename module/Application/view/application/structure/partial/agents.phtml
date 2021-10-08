@@ -72,7 +72,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php foreach ($agent->getGradesActifs() as $grade) : ?>
                     <?php echo $grade->getStructure()->getLibelleCourt(); ?> <br/>
                     BAP <?php echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?> -
-                    <?php echo $grade->getGrade()->getLibelleCourt(); ?>
+                    <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?>
                 <?php endforeach; ?>
             </td>
             <td>

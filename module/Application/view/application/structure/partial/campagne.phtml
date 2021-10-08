@@ -39,7 +39,7 @@ foreach ($agents as $agent) {
     }
 
     if ($entretien === null) {
-        $sans[$agent->getDenomination()] = $agent;
+        if ($agent->isContratLong()) $sans[$agent->getDenomination()] = $agent;
     } else {
         if ($entretien->isComplete()) {
             $complete[$agent->getDenomination()] = $entretien;
@@ -54,7 +54,9 @@ $enCours = $campagne->estEnCours();
 
 <h2> Informations sur la campagne </h2>
 
-<dl class="dl-horizontal">
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
     <dt> Année </dt>
     <dd> <?php echo $campagne->getAnnee(); ?> </dd>
     <dt> Début de la campagne </dt>
@@ -70,6 +72,35 @@ $enCours = $campagne->estEnCours();
         <?php endif; ?>
     </dd>
 </dl>
+    </div>
+    <div class="col-md-6">
+        <h3> Progression de la campagne</h3>
+
+        <?php
+            $nbComplete = count($complete);
+            $nbEncours = count($encours);
+            $nbSans = count($sans);
+            $nbTotal =  $nbComplete + $nbEncours + $nbSans;
+
+            $ratioComplete =  $nbComplete / $nbTotal * 100;
+            $ratioEncours = $nbEncours / $nbTotal * 100;
+            $ratioSans = 100 - ($ratioComplete + $ratioEncours);
+        ?>
+
+        <div class="progress">
+            <div class="progress-bar complete" role="progressbar" style="width: <?php echo $ratioComplete; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens complétés <?php echo $nbComplete; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioComplete); ?>%</div>
+            <div class="progress-bar encours" role="progressbar" style="width: <?php echo $ratioEncours; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens en cours <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
+            <?php echo round($ratioEncours); ?>%</div>
+            <div class="progress-bar sans"   role="progressbar" style="width: <?php echo $ratioSans; ?>%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens non planifiés <?php echo $nbSans; ?>/<?php echo $nbTotal; ?>">
+            <?php echo round($ratioSans); ?>%</div>
+        </div>
+
+    </div>
+</div>
 
 <?php echo $this->portenote('StructureController::afficherAction()>entretien', '', []); ?>
 
@@ -255,7 +286,7 @@ $enCours = $campagne->estEnCours();
                 </td>
                 <td>
                     <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                        <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                        <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleLong():"N.C."; ?>
                     <?php endforeach; ?>
                 </td>
                 <?php if ($enCours === true) : ?>
@@ -291,6 +322,16 @@ $enCours = $campagne->estEnCours();
     span.texte-sursis {
         color:darkred;
         font-style: italic;
+    }
+
+    div.complete {
+        background-color: #009600;
+    }
+    div.sans {
+        background-color: #960000;
+    }
+    div.encours {
+        background-color: #db9a00;
     }
 </style>
 

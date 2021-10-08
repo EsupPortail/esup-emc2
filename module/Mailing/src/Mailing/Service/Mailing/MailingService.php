@@ -354,9 +354,14 @@ class MailingService
      */
     public function sendMailType(string $code, array $variables) : ?Mail
     {
-        $contenu = $this->getContenuService()->getContenuByCode($code);
         $mailtype = $this->getMailTypeService()->getMailTypeByCode($code);
-        if ($mailtype === null OR $contenu === null) {
+        if ($mailtype !== null AND $mailtype->getContenu() !== null) {
+            $contenu = $mailtype->getContenu();
+        } else {
+            $contenu = $this->getContenuService()->getContenuByCode($code);
+        }
+
+        if ($contenu === null) {
             throw new RuntimeException("Le mail type [" . $code . "] n'existe pas !", 0, null);
         }
 

@@ -41,6 +41,12 @@ use UnicaenUtilisateur\Entity\Db\User;
                 <?php endif; ?>
             </dd>
         </dl>
+
+        <?php if ($agent->isContratLong() !== true) : ?>
+            <div class="alert alert-warning">
+                <span class="icon attention"></span> En contrat de moins de 4 mois.
+            </div>
+        <?php endif; ?>
     </div>
     <div class="col-md-6">
         <?php if ($canInfoSource) : ?>

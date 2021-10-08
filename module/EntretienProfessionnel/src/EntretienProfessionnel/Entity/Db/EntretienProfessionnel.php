@@ -481,8 +481,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function toStringLienEntretien() : string {
         //TODO comment invoquer l'aide de vue URL initialiser ? (Solution temporaire de transition)
-        $url = 'https://localhost/entretien-professionnel/renseigner/'.$this->getId();
-        return '<a href="'.$url.'">Acceptation de l\'entretien professionnel</a>';
+        $url = 'http://emc2.unicaen.fr/entretien-professionnel/renseigner/'.$this->getId();
+        return '<a href="'.$url.'">Accéder à l\'entretien professionnel</a>';
     }
 
     public function  toStringValidationAgent() : string {

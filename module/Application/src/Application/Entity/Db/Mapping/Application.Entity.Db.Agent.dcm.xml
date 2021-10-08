@@ -11,6 +11,7 @@
         <field name="harpId"                   column="harp_id"             type="integer" />
         <field name="login"                    column="login"               type="string" length="256" />
         <field name="email"                    column="email"               type="string" length="1024" />
+        <field name="tContratLong"             column="T_CONTRAT_LONG"      type="string" length="1" nullable="true"/>
 
         <one-to-many target-entity="Application\Entity\Db\AgentQuotite" mapped-by="agent" field="quotites"/>
         <one-to-many target-entity="Application\Entity\Db\AgentAffectation" mapped-by="agent" field="affectations"/>
