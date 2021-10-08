@@ -20,9 +20,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
-use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Contenu\ContenuService;
-use Zend\View\Renderer\PhpRenderer;
 
 class FichePosteControllerFactory {
 
@@ -69,12 +67,9 @@ class FichePosteControllerFactory {
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
         $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
 
-        /* @var PhpRenderer $renderer  */
-        $renderer = $container->get('ViewRenderer');
 
         /** @var FichePosteController $controller */
         $controller = new FichePosteController();
-        $controller->setRenderer($renderer);
 
         $controller->setAgentService($agentService);
         $controller->setFicheMetierService($ficheMetierService);

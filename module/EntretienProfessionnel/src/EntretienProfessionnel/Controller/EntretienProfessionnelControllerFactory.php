@@ -6,6 +6,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\Structure\StructureService;
+use Application\Service\Url\UrlService;
 use Autoform\Service\Formulaire\FormulaireInstanceService;
 use Autoform\Service\Formulaire\FormulaireService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
@@ -45,6 +46,7 @@ class EntretienProfessionnelControllerFactory {
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
+         * @var UrlService $urlService
          */
         $agentService = $container->get(AgentService::class);
         $contenuService = $container->get(ContenuService::class);
@@ -64,6 +66,7 @@ class EntretienProfessionnelControllerFactory {
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
+        $urlService = $container->get(UrlService::class);
 
         /**
          * @var EntretienProfessionnelForm $entretienProfessionnelForm
@@ -97,6 +100,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setFormulaireService($formulaireService);
         $controller->setMailingService($mailingService);
         $controller->setStructureService($structureService);
+        $controller->setUrlService($urlService);
 
         $controller->setEntretienProfessionnelForm($entretienProfessionnelForm);
         $controller->setCampagneForm($campagneForm);

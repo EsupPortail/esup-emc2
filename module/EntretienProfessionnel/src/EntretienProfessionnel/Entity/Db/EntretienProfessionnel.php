@@ -473,18 +473,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return "Aucun responsable d'entretien donné";
     }
 
-    public function toStringLienConcovation() : string {
-        //TODO comment invoquer l'aide de vue URL initialiser ? (Solution temporaire de transition)
-        $url = 'http://emc2.unicaen.fr/entretien-professionnel/accepter-entretien/'.$this->getId().'/'.$this->getToken();
-        return '<a href="'.$url.'">Acceptation de l\'entretien professionnel</a>';
-    }
-
-    public function toStringLienEntretien() : string {
-        //TODO comment invoquer l'aide de vue URL initialiser ? (Solution temporaire de transition)
-        $url = 'http://emc2.unicaen.fr/entretien-professionnel/renseigner/'.$this->getId();
-        return '<a href="'.$url.'">Accéder à l\'entretien professionnel</a>';
-    }
-
     public function  toStringValidationAgent() : string {
         if ($this->validationAgent !== null) {
             return $this->validationAgent->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationAgent->getHistoCreateur()->getDisplayName();

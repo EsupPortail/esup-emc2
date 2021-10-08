@@ -28,10 +28,8 @@ use Application\Service\Expertise\ExpertiseServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
-use Application\Service\RendererAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-//use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
@@ -56,10 +54,8 @@ class FichePosteController extends AbstractActionController {
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
-    //use ExporterServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
-    use RendererAwareTrait;
 
     use ContenuServiceAwareTrait;
 
@@ -835,7 +831,7 @@ class FichePosteController extends AbstractActionController {
         }
 
         /** @var SpecificitePosteForm $form */
-        $form = $form = $this->getSpecificitePosteForm();
+        $form = $this->getSpecificitePosteForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/editer-specificite', ['fiche' => $fiche->getId()], [], true));
         $form->bind($specificite);
 

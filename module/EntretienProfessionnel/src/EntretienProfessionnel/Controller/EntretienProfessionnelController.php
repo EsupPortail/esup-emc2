@@ -7,6 +7,7 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use Application\Service\Url\UrlServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Doctrine\ORM\ORMException;
@@ -53,6 +54,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use ValidationTypeServiceAwareTrait;
     use StructureServiceAwareTrait;
     use ContenuServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
 
     use EntretienProfessionnelFormAwareTrait;
@@ -181,7 +183,10 @@ class EntretienProfessionnelController extends AbstractActionController
                 $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
                 $this->getEntretienProfessionnelService()->create($entretien);
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
-                $mail = $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_ENVOI", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'user' => $entretien->getAgent()]);
+                $url = $this->getUrlService();
+                $url->setVariables(['entretien' => $entretien]);
+                $mail = $this->getMailingService()->sendMailType("ENTRETIEN_CONVOCATION_ENVOI", [
+                        'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $url, 'user' => $entretien->getAgent()]);
                 $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
             }
         }
@@ -354,29 +359,31 @@ class EntretienProfessionnelController extends AbstractActionController
                 $validation = $this->getValidationInstanceService()->createValidation($validationType, $entretien, "Refus");
             }
             if ($validation !== null and $entretien !== null) {
+                $urlService = $this->getUrlService();
+                $urlService->setVariables(['entretien' => $entretien]);
                 switch ($type) {
                     case EntretienProfessionnelConstant::VALIDATION_AGENT :
                         $entretien->setValidationAgent($validation);
                         $responsables = $this->getAgentService()->getResponsablesHierarchiques($entretien->getAgent());
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
-                        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'user' => $responsables]);
+                        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'user' => $responsables, 'UrlService' => $urlService]);
                         $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
                         $this->getEntretienProfessionnelService()->update($entretien);
-                        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien,  'agent' => $entretien->getAgent(), 'mailing' => $entretien->getResponsable()->getEmail()]);
+                        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_OBSERVATION_AGENT", ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien,  'agent' => $entretien->getAgent(), 'UrlService' => $urlService, 'mailing' => $entretien->getResponsable()->getEmail()]);
                         $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
                     case EntretienProfessionnelConstant::VALIDATION_RESPONSABLE :
                         $entretien->setValidationResponsable($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
-                        $mail1 = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getAgent()->getEmail()]);
+                        $mail1 = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_RESPONSABLE", ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $urlService, 'mailing' => $entretien->getAgent()->getEmail()]);
                         $this->getMailingService()->addAttachement($mail1, EntretienProfessionnel::class, $entretien->getId());
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
                     case EntretienProfessionnelConstant::VALIDATION_DRH :
                         $entretien->setValidationDRH($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));
-                        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_HIERARCHIE", ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'mailing' => $entretien->getResponsable()->getEmail()]);
+                        $mail = $this->getMailingService()->sendMailType("ENTRETIEN_VALIDATION_HIERARCHIE", ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $urlService, 'mailing' => $entretien->getResponsable()->getEmail()]);
                         $this->getMailingService()->addAttachement($mail, EntretienProfessionnel::class, $entretien->getId());
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
