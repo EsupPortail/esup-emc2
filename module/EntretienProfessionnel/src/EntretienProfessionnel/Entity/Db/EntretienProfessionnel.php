@@ -452,7 +452,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $this;
     }
 
-    /** MACRO POUR CONTENU ****************************************************************************************/
+    /** MACROS ********************************************************************************************/
 
     public function toStringLieu() : string {
         if ($this->lieu !== null) return $this->lieu;

@@ -20,6 +20,7 @@ use Mailing\Service\Mailing\MailingService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenRenderer\Service\Contenu\ContenuService;
+use UnicaenRenderer\Service\Template\TemplateService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;

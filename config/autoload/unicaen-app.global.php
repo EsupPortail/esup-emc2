@@ -1,9 +1,6 @@
 <?php
 /**
  * Configuration globale du module UnicaenApp.
- *
- * Copiez ce fichier dans le répertoire "config/autoload" de l'application,
- * enlevez l'extension ".dist" et adaptez son contenu à vos besoins.
  */
 
 use Zend\Session\Storage\SessionArrayStorage;

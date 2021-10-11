@@ -8,8 +8,8 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
-use UnicaenDocument\Service\Exporter\ExporterService;
 use UnicaenRenderer\Service\Contenu\ContenuService;
+use UnicaenRenderer\Service\Template\TemplateService;
 
 class MissionSpecifiqueAffectationControllerFactory {
 

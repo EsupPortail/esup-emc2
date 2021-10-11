@@ -41,6 +41,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use DateTimeAwareTrait;
     use AgentServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
+    use ContenuServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use EtatServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
@@ -53,7 +54,6 @@ class EntretienProfessionnelController extends AbstractActionController
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use ContenuServiceAwareTrait;
     use UrlServiceAwareTrait;
 
 
@@ -443,23 +443,20 @@ class EntretienProfessionnelController extends AbstractActionController
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
 
-        $contenu = $this->getContenuService()->getContenuByCode('ENTRETIEN_PROFESSIONNEL');
         $vars= [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
             'formations' => $formations,
             'campagne' => $entretien->getCampagne(),
         ];
-        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
-        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
-        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+        $contenu = $this->getContenuService()->generateContenu('ENTRETIEN_PROFESSIONNEL', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->getMpdf()->SetTitle($contenu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($texte);
-        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($contenu->getCorps());
+        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
     public function accepterEntretienAction() {

@@ -45,7 +45,7 @@ $modules = [
     'EntretienProfessionnel',
     'Metier',
     'Application',
-    'ZendDeveloperTools',
+//    'ZendDeveloperTools',
 
 ];
 

@@ -211,22 +211,19 @@ class FicheMetierController extends AbstractActionController
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
-        $contenu = $this->getContenuService()->getContenuByCode("FICHE_METIER");
         $vars = [
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
             'parcours' => $this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()),
         ];
-        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
-        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
-        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+        $contenu = $this->getContenuService()->generateContenu('FICHE_METIER', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->getMpdf()->SetTitle($contenu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($texte);
-        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($contenu->getCorps());
+        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
 //    public function exporterToutesAction()

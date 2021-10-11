@@ -81,7 +81,6 @@ return [
                     'source_code_column' => 'C_INDIVIDU',
                     'columns'            => ['PRENOM', 'NOM_USAGE'],
                 ],
-//                'intermediate_table' => 'src_agent',
                 'destination' => [
                     'name'               => 'Agents gérés par la DRH',
                     'table'              => 'agent',

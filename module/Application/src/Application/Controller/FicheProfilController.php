@@ -18,9 +18,9 @@ class FicheProfilController extends AbstractActionController {
     use ContenuServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
-    use StructureServiceAwareTrait;
     use FicheProfilFormAwareTrait;
     use ParametreServiceAwareTrait;
+    use StructureServiceAwareTrait;
 
     public function ajouterAction()
     {
@@ -113,23 +113,19 @@ class FicheProfilController extends AbstractActionController {
         $ficheposte = $ficheprofil->getFichePoste();
         $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
 
-        $contenu = $this->getContenuService()->getContenuByCode("PROFIL_DE_RECRUTEMENT");
-
         $vars = [
             'ficheprofil' => $ficheprofil,
             'ficheposte' => $ficheposte,
             'structure' => $ficheprofil->getStructure(),
         ];
-        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
-        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
-        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+        $contenu = $this->getContenuService()->generateContenu('PROFIL_DE_RECRUTEMENT', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->getMpdf()->SetTitle($contenu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($texte);
-        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($contenu->getCorps());
+        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
     public function historiserAction()

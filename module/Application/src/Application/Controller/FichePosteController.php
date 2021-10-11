@@ -46,6 +46,7 @@ class FichePosteController extends AbstractActionController {
 
     /** Service **/
     use AgentServiceAwareTrait;
+    use ContenuServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -56,8 +57,6 @@ class FichePosteController extends AbstractActionController {
     use ExpertiseServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
-
-    use ContenuServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -295,22 +294,19 @@ class FichePosteController extends AbstractActionController {
         $ficheposte->addDictionnaire('formations', $this->getFichePosteService()->getFormationsDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('parcours', $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($ficheposte));
 
-        $contenu = $this->getContenuService()->getContenuByCode("FICHE_DE_POSTE");
         $vars = [
             'ficheposte' => $ficheposte,
             'agent' => $agent,
             'structure' => ($agent)?$agent->getAffectationPrincipale()->getStructure():null,
         ];
-        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
-        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
-        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+        $contenu = $this->getContenuService()->generateContenu('FICHE_DE_POSTE', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->getMpdf()->SetTitle($contenu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($texte);
-        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($contenu->getCorps());
+        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
     /** TITRE *********************************************************************************************************/
 

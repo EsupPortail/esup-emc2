@@ -201,22 +201,19 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
     {
         $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
 
-        $contenu = $this->getContenuService()->getContenuByCode("MISSION_SPECIFIQUE_LETTRE");
         $vars = [
             'agent' => $affectation->getAgent(),
             'mission' => $affectation->getMission(),
             'structure' => $affectation->getStructure(),
             'affectation' => $affectation,
         ];
-        $titre = $this->getContenuService()->generateTitre($contenu, $vars);
-        $texte = $this->getContenuService()->generateContenu($contenu, $vars);
-        $complement = $this->getContenuService()->generateComplement($contenu, $vars);
+        $contenu = $this->getContenuService()->generateContenu('MISSION_SPECIFIQUE_LETTRE', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($titre);
+        $exporter->getMpdf()->SetTitle($contenu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($texte);
-        return $exporter->export($complement, PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($contenu->getCorps());
+        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 }

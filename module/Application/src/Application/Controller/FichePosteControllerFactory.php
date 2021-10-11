@@ -21,6 +21,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use UnicaenRenderer\Service\Contenu\ContenuService;
+use UnicaenRenderer\Service\Template\TemplateService;
 
 class FichePosteControllerFactory {
 
@@ -28,18 +29,19 @@ class FichePosteControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var ContenuService $contenuService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
          * @var ActiviteService $activiteService
          * @var ActivitesDescriptionsRetireesService $activitesDescriptionsRetireesSercice
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
-         * @var ContenuService $contenuService
          * @var ExpertiseService $expertiseService
          * @var SpecificitePosteService $specificitePosteService
          * @var ParcoursDeFormationService $parcoursService
          */
         $agentService = $container->get(AgentService::class);
+        $contenuService = $container->get(ContenuService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $structureService = $container->get(StructureService::class);
@@ -47,7 +49,6 @@ class FichePosteControllerFactory {
         $activitesDescriptionsRetireesSercice = $container->get(ActivitesDescriptionsRetireesService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
-        $contenuService = $container->get(ContenuService::class);
         $expertiseService = $container->get(ExpertiseService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
@@ -72,6 +73,7 @@ class FichePosteControllerFactory {
         $controller = new FichePosteController();
 
         $controller->setAgentService($agentService);
+        $controller->setContenuService($contenuService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setStructureService($structureService);
@@ -79,7 +81,6 @@ class FichePosteControllerFactory {
         $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesSercice);
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
-        $controller->setContenuService($contenuService);
         $controller->setExpertiseService($expertiseService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);
