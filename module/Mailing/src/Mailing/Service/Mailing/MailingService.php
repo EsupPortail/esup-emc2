@@ -355,10 +355,9 @@ class MailingService
     public function sendMailType(string $code, array $variables) : ?Mail
     {
         $mailtype = $this->getMailTypeService()->getMailTypeByCode($code);
+        $contenu = null;
         if ($mailtype !== null AND $mailtype->getContenu() !== null) {
-            $contenu = $mailtype->getContenu();
-        } else {
-            $contenu = $this->getContenuService()->getContenuByCode($code);
+            $contenu = $this->getContenuService()->generateContenu($code, $variables);
         }
 
         if ($contenu === null) {
@@ -366,9 +365,9 @@ class MailingService
         }
 
         if ($mailtype->isActif()) {
-            $sujet = $this->getContenuService()->generateComplement($contenu, $variables);
+            $sujet = $contenu->getSujet();
             $sujet = html_entity_decode(strip_tags($sujet));
-            $corps = $this->getContenuService()->generateContenu($contenu, $variables);
+            $corps = $contenu->getCorps();
 
             $mails = [];
             if (isset($variables['mailing']) and $variables['mailing'] !== "") $mails[] = $variables['mailing'];
@@ -393,70 +392,4 @@ class MailingService
         return null;
     }
 
-    /**
-     * @param string $identifier
-     * @param array $variables
-     * @return string
-     */
-//    private function getReplacementText(string $identifier, array $variables) : string
-//    {
-//        /**
-//         * @var Agent $agent
-//         * @var Campagne $campagne
-//         * @var EntretienProfessionnel $entretien
-//         * @var FormationInstance $instance
-//         */
-//
-//        //TODO améliorant en récupérant le entre [] et puis en splittant avec # et tester récupération ou non de l'object ...
-//        switch ($identifier) {
-//            /** DATE **************************************************************************************************/
-//            case 'VAR[DATE#aujourdhui]' :
-//                $date = $this->getDateTime()->format('d/m/Y');
-//                return $date;
-//            /** APPLICATION *******************************************************************************************/
-//            case 'VAR[EMC2#nom]' :
-//                $lien = '<strong>EMC2</strong>';
-//                return $lien;
-//            case 'VAR[EMC2#lien]' :
-//                $lien = '<a href="' . 'https://emc2.unicaen.fr' . '">EMC2</a>';
-//                return $lien;
-//            /** ENTRETIEN *********************************************************************************************/
-//            case 'VAR[ENTRETIEN#lien_accepter]' :
-//                $entretien = $variables['entretien'];
-//                return '<a href="'.$this->rendererService->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true).'">Acceptation de l\'entretien professionnel</a>';
-//            case 'VAR[ENTRETIEN#lien_entretien]' :
-//                $entretien = $variables['entretien'];
-//                return '<a href="'.$this->rendererService->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['force_canonical' => true], true).'">Accéder à l\'entretien professionnel</a>';
-//            /** FORMATION **************************************************************************************************/
-//            case 'VAR[FORMATION#instance_id]' :
-//                $instance = $variables['formation-instance'];
-//                return $instance->getId();
-//            case 'VAR[FORMATION#libelle]' :
-//                $instance = $variables['formation-instance'];
-//                return $instance->getFormation()->getLibelle();
-//            case 'VAR[FORMATION#debut]' :
-//                $instance = $variables['formation-instance'];
-//                return $instance->getDebut();
-//            case 'VAR[FORMATION#fin]' :
-//                $instance = $variables['formation-instance'];
-//                return $instance->getFin();
-//            case 'VAR[FORMATION#Periode]' :
-//                $instance = $variables['formation-instance'];
-//                if ($instance->getDebut() === $instance->getFin()) return $instance->getDebut();
-//                return $instance->getDebut() ." au ". $instance->getFin();
-//            case 'VAR[FORMATION#inscription]' :
-//                $instance = $variables['formation-instance'];
-//                return ($instance->isAutoInscription())?"libre":"manuelle";
-//            case 'VAR[FORMATION#lien_session]' :
-//                $instance = $variables['formation-instance'];
-//                $url = $this->rendererService->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
-//                $intitule = $instance->getFormation()->getLibelle() ."(#". $instance->getId() .")";
-//                return '<a href="'.$url.'">'.$intitule.'</a>';
-//            case 'VAR[FORMATION#Emargements]' :
-//                $instance = $variables['formation-instance'];
-//                $url = $this->rendererService->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
-//                return "Liste de émargements : <a href='".$url."'> PDF des émargements </a>";
-//        }
-//        return '<span style="color:red; font-weight:bold;">Macro inconnu (' . $identifier . ')</span>';
-//    }
-    }
+}

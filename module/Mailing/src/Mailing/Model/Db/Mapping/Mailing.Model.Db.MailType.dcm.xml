@@ -13,7 +13,7 @@
 
         <field name="sujet"             type="string"   length="4096"    column="sujet"                 nullable="true"  />
         <field name="corps"             type="string"   length="4096"    column="corps"                 nullable="true"  />
-        <many-to-one field="contenu" target-entity="UnicaenRenderer\Entity\Db\Content" fetch="LAZY">
+        <many-to-one field="contenu" target-entity="UnicaenRenderer\Entity\Db\Template" fetch="LAZY">
             <join-columns>
                 <join-column name="contenu_id" referenced-column-name="id"/>
             </join-columns>
