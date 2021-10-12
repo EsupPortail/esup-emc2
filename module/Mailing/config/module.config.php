@@ -105,7 +105,7 @@ return array(
                     'administration' => [
                         'pages' => [
                             'mailing' => [
-                                'label'    => 'Mail',
+                                'label'    => 'Mail (deprecated)',
                                 'route'    => 'mailing',
                                 'resource' => MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER),
                                 'order'    => 1,

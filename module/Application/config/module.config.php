@@ -299,8 +299,5 @@ return [
             '998_' => 'css/tooltip.css',
             '070_app' => 'css/app.css',
         ],
-        'images' => [
-            '100_' => 'img/PrEECoG.svg',
-        ]
     ],
 ];
