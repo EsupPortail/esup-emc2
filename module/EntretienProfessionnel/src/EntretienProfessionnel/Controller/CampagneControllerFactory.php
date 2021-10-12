@@ -5,8 +5,9 @@ namespace EntretienProfessionnel\Controller;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Interop\Container\ContainerInterface;
-use Mailing\Service\Mailing\MailingService;
+use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Contenu\ContenuService;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CampagneControllerFactory extends AbstractActionController {
@@ -19,11 +20,13 @@ class CampagneControllerFactory extends AbstractActionController {
     {
         /**
          * @var CampagneService $campagneService
-         * @var MailingService $mailingService
+         * @var ContenuService $contenuService
+         * @var MailService $mailService
          * @var ParametreService $parametreService
          */
         $campagneService = $container->get(CampagneService::class);
-        $mailingService = $container->get(MailingService::class);
+        $contenuService = $container->get(ContenuService::class);
+        $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
 
         /**
@@ -34,7 +37,8 @@ class CampagneControllerFactory extends AbstractActionController {
         $controller = new CampagneController();
 
         $controller->setCampagneService($campagneService);
-        $controller->setMailingService($mailingService);
+        $controller->setContenuService($contenuService);
+        $controller->setMailService($mailService);
         $controller->setParametreService($parametreService);
 
         $controller->setCampagneForm($campagneForm);

@@ -7,6 +7,7 @@
       "url": "https://gest.unicaen.fr/packagist"
     }
   ],
+  "minimum-stability": "dev",
   "require": {
     "unicaen/app": "^3.1",
     "unicaen/auth": "^3.1",
@@ -14,6 +15,7 @@
     "unicaen/privilege": "dev-master",
     "unicaen/renderer": "dev-master",
     "unicaen/pdf": "dev-master",
+    "unicaen/mail": "dev-master",
     "unicaen/bjy-authorize": "^3.0",
     "unicaen/ldap": "^3.0",
     "unicaen/db-import": "3.0",

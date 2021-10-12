@@ -139,7 +139,11 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
                 <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction']); ?>
             </div>
             <div id="mails" class="tab-pane " role="tabpanel">
-                <?php  echo $this->partial('partial/mails-entretien', ['entretien' => $entretien, 'mails' => $mails, 'retour' => $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => true, 'fragment' => 'mails'], true), 'source' => 'renseignerAction']); ?>
+
+                <br/>
+                <div>
+                    <?php echo $this->mails($mails); ?>
+                </div>
             </div>
         </div>
     </div>

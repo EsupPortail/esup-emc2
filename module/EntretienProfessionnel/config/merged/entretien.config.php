@@ -78,7 +78,6 @@ return [
                     'action' => [
                         'creer',
                         'modifier',
-                        'envoyer-convocation',
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
@@ -285,18 +284,6 @@ return [
                             ],
                         ],
                     ],
-                    'envoyer-convocation' => [
-                        'type'  => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/envoyer-convocation/:entretien',
-                            'defaults' => [
-                                'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'envoyer-convocation',
-                            ],
-                        ],
-                    ],
-
                 ],
             ],
         ],

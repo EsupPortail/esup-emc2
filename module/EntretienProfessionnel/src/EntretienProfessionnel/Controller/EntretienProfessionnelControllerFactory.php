@@ -16,9 +16,9 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Observation\ObservationService;
 use Interop\Container\ContainerInterface;
-use Mailing\Service\Mailing\MailingService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenMail\Service\Mail\MailService;
 use UnicaenRenderer\Service\Contenu\ContenuService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
@@ -41,7 +41,7 @@ class EntretienProfessionnelControllerFactory {
          * @var ObservationService $observationService
          * @var FormulaireService $formulaireService
          * @var FormulaireInstanceService $formulaireInstanceService
-         * @var MailingService $mailingService
+         * @var MailService $mailService
          * @var ParcoursDeFormationService $parcoursDeFormationService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
@@ -61,7 +61,7 @@ class EntretienProfessionnelControllerFactory {
 
         $formulaireService = $container->get(FormulaireService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
-        $mailingService = $container->get(MailingService::class);
+        $mailService = $container->get(MailService::class);
         $parcoursDeFormationService = $container->get(ParcoursDeFormationService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -98,7 +98,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
         $controller->setFormulaireService($formulaireService);
-        $controller->setMailingService($mailingService);
+        $controller->setMailService($mailService);
         $controller->setStructureService($structureService);
         $controller->setUrlService($urlService);
 
