@@ -9,16 +9,16 @@ use Doctrine\ORM\QueryBuilder;
 use Indicateur\Entity\Db\Abonnement;
 use Indicateur\Entity\Db\Indicateur;
 use Indicateur\Service\Indicateur\IndicateurServiceAwareTrait;
-use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AbonnementService {
     use EntityManagerAwareTrait;
     use IndicateurServiceAwareTrait;
-    use MailingServiceAwareTrait;
+    use MailServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -184,11 +184,11 @@ class AbonnementService {
 
                 foreach ($abonnements as $abonnement) {
                     $adresse = $abonnement->getUser()->getEmail();
-                    $mail = $this->getMailingService()->sendMail($adresse, $titre, $texte);
-                    $mail->setAttachementType(Indicateur::class);
-                    $mail->setAttachementId($indicateur->getId());
-                    $this->getMailingService()->update($mail);
+                    $mail = $this->getMailService()->sendMail($adresse, $titre, $texte);
+                    $mail->setEntity($indicateur);
+                    $this->getMailService()->update($mail);
                     $abonnement->setDernierEnvoi(new DateTime());
+                    $this->update($abonnement);
                 }
             }
         }

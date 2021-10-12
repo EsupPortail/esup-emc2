@@ -8,8 +8,8 @@ use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -25,7 +25,7 @@ class FormationInstanceController extends AbstractActionController
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
-    use MailingServiceAwareTrait;
+    use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
 
@@ -54,7 +54,7 @@ class FormationInstanceController extends AbstractActionController
     public function afficherAction()
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-        $mails = $this->getMailingService()->getMailsByAttachement(FormationInstance::class, $instance->getId());
+        $mails = $this->getMailService()->getMailsByEntity(FormationInstance::class, $instance->getId());
 
         return new ViewModel([
             'instance' => $instance,

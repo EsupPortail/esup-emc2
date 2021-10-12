@@ -6,14 +6,12 @@ use EntretienProfessionnel\Entity\Db\Observation;
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
-use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ObservationController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;
-    use MailingServiceAwareTrait;
     use ObservationServiceAwareTrait;
     use ObservationFormAwareTrait;
 

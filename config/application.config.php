@@ -29,7 +29,6 @@ $modules = [
     'UnicaenPrivilege',
     'UnicaenAuthentification',
     'UnicaenUtilisateurLdapAdapter',
-    'Mailing',
     'UnicaenUtilisateur',
     'UnicaenEtat',
     'UnicaenRenderer',

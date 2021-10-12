@@ -7,17 +7,19 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
-use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceService
 {
     use GestionEntiteHistorisationTrait;
     use EtatServiceAwareTrait;
-    use MailingServiceAwareTrait;
+    use ContenuServiceAwareTrait;
+    use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -196,11 +198,15 @@ class FormationInstanceService
     {
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
         $this->update($instance);
+
         $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS');
-        $mail = $this->getMailingService()->sendMailType("FORMATION_INSCRIPTION_OUVERTE", ['formation-instance' => $instance, 'mailing' => $email]);
-        $mail->setAttachementType(FormationInstance::class);
-        $mail->setAttachementId($instance->getId());
-        $this->getMailingService()->update($mail);
+        $vars = [ 'formation-instance' => $instance ];
+        $contenu = $this->getContenuService()->generateContenu("FORMATION_INSCRIPTION_OUVERTE", $vars);
+        $mail = $this->getMailService()->sendMail($email, $contenu->getSujet(), $contenu->getCorps());
+        $mail->setEntity($instance);
+        $mail->setTemplateCode($contenu->getTemplate()->getCode());
+        $this->getMailService()->update($mail);
+
         return $instance;
     }
 
@@ -213,16 +219,24 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
-            $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_PRINCIPALE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
-            $mail->setAttachementType(FormationInstance::class);
-            $mail->setAttachementId($instance->getId());
-            $this->getMailingService()->update($mail);
+
+            $vars = [ 'formation-instance' => $instance ];
+            $contenu = $this->getContenuService()->generateContenu("FORMATION_LISTE_PRINCIPALE", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
+            $mail->setEntity($instance);
+            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $this->getMailService()->update($mail);
+
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
-            $mail = $this->getMailingService()->sendMailType("FORMATION_LISTE_SECONDAIRE", ['formation-instance' => $instance, 'mailing' => $inscrit->getAgent()->getEmail()]);
-            $mail->setAttachementType(FormationInstance::class);
-            $mail->setAttachementId($instance->getId());
-            $this->getMailingService()->update($mail);
+
+            $vars = [ 'formation-instance' => $instance ];
+            $contenu = $this->getContenuService()->generateContenu("FORMATION_LISTE_COMPLEMENTAIRE", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
+            $mail->setEntity($instance);
+            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $this->getMailService()->update($mail);
+
         }
         return $instance;
     }
@@ -236,10 +250,13 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_FORMATION_CONVOCATION));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
-            $mail = $this->getMailingService()->sendMailType('FORMATION_CONVOCATION', ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);
-            $mail->setAttachementType(FormationInstance::class);
-            $mail->setAttachementId($instance->getId());
-            $this->getMailingService()->update($mail);
+
+            $vars = ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent()];
+            $contenu = $this->getContenuService()->generateContenu("FORMATION_CONVOCATION", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
+            $mail->setEntity($instance);
+            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $this->getMailService()->update($mail);
         }
         return $instance;
     }
@@ -255,10 +272,13 @@ class FormationInstanceService
         foreach ($instance->getFormateurs() as $formateur) {
             $mails[] = $formateur->getEmail();
         }
-        $mail = $this->getMailingService()->sendMailType('FORMATION_EMARGEMENT', ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'mailing' => implode(",", $mails)]);
-        $mail->setAttachementType(FormationInstance::class);
-        $mail->setAttachementId($instance->getId());
-        $this->getMailingService()->update($mail);
+
+        $vars = ['formation' => $instance->getFormation(), 'formation-instance' => $instance];
+        $contenu = $this->getContenuService()->generateContenu("FORMATION_EMARGEMENT", $vars);
+        $mail = $this->getMailService()->sendMail(implode(",", $mails), $contenu->getSujet(), $contenu->getCorps());
+        $mail->setEntity($instance);
+        $mail->setTemplateCode($contenu->getTemplate()->getCode());
+        $this->getMailService()->update($mail);
         return $instance;
     }
 
@@ -271,10 +291,12 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_ATTENTE_RETOURS));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
-            $mail = $this->getMailingService()->sendMailType('FORMATION_RETOUR', ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent(), 'mailing' => $inscrit->getAgent()->getEmail()]);
-            $mail->setAttachementType(FormationInstance::class);
-            $mail->setAttachementId($instance->getId());
-            $this->getMailingService()->update($mail);
+            $vars = [ 'formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent() ];
+            $contenu = $this->getContenuService()->generateContenu("FORMATION_RETOUR", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
+            $mail->setEntity($instance);
+            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $this->getMailService()->update($mail);
         }
         return $instance;
     }

@@ -5,7 +5,7 @@ namespace Indicateur\Service\Abonnement;
 use Doctrine\ORM\EntityManager;
 use Indicateur\Service\Indicateur\IndicateurService;
 use Interop\Container\ContainerInterface;
-use Mailing\Service\Mailing\MailingService;
+use UnicaenMail\Service\Mail\MailService;
 
 class AbonnementServiceFactory {
 
@@ -18,17 +18,17 @@ class AbonnementServiceFactory {
         /**
          * @var EntityManager $entityManager
          * @var IndicateurService $indicateurService
-         * @var MailingService $mailingService
+         * @var MailService $mailService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $indicateurService = $container->get(IndicateurService::class);
-        $mailingService = $container->get(MailingService::class);
+        $mailService = $container->get(MailService::class);
 
         /** @var AbonnementService $service */
         $service = new AbonnementService();
         $service->setEntityManager($entityManager);
         $service->setIndicateurService($indicateurService);
-        $service->setMailingService($mailingService);
+        $service->setMailService($mailService);
         return $service;
     }
 }

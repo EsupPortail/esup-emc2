@@ -8,8 +8,8 @@ use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
-use Mailing\Service\Mailing\MailingService;
 use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
 class FormationInstanceControllerFactory
@@ -27,7 +27,7 @@ class FormationInstanceControllerFactory
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var FormulaireInstanceService $formulaireInstanceService
-         * @var MailingService $mailingService
+         * @var MailService $mailService
          * @var ParametreService $parametreService
          */
         $etatService = $container->get(EtatService::class);
@@ -35,7 +35,7 @@ class FormationInstanceControllerFactory
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
-        $mailingService = $container->get(MailingService::class);
+        $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
 
         /**
@@ -51,7 +51,7 @@ class FormationInstanceControllerFactory
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setFormulaireInstanceService($formulaireInstanceService);
         $controller->setFormationInstanceForm($formationInstanceForm);
-        $controller->setMailingService($mailingService);
+        $controller->setMailService($mailService);
         $controller->setParametreService($parametreService);
         return $controller;
     }

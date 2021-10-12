@@ -7,8 +7,10 @@ use Application\Service\Agent\AgentService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
-use Mailing\Service\Mailing\MailingService;
 use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenMail\Service\Mail\MailService;
+use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Contenu\ContenuService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class FormationInstanceInscritControllerFactory
@@ -22,17 +24,21 @@ class FormationInstanceInscritControllerFactory
     {
         /**
          * @var AgentService $agentService
+         * @var ContenuService $contenuService
          * @var EtatService $etatService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var MailingService $mailingService
+         * @var MailService $mailService
+         * @var ParametreService $parametreService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $contenuService = $container->get(ContenuService::class);
         $etatService = $container->get(EtatService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $mailingService = $container->get(MailingService::class);
+        $mailService = $container->get(MailService::class);
+        $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
 
         /**
@@ -42,10 +48,12 @@ class FormationInstanceInscritControllerFactory
 
         $controller = new FormationInstanceInscritController();
         $controller->setAgentService($agentService);
+        $controller->setContenuService($contenuService);
         $controller->setEtatService($etatService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setMailingService($mailingService);
+        $controller->setMailService($mailService);
+        $controller->setParametreService($parametreService);
         $controller->setUserService($userService);
         $controller->setSelectionAgentForm($selectionAgentForm);
         return $controller;

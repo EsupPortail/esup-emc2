@@ -1,16 +1,13 @@
 <?php
 
 /**
+ * @see IndicateurController::afficherAction()
  * @var Indicateur $indicateur
  * @var array $header
  * @var array $data
- * @var Mail $mail
- *
- * @see IndicateurController::afficherAction()
  */
 
 use Indicateur\Entity\Db\Indicateur;
-use Mailing\Model\Db\Mail;
 
 ?>
 
@@ -79,9 +76,6 @@ use Mailing\Model\Db\Mail;
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </div>
-
-    <div id="mail" class="tab-pane " role="mail">
     </div>
 </div>
 

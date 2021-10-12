@@ -49,7 +49,6 @@ return [
                         'index-administration',
                     ],
                     'privileges' => [
-                        MailingPrivileges::MAILING_AFFICHER,
                         IndexPrivileges::AFFICHER_INDEX,
                         SynchroPrivileges::SYNCHRO_AFFICHER,
                         UtilisateurPrivileges::UTILISATEUR_AFFICHER,

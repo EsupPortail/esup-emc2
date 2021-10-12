@@ -7,7 +7,6 @@ use DateTime;
 use Exception;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Mailing\Service\Mailing\MailingServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -19,7 +18,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 class FormationConsoleController extends AbstractActionController {
     use EtatServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
-    use MailingServiceAwareTrait;
     use ParametreServiceAwareTrait;
 
     /**
