@@ -20,8 +20,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
-use UnicaenRenderer\Service\Contenu\ContenuService;
-use UnicaenRenderer\Service\Template\TemplateService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FichePosteControllerFactory {
 
@@ -29,7 +28,7 @@ class FichePosteControllerFactory {
     {
         /**
          * @var AgentService $agentService
-         * @var ContenuService $contenuService
+         * @var RenduService $renduService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
          * @var ActiviteService $activiteService
@@ -41,7 +40,7 @@ class FichePosteControllerFactory {
          * @var ParcoursDeFormationService $parcoursService
          */
         $agentService = $container->get(AgentService::class);
-        $contenuService = $container->get(ContenuService::class);
+        $renduService = $container->get(RenduService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $structureService = $container->get(StructureService::class);
@@ -73,7 +72,7 @@ class FichePosteControllerFactory {
         $controller = new FichePosteController();
 
         $controller->setAgentService($agentService);
-        $controller->setContenuService($contenuService);
+        $controller->setRenduService($renduService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setStructureService($structureService);

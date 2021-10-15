@@ -8,8 +8,8 @@ use Application\Service\FicheProfil\FicheProfilService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenRenderer\Service\Contenu\ContenuService;
-use UnicaenRenderer\Service\Template\TemplateService;
+use UnicaenRenderer\Service\Rendu\RenduService;
+
 
 class FicheProfilControllerFactory {
 
@@ -20,13 +20,13 @@ class FicheProfilControllerFactory {
     public function __invoke(ContainerInterface $container) : FicheProfilController
     {
         /**
-         * @var ContenuService $contenuService
+         * @var RenduService $renduService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var ParametreService $parametreService
          * @var StructureService $structureService
          */
-        $contenuService = $container->get(ContenuService::class);
+        $renduService = $container->get(RenduService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -38,7 +38,7 @@ class FicheProfilControllerFactory {
         $ficheProfilForm = $container->get('FormElementManager')->get(FicheProfilForm::class);
 
         $controller = new FicheProfilController();
-        $controller->setContenuService($contenuService);
+        $controller->setRenduService($renduService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setParametreService($parametreService);

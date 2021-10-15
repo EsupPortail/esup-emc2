@@ -55,6 +55,14 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
     private $formateurs;
 
     /**
+     * @return string
+     */
+    public function generateTag()  : string
+    {
+        return 'FormationInstance_' . $this->getId();
+    }
+
+    /**
      * @return int
      */
     public function getId() : int

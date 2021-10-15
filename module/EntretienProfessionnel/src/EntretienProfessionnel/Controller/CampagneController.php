@@ -8,7 +8,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Exception;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -19,7 +19,7 @@ class CampagneController extends AbstractActionController {
     use DateTimeAwareTrait;
 
     use CampagneServiceAwareTrait;
-    use ContenuServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
 
@@ -45,17 +45,15 @@ class CampagneController extends AbstractActionController {
                     $vars = ['campagne' => $campagne];
 
                     $mail_DAC = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_DAC')->getValeur();
-                    $contenu = $this->getContenuService()->generateContenu('CAMPAGNE_OUVERTURE_DAC', $vars);
-                    $mailDac = $this->getMailService()->sendMail($mail_DAC, $contenu->getSujet(), $contenu->getCorps());
-                    $mailDac->setEntity($campagne);
-                    $mailDac->setTemplateCode($contenu->getTemplate()->getCode());
+                    $rendu = $this->getRenduService()->genereateRenduByTemplateCode('CAMPAGNE_OUVERTURE_DAC', $vars);
+                    $mailDac = $this->getMailService()->sendMail($mail_DAC, $rendu->getSujet(), $rendu->getCorps());
+                    $mailDac->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
                     $this->getMailService()->update($mailDac);
 
                     $mail_BIATS = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_BIATS')->getValeur();
-                    $contenu = $this->getContenuService()->generateContenu('CAMPAGNE_OUVERTURE_BIATSS', $vars);
-                    $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $contenu->getSujet(), $contenu->getCorps());
-                    $mailBiats->setEntity($campagne);
-                    $mailBiats->setTemplateCode($contenu->getTemplate()->getCode());
+                    $rendu = $this->getRenduService()->genereateRenduByTemplateCode('CAMPAGNE_OUVERTURE_BIATSS', $vars);
+                    $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $rendu->getSujet(), $rendu->getCorps());
+                    $mailBiats->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
                     $this->getMailService()->update($mailBiats);
 
                 } catch(Exception $e) {

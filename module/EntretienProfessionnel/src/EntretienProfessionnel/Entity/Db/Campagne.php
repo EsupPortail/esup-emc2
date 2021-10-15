@@ -21,6 +21,15 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     /** @var ArrayCollection (EntretienProfessionnel) */
     private $entretiens;
 
+
+    /**
+     * @return string
+     */
+    public function generateTag() : string
+    {
+        return 'Campagne_' . $this->getId();
+    }
+
     /**
      * @return int
      */

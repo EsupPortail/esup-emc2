@@ -9,13 +9,13 @@ use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
-use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class FicheProfilController extends AbstractActionController {
-    use ContenuServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use FicheProfilFormAwareTrait;
@@ -118,14 +118,14 @@ class FicheProfilController extends AbstractActionController {
             'ficheposte' => $ficheposte,
             'structure' => $ficheprofil->getStructure(),
         ];
-        $contenu = $this->getContenuService()->generateContenu('PROFIL_DE_RECRUTEMENT', $vars);
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('PROFIL_DE_RECRUTEMENT', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($contenu->getSujet());
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($contenu->getCorps());
-        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
     public function historiserAction()

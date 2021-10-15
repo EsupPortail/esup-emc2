@@ -31,7 +31,7 @@ use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
-use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
@@ -46,7 +46,7 @@ class FicheMetierController extends AbstractActionController
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
     use AgentServiceAwareTrait;
-    use ContenuServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
@@ -216,14 +216,14 @@ class FicheMetierController extends AbstractActionController
             'metier' => $fichemetier->getMetier(),
             'parcours' => $this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()),
         ];
-        $contenu = $this->getContenuService()->generateContenu('FICHE_METIER', $vars);
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FICHE_METIER', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($contenu->getSujet());
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($contenu->getCorps());
-        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
 //    public function exporterToutesAction()

@@ -19,7 +19,7 @@ use Interop\Container\ContainerInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
-use UnicaenRenderer\Service\Contenu\ContenuService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -31,7 +31,7 @@ class EntretienProfessionnelControllerFactory {
     {
         /**
          * @var AgentService $agentService
-         * @var ContenuService $contenuService
+         * @var RenduService $renduService
          * @var UserService $userService
          * @var ConfigurationService $configurationService
          * @var EntretienProfessionnelService $entretienProfesionnelService
@@ -49,7 +49,7 @@ class EntretienProfessionnelControllerFactory {
          * @var UrlService $urlService
          */
         $agentService = $container->get(AgentService::class);
-        $contenuService = $container->get(ContenuService::class);
+        $renduService = $container->get(RenduService::class);
         $userService = $container->get(UserService::class);
         $configurationService = $container->get(ConfigurationService::class);
         $etatService = $container->get(EtatService::class);
@@ -85,7 +85,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setRenderer($renderer);
 
         $controller->setAgentService($agentService);
-        $controller->setContenuService($contenuService);
+        $controller->setRenduService($renduService);
         $controller->setUserService($userService);
         $controller->setConfigurationService($configurationService);
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);

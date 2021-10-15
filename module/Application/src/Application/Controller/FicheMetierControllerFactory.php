@@ -21,7 +21,7 @@ use Metier\Service\Metier\MetierService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
-use UnicaenRenderer\Service\Contenu\ContenuService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 use Zend\View\Renderer\PhpRenderer;
 
 class FicheMetierControllerFactory {
@@ -31,7 +31,7 @@ class FicheMetierControllerFactory {
         /**
          * @var ActiviteService $activiteService
          * @var AgentService $agentService;
-         * @var ContenuService $contenuService;
+         * @var RenduService $renduService;
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
@@ -44,7 +44,7 @@ class FicheMetierControllerFactory {
          */
         $activiteService = $container->get(ActiviteService::class);
         $agentService = $container->get(AgentService::class);
-        $contenuService = $container->get(ContenuService::class);
+        $renduService = $container->get(RenduService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
@@ -81,7 +81,7 @@ class FicheMetierControllerFactory {
 
         $controller->setActiviteService($activiteService);
         $controller->setAgentService($agentService);
-        $controller->setContenuService($contenuService);
+        $controller->setRenduService($renduService);
         $controller->setDomaineService($domaineService);
         $controller->setEtatService($etatService);
         $controller->setEtatTypeService($etatTypeService);

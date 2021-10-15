@@ -8,8 +8,7 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
-use UnicaenRenderer\Service\Contenu\ContenuService;
-use UnicaenRenderer\Service\Template\TemplateService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 
 class MissionSpecifiqueAffectationControllerFactory {
 
@@ -21,13 +20,13 @@ class MissionSpecifiqueAffectationControllerFactory {
     {
         /**
          * @var AgentService $agentService
-         * @var ContenuService $contenuService
+         * @var RenduService $renduService
          * @var MissionSpecifiqueService $missionSpecifiqueService
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var StructureService $structureService
          */
         $agentService = $container->get(AgentService::class);
-        $contenuService = $container->get(ContenuService::class);
+        $renduService = $container->get(RenduService::class);
         $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
         $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $structureService = $container->get(StructureService::class);
@@ -41,7 +40,7 @@ class MissionSpecifiqueAffectationControllerFactory {
         $controller = new MissionSpecifiqueAffectationController();
 
         $controller->setAgentService($agentService);
-        $controller->setContenuService($contenuService);
+        $controller->setRenduService($renduService);
         $controller->setMissionSpecifiqueService($missionSpecifiqueService);
         $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setStructureService($structureService);

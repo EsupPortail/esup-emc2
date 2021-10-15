@@ -11,14 +11,14 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceService
 {
     use GestionEntiteHistorisationTrait;
     use EtatServiceAwareTrait;
-    use ContenuServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
 
@@ -201,10 +201,9 @@ class FormationInstanceService
 
         $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS');
         $vars = [ 'formation-instance' => $instance ];
-        $contenu = $this->getContenuService()->generateContenu("FORMATION_INSCRIPTION_OUVERTE", $vars);
-        $mail = $this->getMailService()->sendMail($email, $contenu->getSujet(), $contenu->getCorps());
-        $mail->setEntity($instance);
-        $mail->setTemplateCode($contenu->getTemplate()->getCode());
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_OUVERTE", $vars);
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $instance;
@@ -221,20 +220,18 @@ class FormationInstanceService
         foreach ($instance->getListePrincipale() as $inscrit) {
 
             $vars = [ 'formation-instance' => $instance ];
-            $contenu = $this->getContenuService()->generateContenu("FORMATION_LISTE_PRINCIPALE", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
-            $mail->setEntity($instance);
-            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_LISTE_PRINCIPALE", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
 
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
 
             $vars = [ 'formation-instance' => $instance ];
-            $contenu = $this->getContenuService()->generateContenu("FORMATION_LISTE_COMPLEMENTAIRE", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
-            $mail->setEntity($instance);
-            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_LISTE_COMPLEMENTAIRE", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
 
         }
@@ -252,10 +249,9 @@ class FormationInstanceService
         foreach ($instance->getListePrincipale() as $inscrit) {
 
             $vars = ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent()];
-            $contenu = $this->getContenuService()->generateContenu("FORMATION_CONVOCATION", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
-            $mail->setEntity($instance);
-            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_CONVOCATION", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
         }
         return $instance;
@@ -274,10 +270,9 @@ class FormationInstanceService
         }
 
         $vars = ['formation' => $instance->getFormation(), 'formation-instance' => $instance];
-        $contenu = $this->getContenuService()->generateContenu("FORMATION_EMARGEMENT", $vars);
-        $mail = $this->getMailService()->sendMail(implode(",", $mails), $contenu->getSujet(), $contenu->getCorps());
-        $mail->setEntity($instance);
-        $mail->setTemplateCode($contenu->getTemplate()->getCode());
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_EMARGEMENT", $vars);
+        $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
         return $instance;
     }
@@ -292,10 +287,9 @@ class FormationInstanceService
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
             $vars = [ 'formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent() ];
-            $contenu = $this->getContenuService()->generateContenu("FORMATION_RETOUR", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $contenu->getSujet(), $contenu->getCorps());
-            $mail->setEntity($instance);
-            $mail->setTemplateCode($contenu->getTemplate()->getCode());
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_RETOUR", $vars);
+            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
         }
         return $instance;

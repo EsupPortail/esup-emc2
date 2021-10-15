@@ -10,7 +10,7 @@ use Interop\Container\ContainerInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenRenderer\Service\Contenu\ContenuService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class FormationInstanceInscritControllerFactory
@@ -24,7 +24,7 @@ class FormationInstanceInscritControllerFactory
     {
         /**
          * @var AgentService $agentService
-         * @var ContenuService $contenuService
+         * @var RenduService $renduService
          * @var EtatService $etatService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
@@ -33,7 +33,7 @@ class FormationInstanceInscritControllerFactory
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
-        $contenuService = $container->get(ContenuService::class);
+        $renduService = $container->get(RenduService::class);
         $etatService = $container->get(EtatService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
@@ -48,7 +48,7 @@ class FormationInstanceInscritControllerFactory
 
         $controller = new FormationInstanceInscritController();
         $controller->setAgentService($agentService);
-        $controller->setContenuService($contenuService);
+        $controller->setRenduService($renduService);
         $controller->setEtatService($etatService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);

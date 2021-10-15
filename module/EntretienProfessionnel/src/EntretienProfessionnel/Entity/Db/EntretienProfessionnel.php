@@ -29,6 +29,12 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     const ETAT_VALIDATION_HIERARCHIE        = 'ENTRETIEN_VALIDATION_HIERARCHIE';
     const DELAI_OBSERVATION                 = 8;
 
+
+    public function generateTag() : string
+    {
+        return (implode('_', [$this->getResourceId(), $this->getId()]));
+    }
+
     public function getResourceId() : string
     {
         return 'EntretienProfessionnel';

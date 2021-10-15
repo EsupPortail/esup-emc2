@@ -11,14 +11,14 @@ use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenPdf\Exporter\PdfExporter;
-use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class MissionSpecifiqueAffectationController extends AbstractActionController {
     use AgentServiceAwareTrait;
-    use ContenuServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use MissionSpecifiqueServiceAwareTrait;
     use StructureServiceAwareTrait;
     use MissionSpecifiqueAffectationServiceAwareTrait;
@@ -207,13 +207,13 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             'structure' => $affectation->getStructure(),
             'affectation' => $affectation,
         ];
-        $contenu = $this->getContenuService()->generateContenu('MISSION_SPECIFIQUE_LETTRE', $vars);
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('MISSION_SPECIFIQUE_LETTRE', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($contenu->getSujet());
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($contenu->getCorps());
-        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 }

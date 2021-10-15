@@ -31,7 +31,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
-use UnicaenRenderer\Service\Contenu\ContenuServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -46,7 +46,7 @@ class FichePosteController extends AbstractActionController {
 
     /** Service **/
     use AgentServiceAwareTrait;
-    use ContenuServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -299,14 +299,14 @@ class FichePosteController extends AbstractActionController {
             'agent' => $agent,
             'structure' => ($agent)?$agent->getAffectationPrincipale()->getStructure():null,
         ];
-        $contenu = $this->getContenuService()->generateContenu('FICHE_DE_POSTE', $vars);
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FICHE_DE_POSTE', $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($contenu->getSujet());
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');
         $exporter->setFooterScript('');
-        $exporter->addBodyHtml($contenu->getCorps());
-        return $exporter->export($contenu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
     /** TITRE *********************************************************************************************************/
 

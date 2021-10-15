@@ -54,7 +54,7 @@ class FormationInstanceController extends AbstractActionController
     public function afficherAction()
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-        $mails = $this->getMailService()->getMailsByEntity(FormationInstance::class, $instance->getId());
+        $mails = $this->getMailService()->getMailsByMotClef($instance->generateTag());
 
         return new ViewModel([
             'instance' => $instance,
