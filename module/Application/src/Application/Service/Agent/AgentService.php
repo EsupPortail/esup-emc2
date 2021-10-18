@@ -155,11 +155,13 @@ class AgentService {
     }
 
     /**
-     * @param User $user
+     * @param User|null $user
      * @return Agent|null
      */
-    public function getAgentByUser(User $user) : ?Agent
+    public function getAgentByUser(?User $user) : ?Agent
     {
+        if ($user === null) return null;
+
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.utilisateur = :user')
             ->setParameter('user', $user)
@@ -696,11 +698,13 @@ class AgentService {
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return StructureResponsable[]
      */
-    public function getResposabiliteStructure(Agent $agent) : array
+    public function getResposabiliteStructure(?Agent $agent) : ?array
     {
+        if ($agent === null) return null;
+
         $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
             ->andWhere('sr.agent = :agent')
             ->setParameter('agent', $agent)
