@@ -49,7 +49,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
 
     /** @var ArrayCollection */
     private $gestionnaires;
-    /** @var ArrayCollection */
+    /** @var ArrayCollection (StructureResponsable) */
     private $responsables;
     /** @var ArrayCollection (Poste) */
     private $postes;
@@ -171,32 +171,12 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     }
 
     /**
-     * @return User[]
+     * @return StructureResponsable[]
      */
     public function getResponsables() : array
     {
         if ($this->responsables === null) return [];
         return $this->responsables->toArray();
-    }
-
-    /**
-     * @param User $user
-     * @return Structure
-     */
-    public function addResponsable(User $user) : Structure
-    {
-        $this->responsables->add($user);
-        return $this;
-    }
-
-    /**
-     * @param User $user
-     * @return Structure
-     */
-    public function removeResponsable(User $user) : Structure
-    {
-        $this->responsables->removeElement($user);
-        return $this;
     }
 
     /** POSTE ****************************************************************************************************/

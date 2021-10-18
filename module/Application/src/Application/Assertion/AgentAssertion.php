@@ -5,6 +5,7 @@ namespace Application\Assertion;
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -43,7 +44,7 @@ class AgentAssertion extends AbstractAssertion {
                 $structures[] = $grade->getStructure();
             }
             foreach ($structures as $structure) {
-                $isResponsable = $this->getStructureService()->isResponsable($structure, $user);
+                $isResponsable = $this->getStructureService()->isResponsable($structure, $entity);
                 if ($isResponsable) break;
             }
         }

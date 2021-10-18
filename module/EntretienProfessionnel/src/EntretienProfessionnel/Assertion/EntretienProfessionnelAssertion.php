@@ -23,8 +23,10 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             return false;
         }
 
+
         /** @var EntretienProfessionnel $entity */
         $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
         $isResponsable = false;
@@ -37,7 +39,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 $structures[] = $structuresForcee->getStructure();
             }
             foreach ($structures as $structure) {
-                $isResponsable = $this->getStructureService()->isResponsable($structure, $user);
+                $isResponsable = $this->getStructureService()->isResponsable($structure, $agent);
                 if ($isResponsable) break;
             }
         }

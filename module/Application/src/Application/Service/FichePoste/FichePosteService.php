@@ -456,20 +456,22 @@ class FichePosteService {
 
     public function isGererPar(FichePoste $fiche, User $user)
     {
+        $agent = $this->getAgentService()->getAgentByUser($user);
+
         if ($fiche->getPoste()) {
             $structure = $fiche->getPoste()->getStructure();
             if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
-            if ($this->getStructureService()->isResponsable($structure, $user)) return true;
+            if ($this->getStructureService()->isResponsable($structure, $agent)) return true;
         }
         if ($fiche->getAgent()) {
             foreach ($fiche->getAgent()->getAffectationsActifs() as $grade) {
                 $structure = $grade->getStructure();
                 if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
-                if ($this->getStructureService()->isResponsable($structure, $user)) return true;
+                if ($this->getStructureService()->isResponsable($structure, $agent)) return true;
             }
             foreach ($fiche->getAgent()->getStructuresForcees() as $structureForcee) {
                 if ($this->getStructureService()->isGestionnaire($structureForcee->getStructure(), $user)) return true;
-                if ($this->getStructureService()->isResponsable($structureForcee->getStructure(), $user)) return true;
+                if ($this->getStructureService()->isResponsable($structureForcee->getStructure(), $agent)) return true;
             }
         }
         return false;

@@ -73,7 +73,7 @@ use UnicaenUtilisateur\Entity\Db\User;
                     <?php if ($responsables !== null AND !empty($responsables)) : ?>
                         <ul>
                             <?php foreach ($responsables as $responsable) : ?>
-                                <li> <?php echo $responsable->getDisplayName(); ?> </li>
+                                <li> <?php echo $responsable->getDenomination(); ?> </li>
                             <?php endforeach; ?>
                         </ul>
                     <?php else : ?>

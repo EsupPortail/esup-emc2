@@ -253,6 +253,23 @@ return [
                     'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'histo','parent_id'],
                 ],
             ],
+            [
+                'name' => 'Import_RESPONSABLE',
+                'source' => [
+                    'name'               => 'Responsables des structures',
+                    'select'             => 'SELECT * FROM V_PREECOG_RESPONSABLE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                    'columns'            => ['STRUCTURE_ID', 'AGENT_ID', 'FONCTION_ID', 'DATE_DEBUT', 'DATE_FIN'],
+                ],
+                'destination' => [
+                    'name'               => 'Responsables des strucures',
+                    'table'              => 'structure_responsable',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['structure_id', 'agent_id', 'fonction_id', 'date_debut', 'date_fin'],
+                ],
+            ],
 //            [
 //                'name' => 'Import_FONCTION',
 //                'source' => [

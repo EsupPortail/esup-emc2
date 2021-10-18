@@ -6,14 +6,14 @@
  * drop this config file in it and change the values as you wish.
  */
 
+use Application\Provider\IdentityProvider;
+use Application\Provider\IdentityProviderFactory;
 use UnicaenAuthentification\Provider\Identity\Chain;
 use UnicaenAuthentification\Provider\Role\DbRole;
 use UnicaenAuthentification\Provider\Role\Username;
 use UnicaenPrivilege\Entity\Db\Privilege;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
-use UnicaenUtilisateur\Entity\Db\Role;
-use UnicaenUtilisateur\Entity\Db\User;
 
 $settings = [
     /**
@@ -23,6 +23,11 @@ $settings = [
     'save_ldap_user_in_database' => true,
     'enable_privileges' => true,
     'entity_manager_name' => 'doctrine.entitymanager.orm_default', // nom du gestionnaire d'entités à utiliser
+    'identity_providers'  => [
+        300 => 'UnicaenAuthentification\Provider\Identity\Basic',   // en 1er
+        200 => 'UnicaenAuthentification\Provider\Identity\Db',      // en 2e
+        100 => 'Application\Provider\IdentityProvider', // en 3e
+    ],
 ];
 
 $config = [
@@ -51,6 +56,11 @@ $config = [
          * Accepted values: boolean true or false
          */
         'enable_registration' => false,
+    ],
+    'service_manager' => [
+        'factories' => [
+            IdentityProvider::class => IdentityProviderFactory::class,
+        ],
     ],
 ];
 

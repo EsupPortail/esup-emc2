@@ -68,36 +68,21 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
         </dl>
     </div>
 
+    <!-- RESPONSABLE ET GESTIONNAIRE ---------------------------------------------------------------------------------->
+
     <div class="col-md-6">
         <?php echo $this->portenote('StructureController::indexAction()>Role', '', []); ?>
         <h2>
             Responsables
             <span class="badge"><?php echo count($structure->getResponsables()); ?></span>
-            <?php if ($canEditerGestionnaire) : ?>
-                <a
-                    <?php /** @see \Application\Controller\StructureController::ajouterResponsableAction() */ ?>
-                        href="<?php echo $this->url('structure/ajouter-responsable', ['structure' => $structure->getId()], [], true); ?>"
-                        class="ajax-modal"
-                        data-event="modification"
-                >
-                    <span class="icon editer" data-toggle="tooltip" data-html="true"
-                          title="Ajouter un&middot;e reposanble à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
-                    </span></a>
-            <?php endif; ?>
+            <span class="icon synchoniser" title="Synchronisé depuis OCTOPUS"></span>
         </h2>
         <ul>
             <?php foreach ($structure->getResponsables() as $responsable) : ?>
                 <li>
-                    <?php echo $responsable->getDisplayName(); ?>
-                    <?php if ($canEditerGestionnaire) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\StructureController::retirerResponsableAction() */ ?>
-                                href="<?php echo $this->url('structure/retirer-responsable', ['structure' => $structure->getId(), 'responsable' => $responsable->getId()], [], true); ?>"
-                        >
-                            <span class="icon detruire"  data-toggle="tooltip" data-html="true"
-                                  title="Supprimer la reponsabilité de structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='highlight user'><?php echo $responsable->getDisplayName(); ?></span>">
-                            </span></a>
-                    <?php endif; ?>
+                    <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut())?$responsable->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($responsable->getDateFin())?$responsable->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                        <?php echo $responsable->getAgent()->getDenomination(); ?>
+                    </span>
                 </li>
             <?php endforeach; ?>
         </ul>

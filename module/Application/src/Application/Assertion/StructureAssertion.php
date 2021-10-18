@@ -5,6 +5,7 @@ namespace Application\Assertion;
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureService;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Assertion\AbstractAssertion;
@@ -12,6 +13,7 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class StructureAssertion extends AbstractAssertion {
+    use AgentServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -22,6 +24,7 @@ class StructureAssertion extends AbstractAssertion {
         }
 
         $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
         $isGestionnaire = false;
@@ -30,7 +33,7 @@ class StructureAssertion extends AbstractAssertion {
         }
         $isResponsable = false;
         if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
-            $isResponsable = $this->getStructureService()->isResponsable($entity, $user);
+            $isResponsable = $this->getStructureService()->isResponsable($entity, $agent);
         }
 
         switch($privilege) {

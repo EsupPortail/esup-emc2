@@ -2,8 +2,10 @@
 
 namespace Application\Service\Structure;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -15,6 +17,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class StructureService
 {
+    use AgentServiceAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -151,13 +154,14 @@ class StructureService
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByResponsable($user, $ouverte = true)
+    public function getStructuresByResponsable(User $user, bool $ouverte = true) : array
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.responsables', 'responsableSelection')
             ->addSelect('responsable')->join('structure.responsables', 'responsable')
-            ->andWhere('responsableSelection.id = :userId')
-            ->setParameter('userId', $user->getId())
+            ->addSelect('agent')->join('responsable.agent', 'agent')
+            ->andWhere('agent.utilisateur = :user')
+            ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt')
             ->andWhere("structure.histo IS NULL")
         ;
@@ -230,13 +234,16 @@ class StructureService
 
     /**
      * @param Structure $structure
-     * @param User $user
+     * @param Agent $agent
      * @return boolean
      */
-    public function isResponsable(Structure $structure, User $user)
+    public function isResponsable(Structure $structure, Agent $agent)
     {
-        if (array_search($user, $structure->getResponsables()) !== false) return true;
-        if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $user);
+        $responsables = $structure->getResponsables();
+        foreach ($responsables as $responsable) {
+            if ($responsable->getAgent() === $agent) return true;
+        }
+        if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
         return false;
     }
 

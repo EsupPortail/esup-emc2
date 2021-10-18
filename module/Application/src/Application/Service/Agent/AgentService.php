@@ -9,6 +9,7 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\Structure;
+use Application\Entity\Db\StructureResponsable;
 use Application\Service\DecoratorTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -364,10 +365,13 @@ class AgentService {
             $structure = $structure->getParent();
         }
 
-        $responsables = $structure->getResponsables();
+        $structureResponsables = $structure->getResponsables();
+        $responsables = [];
+        foreach ($structureResponsables as $structureResponsable) {
+            $responsables[] = $structureResponsable->getAgent();
+        }
+
         if ($responsables !== []) return $responsables;
-
-
         return null;
     }
 
@@ -686,6 +690,21 @@ class AgentService {
             ->andWhere('astatut.dateDebut <= :date')
             ->andWhere('astatut.dateFin IS NULL OR astatut.dateFin >= :date')
             ->setParameter('date', $date)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return StructureResponsable[]
+     */
+    public function getResposabiliteStructure(Agent $agent) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
+            ->andWhere('sr.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('sr.deleted_on IS NULL')
         ;
         $result = $qb->getQuery()->getResult();
         return $result;

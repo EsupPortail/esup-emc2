@@ -230,60 +230,60 @@ class StructureController extends AbstractActionController {
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
 
-    public function ajouterResponsableAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        /** @var AjouterGestionnaireForm $form */
-        $form = $this->getAjouterGestionnaireForm();
-        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-responsable', ['structure' => $structure->getId()]));
-        /** @var SearchAndSelect $element */
-        $element = $form->get('structure');
-        /** @see StructureController::rechercherWithStructureMereAction() */
-        $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $responsable = $this->getUserService()->getUtilisateur($data['gestionnaire']['id']);
-            $structure = $this->getStructureService()->getStructure($data['structure']['id']);
-            if ($responsable !== null AND $structure !== null) {
-                if (!$responsable->hasRole(RoleConstant::RESPONSABLE)) {
-                    $responsableRole = $this->getRoleService()->getRoleByCode(RoleConstant::RESPONSABLE);
-                    if (!$responsable->hasRole($responsableRole)) $responsable->addRole($responsableRole);
-                    $this->getUserService()->update($responsable);
-                }
-                $structure->addResponsable($responsable);
-                $this->getStructureService()->update($structure);
-            }
-        }
-
-        $form->get('gestionnaire')->setLabel('Responsable * :');
-        $vm = new ViewModel();
-        $vm->setTemplate("application/default/default-form");
-        $vm->setVariables([
-            'title' => "Ajout d'un&middot;e responsable à une structure",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function retirerResponsableAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $responsable = $this->getUserService()->getUtilisateur($this->params()->fromRoute('responsable'));
-
-        $structure->removeResponsable($responsable);
-        $this->getStructureService()->update($structure);
-
-        $structures = $this->getStructureService()->getStructuresByResponsable($responsable);
-        if (empty($structures)) {
-            $role = $this->getRoleService()->getRoleByCode(RoleConstant::RESPONSABLE);
-            $this->getUserService()->removeRole($responsable, $role);
-        }
-
-        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
-    }
+//    public function ajouterResponsableAction()
+//    {
+//        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+//        /** @var AjouterGestionnaireForm $form */
+//        $form = $this->getAjouterGestionnaireForm();
+//        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-responsable', ['structure' => $structure->getId()]));
+//        /** @var SearchAndSelect $element */
+//        $element = $form->get('structure');
+//        /** @see StructureController::rechercherWithStructureMereAction() */
+//        $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+//
+//        /** @var Request $request */
+//        $request = $this->getRequest();
+//        if ($request->isPost()) {
+//            $data = $request->getPost();
+//            $responsable = $this->getUserService()->getUtilisateur($data['gestionnaire']['id']);
+//            $structure = $this->getStructureService()->getStructure($data['structure']['id']);
+//            if ($responsable !== null AND $structure !== null) {
+//                if (!$responsable->hasRole(RoleConstant::RESPONSABLE)) {
+//                    $responsableRole = $this->getRoleService()->getRoleByCode(RoleConstant::RESPONSABLE);
+//                    if (!$responsable->hasRole($responsableRole)) $responsable->addRole($responsableRole);
+//                    $this->getUserService()->update($responsable);
+//                }
+//                $structure->addResponsable($responsable);
+//                $this->getStructureService()->update($structure);
+//            }
+//        }
+//
+//        $form->get('gestionnaire')->setLabel('Responsable * :');
+//        $vm = new ViewModel();
+//        $vm->setTemplate("application/default/default-form");
+//        $vm->setVariables([
+//            'title' => "Ajout d'un&middot;e responsable à une structure",
+//            'form' => $form,
+//        ]);
+//        return $vm;
+//    }
+//
+//    public function retirerResponsableAction()
+//    {
+//        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+//        $responsable = $this->getUserService()->getUtilisateur($this->params()->fromRoute('responsable'));
+//
+//        $structure->removeResponsable($responsable);
+//        $this->getStructureService()->update($structure);
+//
+//        $structures = $this->getStructureService()->getStructuresByResponsable($responsable);
+//        if (empty($structures)) {
+//            $role = $this->getRoleService()->getRoleByCode(RoleConstant::RESPONSABLE);
+//            $this->getUserService()->removeRole($responsable, $role);
+//        }
+//
+//        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+//    }
 
     /** RESUME *********************************************************************************************************/
 
