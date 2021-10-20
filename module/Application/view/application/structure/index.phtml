@@ -29,20 +29,14 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
     </div>
 </div>
 <div class="main">
-<!--    <div class="row">-->
-<!--        <a  href="--><?php //echo $this->url('structure/graphe', [], [], true); ?><!--"-->
-<!--            class="btn btn-warning"-->
-<!--        >-->
-<!--            Générer le graphe des structures</a>-->
-<!--    </div>-->
 
-    <table id="structures" class="datatable table table-condensed">
+    <table id="structures" class="datatable table table-condensed table-hover">
         <thead>
             <tr>
-                <th> Libellé court </th>
-                <th> Type </th>
+                <th> Libellé </th>
                 <th> Code </th>
-                <th> Gestionnaire </th>
+                <th> Type </th>
+                <th> Resp./Gest. </th>
                 <th> Action </th>
             </tr>
         </thead>
@@ -59,23 +53,30 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                             </span>
                         <?php endif; ?>
                     </td>
-                    <td> <?php echo $structure->getType(); ?> </td>
                     <td> <?php echo $structure->getCode(); ?> </td>
+                    <td> <?php echo $structure->getType(); ?> </td>
                     <td>
-                        <?php if (count($structure->getGestionnaires())) : ?>
-                            <?php
-                            $text = "";
+                        <!-- responsables -->
+                        <?php
+                            $responsables = $structure->getResponsables();
+                            $listing = "<u><b>Responsable(s) : </b></u><br/>";
+                            foreach ($responsables as $responsable) { $listing .= $responsable->getAgent()->getDenomination() . "<br/>"; }
+                        ?>
+                        <span title="<?php echo $listing; ?>" data-toggle="tooltip" data-html="true" <?php if (empty($responsables)) echo ' style="color:darkred;" '; ?> >
+                        <?php echo count($responsables); ?> <span class="icon agent"></span>
+                        </span>
+
+                        /
+
+                        <!-- gestionnaires -->
+                        <?php
                             $gestionnaires = $structure->getGestionnaires();
-                            usort($gestionnaires, function(User $a, User $b) {return $a->getDisplayName()>$b->getDisplayName();});
-                            foreach ($structure->getGestionnaires() as $gestionnaire) $text .= $gestionnaire->getDisplayName()."\n";
-                            ?>
-                            <span title="<?php echo $text; ?>">
-                                <?php echo count($structure->getGestionnaires()); ?>
-                                <i class="fas fa-user"></i>
-                            </span>
-                        <?php else : ?>
-                            <strong style="color:darkred;">Aucun</strong>
-                        <?php endif; ?>
+                            $listing = "<u><b>Gestionnaires(s) : </b></u><br/>";
+                            foreach ($gestionnaires as $gestionnaire) { $listing .= $gestionnaire->getDisplayName() . "<br/>"; }
+                        ?>
+                        <span title="<?php echo $listing; ?>" data-toggle="tooltip" data-html="true"  >
+                        <?php echo count($gestionnaires); ?> <span class="icon agent"></span>
+                        </span>
                     </td>
                     <td>
                         <?php if ($canAfficher) : ?>
@@ -89,126 +90,17 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
             <?php endforeach; ?>
         </tbody>
     </table>
-
-<!--    <table id="temp" class="datatable table table-condensed">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th> Id </th>-->
-<!--            <th> libelle </th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--            --><?php //for ($i = 1 ; $i <= 50 ; $i++) : ?>
-<!--                <tr>-->
-<!--                    <td> --><?php //echo $i; ?><!-- </td>-->
-<!--                    <td> --><?php //echo $i; ?><!-- </td>-->
-<!--                </tr>-->
-<!--            --><?php //endfor; ?>
-<!--        </tbody>-->
-<!--    </table>-->
 </div>
 
 
 <script>
-    let loaded = false;
-    let table ;
-    let search ;
-    let page ;
-
-    let array = Array();
-
-    $(window).bind('beforeunload', function() {
-        let params = '';
-        if (search !== null && search !== undefined) {
-            params += "search=" + search;
-        }
-        if (page !== null && page !== undefined)   {
-            if (params !== '') params += "&";
-            params += "page=" + page;
-        }
-        if (table !== null && table !== undefined)   {
-            if (params !== '') params += "&";
-            params += "table=" + table;
-        }
-        if (params !== '') {
-            console.log("params : " + params);
-            history.replaceState({}, null, '?' + params);
-        }
-    });
-
-    // $(document).ready(function() {
-    //     $('.datatable').DataTable({});
-    // });
-
-    $(document).ready(function() {
-        let table = $('#structures').DataTable({});
-        let searchParams = new URLSearchParams(window.location.search);
-        let search = searchParams.get('search')
-        let page = searchParams.get('page')
-        if (/** search !== undefined && search !== "undefined" &&*/ search !== null && search !== "null") {
-            table.search(search);
-        }
-        if (/**page !== undefined && page !== "undefined" &&*/ page !== null && page !== "null") {
-            table.page(parseInt(page));
-        }
-        table.draw(false);
-
-        loaded = true;
-    });
-
-
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
-    });
-
-    $.fn.historique_recherche = function() {
-        this.each(function() {
-
-            // $(document).ready(function() {
-            //     let searchParams = new URLSearchParams(window.location.search);
-            //     let search = searchParams.get('search');
-            //     let page = searchParams.get('page')
-            //     let table = searchParams.get('table')
-            //
-            //     if (table !== null && table !== "null") {
-            //         let table_ = array[table];
-            //         console.log(table_);
-            //         if (search !== null && search !== "null") {
-            //             table_.search(search);
-            //         }
-            //         if (page !== null && page !== "null") {
-            //             table_.page(parseInt(page));
-            //         }
-            //         table_.draw(false);
-            //     }
-            // });
-
-            $(this).on('page.dt', function () {
-                if (loaded === true) {
-                    let table_  = $(this).DataTable();
-                    table  = $(this).attr('id');
-                    page   = table_.page();
-                    console.log("PAGE: " + table + " " + page);
-                }
-            });
-
-            $(this).on('search.dt', function () {
-                if (loaded === true) {
-                    let table_ = $(this).DataTable();
-                    table      = $(this).attr('id');
-                    search = table_.search();
-                    console.log("SEARCH: " + table + " " + search);
-                }
-            });
-
-            // NB : il existe aussi un event order.dt
+        $('.datatable').DataTable({
+            paging: false,
         });
-        return this;
-    }
-
-    $('table').historique_recherche();
-
+    });
 </script>
