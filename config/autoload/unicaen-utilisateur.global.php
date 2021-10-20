@@ -1,5 +1,6 @@
 <?php
 
+use Application\Provider\IdentityProvider;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenUtilisateurLdapAdapter\Service\LdapService;
@@ -30,6 +31,7 @@ return [
             'ldap'      => LdapService::class,
 //            'octopus'   => OctopusService::class,
         ],
+        'identity-provider' => IdentityProvider::class,
     ],
 
     // pour la mise a jour des champs d'historisation ...

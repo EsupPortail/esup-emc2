@@ -9,6 +9,7 @@ use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
 
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
+use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
@@ -20,27 +21,39 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 
     private $roles;
 
+
+    /**
+     * @param User|null $user
+     * @return string[]|RoleInterface[]
+     */
+    public function computeRolesAutomatiques(?User $user = null)
+    {
+        $roles = [];
+
+        if ($user === null) {
+            $user = $this->getUserService()->getConnectedUser();
+        }
+
+        $agent = $this->getAgentService()->getAgentByUser($user);
+        if ($agent !== null) {
+            $roleAgent = $this->getRoleService()->getRoleByCode('Agent');
+            $roles[] = $roleAgent;
+
+            $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
+            if ($responsabilites !== null and $responsabilites !== []) {
+                $roleResponsable = $this->getRoleService()->getRoleByCode('Responsable de structure');
+                $roles[] = $roleResponsable;
+            }
+        }
+        return $roles;
+    }
+
     /**
      * @return string[]|RoleInterface[]
      */
     public function getIdentityRoles()
     {
-        $this->roles = [];
-
-        $user = $this->getUserService()->getConnectedUser();
-        $agent = $this->getAgentService()->getAgentByUser($user);
-
-        if ($agent !== null) {
-            $roleAgent = $this->getRoleService()->getRoleByCode('Agent');
-            $this->roles[] = $roleAgent;
-        }
-
-        $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
-        if ($responsabilites !== null AND $responsabilites !== []) {
-            $roleResponsable = $this->getRoleService()->getRoleByCode('Responsable de structure');
-            $this->roles[] = $roleResponsable;
-        }
-
+        $this->roles = $this->roles = $this->computeRolesAutomatiques();
         return $this->roles;
     }
 
