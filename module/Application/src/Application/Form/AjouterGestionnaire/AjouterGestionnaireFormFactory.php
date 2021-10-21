@@ -18,14 +18,11 @@ class AjouterGestionnaireFormFactory {
         $pluginManager = $container->get('ViewHelperManager');
         /** @var Url $urlManager */
         $urlManager = $pluginManager->get('Url');
-        /** @see StructureController::rechercherAction() */
-        $urlStructure =  $urlManager->__invoke('structure/rechercher', [], [], true);
-        /** @see AgentController::rechercherGestionnaireAction() */
-        $urlGestionnaire =  $urlManager->__invoke('agent/rechercher-gestionnaire', [], [], true);
+        /** @see AgentController::rechercherAction() */
+        $urlGestionnaire =  $urlManager->__invoke('agent/rechercher', [], [], true);
 
         /** @var AjouterGestionnaireForm $form */
         $form = new AjouterGestionnaireForm();
-        $form->setUrlStructure($urlStructure);
         $form->setUrlGestionnaire($urlGestionnaire);
         return $form;
     }

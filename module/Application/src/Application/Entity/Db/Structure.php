@@ -51,7 +51,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     private $gestionnaires;
     /** @var ArrayCollection (StructureResponsable) */
     private $responsables;
-    /** @var ArrayCollection (Poste) */
+    /** @var ArrayCollection (Agent) */
     private $postes;
     /** @var ArrayCollection (AgentMissionSpecifique) */
     private $missions;
@@ -142,7 +142,7 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     /** GESTIONNAIRES ET RESPONSABLES **************************************************************************/
 
     /**
-     * @return User[]
+     * @return Agent[]
      */
     public function getGestionnaires() : array
     {
@@ -151,22 +151,22 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     }
 
     /**
-     * @param User $user
+     * @param Agent $agent
      * @return Structure
      */
-    public function addGestionnaire(User $user) : Structure
+    public function addGestionnaire(Agent $agent) : Structure
     {
-        $this->gestionnaires->add($user);
+        $this->gestionnaires->add($agent);
         return $this;
     }
 
     /**
-     * @param User $user
+     * @param Agent $agent
      * @return Structure
      */
-    public function removeGestionnaire(User $user) : Structure
+    public function removeGestionnaire(Agent $agent) : Structure
     {
-        $this->gestionnaires->removeElement($user);
+        $this->gestionnaires->removeElement($agent);
         return $this;
     }
 

@@ -167,7 +167,8 @@ class EntretienProfessionnelController extends AbstractActionController
         if ($structure !== null) {
             /** @var SearchAndSelect $element */
             $element = $form->get('responsable');
-            $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-gestionnaires', ['structure' => $structure->getId()], [], true));
+            //$element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-gestionnaires', ['structure' => $structure->getId()], [], true));
+            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['structure' => $structure->getId()], [], true));
         }
 
         /** @var Request $request */
@@ -218,7 +219,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $form->bind($entretien);
         /** @var SearchAndSelect $element */
         $element = $form->get('responsable');
-        $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-gestionnaires', ['structure' => $structure->getId()], [], true));
+        $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['structure' => $structure->getId()], [], true));
         $element = $form->get('agent');
         $element->setAttribute('readonly', true);
 
@@ -498,5 +499,17 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
+    public function findResponsablePourEntretienAction() {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $term = $this->params()->fromQuery('term');
+
+        if ($term !== null and trim($term) !== "") {
+            $agents = $this->getEntretienProfessionnelService()->findResponsablePourEntretien($structure, $term);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
+            return new JsonModel($result);
+        }
+
+        exit();
+    }
 
 }

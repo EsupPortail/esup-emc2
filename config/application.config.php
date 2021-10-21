@@ -29,6 +29,8 @@ $modules = [
     'UnicaenPrivilege',
     'UnicaenAuthentification',
     'UnicaenUtilisateurLdapAdapter',
+    'UnicaenUtilisateurOctopusAdapter',
+    'Octopus',
     'UnicaenUtilisateur',
     'UnicaenEtat',
     'UnicaenRenderer',

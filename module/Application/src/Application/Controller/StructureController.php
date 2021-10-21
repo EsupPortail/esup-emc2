@@ -182,23 +182,13 @@ class StructureController extends AbstractActionController {
         /** @var AjouterGestionnaireForm $form */
         $form = $this->getAjouterGestionnaireForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
-        /** @var SearchAndSelect $element */
-        $element = $form->get('structure');
-        /** @see StructureController::rechercherWithStructureMereAction() */
-        $element->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $gestionnaire = $this->getUserService()->getUtilisateur($data['gestionnaire']['id']);
-            $structure = $this->getStructureService()->getStructure($data['structure']['id']);
+            $gestionnaire = $this->getAgentService()->getAgent($data['gestionnaire']['id']);
             if ($gestionnaire !== null AND $structure !== null) {
-                if (!$gestionnaire->hasRole(RoleConstant::GESTIONNAIRE)) {
-                    $gestionnaireRole = $this->getRoleService()->getRoleByCode(RoleConstant::GESTIONNAIRE);
-                    if (!$gestionnaire->hasRole($gestionnaireRole)) $gestionnaire->addRole($gestionnaireRole);
-                    $this->getUserService()->update($gestionnaire);
-                }
                 $structure->addGestionnaire($gestionnaire);
                 $this->getStructureService()->update($structure);
             }
@@ -216,16 +206,10 @@ class StructureController extends AbstractActionController {
     public function retirerGestionnaireAction()
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $gestionnaire = $this->getUserService()->getUtilisateur($this->params()->fromRoute('gestionnaire'));
+        $gestionnaire = $this->getAgentService()->getAgent($this->params()->fromRoute('gestionnaire'));
 
         $structure->removeGestionnaire($gestionnaire);
         $this->getStructureService()->update($structure);
-
-        $structures = $this->getStructureService()->getStructuresByGestionnaire($gestionnaire);
-        if (empty($structures)) {
-            $role = $this->getRoleService()->getRoleByCode(RoleConstant::GESTIONNAIRE);
-            $this->getUserService()->removeRole($gestionnaire, $role);
-        }
 
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }

@@ -714,4 +714,22 @@ class AgentService {
         return $result;
     }
 
+    /**
+     * @param Agent|null $agent
+     * @return Structure[]
+     */
+    public function getGestionnaireStructure(?Agent $agent) : ?array
+    {
+        if ($agent === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.gestionnaires', 'gestionnaire')
+            ->andWhere('gestionnaire.id = :agentId')
+            ->setParameter('agentId', $agent->getId())
+            //->andWhere('structure.deleted_on IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
 }

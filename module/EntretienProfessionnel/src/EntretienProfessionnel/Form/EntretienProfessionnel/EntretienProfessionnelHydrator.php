@@ -38,7 +38,8 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $reponsable = $this->getUserService()->getUtilisateur($data['responsable']['id']);
+//        $reponsable = $this->getUserService()->getUtilisateur($data['responsable']['id']);
+        $reponsable = $this->getAgentService()->getAgent($data['responsable']['id'])->getUtilisateur();
         $agent      = $this->getAgentService()->getAgent($data['agent']['id']);
         $date_day   = (isset($data['date_entretien']) AND trim($data['date_entretien']) !== "")?trim($data['date_entretien']):null;
         $date_time  = (isset($data['heure_entretien']) AND trim($data['heure_entretien']) !== "")?trim($data['heure_entretien']):null;

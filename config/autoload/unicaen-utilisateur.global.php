@@ -4,6 +4,8 @@ use Application\Provider\IdentityProvider;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenUtilisateurLdapAdapter\Service\LdapService;
+use UnicaenUtilisateurOctopusAdapter\Service\OctopusService;
+
 //use UnicaenUtilisateurOctopusAdapter\Service\OctopusService;
 
 return [
@@ -28,8 +30,8 @@ return [
     'unicaen-utilisateur' => [
         'recherche-individu' => [
             'app'       => UserService::class,
-            'ldap'      => LdapService::class,
-//            'octopus'   => OctopusService::class,
+//            'ldap'      => LdapService::class,
+            'octopus'   => OctopusService::class,
         ],
         'identity-provider' => IdentityProvider::class,
     ],

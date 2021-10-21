@@ -3,7 +3,6 @@
 namespace Application\Provider;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
@@ -43,6 +42,12 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
             if ($responsabilites !== null and $responsabilites !== []) {
                 $roleResponsable = $this->getRoleService()->getRoleByCode('Responsable de structure');
                 $roles[] = $roleResponsable;
+            }
+
+            $gestions = $this->getAgentService()->getGestionnaireStructure($agent);
+            if ($gestions !== null and $gestions !== []) {
+                $roleGestionnaire = $this->getRoleService()->getRoleByCode('Gestionnaire de structure');
+                $roles[] = $roleGestionnaire;
             }
         }
         return $roles;

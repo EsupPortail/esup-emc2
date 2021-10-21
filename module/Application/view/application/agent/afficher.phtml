@@ -86,8 +86,8 @@ if ($agent !== null) {
             </li>
             <li>
                 <a href="#fiches" aria-controls="fiches" role="tab" data-toggle="tabz">
-                    Fiches de poste, <br/>
-                    missions spécifiques
+<!--                    Fiches de poste, <br/>-->
+                    Missions <br/>spécifiques
                 </a>
             </li>
             <li>
@@ -132,7 +132,7 @@ if ($agent !== null) {
                 <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'affectations' => $affectations, 'statuts' => $statuts, 'grades' => $grades, 'responsables' => $responsables, 'quotite' => $quotite,  'canInfoSource' => $canInfoSource]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>
+                <?php //echo $this->partial('partial/fiche-poste', ['fichespostes' => $fichespostes], []); ?>
                 <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits, "options" => $options['actions']], []); ?>
             </div>
             <div id="entretiens" class="tab-pane " role="tabpanel">

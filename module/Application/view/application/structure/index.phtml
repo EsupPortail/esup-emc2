@@ -72,7 +72,7 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                         <?php
                             $gestionnaires = $structure->getGestionnaires();
                             $listing = "<u><b>Gestionnaires(s) : </b></u><br/>";
-                            foreach ($gestionnaires as $gestionnaire) { $listing .= $gestionnaire->getDisplayName() . "<br/>"; }
+                            foreach ($gestionnaires as $gestionnaire) { $listing .= $gestionnaire->getDenomination() . "<br/>"; }
                         ?>
                         <span title="<?php echo $listing; ?>" data-toggle="tooltip" data-html="true"  >
                         <?php echo count($gestionnaires); ?> <span class="icon agent"></span>

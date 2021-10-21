@@ -11,8 +11,6 @@ class AjouterGestionnaireForm extends Form {
 
     /** @var string */
     private $urlGestionnaire;
-    /** @var string */
-    private $urlStructure;
 
     /**
      * @param string $urlGestionnaire
@@ -21,16 +19,6 @@ class AjouterGestionnaireForm extends Form {
     public function setUrlGestionnaire(string $urlGestionnaire)
     {
         $this->urlGestionnaire = $urlGestionnaire;
-        return $this;
-    }
-
-    /**
-     * @param string $urlStructure
-     * @return AjouterGestionnaireForm
-     */
-    public function setUrlStructure(string $urlStructure)
-    {
-        $this->urlStructure = $urlStructure;
         return $this;
     }
 
@@ -46,17 +34,6 @@ class AjouterGestionnaireForm extends Form {
                 'placeholder' => "Agent à ajouter comme gestionnaire...",
             ]);
         $this->add($gestionnaire);
-
-        // structure
-        $structure = new SearchAndSelect('structure', ['label' => "Service/composante/direction d'affectation * :"]);
-        $structure
-            ->setAutocompleteSource($this->urlStructure)
-            ->setSelectionRequired(true)
-            ->setAttributes([
-                'id' => 'structure',
-                'placeholder' => "Nom de la structure ...",
-            ]);
-        $this->add($structure);
 
         //Submit
         $this->add([
@@ -76,7 +53,6 @@ class AjouterGestionnaireForm extends Form {
 
         $this->setInputFilter((new Factory())->createInputFilter([
             'gestionnaire'      => [ 'required' => true,  ],
-            'structure'         => [ 'required' => true, ],
         ]));
     }
 

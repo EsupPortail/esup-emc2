@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
+use Application\Entity\Db\StructureResponsable;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\DecoratorTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
@@ -19,6 +20,7 @@ use UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class EntretienProfessionnelService {
     use GestionEntiteHistorisationTrait;
@@ -150,7 +152,7 @@ class EntretienProfessionnelService {
      * @param string $texte
      * @return User[]
      */
-    public function findResponsableByTerm(string $texte)
+    public function findResponsableEntretienByTerm(string $texte)
     {
             $qb = $this->createQueryBuilder()
                 ->andWhere("LOWER(responsable.displayName) LIKE :critere")
@@ -378,5 +380,31 @@ class EntretienProfessionnelService {
         }
 
         return $documents;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param string $term
+     * @return Agent[]
+     */
+    public function findResponsablePourEntretien(Structure $structure, string $term) : array
+    {
+        // recuperation des responsable de structure
+        $result_resp = array_map(
+            function (StructureResponsable $a) { return $a->getAgent(); },
+            $structure->getResponsables()
+        );
+        $result_resp = array_filter($result_resp, function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
+        // todo /!\ et les délégués (gestionnaires)
+        $result_gest = $structure->getGestionnaires();
+
+        $result = array_merge($result_resp, $result_gest);
+        $result = $result_resp;
+
+        if ($structure->getParent() AND $structure->getParent() !== $structure) {
+            $parent = $this->findResponsablePourEntretien($structure->getParent(), $term);
+            $result = array_merge($result, $parent);
+        }
+        return $result;
     }
 }

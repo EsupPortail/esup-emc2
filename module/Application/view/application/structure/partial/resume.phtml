@@ -105,14 +105,14 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
         <ul>
             <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
                 <li>
-                    <?php echo $gestionnaire->getDisplayName(); ?>
+                    <?php echo $gestionnaire->getDenomination(); ?>
                     <?php if ($canEditerGestionnaire) : ?>
                         <a
                             <?php /** @see \Application\Controller\StructureController::retirerGestionnaireAction() */ ?>
                             href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>"
                         >
                             <span class="icon detruire"  data-toggle="tooltip" data-html="true"
-                                  title="Supprimer la gestion de structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='highlight user'><?php echo $gestionnaire->getDisplayName(); ?></span>">
+                                  title="Supprimer la gestion de structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='highlight user'><?php echo $gestionnaire->getDenomination(); ?></span>">
                             </span></a>
                     <?php endif; ?>
                 </li>

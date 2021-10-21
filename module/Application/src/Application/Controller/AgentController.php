@@ -375,16 +375,6 @@ class AgentController extends AbstractActionController
         exit;
     }
 
-    public function rechercherGestionnaireAction()
-    {
-        if (($term = $this->params()->fromQuery('term'))) {
-            $gestionnaires = $this->getUserService()->findByTerm($term);
-            $result = $this->getUserService()->formatUserJSON($gestionnaires);
-            return new JsonModel($result);
-        }
-        exit;
-    }
-
     /** PARTIE ASSOCIEE AUX PPP, STAGE, TUTORAT, ACCOMPAGNEMENT *******************************************************/
 
     public function ajouterPppAction()

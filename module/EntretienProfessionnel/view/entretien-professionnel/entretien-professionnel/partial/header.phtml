@@ -14,8 +14,15 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+    use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
-$sursis = $entretien->getSursisActif();
+    $sursis = $entretien->getSursisActif();
+
+$canAfficherInformationMetier = (
+        $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE))
+        OR
+        $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH))
+);
 ?>
 
 <div class="row">
@@ -36,41 +43,46 @@ $sursis = $entretien->getSursisActif();
                             <?php echo $agent->getDenomination(); ?>
                         </a>
                     </dd>
-                    <dt> Fiche(s) de poste</dt>
-                    <dd>
-                        <?php if ($ficheposte !== null) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                                href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
-                                target="_blank"
-                            >
-                                Fiche de poste #<?php echo $ficheposte->getId();?>
-                            </a>
-                        <?php else : ?>
-                            <span style="color: darkred;"><span class="icon attention"></span> Aucune fiche de poste</span>
-                        <?php endif; ?>
-                    </dd>
-                    <dt> Fiche(s) métier(s)</dt>
-                    <dd>
-                        <?php if (!empty($fichesmetiers)) : ?>
-                            <?php $first = true; foreach ($fichesmetiers as $fichemetier) : ?>
-                                <?php if ($first) $first=false; else echo '<br/>'; ?>
+                    <?php if ($canAfficherInformationMetier) : ?>
+
+                        <dt> Fiche(s) de poste</dt>
+                        <dd>
+                            <?php if ($ficheposte !== null) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */ ?>
-                                    href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fichemetier->getId()], [], true); ?>"
+                                    <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+                                    href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
                                     target="_blank"
                                 >
-                                    <?php
-                                        $libelle = "Fiche metier #".$fichemetier->getId();
-                                        if ($fichemetier->getMetier()) $libelle = $fichemetier->getMetier()->getLibelle();
-                                    ?>
-                                    <?php echo $libelle; ?>
+                                    Fiche de poste #<?php echo $ficheposte->getId();?>
                                 </a>
-                            <?php endforeach; ?>
-                        <?php else : ?>
-                            <span style="color: darkred;"><span class="icon attention"></span> Aucune fiche métier </span>
-                        <?php endif; ?>
-                    </dd>
+                            <?php else : ?>
+                                <span style="color: darkred;"><span class="icon attention"></span> Aucune fiche de poste</span>
+                            <?php endif; ?>
+                        </dd>
+                        <dt> Fiche(s) métier(s)</dt>
+                        <dd>
+                            <?php if (!empty($fichesmetiers)) : ?>
+                                <?php $first = true; foreach ($fichesmetiers as $fichemetier) : ?>
+                                    <?php if ($first) $first=false; else echo '<br/>'; ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */ ?>
+                                        href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fichemetier->getId()], [], true); ?>"
+                                        target="_blank"
+                                    >
+                                        <?php
+                                            $libelle = "Fiche metier #".$fichemetier->getId();
+                                            if ($fichemetier->getMetier()) $libelle = $fichemetier->getMetier()->getLibelle();
+                                        ?>
+                                        <?php echo $libelle; ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <span style="color: darkred;"><span class="icon attention"></span> Aucune fiche métier </span>
+                            <?php endif; ?>
+                        </dd>
+
+                    <?php endif; ?>
+
                     <dt> Structure(s) </dt>
                     <dd>
                         <?php

@@ -58,10 +58,16 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::DRH:
                         return true;
                     case RoleConstant::PERSONNEL:
-                        return $entity->getAgent()->getUtilisateur() === $user;
+                        if ($entity->getAgent()->getUtilisateur() !== $user) return false;
+                        // TODO DEBUT /!\ modification ad'hoc suite au demande du DRH /!\
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION) return false;
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) return false;
+                        // TODO FIN
+                        return true;
                     case RoleConstant::GESTIONNAIRE:
+                        return  $entity->getResponsable() === $user;
                     case RoleConstant::RESPONSABLE:
-                        return $entity->getResponsable() === $user;
+                        return $isResponsable;
                     default:
                         return false;
                 }
@@ -72,8 +78,9 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::DRH:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
+                        return  $entity->getResponsable() === $user;
                     case RoleConstant::RESPONSABLE:
-                        return $entity->getResponsable() === $user;
+                        return $isResponsable;
                     default:
                         return false;
             }

@@ -20,7 +20,8 @@
     "unicaen/ldap": "^3.0",
     "unicaen/db-import": "3.0",
     "graphp/graphviz": "^0.2.2",
-    "curl/curl": "^2.3"
+    "curl/curl": "^2.3",
+    "unicaen/octopus": "dev-master"
   },
   "require-dev": {
     "unicaen/code": "^1.0",

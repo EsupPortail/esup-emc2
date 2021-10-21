@@ -78,6 +78,7 @@ return [
                     'action' => [
                         'creer',
                         'modifier',
+                        'find-responsable-pour-entretien',
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
@@ -130,6 +131,17 @@ return [
                     ],
                 ],
                 'child_routes' => [
+                    'find-responsable-pour-entretien' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/find-responsable-pour-entretien[/:structure]',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'find-responsable-pour-entretien',
+                            ],
+                        ],
+                    ],
                     'accepter-entretien' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
