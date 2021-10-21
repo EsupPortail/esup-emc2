@@ -16,6 +16,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Application\Service\StructureAgentForce\StructureAgentForceService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
+use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
@@ -30,6 +31,7 @@ class StructureControllerFactory {
          * @var AgentService $agentService
          * @var EntretienProfessionnelService $entretienService
          * @var CampagneService $campagneService
+         * @var DelegueService $delegueService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var FormationInstanceInscritService $formationInstanceInscritService
@@ -44,6 +46,7 @@ class StructureControllerFactory {
         $agentService = $container->get(AgentService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
+        $delegueService = $container->get(DelegueService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
@@ -72,6 +75,7 @@ class StructureControllerFactory {
         $controller->setAgentService($agentService);
         $controller->setEntretienProfessionnelService($entretienService);
         $controller->setCampagneService($campagneService);
+        $controller->setDelegueService($delegueService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);

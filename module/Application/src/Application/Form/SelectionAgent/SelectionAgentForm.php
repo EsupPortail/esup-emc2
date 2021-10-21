@@ -31,7 +31,7 @@ class SelectionAgentForm extends Form {
             ->setSelectionRequired(true)
             ->setAttributes([
                 'id' => 'agent',
-                'placeholder' => "Agent effectuant la mission ...",
+                'placeholder' => "Dénomination de l'agent ...",
             ]);
         $this->add($agent);
 
@@ -40,7 +40,7 @@ class SelectionAgentForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer affectation',
+                'label' => '<i class="fas fa-save"></i> Enregistrer ',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

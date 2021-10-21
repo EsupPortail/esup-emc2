@@ -3,7 +3,9 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\StructurePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 
@@ -11,6 +13,7 @@ use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
  * @var Campagne $campagne
  * @var Structure $structure
  * @var Agent[] $agents
+ * @var Delegue[] $delegues
  */
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
@@ -23,6 +26,10 @@ $canDetruireEntretien = $this->isAllowed(EntretienproPrivileges::getResourceId(E
 $canSursisAjouter = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_AJOUTER));
 $canSursisModifier = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_MODIFIER));
 $canSursisSupprimer = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_SUPPRIMER));
+
+$canGererDelegue = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
+
+$deleguesCampagne = array_filter($delegues, function (Delegue $a) use ($campagne) { return $a->getCampagne() === $campagne;});
 
 $complete = [];
 $encours = [];
@@ -56,22 +63,54 @@ $enCours = $campagne->estEnCours();
 
 <div class="row">
     <div class="col-md-6">
-        <dl class="dl-horizontal">
-    <dt> Année </dt>
-    <dd> <?php echo $campagne->getAnnee(); ?> </dd>
-    <dt> Début de la campagne </dt>
-    <dd> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?></dd>
-    <dt> Fin de la campagne </dt>
-    <dd> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
-    <dt> En cours </dt>
-    <dd>
-        <?php if ($enCours) : ?>
-            <span style="color:darkgreen;"><span class="icon ok"></span>Oui</span>
+            <dl class="dl-horizontal">
+        <dt> Année </dt>
+        <dd> <?php echo $campagne->getAnnee(); ?> </dd>
+        <dt> Début de la campagne </dt>
+        <dd> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?></dd>
+        <dt> Fin de la campagne </dt>
+        <dd> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
+        <dt> En cours </dt>
+        <dd>
+            <?php if ($enCours) : ?>
+                <span style="color:darkgreen;"><span class="icon ok"></span>Oui</span>
+            <?php else : ?>
+                <span style="color:darkred;"><span class="icon ko"></span>Non</span>
+            <?php endif; ?>
+        </dd>
+    </dl>
+
+        <h3>Délégué&middot;e&middot;s pour la campagne
+            <span class="badge"><?php echo count($deleguesCampagne); ?></span>
+            <?php /** @see \EntretienProfessionnel\Controller\DelegueController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('entretien-professionnel/ajouter-delegue', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true); ?>"
+               data-toggle="tooltip" data-html="true" class="ajax-modal" data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+            </a>
+        </h3>
+
+        <?php if(empty($deleguesCampagne)) : ?>
+            <i>Aucun délégué pour la campagne</i>i>
         <?php else : ?>
-            <span style="color:darkred;"><span class="icon ko"></span>Non</span>
+            <ul>
+                <?php foreach ($deleguesCampagne as $delegue) : ?>
+                    <li>
+                        <span title="<?php echo $delegue->getDescription(); ?>" data-toggle="tooltip" data-html="true">
+                            <?php echo $delegue->getAgent()->getDenomination(); ?>
+                        </span>
+                        <?php if ($canGererDelegue) : ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\DelegueController::retirerAction() */ ?>
+                            <a href="<?php echo $this->url('entretien-professionnel/retirer-delegue', ['delegue' => $delegue->getId()], [], true); ?>">
+                                <span class="icon detruire"></span>
+                            </a>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         <?php endif; ?>
-    </dd>
-</dl>
+
+
     </div>
     <div class="col-md-6">
         <h3> Progression de la campagne</h3>
