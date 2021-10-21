@@ -2,8 +2,10 @@
 
 namespace Application\Provider;
 
+use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
+use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
@@ -41,19 +43,19 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 
             $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
             if ($responsabilites !== null and $responsabilites !== []) {
-                $roleResponsable = $this->getRoleService()->getRoleByCode('Responsable de structure');
+                $roleResponsable = $this->getRoleService()->getRoleByCode(Structure::ROLE_RESPONSABLE);
                 $roles[] = $roleResponsable;
             }
 
             $gestions = $this->getAgentService()->getGestionnaireStructure($agent);
             if ($gestions !== null and $gestions !== []) {
-                $roleGestionnaire = $this->getRoleService()->getRoleByCode('Gestionnaire de structure');
+                $roleGestionnaire = $this->getRoleService()->getRoleByCode(Structure::ROLE_GESTIONNAIRE);
                 $roles[] = $roleGestionnaire;
             }
 
             $deleguations = $this->getDelegueService()->getDeleguesByAgent($agent);
             if ($deleguations !== null and $deleguations !== []) {
-                $roleDelegue = $this->getRoleService()->getRoleByCode('Délégué·e pour entretien professionnel');
+                $roleDelegue = $this->getRoleService()->getRoleByCode(Delegue::ROLE_DELEGUE);
                 $roles[] = $roleDelegue;
             }
 

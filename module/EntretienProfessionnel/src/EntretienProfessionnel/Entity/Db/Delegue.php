@@ -10,6 +10,9 @@ use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class Delegue implements HistoriqueAwareInterface, HasDescriptionInterface {
+
+    const ROLE_DELEGUE = 'Délégué·e pour entretien professionnel';
+
     use HistoriqueAwareTrait;
     use HasDescriptionTrait;
 

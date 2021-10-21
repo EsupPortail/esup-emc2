@@ -19,6 +19,9 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     use SynchroAwareTrait;
     use StructureMacroTrait;
 
+    const ROLE_RESPONSABLE   = 'Responsable de structure';
+    const ROLE_GESTIONNAIRE  = 'Gestionnaire de structure';
+
     public function getResourceId()
     {
         return 'Structure';
