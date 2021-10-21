@@ -21,7 +21,7 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'responsable' => $object->getResponsable(),
+            'responsable' => ($object->getResponsable())?['id' => $object->getResponsable()->getId(), 'label' => $object->getResponsable()->getDenomination()]:null,
             'agent' => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
             'date_entretien'  => ($object->getDateEntretien())?$object->getDateEntretien()->format('d/m/Y'):null,
             'heure_entretien' => ($object->getDateEntretien())?$object->getDateEntretien()->format('H:i'):null,
@@ -38,8 +38,7 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-//        $reponsable = $this->getUserService()->getUtilisateur($data['responsable']['id']);
-        $reponsable = $this->getAgentService()->getAgent($data['responsable']['id'])->getUtilisateur();
+        $reponsable = $this->getAgentService()->getAgent($data['responsable']['id']);
         $agent      = $this->getAgentService()->getAgent($data['agent']['id']);
         $date_day   = (isset($data['date_entretien']) AND trim($data['date_entretien']) !== "")?trim($data['date_entretien']):null;
         $date_time  = (isset($data['heure_entretien']) AND trim($data['heure_entretien']) !== "")?trim($data['heure_entretien']):null;

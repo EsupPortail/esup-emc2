@@ -114,10 +114,10 @@ class CampagneService {
     }
 
     /**
-     * @param $id
+     * @param int|null $id
      * @return Campagne
      */
-    public function getCampagne($id) : Campagne
+    public function getCampagne(?int $id) : ?Campagne
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('campagne.id = :id')
@@ -134,9 +134,9 @@ class CampagneService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return Campagne
+     * @return Campagne|null
      */
-    public function getRequestedCampagne(AbstractActionController $controller, string $param = "campagne") : Campagne
+    public function getRequestedCampagne(AbstractActionController $controller, string $param = "campagne") : ?Campagne
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCampagne($id);

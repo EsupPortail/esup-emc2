@@ -12,7 +12,9 @@ use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use UnicaenApp\Exception\RuntimeException;
@@ -20,11 +22,11 @@ use UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 
 class EntretienProfessionnelService {
     use GestionEntiteHistorisationTrait;
     use ConfigurationServiceAwareTrait;
+    use DelegueServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use DecoratorTrait;
@@ -395,16 +397,26 @@ class EntretienProfessionnelService {
             $structure->getResponsables()
         );
         $result_resp = array_filter($result_resp, function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
-        // todo /!\ et les délégués (gestionnaires)
-        $result_gest = $structure->getGestionnaires();
-
-        $result = array_merge($result_resp, $result_gest);
-        $result = $result_resp;
 
         if ($structure->getParent() AND $structure->getParent() !== $structure) {
             $parent = $this->findResponsablePourEntretien($structure->getParent(), $term);
-            $result = array_merge($result, $parent);
+            $result_resp = array_merge($result_resp, $parent);
         }
-        return $result;
+        return $result_resp;
+    }
+
+    public function findDeleguePourEntretien(?Structure $structure, Campagne $campagne, $term)
+    {
+        $result_dele = array_map(
+            function (Delegue $a) { return $a->getAgent(); },
+            $this->getDelegueService()->getDeleguesByStructureAndCampagne($structure, $campagne)
+        );
+        $result_dele = array_filter($result_dele,function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
+
+        if ($structure->getParent() AND $structure->getParent() !== $structure) {
+            $parent = $this->findDeleguePourEntretien($structure->getParent(), $campagne, $term);
+            $result_dele = array_merge($result_dele, $parent);
+        }
+        return $result_dele;
     }
 }

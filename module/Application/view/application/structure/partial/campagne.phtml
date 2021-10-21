@@ -164,7 +164,7 @@ $enCours = $campagne->estEnCours();
     <?php foreach ($complete as $denomination => $entretien): ?>
         <tr>
             <td> <?php echo $entretien->getAgent()->getDenomination(); ?></td>
-            <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
+            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
             <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
             <td>
                 <?php echo $this->etatbadge($entretien->getEtat()); ?>
@@ -212,7 +212,7 @@ $enCours = $campagne->estEnCours();
     <?php foreach ($encours as $denomination => $entretien): ?>
         <tr>
             <td> <?php echo $entretien->getAgent()->getDenomination(); ?></td>
-            <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
+            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
             <td>
                 <?php $sursis = $entretien->getSursisActif(); ?>
                 <?php if ($sursis === null) : ?>

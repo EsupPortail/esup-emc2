@@ -31,13 +31,13 @@ class EntretienProfessionnelControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var CampagneService $campagneService
          * @var RenduService $renduService
          * @var UserService $userService
          * @var ConfigurationService $configurationService
          * @var EntretienProfessionnelService $entretienProfesionnelService
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
-         * @var CampagneService $campagneService
          * @var ObservationService $observationService
          * @var FormulaireService $formulaireService
          * @var FormulaireInstanceService $formulaireInstanceService

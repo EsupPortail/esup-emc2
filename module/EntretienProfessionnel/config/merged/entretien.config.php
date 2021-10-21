@@ -135,7 +135,7 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/find-responsable-pour-entretien[/:structure]',
+                            'route'    => '/find-responsable-pour-entretien[/:structure/:campagne]',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'find-responsable-pour-entretien',

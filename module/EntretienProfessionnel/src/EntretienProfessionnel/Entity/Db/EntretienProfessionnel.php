@@ -44,7 +44,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private $id;
     /** @var Agent */
     private $agent;
-    /** @var User */
+    /** @var Agent */
     private $responsable;
     /** @var Campagne */
     private $campagne;
@@ -100,18 +100,18 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @return User
+     * @return Agent
      */
-    public function getResponsable() : ?User
+    public function getResponsable() : ?Agent
     {
         return $this->responsable;
     }
 
     /**
-     * @param User|null $responsable
+     * @param Agent|null $responsable
      * @return EntretienProfessionnel
      */
-    public function setResponsable(?User $responsable) : EntretienProfessionnel
+    public function setResponsable(?Agent $responsable) : EntretienProfessionnel
     {
         $this->responsable = $responsable;
         return $this;

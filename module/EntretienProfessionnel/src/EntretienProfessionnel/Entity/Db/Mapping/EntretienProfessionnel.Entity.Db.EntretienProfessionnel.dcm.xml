@@ -10,8 +10,8 @@
             <join-column name="agent" referenced-column-name="c_individu"/>
         </many-to-one>
 
-        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="responsable">
-            <join-column name="responsable_id" referenced-column-name="id"/>
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="responsable">
+            <join-column name="responsable_id" referenced-column-name="c_individu"/>
         </many-to-one>
 
         <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne"  field="campagne">
