@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Service\Delegue;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -136,6 +137,16 @@ class DelegueService {
             ->setParameter('structure', $structure)
             ->andWhere('delegue.campagne = :campagne')
             ->setParameter('campagne', $campagne)
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getDeleguesByAgent(Agent $agent) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('delegue.agent = :agent')
+            ->setParameter('agent', $agent)
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
         return $result;

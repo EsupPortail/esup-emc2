@@ -4,6 +4,7 @@ namespace Application\Provider;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
+use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
 
@@ -16,10 +17,10 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 {
     use AgentServiceAwareTrait;
     use RoleServiceAwareTrait;
+    use DelegueServiceAwareTrait;
     use UserServiceAwareTrait;
 
     private $roles;
-
 
     /**
      * @param User|null $user
@@ -49,6 +50,13 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
                 $roleGestionnaire = $this->getRoleService()->getRoleByCode('Gestionnaire de structure');
                 $roles[] = $roleGestionnaire;
             }
+
+            $deleguations = $this->getDelegueService()->getDeleguesByAgent($agent);
+            if ($deleguations !== null and $deleguations !== []) {
+                $roleDelegue = $this->getRoleService()->getRoleByCode('Délégué·e pour entretien professionnel');
+                $roles[] = $roleDelegue;
+            }
+
         }
         return $roles;
     }
