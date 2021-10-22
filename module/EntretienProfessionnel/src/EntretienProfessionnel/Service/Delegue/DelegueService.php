@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -83,6 +84,17 @@ class DelegueService {
     }
 
     /**
+     * @return Delegue[]
+     */
+    public function getDelegues() : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param int|null $id
      * @return Delegue|null
      */
@@ -150,5 +162,20 @@ class DelegueService {
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsersInDelegue() : array
+    {
+        $delegues = $this->getDelegues();
+
+        $users = [];
+        foreach ($delegues as $delegue) {
+            $user = $delegue->getAgent()->getUtilisateur();
+            if ($user !== null) $users[$user->getId()] = $user;
+        }
+        return $users;
     }
 }

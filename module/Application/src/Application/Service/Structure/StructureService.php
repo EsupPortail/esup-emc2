@@ -5,6 +5,7 @@ namespace Application\Service\Structure;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
+use Application\Entity\Db\StructureResponsable;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -325,5 +326,47 @@ class StructureService
             $options[$structure->getId()] = "[".$structure->getLibelleCourt()."] ".$structure->getLibelleLong();
         }
         return $options;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsersInResponsables() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder("sr")
+            ->join('sr.agent', 'agent')->addSelect('agent')
+            ->orderBy('agent.nomUsuel, agent.prenom' , 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        /** @var StructureResponsable[] $result */
+        $users = [];
+        foreach ($result as $responsable) {
+            $user = $responsable->getAgent()->getUtilisateur();
+            if ($user !== null) $users[$user->getId()] = $user;
+        }
+        return $users;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsersInGestionnaires() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder("s")
+            ->join('s.gestionnaires', 'gestionnaire')->addSelect('gestionnaire')
+            ->orderBy('gestionnaire.nomUsuel, gestionnaire.prenom' , 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        /** @var Structure[] $result */
+        $users = [];
+        foreach ($result as $structure) {
+            foreach ($structure->getGestionnaires() as $gestionnaire) {
+                $user = $gestionnaire->getUtilisateur();
+                if ($user !== null) $users[$user->getId()] = $user;
+            }
+        }
+        return $users;
     }
 }

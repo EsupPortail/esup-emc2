@@ -4,9 +4,12 @@ namespace Application\Provider;
 
 use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
 use EntretienProfessionnel\Entity\Db\Delegue;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
 
@@ -18,17 +21,41 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class IdentityProvider implements ProviderInterface, ChainableProvider
 {
     use AgentServiceAwareTrait;
-    use RoleServiceAwareTrait;
     use DelegueServiceAwareTrait;
+    use RoleServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
     private $roles;
 
     /**
+     * @param string $code
+     * @return User[]|null
+     */
+    public function computeUsersAutomatiques(string $code) : ?array
+    {
+        switch ($code) {
+            case 'Agent' :
+                $user = $this->getAgentService()->getUsersInAgent();
+                return $user;
+            case Structure::ROLE_RESPONSABLE :
+                $user = $this->getStructureService()->getUsersInResponsables();
+                return $user;
+            case Structure::ROLE_GESTIONNAIRE :
+                $user = $this->getStructureService()->getUsersInGestionnaires();
+                return $user;
+            case Delegue::ROLE_DELEGUE :
+                $user = $this->getDelegueService()->getUsersInDelegue();
+                return $user;
+        }
+        return null;
+    }
+
+    /**
      * @param User|null $user
      * @return string[]|RoleInterface[]
      */
-    public function computeRolesAutomatiques(?User $user = null)
+    public function computeRolesAutomatiques(?User $user = null) : array
     {
         $roles = [];
 

@@ -732,4 +732,23 @@ class AgentService {
         return $result;
     }
 
+    /**
+     * @return User[]
+     */
+    public function getUsersInAgent() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->join('agent.utilisateur', 'utilisateur')
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $users = [];
+        /** @var Agent $item */
+        foreach ($result as $item) {
+            $users[] = $item->getUtilisateur();
+        }
+        return $users;
+    }
+
 }
