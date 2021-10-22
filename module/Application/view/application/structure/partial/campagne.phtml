@@ -82,12 +82,14 @@ $enCours = $campagne->estEnCours();
 
         <h3>Délégué&middot;e&middot;s pour la campagne
             <span class="badge"><?php echo count($deleguesCampagne); ?></span>
-            <?php /** @see \EntretienProfessionnel\Controller\DelegueController::ajouterAction() */ ?>
-            <a href="<?php echo $this->url('entretien-professionnel/ajouter-delegue', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true); ?>"
-               data-toggle="tooltip" data-html="true" class="ajax-modal" data-event="modification"
-            >
-                <span class="icon ajouter"></span>
-            </a>
+            <?php if ($canGererDelegue AND $enCours) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\DelegueController::ajouterAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/ajouter-delegue', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true); ?>"
+                   data-toggle="tooltip" data-html="true" class="ajax-modal" data-event="modification"
+                >
+                    <span class="icon ajouter"></span>
+                </a>
+            <?php endif; ?>
         </h3>
 
         <?php if(empty($deleguesCampagne)) : ?>
@@ -99,7 +101,7 @@ $enCours = $campagne->estEnCours();
                         <span title="<?php echo $delegue->getDescription(); ?>" data-toggle="tooltip" data-html="true">
                             <?php echo $delegue->getAgent()->getDenomination(); ?>
                         </span>
-                        <?php if ($canGererDelegue) : ?>
+                        <?php if ($canGererDelegue AND $enCours) : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\DelegueController::retirerAction() */ ?>
                             <a href="<?php echo $this->url('entretien-professionnel/retirer-delegue', ['delegue' => $delegue->getId()], [], true); ?>">
                                 <span class="icon detruire"></span>
