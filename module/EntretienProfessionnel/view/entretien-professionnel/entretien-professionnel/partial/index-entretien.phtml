@@ -58,7 +58,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
                 <?php echo $entretien->getAgent()->getPrenom(); ?>
                 <?php echo $entretien->getAgent()->getNomUsuel(); ?>
             </td>
-            <td> <?php echo $entretien->getResponsable()->getDisplayName(); ?> </td>
+            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
             <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
             <td> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
             <td>

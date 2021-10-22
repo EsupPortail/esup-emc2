@@ -475,7 +475,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return "Aucun agent donné";
     }
     public function toStringResponsable() : string {
-        if ($this->getResponsable() !== null) return $this->getResponsable()->getDisplayName();
+        if ($this->getResponsable() !== null) return $this->getResponsable()->getDenomination();
         return "Aucun responsable d'entretien donné";
     }
 
