@@ -41,12 +41,13 @@ $modules = [
     'UnicaenParametre',
     'UnicaenValidation',
     'Autoform',
-    'Fichier',
     'Indicateur',
-    'Formation',
     'EntretienProfessionnel',
     'Metier',
+    'Formation',
+    'Fichier',
     'Application',
+
 //    'ZendDeveloperTools',
 
 ];

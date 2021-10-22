@@ -2,9 +2,9 @@
 
 namespace Formation;
 
-use Formation\Controller\FormationController;
 use Formation\Controller\ImportationLagafController;
 use Formation\Controller\ImportationLagafControllerFactory;
+use Formation\Provider\Privilege\LagafPrivileges;
 use Formation\Service\Stagiaire\StagiaireService;
 use Formation\Service\Stagiaire\StagiaireServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -27,8 +27,8 @@ return [
                         'presence',
                         'element',
                     ],
-                    'roles' => [
-                        "Administrateur technique",
+                    'privileges' => [
+                        LagafPrivileges::IMPORT_LAGAF,
                     ],
                 ],
             ],

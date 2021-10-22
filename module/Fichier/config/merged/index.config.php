@@ -4,6 +4,7 @@ namespace Application;
 
 use Fichier\Controller\IndexController;
 use Fichier\Controller\IndexControllerFactory;
+use Fichier\Provider\Privilege\FichierPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -17,8 +18,8 @@ return [
                     'action' => [
                         'index',
                     ],
-                    'roles' => [
-                        'Administrateur technique',
+                    'privileges' => [
+                        FichierPrivileges::FICHIER_INDEX,
                     ],
                 ],
             ],

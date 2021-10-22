@@ -47,8 +47,8 @@ return [
                         'valider-responsable',
                         'valider-drh',
                     ],
-                    'roles' => [
-                        'Administrateur technique',
+                    'privileges' => [
+                        FormationinstanceinscritPrivileges::FORMATIONINSTANCEINSCRIT_MODIFIER,
                     ],
                 ],
             ],
