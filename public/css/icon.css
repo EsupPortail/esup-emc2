@@ -313,3 +313,12 @@ span.icon.convoquer:before {
 span.icon.cloturer:before {
     content: "\f28d";
 }
+
+span.icon.reference:before {
+    content: "\f02d";
+}
+
+span.icon.reset:before,
+span.icon.remise-a-zero:before {
+    content: "\f12d";
+}

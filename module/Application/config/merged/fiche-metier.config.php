@@ -13,6 +13,7 @@ use Application\Form\FicheMetier\LibelleHydratorFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
+use Application\View\Helper\FicheMetierEnteteViewHelper;
 use Application\View\Helper\FicheMetierEtatViewHelper;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FicheMetierViewHelper;
@@ -478,6 +479,7 @@ return [
             'specificitePoste' => SpecificitePosteViewHelper::class,
             'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
             'ficheMetier'  => FicheMetierViewHelper::class,
+            'ficheMetierEntete' => FicheMetierEnteteViewHelper::class,
             'raisons' => RaisonsViewHelper::class,
         ],
     ],

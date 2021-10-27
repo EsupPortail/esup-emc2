@@ -1,0 +1,39 @@
+<?php
+
+use Application\Entity\Db\FicheMetier;
+
+/**
+ * @see \Application\View\Helper\FicheMetierEnteteViewHelper
+ * @var FicheMetier $fichemetier
+ * @var array $options
+ */
+
+$metier = $fichemetier->getMetier();
+$libelle = $metier->getLibelle(true);
+
+$domaines = $metier->toStringDomaines();
+$references = $metier->getReferencesAffichage();
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1> <?php echo $libelle; ?> </h1>
+        <?php echo $metier->getReferencesAffichage(); ?>
+        <?php if ($fichemetier->hasExpertise()) : ?>
+            <span class="expertise avec">
+                <i class="fas fa-star icon" style="font-size: large; display: inline-block; padding-right: 3px; vertical-align: middle;"></i>
+                &nbsp;Sujet à expertise
+            </span>
+        <?php else : ?>
+            <span class="expertise sans">
+                <i class="far fa-star icon" style="font-size: large; display: inline-block; padding-right: 3px; vertical-align: middle;"></i>
+                &nbsp;Non sujet à expertise</span>
+        <?php endif; ?>
+    </div>
+    <div class="col-md-4">
+        <div class="pull-right">
+            <?php echo $domaines; ?>
+        </div>
+    </div>
+</div>

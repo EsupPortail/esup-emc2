@@ -34,7 +34,7 @@ input[type=submit],
 a.btn,
 span.btn
 {
-    width:27rem;
+    width:25rem;
     margin:1rem;
 }
 
@@ -140,8 +140,13 @@ span.probleme {
 
 .titre-bloc {
     background-color:var(--color-light-bis);
-    margin-left: 2rem;
+    padding: 0 0 0 2rem;
+    margin: 0;
     border: 1px var(--content-color) solid;
+}
+
+.titre-bloc h3 {
+    margin: 0;
 }
 
 .groupe-libelle {
@@ -351,4 +356,46 @@ div.delta_5 {
 div.row {
     margin-left: 0;
     margin-right: 0;
+}
+
+/** Badge *************************************************************************************************************/
+
+span.reference {
+    background-color: #dfc4b2;
+    margin: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+span.reference:before {
+    font-family: "Font Awesome 5 Free";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    font-size: large;
+    content: "\f02d";
+}
+
+span.expertise {
+    margin: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+span.expertise.avec {
+    background-color: lightgreen;
+}
+span.expertise.sans {
+    background-color: lightcoral;
+}
+
+div.panel-heading  h2 {
+    margin: 0;
+    color: #3c6c8b;
+    text-decoration: none;
+}
+
+div.panel-heading a.btn {
+    margin: 0;
 }

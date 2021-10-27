@@ -239,7 +239,9 @@ class Metier implements HistoriqueAwareInterface {
         /** @var Reference $reference */
         foreach ($this->getReferences() as $reference) {
             $texte .= "<a href='". $reference->getUrl()."'>";
+            $texte .= "<span class='reference'>";
             $texte .= $reference->getReferentiel()->getLibelleCourt().' - '.$reference->getCode();
+            $texte .= "</span>";
             $texte .= "</a>";
         }
         return $texte;
@@ -254,6 +256,25 @@ class Metier implements HistoriqueAwareInterface {
             $texte .= "<li>" . $domaine->getLibelle() . " / " . $domaine->getFamille()->getLibelle() . "</li>";
         }
         $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function toStringDomaines() : string
+    {
+        $texte  = "<table style='width: 25rem;'>";
+        $texte .= "    <thead style='border:2px solid black; background: lightyellow;'><tr>";
+        $texte .= "        <th style='padding: 1rem;'>Domaine(s) </th>";
+        $texte .= "    </tr></thead>";
+
+        /** @var Domaine $domaine */
+        $domaines = $this->domaines->toArray();
+        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle(); });
+        $texte .= "<tbody style='border:2px solid black;'>";
+        foreach ($domaines as $domaine) {
+            $texte .= "<tr><td style='padding:0.25rem 1rem;'>" . $domaine->getLibelle() . "</td></tr>";
+        }
+        $texte .= "</tbody>";
+        $texte .= "</table>";
         return $texte;
     }
 

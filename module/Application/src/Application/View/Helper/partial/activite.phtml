@@ -51,235 +51,182 @@ $nbFormation   = count($formationsListe);
 $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
 ?>
 
-<!-- NOM DE L'ACTVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<div class="row">
-    <div class="col-md-11 titre-bloc" >
-        <div class="row">
-            <div class="col-md-8">
-                <h3>
-                    <?php echo $activite->getLibelle(); ?>
-                    <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-                        <a
-                            <?php /** @see ActiviteController::modifierLibelleAction() */?>
-                                href="<?php echo $this->url("activite/modifier-libelle", ["activite" => $activite->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
-                        >
-                            <span class="icon editer" title="Modifier le libellé associé à la mission"></span></a>
-                    <?php endif; ?>
-                </h3>
-            </div>
-            <!-- DEPLACEMENT ET MANIPULATION DE LA LISTE DES ACTIVITES ------------------------------------------------>
-            <?php if ($mode == 'edition-fiche-metier') : ?>
-                <div class="col-md-4 pull-right">
-                    <?php /** @see ActiviteController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
-                       class="btn btn-default"
-                       style="width:5rem; margin: 5px;"
-                       target="_blank"
-                    >
-                        <span class="icon editer"></span><br/>
-                    </a>
+<div>
 
-                    <?php /** @see FicheMetierController::retirerActiviteAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $type->getId()], [], true); ?>"
-                       class="btn btn-default"
-                       style="width:5rem; margin: 5px;">
-                        <span class="icon detruire"></span><br/>
-                    </a>
-
-                    <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
-                       class="btn btn-default"
-                       style="width:5rem; margin: 5px;">
-                        <span class="icon monter"></span><br/>
-                    </a>
-
-                    <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
-                       class="btn btn-default"
-                       style="width:5rem; margin: 5px;">
-                        <span class="icon descendre"></span><br/>
-                    </a>
-                </div>
-            <?php endif; ?>
-            <!-- SELECTION DES ACTIVITES ------------------------------------------------>
-            <?php if ($mode == 'edition-fiche-poste') : ?>
-                <div class="col-md-1 pull-right">
-                    <?php if ($ficheposte !== null AND $fichemetier !== null AND !empty($activite->getDescriptions())) : ?>
-                        <a      <?php /** @see \Application\Controller\FichePosteController::selectionnerDescriptionsRetireesAction() */ ?>
-                                href="<?php echo $this->url('fiche-poste/selectionner-descriptions-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId(), 'activite' => $activite->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification">
-                            <span class="icon listing" title="Sélection des sous-activités"></span></a>
-                    <?php else: ?>
-                        <span class="icon listing" style="color:darkred;" title="Pas de fiche de poste, ou de fiche métier, ou pas de sous-activités"></span>
-                    <?php endif; ?>
-                </div>
-            <?php endif ; ?>
+    <!-- TITRE -------------------------------------------------------------------------------------------------------->
+    <?php if ($mode !== 'modifier-activite') : ?>
+        <div class="titre-bloc">
+            <h3><?php echo $activite->getLibelle(); ?></h3>
         </div>
-    </div>
-</div>
+    <?php endif; ?>
 
-<div class="row">
-
-<!-- AFFICHAGE DES SOUS ACTIVITE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<div class="col-md-7">
-    <h4>
-        <?php if ($canModifier AND $mode === "modifier-activite") : ?>
-            Description
-            <a  <?php /** @see ActiviteController::ajouterDescriptionAction() */?>
-                href="<?php echo $this->url('activite/ajouter-description', ['activite' => $activite->getId()], [], true); ?>"
-                class="ajax-modal"
+    <div class="row">
+    <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+        <a <?php /** @see ActiviteController::modifierLibelleAction() */?>
+                href="<?php echo $this->url("activite/modifier-libelle", ["activite" => $activite->getId()], [], true); ?>"
+                class="btn btn-primary ajax-modal"
                 data-event="modification"
+        >
+            <span class="icon editer"></span>
+            Modifier le libellé
+        </a>
+        <a  <?php /** @see ActiviteController::ajouterDescriptionAction() */?>
+                href="<?php echo $this->url('activite/ajouter-description', ['activite' => $activite->getId()], [], true); ?>"
+                class="btn btn-primary ajax-modal"
+                data-event="modification"
+        >
+            <span class="icon editer"></span>
+            Ajouter une description
+        </a>
+        <a  <?php /** @see ActiviteController::ajouterDescriptionsAction() */?>
+                href="<?php echo $this->url('activite/ajouter-descriptions', ['activite' => $activite->getId()], [], true); ?>"
+                class="btn btn-primary ajax-modal"
+                data-event="modification"
+        >
+            <span class="icon editer"></span>
+            Ajouter plusieurs descriptions
+        </a>
+    <?php endif; ?>
+    <?php if ($mode == 'edition-fiche-metier') : ?>
+        <div class="pull-right">
+            <?php /** @see ActiviteController::modifierAction() */ ?>
+            <a href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
+               class="btn btn-primary" target="_blank"
             >
-                <span class="icon ajouter" title="Ajouter une description"></span></a>
+                <span class="icon editer"></span>
+                Modifier l'activité
+            </a>
 
-<!--                    <span class="icon ajouter-plusieurs"></span>-->
-        <?php endif; ?>
-        <?php if ($canModifier AND $mode === "modifier-activite") : ?>
-            <a  <?php /** @see ActiviteController::ajouterDescriptionsAction() */?>
-                    href="<?php echo $this->url('activite/ajouter-descriptions', ['activite' => $activite->getId()], [], true); ?>"
-                    class="ajax-modal"
-                    data-event="modification"
-            >
-                <span class="icon ajouter-plusieurs" title="Ajouter plusieurs descriptions en une seule fois"></span></a>
-        <?php endif; ?>
-    </h4>
+            <?php /** @see FicheMetierController::retirerActiviteAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $type->getId()], [], true); ?>"
+               class="btn btn-primary">
+                <span class="icon detruire"></span>
+                Retirer l'activité
+            </a>
+
+            <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
+               class="btn btn-primary">
+                <span class="icon monter"></span>
+                Remonter l'activité
+            </a>
+
+            <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
+               class="btn btn-primary">
+                <span class="icon descendre"></span>
+                Descendre l'activité
+            </a>
+        </div>
+    <?php endif; ?>
+    </div>
+
+    <!-- description -------------------------------------------------------------------------------------------------->
     <?php
         $descriptions = $activite->getDescriptions();
         usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre() > $b->getOrdre();});
     ?>
-    <?php if (! empty($descriptions)) : ?>
-        <ul id="descriptions">
-            <?php foreach ($descriptions as $description) : ?>
-                <?php
-                    $display = true;
-                    if ($retirees !== null) {
-                        foreach ($retirees as $retiree) {
-                            if ($retiree->getDescription()->getId() === $description->getId()) {
-                                $display = false;
-                                break;
-                            }
-                        }
-                    }
-                ?>
-                <?php if ($display) : ?>
-                <li id="<?php echo $description->getId(); ?>">
-                    <span class="activite-bloc" id="<?php echo $description->getId(); ?>">
-                        <?php echo $description->getDescription(); ?>
-                    </span>
-                    <?php if ($canModifier AND $mode === "modifier-activite") : ?>
-                        <a  <?php /** @see ActiviteController::modifierDescriptionAction() */?>
-                                href="<?php echo $this->url('activite/modifier-description', ['description' => $description->getId()], [], true); ?>"
-                                class="ajax-modal"
-                                data-event="modification"
-                        >
-                            <span class="icon editer" title="Modifier la description"></span></a>
+    <ul>
+        <?php foreach ($descriptions as $description) : ?>
+            <li>
+                <?php echo $description->getDescription();?>
+                <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+                    <a  <?php /** @see ActiviteController::modifierDescriptionAction() */?>
+                            href="<?php echo $this->url('activite/modifier-description', ['description' => $description->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon editer" title="Modifier la description"></span></a>
                     <a  <?php /** @see ActiviteController::supprimerDescriptionAction() */?>
                             href="<?php echo $this->url('activite/supprimer-description', ['description' => $description->getId()], [], true); ?>"
                     >
                         <span class="icon historiser" title="Historiser la description"></span></a>
-                    <?php endif; ?>
-                </li>
                 <?php endif; ?>
-            <?php endforeach; ?>
-        </ul>
-    <?php else : ?>
-        <span class="probleme"> <?php echo $activite->getDescription(); ?> </span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <!-- complement --------------------------------------------------------------------------------------------------->
+    <?php if ($mode === 'modifier-activite' OR $nbObject !== 0) : ?>
+        <div class="row" style="border:1px lightblue solid; margin: 1rem; ">
+            <?php if ($mode === 'modifier-activite' OR $nbCompetence > 0) : ?>
+                <div class="col-md-4">
+                    <h4>
+                        <span class="icon competence"></span>
+                        Compétences
+                        <span class="badge"> <?php echo $nbCompetence; ?></span>
+
+                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+                            <a
+                                <?php /** @see ActiviteController::modifierCompetenceAction() */?>
+                                    href="<?php echo $this->url("activite/modifier-competence", ["activite" => $activite->getId()], [], true); ?>"
+                                    class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier les compétences associées à la mission"></span></a>
+                        <?php endif; ?>
+                    </h4>
+                    <ul>
+                        <?php foreach ($competencesListe as $competenceElement) : ?>
+                            <li title="<?php if ($competenceElement->getCommentaire()) echo $competenceElement->getCommentaire(); ?>">
+                                <?php echo $competenceElement->getCompetence()->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            <?php if ($mode === 'modifier-activite' OR $nbApplication > 0) : ?>
+                <div class="col-md-4">
+                    <h4>
+                        <span class="icon application"></span>
+                        Applications
+                        <span class="badge"> <?php echo $nbApplication; ?></span>
+                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+                            <a
+                                <?php /** @see ActiviteController::modifierApplicationAction() */?>
+                                    href="<?php echo $this->url("activite/modifier-application", ["activite" => $activite->getId()], [], true); ?>"
+                                    class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier les applications associées à la mission"></span></a>
+                        <?php endif; ?>
+                    </h4>
+
+                    <ul>
+                        <?php foreach ($applicationsListe as $applicationElement) : ?>
+                            <li title="<?php if ($applicationElement->getCommentaire()) echo $applicationElement->getCommentaire(); ?>">
+                                <?php echo $applicationElement->getApplication()->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            <?php if ($mode === 'modifier-activite' OR $nbFormation > 0) : ?>
+                <div class="col-md-4">
+                    <h4>
+                        <span class="icon formation"></span>
+                        Formations
+                        <span class="badge"> <?php echo $nbFormation; ?></span>
+                        <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
+                            <a
+                                <?php /** @see ActiviteController::modifierFormationAction() */?>
+                                    href="<?php echo $this->url("activite/modifier-formation", ["activite" => $activite->getId()], [], true); ?>"
+                                    class="ajax-modal"
+                                    data-event="modification"
+                            >
+                                <span class="icon editer" title="Modifier les formations associées à la mission"></span></a>
+                        <?php endif; ?>
+                    </h4>
+                    <ul>
+                        <?php foreach ($formationsListe as $formationElement) : ?>
+                            <li title="<?php if ($formationElement->getCommentaire()) echo $formationElement->getCommentaire(); ?>">
+                                <?php echo $formationElement->getFormation()->getLibelle(); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+        </div>
     <?php endif; ?>
 </div>
-
-<!-- CARTOUCHE LATERAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<?php if ($mode === 'modifier-activite' OR $nbObject !== 0) : ?>
-    <div class="col-md-4" style="border:1px lightblue solid; margin: 1rem; ">
-        <small>
-        <?php if ($mode === 'modifier-activite' OR $nbCompetence > 0) : ?>
-            <h4>
-                <span class="icon competence"></span>
-                Compétences
-                <span class="badge"> <?php echo $nbCompetence; ?></span>
-                <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-                    <a
-                        <?php /** @see ActiviteController::modifierCompetenceAction() */?>
-                        href="<?php echo $this->url("activite/modifier-competence", ["activite" => $activite->getId()], [], true); ?>"
-                        class="ajax-modal"
-                        data-event="modification"
-                    >
-                        <span class="icon editer" title="Modifier les compétences associées à la mission"></span></a>
-                <?php endif; ?>
-            </h4>
-
-            <ul>
-                <?php foreach ($competencesListe as $competenceElement) : ?>
-                    <li title="<?php if ($competenceElement->getCommentaire()) echo $competenceElement->getCommentaire(); ?>">
-                        <?php echo $competenceElement->getCompetence()->getLibelle(); ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-
-        <?php if ($mode === 'modifier-activite' OR $nbApplication > 0) : ?>
-            <h4>
-                <span class="icon application"></span>
-                Applications
-                <span class="badge"> <?php echo $nbApplication; ?></span>
-                <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-                    <a
-                        <?php /** @see ActiviteController::modifierApplicationAction() */?>
-                            href="<?php echo $this->url("activite/modifier-application", ["activite" => $activite->getId()], [], true); ?>"
-                            class="ajax-modal"
-                            data-event="modification"
-                    >
-                        <span class="icon editer" title="Modifier les applications associées à la mission"></span></a>
-                <?php endif; ?>
-            </h4>
-
-            <ul>
-                <?php foreach ($applicationsListe as $applicationElement) : ?>
-                    <li title="<?php if ($applicationElement->getCommentaire()) echo $applicationElement->getCommentaire(); ?>">
-                        <?php echo $applicationElement->getApplication()->getLibelle(); ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-
-        <?php if ($mode === 'modifier-activite' OR $nbFormation > 0) : ?>
-            <h4>
-                <span class="icon formation"></span>
-                Formations
-                <span class="badge"> <?php echo $nbFormation; ?></span>
-                <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-                    <a
-                        <?php /** @see ActiviteController::modifierFormationAction() */?>
-                            href="<?php echo $this->url("activite/modifier-formation", ["activite" => $activite->getId()], [], true); ?>"
-                            class="ajax-modal"
-                            data-event="modification"
-                    >
-                        <span class="icon editer" title="Modifier les formations associées à la mission"></span></a>
-                <?php endif; ?>
-            </h4>
-
-            <ul>
-                <?php foreach ($formationsListe as $formationElement) : ?>
-                    <li title="<?php if ($formationElement->getCommentaire()) echo $formationElement->getCommentaire(); ?>">
-                        <?php echo $formationElement->getFormation()->getLibelle(); ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-        </small>
-    </div>
-<?php endif; ?>
-
-</div>
-<style>
-    a.btn-default {
-        background-color: lightgrey;
-    }
-    a.btn-default:hover {
-        background-color: #aaaaaa;
-    }
-</style>
 
 <script>
     $(function() {
