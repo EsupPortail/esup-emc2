@@ -51,8 +51,6 @@
 
         <one-to-many target-entity="Application\Entity\Db\Structure" mapped-by="parent" field="enfants"/>
 
-        <field name="histo"     type="datetime"                 column="histo"/>
-
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>
         <field name="updated_on"               column="updated_on"       type="datetime"/>

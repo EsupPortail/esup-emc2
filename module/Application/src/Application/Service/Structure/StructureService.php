@@ -2,6 +2,7 @@
 
 namespace Application\Service\Structure;
 
+use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
@@ -27,16 +28,10 @@ class StructureService
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * Les structures sont importées de Octopus du coup les créations, historisations et suppressions sont gérées par
-     * le module d'import. Seul la mise à jour est utile car des informations sont mises à jour de façon interne dans
-     * l'application (p.e. les gestionnaires, les descriptions, ...)
-     */
-
-    /**
      * @param Structure
      * @return Structure
      */
-    public function update($structure)
+    public function update($structure) : Structure
     {
         try {
             $this->getEntityManager()->flush($structure);
@@ -51,16 +46,13 @@ class StructureService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() {
+    public function createQueryBuilder() : QueryBuilder
+    {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
             ->addSelect('type')->join('structure.type', 'type')
-            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
-            //->addSelect('ficheposte')->leftJoin('poste.fichePoste', 'ficheposte')
-            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
             ->orderBy('structure.code')
-            ->andWhere("structure.histo IS NULL")
         ;
         return $qb;
     }
@@ -69,7 +61,7 @@ class StructureService
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructures($ouverte = true)
+    public function getStructures(bool $ouverte = true) : array
     {
         $qb = $this->createQueryBuilder();
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
@@ -79,10 +71,10 @@ class StructureService
     }
 
     /**
-     * @param integer $id
-     * @return Structure
+     * @param int|null $id
+     * @return Structure|null
      */
-    public function getStructure($id)
+    public function getStructure(?int $id) : ?Structure
     {
         if ($id === "" OR $id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -99,9 +91,9 @@ class StructureService
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return Structure
+     * @return Structure|null
      */
-    public function getRequestedStructure($controller, $paramName = 'structure')
+    public function getRequestedStructure(AbstractActionController $controller, string $paramName = 'structure') : ?Structure
     {
         $id = $controller->params()->fromRoute($paramName);
         $structure = $this->getStructure($id);
@@ -113,7 +105,7 @@ class StructureService
      * @param Structure[] $structures
      * @return Structure[]
      */
-    public function getStructuresByTerm($term, $structures = null)
+    public function getStructuresByTerm(string $term, array $structures = null) : array
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
@@ -136,7 +128,7 @@ class StructureService
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByGestionnaire($user, $ouverte = true)
+    public function getStructuresByGestionnaire(User $user, bool $ouverte = true) : array
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.gestionnaires', 'gestionnaireSelection')
@@ -166,7 +158,6 @@ class StructureService
             ->andWhere('agent.utilisateur = :user')
             ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt')
-            ->andWhere("structure.histo IS NULL")
         ;
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
 
@@ -177,19 +168,15 @@ class StructureService
 
     /**
      * @param Structure $structure
-     * @param boolean $ouverte
+     * @param bool $ouverte
      * @return Structure[]
      */
-    public function getSousStructures($structure, $ouverte = true)
+    public function getSousStructures(Structure $structure, bool $ouverte = true) : array
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-//            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
-//            ->addSelect('poste')->leftJoin('structure.postes', 'poste')
-//            ->addSelect('mission')->leftJoin('structure.missions', 'mission')
             ->andWhere('structure.parent = :structure')
             ->setParameter('structure', $structure)
             ->orderBy('structure.code')
-            ->andWhere("structure.histo IS NULL")
             ->andWhere("structure.deleted_on IS NULL");
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
         $result = $qb->getQuery()->getResult();
@@ -201,7 +188,8 @@ class StructureService
      * @param Structure $structure
      * @return Structure[]
      */
-    public function getStructuresFilles($structure) {
+    public function getStructuresFilles(Structure $structure) : array
+    {
         $filles = [];
         $dejaTraitees = [];
 
@@ -228,7 +216,7 @@ class StructureService
      * @param User $user
      * @return boolean
      */
-    public function isGestionnaire(Structure $structure, User $user)
+    public function isGestionnaire(Structure $structure, User $user) : bool
     {
         if (array_search($user, $structure->getGestionnaires()) !== false) return true;
         if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $user);
@@ -240,7 +228,7 @@ class StructureService
      * @param Agent $agent
      * @return boolean
      */
-    public function isResponsable(Structure $structure, Agent $agent)
+    public function isResponsable(Structure $structure, Agent $agent)  : bool
     {
         $responsables = $structure->getResponsables();
         foreach ($responsables as $responsable) {
@@ -255,7 +243,8 @@ class StructureService
      * @param bool $filles
      * @return User[]
      */
-    public function getGestionnairesByStructure(Structure $structure, $filles = true) {
+    public function getGestionnairesByStructure(Structure $structure, bool $filles = true) : array
+    {
         $gestionnaires = [];
         $vue = [];
 
@@ -314,7 +303,17 @@ class StructureService
             $fps = $structure->getFichesPostesRecrutements();
             foreach ($fps as $fp) $fiches[$fp->getId()] = $fp;
         }
-        return $fiches;
+
+        $result = [];
+        foreach ($fiches as $fiche) {
+            $result[] = ['id' => $fiche->getId(),
+                'agent_id' => ($fiche->getAgent())?$fiche->getAgent()->getId():null,
+                'prenom' => ($fiche->getAgent())?$fiche->getAgent()->getPrenom():null,
+                'nom_usage' => ($fiche->getAgent())?$fiche->getAgent()->getNomUsuel():null,
+                'fiche_principale' => ($fiche->getFicheTypeExternePrincipale())?$fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle():null,
+            ];
+        }
+        return $result;
     }
 
     /**
@@ -327,11 +326,10 @@ select
     s.id as ID,
     s.libelle_court as LIBELLE_COURT,
     s.libelle_long as LIBELLE_LONG,
-    st.libelle AS TYPE,
-   current_date
+    st.libelle AS TYPE
 from structure s
 left join structure_type st on st.id = s.type_id
-where (s.fermeture IS NULL OR s.fermeture >= current_date)
+where s.fermeture IS NULL
 EOS;
 
         $tmp = null;
@@ -393,5 +391,29 @@ EOS;
             }
         }
         return $users;
+    }
+
+    /**
+     * @return Structure[]
+     */
+    public function getStructuresByCurrentRole() : array
+    {
+        $role = $this->getUserService()->getConnectedRole();
+
+        $selecteur = [];
+        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+            $user = $this->getUserService()->getConnectedUser();
+            $structures = $this->getStructuresByGestionnaire($user);
+            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
+            $selecteur = $structures;
+        }
+        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+            $user = $this->getUserService()->getConnectedUser();
+            $structures = $this->getStructuresByResponsable($user);
+            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
+            $selecteur = $structures;
+        }
+
+        return $selecteur;
     }
 }

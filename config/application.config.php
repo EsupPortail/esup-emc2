@@ -48,7 +48,7 @@ $modules = [
     'Fichier',
     'Application',
 
-//    'ZendDeveloperTools',
+    'ZendDeveloperTools',
 
 ];
 

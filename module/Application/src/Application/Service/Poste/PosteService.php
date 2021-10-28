@@ -156,6 +156,9 @@ class PosteService {
      */
     public function getPostesByStructures($structures = [],  $libre = false)
     {
+        //todo lorsque remonter virer cela
+        return [];
+
         /** @var QueryBuilder $qb */
         $qb = $this->createQueryBuilder()
                 ->andWhere('poste.structure IN (:structures)')

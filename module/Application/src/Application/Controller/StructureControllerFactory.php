@@ -37,11 +37,9 @@ class StructureControllerFactory {
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var PosteService $posteService
-         * @var RoleService $roleService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
-         * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
@@ -52,11 +50,9 @@ class StructureControllerFactory {
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $posteService = $container->get(PosteService::class);
-        $roleService = $container->get(RoleService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
-        $userService = $container->get(UserService::class);
 
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
@@ -81,11 +77,9 @@ class StructureControllerFactory {
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setPosteService($posteService);
-        $controller->setRoleService($roleService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
-        $controller->setUserService($userService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
         $controller->setAjouterGestionnaireForm($ajouterGestionnaire);

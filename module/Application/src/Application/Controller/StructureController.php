@@ -2,9 +2,7 @@
 
 namespace Application\Controller;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureAgentForce;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\AjouterGestionnaire\AjouterGestionnaireForm;
@@ -24,11 +22,10 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -40,10 +37,8 @@ class StructureController extends AbstractActionController {
     use FormationInstanceInscritServiceAwareTrait;
     use MissionSpecifiqueAffectationServiceAwareTrait;
     use PosteServiceAwareTrait;
-    use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
-    use UserServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
@@ -56,42 +51,18 @@ class StructureController extends AbstractActionController {
     use SelectionAgentFormAwareTrait;
     use HasDescriptionFormAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $structures = $this->getStructureService()->getStructures();
-        $user = $this->getUserService()->getConnectedUser();
-        $role = $this->getUserService()->getConnectedRole();
 
         return new ViewModel([
             'structures' => $structures,
-            'user' => $user,
-            'role' => $role,
         ]);
     }
 
     public function afficherAction()
     {
-        /** Préparation du selecteur quand le rôle le demande **/
-        $role = $this->getUserService()->getConnectedRole();
-        $selecteur = [];
-        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
-            $user = $this->getUserService()->getConnectedUser();
-            $structures = $this->getStructureService()->getStructuresByGestionnaire($user);
-            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
-            $selecteur = $structures;
-        }
-        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
-            $user = $this->getUserService()->getConnectedUser();
-            $structures = $this->getStructureService()->getStructuresByResponsable($user);
-            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
-            $selecteur = $structures;
-        }
-        if ($role->getRoleId() === RoleConstant::ADMIN_TECH OR $role->getRoleId() === RoleConstant::ADMIN_FONC OR $role->getRoleId() === RoleConstant::OBSERVATEUR) {
-            $unicaen = $this->getStructureService()->getStructure(1);
-            $structures = $this->getStructureService()->getSousStructures($unicaen, true);
-            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
-            $selecteur = array_filter($structures, function (Structure $s) {return ($s->getHisto() === null);});
-        }
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         /** Récupération des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
@@ -99,33 +70,36 @@ class StructureController extends AbstractActionController {
         $structures[] =  $structure;
 
         /** Récupération des missions spécifiques liées aux structures */
-        $missionsSpecifiques = $this->getMissionSpecifiqueAffectationService()->getMissionsSpecifiquesByStructures($structures);
+        $missionsSpecifiques = []; //$this->getMissionSpecifiqueAffectationService()->getMissionsSpecifiquesByStructures($structures);
+
+        /** Récupération des agents et postes liés aux structures */
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, [] /**$structure->getAgentsForces()**/);
+        $allAgents = array_merge($agents, $agentsForces);
 
         /** Récupération des fiches de postes liées aux structures */
-        $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructures($structures, true);
+        $fichesPostes = $this->getFichePosteService()->getFichesPostesByAgents($allAgents);
         $fichesCompletes = []; $fichesIncompletes = [];
         foreach ($fichesPostes as $fichePoste) {
-            if ($fichePoste->isComplete()) {
+            if ($fichePoste['agent_id'] !== null AND $fichePoste['fiche_principale']) {
                 $fichesCompletes[] = $fichePoste;
             } else {
                 $fichesIncompletes[] = $fichePoste;
             }
         }
         $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
-        /** Récupération des agents et postes liés aux structures */
-        $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
+
 
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
         /** Campagne */
-        $last = $this->getCampagneService()->getLastCampagne();
-        $campagnes = $this->getCampagneService()->getCampagnesActives();
+        $last = null;//= $this->getCampagneService()->getLastCampagne();
+        $campagnes = [];//= $this->getCampagneService()->getCampagnesActives();
         $entretiens = [];
 
-        $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
-        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure);
-        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
+        $delegues = [];//= $this->getDelegueService()->getDeleguesByStructure($structure);
+        $inscriptions = [];//= $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure);
+        $profils = [];//= $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -150,9 +124,9 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
-    /** Action associé à la partie résumé : description et gestionnaire  **********************************************/
+    /** RESUME ********************************************************************************************************/
 
-    public function editerDescriptionAction()
+    public function editerDescriptionAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
 
@@ -179,11 +153,22 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
-    /** GESTION DES RESPONSABLES ET GESTIONNAIRES *******************************************************************/
-
-    public function ajouterGestionnaireAction()
+    public function toggleResumeMereAction() : Response
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structure->setRepriseResumeMere(! $structure->getRepriseResumeMere());
+        $this->getStructureService()->update($structure);
+
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+    }
+
+    /** GESTION DES RESPONSABLES ET GESTIONNAIRES *******************************************************************/
+
+    public function ajouterGestionnaireAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        if ($structure === null) throw new RuntimeException("Aucun structure pour l'identifiant [".$this->params()->fromRoute(['structure'])."]");
+
         /** @var AjouterGestionnaireForm $form */
         $form = $this->getAjouterGestionnaireForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
@@ -193,10 +178,9 @@ class StructureController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             $gestionnaire = $this->getAgentService()->getAgent($data['gestionnaire']['id']);
-            if ($gestionnaire !== null AND $structure !== null) {
-                $structure->addGestionnaire($gestionnaire);
-                $this->getStructureService()->update($structure);
-            }
+            if ($gestionnaire === null) throw new RuntimeException("Aucun agent pour l'identifiant [".$data['gestionnaire']['id']."/".$data['gestionnaire']['label']."]");
+            $structure->addGestionnaire($gestionnaire);
+            $this->getStructureService()->update($structure);
         }
 
         $vm = new ViewModel();
@@ -208,7 +192,7 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
-    public function retirerGestionnaireAction()
+    public function retirerGestionnaireAction() : Response
     {
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
         $gestionnaire = $this->getAgentService()->getAgent($this->params()->fromRoute('gestionnaire'));
@@ -219,20 +203,9 @@ class StructureController extends AbstractActionController {
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }
 
-    /** RESUME *********************************************************************************************************/
-
-    public function toggleResumeMereAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
-        $structure->setRepriseResumeMere(! $structure->getRepriseResumeMere());
-        $this->getStructureService()->update($structure);
-
-        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
-    }
-
     /** Fonctions de recherche ****************************************************************************************/
 
-    public function rechercherAction()
+    public function rechercherAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $structures = $this->getStructureService()->getStructuresByTerm($term);
@@ -242,7 +215,7 @@ class StructureController extends AbstractActionController {
         exit;
     }
 
-    public function rechercherWithStructureMereAction()
+    public function rechercherWithStructureMereAction() : JsonModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
@@ -258,32 +231,9 @@ class StructureController extends AbstractActionController {
         exit;
     }
 
-    /**
-     * @return JsonModel
-     */
-    public function rechercherGestionnairesAction()
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-
-        $users = $this->getStructureService()->getGestionnairesByStructure($structure);
-
-        $selected = [];
-
-        $term = $this->params()->fromQuery('term');
-        if ($term) {
-            $term = strtolower($term);
-            foreach ($users as $user) {
-                if (strpos(strtolower($user->getDisplayName()), $term) !== false) $selected[] = $user;
-            }
-            $result = $this->getUserService()->formatUserJSON($selected);
-            return new JsonModel($result);
-        }
-        exit;
-    }
-
     /** AGENTS FORCES *************************************************************************************************/
 
-    public function ajouterManuellementAgentAction()
+    public function ajouterManuellementAgentAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structureAgentForce = new StructureAgentForce();
@@ -313,7 +263,7 @@ class StructureController extends AbstractActionController {
         return $vm;
     }
 
-    public function retirerManuellementAgentAction()
+    public function retirerManuellementAgentAction() : ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $structure = $this->getStructureService()->getRequestedStructure($this);
@@ -410,7 +360,7 @@ class StructureController extends AbstractActionController {
     /**
      * Extraction du listing des agents et des fiches de poste associées
      */
-    public function extractionListingFichePosteAction()
+    public function extractionListingFichePosteAction() : CsvModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);
@@ -448,7 +398,7 @@ class StructureController extends AbstractActionController {
     /**
      * Extraction du listing des agents et des fiches de poste associées
      */
-    public function extractionListingMissionSpecifiqueAction()
+    public function extractionListingMissionSpecifiqueAction() : CsvModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);

@@ -13,10 +13,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class Structure implements ResourceInterface, SynchroAwareInterface, HasDescriptionInterface {
+class Structure implements ResourceInterface, HasDescriptionInterface {
     use DbImportableAwareTrait;
     use HasDescriptionTrait;
-    use SynchroAwareTrait;
     use StructureMacroTrait;
 
     const ROLE_RESPONSABLE   = 'Responsable de structure';
@@ -128,6 +127,16 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
     public function getFermeture() : ?DateTime
     {
         return $this->fermeture;
+    }
+
+    /**
+     * @param DateTime|null $date
+     * @return bool
+     */
+    public function isOuverte(?DateTime $date = null): bool
+    {
+        if ($date === null) $date = new DateTime();
+        return ($this->ouverture <= $date AND ($this->fermeture === null OR $this->fermeture >= $date));
     }
 
     /**
@@ -270,7 +279,9 @@ class Structure implements ResourceInterface, SynchroAwareInterface, HasDescript
      */
     public function getEnfants() : array
     {
-        return $this->enfants->toArray();
+        $enfants = $this->enfants->toArray();
+        $enfants = array_filter($enfants, function(Structure $a) { return $a->isOuverte(); });
+        return $enfants;
     }
 
     /**

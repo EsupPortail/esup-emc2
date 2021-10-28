@@ -24,54 +24,6 @@ return [
          * Liste des imports.
          */
         'synchros' => [
-//            [
-//                'name' => 'Import_AGENT',
-                /**
-                 * Configuration de la source de données à importer :
-                 * - 'name'               : petit nom (unique) de la source
-                 * - 'table'              : nom de la table source contenant les données à importer
-                 * - 'select'             : select SQL de mise en forme des données source à importer (NB: antinomique avec 'table')
-                 * - 'connection'         : identifiant de la connexion Doctrine à la base de données source
-                 * - 'source_code_column' : nom de la colonne dans la table/vue source contenant l'identifiant unique
-                 * - 'columns'            : liste ordonnée des noms des colonnes à prendre en compte dans la table/vue source
-                 */
-//                'source' => [
-//                    'name'               => 'Agents geres par la DRH',
-//                    'table'              => 'V_AGENT',
-//                    'select'              => 'SELECT * FROM V_AGENT',
-//                    'connection'         => 'octopus',
-//                    'source_code_column' => 'C_INDIVIDU',
-//                    'columns'            => ['C_SRC_INDIVIDU', 'C_SOURCE', 'PRENOM', 'NOM_USAGE'],
-//                ],
-                /**
-                 * Forçage éventuel du nom de la table intermédiaire utilisée lorsque source et destination
-                 * ne partagent pas la même connexion. NB: cette table intermédiaire est créée/peuplée/supprimée
-                 * dans la base de données destination à chaque import.
-                 * En l'absence de ce forçage, le nom de la table intermédiaire sera celui de la table destination
-                 * préfixé par "src_".
-                 */
-//                'intermediate_table' => 'src_agent',
-                /**
-                 * Configuration de la destination des données importées :
-                 * - 'name'               : petit nom (unique) de la destination
-                 * - 'table'              : nom de la table destination vers laquelle les données sont importées
-                 * - 'connection'         : identifiant de la connexion Doctrine à la base de données destination
-                 * - 'source_code_column' : nom de la colonne dans la table destination contenant l'identifiant unique
-                 * - 'columns'            : liste ordonnée des noms des colonnes importées dans la table destination
-                 * - 'columns_to_char'    : format sprintf nécessaire pour mettre des colonnes au format requis (string)
-                 */
-//                'destination' => [
-//                    'name'               => 'Agents gérés par la DRH',
-//                    'table'              => 'agent',
-//                    'connection'         => 'default',
-//                    'source_code_column' => 'c_individu',
-//                    'columns'            => ['c_src_individu', 'c_source', 'prenom', 'nom_usage'],
-//                    'columns_to_char' => [
-//                        'debut_validite' => "TO_CHAR(%s,'YYYY-MM-DD')", // car colonne destination de type TIMESTAMP
-//                        'fin_validite'   => "TO_CHAR(%s,'YYYY-MM-DD')", // idem
-//                    ],
-//                ],
-//            ],
             [
                 'name' => 'Import_AGENT',
                 'source' => [
@@ -240,7 +192,7 @@ return [
                 'name' => 'Import_STRUCTURE',
                 'source' => [
                     'name'               => 'Agents geres par la DRH',
-                    'select'             => 'SELECT ID, CODE, LIBELLE_COURT, LIBELLE_LONG, TYPE_ID, DATE_OUVERTURE AS OUVERTURE, DATE_FERMETURE AS FERMETURE, HISTO, PARENT_ID FROM V_PREECOG_STRUCTURE',
+                    'select'             => 'SELECT ID, CODE, LIBELLE_COURT, LIBELLE_LONG, TYPE_ID, DATE_OUVERTURE AS OUVERTURE, DATE_FERMETURE AS FERMETURE, PARENT_ID FROM V_PREECOG_STRUCTURE',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                 ],
@@ -250,7 +202,7 @@ return [
                     'table'              => 'structure',
                     'connection'         => 'default',
                     'source_code_column' => 'id',
-                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'histo','parent_id'],
+                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'parent_id'],
                 ],
             ],
             [

@@ -129,7 +129,7 @@ class AgentController extends AbstractActionController
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
 
-        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgents([$agent]);
         $missions = $agent->getMissionsSpecifiques();
 
         return new ViewModel([

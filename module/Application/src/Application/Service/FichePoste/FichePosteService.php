@@ -14,6 +14,9 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -180,6 +183,117 @@ class FichePosteService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getFichePosteAsArray(int $id) : array
+    {
+        $params = ['id' => $id];
+
+        $sql = <<<EOS
+select
+    id,
+    a.c_individu as agent_id
+from fiche_poste f
+left join agent a on f.agent = a.c_individu
+where f.id = :id
+EOS;
+
+        $tmp = null;
+        try {
+            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
+            $tmp = $res->fetchAssociative();
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+        } catch (DRV_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+        }
+
+        $array = [
+            'id' => $id,
+            'agent_id' => $tmp['agent_id'],
+        ];
+        return $array;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @return array
+     */
+    public function getFichesPostesAsArray() : array
+    {
+        $params = ['agent_ids' => []];
+
+        $sql = <<<EOS
+select
+    f.id, f.libelle as fiche_libelle, f.histo_destruction,
+    a.c_individu AS agent_id, a.prenom, a.nom_usage,
+    aa.id_orig,
+    s.id as structure_id, s.libelle_court as structure,
+    m.libelle_default as fiche_principale
+from fiche_poste f
+left join agent a on f.agent = a.c_individu
+left join agent_affectation aa on a.c_individu = aa.agent_id
+left join structure s on aa.structure_id = s.id
+left join fiche_type_externe fte on f.id = fte.fiche_poste
+left join fichemetier f2 on fte.fiche_type = f2.id
+left join metier m on m.id = f2.metier_id
+where (fte.principale = true OR fte IS NULL)
+  and (aa IS NULL OR aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null)
+
+EOS;
+
+        $tmp = null;
+        try {
+            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_INT_ARRAY]);
+            $tmp = $res->fetchAllAssociative();
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+        } catch (DRV_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+        }
+        return $tmp;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @return array
+     */
+    public function getFichesPostesbyAgents(array $agents) : array
+    {
+        if (empty($agents)) return [];
+
+        $params = ['agent_ids' => array_map(function (Agent $a) { return $a->getId();}, $agents)];
+
+        $sql = <<<EOS
+select
+f.id, a.c_individu AS agent_id, a.prenom, a.nom_usage,s.id as structure_id, s.libelle_court as structure, m.libelle_default as fiche_principale, f.libelle as fiche_libelle, f.histo_destruction
+from fiche_poste f
+join agent a on f.agent = a.c_individu
+join agent_affectation aa on a.c_individu = aa.agent_id
+join structure s on aa.structure_id = s.id
+left join fiche_type_externe fte on f.id = fte.fiche_poste
+left join fichemetier f2 on fte.fiche_type = f2.id
+left join metier m on m.id = f2.metier_id
+where a.c_individu in (:agent_ids)
+  and aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null
+  and (fte.principale = true OR fte IS NULL)
+  and f.histo_destruction IS NULL
+EOS;
+
+        $tmp = null;
+        try {
+            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_INT_ARRAY]);
+            $tmp = $res->fetchAllAssociative();
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+        } catch (DRV_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
+        }
+        return $tmp;
     }
 
     /** FICHE TYPE EXTERNE ********************************************************************************************/

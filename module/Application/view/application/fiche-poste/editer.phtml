@@ -3,6 +3,7 @@
 /**
  * @see \Application\Controller\FichePosteController::editerAction()
  * @var Agent $agent
+ * @var int $ficheId
  * @var FichePoste $fiche
  * @var Structure $structure
  * @var boolean $sousstructure
@@ -32,7 +33,7 @@ $date = new DateTime();
 
 $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
 
-$this->headTitle("Modification de la fiche de poste #".$fiche->getId());
+$this->headTitle("Modification de la fiche de poste #".$ficheId);
 ?>
 
 <?php if (! $canModifier ) : ?>

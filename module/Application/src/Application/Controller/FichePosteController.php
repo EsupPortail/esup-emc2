@@ -68,15 +68,15 @@ class FichePosteController extends AbstractActionController {
 
     public function indexAction()
     {
-        $fiches = $this->getFichePosteService()->getFichesPostes();
+        $fiches = $this->getFichePosteService()->getFichesPostesAsArray();
 
         $fichesCompletes = [];
         $fichesIncompletes = [];
         $ficheVides = [];
         foreach ($fiches as $fiche) {
-            if ($fiche->isComplete()) $fichesCompletes[] = $fiche;
+            if ($fiche['agent_id'] !== null AND $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
             else {
-                if ($fiche->isVide()) $ficheVides[] = $fiche;
+                if ($fiche['agent_id'] === null AND $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
                 else $fichesIncompletes[] = $fiche;
             }
         }
@@ -211,19 +211,26 @@ class FichePosteController extends AbstractActionController {
         /** @var FichePoste $fiche */
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
+        $agent = $fiche->getAgent();
 
-        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
-        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
-        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
+//        $ficheId = $this->params()->fromRoute('fiche-poste');
+//        $array = $this->getFichePosteService()->getFichePosteAsArray($ficheId);
+//        $agent = null;
+//        if ($array['agent_id'] !== null) $agent = $this->getAgentService()->getAgent($array['agent_id']);
+
+        $applications = []; //$this->getFichePosteService()->getApplicationsDictionnaires($fiche);
+        $competences = []; // $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
+        $formations = []; // $this->getFichePosteService()->getFormationsDictionnaires($fiche);
+        $activites = []; // $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         //parcours de formation
-        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
+        $parcours = []; // $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
 
         return new ViewModel([
+            'ficheId' => $this->params()->fromRoute('fiche-poste'),
             'fiche' => $fiche,
 //            'agent' => $this->getAgentService()->getAgent($fiche->getAgent()->getId()),
-            'agent' => $fiche->getAgent(),
+            'agent' => $agent,
             'structure' => $structure,
             'applications' => $applications,
             'competences' => $competences,
