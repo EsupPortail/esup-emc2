@@ -44,7 +44,7 @@ class CompetenceElementForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner un niveau ... ",
-                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions('Compétence'),
+                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions('Competence'),
             ],
             'attributes' => [
                 'id'                => 'niveau',

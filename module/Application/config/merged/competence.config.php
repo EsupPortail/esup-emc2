@@ -118,6 +118,7 @@ return [
                 [
                     'controller' => MaitriseNiveauController::class,
                     'action' => [
+                        'index',
                         'afficher',
                     ],
                     'privileges' => [
@@ -169,6 +170,7 @@ return [
 
     'router'          => [
         'routes' => [
+
             'competence' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -287,14 +289,15 @@ return [
                     'route'    => '/competence-maitrise',
                     'defaults' => [
                         'controller' => MaitriseNiveauController::class,
+                        'action' => 'index',
                     ],
                 ],
-                'may_terminate' => false,
+                'may_terminate' => true,
                 'child_routes' => [
                     'ajouter' => [
-                        'type'  => Segment::class,
+                        'type'  => Literal::class,
                         'options' => [
-                            'route'    => '/ajouter/:type',
+                            'route'    => '/ajouter',
                             'defaults' => [
                                 'controller' => MaitriseNiveauController::class,
                                 'action'     => 'ajouter',
@@ -529,6 +532,16 @@ return [
                                 'route'    => 'competence',
                                 'resource' => CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER),
                                 'order'    => 600,
+                            ],
+                        ],
+                    ],
+                    'administration' => [
+                        'pages' => [
+                            'niveau-matrise' => [
+                                'label'    => 'Niveaux de maîtrise',
+                                'route'    => 'competence-maitrise',
+                                'resource' => CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER),
+                                'order'    => 1150,
                             ],
                         ],
                     ],

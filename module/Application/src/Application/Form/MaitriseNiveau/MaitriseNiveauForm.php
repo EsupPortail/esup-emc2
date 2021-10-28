@@ -78,9 +78,14 @@ class MaitriseNiveauForm extends Form {
         ]);
         //type
         $this->add([
-            'type' => Hidden::class,
+            'type' => Text::class,
             'name' => 'type',
-            'value' => $this->type,
+            'options' => [
+                'label' => "Type * :",
+            ],
+            'attributes' => [
+                'id' => 'type',
+            ],
         ]);
         //submit
         $this->add([

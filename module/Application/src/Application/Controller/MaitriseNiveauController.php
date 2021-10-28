@@ -13,6 +13,12 @@ class MaitriseNiveauController extends AbstractActionController
     use MaitriseNiveauServiceAwareTrait;
     use MaitriseNiveauFormAwareTrait;
 
+    public function indexAction()
+    {
+        $niveaux = $this->getMaitriseNiveauService()->getMaitrisesNiveaux("", 'id', 'ASC', true);
+        return new ViewModel(['niveaux' => $niveaux]);
+    }
+
     public function afficherAction()
     {
         $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
@@ -27,12 +33,9 @@ class MaitriseNiveauController extends AbstractActionController
 
     public function ajouterAction()
     {
-        $type = $this->params()->fromRoute('type');
         $maitrise = new MaitriseNiveau();
-        $maitrise->setType($type);
         $form = $this->getMaitriseNiveauForm();
-        $form->setType($type);
-        $form->setAttribute('action', $this->url()->fromRoute('competence-maitrise/ajouter', ['type' => $type], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('competence-maitrise/ajouter', [], [], true));
         $form->bind($maitrise);
 
         $request = $this->getRequest();
@@ -82,14 +85,22 @@ class MaitriseNiveauController extends AbstractActionController
     public function historiserAction()
     {
         $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
+        $retour = $this->params()->fromQuery('retour');
+
         $this->getMaitriseNiveauService()->historise($maitrise);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('competence', [], ['fragment' => 'niveau'], true);
     }
 
     public function restaurerAction()
     {
         $maitrise = $this->getMaitriseNiveauService()->getRequestedMaitriseNiveau($this);
+        $retour = $this->params()->fromQuery('retour');
+
         $this->getMaitriseNiveauService()->restore($maitrise);
+
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('competence', [], ['fragment' => 'niveau'], true);
     }
 

@@ -12,6 +12,21 @@ use Zend\InputFilter\Factory;
 class SelectionMaitriseNiveauForm extends Form {
     use MaitriseNiveauServiceAwareTrait;
 
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @param string $type
+     * @return SelectionMaitriseNiveauForm
+     */
+    public function setType(string $type = ""): SelectionMaitriseNiveauForm
+    {
+        $this->type = $type;
+        return $this;
+    }
+
     public function init()
     {
         //select :: niveau
@@ -21,7 +36,7 @@ class SelectionMaitriseNiveauForm extends Form {
             'options' => [
                 'label' => "Niveau de maîtrise * :",
                 'empty_option' => "Sélectionner un niveau de maîtrise ...",
-                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions(),
+                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions(($this->type)??""),
             ],
             'attributes' => [
                 'id'                => 'niveau',

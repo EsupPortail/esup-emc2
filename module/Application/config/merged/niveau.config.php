@@ -48,10 +48,10 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
+                    'administration' => [
                         'pages' => [
                             'niveau' => [
-                                'label'    => 'Niveaux',
+                                'label'    => 'Niveaux des métiers',
                                 'route'    => 'niveau',
                                 'resource' => PrivilegeController::getResourceId(NiveauController::class, 'index') ,
                                 'order'    => 1150,

@@ -105,6 +105,8 @@ class ElementController extends AbstractActionController {
         }
 
         $form = $this->getSelectionMaitriseNiveauForm();
+        $form->setType($elementType);
+        $form->init();
         $form->setAttribute('action', $this->url()->fromRoute('element/changer-niveau', ['type' => $elementType, 'id' => $element->getId(), 'clef' => $clef], [], true));
         $form->bind($element);
         if ($clef === 'masquer') $form->masquerClef();
