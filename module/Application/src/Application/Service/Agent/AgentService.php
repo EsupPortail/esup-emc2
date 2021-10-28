@@ -14,6 +14,8 @@ use Application\Service\DecoratorTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -41,6 +43,40 @@ class AgentService {
             throw new RuntimeException("Un problème a été recontré lors de la mise à jour de l'agent", $e);
         }
         return $agent;
+    }
+
+    /** REQUETAGE *****************************************************************************************************/
+
+    public function getAgentsPourIndex() : array
+    {
+        $sql = <<<EOS
+select
+    a.c_individu AS ID,
+    a.prenom AS PRENOM,
+    a.nom_usage AS NOM_USAGE,
+    uuu.username AS UTILISATEUR,
+    current_date
+from agent a
+left join unicaen_utilisateur_user uuu on a.utilisateur_id = uuu.id
+left join agent_affectation aa on aa.agent_id = a.c_individu
+where aa.t_principale = 'O'
+and aa.date_debut <= current_date AND (aa.date_fin IS NULL OR aa.date_fin >= current_date)
+group by a.c_individu, a.prenom, a.c_individu, a.nom_usage, uuu.username
+order by a.nom_usage, a.prenom
+EOS;
+
+        $tmp = null;
+        try {
+            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, []);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+        }
+        return $tmp;
     }
 
     public function createQueryBuilder() : QueryBuilder

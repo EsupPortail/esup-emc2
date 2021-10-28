@@ -56,6 +56,9 @@ use Zend\View\Model\ViewModel;
 class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -64,7 +67,7 @@ class AgentController extends AbstractActionController
     use HasCompetenceCollectionServiceAwareTrait;
     use HasFormationCollectionServiceAwareTrait;
 
-    use EntretienProfessionnelServiceAwareTrait;
+
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
@@ -74,15 +77,13 @@ class AgentController extends AbstractActionController
     use CategorieServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use UserServiceAwareTrait;
+
 
     use ApplicationElementFormAwareTrait;
     use CompetenceElementFormAwareTrait;
     use FormationElementFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use UploadFormAwareTrait;
-
-    use FichePosteServiceAwareTrait;
 
     use AgentPPPServiceAwareTrait;
     use AgentPPPFormAwareTrait;
@@ -96,19 +97,11 @@ class AgentController extends AbstractActionController
     use EtatTypeServiceAwareTrait;
     use EtatServiceAwareTrait;
 
-    public function indexAction()
+    public function indexAction()  : ViewModel
     {
-        $fromQueries = $this->params()->fromQuery();
-//        $filtres = [];
-//        $clefs = ['titulaire', 'cdi', 'cdd', 'administratif', 'chercheur', 'enseignant', 'vacataire'];
-//        foreach ($clefs as $clef) {
-//            if (empty($fromQueries) or $fromQueries[$clef] === 'on') $filtres[$clef] = true;
-//        }
-//        $agents = $this->getAgentService()->getAgents($filtres);
-        $agents = $this->getAgentService()->getAgents();
+        $agents = $this->getAgentService()->getAgentsPourIndex();
         return new ViewModel([
             'agents' => $agents,
-//            'filtres' => $filtres,
         ]);
     }
 
@@ -120,10 +113,8 @@ class AgentController extends AbstractActionController
         /** si pas d'agent de specifier récupérer l'agent lié au compte de la personne connectée */
         if ($agent === null) {
             if ($utilisateur !== null) $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+            if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
         }
-
-        /** si pas d'agent throw exception */
-        if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
 
         $agentStatuts = $this->getAgentService()->getAgentStatutsByAgent($agent, true);
         $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, true);
@@ -155,13 +146,13 @@ class AgentController extends AbstractActionController
             'missions' => $missions,
 
             'ppps' => $this->getAgentPPPService()->getAgentPPPsByAgent($agent),
-            'stages' => $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
-            'tutorats' => $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
+            'stages' =>  $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
+            'tutorats' =>  $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
             'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
         ]);
     }
 
-    public function afficherStatutsGradesAction()
+    public function afficherStatutsGradesAction() : ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
@@ -180,7 +171,7 @@ class AgentController extends AbstractActionController
 
     /** Gestion des ACQUIS ***************************************************************************************/
 
-    public function ajouterFormationAction()
+    public function ajouterFormationAction()  : ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $formation = $this->getFormationService()->getRequestedFormation($this);
@@ -215,7 +206,7 @@ class AgentController extends AbstractActionController
 
     /** Validation élement associée à l'agent *************************************************************************/
 
-    public function validerElementAction()
+    public function validerElementAction() : ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $entityId = $this->params()->fromRoute('id');
@@ -289,8 +280,6 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    //TODO non retour retour semble merder
-
     //TODO fix that ...
     public function revoquerElementAction()
     {
@@ -350,7 +339,7 @@ class AgentController extends AbstractActionController
 
     /** Recherche d'agent  ********************************************************************************************/
 
-    public function rechercherAction()
+    public function rechercherAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $agents = $this->getAgentService()->getAgentsByTerm($term);
@@ -360,7 +349,7 @@ class AgentController extends AbstractActionController
         exit;
     }
 
-    public function rechercherWithStructureMereAction()
+    public function rechercherWithStructureMereAction() : JsonModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 

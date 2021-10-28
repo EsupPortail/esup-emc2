@@ -2,8 +2,7 @@
 
 /**
  * @see \Application\Controller\AgentController::indexAction()
- * @var Agent[] $agents
- * @var Boolean[] $filtres
+ * @var array $agents ['id' => string, 'prenom' => string, 'nom_usage' => string, 'utilisateur' => string ]
  */
 
 use Application\Entity\Db\Agent;
@@ -34,8 +33,6 @@ $this->headTitle("Index des agents")
 
 <div class="main">
 
-<!--    --><?php //echo $this->partial('partial/filtre_statut', ['url' => $this->url('agent'), 'filtres' => $filtres]); ?>
-
     <?php if (count($agents) > 0) : ?>
         <table id="agents" class="datatable table table-condensed">
             <thead>
@@ -49,11 +46,11 @@ $this->headTitle("Index des agents")
             <tbody>
             <?php foreach ($agents as $agent) : ?>
                 <tr>
-                    <td> <span class="badge">Octopus - <?php echo $agent->getId(); ?></span></td>
-                    <td> <?php echo $agent->getDenomination(); ?></td>
+                    <td> <span class="badge">Octopus - <?php echo $agent['id']; ?></span></td>
+                    <td> <?php echo $agent['prenom']; ?> <?php echo $agent['nom_usage']; ?> </td>
                     <td>
-                        <?php if ($agent->getUtilisateur() !== null) : ?>
-                            <span class="icon ok" style="color:darkgreen;" title="<?php echo $agent->getUtilisateur()->getUsername(); ?>"></span>
+                        <?php if ($agent['utilisateur'] !== null) : ?>
+                            <span class="icon ok" style="color:darkgreen;" title="<?php echo $agent['utilisateur']; ?>"></span>
                         <?php else: ?>
                             <span class="icon ko" style="color:darkred;"></span>
                         <?php endif; ?>
@@ -62,7 +59,7 @@ $this->headTitle("Index des agents")
                         <?php if ($canAfficher) : ?>
                             <a
                                 <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent['id']], [], true); ?>"
                             >
                                 <span class="icon voir"  title="Afficher l'agent"></span></a>
                         <?php endif; ?>
@@ -84,17 +81,5 @@ $this->headTitle("Index des agents")
             }
         } );
     } );
-
-    $(function() {
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
-        });
-    });
-    $(function() {
-        $("body").on("modification-noreload", function (event) {
-            event.div.modal('hide');
-        });
-    });
 </script>
 

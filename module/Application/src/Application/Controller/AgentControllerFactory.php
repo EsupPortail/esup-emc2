@@ -39,10 +39,13 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
 class AgentControllerFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return AgentController
+     */
+    public function __invoke(ContainerInterface $container) : AgentController
     {
         /**
-         * @var AgentService $agentService
          * @var ApplicationElementService $applicationElementService
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var CategorieService $categorieService
@@ -50,7 +53,6 @@ class AgentControllerFactory {
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var FormationElementService $formationElementService
          * @var HasFormationCollectionService $hasFormationElementService
-         * @var EntretienProfessionnelService $entretienService
          * @var ParcoursDeFormationService $parcoursService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
@@ -61,11 +63,19 @@ class AgentControllerFactory {
          * @var FormationService $formationService
          * @var StructureService $structureService
          * @var UserService $userService
-         *
+         */
+
+        /**
+         * @var AgentService $agentService
+         * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var FichePosteService $fichePosteService
-         *
+         * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
+        $fichePosteService = $container->get(FichePosteService::class);
+        $userService = $container->get(UserService::class);
+
         $applicationElementService = $container->get(ApplicationElementService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
@@ -73,7 +83,7 @@ class AgentControllerFactory {
         $formationElementService = $container->get(FormationElementService::class);
         $hasFormationElementService = $container->get(HasFormationCollectionService::class);
         $categorieService = $container->get(CategorieService::class);
-        $entretienService = $container->get(EntretienProfessionnelService::class);
+
         $parcoursService = $container->get(ParcoursDeFormationService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
@@ -81,9 +91,7 @@ class AgentControllerFactory {
         $fichierService = $container->get(FichierService::class);
         $applicationService = $container->get(ApplicationService::class);
         $formationService = $container->get(FormationService::class);
-        $userService = $container->get(UserService::class);
         $structureService = $container->get(StructureService::class);
-        $fichePosteService = $container->get(FichePosteService::class);
 
         /**
          * @var ApplicationElementForm $applicationElementForm
@@ -100,6 +108,9 @@ class AgentControllerFactory {
         $controller = new AgentController();
 
         $controller->setAgentService($agentService);
+        $controller->setEntretienProfessionnelService($entretienProfessionnelService);
+        $controller->setFichePosteService($fichePosteService);
+        $controller->setUserService($userService);
 
         $controller->setApplicationElementService($applicationElementService);
         $controller->setHasApplicationCollectionService($hasApplicationCollectionService);
@@ -110,16 +121,15 @@ class AgentControllerFactory {
 
         $controller->setParcoursDeFormationService($parcoursService);
         $controller->setCategorieService($categorieService);
-        $controller->setEntretienProfessionnelService($entretienService);
+
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
         $controller->setNatureService($natureService);
         $controller->setFichierService($fichierService);
         $controller->setFormationService($formationService);
         $controller->setApplicationService($applicationService);
-        $controller->setUserService($userService);
+
         $controller->setStructureService($structureService);
-        $controller->setFichePosteService($fichePosteService);
 
         $controller->setApplicationElementForm($applicationElementForm);
         $controller->setCompetenceElementForm($competenceElementForm);

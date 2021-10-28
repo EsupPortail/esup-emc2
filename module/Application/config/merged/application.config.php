@@ -21,6 +21,7 @@ use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
 use Application\Form\SelectionApplication\SelectionApplicationHydrator;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\Application\ApplicationGroupeService;
 use Application\Service\Application\ApplicationGroupeServiceFactory;
 use Application\Service\Application\ApplicationService;
@@ -96,7 +97,8 @@ return [
                       'ajouter-application-element',
                   ],
                   'privileges' => [
-                    AgentPrivileges::AGENT_ACQUIS_MODIFIER,
+                      AgentPrivileges::AGENT_ACQUIS_MODIFIER,
+                      FicheMetierPrivileges::FICHEMETIER_MODIFIER,
                   ],
                 ],
             ],

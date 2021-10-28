@@ -7,6 +7,8 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -320,10 +322,33 @@ class StructureService
      */
     public function getStructuresAsOptions() : array
     {
-        $structures = $this->getStructures();
+        $sql = <<<EOS
+select
+    s.id as ID,
+    s.libelle_court as LIBELLE_COURT,
+    s.libelle_long as LIBELLE_LONG,
+    st.libelle AS TYPE,
+   current_date
+from structure s
+left join structure_type st on st.id = s.type_id
+where (s.fermeture IS NULL OR s.fermeture >= current_date)
+EOS;
+
+        $tmp = null;
+        try {
+            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, []);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+        }
+
         $options = [];
-        foreach ($structures as $structure) {
-            $options[$structure->getId()] = "[".$structure->getLibelleCourt()."] ".$structure->getLibelleLong();
+        foreach ($tmp as $structure) {
+            $options[$structure['id']] = "[".$structure['type']."] ".$structure['libelle_long'] . " (".$structure['libelle_court'].")";
         }
         return $options;
     }
