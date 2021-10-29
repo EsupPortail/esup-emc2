@@ -5,7 +5,7 @@ namespace Application\Service\Agent;
 use Application\Service\Structure\StructureService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class AgentServiceFactory {
 
@@ -13,7 +13,8 @@ class AgentServiceFactory {
      * @param ContainerInterface $container
      * @return AgentService
      */
-    public function __invoke(ContainerInterface $container) {
+    public function __invoke(ContainerInterface $container) : AgentService
+    {
         /**
          * @var EntityManager $entityManager
          * @var StructureService $structureService

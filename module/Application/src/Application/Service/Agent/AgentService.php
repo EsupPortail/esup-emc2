@@ -3,11 +3,8 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentAffectation;
-use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentQuotite;
-use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
 use Application\Service\DecoratorTrait;
@@ -537,109 +534,6 @@ EOS;
         return $result;
     }
 
-    /** ************************************************************************************************************ **/
-    /** Affectations, Status, Grades **********************************************************************************/
-    /** ************************************************************************************************************ **/
-
-    /**
-     * @param Agent $agent
-     * @param bool $actif
-     * @return AgentAffectation[]
-     */
-    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentAffectation::class)->createQueryBuilder('agentaffectation')
-            ->addSelect('agent')->join('agentaffectation.agent', 'agent')
-            ->addSelect('structure')->join('agentaffectation.structure', 'structure')
-            ->andWhere('agentaffectation.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->andWhere('agentaffectation.deleted_on IS NULL')
-            ->orderBy('agentaffectation.dateDebut')
-        ;
-
-        if ($actif === true) {
-            $qb = $this->decorateWithActif($qb, 'agentaffectation');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Structure $structure
-     * @param bool $actif
-     * @return AgentAffectation[]
-     */
-    public function getAgentAffectationsByStructure(Structure $structure, bool $actif = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentAffectation::class)->createQueryBuilder('agentaffectation')
-            ->addSelect('agent')->join('agentaffectation.agent', 'agent')
-            ->addSelect('structure')->join('agentaffectation.structure', 'structure')
-            ->andWhere('agentaffectation.structure = :structure')
-            ->setParameter('structure', $structure)
-            ->andWhere('agentaffectation.deleted_on IS NULL')
-        ;
-
-        if ($actif === true) {
-            $qb = $this->decorateWithActif($qb, 'agentaffectation');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Agent $agent
-     * @param bool $actif
-     * @return AgentGrade[]
-     */
-    public function getAgentGradesByAgent(Agent $agent, bool $actif = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
-            ->addSelect('agent')->join('agentgrade.agent', 'agent')
-            ->addSelect('structure')->join('agentgrade.structure', 'structure')
-            ->addSelect('corps')->join('agentgrade.corps', 'corps')
-            ->addSelect('corps')->join('agentgrade.grade', 'grade')
-            ->addSelect('bap')->join('agentgrade.bap', 'bap')
-            ->andWhere('agentgrade.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->andWhere('agentgrade.deleted_on IS NULL')
-            ->orderBy('agentgrade.dateDebut')
-        ;
-
-        if ($actif === true) {
-            $qb = $this->decorateWithActif($qb, 'agentgrade');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Structure $structure
-     * @param bool $actif
-     * @return AgentGrade[]
-     */
-    public function getAgentGradesByStructure(Structure $structure, bool $actif = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
-            ->addSelect('agent')->join('agentgrade.agent', 'agent')
-            ->addSelect('structure')->join('agentgrade.structure', 'structure')
-            ->addSelect('corps')->join('agentgrade.corps', 'corps')
-            ->addSelect('corps')->join('agentgrade.grade', 'grade')
-            ->addSelect('bap')->join('agentgrade.bap', 'bap')
-            ->andWhere('agentgrade.structure = :structure')
-            ->setParameter('structure', $structure)
-            ->andWhere('agentgrade.deleted_on IS NULL')
-        ;
-
-        if ($actif === true) {
-            $qb = $this->decorateWithActif($qb, 'agentgrade');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
 
     /** QUOTITE *******************************************************************************************************/
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Application\Service\AgentStatut;
+namespace Application\Service\AgentAffectation;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentStatut;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Structure;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
-class AgentStatutService {
+class AgentAffectationService {
     use EntityManagerAwareTrait;
 
     /** REQUETAGE *****************************************************************************************************/
@@ -18,10 +18,10 @@ class AgentStatutService {
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(AgentStatut::class)->createQueryBuilder('agentstatut')
-            ->join('agentstatut.agent', 'agent')->addSelect('agent')
-            ->join('agentstatut.structure', 'structure')->addSelect('structure')
-            ->andWhere('agentstatut.deleted_on IS NULL')
+        $qb = $this->getEntityManager()->getRepository(AgentAffectation::class)->createQueryBuilder('agentaffectation')
+            ->join('agentaffectation.agent', 'agent')->addSelect('agent')
+            ->join('agentaffectation.structure', 'structure')->addSelect('structure')
+            ->andWhere('agentaffectation.deleted_on IS NULL')
         ;
         return $qb;
     }
@@ -31,14 +31,14 @@ class AgentStatutService {
      * @param bool $actif
      * @return array
      */
-    public function getAgentStatutsByAgent(Agent $agent, bool $actif = true) : array
+    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true) : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agentstatut.agent = :agent')
+            ->andWhere('agentaffectation.agent = :agent')
             ->setParameter('agent', $agent)
         ;
 
-        if ($actif === true) $qb = AgentStatut::decorateWithActif($qb, 'agentstatut');
+        if ($actif === true) $qb = AgentAffectation::decorateWithActif($qb, 'agentaffectation');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -49,17 +49,16 @@ class AgentStatutService {
      * @param bool $actif
      * @return array
      */
-    public function getAgentStatutsByStructure(Structure $structure, bool $actif = true) : array
+    public function getAgentAffectationsByStructure(Structure $structure, bool $actif = true) : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agentstatut.structure = :structure')
+            ->andWhere('agentaffectation.structure = :structure')
             ->setParameter('structure', $structure)
         ;
 
-        if ($actif === true) $qb = AgentStatut::decorateWithActif($qb, 'agentstatut');
+        if ($actif === true) $qb = AgentAffectation::decorateWithActif($qb, 'agentaffectation');
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
-
 }

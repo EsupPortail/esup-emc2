@@ -17,6 +17,8 @@ use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
+use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Service\AgentPPP\AgentPPPServiceAwareTrait;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
 use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
@@ -57,6 +59,8 @@ use Zend\View\Model\ViewModel;
 class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use AgentAffectationServiceAwareTrait;
+    use AgentGradeServiceAwareTrait;
     use AgentStatutServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use FichePosteServiceAwareTrait;
@@ -119,8 +123,8 @@ class AgentController extends AbstractActionController
         }
 
         $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent, true);
-        $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, true);
-        $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, true);
+        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true);
+        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent, true);
 
         $connectedAgent = $this->getAgentService()->getAgentByUser($utilisateur);
         $connectedRole = $this->getUserService()->getConnectedRole();
@@ -159,8 +163,8 @@ class AgentController extends AbstractActionController
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
         $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent, false);
-        $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, false);
-        $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, false);
+        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, false);
+        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent, false);
 
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),

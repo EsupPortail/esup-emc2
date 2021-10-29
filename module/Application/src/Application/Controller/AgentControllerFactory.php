@@ -10,6 +10,8 @@ use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAccompagnement\AgentAccompagnementService;
+use Application\Service\AgentAffectation\AgentAffectationService;
+use Application\Service\AgentGrade\AgentGradeService;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
 use Application\Service\AgentStatut\AgentStatutService;
@@ -68,12 +70,16 @@ class AgentControllerFactory {
 
         /**
          * @var AgentService $agentService
+         * @var AgentAffectationService $agentAffectationService
+         * @var AgentGradeService $agentGradeService
          * @var AgentStatutService $agentStatutService
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var FichePosteService $fichePosteService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAffectationService = $container->get(AgentAffectationService::class);
+        $agentGradeService = $container->get(AgentGradeService::class);
         $agentStatutService = $container->get(AgentStatutService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $fichePosteService = $container->get(FichePosteService::class);
@@ -111,6 +117,8 @@ class AgentControllerFactory {
         $controller = new AgentController();
 
         $controller->setAgentService($agentService);
+        $controller->setAgentAffectationService($agentAffectationService);
+        $controller->setAgentGradeService($agentGradeService);
         $controller->setAgentStatutService($agentStatutService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setFichePosteService($fichePosteService);

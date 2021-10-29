@@ -31,6 +31,10 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
 use Application\Service\AgentAccompagnement\AgentAccompagnementService;
 use Application\Service\AgentAccompagnement\AgentAccompagnementServiceFactory;
+use Application\Service\AgentAffectation\AgentAffectationService;
+use Application\Service\AgentAffectation\AgentAffectationServiceFactory;
+use Application\Service\AgentGrade\AgentGradeService;
+use Application\Service\AgentGrade\AgentGradeServiceFactory;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentPPP\AgentPPPServiceFactory;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
@@ -626,8 +630,11 @@ return [
     'service_manager' => [
         'factories' => [
             AgentAssertion::class => AgentAssertionFactory::class,
+
             AgentService::class => AgentServiceFactory::class,
+            AgentAffectationService::class => AgentAffectationServiceFactory::class,
             AgentAccompagnementService::class => AgentAccompagnementServiceFactory::class,
+            AgentGradeService::class => AgentGradeServiceFactory::class,
             AgentPPPService::class => AgentPPPServiceFactory::class,
             AgentStageObservationService::class => AgentStageObservationServiceFactory::class,
             AgentStatutService::class => AgentStatutServiceFactory::class,
