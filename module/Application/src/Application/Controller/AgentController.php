@@ -19,6 +19,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
 use Application\Service\AgentPPP\AgentPPPServiceAwareTrait;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
+use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
@@ -56,6 +57,7 @@ use Zend\View\Model\ViewModel;
 class AgentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use AgentStatutServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -116,7 +118,7 @@ class AgentController extends AbstractActionController
             if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
         }
 
-        $agentStatuts = $this->getAgentService()->getAgentStatutsByAgent($agent, true);
+        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent, true);
         $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, true);
         $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, true);
 
@@ -156,7 +158,7 @@ class AgentController extends AbstractActionController
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
-        $agentStatuts = $this->getAgentService()->getAgentStatutsByAgent($agent, false);
+        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent, false);
         $agentAffectations = $this->getAgentService()->getAgentAffectationsByAgent($agent, false);
         $agentGrades = $this->getAgentService()->getAgentGradesByAgent($agent, false);
 

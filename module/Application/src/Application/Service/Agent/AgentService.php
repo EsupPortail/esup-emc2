@@ -591,49 +591,6 @@ EOS;
     /**
      * @param Agent $agent
      * @param bool $actif
-     * @return AgentStatut[]
-     */
-    public function getAgentStatutsByAgent(Agent $agent, bool $actif = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentStatut::class)->createQueryBuilder('agentstatut')
-            ->andWhere('agentstatut.deleted_on IS NULL')
-            ->orderBy('agentstatut.dateDebut')
-        ;
-        $qb = $this->decorateWithAgent($qb, 'agentstatut', $agent);
-        $qb = $this->decorateWithStructure($qb, 'agentstatut');
-
-        if ($actif === true) {
-            $qb = $this->decorateWithActif($qb, 'agentstatut');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Structure $structure
-     * @param bool $actif
-     * @return AgentStatut[]
-     */
-    public function getAgentStatutsByStructure(Structure $structure, bool $actif = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentStatut::class)->createQueryBuilder('agentstatut')
-            ->andWhere('agentstatut.deleted_on IS NULL')
-        ;
-        $qb = $this->decorateWithAgent($qb, 'agentstatut');
-        $qb = $this->decorateWithStructure($qb, 'agentstatut', $structure);
-
-        if ($actif === true) {
-            $qb = $this->decorateWithActif($qb, 'agentstatut');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Agent $agent
-     * @param bool $actif
      * @return AgentGrade[]
      */
     public function getAgentGradesByAgent(Agent $agent, bool $actif = true) : array
@@ -707,29 +664,6 @@ EOS;
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs AgentQuotite de retournées pour l'agent [".$agent->getId()."] en date du [".$date->format('d/m/Y')."]",0,$e);
         }
-        return $result;
-    }
-
-    /** STATUTS *******************************************************************************************************/
-
-    /**
-     * @param Agent $agent
-     * @param DateTime|null $date
-     * @return AgentStatut[]
-     */
-    public function getAgentStatuts(Agent $agent, ?DateTime $date = null) : array
-    {
-        if ($date === null) $date = new DateTime();
-
-        $qb = $this->getEntityManager()->getRepository(AgentStatut::class)->createQueryBuilder('astatut')
-            ->leftjoin('astatut.structure', 'structure')->addSelect('structure')
-            ->andWhere('astatut.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->andWhere('astatut.dateDebut <= :date')
-            ->andWhere('astatut.dateFin IS NULL OR astatut.dateFin >= :date')
-            ->setParameter('date', $date)
-        ;
-        $result = $qb->getQuery()->getResult();
         return $result;
     }
 

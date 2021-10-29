@@ -3,6 +3,7 @@
 namespace Application\Entity\Db\Traits;
 
 use DateTime;
+use Doctrine\ORM\QueryBuilder;
 
 trait HasPeriodeTrait {
 
@@ -86,5 +87,23 @@ trait HasPeriodeTrait {
     public function getDateFinToString() : string
     {
         return ($this->dateFin)?$this->dateFin->format('d/m/Y'):"N.C.";
+    }
+
+    /** Decorateur ****************************************************************************************************/
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $entityName
+     * @param DateTime|null $date
+     * @return QueryBuilder
+     */
+    static public function decorateWithActif(QueryBuilder $qb, string $entityName,  ?DateTime $date = null) : QueryBuilder
+    {
+        if ($date === null) $date = new DateTime();
+        $qb = $qb
+            ->andWhere($entityName . '.dateDebut <= :date')
+            ->andWhere($entityName . '.dateFin IS NULL OR ' . $entityName . '.dateFin >= :date')
+            ->setParameter('date', $date);
+        return $qb;
     }
 }

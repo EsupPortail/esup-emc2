@@ -35,6 +35,8 @@ use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentPPP\AgentPPPServiceFactory;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceFactory;
+use Application\Service\AgentStatut\AgentStatutService;
+use Application\Service\AgentStatut\AgentStatutServiceFactory;
 use Application\Service\AgentTutorat\AgentTutoratService;
 use Application\Service\AgentTutorat\AgentTutoratServiceFactory;
 use Application\View\Helper\AgentAffectationViewHelper;
@@ -628,6 +630,7 @@ return [
             AgentAccompagnementService::class => AgentAccompagnementServiceFactory::class,
             AgentPPPService::class => AgentPPPServiceFactory::class,
             AgentStageObservationService::class => AgentStageObservationServiceFactory::class,
+            AgentStatutService::class => AgentStatutServiceFactory::class,
             AgentTutoratService::class => AgentTutoratServiceFactory::class,
         ],
     ],
