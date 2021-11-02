@@ -135,12 +135,13 @@ class AgentController extends AbstractActionController
         if ($connectedAgent !== $agent and ($connectedRole->getRoleId() === RoleConstant::PERSONNEL or $agent === null)) {
             return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [], true);
         }
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsParAgent($agent);
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
-        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
 
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgents([$agent]);
 
+        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
+//        $applications = $this->getApplicationElementService()->getApplicationElementsByAgent($agent);
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
@@ -148,10 +149,13 @@ class AgentController extends AbstractActionController
             'affectations' => $agentAffectations,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
+            'fichespostes' => $fichespostes,
+
             'entretiens' => $entretiens,
             'responsables' => $responsables,
+
             'parcoursArray' => $parcoursArray,
-            'fichespostes' => $fichespostes,
+
             'quotite' => $this->getAgentQuotiteService()->getAgentQuotiteCurrent($agent),
             'missions' => $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgent($agent, false),
 

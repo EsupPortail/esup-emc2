@@ -3,10 +3,10 @@
 namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
-use Application\Service\DecoratorTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -29,7 +29,6 @@ class EntretienProfessionnelService {
     use DelegueServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use DecoratorTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -103,8 +102,8 @@ class EntretienProfessionnelService {
             ->addSelect('validationDRH')->leftjoin('entretien.validationDRH','validationDRH')
         ;
 
-        $qb = $this->decorateWithActif($qb, 'affectation');
-        $qb = $this->decorateWithEtat($qb, 'entretien');
+        $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
+        $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
         return $qb;
     }
 
@@ -231,6 +230,7 @@ class EntretienProfessionnelService {
             ->addSelect('champ')->join('categorie.champs', 'champ')
             ->andWhere('entretien.id = :id')
             ->setParameter('id', $id);
+
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
@@ -253,15 +253,16 @@ class EntretienProfessionnelService {
 
     /**
      * @param Agent $agent
-     * @return EntretienProfessionnel[]
+     * @return array
      */
-    public function getEntretiensProfessionnelsParAgent(Agent $agent) : array
+    public function getEntretiensProfessionnelsByAgent(Agent $agent)  : array
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->leftJoin('entretien.responsable', 'responsable')->addSelect('responsable')
             ->andWhere('entretien.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->orderBy('campagne.annee', 'ASC')
-        ;
+            ->setParameter('agent', $agent);
+
+        $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
 
         $result = $qb->getQuery()->getResult();
         return $result;

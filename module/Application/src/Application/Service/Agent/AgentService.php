@@ -5,7 +5,6 @@ namespace Application\Service\Agent;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
-use Application\Service\DecoratorTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -22,7 +21,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 class AgentService {
     use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
-    use DecoratorTrait;
 
     /** AGENT *********************************************************************************************************/
 

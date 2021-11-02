@@ -2,6 +2,8 @@
 
 namespace UnicaenEtat\Entity\Db;
 
+use Doctrine\ORM\QueryBuilder;
+
 trait HasEtatTrait {
 
     private $etat;
@@ -24,5 +26,27 @@ trait HasEtatTrait {
         return $this;
     }
 
+    /** Decorateur ****************************************************************************************************/
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $entityName
+     * @param Etat|null $etat
+     * @return QueryBuilder
+     */
+    static public function decorateWithEtat(QueryBuilder $qb, string $entityName,  ?Etat $etat = null) : QueryBuilder
+    {
+        $qb = $qb
+            ->leftJoin($entityName . '.etat', 'etat')->addSelect('etat')
+            ->leftJoin('etat.type', 'type')->addSelect('type')
+        ;
+
+        if ($etat !== null) {
+            $qb = $qb->andWhere($entityName . '.etat = :etat')
+                    ->setParameter('etat', $etat);
+        }
+
+        return $qb;
+    }
 
 }
