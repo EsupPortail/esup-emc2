@@ -110,7 +110,6 @@ class StructureService
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($term).'%')
-            ->andWhere('structure.histo IS NULL')
             ->andWhere('structure.fermeture IS NULL')
         ;
 
@@ -136,7 +135,6 @@ class StructureService
             ->andWhere('gestionnaireSelection.id = :userId')
             ->setParameter('userId', $user->getId())
             ->orderBy('structure.libelleCourt')
-            ->andWhere("structure.histo IS NULL")
         ;
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
 

@@ -141,7 +141,6 @@ class EntretienProfessionnelService {
                 ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
                 ->andWhere('affectation.structure = :structure')
                 ->setParameter('structure', $structure)
-                ->andWhere('structure.histo IS NULL')
                 ->andWhere('structure.fermeture IS NULL')
                 ->andWhere('affectation.dateDebut <= entretien.dateEntretien')
                 ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien');
@@ -201,7 +200,6 @@ class EntretienProfessionnelService {
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($texte).'%')
-            ->andWhere('structure.histo IS NULL')
             ->andWhere('structure.fermeture IS NULL')
             ->andWhere('affectation.dateDebut <= entretien.dateEntretien')
             ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien')

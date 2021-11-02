@@ -2,10 +2,10 @@
 
 namespace Application\Form\AgentMissionSpecifique;
 
+use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\DateTime;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
@@ -80,29 +80,13 @@ class AgentMissionSpecifiqueForm extends Form {
             ]);
         $this->add($structure);
 
-        //Debut
+        // periode
         $this->add([
-            'type' => DateTime::class,
-            'name' => 'debut',
-            'options' => [
-                'label' => "Date de début* :",
-                'format' => "d/m/Y",
-            ],
+            'name' => 'HasPeriode',
+            'type' => HasPeriodeFieldset::class,
             'attributes' => [
-                'id' => 'debut',
-            ],
-        ]);
-        //Fin
-        $this->add([
-            'type' => DateTime::class,
-            'name' => 'fin',
-            'options' => [
-                'label' => "Date de fin :",
-                'format' => "d/m/Y",
-            ],
-            'attributes' => [
-                'id' => 'fin',
-            ],
+                'id' => 'periode',
+            ]
         ]);
         //Decharge
         $this->add([
@@ -136,8 +120,10 @@ class AgentMissionSpecifiqueForm extends Form {
             'agent'             => [ 'required' => true,  ],
             'mission'           => [ 'required' => true,  ],
             'structure'         => [ 'required' => false, ],
-            'debut'             => [ 'required' => true,  ],
-            'fin'               => [ 'required' => false, ],
+            'HasPeriode'        => [ 'required' => false,
+//                'HasPeriode#date_debut' => ['required' => true],
+//                'HasPeriode#date_fin' => ['required' => false],
+            ],
             'decharge'          => [ 'required' => false, ],
         ]));
     }

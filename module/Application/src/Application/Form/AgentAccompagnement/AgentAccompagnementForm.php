@@ -64,7 +64,7 @@ class AgentAccompagnementForm extends Form
                 'data-live-search' => 'true',
             ],
         ]);
-        // description
+        // periode
         $this->add([
             'name' => 'HasPeriode',
             'type' => HasPeriodeFieldset::class,
