@@ -10,6 +10,10 @@ use Application\Form\AgentAccompagnement\AgentAccompagnementForm;
 use Application\Form\AgentAccompagnement\AgentAccompagnementFormFactory;
 use Application\Form\AgentAccompagnement\AgentAccompagnementHydrator;
 use Application\Form\AgentAccompagnement\AgentAccompagnementHydratorFactory;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormFactory;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydrator;
+use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactory;
 use Application\Form\AgentPPP\AgentPPPForm;
 use Application\Form\AgentPPP\AgentPPPFormFactory;
 use Application\Form\AgentPPP\AgentPPPHydrator;
@@ -656,6 +660,7 @@ return [
         'factories' => [
             SelectionAgentForm::class => SelectionAgentFormFactory::class,
             AgentAccompagnementForm::class => AgentAccompagnementFormFactory::class,
+            AgentMissionSpecifiqueForm::class => AgentMissionSpecifiqueFormFactory::class,
             AgentPPPForm::class => AgentPPPFormFactory::class,
             AgentStageObservationForm::class => AgentStageObservationFormFactory::class,
             AgentTutoratForm::class => AgentTutoratFormFactory::class,
@@ -665,6 +670,7 @@ return [
         'factories' => [
             SelectionAgentHydrator::class => SelectionAgentHydratorFactory::class,
             AgentAccompagnementHydrator::class => AgentAccompagnementHydratorFactory::class,
+            AgentMissionSpecifiqueHydrator::class => AgentMissionSpecifiqueHydratorFactory::class,
             AgentPPPHydrator::class => AgentPPPHydratorFactory::class,
             AgentStageObservationHydrator::class => AgentStageObservationHydratorFactory::class,
             AgentTutoratHydrator::class => AgentTutoratHydratorFactory::class,

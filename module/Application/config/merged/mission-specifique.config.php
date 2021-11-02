@@ -6,10 +6,6 @@ use Application\Controller\MissionSpecifiqueAffectationController;
 use Application\Controller\MissionSpecifiqueAffectationControllerFactory;
 use Application\Controller\MissionSpecifiqueController;
 use Application\Controller\MissionSpecifiqueControllerFactory;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormFactory;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydrator;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueHydratorFactory;
 use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
 use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
 use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
@@ -504,13 +500,11 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AgentMissionSpecifiqueForm::class => AgentMissionSpecifiqueFormFactory::class,
             MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            AgentMissionSpecifiqueHydrator::class => AgentMissionSpecifiqueHydratorFactory::class,
             MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
         ],
     ]
