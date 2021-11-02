@@ -4,7 +4,7 @@ namespace Application\Controller;
 
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
-use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
@@ -16,19 +16,19 @@ class MissionSpecifiqueAffectationControllerFactory {
      * @param ContainerInterface $container
      * @return MissionSpecifiqueAffectationController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : MissionSpecifiqueAffectationController
     {
         /**
          * @var AgentService $agentService
+         * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var RenduService $renduService
          * @var MissionSpecifiqueService $missionSpecifiqueService
-         * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var StructureService $structureService
          */
         $agentService = $container->get(AgentService::class);
+        $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $renduService = $container->get(RenduService::class);
         $missionSpecifiqueService = $container->get(MissionSpecifiqueService::class);
-        $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $structureService = $container->get(StructureService::class);
 
         /**
@@ -40,9 +40,9 @@ class MissionSpecifiqueAffectationControllerFactory {
         $controller = new MissionSpecifiqueAffectationController();
 
         $controller->setAgentService($agentService);
+        $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
         $controller->setRenduService($renduService);
         $controller->setMissionSpecifiqueService($missionSpecifiqueService);
-        $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setStructureService($structureService);
 
         $controller->setAgentMissionSpecifiqueForm($agentMissionSpecifiqueForm);

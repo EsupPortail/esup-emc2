@@ -8,9 +8,9 @@ use Application\Form\HasDescription\HasDescriptionForm;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
-use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
 use Application\Service\Poste\PosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
@@ -20,8 +20,6 @@ use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\Role\RoleService;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureControllerFactory {
 
@@ -29,26 +27,26 @@ class StructureControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var EntretienProfessionnelService $entretienService
          * @var CampagneService $campagneService
          * @var DelegueService $delegueService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var MissionSpecifiqueAffectationService $missionSpecifiqueAffectationService
          * @var PosteService $posteService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
          */
         $agentService = $container->get(AgentService::class);
+        $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
         $delegueService = $container->get(DelegueService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $missionSpecifiqueAffectationService = $container->get(MissionSpecifiqueAffectationService::class);
         $posteService = $container->get(PosteService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
@@ -69,13 +67,13 @@ class StructureControllerFactory {
         $controller = new StructureController();
 
         $controller->setAgentService($agentService);
+        $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
         $controller->setEntretienProfessionnelService($entretienService);
         $controller->setCampagneService($campagneService);
         $controller->setDelegueService($delegueService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setMissionSpecifiqueAffectationService($missionSpecifiqueAffectationService);
         $controller->setPosteService($posteService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);

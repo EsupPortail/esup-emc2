@@ -15,8 +15,6 @@ use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
 use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
 use Application\Form\MissionSpecifique\MissionSpecifiqueHydratorFactory;
 use Application\Provider\Privilege\MissionspecifiquePrivileges;
-use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationService;
-use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceFactory;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -419,7 +417,7 @@ return [
                             'afficher' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/afficher/:affectation',
+                                    'route'    => '/afficher/:agent-mission-specifique',
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'afficher',
@@ -439,7 +437,7 @@ return [
                             'modifier' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/modifier/:affectation',
+                                    'route'    => '/modifier/:agent-mission-specifique',
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'modifier',
@@ -449,7 +447,7 @@ return [
                             'historiser' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/historiser/:affectation',
+                                    'route'    => '/historiser/:agent-mission-specifique',
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'historiser',
@@ -459,7 +457,7 @@ return [
                             'restaurer' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/restaurer/:affectation',
+                                    'route'    => '/restaurer/:agent-mission-specifique',
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'restaurer',
@@ -469,7 +467,7 @@ return [
                             'detruire' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/detruire/:affectation',
+                                    'route'    => '/detruire/:agent-mission-specifique',
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'detruire',
@@ -479,7 +477,7 @@ return [
                             'generer-lettre-type' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/generer-lettre-type/:affectation',
+                                    'route'    => '/generer-lettre-type/:agent-mission-specifique',
                                     'defaults' => [
                                         'controller' => MissionSpecifiqueAffectationController::class,
                                         'action'     => 'generer-lettre-type',
@@ -496,7 +494,6 @@ return [
     'service_manager' => [
         'factories' => [
             MissionSpecifiqueService::class => MissionSpecifiqueServiceFactory::class,
-            MissionSpecifiqueAffectationService::class => MissionSpecifiqueAffectationServiceFactory::class,
         ],
     ],
     'controllers'     => [

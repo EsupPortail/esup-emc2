@@ -14,7 +14,7 @@ class PosteController extends AbstractActionController {
     use PosteServiceAwareTrait;
     use PosteFormAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $postes = $this->getPosteService()->getPostes();
         
@@ -23,7 +23,7 @@ class PosteController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction()
+    public function afficherAction()  :ViewModel
     {
         /** @var Poste $poste */
         $posteId = $this->params()->fromRoute('poste');
@@ -35,7 +35,7 @@ class PosteController extends AbstractActionController {
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         /** @var Poste $poste */
         $poste = new Poste();
@@ -64,7 +64,7 @@ class PosteController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         /** @var Poste $poste */
         $posteId = $this->params()->fromRoute('poste');
@@ -94,7 +94,7 @@ class PosteController extends AbstractActionController {
         return $vm;
     }
 
-    public function supprimerAction()
+    public function supprimerAction() : ViewModel
     {
         $posteId = $this->params()->fromRoute('poste');
         $poste = $this->getPosteService()->getPoste($posteId);

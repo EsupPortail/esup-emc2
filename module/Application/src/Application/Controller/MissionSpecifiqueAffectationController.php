@@ -6,7 +6,7 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
@@ -18,10 +18,10 @@ use Zend\View\Model\ViewModel;
 
 class MissionSpecifiqueAffectationController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use AgentMissionSpecifiqueServiceAwareTrait;
     use RenduServiceAwareTrait;
     use MissionSpecifiqueServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use MissionSpecifiqueAffectationServiceAwareTrait;
 
     use AgentMissionSpecifiqueFormAwareTrait;
 
@@ -34,7 +34,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $agent        = ($agentId !== '')?$this->getAgentService()->getAgent($agentId):null;
         $structure    = ($structureId !== '')?$this->getStructureService()->getStructure($structureId):null;
         $mission      = ($missionId !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($missionId):null;
-        $affectations = $this->getMissionSpecifiqueAffectationService()->getAffectations($agent, $mission, $structure);
+        $affectations = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgentAndMissionAndStructure($agent, $mission, $structure, false);
         $missions    = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
 
         return new ViewModel([
@@ -49,7 +49,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
     public function afficherAction() : ViewModel
     {
-        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
+        $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
 
         $vm = new ViewModel();
         $vm->setVariables([
@@ -95,7 +95,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getMissionSpecifiqueAffectationService()->create($affectation);
+                $this->getAgentMissionSpecifiqueService()->create($affectation);
             }
         }
 
@@ -115,7 +115,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $agentId = $this->params()->fromQuery('agent');
         $agent = $this->getAgentService()->getAgent($agentId);
 
-        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
+        $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
         $agentSS = $form->get('agent');
@@ -142,7 +142,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getMissionSpecifiqueAffectationService()->update($affectation);
+                $this->getAgentMissionSpecifiqueService()->update($affectation);
             }
         }
 
@@ -156,8 +156,8 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
     }
 
     public function historiserAction() {
-        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
-        $this->getMissionSpecifiqueAffectationService()->historise($affectation);
+        $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
+        $this->getAgentMissionSpecifiqueService()->historise($affectation);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
@@ -165,8 +165,8 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
     }
 
     public function restaurerAction() {
-        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
-        $this->getMissionSpecifiqueAffectationService()->restore($affectation);
+        $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
+        $this->getAgentMissionSpecifiqueService()->restore($affectation);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
@@ -175,13 +175,13 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
     public function detruireAction()
     {
-        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
+        $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueAffectationService()->delete($affectation);
+            if ($data["reponse"] === "oui") $this->getAgentMissionSpecifiqueService()->delete($affectation);
             exit();
         }
 
@@ -199,7 +199,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
     public function genererLettreTypeAction()
     {
-        $affectation = $this->getMissionSpecifiqueAffectationService()->getRequestedAffectation($this);
+        $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
 
         $vars = [
             'agent' => $affectation->getAgent(),

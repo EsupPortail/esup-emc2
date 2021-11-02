@@ -10,9 +10,9 @@ use Application\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
-use Application\Service\MissionSpecifique\MissionSpecifiqueAffectationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -32,10 +32,10 @@ use Zend\View\Model\ViewModel;
 
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use AgentMissionSpecifiqueServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
-    use MissionSpecifiqueAffectationServiceAwareTrait;
     use PosteServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
@@ -60,7 +60,7 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
@@ -70,7 +70,7 @@ class StructureController extends AbstractActionController {
         $structures[] =  $structure;
 
         /** Récupération des missions spécifiques liées aux structures */
-        $missionsSpecifiques = []; //$this->getMissionSpecifiqueAffectationService()->getMissionsSpecifiquesByStructures($structures);
+        $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByStructures($structures, false);
 
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
@@ -403,7 +403,7 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] = $structure;
-        $missionsSpecifiques = $this->getMissionSpecifiqueAffectationService()->getMissionsSpecifiquesByStructures($structures);
+        $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByStructures($structures, false);
 
 
         $filename = "listing_mission_specifique-_" . str_replace(" ","_",$structure->getLibelleCourt()) . "_-_" . (new DateTime())->format('ymd-hms') . ".csv";

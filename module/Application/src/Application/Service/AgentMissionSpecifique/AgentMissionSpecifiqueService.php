@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\Structure;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -15,6 +16,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class AgentMissionSpecifiqueService
 {
     use GestionEntiteHistorisationTrait;
+    use StructureServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -160,6 +162,61 @@ class AgentMissionSpecifiqueService
             ->andWhere('agentmission.structure = :structure')
             ->setParameter('structure', $structure)
         ;
+
+        if ($actif === true) $qb = AgentMissionSpecifique::decorateWithActif($qb, 'agentmission');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param array $structures
+     * @param bool $actif
+     * @return array
+     */
+    public function getAgentMissionsSpecifiquesByStructures(array $structures, bool $actif = true) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentmission.structure in (:structures)')
+            ->setParameter('structures', $structures)
+        ;
+
+        if ($actif === true) $qb = AgentMissionSpecifique::decorateWithActif($qb, 'agentmission');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Agent|null $agent
+     * @param MissionSpecifique|null $mission
+     * @param Structure|null $structure
+     * @param bool $actif
+     * @return array
+     */
+    public function getAgentMissionsSpecifiquesByAgentAndMissionAndStructure(?Agent $agent, ?MissionSpecifique  $mission, ?Structure $structure, bool $actif = true) : array
+    {
+        $qb = $this->createQueryBuilder();
+
+        if ($agent) {
+            $qb = $qb->andWhere('agentmission.agent = :agent')
+                ->setParameter('agent', $agent);
+        }
+
+        if ($mission) {
+            $qb = $qb->andWhere('agentmission.mission = :mission')
+                ->setParameter('mission', $mission);
+        }
+
+        if ($structure) {
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
+
+            $qb = $this->createQueryBuilder()
+                ->andWhere('agentmission.structure in (:structures)')
+                ->setParameter('structures', $structures)
+            ;
+        }
 
         if ($actif === true) $qb = AgentMissionSpecifique::decorateWithActif($qb, 'agentmission');
 
