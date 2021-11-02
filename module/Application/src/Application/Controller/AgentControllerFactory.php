@@ -12,7 +12,9 @@ use Application\Service\Agent\AgentService;
 use Application\Service\AgentAccompagnement\AgentAccompagnementService;
 use Application\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentGrade\AgentGradeService;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentPPP\AgentPPPService;
+use Application\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
 use Application\Service\AgentStatut\AgentStatutService;
 use Application\Service\AgentTutorat\AgentTutoratService;
@@ -72,6 +74,8 @@ class AgentControllerFactory {
          * @var AgentService $agentService
          * @var AgentAffectationService $agentAffectationService
          * @var AgentGradeService $agentGradeService
+         * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
+         * @var AgentQuotiteService $agentQuotiteService
          * @var AgentStatutService $agentStatutService
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var FichePosteService $fichePosteService
@@ -80,6 +84,8 @@ class AgentControllerFactory {
         $agentService = $container->get(AgentService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentGradeService = $container->get(AgentGradeService::class);
+        $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
+        $agentQuotiteService = $container->get(AgentQuotiteService::class);
         $agentStatutService = $container->get(AgentStatutService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $fichePosteService = $container->get(FichePosteService::class);
@@ -119,6 +125,8 @@ class AgentControllerFactory {
         $controller->setAgentService($agentService);
         $controller->setAgentAffectationService($agentAffectationService);
         $controller->setAgentGradeService($agentGradeService);
+        $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
+        $controller->setAgentQuotiteService($agentQuotiteService);
         $controller->setAgentStatutService($agentStatutService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setFichePosteService($fichePosteService);

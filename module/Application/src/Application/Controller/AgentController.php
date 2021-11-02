@@ -19,7 +19,9 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentPPP\AgentPPPServiceAwareTrait;
+use Application\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
 use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
@@ -61,6 +63,8 @@ class AgentController extends AbstractActionController
     use AgentServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use AgentGradeServiceAwareTrait;
+    use AgentMissionSpecifiqueServiceAwareTrait;
+    use AgentQuotiteServiceAwareTrait;
     use AgentStatutServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use FichePosteServiceAwareTrait;
@@ -136,7 +140,7 @@ class AgentController extends AbstractActionController
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
 
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgents([$agent]);
-        $missions = $agent->getMissionsSpecifiques();
+
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
@@ -144,12 +148,12 @@ class AgentController extends AbstractActionController
             'affectations' => $agentAffectations,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
-            'quotite' => $this->getAgentService()->getAgentQuotite($agent),
             'entretiens' => $entretiens,
             'responsables' => $responsables,
             'parcoursArray' => $parcoursArray,
             'fichespostes' => $fichespostes,
-            'missions' => $missions,
+            'quotite' => $this->getAgentQuotiteService()->getAgentQuotiteCurrent($agent),
+            'missions' => $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgent($agent, false),
 
             'ppps' => $this->getAgentPPPService()->getAgentPPPsByAgent($agent),
             'stages' =>  $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),

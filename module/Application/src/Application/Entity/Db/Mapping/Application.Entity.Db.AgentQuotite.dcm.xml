@@ -8,8 +8,8 @@
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
 
-        <field name="debut"     type="datetime"                 column="debut"     nullable="false"/>
-        <field name="fin"       type="datetime"                 column="fin"       nullable="false"/>
+        <field name="dateDebut" type="datetime"                     column="debut"     nullable="false"/>
+        <field name="dateFin"   type="datetime"                     column="fin"       nullable="false"/>
         <field name="quotite"   type="integer"                      column="quotite"   nullable="false"/>
 
         <!-- DB IMPORT #############################  -->

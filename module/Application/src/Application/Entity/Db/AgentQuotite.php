@@ -2,27 +2,19 @@
 
 namespace Application\Entity\Db;
 
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
-use DateTime;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 
-/**
- * Données synchronisées depuis Octopus :
- * - pas de setter sur les données ainsi remontées
- */
-class AgentQuotite
+class AgentQuotite implements HasPeriodeInterface
 {
+    use HasPeriodeTrait;
     use DbImportableAwareTrait;
-    use DateTimeAwareTrait;
 
     /** @var int */
     private $id;
     /** @var Agent */
     private $agent;
-    /** @var DateTime */
-    private $debut;
-    /** @var DateTime */
-    private $fin;
     /** @var integer */
     private $quotite;
 
@@ -53,42 +45,6 @@ class AgentQuotite
     }
 
     /**
-     * @return DateTime|null
-     */
-    public function getDebut(): ?DateTime
-    {
-        return $this->debut;
-    }
-
-    /**
-     * @param DateTime|null $debut
-     * @return AgentQuotite
-     */
-    public function setDebut(?DateTime $debut): AgentQuotite
-    {
-        $this->debut = $debut;
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getFin(): ?DateTime
-    {
-        return $this->fin;
-    }
-
-    /**
-     * @param DateTime|null $fin
-     * @return AgentQuotite
-     */
-    public function setFin(?DateTime $fin): AgentQuotite
-    {
-        $this->fin = $fin;
-        return $this;
-    }
-
-    /**
      * @return int|null
      */
     public function getQuotite(): ?int
@@ -106,11 +62,4 @@ class AgentQuotite
         return $this;
     }
 
-    public function isEnCours(?DateTime $date = null)
-    {
-        $date = $date ? : $this->getDateTime();
-        if ($date < $this->getDebut()) return false;
-        if ($this->getFin() !== null and $date > $this->getFin()) return false;
-        return true;
-    }
 }

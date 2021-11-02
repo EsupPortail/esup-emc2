@@ -531,7 +531,7 @@ class Agent implements
     {
         /** @var AgentQuotite $quotite */
         foreach ($this->quotites as $quotite) {
-            if (!$quotite->isDeleted() AND $quotite->isEnCours($date)) return $quotite;
+            if (!$quotite->isDeleted() AND $quotite->estEnCours($date)) return $quotite;
         }
         return null;
     }

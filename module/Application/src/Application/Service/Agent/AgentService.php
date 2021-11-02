@@ -3,12 +3,9 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
 use Application\Service\DecoratorTrait;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -18,11 +15,12 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationElement;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
     use DecoratorTrait;
 
@@ -105,7 +103,7 @@ EOS;
 //            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
             ->andWhere('affectation.dateDebut <= :NOW')
             ->andWhere('affectation.dateFin >= :NOW OR affectation.dateFin IS NULL')
-            ->setParameter('NOW', $this->getDateTime())
+            ->setParameter('NOW', new DateTime())
         ;
 
 //        $tmp = ['statut IS NULL'];
@@ -134,7 +132,7 @@ EOS;
      */
     public function getAgentsByTerm(?string $term, ?array $structures = null) : array
     {
-        $date = $this->getDateTime();
+        $date = new DateTime();
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
             ->addSelect('structure')->join('affectation.structure', 'structure')
@@ -232,7 +230,7 @@ EOS;
      */
     public function getAgentsSansFichePosteByStructure(?Structure $structure = null, bool $sousstructure = false) : array
     {
-        $today = $this->getDateTime();
+        $today = new DateTime();
 
         /** !!TODO!! faire le lien entre agent et fiche de poste */
         $qb1 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
@@ -280,7 +278,7 @@ EOS;
      */
     public function getAgentsByStructures(array $structures) : array
     {
-        $today = $this->getDateTime();
+        $today = new DateTime();
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             //AFFECTATION
@@ -429,88 +427,6 @@ EOS;
         return $result;
     }
 
-    /** MISSION SPECIFIQUE ********************************************************************************************/
-
-    /**
-     * @param integer $id
-     * @return AgentMissionSpecifique|null
-     */
-    public function getAgentMissionSpecifique(int $id) : ?AgentMissionSpecifique
-    {
-        $qb = $this->getEntityManager()->getRepository(AgentMissionSpecifique::class)->createQueryBuilder('mission')
-            ->andWhere('mission.id = :id')
-            ->setParameter('id', $id)
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (ORMException $e) {
-            throw new RuntimeException("Plusieurs AgentMissionSpecifique partagent le même identifiant [". $id ."].", $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return AgentMissionSpecifique|null
-     */
-    public function getRequestedAgentMissionSpecifique(AbstractActionController $controller, string $paramName = 'agent-mission-specifique') : ?AgentMissionSpecifique
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $result = $this->getAgentMissionSpecifique($id);
-        return $result;
-    }
-
-    /**
-     * @param AgentMissionSpecifique $agentMissionSpecifique
-     * @return AgentMissionSpecifique
-     */
-    public function createAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
-    {
-        $this->createFromTrait($agentMissionSpecifique);
-        return $agentMissionSpecifique;
-    }
-
-    /**
-     * @param AgentMissionSpecifique $agentMissionSpecifique
-     * @return AgentMissionSpecifique
-     */
-    public function updateAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
-    {
-        $this->updateFromTrait($agentMissionSpecifique);
-        return $agentMissionSpecifique;
-    }
-
-    /**
-     * @param AgentMissionSpecifique $agentMissionSpecifique
-     * @return AgentMissionSpecifique
-     */
-    public function historiserAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
-    {
-        $this->historiserFromTrait($agentMissionSpecifique);
-        return $agentMissionSpecifique;
-    }
-
-    /**
-     * @param AgentMissionSpecifique $agentMissionSpecifique
-     * @return AgentMissionSpecifique
-     */
-    public function restoreAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
-    {
-        $this->restoreFromTrait($agentMissionSpecifique);
-        return $agentMissionSpecifique;
-    }
-
-    /**
-     * @param AgentMissionSpecifique $agentMissionSpecifique
-     * @return AgentMissionSpecifique
-     */
-    public function deleteAgentMissionSpecifique(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
-    {
-        $this->deleteFromTrait($agentMissionSpecifique);
-        return $agentMissionSpecifique;
-    }
-
     /**
      * @param Agent[] $agents
      * @return array
@@ -531,33 +447,6 @@ EOS;
         usort($result, function ($a, $b) {
             return strcmp($a['label'], $b['label']);
         });
-        return $result;
-    }
-
-
-    /** QUOTITE *******************************************************************************************************/
-
-    /**
-     * @param Agent $agent
-     * @param DateTime|null $date
-     * @return AgentQuotite|null
-     */
-    public function getAgentQuotite(Agent $agent, ?DateTime $date = null) : ?AgentQuotite
-    {
-        if ($date === null) $date = new DateTime();
-
-        $qb = $this->getEntityManager()->getRepository(AgentQuotite::class)->createQueryBuilder('quotite')
-            ->andWhere('quotite.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->andWhere('quotite.debut <= :date')
-            ->andWhere('quotite.fin IS NULL OR quotite.fin >= :date')
-            ->setParameter('date', $date)
-        ;
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs AgentQuotite de retournées pour l'agent [".$agent->getId()."] en date du [".$date->format('d/m/Y')."]",0,$e);
-        }
         return $result;
     }
 

@@ -35,8 +35,12 @@ use Application\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentAffectation\AgentAffectationServiceFactory;
 use Application\Service\AgentGrade\AgentGradeService;
 use Application\Service\AgentGrade\AgentGradeServiceFactory;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentPPP\AgentPPPServiceFactory;
+use Application\Service\AgentQuotite\AgentQuotiteService;
+use Application\Service\AgentQuotite\AgentQuotiteServiceFactory;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceFactory;
 use Application\Service\AgentStatut\AgentStatutService;
@@ -635,7 +639,9 @@ return [
             AgentAffectationService::class => AgentAffectationServiceFactory::class,
             AgentAccompagnementService::class => AgentAccompagnementServiceFactory::class,
             AgentGradeService::class => AgentGradeServiceFactory::class,
+            AgentMissionSpecifiqueService::class => AgentMissionSpecifiqueServiceFactory::class,
             AgentPPPService::class => AgentPPPServiceFactory::class,
+            AgentQuotiteService::class => AgentQuotiteServiceFactory::class,
             AgentStageObservationService::class => AgentStageObservationServiceFactory::class,
             AgentStatutService::class => AgentStatutServiceFactory::class,
             AgentTutoratService::class => AgentTutoratServiceFactory::class,
