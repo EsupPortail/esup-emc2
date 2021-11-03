@@ -12,14 +12,4 @@ usort($instances, function (FormationInstance $a, FormationInstance $b) { return
 $canVoir = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 ?>
 
-<?php foreach($instances as $instance) : ?>
-    <?php echo $instance->getInstanceLibelle(); ?> <br/>
-    <?php echo $instance->getDebut(); ?> -> <?php echo $instance->getFin(); ?> <br/>
-    <?php echo count($instance->getListePrincipale()); ?>
-
-    <?php if ($canVoir) : ?>
-        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>">
-        <span class="icon voir"></span></a>
-    <?php endif; ?>
-    <hr/>
-<?php endforeach; ?>
+<?php echo $this->formationInstanceArray($instances); ?>

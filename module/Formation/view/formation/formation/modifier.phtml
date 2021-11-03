@@ -87,77 +87,7 @@ $this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLib
         </div>
     </div>
 
-    <table class="datatable table table-condensed">
-        <thead>
-            <tr>
-                <th> Id </th>
-                <th> Début </th>
-                <th> Fin </th>
-                <th> #Plage </th>
-                <th> #Inscrit </th>
-                <th> État </th>
-                <th> Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($instances as $instance) : ?>
-            <tr <?php if ($instance->estHistorise()) echo 'class="historise"'; ?> >
-                <td>
-                    <span class="badge source <?php echo $instance->getSource(); ?>">
-                        <?php echo $instance->getSource(); ?>
-                        <?php echo $instance->getIdSource(); ?>
-                    </span> </td>
-                <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
-                <td> <?php echo ($instance->getFin())?:"???"; ?></td>
-                <td> <?php echo ($instance->getJournees())?count($instance->getJournees()):"???"; ?></td>
-                <td>
-                    <?php if ($instance->getInscrits()) : ?>
-                        Principale : <?php echo count($instance->getListePrincipale())."/".$instance->getNbPlacePrincipale(); ?>
-                        <?php if ($instance->isListePrincipaleComplete()) : ?>
-                            <span class="label label-success"> Complète</span>
-                        <?php endif; ?>
-                        <br/>
-                        Complémentaire : <?php echo count($instance->getListeComplementaire())."/".$instance->getNbPlaceComplementaire(); ?>
-                        <?php if ($instance->isListeComplementaireComplete()) : ?>
-                            <span class="label label-success"> Complète</span>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <?php echo ($instance->getEtat())?$this->etatbadge($instance->getEtat()):"N.C."; ?>
-                </td>
-                <td>
-                    <?php if ($canAfficherInstance) : ?>
-                        <?php /** @see FormationInstanceController::afficherAction() */ ?>
-                        <a  href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
-                            data-toogle="tooltip" data-html="true" title="Afficher/Modifier la session de formation">
-                            <span class="icon voir"></span></a>
-                    <?php endif; ?>
-                    <?php if ($canHistoriserInstance) : ?>
-                        <?php if ($instance->estNonHistorise()) : ?>
-                            <?php /** @see FormationInstanceController::historiserAction() */ ?>
-                            <a   href="<?php echo $this->url('formation-instance/historiser', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                 data-toogle="tooltip" data-html="true" title="Historiser la session de formation">
-                                <span class="icon historiser"></span></a>
-                        <?php else : ?>
-                            <?php /** @see FormationInstanceController::restaurerAction() */ ?>
-                            <a   href="<?php echo $this->url('formation-instance/restaurer', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                 data-toogle="tooltip" data-html="true" title="Restaurer la session de formation">
-                                <span class="icon restaurer"></span></a>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                    <?php if ($canSupprimerInstance) : ?>
-                        <?php /** @see FormationInstanceController::supprimerAction() */ ?>
-                        <a   href="<?php echo $this->url('formation-instance/supprimer', ['formation-instance' => $instance->getId()], [], true); ?>"
-                             class="ajax-modal" data-event="modification"
-                             data-toogle="tooltip" data-html="true" title="Supprimer la session de formation">
-                            <span class="icon detruire"></span></a>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+    <?php echo $this->formationInstanceArray($instances); ?>
 
 </div>
 

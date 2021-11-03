@@ -11,6 +11,7 @@ use Formation\Form\FormationInstance\FormationInstanceHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
+use Formation\View\Helper\FormationInstanceArrayViewHelper;
 use Formation\View\Helper\FormationInstanceInformationsViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Mvc\Console\Router\Simple;
@@ -273,6 +274,7 @@ return [
     'view_helpers' => [
         'invokables' => [
             'formationInstanceInformations' => FormationInstanceInformationsViewHelper::class,
+            'formationInstanceArray' => FormationInstanceArrayViewHelper::class,
         ],
     ],
 
