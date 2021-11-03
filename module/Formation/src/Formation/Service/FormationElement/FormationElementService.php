@@ -20,7 +20,7 @@ class FormationElementService {
      * @param FormationElement $element
      * @return FormationElement
      */
-    public function create(FormationElement $element)
+    public function create(FormationElement $element) : FormationElement
     {
         $this->createFromTrait($element);
         return $element;
@@ -30,7 +30,7 @@ class FormationElementService {
      * @param FormationElement $element
      * @return FormationElement
      */
-    public function update(FormationElement $element)
+    public function update(FormationElement $element) : FormationElement
     {
         $this->updateFromTrait($element);
         return $element;
@@ -40,7 +40,7 @@ class FormationElementService {
      * @param FormationElement $element
      * @return FormationElement
      */
-    public function restore(FormationElement $element)
+    public function restore(FormationElement $element) : FormationElement
     {
         $this->restoreFromTrait($element);
         return $element;
@@ -50,7 +50,7 @@ class FormationElementService {
      * @param FormationElement $element
      * @return FormationElement
      */
-    public function historise(FormationElement $element)
+    public function historise(FormationElement $element) : FormationElement
     {
         $this->historiserFromTrait($element);
         return $element;
@@ -60,7 +60,7 @@ class FormationElementService {
      * @param FormationElement $element
      * @return FormationElement
      */
-    public function delete(FormationElement $element)
+    public function delete(FormationElement $element) : FormationElement
     {
         $this->deleteFromTrait($element);
         return $element;
@@ -81,9 +81,9 @@ class FormationElementService {
 
     /**
      * @param int $id
-     * @return FormationElement
+     * @return FormationElement|null
      */
-    public function getFormationElement(int $id) : FormationElement
+    public function getFormationElement(int $id) : ?FormationElement
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formationelement.id = :id')
@@ -100,9 +100,9 @@ class FormationElementService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationElement
+     * @return FormationElement|null
      */
-    public function getRequestedFormationElement(AbstractActionController $controller, string $param = "formation-element")
+    public function getRequestedFormationElement(AbstractActionController $controller, string $param = "formation-element") : ?FormationElement
     {
         $id = $controller->params()->fromRoute($param);
         return $this->getFormationElement($id);

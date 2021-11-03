@@ -7,6 +7,7 @@ use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Interop\Container\ContainerInterface;
 use UnicaenDocument\Service\Exporter\ExporterService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 use Zend\View\Renderer\PhpRenderer;
 
 class FormationInstanceDocumentControllerFactory
@@ -18,12 +19,12 @@ class FormationInstanceDocumentControllerFactory
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var FormationInstanceJourneeService $formationInstanceJourneeService
-         * @var ExporterService $exporterService
+         * @var RenduService $renduService
          */
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
-        $exporterService = $container->get(ExporterService::class);
+        $renduService = $container->get(RenduService::class);
 
         /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
@@ -33,7 +34,7 @@ class FormationInstanceDocumentControllerFactory
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
-        $controller->setExporterService($exporterService);
+        $controller->setRenduService($renduService);
         $controller->setRenderer($renderer);
 
         return $controller;

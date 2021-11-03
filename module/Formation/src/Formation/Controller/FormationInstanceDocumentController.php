@@ -2,14 +2,16 @@
 
 namespace Formation\Controller;
 
-use Application\Service\Export\Formation\Emargement\EmargementPdfExporter;
 use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenDocument\Service\Exporter\ExporterServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceDocumentController extends AbstractActionController
@@ -17,7 +19,8 @@ class FormationInstanceDocumentController extends AbstractActionController
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
-    use ExporterServiceAwareTrait;
+    use RenduServiceAwareTrait;
+    use TemplateServiceAwareTrait;
 
     private $renderer;
 
@@ -68,14 +71,18 @@ class FormationInstanceDocumentController extends AbstractActionController
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
-        $this->getExporterService()->setVars([
-            'type' => 'FORMATION_CONVOCATION',
+        $vars = [
             'agent' => $inscrit->getAgent(),
             'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
-        ]);
-        $this->getExporterService()->export('export.pdf');
-        exit;
+        ];
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FORMATION_CONVOCATION', $vars);
+        $exporter = new PdfExporter();
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->setHeaderScript('');
+        $exporter->setFooterScript('');
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
     /**
@@ -85,15 +92,20 @@ class FormationInstanceDocumentController extends AbstractActionController
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
-        $this->getExporterService()->setVars([
-            'type' => 'FORMATION_ATTESTATION',
+        $vars = [
+            'type' => '',
             'agent' => $inscrit->getAgent(),
             'inscrit' => $inscrit,
             'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
-        ]);
-        $this->getExporterService()->export('export.pdf');
-        exit;
+        ];
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FORMATION_ATTESTATION', $vars);
+        $exporter = new PdfExporter();
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->setHeaderScript('');
+        $exporter->setFooterScript('');
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
 }

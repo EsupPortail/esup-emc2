@@ -11,7 +11,7 @@ trait FormationInstanceServiceAwareTrait
     /**
      * @return FormationInstanceService
      */
-    public function getFormationInstanceService()
+    public function getFormationInstanceService() : FormationInstanceService
     {
         return $this->formationInstanceService;
     }
@@ -20,7 +20,7 @@ trait FormationInstanceServiceAwareTrait
      * @param FormationInstanceService $service
      * @return FormationInstanceService
      */
-    public function setFormationInstanceService(FormationInstanceService $service)
+    public function setFormationInstanceService(FormationInstanceService $service) : FormationInstanceService
     {
         $this->formationInstanceService = $service;
         return $this->formationInstanceService;

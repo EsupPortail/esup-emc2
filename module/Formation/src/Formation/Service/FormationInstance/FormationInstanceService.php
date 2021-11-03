@@ -7,6 +7,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Service\Url\UrlServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -21,6 +22,7 @@ class FormationInstanceService
     use RenduServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -28,7 +30,7 @@ class FormationInstanceService
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function create(FormationInstance $instance)
+    public function create(FormationInstance $instance) : FormationInstance
     {
         $this->createFromTrait($instance);
         return $instance;
@@ -38,7 +40,7 @@ class FormationInstanceService
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function update(FormationInstance $instance)
+    public function update(FormationInstance $instance) : FormationInstance
     {
         $this->updateFromTrait($instance);
         return $instance;
@@ -48,7 +50,7 @@ class FormationInstanceService
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function historise(FormationInstance $instance)
+    public function historise(FormationInstance $instance) : FormationInstance
     {
         $this->historiserFromTrait($instance);
         return $instance;
@@ -58,7 +60,7 @@ class FormationInstanceService
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function restore(FormationInstance $instance)
+    public function restore(FormationInstance $instance) : FormationInstance
     {
         $this->restoreFromTrait($instance);
         return $instance;
@@ -68,7 +70,7 @@ class FormationInstanceService
      * @param FormationInstance $instance
      * @return FormationInstance
      */
-    public function delete(FormationInstance $instance)
+    public function delete(FormationInstance $instance) : FormationInstance
     {
         $this->deleteFromTrait($instance);
         return $instance;
@@ -79,7 +81,7 @@ class FormationInstanceService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
             ->addSelect('formation')->join('Finstance.formation', 'formation')
@@ -100,7 +102,7 @@ class FormationInstanceService
      * @param string $ordre
      * @return FormationInstance[]
      */
-    public function getFormationsInstances($champ = 'id', $ordre = 'ASC')
+    public function getFormationsInstances(string $champ = 'id', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('Finstance.' . $champ, $ordre);
@@ -115,7 +117,7 @@ class FormationInstanceService
      * @param string $ordre
      * @return array
      */
-    public function getFormationsInstancesByFormation(Formation $formation, $champ = 'id', $ordre = 'ASC')
+    public function getFormationsInstancesByFormation(Formation $formation, string $champ = 'id', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
@@ -142,10 +144,10 @@ class FormationInstanceService
     }
 
     /**
-     * @param integer $id
-     * @return FormationInstance
+     * @param int|null $id
+     * @return FormationInstance|null
      */
-    public function getFormationInstance(int $id)
+    public function getFormationInstance(?int $id) : ?FormationInstance
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.id = :id')
@@ -162,9 +164,9 @@ class FormationInstanceService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationInstance
+     * @return FormationInstance|null
      */
-    public function getRequestedFormationInstance(AbstractActionController $controller, $param = 'formation-instance')
+    public function getRequestedFormationInstance(AbstractActionController $controller, string $param = 'formation-instance') : ?FormationInstance
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstance($id);
@@ -172,7 +174,12 @@ class FormationInstanceService
         return $result;
     }
 
-    public function getFormationInstanceBySource(string $source, string $idSource)
+    /**
+     * @param string $source
+     * @param string $idSource
+     * @return FormationInstance|null
+     */
+    public function getFormationInstanceBySource(string $source, string $idSource) : ?FormationInstance
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.source = :source')
@@ -199,8 +206,11 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
         $this->update($instance);
 
-        $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS');
-        $vars = [ 'formation-instance' => $instance ];
+        $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS')->getValeur();
+        $vars = [
+            'instance' => $instance,
+            'UrlService' => $this->getUrlService(),
+        ];
         $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_OUVERTE", $vars);
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -219,8 +229,8 @@ class FormationInstanceService
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
 
-            $vars = [ 'formation-instance' => $instance ];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_LISTE_PRINCIPALE", $vars);
+            $vars = [ 'agent' => $inscrit->getAgent(), 'instance' => $instance, 'UrlService' => $this->getUrlService() ];
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_PRINCIPALE", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -228,8 +238,8 @@ class FormationInstanceService
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
 
-            $vars = [ 'formation-instance' => $instance ];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_LISTE_COMPLEMENTAIRE", $vars);
+            $vars = [ 'agent' => $inscrit->getAgent(), 'instance' => $instance, 'UrlService' => $this->getUrlService() ];
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_COMPLEMENTAIRE", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -248,8 +258,8 @@ class FormationInstanceService
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
 
-            $vars = ['formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent()];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_CONVOCATION", $vars);
+            $vars = ['instance' => $instance, 'agent' => $inscrit->getAgent(), 'UrlService' => $this->getUrlService()];
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_CONVOCATION", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -269,8 +279,9 @@ class FormationInstanceService
             $mails[] = $formateur->getEmail();
         }
 
-        $vars = ['formation' => $instance->getFormation(), 'formation-instance' => $instance];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_EMARGEMENT", $vars);
+        $urlService = $this->getUrlService()->setVariables(['instance' => $instance]);
+        $vars = ['instance' => $instance, 'UrlService' => $urlService];
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_EMARGEMENT", $vars);
         $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -286,8 +297,8 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_ATTENTE_RETOURS));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
-            $vars = [ 'formation' => $instance->getFormation(), 'formation-instance' => $instance, 'agent' => $inscrit->getAgent() ];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_RETOUR", $vars);
+            $vars = [ 'instance' => $instance, 'agent' => $inscrit->getAgent(), 'UrlService' => $this->getUrlService()];
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_RETOUR", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -304,5 +315,25 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_CLOTURE_INSTANCE));
         $this->update($instance);
         return $instance;
+    }
+
+    /**
+     * @return FormationInstance[]
+     * @attention se base sur l'etat !
+     */
+    public function getFormationInstanceEnCours() : array
+    {
+//        select fi.id, fi.formation_id, uee.code, f.libelle
+//        from formation_instance fi
+//        join formation f on fi.formation_id = f.id
+//        left join unicaen_etat_etat uee on fi.etat_id = uee.id
+//        where uee.id IS NOT NULL AND uee.code <> 'FORMATION_FERMEE'
+        $qb = $this->createQueryBuilder()
+            ->andWhere('Finstance.etat IS NOT NULL AND etat.code <> :cloturer')
+            ->setParameter('cloturer', FormationInstance::ETAT_CLOTURE_INSTANCE)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

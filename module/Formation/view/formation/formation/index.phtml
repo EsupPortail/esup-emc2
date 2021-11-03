@@ -5,11 +5,13 @@
  *
  * @var Formation[] $formations
  * @var FormationGroupe[] $groupes
+ * @var FormationInstance[] $instances
  * @var EtatService $etatService (deplacer dans workflow stuff)
  */
 
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
+use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenEtat\Service\Etat\EtatService;
 
@@ -37,6 +39,14 @@ $droits = [
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
         <li>
+            <a href="#instance" aria-controls="instance" role="tab" data-toggle="tabz">
+                Sessions en cours
+                <span class="badge">
+                    <?php echo count($instances); ?>
+                </span>
+            </a>
+        </li>
+        <li>
             <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz">
                 Actions de formation &nbsp;
                 <span class="badge">
@@ -57,29 +67,23 @@ $droits = [
                 Workflow
             </a>
         </li>
-        <li class="pull-right">
-            <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz" >
-                Bulles d'informations &nbsp;
-            </a>
-        </li>
     </ul>
 
     <div class="main-with-tab">
 
         <div class="tab-content">
+            <div id="instance" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-instance', ['instances' => $instances, 'droits' => $droits], [], true); ?>
+            </div>
             <div id="groupe" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/index-groupe', ['groupes' => $groupes, 'droits' => $droits], [], true); ?>
             </div>
-
             <div id="formation" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/index-formation', ['formations' => $formations, 'droits' => $droits], [], true); ?>
             </div>
 
             <div id="workflow" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('workflow', ['etatService' => $etatService], [], true); ?>
-            </div>
-            <div id="informations" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('administration-messages', [], [], true); ?>
             </div>
         </div>
     </div>
@@ -89,7 +93,7 @@ $droits = [
     $(function () {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "formation";
+        if (name === undefined || name === "") name = "instance";
 
         $('a[aria-controls=' + name + ']').tab('show');
 

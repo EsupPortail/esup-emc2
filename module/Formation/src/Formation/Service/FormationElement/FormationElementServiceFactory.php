@@ -12,7 +12,7 @@ class FormationElementServiceFactory {
      * @param ContainerInterface $container
      * @return FormationElementService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : FormationElementService
     {
         /**
          * @var EntityManager $entityManager

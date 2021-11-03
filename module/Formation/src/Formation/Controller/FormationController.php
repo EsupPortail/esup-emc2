@@ -35,10 +35,12 @@ class FormationController extends AbstractActionController
     {
         $formations = $this->getFormationService()->getFormations();
         $groupes = $this->getFormationGroupeService()->getFormationsGroupes('libelle');
+        $instances = $this->getFormationInstanceService()->getFormationInstanceEnCours();
 
         return new ViewModel([
             'formations' => $formations,
             'groupes' => $groupes,
+            'instances' => $instances,
         ]);
     }
 

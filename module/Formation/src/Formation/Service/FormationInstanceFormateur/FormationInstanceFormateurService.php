@@ -19,7 +19,7 @@ class FormationInstanceFormateurService
      * @param FormationInstanceFormateur $formateur
      * @return FormationInstanceFormateur
      */
-    public function create(FormationInstanceFormateur $formateur)
+    public function create(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
         $this->createFromTrait($formateur);
         return $formateur;
@@ -29,7 +29,7 @@ class FormationInstanceFormateurService
      * @param FormationInstanceFormateur $formateur
      * @return FormationInstanceFormateur
      */
-    public function update(FormationInstanceFormateur $formateur)
+    public function update(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
         $this->updateFromTrait($formateur);
         return $formateur;
@@ -39,7 +39,7 @@ class FormationInstanceFormateurService
      * @param FormationInstanceFormateur $formateur
      * @return FormationInstanceFormateur
      */
-    public function historise(FormationInstanceFormateur $formateur)
+    public function historise(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
         $this->historiserFromTrait($formateur);
         return $formateur;
@@ -49,7 +49,7 @@ class FormationInstanceFormateurService
      * @param FormationInstanceFormateur $formateur
      * @return FormationInstanceFormateur
      */
-    public function restore(FormationInstanceFormateur $formateur)
+    public function restore(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
         $this->restoreFromTrait($formateur);
         return $formateur;
@@ -59,7 +59,7 @@ class FormationInstanceFormateurService
      * @param FormationInstanceFormateur $formateur
      * @return FormationInstanceFormateur
      */
-    public function delete(FormationInstanceFormateur $formateur)
+    public function delete(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
         $this->deleteFromTrait($formateur);
         return $formateur;
@@ -70,7 +70,7 @@ class FormationInstanceFormateurService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceFormateur::class)->createQueryBuilder('formateur')
             ->addSelect('finstance')->join('formateur.instance', 'finstance');
@@ -78,10 +78,10 @@ class FormationInstanceFormateurService
     }
 
     /**
-     * @param integer $id
-     * @return FormationInstanceFormateur
+     * @param int|null $id
+     * @return FormationInstanceFormateur|null
      */
-    public function getFormationInstanceFormateur(int $id)
+    public function getFormationInstanceFormateur(?int $id) : ?FormationInstanceFormateur
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formateur.id = :id')
@@ -97,9 +97,9 @@ class FormationInstanceFormateurService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationInstanceFormateur
+     * @return FormationInstanceFormateur|null
      */
-    public function getRequestedFormationInstanceFormateur(AbstractActionController $controller, string $param = 'formateur')
+    public function getRequestedFormationInstanceFormateur(AbstractActionController $controller, string $param = 'formateur') : ?FormationInstanceFormateur
     {
         $id = $controller->params()->fromRoute($param);
         return $this->getFormationInstanceFormateur($id);

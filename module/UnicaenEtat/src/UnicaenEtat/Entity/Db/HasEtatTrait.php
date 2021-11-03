@@ -26,6 +26,16 @@ trait HasEtatTrait {
         return $this;
     }
 
+    /**
+     * @param string $etatCode
+     * @return boolean
+     */
+    public function isEtat(string $etatCode) : bool
+    {
+        if ($this->etat === null) return false;
+        return ($this->etat->getCode() === $etatCode);
+    }
+
     /** Decorateur ****************************************************************************************************/
 
     /**

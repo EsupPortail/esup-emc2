@@ -21,7 +21,7 @@ class FormationGroupeService
      * @param FormationGroupe $groupe
      * @return FormationGroupe
      */
-    public function create(FormationGroupe $groupe)
+    public function create(FormationGroupe $groupe) : FormationGroupe
     {
         $this->createFromTrait($groupe);
         return $groupe;
@@ -31,7 +31,7 @@ class FormationGroupeService
      * @param FormationGroupe $groupe
      * @return FormationGroupe
      */
-    public function update(FormationGroupe $groupe)
+    public function update(FormationGroupe $groupe) : FormationGroupe
     {
         $this->updateFromTrait($groupe);
         return $groupe;
@@ -41,7 +41,7 @@ class FormationGroupeService
      * @param FormationGroupe $groupe
      * @return FormationGroupe
      */
-    public function historise(FormationGroupe $groupe)
+    public function historise(FormationGroupe $groupe) : FormationGroupe
     {
         $this->historiserFromTrait($groupe);
         return $groupe;
@@ -51,7 +51,7 @@ class FormationGroupeService
      * @param FormationGroupe $groupe
      * @return FormationGroupe
      */
-    public function restore(FormationGroupe $groupe)
+    public function restore(FormationGroupe $groupe) : FormationGroupe
     {
         $this->restoreFromTrait($groupe);
         return $groupe;
@@ -61,7 +61,7 @@ class FormationGroupeService
      * @param FormationGroupe $groupe
      * @return FormationGroupe
      */
-    public function delete(FormationGroupe $groupe)
+    public function delete(FormationGroupe $groupe) : FormationGroupe
     {
         $this->deleteFromTrait($groupe);
         return $groupe;
@@ -72,7 +72,7 @@ class FormationGroupeService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
             ->addSelect('formation')->leftJoin('groupe.formations', 'formation');
@@ -84,7 +84,7 @@ class FormationGroupeService
      * @param string $ordre
      * @return FormationGroupe[]
      */
-    public function getFormationsGroupes($champ = 'ordre', $ordre = 'ASC')
+    public function getFormationsGroupes(string $champ = 'ordre', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.' . $champ, $ordre);
@@ -97,7 +97,7 @@ class FormationGroupeService
      * @param FormationGroupe $groupe
      * @return array
      */
-    public function optionify(FormationGroupe $groupe)
+    public function optionify(FormationGroupe $groupe) : array
     {
         $this_option = [
             'value' => $groupe->getId(),
@@ -111,7 +111,7 @@ class FormationGroupeService
      * @param string $ordre
      * @return array
      */
-    public function getFormationsGroupesAsOption($champ = 'libelle', $ordre = 'ASC') : array
+    public function getFormationsGroupesAsOption(string $champ = 'libelle', string $ordre = 'ASC') : array
     {
         $groupes = $this->getFormationsGroupes($champ, $ordre);
         $array = [];
@@ -124,9 +124,9 @@ class FormationGroupeService
 
     /**
      * @param integer $id
-     * @return FormationGroupe
+     * @return FormationGroupe|null
      */
-    public function getFormationGroupe(int $id)
+    public function getFormationGroupe(int $id) : ?FormationGroupe
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('groupe.id = :id')
@@ -144,7 +144,7 @@ class FormationGroupeService
      * @param string $param
      * @return FormationGroupe
      */
-    public function getRequestedFormationGroupe(AbstractActionController $controller, $param = 'formation-groupe')
+    public function getRequestedFormationGroupe(AbstractActionController $controller, string  $param = 'formation-groupe') : ?FormationGroupe
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationGroupe($id);
@@ -155,7 +155,7 @@ class FormationGroupeService
      * @param string|null $libelle
      * @return FormationGroupe|null
      */
-    public function getFormationGroupeByLibelle(?string $libelle)
+    public function getFormationGroupeByLibelle(?string $libelle) : ?FormationGroupe
     {
         if ($libelle === null) return null;
 

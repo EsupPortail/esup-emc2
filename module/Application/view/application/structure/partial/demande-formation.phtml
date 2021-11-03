@@ -34,28 +34,67 @@ foreach ($inscriptions as $inscription) {
 
 ?>
 
-<h2> Demandes de formations </h2>
 
 <div class="description">
     <p class="description">Liste des inscriptions dans un intervalle de plus ou moins 1 an.</p>
 </div>
 
-<?php usort($array, function ($a,$b) { return $a['formation']->getLibelle() > $b['formation']->getLibelle();}); ?>
-<?php foreach ($array as $item) : ?>
-    <h3> <?php echo $item['formation']->getLibelle(); ?> </h3>
-    <?php foreach($item['instances'] as $instance) : ?>
-        <h4>Instance du <?php echo $instance['instance']->getDebut(); ?> au <?php echo $instance['instance']->getFin(); ?> (<?php echo $instance['instance']->getDuree(); ?> heures).</h4>
+<div class="row">
+    <div class="col-md-6">
+
+    <h2> Demandes de formations </h2>
+
+    <?php
+    $attentes = array_filter(
+            $inscriptions,
+            function (FormationInstanceInscrit $inscription) { return ($inscription->getEtat() !== null AND $inscription->getEtat()->getCode() === FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION);}
+            );
+    ?>
+    <?php usort($attentes, function ($a,$b) { return $a['formation']->getLibelle() > $b['formation']->getLibelle();}); ?>
+    <?php foreach ($array as $item) : ?>
+        <h3> <?php echo $item['formation']->getLibelle(); ?> </h3>
+
+        <?php foreach($item['instances'] as $instance) : ?>
+            <h4>Instance du <?php echo $instance['instance']->getDebut(); ?> au <?php echo $instance['instance']->getFin(); ?> (<?php echo $instance['instance']->getDuree(); ?>).</h4>
+            <ul>
+            <?php foreach ($instance['inscriptions'] as $inscription) : ?>
+                <li>
+                    <?php echo $this->etatbadge($inscription->getEtat()); ?>
+                    <?php echo $inscription->getAgent()->getDenomination(); ?>
+                    <?php if ($canValiderResponsable ) : ?>
+                        <a  <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
+                                href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do"> Gérer la demande</a>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+
+    </div>
+    <div class="col-md-6">
+    <h2> Listes de demandes </h2>
+
+    <?php usort($array, function ($a,$b) { return $a['formation']->getLibelle() > $b['formation']->getLibelle();}); ?>
+    <?php foreach ($array as $item) : ?>
+        <h3> <?php echo $item['formation']->getLibelle(); ?> </h3>
+
         <ul>
-        <?php foreach ($instance['inscriptions'] as $inscription) : ?>
+        <?php foreach($item['instances'] as $instance) : ?>
             <li>
-                <?php echo $this->etatbadge($inscription->getEtat()); ?>
-                <?php echo $inscription->getAgent()->getDenomination(); ?>
-                <?php if ($canValiderResponsable AND $inscription->getEtat() !== null AND $inscription->getEtat()->getCode() === FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION) : ?>
-                    <a  <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
-                            href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do"> Gérer la demande</a>
-                <?php endif; ?>
+                Instance du <?php echo $instance['instance']->getDebut(); ?> au <?php echo $instance['instance']->getFin(); ?> (<?php echo $instance['instance']->getDuree(); ?>).
+                <ul>
+                    <?php foreach ($instance['inscriptions'] as $inscription) : ?>
+                        <li>
+                            <?php echo $this->etatbadge($inscription->getEtat()); ?>
+                            <?php echo $inscription->getAgent()->getDenomination(); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </li>
         <?php endforeach; ?>
         </ul>
     <?php endforeach; ?>
-<?php endforeach; ?>
+
+    </div>
+</div>

@@ -62,7 +62,7 @@ $query = ['retour' => $this->url(null,[],
     <?php if ($affectations === null OR empty($affectations)) : ?>
         Aucune affectations de trouvés.
     <?php else : ?>
-        <table id="datatable" class="datatable table table-condensed">
+        <table  class="table table-condensed table-hover">
             <thead>
                 <tr>
                     <th> Agent </th>
@@ -153,6 +153,6 @@ $query = ['retour' => $this->url(null,[],
         });
     });
 
-    $('select').selectpicker();
+    // $('select').selectpicker();
 </script>
 

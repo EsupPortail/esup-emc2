@@ -11,19 +11,19 @@ trait FormationGroupeServiceAwareTrait
     /**
      * @return FormationGroupeService
      */
-    public function getFormationGroupeService()
+    public function getFormationGroupeService() : FormationGroupeService
     {
         return $this->formationGroupeService;
     }
 
     /**
      * @param FormationGroupeService $formationGroupeService
-     * @return FormationGroupeServiceAwareTrait
+     * @return FormationGroupeService
      */
-    public function setFormationGroupeService(FormationGroupeService $formationGroupeService)
+    public function setFormationGroupeService(FormationGroupeService $formationGroupeService) : FormationGroupeService
     {
         $this->formationGroupeService = $formationGroupeService;
-        return $this;
+        return $this->formationGroupeService;
     }
 
 }

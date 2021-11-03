@@ -64,13 +64,17 @@ foreach ($missions as $mission) {
         <div class="col-md-3">
             <label for="mission">Mission :</label>
             <select id="mission" name="mission" class="selectpicker show-tick" data-live-search="true">
-                <option value="0"> Toutes les missions </option>
+                <optgroup label="...">
+                    <option> Toutes les missions </option>
+                </optgroup>
                 <?php foreach($groupes as $groupe_clef => $groupe) : ?>
                     <optgroup label="<?php echo ($groupe_clef !== 'ZzzZzz')?$groupe_clef:"Sans thème"; ?>">
-                        <?php foreach ($groupe as $mission) : ?>
-                            <option value="<?php echo $mission->getId(); ?>"
-                                <?php //if ($mission && $mission->getId() == 0) echo " selected" ?>
-                            > <?php echo $mission->getLibelle(); ?> </option>
+                        <?php foreach ($groupe as $mission_) : ?>
+                            <option value="<?php echo $mission_->getId(); ?>"
+                            <?php if ($mission_ === $mission)
+                                echo " selected ";
+                            ?>
+                            > <?php echo $mission_->getLibelle(); ?> </option>
                         <?php endforeach; ?>
                     </optgroup>
                 <?php endforeach; ?>

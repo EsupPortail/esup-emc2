@@ -10,7 +10,11 @@ use Zend\View\Renderer\PhpRenderer;
 class FormationGroupeServiceFactory
 {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return FormationGroupeService
+     */
+    public function __invoke(ContainerInterface $container) : FormationGroupeService
     {
         /**
          * @var EntityManager $entityManager

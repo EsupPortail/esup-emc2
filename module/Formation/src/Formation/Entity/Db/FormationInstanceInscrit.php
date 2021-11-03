@@ -9,13 +9,15 @@ use Application\Entity\HasAgentInterface;
 use Autoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasSourceInterface, ResourceInterface
+class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface, HasSourceInterface, ResourceInterface
 {
+    use HasEtatTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
 
@@ -46,21 +48,21 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $frais;
     /** @var FormulaireInstance */
     private $questionnaire;
-    /** @var Etat|null */
-    private $etat;
+    /** @var string|null */
+    private $complement;
 
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
     /**
-     * @return FormationInstance
+     * @return FormationInstance|null
      */
-    public function getInstance()
+    public function getInstance() : ?FormationInstance
     {
         return $this->instance;
     }
@@ -78,7 +80,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     /**
      * @return Agent
      */
-    public function getAgent()
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }
@@ -87,16 +89,16 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
      * @param Agent|null $agent
      * @return FormationInstanceInscrit
      */
-    public function setAgent($agent)
+    public function setAgent(?Agent $agent) : FormationInstanceInscrit
     {
         $this->agent = $agent;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getListe()
+    public function getListe() : ?string
     {
         return $this->liste;
     }
@@ -105,7 +107,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
      * @param string|null $liste
      * @return FormationInstanceInscrit
      */
-    public function setListe(?string $liste)
+    public function setListe(?string $liste) : FormationInstanceInscrit
     {
         $this->liste = $liste;
         return $this;
@@ -148,8 +150,25 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getComplement(): ?string
+    {
+        return $this->complement;
+    }
 
-    public function getPresences()
+    /**
+     * @param string|null $complement
+     * @return FormationInstanceInscrit
+     */
+    public function setComplement(?string $complement): FormationInstanceInscrit
+    {
+        $this->complement = $complement;
+        return $this;
+    }
+
+    public function getPresences() : array
     {
         return $this->presences->toArray();
     }
@@ -163,7 +182,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         return false;
     }
 
-    public function getDureePresence()
+    public function getDureePresence() : string
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
         /** @var FormationInstancePresence[] $presences */
@@ -183,24 +202,6 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $minutes = ($result->i);
         $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
-    }
-
-    /**
-     * @return Etat|null
-     */
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    /**
-     * @param Etat|null $etat
-     * @return FormationInstanceInscrit
-     */
-    public function setEtat(?Etat $etat): FormationInstanceInscrit
-    {
-        $this->etat = $etat;
-        return $this;
     }
 
 }

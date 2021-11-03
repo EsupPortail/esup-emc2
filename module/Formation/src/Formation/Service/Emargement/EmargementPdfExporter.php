@@ -1,10 +1,9 @@
 <?php
 
-namespace Application\Service\Export\Formation\Emargement;
+namespace Formation\Service\Emargement;
 
-use Application\Entity\Db\FicheMetier;
 use Formation\Entity\Db\FormationInstanceJournee;
-use UnicaenApp\Exporter\Pdf as PdfExporter;
+use UnicaenPdf\Exporter\PdfExporter as PdfExporter;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplatePathStack;
 
@@ -12,7 +11,7 @@ class EmargementPdfExporter extends PdfExporter
 {
     private $vars;
 
-    public function setVars(array $vars)
+    public function setVars(array $vars) : EmargementPdfExporter
     {
         $this->vars = $vars;
         $this->vars['exporter'] = $this;
@@ -27,7 +26,7 @@ class EmargementPdfExporter extends PdfExporter
         $resolver->attach(new TemplatePathStack(['script_paths' => [__DIR__]]));
     }
 
-    public function export($filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null)
+    public function export($filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null) : string
     {
         //$this->addBodyHtml('<style>' . file_get_contents('/css/app.css') . '</style>');
         $this->setHeaderScript('empty.phtml');
@@ -43,7 +42,7 @@ class EmargementPdfExporter extends PdfExporter
      * @param null $memoryLimit
      * @return string
      */
-    public function exportAll($journees, $filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null)
+    public function exportAll(array $journees, $filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null)
     {
         $first = true;
         $this->setHeaderScript('empty.phtml');

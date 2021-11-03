@@ -212,7 +212,7 @@ class AgentMissionSpecifiqueService
             $structures = $this->getStructureService()->getStructuresFilles($structure);
             $structures[] = $structure;
 
-            $qb = $this->createQueryBuilder()
+            $qb = $qb
                 ->andWhere('agentmission.structure in (:structures)')
                 ->setParameter('structures', $structures)
             ;

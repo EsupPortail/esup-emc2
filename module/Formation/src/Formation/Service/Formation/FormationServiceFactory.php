@@ -9,7 +9,11 @@ use UnicaenUtilisateur\Service\User\UserService;
 class FormationServiceFactory
 {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return FormationService
+     */
+    public function __invoke(ContainerInterface $container) : FormationService
     {
         /**
          * @var EntityManager $entityManager

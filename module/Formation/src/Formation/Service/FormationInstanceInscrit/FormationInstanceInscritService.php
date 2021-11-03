@@ -75,16 +75,24 @@ class FormationInstanceInscritService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
             ->addSelect('agent')->join('inscrit.agent', 'agent')
+
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+            ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
+
             ->addSelect('finstance')->join('inscrit.instance', 'finstance')
+            ->addSelect('formation')->join('finstance.formation', 'formation')
+            ->addSelect('journee')->join('finstance.journees', 'journee')
+
             ->addSelect('instanceetat')->leftjoin('finstance.etat', 'instanceetat')
+            ->addSelect('instanceetattype')->leftjoin('instanceetat.type', 'instanceetattype')
             ->addSelect('inscritetat')->leftjoin('inscrit.etat', 'inscritetat')
-            ->addSelect('formation')->join('finstance.formation', 'formation');
+            ->addSelect('inscritetattype')->leftjoin('inscritetat.type', 'inscritetattype')
+        ;
         return $qb;
     }
 

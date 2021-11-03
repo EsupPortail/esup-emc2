@@ -4,6 +4,8 @@ namespace Formation;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Formation\Service\Url\UrlService;
+use Formation\Service\Url\UrlServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -39,6 +41,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            UrlService::class => UrlServiceFactory::class,
         ],
     ],
     'controllers'     => [

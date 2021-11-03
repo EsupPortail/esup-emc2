@@ -93,13 +93,13 @@ class StructureController extends AbstractActionController {
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
         /** Campagne */
-        $last = null;//= $this->getCampagneService()->getLastCampagne();
-        $campagnes = [];//= $this->getCampagneService()->getCampagnesActives();
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
         $entretiens = [];
 
-        $delegues = [];//= $this->getDelegueService()->getDeleguesByStructure($structure);
-        $inscriptions = [];//= $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure);
-        $profils = [];//= $this->getFicheProfilService()->getFichesPostesByStructure($structure);
+        $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
+        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure);
+        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         return new ViewModel([
             'selecteur' => $selecteur,

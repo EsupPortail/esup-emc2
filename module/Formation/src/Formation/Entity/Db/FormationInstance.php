@@ -7,12 +7,14 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
-class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
+class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatInterface
 {
+    use HasEtatTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
 
@@ -44,8 +46,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
     private $lieu;
     /** @var string */
     private $type;
-    /** @var Etat */
-    private $etat;
 
     /** @var ArrayCollection (FormationInstanceJournee) */
     private $journees;
@@ -104,34 +104,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
     {
         $this->complement = $complement;
         return $this;
-    }
-
-    /**
-     * @return Etat|null
-     */
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    /**
-     * @param Etat $etat
-     * @return FormationInstance
-     */
-    public function setEtat(Etat $etat): FormationInstance
-    {
-        $this->etat = $etat;
-        return $this;
-    }
-
-    /**
-     * @param string $etatCode
-     * @return boolean
-     */
-    public function isEtat(string $etatCode) : bool
-    {
-        if ($this->etat === null) return false;
-        return ($this->etat->getCode() === $etatCode);
     }
 
     /** PLACE SUR LISTE  **********************************************************************************************/
@@ -419,6 +391,11 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
 
     /** Fonctions pour les macros **********************************************************************************/
 
+    public function getInstanceLibelle() : string
+    {
+        return $this->getFormation()->getLibelle();
+    }
+
     public function getInstanceCode() : string
     {
         return $this->getFormation()->getId() . "/" . $this->getId();
@@ -432,8 +409,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
             return ($a->getNom() . " " . $a->getPrenom()) > ($b->getNom() . " " . $b->getPrenom());
         });
 
-        $text = "";
-        $text .= "<table style='width:100%;'>";
+        $text  = "<table style='width:100%;'>";
         $text .= "<thead>";
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Dénomination  </th>";
@@ -461,8 +437,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
         $journees = $this->getJournees();
         //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a > $b;});
 
-        $text = "";
-        $text .= "<table style='width:100%;'>";
+        $text  = "<table style='width:100%;'>";
         $text .= "<thead>";
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Date  </th>";
@@ -486,6 +461,12 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
         return $text;
     }
 
+    public function getPeriode() : string
+    {
+        return $this->getDebut() . " au " . $this->getFin();
+
+    }
+
     public function getListeComplementaireAgents() : string
     {
         /** @var FormationInstanceInscrit[] $inscrits */
@@ -497,8 +478,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
             return ($a->getAgent()->getNomUsuel() . " " . $a->getAgent()->getPrenom()) > ($b->getAgent()->getNomUsuel() . " " . $b->getAgent()->getPrenom());
         });
 
-        $text = "";
-        $text .= "<table style='width:100%;'>";
+        $text  = "<table style='width:100%;'>";
         $text .= "<thead>";
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Dénomination  </th>";
@@ -537,7 +517,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface
         $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));
         $heures = ($result->d * 24 + $result->h);
         $minutes = ($result->i);
-        $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
+        $text = $heures . " heures" . (($minutes !== 0) ? (" ".$minutes . " minutes") : "");
         return $text;
     }
 }

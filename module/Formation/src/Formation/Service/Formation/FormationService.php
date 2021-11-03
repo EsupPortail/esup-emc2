@@ -19,7 +19,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function create(Formation $formation)
+    public function create(Formation $formation) : Formation
     {
         $this->createFromTrait($formation);
         return $formation;
@@ -29,7 +29,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function update(Formation $formation)
+    public function update(Formation $formation) : Formation
     {
         $this->updateFromTrait($formation);
         return $formation;
@@ -39,7 +39,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function historise(Formation $formation)
+    public function historise(Formation $formation) : Formation
     {
         $this->historiserFromTrait($formation);
         return $formation;
@@ -49,7 +49,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function restore(Formation $formation)
+    public function restore(Formation $formation) : Formation
     {
         $this->restoreFromTrait($formation);
         return $formation;
@@ -59,7 +59,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function delete(Formation $formation)
+    public function delete(Formation $formation) : Formation
     {
         $this->deleteFromTrait($formation);
         return $formation;
@@ -70,7 +70,7 @@ class FormationService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
             ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
@@ -87,7 +87,7 @@ class FormationService
      * @param string $ordre
      * @return Formation[]
      */
-    public function getFormations($champ = 'libelle', $ordre = 'ASC')
+    public function getFormations(string $champ = 'libelle', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
@@ -97,9 +97,9 @@ class FormationService
 
     /**
      * @param int|null $id
-     * @return Formation
+     * @return Formation|null
      */
-    public function getFormation(?int $id)
+    public function getFormation(?int $id) : ?Formation
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -117,9 +117,9 @@ class FormationService
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return Formation
+     * @return Formation|null
      */
-    public function getRequestedFormation(AbstractActionController $controller, $paramName = 'formation')
+    public function getRequestedFormation(AbstractActionController $controller, string $paramName = 'formation') : ?Formation
     {
         $id = $controller->params()->fromRoute($paramName);
         $activite = $this->getFormation($id);
@@ -131,7 +131,7 @@ class FormationService
      * @param string $id
      * @return Formation|null
      */
-    public function getFormationBySource(string $source, string $id)
+    public function getFormationBySource(string $source, string $id) : ?Formation
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formation.source = :source')
@@ -151,7 +151,7 @@ class FormationService
     /**
      * @return array
      */
-    public function getFormationsAsOptions()
+    public function getFormationsAsOptions() : array
     {
         $formations = $this->getFormations('libelle');
 
@@ -166,7 +166,7 @@ class FormationService
      * @param Formation[] $formationsAlreadyUsed
      * @return Formation[]
      */
-    public function getFormationsDisponiblesAsOptions($formationsAlreadyUsed = [])
+    public function getFormationsDisponiblesAsOptions(array $formationsAlreadyUsed = []) : array
     {
         $formations = $this->getFormations('libelle', 'ASC');
 
@@ -190,7 +190,7 @@ class FormationService
     /**
      * @return array
      */
-    public function getFormationsGroupesAsGroupOptions()
+    public function getFormationsGroupesAsGroupOptions() : array
     {
         $formations = $this->getFormations();
         $dictionnaire = [];
@@ -225,7 +225,7 @@ class FormationService
      * @param array $data
      * @return Formation
      */
-    public function updateLibelle(Formation $formation, array $data)
+    public function updateLibelle(Formation $formation, array $data) : Formation
     {
         /** @var string $libelle */
         $libelle = null;

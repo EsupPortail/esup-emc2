@@ -8,9 +8,9 @@ use Zend\View\Renderer\PhpRenderer;
 class UrlService {
 
     /** @var PhpRenderer */
-    private $renderer;
+    protected $renderer;
     /** @var array */
-    private $variables;
+    protected $variables;
 
     /**
      * @param PhpRenderer $renderer
