@@ -18,79 +18,82 @@ $canAjouterInstance         = $this->isAllowed(FormationinstancePrivileges::getR
 $canHistoriserInstance      = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_HISTORISER));
 $canSupprimerInstance       = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_SUPPRIMER));
 
-$this->headTitle("Formation " . $formation->getId() . " - " . $formation->getLibelle());
+$this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->getId() . " - " . $formation->getLibelle());
 ?>
 
 <h1 class="page-header">
-    Formation <?php echo $formation->getId(); ?> - <?php echo $formation->getLibelle(); ?>
+    <span class="badge source <?php echo $formation->getSource(); ?>"><?php echo $formation->getSource(); ?> <?php echo $formation->getId(); ?> </span> <?php echo $formation->getLibelle(); ?>
 </h1>
 
-<div class="main">
-    <div class="row">
-        <div class="col-sm-6 col-md-8">
-            <?php echo $this->formationInformations($formation); ?>
-        </div>
-        <div class="pull-right">
-            <?php if ($canModifierInformations) : ?>
-                <?php /** @see FormationController::modifierFormationInformationsAction() */?>
-                <a      href="<?php echo $this->url('formation/modifier-formation-informations', ['formation' => $formation->getId()], [], true); ?>"
-                        class="btn btn-primary action ajax-modal" data-event="modification"
-                >
-                    <span class="icon editer"></span>
-                    Modifier les informations
-                </a>
-            <?php endif; ?>
-            <br/>
-            <?php /** @see FormationController::indexAction() */ ?>
-            <a      href="<?php echo $this->url('formation', [], ['fragment' => "formation"], true); ?>"
-                    class="btn btn-info action">
-                <span class="icon retour"></span>
-                Retour à l'index des formations
+<!-- INFORMATIONS GENERALES ------------------------------------------------------------------------------------------->
 
+<div class="row">
+    <div class="col-sm-6 col-md-8">
+        <?php echo $this->formationInformations($formation); ?>
+    </div>
+    <div class="pull-right">
+        <?php if ($canModifierInformations) : ?>
+            <?php /** @see FormationController::modifierFormationInformationsAction() */?>
+            <a      href="<?php echo $this->url('formation/modifier-formation-informations', ['formation' => $formation->getId()], [], true); ?>"
+                    class="btn btn-primary action ajax-modal" data-event="modification"
+            >
+                <span class="icon editer"></span>
+                Modifier les informations
             </a>
-        </div>
+        <?php endif; ?>
+        <br/>
+        <?php /** @see FormationController::indexAction() */ ?>
+        <a      href="<?php echo $this->url('formation', [], ['fragment' => "formation"], true); ?>"
+                class="btn btn-info action">
+            <span class="icon retour"></span>
+            Retour à l'index des formations
+
+        </a>
     </div>
-
-    <div>
-        <h2> Applications et compétences obtenues après cette formation</h2>
-
-        <?php echo $this->applicationBloc($formation->getApplicationDictionnaire(), $formation, [
-                'actions' => ['afficher' => true, 'valider' => false, 'modifier' => $canModifierInformations, 'supprimer' => $canModifierInformations],
-                'display' => ['validation' => false]
-        ]); ?>
-        <?php echo $this->competenceBloc($formation->getCompetenceDictionnaire(), $formation, [
-                'actions' => ['afficher' => true, 'valider' => false, 'modifier' => $canModifierInformations, 'supprimer' => $canModifierInformations],
-                'display' => ['validation' => false]
-        ]); ?>
-    </div>
-
-
-    <div class="row">
-        <div class="col-sm-6 col-md-8">
-            <h2>
-                Sessions de formation
-                <span class="badge"><?php echo count($instances); ?></span>
-            </h2>
-        </div>
-        <div class="pull-right">
-            <?php if ($canAjouterInstance) : ?>
-                <?php /** @see FormationInstanceController::ajouterAction() */ ?>
-                <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
-                        class="btn btn-primary action"
-                >
-                    <span class="icon ajouter"></span>
-                    Ajouter une session
-                </a>
-            <?php endif; ?>
-            <br/>
-            <br/>
-        </div>
-    </div>
-
-    <?php echo $this->formationInstanceArray($instances); ?>
-
 </div>
 
+<!-- ACQUIS FOURNIS PAR LA FORMATION ---------------------------------------------------------------------------------->
+
+<div>
+    <h2> Applications et compétences obtenues après cette formation</h2>
+
+    <?php echo $this->applicationBloc($formation->getApplicationDictionnaire(), $formation, [
+            'actions' => ['afficher' => true, 'valider' => false, 'modifier' => $canModifierInformations, 'supprimer' => $canModifierInformations],
+            'display' => ['validation' => false]
+    ]); ?>
+    <?php echo $this->competenceBloc($formation->getCompetenceDictionnaire(), $formation, [
+            'actions' => ['afficher' => true, 'valider' => false, 'modifier' => $canModifierInformations, 'supprimer' => $canModifierInformations],
+            'display' => ['validation' => false]
+    ]); ?>
+</div>
+
+<!-- SESSIONS LIEES FORMATION ----------------------------------------------------------------------------------------->
+
+<div class="row">
+    <div class="col-sm-6 col-md-8">
+        <h2>
+            Sessions de formation
+            <span class="badge"><?php echo count($instances); ?></span>
+        </h2>
+    </div>
+    <div class="pull-right">
+        <?php if ($canAjouterInstance) : ?>
+            <?php /** @see FormationInstanceController::ajouterAction() */ ?>
+            <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
+                    class="btn btn-primary action"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une session
+            </a>
+        <?php endif; ?>
+        <br/>
+        <br/>
+    </div>
+</div>
+
+<?php echo $this->formationInstanceArray($instances); ?>
+
+<br/>
 
 <script>
     $(function() {

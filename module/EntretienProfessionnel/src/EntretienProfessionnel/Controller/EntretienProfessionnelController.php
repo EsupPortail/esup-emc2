@@ -81,7 +81,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $etat         = ($etatId !== null AND  $etatId !== '')?$this->getEtatService()->getEtat($etatId):null;
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels($agent, $responsable, $structure, $campagne, $etat);
-        
+
         $campagnes = $this->getCampagneService()->getCampagnes();
         $type = $this->getEtatTypeService()->getEtatTypeByCode('ENTRETIEN_PROFESSIONNEL');
         $etats = $this->getEtatService()->getEtatsByType($type);

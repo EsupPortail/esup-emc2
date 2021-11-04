@@ -10,7 +10,7 @@ use Zend\View\Resolver\TemplatePathStack;
 
 /**
  * le tableau d'options peut recevoir un ensemble de booléen pour les droits afin de ne pas recalculer ou transmettre des valeurs différentes.
- * $options['droits']['afficher' => Boolean, 'reenvoyer' => Boolean, 'supprimer' => Boolean]
+ * $options['droits']['afficher' => Boolean, 'historiser' => Boolean, 'supprimer' => Boolean]
  */
 
 class FormationInstanceArrayViewHelper extends AbstractHelper

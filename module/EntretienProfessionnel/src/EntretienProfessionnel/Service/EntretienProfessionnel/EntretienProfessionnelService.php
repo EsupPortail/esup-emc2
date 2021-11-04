@@ -9,6 +9,8 @@ use Application\Entity\Db\StructureResponsable;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -81,6 +83,46 @@ class EntretienProfessionnelService {
     {
         $this->deleteFromTrait($entretien);
         return $entretien;
+    }
+
+    /** REQUETAGE ARRAYS **********************************************************************************************/
+
+    /**
+     * @return array
+     */
+    public function getEntretiensProfessionnelsArray() : array
+    {
+        $sql = <<<EOS
+select
+   ep.id as entretien_id, ep.date_entretien as entretien_date, ep.lieu as entretien_lieu,
+   epc.id as campagne_id, epc.annee as campagne_annee,
+   aa.c_individu as agent_id, aa.prenom as agent_prenom, aa.nom_usage as agent_nom,
+   s.id as structure_id, s.libelle_court as structure_court, s.libelle_long as structure_long,
+   ar.c_individu as responsable_id, ar.prenom as responsable_prenom, ar.nom_usage as responsable_nom,
+   uee.code as etat
+from entretien_professionnel ep
+join entretienprofessionnel_campagne epc on ep.campagne_id = epc.id
+join agent aa on ep.agent = aa.c_individu
+join agent ar on ep.responsable_id = ar.c_individu
+join unicaen_etat_etat uee on ep.etat_id = uee.id
+left join agent_affectation aaa on aaa.agent_id = aa.c_individu
+left join structure s on s.id = aaa.structure_id
+where (aaa.date_debut IS NULL OR aaa.date_debut <= ep.date_entretien)
+  and (aaa.date_fin IS NULL OR aaa.date_fin >= ep.date_entretien)
+  and aaa.deleted_on IS NULL
+EOS;
+
+        try {
+            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, []);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des entretiens professionnels", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des entretiens professionnels", 0, $e);
+        }
+        return $tmp;
     }
 
     /** REQUETAGE *****************************************************************************************************/

@@ -140,7 +140,12 @@ if ($agent !== null) {
                 <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits, "options" => $options['actions']], []); ?>
             </div>
             <div id="entretiens" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/entretien-professionnel', ['entretiens' => $entretiens, 'agent' => $agent, "droits" => $droits], []); ?>
+                <?php echo $this->entretienProfessionnelArray($entretiens,
+                    [
+                        'affichages' => ['agent' => false, 'lieu' => false],
+                        'droits' => ['modifier' => false, 'historiser' => false,  'supprimer' => false, 'sursis' => false]
+                    ]
+                ); ?>
             </div>
 
             <?php if ($displayParcours === true) : ?>

@@ -26,96 +26,12 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
 <h2> Liste des entretiens enregistrés </h2>
 
-<table class="datatable table table-condensed">
-    <thead>
-    <tr>
-        <th> Année </th>
-        <th> Structure <span class="icon attention" title="Structures déduites de l'affectation et non du poste" style="color:darkred;"></span></th>
-        <th> Agent </th>
-        <th> Responsable </th>
-        <th> Date </th>
-        <th id="etat"> État </th>
-        <th id="action"> Action </th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($entretiens as $entretien) : ?>
-        <tr class="<?php echo ($entretien->estHistorise()?"historise":""); ?>">
-            <td> <?php echo $entretien->getAnnee(); ?> </td>
-            <td>
-                <?php $affectations = $entretien->getAgent()->getAffectations($entretien->getDateEntretien()); ?>
-                <?php if ($affectations !== null and !empty($affectations)) : ?>
-                    <?php $first = true; ?>
-                    <?php foreach ($affectations as $affectation) : ?>
-                        <?php if (!$first) echo '<br/>'; else $first = false; ?>
-                        <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    Aucune structure
-                <?php endif; ?>
-            </td>
-            <td>
-                <?php echo $entretien->getAgent()->getPrenom(); ?>
-                <?php echo $entretien->getAgent()->getNomUsuel(); ?>
-            </td>
-            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
-            <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?> </td>
-            <td> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
-            <td>
-                <?php if ($canVoir) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::afficherAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true) ?>"
-                    >
-                        <span class="icon voir" title="Voir le compte-rendu de l'entretien professionnel"></a>
-                <?php endif; ?>
-
-                <?php if ($canVoir) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true) ?>"
-                    >
-                        <span class="icon pdf" title="Exporter l'entretien professionnel"></a>
-                <?php endif; ?>
-
-                <?php if ($canModifier) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
-                    >
-                        <span class="icon editer" title="Modifier le compte-rendu de l'entretien professionnel"></span></a>
-                <?php endif; ?>
-
-                <?php if ($canHistoriser) : ?>
-                    <?php if ($entretien->estNonHistorise()) : ?>
-                        <a
-                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */?>
-                            href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
-                        >
-                            <span class="icon historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span></a>
-                    <?php else : ?>
-                        <a
-                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::restaurerAction() */?>
-                            href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
-                        >
-                            <span class="icon restaurer" title="Restaurer le compte-rendu de l'entretien professionnel"></span></a>
-                    <?php endif; ?>
-                <?php endif; ?>
-
-                <?php if ($canDetruire) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
-                        class="ajax-modal"
-                        data-event="modification"
-                    >
-                        <span class="icon detruire" title="Supprimer définitivement le compte-rendu de l'entretien professionnel"></span></a>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+<?php echo $this->entretienProfessionnelArray($entretiens,
+    [
+        'affichages' => ['lieu' => false],
+        'droits' => []
+    ]
+); ?>
 
 
 <style>

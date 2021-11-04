@@ -1,0 +1,219 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
+
+/**
+ * @see \Formation\View\Helper\EntretienProfessionnelArrayViewHelper
+ * @var EntretienProfessionnel[] $entretiens
+ * @var array $options
+ */
+
+// recuperation des données à afficher
+$displayAnnee = true;
+if (isset($options['affichages']) AND isset($options['affichages']['annee']))       $displayAnnee = $options['affichages']['annee'];
+$displayStructure = true;
+if (isset($options['affichages']) AND isset($options['affichages']['structure']))   $displayStructure = $options['affichages']['structure'];
+$displayAgent = true;
+if (isset($options['affichages']) AND isset($options['affichages']['agent']))       $displayAgent = $options['affichages']['agent'];
+$displayResponsable = true;
+if (isset($options['affichages']) AND isset($options['affichages']['responsable'])) $displayResponsable = $options['affichages']['responsable'];
+$displayDate = true;
+if (isset($options['affichages']) AND isset($options['affichages']['date']))        $displayDate = $options['affichages']['date'];
+$displayLieu = true;
+if (isset($options['affichages']) AND isset($options['affichages']['lieu']))        $displayLieu = $options['affichages']['lieu'];
+$displayEtat = true;
+if (isset($options['affichages']) AND isset($options['affichages']['etat']))        $displayEtat = $options['affichages']['etat'];
+$displayAction = true;
+if (isset($options['affichages']) AND isset($options['affichages']['action']))      $displayAction = $options['affichages']['action'];
+
+// recuperation des droits pour les actions
+$canAfficher  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['afficher'])) {
+    $canAfficher = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
+} else {
+    $canAfficher = $options['droits']['afficher'];
+}
+$canExporter  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['exporter'])) {
+    $canExporter = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
+} else {
+    $canExporter = $options['droits']['exporter'];
+}
+$canModifier  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['modifier'])) {
+    $canModifier = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER));
+} else {
+    $canModifier = $options['droits']['modifier'];
+}
+$canSursis  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['sursis'])) {
+    $canSursis = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_MODIFIER));
+} else {
+    $canSursis = $options['droits']['sursis'];
+}
+$canRenseigner  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['renseigner'])) {
+    $canRenseigner = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER));
+} else {
+    $canRenseigner = $options['droits']['renseigner'];
+}
+$canHistoriser  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['historiser'])) {
+    $canHistoriser = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_HISTORISER));
+} else {
+    $canHistoriser = $options['droits']['historiser'];
+}
+$canSupprimer  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
+    $canSupprimer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
+} else {
+    $canSupprimer = $options['droits']['supprimer'];
+}
+
+?>
+
+<table class="table table-condensed table-hover" style="margin:1rem 0;">
+    <thead>
+    <tr>
+        <?php if ($displayAnnee) : ?>
+            <th style="width:9rem;"> Année </th>
+        <?php endif; ?>
+        <?php if ($displayStructure) : ?>
+            <th> Structure </th>
+        <?php endif; ?>
+        <?php if ($displayAgent) : ?>
+            <th> Agent </th>
+        <?php endif; ?>
+        <?php if ($displayResponsable) : ?>
+            <th> Responsable </th>
+        <?php endif; ?>
+        <?php if ($displayDate) : ?>
+            <th> Date</th>
+        <?php endif; ?>
+        <?php if ($displayLieu) : ?>
+            <th> Lieu</th>
+        <?php endif; ?>
+        <?php if ($displayEtat) : ?>
+            <th style="width:6rem;"> État </th>
+        <?php endif; ?>
+        <?php if ($displayAction) : ?>
+            <th style="width:16rem;"> Action </th>
+        <?php endif; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($entretiens as $entretien) : ?>
+    <tr>
+        <?php if ($displayAnnee) : ?>
+            <td> <?php echo $entretien->getCampagne()->getAnnee(); ?> </td>
+        <?php endif; ?>
+        <?php if ($displayStructure) : ?>
+            <td>
+                <?php $affectations = $entretien->getAgent()->getAffectations($entretien->getDateEntretien()); ?>
+                <?php if ($affectations !== null and !empty($affectations)) : ?>
+                    <?php $first = true; ?>
+                    <?php foreach ($affectations as $affectation) : ?>
+                        <?php if (!$first) echo '<br/>'; else $first = false; ?>
+                        <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    Aucune structure
+                <?php endif; ?>
+            </td>
+        <?php endif; ?>
+        <?php if ($displayAgent) : ?>
+            <td> <?php echo $entretien->getAgent()->getDenomination(); ?> </td>
+        <?php endif; ?>
+        <?php if ($displayResponsable) : ?>
+            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
+        <?php endif; ?>
+        <?php if ($displayDate) : ?>
+            <td>
+                <?php if ($sursis = $entretien->getSursisActif()) : ?>
+                    <i><?php echo $entretien->getSursisActif()->getSursis()->format('d/m/Y à H:i'); ?></i>
+                <?php else : ?>
+                    <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?>
+                <?php endif; ?>
+            </td>
+        <?php endif; ?>
+        <?php if ($displayLieu) : ?>
+            <td> <?php echo $entretien->getLieu(); ?> </td>
+        <?php endif; ?>
+        <?php if ($displayEtat) : ?>
+            <td> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
+        <?php endif; ?>
+        <?php if ($displayAction) : ?>
+        <td>
+            <?php if ($canAfficher) : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::afficherAction() */?>
+                    href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true) ?>"
+                >
+                    <span class="icon voir" title="Voir le compte-rendu de l'entretien professionnel"></a>
+            <?php endif; ?>
+            <?php if ($canExporter) : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterAction() */?>
+                    href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true) ?>"
+                >
+                    <span class="icon pdf" title="Exporter l'entretien professionnel"></a>
+            <?php endif; ?>
+            <?php if ($canRenseigner) : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
+                    href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true) ?>"
+                >
+                    <span class="icon editer" title="Renseigner le compte-rendu de l'entretien professionnel"></a>
+            <?php endif; ?>
+            <?php if ($canModifier) : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
+                    href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
+                >
+                    <span class="icon gerer" title="Modifier le compte-rendu de l'entretien professionnel"></span></a>
+                <?php if ($canSursis) : ?>
+                    <a      <?php /** @see \EntretienProfessionnel\Controller\SursisController::modifierAction() */ ?>
+                            href="<?php
+                                if ($entretien->getSursisActif())
+                                    echo $this->url('entretien-professionnel/sursis/modifier', ['sursis' => $entretien->getSursisActif()->getId()], [], true);
+                                else
+                                    echo $this->url('entretien-professionnel/sursis/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true);
+                            ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon sursis"></span></a>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($canHistoriser) : ?>
+                <?php if ($entretien->estNonHistorise()) : ?>
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */?>
+                        href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
+                    >
+                        <span class="icon historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span></a>
+                <?php else : ?>
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::restaurerAction() */?>
+                        href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
+                    >
+                        <span class="icon restaurer" title="Restaurer le compte-rendu de l'entretien professionnel"></span></a>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <?php if ($canSupprimer) : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */?>
+                    href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
+                    class="ajax-modal"
+                    data-event="modification"
+                >
+                    <span class="icon detruire" title="Supprimer définitivement le compte-rendu de l'entretien professionnel"></span></a>
+            <?php endif; ?>
+        </td>
+        <?php endif; ?>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

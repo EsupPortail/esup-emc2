@@ -13,6 +13,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormFactory;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHydrator;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHydratorFactory;
+use EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
@@ -340,6 +341,12 @@ return [
         'factories' => [
             EntretienProfessionnelHydrator::class => EntretienProfessionnelHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'entretienProfessionnelArray' => EntretienProfessionnelArrayViewHelper::class,
+        ],
+    ],
+
 
 ];
