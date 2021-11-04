@@ -25,8 +25,8 @@ class AgentStageObservationHydrator implements HydratorInterface {
             'structure'         => ($object->getStructure())?($object->getStructure())->getId():null,
             'metier'            => ($object->getMetier())?($object->getMetier())->getId():null,
             'HasPeriode'        => [
-                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format('d/m/Y'):null,
-                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format('d/m/Y'):null,
+                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
+                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
             ],
             'etat'              => [
                 'etat' => ($object->getEtat())?$object->getEtat()->getId():null,

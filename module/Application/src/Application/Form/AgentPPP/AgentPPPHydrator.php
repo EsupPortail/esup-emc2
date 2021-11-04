@@ -21,8 +21,8 @@ class AgentPPPHydrator implements HydratorInterface {
             'type'              => $object->getType(),
             'libelle'           => $object->getLibelle(),
             'HasPeriode'        => [
-                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format('d/m/Y'):null,
-                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format('d/m/Y'):null,
+                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
+                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
             ],
             'etat'              => [
                 'etat' => ($object->getEtat())?$object->getEtat()->getId():null,

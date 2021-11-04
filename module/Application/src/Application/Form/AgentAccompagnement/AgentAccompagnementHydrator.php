@@ -28,8 +28,8 @@ class AgentAccompagnementHydrator implements HydratorInterface {
             'bap'               => ($object->getBap())?($object->getBap())->getId():null,
             'corps'             => ($object->getCorps())?($object->getCorps())->getId():null,
             'HasPeriode'        => [
-                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format('d/m/Y'):null,
-                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format('d/m/Y'):null,
+                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
+                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
             ],
             'etat'              => [
                 'etat' => ($object->getEtat())?$object->getEtat()->getId():null,

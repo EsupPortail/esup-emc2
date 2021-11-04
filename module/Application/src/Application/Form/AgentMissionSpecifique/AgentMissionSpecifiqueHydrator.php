@@ -26,8 +26,8 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
             'agent'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
             'structure' => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
             'HasPeriode'        => [
-                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format('d/m/Y'):null,
-                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format('d/m/Y'):null,
+                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
+                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
             ],
             'decharge'  => ($object->getDecharge()?$object->getDecharge():null)
         ];
