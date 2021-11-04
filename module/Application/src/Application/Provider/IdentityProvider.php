@@ -6,10 +6,8 @@ use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
-use EntretienProfessionnel\Entity\Db\Delegue;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
 
@@ -44,7 +42,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
             case Structure::ROLE_GESTIONNAIRE :
                 $user = $this->getStructureService()->getUsersInGestionnaires();
                 return $user;
-            case Delegue::ROLE_DELEGUE :
+            case EntretienProfessionnelConstant::ROLE_DELEGUE :
                 $user = $this->getDelegueService()->getUsersInDelegue();
                 return $user;
         }
@@ -82,7 +80,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 
             $deleguations = $this->getDelegueService()->getDeleguesByAgent($agent);
             if ($deleguations !== null and $deleguations !== []) {
-                $roleDelegue = $this->getRoleService()->getRoleByCode(Delegue::ROLE_DELEGUE);
+                $roleDelegue = $this->getRoleService()->getRoleByCode(EntretienProfessionnelConstant::ROLE_DELEGUE);
                 $roles[] = $roleDelegue;
             }
 

@@ -66,7 +66,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
     use RendererAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $fromQueries  = $this->params()->fromQuery();
         $agentId      = $fromQueries['agent'];
@@ -101,17 +101,19 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
-    public function rechercherResponsableAction()
+    /** Action de recherche parmi les entretiens professionnels *******************************************************/
+
+    public function rechercherResponsableAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $responsables = $this->getEntretienProfessionnelService()->findResponsableByTerm($term);
-            $result = $this->getUserService()->formatUserJSON($responsables);
+            $result = $this->getAgentService()->formatAgentJSON($responsables);
             return new JsonModel($result);
         }
         exit;
     }
 
-    public function rechercherAgentAction()
+    public function rechercherAgentAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $agents = $this->getEntretienProfessionnelService()->findAgentByTerm($term);
@@ -121,7 +123,7 @@ class EntretienProfessionnelController extends AbstractActionController
         exit;
     }
 
-    public function rechercherStructureAction()
+    public function rechercherStructureAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $structures = $this->getEntretienProfessionnelService()->findStructureByTerm($term);

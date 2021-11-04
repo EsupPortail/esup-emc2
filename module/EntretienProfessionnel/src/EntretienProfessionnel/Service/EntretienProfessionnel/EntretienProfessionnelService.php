@@ -192,29 +192,9 @@ EOS;
 
     /**
      * @param string $texte
-     * @return User[]
-     */
-    public function findResponsableEntretienByTerm(string $texte)
-    {
-            $qb = $this->createQueryBuilder()
-                ->andWhere("LOWER(responsable.displayName) LIKE :critere")
-                ->setParameter("critere", '%'.strtolower($texte).'%');
-            $result = $qb->getQuery()->getResult();
-
-            $responsables = [];
-            /** @var EntretienProfessionnel $item */
-            foreach ($result as $item) {
-                $responsable = $item->getResponsable();
-                $responsables[$responsable->getId()] = $responsable;
-            }
-            return $responsables;
-    }
-
-    /**
-     * @param string $texte
      * @return Agent[]
      */
-    public function findAgentByTerm(string $texte)
+    public function findAgentByTerm(string $texte) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
@@ -232,9 +212,29 @@ EOS;
 
     /**
      * @param string $texte
+     * @return Agent[]
+     */
+    public function findResponsableByTerm(string $texte) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(CONCAT(responsable.prenom, ' ', responsable.nomUsuel)) like :search OR LOWER(CONCAT(responsable.nomUsuel, ' ', responsable.prenom)) like :search")
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        $responsables = [];
+        /** @var EntretienProfessionnel $item */
+        foreach ($result as $item) {
+            $responsable = $item->getResponsable();
+            $responsables[$responsable->getId()] = $responsable;
+        }
+        return $responsables;
+    }
+
+    /**
+     * @param string $texte
      * @return Structure[]
      */
-    public function findStructureByTerm(string $texte)
+    public function findStructureByTerm(string $texte) : array
     {
         $qb = $this->createQueryBuilder()
             ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
