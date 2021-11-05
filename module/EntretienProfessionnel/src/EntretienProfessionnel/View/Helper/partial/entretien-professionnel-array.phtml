@@ -78,7 +78,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
     <thead>
     <tr>
         <?php if ($displayAnnee) : ?>
-            <th style="width:9rem;"> Année </th>
+            <th style="min-width:9rem;"> Année </th>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <th> Structure </th>
@@ -96,10 +96,10 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
             <th> Lieu</th>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <th style="width:6rem;"> État </th>
+            <th style="min-width:6rem;"> État </th>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
-            <th style="width:16rem;"> Action </th>
+            <th style="min-width:16rem;"> Action </th>
         <?php endif; ?>
     </tr>
     </thead>
