@@ -20,8 +20,6 @@ $canHistoriser  = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 ?>
 
-<?php echo $this->portenote('EntretienProfessionnelController::entretiens', '', []); ?>
-
 <?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => $params], [], true); ?>
 
 <h2> Liste des entretiens enregistrés </h2>

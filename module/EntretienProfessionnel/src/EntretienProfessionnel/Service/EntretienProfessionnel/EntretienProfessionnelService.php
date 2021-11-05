@@ -136,7 +136,7 @@ class EntretienProfessionnelService {
                 ->setParameter('etat', $etat);
         }
         if ($structure !== null) {
-            $qb = $qb->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+            $qb = $qb
                 ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
                 ->andWhere('affectation.structure = :structure')
                 ->setParameter('structure', $structure)
@@ -195,7 +195,6 @@ class EntretienProfessionnelService {
     public function findStructureByTerm(string $texte) : array
     {
         $qb = $this->createQueryBuilder()
-            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($texte).'%')
