@@ -69,7 +69,8 @@ class ObservationService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() {
+    public function createQueryBuilder() : QueryBuilder
+    {
         $qb = $this->getEntityManager()->getRepository(Observation::class)->createQueryBuilder('observation')
             ->addSelect('entretien')->join('observation.entretien','entretien')
             ;
@@ -81,7 +82,7 @@ class ObservationService {
      * @param string $ordre
      * @return Observation[]
      */
-    public function getObservations($champ = 'id', $ordre = 'ASC') : array
+    public function getObservations(string $champ = 'id', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('observation.' . $champ, $ordre);
@@ -90,10 +91,10 @@ class ObservationService {
     }
 
     /**
-     * @param int $id
-     * @return Observation
+     * @param int|null $id
+     * @return Observation|null
      */
-    public function getObservation(int $id) : Observation
+    public function getObservation(?int $id) : ?Observation
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('observation.id = :id')
@@ -109,9 +110,9 @@ class ObservationService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return Observation
+     * @return Observation|null
      */
-    public function getRequestedObservation(AbstractActionController $controller, string $param = 'observation')
+    public function getRequestedObservation(AbstractActionController $controller, string $param = 'observation') : ?Observation
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getObservation($id);

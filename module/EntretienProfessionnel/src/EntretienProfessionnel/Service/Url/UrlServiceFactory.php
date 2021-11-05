@@ -1,6 +1,6 @@
 <?php
 
-namespace EntretienProfessionnel\Service\Url;
+namespace Application\Service\Url;
 
 use Interop\Container\ContainerInterface;
 use Zend\View\Renderer\PhpRenderer;

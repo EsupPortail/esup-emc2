@@ -12,7 +12,7 @@ class ObservationServiceFactory {
      * @param ContainerInterface $container
      * @return ObservationService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ObservationService
     {
         /**
          * @var EntityManager $entityManager

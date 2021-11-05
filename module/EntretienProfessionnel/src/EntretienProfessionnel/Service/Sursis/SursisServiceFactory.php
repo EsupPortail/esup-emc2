@@ -12,7 +12,7 @@ class SursisServiceFactory {
      * @param ContainerInterface $container
      * @return SursisService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : SursisService
     {
         /**
          * @var EntityManager $entityManager

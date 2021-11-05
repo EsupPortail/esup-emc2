@@ -16,7 +16,7 @@ class EntretienProfessionnelServiceFactory
      * @param ContainerInterface $container
      * @return EntretienProfessionnelService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : EntretienProfessionnelService
     {
         /**
          * @var EntityManager $entityManager

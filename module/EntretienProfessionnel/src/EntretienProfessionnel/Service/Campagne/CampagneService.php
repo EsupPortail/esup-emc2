@@ -149,12 +149,8 @@ class CampagneService {
      */
     public function getCampagnesActives(?DateTime $date = null) : array
     {
-        if ($date === null) $date = $this->getDateTime();
-        $qb = $this->createQueryBuilder()
-            ->andWhere('campagne.dateFin >= :date')
-            ->setParameter('date', $date)
-        ;
-
+        $qb = $this->createQueryBuilder();
+        $qb = Campagne::decorateWithActif($qb, 'campagne', $date);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
