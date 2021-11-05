@@ -14,9 +14,9 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
 
 <div class="row">
     <div class="col-md-6">
-        <?php echo $this->portenote('StructureController::indexAction()>Description', '', []); ?>
 
-        <h2>
+
+        <h2 style="border-bottom:1px solid black;">
             Description
             <?php if ($canEditerDescription) : ?>
                 <a
@@ -44,6 +44,9 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
 
             <?php endif; ?>
         </h2>
+
+        <?php echo $this->portenote('StructureController::indexAction()>Description', '', []); ?>
+
         <?php if ($structure->getRepriseResumeMere()) : ?>
             <div class="alert alert-info">
                 <span class="icon information"></span>
@@ -71,12 +74,18 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
     <!-- RESPONSABLE ET GESTIONNAIRE ---------------------------------------------------------------------------------->
 
     <div class="col-md-6">
-        <?php echo $this->portenote('StructureController::indexAction()>Role', '', []); ?>
-        <h2>
+        <h2 style="border-bottom:1px solid black;">
+            Rôles
+            <span class="icon information" style="color:var(--content-background)"></span>
+        </h2>
+
+        <?php //echo $this->portenote('StructureController::indexAction()>Role', '', []); ?>
+
+        <h3>
             Responsables
             <span class="badge"><?php echo count($structure->getResponsables()); ?></span>
             <span class="icon synchoniser" title="Synchronisé depuis OCTOPUS"></span>
-        </h2>
+        </h3>
         <ul>
             <?php foreach ($structure->getResponsables() as $responsable) : ?>
                 <li>
@@ -87,7 +96,7 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
             <?php endforeach; ?>
         </ul>
 
-        <h2>
+        <h3>
             Gestionnaires
             <span class="badge"><?php echo count($structure->getGestionnaires()); ?></span>
             <?php if ($canEditerGestionnaire) : ?>
@@ -97,11 +106,11 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
                     class="ajax-modal"
                     data-event="modification"
                 >
-                    <span class="icon editer" data-toggle="tooltip" data-html="true"
+                    <span class="icon ajouter" data-toggle="tooltip" data-html="true"
                           title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                     </span></a>
             <?php endif; ?>
-        </h2>
+        </h3>
         <ul>
             <?php foreach ($structure->getGestionnaires() as $gestionnaire) : ?>
                 <li>
@@ -119,9 +128,14 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
             <?php endforeach; ?>
         </ul>
 
-        <?php echo $this->portenote('StructureController::indexAction()>structures_liees', '', []); ?>
+        <h2 style="border-bottom:1px solid black;">
+            Structures
+            <span class="icon information" style="color:var(--content-background)"></span>
+        </h2>
 
-        <h2> Structure mère <tt>n+1</tt> </h2>
+        <?php //echo $this->portenote('StructureController::indexAction()>structures_liees', '', []); ?>
+
+        <h3> Structure mère <tt>n+1</tt> </h3>
         <?php if ($structure->getParent() !== null) :?>
             <ul>
                 <li>
@@ -134,12 +148,12 @@ $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRU
         <?php else : ?>
             Aucune structure mère
         <?php endif; ?>
-        <h2>
+        <h3>
             Structures filles <tt>n-1</tt>
             <span class="badge">
                     <?php echo count($filles); ?>
                 </span>
-        </h2>
+        </h3>
         <ul>
             <?php foreach ($filles as $enfant) : ?>
                 <li>
