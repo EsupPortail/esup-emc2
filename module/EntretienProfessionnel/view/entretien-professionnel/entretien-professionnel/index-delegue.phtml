@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::indexDelegueAction()
+ * @var EntretienProfessionnel[] $entretiens
+ */
+
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+
+$this->headTitle('Index des entretiens professionnel');
+
+?>
+
+<h1 class="page-header">
+    Index des entretiens professionnel
+</h1>
+
+<?php
+    echo $this->entretienProfessionnelArray($entretiens,
+        [
+            'affichages' => ['agent' => false, 'lieu' => false],
+            'droits' => ['modifier' => false, 'historiser' => false, 'supprimer' => false, 'sursis' => false]
+        ]
+    );
+?>

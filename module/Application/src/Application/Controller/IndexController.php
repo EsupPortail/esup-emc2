@@ -6,6 +6,7 @@ use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -61,6 +62,9 @@ class IndexController extends AbstractActionController
                 case RoleConstant::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
+                    break;
+                case EntretienProfessionnelConstant::ROLE_DELEGUE :
+                    return $this->redirect()->toRoute('entretien-professionnel/index-delegue', [], [], true);
                     break;
             }
         }

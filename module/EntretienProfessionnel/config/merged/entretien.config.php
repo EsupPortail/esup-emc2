@@ -67,6 +67,15 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
+                        'index-delegue',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'afficher',
                         'exporter',
                     ],
@@ -132,6 +141,17 @@ return [
                     ],
                 ],
                 'child_routes' => [
+                    'index-delegue' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-delegue',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'index-delegue',
+                            ],
+                        ],
+                    ],
                     'find-responsable-pour-entretien' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,

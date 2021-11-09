@@ -268,6 +268,23 @@ class EntretienProfessionnelService {
     }
 
     /**
+     * @param Agent $delegue
+     * @return array
+     */
+    public function getEntretiensProfessionnelsByDelegue(Agent $delegue)  : array
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->leftJoin('entretien.responsable', 'responsable')->addSelect('responsable')
+            ->andWhere('entretien.responsable = :delegue')
+            ->setParameter('delegue', $delegue);
+
+        $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param string token
      * @return EntretienProfessionnel|null
      */
