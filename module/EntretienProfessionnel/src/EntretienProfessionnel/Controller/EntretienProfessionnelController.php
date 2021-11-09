@@ -396,6 +396,13 @@ class EntretienProfessionnelController extends AbstractActionController
                         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
                         $this->getMailService()->update($mail);
 
+                        if ($entretien->getObservationActive() !== null) {
+                            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_OBSERVATION_AGENT", $vars);
+                            $mail = $this->getMailService()->sendMail($entretien->getResponsable()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+                            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+                            $this->getMailService()->update($mail);
+                        }
+
                         break;
 
                     case EntretienProfessionnelConstant::VALIDATION_RESPONSABLE :
