@@ -233,7 +233,20 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
+                $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
+
+                //exemple d'envoi de mail avec unicaenRenderer et unicaenMail
+                $vars = ['entretien' => $entretien, 'campagne' => $entretien->getCampagne()];
+                $url = $this->getUrlService();
+                $url->setVariables($vars);
+                $vars['UrlService'] = $url;
+
+                $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_CONVOCATION_ENVOI", $vars);
+                $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+                $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+                $this->getMailService()->update($mail);
             }
         }
 
