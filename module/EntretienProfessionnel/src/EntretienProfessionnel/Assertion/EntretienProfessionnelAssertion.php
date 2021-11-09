@@ -100,7 +100,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                         return true;
                     default:
-                        return $entity->getResponsable() === $user;
+                        return $entity->getResponsable()->getUtilisateur() === $user;
                 }
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH :
                 switch ($role->getRoleId()) {
