@@ -9,6 +9,7 @@
         <field name="annee"                column="annee"           type="string" length="256"   nullable="false"/>
         <field name="dateDebut"            column="date_debut"      type="datetime"              nullable="false"/>
         <field name="dateFin"              column="date_fin"        type="datetime"              nullable="false"/>
+        <field name="dateCirculaire"       column="date_circulaire" type="datetime"              nullable="false"/>
 
         <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne"  field="precede">
             <join-column name="precede_id" referenced-column-name="id"/>

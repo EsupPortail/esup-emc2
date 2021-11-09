@@ -72,6 +72,21 @@ class CampagneForm extends Form
                 'id'                => 'date_fin',
             ]
         ]);
+        //DEBUT (DATE)
+        $this->add([
+            'name' => 'date_circulaire',
+            'type' => DateTime::class,
+            'options' => [
+                'label' => 'Date de la circulaire : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+                'format' => 'd/m/Y'
+            ],
+            'attributes' => [
+                'id'                => 'date_circulaire',
+            ]
+        ]);
         //PRECEDE (SELECT)
         $this->add([
             'name' => 'precede',
@@ -110,6 +125,7 @@ class CampagneForm extends Form
             'annee' => [       'required' => true,   ],
             'date_debut' => [  'required' => true,   ],
             'date_fin' =>   [  'required' => true,   ],
+            'date_circulaire' =>   [  'required' => false,   ],
             'precede' =>    [  'required' => false,  ],
         ]));
     }

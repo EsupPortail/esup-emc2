@@ -84,6 +84,14 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     default:
                         return false;
             }
+            case EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE :
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                        return true;
+                    default:
+                        return $entity->getResponsable()->getUtilisateur() === $user;
+                }
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
@@ -94,18 +102,11 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     default:
                         return false;
                 }
-            case EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE :
-                switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                        return true;
-                    default:
-                        return $entity->getResponsable()->getUtilisateur() === $user;
-                }
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
+                        return true;
                     case RoleConstant::DRH:
                         return true;
                     case RoleConstant::RESPONSABLE:

@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
@@ -18,6 +19,9 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     private $annee;
     /** @var Campagne */
     private $precede;
+    /** @var DateTime|null */
+    private $dateCirculaire;
+
     /** @var ArrayCollection (EntretienProfessionnel) */
     private $entretiens;
 
@@ -75,6 +79,24 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     }
 
     /**
+     * @return DateTime|null
+     */
+    public function getDateCirculaire(): ?DateTime
+    {
+        return $this->dateCirculaire;
+    }
+
+    /**
+     * @param DateTime|null $dateCirculaire
+     * @return Campagne
+     */
+    public function setDateCirculaire(?DateTime $dateCirculaire): Campagne
+    {
+        $this->dateCirculaire = $dateCirculaire;
+        return $this;
+    }
+
+    /**
      * @return EntretienProfessionnel[]
      */
     public function getEntretiensProfessionnels() : array
@@ -82,4 +104,10 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
         return $this->entretiens->toArray();
     }
 
+    /** Fonctions pour les macros *************************************************************************************/
+
+    public function getDateCirculaireToString() : string
+    {
+        return ($this->dateCirculaire)?$this->dateCirculaire->format('d/m/Y'):"N.C.";
+    }
 }
