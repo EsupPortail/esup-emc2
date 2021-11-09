@@ -171,6 +171,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
+                    class="ajax-modal" data-event="modification"
                 >
                     <span class="icon gerer" title="Modifier le compte-rendu de l'entretien professionnel"></span></a>
                 <?php if ($canSursis) : ?>
