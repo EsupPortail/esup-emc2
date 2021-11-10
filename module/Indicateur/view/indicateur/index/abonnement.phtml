@@ -1,0 +1,32 @@
+<?php
+
+use Indicateur\Entity\Db\Indicateur;
+
+/**
+ * @see \Indicateur\Controller\IndexController::abonnementAction()
+ * @var Indicateur[] $indicateurs
+ */
+
+?>
+
+<form action="<?php echo $this->url("mes-indicateurs/abonnement" ,[], [], true); ?>" method="post">
+
+    <label for="indicateur">Indicateur : </label>
+    <select id="indicateur" name="indicateur" class="selectpicker">
+        <option value=""> Aucun indicateur </option>
+        <?php foreach ($indicateurs as $indicateur) : ?>
+            <option value="<?php echo $indicateur->getId(); ?>"> <?php echo $indicateur->getTitre(); ?> </option>
+        <?php endforeach; ?>
+    </select>
+    <br/>
+    <input type="submit" class="btn btn-primary" value="S'abonner"/>
+
+</form>
+
+<div id="infos">
+
+</div>
+
+<script>
+    $('select').selectpicker();
+</script>

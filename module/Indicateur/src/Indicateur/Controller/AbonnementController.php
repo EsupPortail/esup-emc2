@@ -43,10 +43,12 @@ class AbonnementController extends AbstractActionController {
     {
         $indicateur = $this->getIndicateurService()->getRequestedIndicateur($this);
         $user = $this->getUserService()->getConnectedUser();
+        $retour = $this->params()->fromQuery('retour');
 
         $abonnements = $this->getAbonnementService()->getAbonnementsByUserAndIndicateur($user, $indicateur);
         foreach ($abonnements as $abonnement) $this->getAbonnementService()->delete($abonnement);
 
+        if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('indicateurs', [], [], true);
     }
 

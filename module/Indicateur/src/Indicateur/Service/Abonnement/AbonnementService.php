@@ -194,4 +194,16 @@ class AbonnementService {
         }
     }
 
+    /**
+     * @param User|null $user
+     * @param Indicateur|null $indicateur
+     */
+    public function isAbonner(?User $user, ?Indicateur $indicateur) : bool
+    {
+        foreach ($indicateur->getAbonnements() as $abonnement) {
+            if ($abonnement->getUser() === $user) return true;
+        }
+        return false;
+    }
+
 }
