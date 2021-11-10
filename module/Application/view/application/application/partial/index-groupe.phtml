@@ -25,7 +25,7 @@ use Application\Entity\Db\ApplicationGroupe;
         <?php if ($canAjouter) : ?>
             <br/>
             <a
-                <?php /** @see ApplicationController::ajouterGroupeAction() */ ?>
+                <?php /** @see ApplicationGroupeController::ajouterAction() */ ?>
                 href="<?php echo $this->url('application/groupe/ajouter', [], [], true); ?>"
                 class="btn btn-primary action ajax-modal"
                 data-event="modification">
@@ -63,7 +63,7 @@ use Application\Entity\Db\ApplicationGroupe;
             <td> <?php echo count($groupe->getApplications()); ?> </td>
             <td>
                 <?php if ($canAfficher) : ?>
-                    <a  <?php /** @see ApplicationController::afficherGroupeAction() */ ?>
+                    <a  <?php /** @see ApplicationGroupeController::afficherAction() */ ?>
                         href="<?php echo $this->url('application/groupe/afficher', ['application-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal">
                         <span class="icon voir" title="Afficher le groupe"></span></a>
@@ -72,7 +72,7 @@ use Application\Entity\Db\ApplicationGroupe;
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <a
-                        <?php /** @see ApplicationController::modifierGroupeAction() */ ?>
+                        <?php /** @see ApplicationGroupeController::modifierAction() */ ?>
                         href="<?php  echo $this->url('application/groupe/editer', ['application-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"
@@ -84,14 +84,14 @@ use Application\Entity\Db\ApplicationGroupe;
                 <?php if ($canHistoriser) : ?>
                     <?php if ($groupe->estNonHistorise()) : ?>
                         <a
-                            <?php /** @see ApplicationController::historiserGroupeAction() */ ?>
+                            <?php /** @see ApplicationGroupeController::historiserAction() */ ?>
                             href="<?php  echo $this->url('application/groupe/historiser', ['application-groupe' => $groupe->getId()], [], true); ?>"
                         >
                             <span class="icon historiser" title="Historiser le groupe"></span></a>
                     <?php else : ?>
 
                         <a
-                            <?php /** @see ApplicationController::restaurerGroupeAction() */ ?>
+                            <?php /** @see ApplicationGroupeController::restaurerAction() */ ?>
                             href="<?php  echo $this->url('application/groupe/restaurer', ['application-groupe' => $groupe->getId()], [], true); ?>"
                         >
                             <span class="icon restaurer" title="Restaurer le groupe"></span></a>
@@ -105,7 +105,7 @@ use Application\Entity\Db\ApplicationGroupe;
                 <?php endif; ?>
                 <?php if ($canDetruire) : ?>
                     <a
-                        <?php /** @see ApplicationController::detruireGroupeAction() */ ?>
+                        <?php /** @see ApplicationGroupeController::detruireAction() */ ?>
                         href="<?php  echo $this->url('application/groupe/detruire', ['application-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >

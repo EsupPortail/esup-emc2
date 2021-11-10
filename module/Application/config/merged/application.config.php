@@ -4,6 +4,8 @@ namespace Application;
 
 use Application\Controller\ApplicationController;
 use Application\Controller\ApplicationControllerFactory;
+use Application\Controller\ApplicationGroupeController;
+use Application\Controller\ApplicationGroupeControllerFactory;
 use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormFactory;
 use Application\Form\Application\ApplicationHydrator;
@@ -52,7 +54,6 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'afficher',
-                        'afficher-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
@@ -63,9 +64,6 @@ return [
                     'action' => [
                         'changer-status',
                         'editer',
-                        'modifier-groupe',
-                        'historiser-groupe',
-                        'restaurer-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EDITER,
@@ -75,7 +73,6 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'creer',
-                        'ajouter-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AJOUTER,
@@ -85,7 +82,6 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'effacer',
-                        'detruire-groupe',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_EFFACER,
@@ -101,8 +97,37 @@ return [
                       FicheMetierPrivileges::FICHEMETIER_MODIFIER,
                   ],
                 ],
+                [
+                    'controller' => ApplicationGroupeController::class,
+                    'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::APPLICATION_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationGroupeController::class,
+                    'action' => [
+                        'ajouter',
+                        'modifier',
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::APPLICATION_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationGroupeController::class,
+                    'action' => [
+                        'detruire-groupe',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::APPLICATION_EFFACER,
+                    ],
+                ],
             ],
-
         ],
     ],
 
@@ -144,7 +169,7 @@ return [
                         'options' => [
                             'route' => '/groupe',
                             'defaults' => [
-                                'controller' => ApplicationController::class,
+                                'controller' => ApplicationGroupeController::class,
                             ],
                         ],
                         'child_routes' => [
@@ -153,8 +178,8 @@ return [
                                 'options' => [
                                     'route' => '/afficher/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationController::class,
-                                        'action' => 'afficher-groupe',
+                                        'controller' => ApplicationGroupeController::class,
+                                        'action' => 'afficher',
                                     ],
                                 ],
                             ],
@@ -163,8 +188,8 @@ return [
                                 'options' => [
                                     'route' => '/ajouter',
                                     'defaults' => [
-                                        'controller' => ApplicationController::class,
-                                        'action' => 'ajouter-groupe',
+                                        'controller' => ApplicationGroupeController::class,
+                                        'action' => 'ajouter',
                                     ],
                                 ],
                             ],
@@ -173,8 +198,8 @@ return [
                                 'options' => [
                                     'route' => '/modifier/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationController::class,
-                                        'action' => 'modifier-groupe',
+                                        'controller' => ApplicationGroupeController::class,
+                                        'action' => 'modifier',
                                     ],
                                 ],
                             ],
@@ -183,8 +208,8 @@ return [
                                 'options' => [
                                     'route' => '/historiser/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationController::class,
-                                        'action' => 'historiser-groupe',
+                                        'controller' => ApplicationGroupeController::class,
+                                        'action' => 'historiser',
                                     ],
                                 ],
                             ],
@@ -193,8 +218,8 @@ return [
                                 'options' => [
                                     'route' => '/restaurer/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationController::class,
-                                        'action' => 'restaurer-groupe',
+                                        'controller' => ApplicationGroupeController::class,
+                                        'action' => 'restaurer',
                                     ],
                                 ],
                             ],
@@ -203,8 +228,8 @@ return [
                                 'options' => [
                                     'route' => '/detruire/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationController::class,
-                                        'action' => 'detruire-groupe',
+                                        'controller' => ApplicationGroupeController::class,
+                                        'action' => 'detruire',
                                     ],
                                 ],
                             ],
@@ -289,6 +314,7 @@ return [
     'controllers' => [
         'factories' => [
             ApplicationController::class => ApplicationControllerFactory::class,
+            ApplicationGroupeController::class => ApplicationGroupeControllerFactory::class,
         ],
     ],
     'form_elements' => [

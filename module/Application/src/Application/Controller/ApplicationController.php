@@ -10,7 +10,6 @@ use Application\Entity\Db\FicheMetier;
 use Application\Form\Application\ApplicationForm;
 use Application\Form\Application\ApplicationFormAwareTrait;
 use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
-use Application\Form\ApplicationGroupe\ApplicationGroupeFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
@@ -28,11 +27,10 @@ class ApplicationController  extends AbstractActionController {
     use FicheMetierServiceAwareTrait;
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
-    use ApplicationGroupeFormAwareTrait;
 
     /** APPLICATION ***************************************************************************************************/
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $groupeId = $this->params()->fromQuery('groupe');
         /**
@@ -160,110 +158,6 @@ class ApplicationController  extends AbstractActionController {
             'title' => "Description de l'application",
             'application' => $application,
         ]);
-    }
-
-    /** GROUPE ********************************************************************************************************/
-
-    public function ajouterGroupeAction()
-    {
-        $groupe = new ApplicationGroupe();
-
-        $form = $this->getApplicationGroupeForm();
-        $form->setAttribute('action', $this->url()->fromRoute('application/groupe/ajouter',[],[], true));
-        $form->bind($groupe);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getApplicationGroupeService()->create($groupe);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'un groupe d'application",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function afficherGroupeAction()
-    {
-        $groupe = $this->getApplicationGroupeService()->getRequestedApplicationGroupe($this);
-
-        return new ViewModel([
-            'title' => "Affichage du groupe d'application",
-            'groupe' => $groupe,
-        ]);
-    }
-
-    public function modifierGroupeAction()
-    {
-        $groupe = $this->getApplicationGroupeService()->getRequestedApplicationGroupe($this);
-
-        $form = $this->getApplicationGroupeForm();
-        $form->setAttribute('action', $this->url()->fromRoute('application/groupe/editer',[],[], true));
-        $form->bind($groupe);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getApplicationGroupeService()->update($groupe);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'un groupe d'application",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserGroupeAction()
-    {
-        $groupe = $this->getApplicationGroupeService()->getRequestedApplicationGroupe($this);
-        $this->getApplicationGroupeService()->historise($groupe);
-        return $this->redirect()->toRoute('application', [], ['fragment' => 'groupe'], true);
-    }
-
-    public function restaurerGroupeAction()
-    {
-        $groupe = $this->getApplicationGroupeService()->getRequestedApplicationGroupe($this);
-        $this->getApplicationGroupeService()->restore($groupe);
-        return $this->redirect()->toRoute('application', [], ['fragment' => 'groupe'], true);
-    }
-
-    public function detruireGroupeAction()
-    {
-        $groupe = $this->getApplicationGroupeService()->getRequestedApplicationGroupe($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getApplicationGroupeService()->delete($groupe);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($groupe !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression du groupe d'application [" . $groupe->getLibelle(). "]",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('application/groupe/detruire', ["application-groupe" => $groupe->getId()], [], true),
-            ]);
-        }
-        return $vm;
     }
 
     /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
