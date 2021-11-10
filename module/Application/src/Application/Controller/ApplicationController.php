@@ -33,12 +33,11 @@ class ApplicationController  extends AbstractActionController {
     public function indexAction() : ViewModel
     {
         $groupeId = $this->params()->fromQuery('groupe');
+        $activite = $this->params()->fromQuery('activite');
         /**
          * @var Application[] $applications
          * @var ApplicationGroupe[] $groupes
          */
-
-        $applications = [];
         if ($groupeId !== null AND $groupeId !== "") {
             $groupe = $this->getApplicationGroupeService()->getApplicationGroupe($groupeId);
             $applications = $this->getApplicationService()->getApplicationsGyGroupe($groupe);
@@ -47,8 +46,12 @@ class ApplicationController  extends AbstractActionController {
         }
         $groupes = $this->getApplicationGroupeService()->getApplicationsGroupes('libelle');
 
+        if ($activite === "1") $applications = array_filter($applications, function (Application $a) { return $a->isActif();});
+        if ($activite === "0") $applications = array_filter($applications, function (Application $a) { return !$a->isActif();});
+
         return new ViewModel([
             'applications' => $applications,
+            'activite' => $activite,
             'groupes' => $groupes,
             'groupeSelected' => $groupeId,
         ]);
@@ -150,7 +153,7 @@ class ApplicationController  extends AbstractActionController {
         return $this->redirect()->toRoute('application');
     }
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 

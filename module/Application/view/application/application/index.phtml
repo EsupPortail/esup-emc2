@@ -9,6 +9,7 @@ use Application\Provider\Privilege\ApplicationPrivileges;
  * @var Application[] $applications
  * @var ApplicationGroupe[] $groupes
  * @var int $groupeSelected
+ * @var int $activite
  */
 
 
@@ -54,7 +55,7 @@ $this->headTitle("Index des applications");
             </div>
 
             <div id="application" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-application', ['applications' => $applications, 'groupes' => $groupes, 'groupeSelected' => $groupeSelected, 'droits' => $droits], [], true); ?>
+                <?php echo $this->partial('partial/index-application', ['applications' => $applications, 'groupes' => $groupes, 'groupeSelected' => $groupeSelected, 'activite' => $activite, 'droits' => $droits], [], true); ?>
             </div>
         </div>
     </div>

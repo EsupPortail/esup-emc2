@@ -1,0 +1,32 @@
+<?php
+
+use Application\Entity\Db\Application;
+
+/**
+ * @see \Application\View\Helper\ApplicationViewHelper
+ * @var Application $application
+ * @var array $options
+ */
+
+?>
+
+<span data-toggle="tooltip" data-html="true"
+      title="
+      <table><tr>
+        <td> <span class='icon application'></span> </td>
+        <td>
+          <?php echo $application->getLibelle(); ?> <br/>
+          <i><?php echo ($application->getGroupe())?$application->getGroupe()->getLibelle():'Aucun groupe'; ?></i>
+        </td>
+        <td>
+        <?php if ($application->isActif()) : ?>
+            <span class='badge' style='background:darkgreen;'>&nbsp;</span>
+        <?php else : ?>
+            <span class='badge' style='background:darkred;'>&nbsp;</span>
+        <?php endif; ?>
+        </td>
+      </tr></table>
+      "
+>
+    <?php echo $application->getLibelle(); ?>
+</span>

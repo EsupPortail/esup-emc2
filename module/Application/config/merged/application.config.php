@@ -33,6 +33,7 @@ use Application\Service\ApplicationElement\ApplicationElementServiceFactory;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceFactory;
 use Application\View\Helper\ApplicationBlocViewHelper;
+use Application\View\Helper\ApplicationViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -337,6 +338,7 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
+            'application' => ApplicationViewHelper::class,
             'applicationBloc' => ApplicationBlocViewHelper::class,
         ],
     ],

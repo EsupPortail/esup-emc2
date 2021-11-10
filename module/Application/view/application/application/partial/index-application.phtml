@@ -7,6 +7,7 @@ use Application\Entity\Db\ApplicationGroupe;
  * @var Application[] $applications
  * @var ApplicationGroupe[] $groupes
  * @var int $groupeSelected
+ * @var int $activite
  * @var boolean[] $droits
  */
 
@@ -23,26 +24,10 @@ usort($applications, function(Application $a, Application $b) {
 
 ?>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <h2>
             Applications
         </h2>
-    </div>
-    <div class="col-md-4">
-            Filtrer les applications par groupe : <br/>
-            <select id="groupe-select" name="groupe-select" class="selectpicker" data-live-search="true">
-                <option value="" <?php if (null == $groupeSelected) echo " selected "; ?>>
-                    Aucune sélection
-                </option>
-                <?php foreach ($groupes as $groupe): ?>
-                    <option value="<?php echo $groupe->getId(); ?>" <?php if ($groupe->getId() == $groupeSelected) echo " selected "; ?>>
-                        <?php echo $groupe->getLibelle(); ?>
-                    </option>
-                <?php endforeach; ?>
-                <option value="-1" <?php if (-1 == $groupeSelected) echo " selected "; ?>>
-                    Sans groupe
-                </option>
-            </select>
     </div>
     <div class="col-md-4">
         <?php if ($canAjouter) : ?>
@@ -60,6 +45,10 @@ usort($applications, function(Application $a, Application $b) {
     </div>
 </div>
 
+<?php
+    echo $this->partial('partial/filtre', ['groupes' => $groupes, 'groupe' => $groupeSelected, 'activite' => $activite], [], true);
+?>
+
 <br/>
 <br/>
 
@@ -76,7 +65,7 @@ usort($applications, function(Application $a, Application $b) {
     <tbody>
     <?php foreach($applications as $application): ?>
         <tr>
-            <td> <?php echo $application->getLibelle(); ?> </td>
+            <td> <?php echo $this->application($application); ?> </td>
             <td>
                 <?php if ($application->getGroupe()) : ?>
                     <?php echo $application->getGroupe()->getLibelle(); ?>
