@@ -8,6 +8,7 @@ use Application\Service\Structure\StructureServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -18,7 +19,7 @@ class DelegueController extends AbstractActionController {
     use StructureServiceAwareTrait;
     use SelectionAgentFormAwareTrait;
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
@@ -55,7 +56,7 @@ class DelegueController extends AbstractActionController {
 
     }
 
-    public function retirerAction()
+    public function retirerAction() : Response
     {
         $delegue = $this->getDelegueService()->getRequestedDelegue($this);
         $this->getDelegueService()->delete($delegue);

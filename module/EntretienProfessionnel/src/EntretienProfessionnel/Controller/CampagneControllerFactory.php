@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Controller;
 
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
+use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -20,14 +21,10 @@ class CampagneControllerFactory extends AbstractActionController {
     {
         /**
          * @var CampagneService $campagneService
-         * @var RenduService $renduService
-         * @var MailService $mailService
-         * @var ParametreService $parametreService
+         * @var NotificationService $notificationService
          */
         $campagneService = $container->get(CampagneService::class);
-        $renduService = $container->get(RenduService::class);
-        $mailService = $container->get(MailService::class);
-        $parametreService = $container->get(ParametreService::class);
+        $notificationService = $container->get(NotificationService::class);
 
         /**
          * @var CampagneForm $campagneForm
@@ -35,14 +32,9 @@ class CampagneControllerFactory extends AbstractActionController {
         $campagneForm = $container->get('FormElementManager')->get(CampagneForm::class);
 
         $controller = new CampagneController();
-
         $controller->setCampagneService($campagneService);
-        $controller->setRenduService($renduService);
-        $controller->setMailService($mailService);
-        $controller->setParametreService($parametreService);
-
+        $controller->setNotificationService($notificationService);
         $controller->setCampagneForm($campagneForm);
-
         return $controller;
     }
 }

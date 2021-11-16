@@ -17,7 +17,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     use UserServiceAwareTrait;
     use StructureServiceAwareTrait;
 
-    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null)
+    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
     {
         if (!$entity instanceof EntretienProfessionnel) {
             return false;
@@ -106,7 +106,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
-                        return true;
                     case RoleConstant::DRH:
                         return true;
                     case RoleConstant::RESPONSABLE:

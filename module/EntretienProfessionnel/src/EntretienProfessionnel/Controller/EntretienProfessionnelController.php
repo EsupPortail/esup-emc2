@@ -17,6 +17,8 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFor
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\Service\Notification\NotificationService;
+use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -32,6 +34,7 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -48,6 +51,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use CampagneServiceAwareTrait;
     use ObservationServiceAwareTrait;
     use MailServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -199,16 +203,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $this->getEntretienProfessionnelService()->create($entretien);
                 $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
 
-                //exemple d'envoi de mail avec unicaenRenderer et unicaenMail
-                $vars = ['entretien' => $entretien, 'campagne' => $entretien->getCampagne()];
-                $url = $this->getUrlService();
-                $url->setVariables($vars);
-                $vars['UrlService'] = $url;
-
-                $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_CONVOCATION_ENVOI", $vars);
-                $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-                $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-                $this->getMailService()->update($mail);
+                $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
 
@@ -221,7 +216,7 @@ class EntretienProfessionnelController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
@@ -249,16 +244,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
 
-                //exemple d'envoi de mail avec unicaenRenderer et unicaenMail
-                $vars = ['entretien' => $entretien, 'campagne' => $entretien->getCampagne()];
-                $url = $this->getUrlService();
-                $url->setVariables($vars);
-                $vars['UrlService'] = $url;
-
-                $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_CONVOCATION_ENVOI", $vars);
-                $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-                $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-                $this->getMailService()->update($mail);
+                $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
 
@@ -271,7 +257,7 @@ class EntretienProfessionnelController extends AbstractActionController
         return $vm;
     }
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
@@ -299,7 +285,7 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
-    public function renseignerAction()
+    public function renseignerAction() : ViewModel
     {
         /** TODO  revoir ici une seul fiche de poste actives sinon c'est la merde */
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
@@ -327,14 +313,14 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->historise($entretien);
         return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $this->getEntretienProfessionnelService()->restore($entretien);
@@ -386,35 +372,17 @@ class EntretienProfessionnelController extends AbstractActionController
             if ($data["reponse"] === "non") {
                 $validation = $this->getValidationInstanceService()->createValidation($validationType, $entretien, "Refus");
             }
-            if ($validation !== null and $entretien !== null) {
+            if ($validation !== null) {
                 $urlService = $this->getUrlService();
                 $urlService->setVariables(['entretien' => $entretien]);
                 switch ($type) {
                     case EntretienProfessionnelConstant::VALIDATION_AGENT :
                         $entretien->setValidationAgent($validation);
-                        $responsables = $this->getAgentService()->getResponsablesHierarchiques($entretien->getAgent());
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
-                        $mailResponsables = "";
-                        foreach ($responsables as $responsable) {
-                            if ($mailResponsables !== "" AND $responsable->getEmail() !== null) $mailResponsables .= ",";
-                            if ($responsable->getEmail() !== null) $mailResponsables .= $responsable->getEmail();
-                        }
-
-                        $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $urlService];
-                        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-AGENT", $vars);
-                        $mail = $this->getMailService()->sendMail($mailResponsables, $rendu->getSujet(), $rendu->getCorps());
-                        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-                        $this->getMailService()->update($mail);
-
-                        if ($entretien->getObservationActive() !== null) {
-                            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_OBSERVATION_AGENT", $vars);
-                            $mail = $this->getMailService()->sendMail($entretien->getResponsable()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-                            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-                            $this->getMailService()->update($mail);
-                        }
-
+                        $this->getNotificationService()->triggerValidationAgent($entretien);
+                        if ($entretien->getObservationActive() !== null) $this->getNotificationService()->triggerObservations($entretien);
                         break;
 
                     case EntretienProfessionnelConstant::VALIDATION_RESPONSABLE :
@@ -422,11 +390,7 @@ class EntretienProfessionnelController extends AbstractActionController
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
-                        $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $urlService];
-                        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_VALIDATION_1-RESPONSABLE", $vars);
-                        $mail = $this->getMailService()->sendMail($entretien->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-                        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-                        $this->getMailService()->update($mail);
+                        $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
                         break;
 
                     case EntretienProfessionnelConstant::VALIDATION_DRH :
@@ -434,11 +398,7 @@ class EntretienProfessionnelController extends AbstractActionController
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
-                        $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $urlService];
-                        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_VALIDATION_3-HIERARCHIE", $vars);
-                        $mail = $this->getMailService()->sendMail($entretien->getResponsable()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-                        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-                        $this->getMailService()->update($mail);
+                        $this->getNotificationService()->triggerValidationResponsableHierarchique($entretien);
                         break;
                 }
                 $this->getEntretienProfessionnelService()->update($entretien);
@@ -522,11 +482,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
             $this->getEntretienProfessionnelService()->update($entretien);
 
-            $vars = ['entretien' => $entretien, 'campagne' => $entretien->getCampagne(), 'agent' => $entretien->getAgent()];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_CONVOCATION_ACCEPTER", $vars);
-            $mail = $this->getMailService()->sendMail($entretien->getResponsable()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-            $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
+            $this->getNotificationService()->triggerConvocationAcceptation($entretien);
         }
 
         return new ViewModel([

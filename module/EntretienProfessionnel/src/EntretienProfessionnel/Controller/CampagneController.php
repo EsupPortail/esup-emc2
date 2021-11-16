@@ -5,10 +5,7 @@ namespace EntretienProfessionnel\Controller;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
-use Exception;
-use UnicaenMail\Service\Mail\MailServiceAwareTrait;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -17,12 +14,8 @@ use Zend\View\Model\ViewModel;
 
 class CampagneController extends AbstractActionController {
     use DateTimeAwareTrait;
-
     use CampagneServiceAwareTrait;
-    use RenduServiceAwareTrait;
-    use MailServiceAwareTrait;
-    use ParametreServiceAwareTrait;
-
+    use NotificationServiceAwareTrait;
     use CampagneFormAwareTrait;
 
     public function ajouterAction() : ViewModel
@@ -40,31 +33,9 @@ class CampagneController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCampagneService()->create($campagne);
-                try {
 
-                    $vars = ['campagne' => $campagne];
-
-                    $mail_DAC = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_DAC')->getValeur();
-                    $rendu = $this->getRenduService()->genereateRenduByTemplateCode('CAMPAGNE_OUVERTURE_DAC', $vars);
-                    $mailDac = $this->getMailService()->sendMail($mail_DAC, $rendu->getSujet(), $rendu->getCorps());
-                    $mailDac->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
-                    $this->getMailService()->update($mailDac);
-
-                    $mail_BIATS = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_BIATS')->getValeur();
-                    $rendu = $this->getRenduService()->genereateRenduByTemplateCode('CAMPAGNE_OUVERTURE_BIATSS', $vars);
-                    $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $rendu->getSujet(), $rendu->getCorps());
-                    $mailBiats->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
-                    $this->getMailService()->update($mailBiats);
-
-                } catch(Exception $e) {
-                    $vm = new ViewModel([
-                        'title' => "Un problème est survenu lors de la création de la campagne d'entretien professionnel",
-                        'text' => "Création effectué mais une exception a été levée lors de l'envoi des mails <br/><br/> <strong>" . $e->getMessage() ."</strong>",
-                    ]);
-                    $vm->setTemplate('entretien-professionnel/default/probleme');
-                    return $vm;
-
-                }
+               $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
+               $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
             }
         }
 

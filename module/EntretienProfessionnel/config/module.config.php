@@ -4,6 +4,8 @@ namespace EntretienProfessionnel;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use EntretienProfessionnel\Service\Notification\NotificationService;
+use EntretienProfessionnel\Service\Notification\NotificationServiceFactory;
 use EntretienProfessionnel\Service\Url\UrlService;
 use EntretienProfessionnel\Service\Url\UrlServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -41,6 +43,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
         ],
     ],

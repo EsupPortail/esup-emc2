@@ -13,6 +13,7 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFor
 use EntretienProfessionnel\Form\Observation\ObservationForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use EntretienProfessionnel\Service\Notification\NotificationService;
 use EntretienProfessionnel\Service\Observation\ObservationService;
 use EntretienProfessionnel\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
@@ -42,6 +43,7 @@ class EntretienProfessionnelControllerFactory {
          * @var FormulaireService $formulaireService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailService $mailService
+         * @var NotificationService $notificationService
          * @var ParcoursDeFormationService $parcoursDeFormationService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
@@ -62,6 +64,7 @@ class EntretienProfessionnelControllerFactory {
         $formulaireService = $container->get(FormulaireService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailService = $container->get(MailService::class);
+        $notificationService = $container->get(NotificationService::class);
         $parcoursDeFormationService = $container->get(ParcoursDeFormationService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -99,6 +102,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setValidationTypeService($validationTypeService);
         $controller->setFormulaireService($formulaireService);
         $controller->setMailService($mailService);
+        $controller->setNotificationService($notificationService);
         $controller->setStructureService($structureService);
         $controller->setUrlService($urlService);
 
