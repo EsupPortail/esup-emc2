@@ -84,7 +84,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 500,
+                                'order' => 800,
                                 'label' => 'Catégories, corps, grades et correspondances',
                                 'route' => 'corps',
                                 'resource' => PrivilegeController::getResourceId(CorpsController::class, 'index') ,

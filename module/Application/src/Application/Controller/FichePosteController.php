@@ -218,10 +218,10 @@ class FichePosteController extends AbstractActionController {
 //        $agent = null;
 //        if ($array['agent_id'] !== null) $agent = $this->getAgentService()->getAgent($array['agent_id']);
 
-        $applications = []; //$this->getFichePosteService()->getApplicationsDictionnaires($fiche);
-        $competences = []; // $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $formations = []; // $this->getFichePosteService()->getFormationsDictionnaires($fiche);
-        $activites = []; // $this->getFichePosteService()->getActivitesDictionnaires($fiche);
+        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
+        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
+        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
+        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         //parcours de formation
         $parcours = []; // $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);

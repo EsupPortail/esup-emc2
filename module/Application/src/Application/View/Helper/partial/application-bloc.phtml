@@ -166,13 +166,13 @@ ksort($groupes);
                 <?php endif; ?>
                 <td class="action">
                     <?php if ($entite instanceof ApplicationElement) : ?>
-                        <?php if ($canAfficher) : ?>
-                            <a  <?php /** @see \Application\Controller\ElementController::afficherAction() */ ?>
-                                    href="<?php echo $this->url("element/afficher", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId()], [], true); ?>"
-                                    class="ajax-modal" data-toggle="tooltip" data-html="true"
-                                    title="Afficher l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
-                                <span class="icon voir"></span></a>
-                        <?php endif; ?>
+<!--                        --><?php //if ($canAfficher) : ?>
+<!--                            <a  --><?php ///** @see \Application\Controller\ElementController::afficherAction() */ ?>
+<!--                                    href="--><?php //echo $this->url("element/afficher", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId()], [], true); ?><!--"-->
+<!--                                    class="ajax-modal" data-toggle="tooltip" data-html="true"-->
+<!--                                    title="Afficher l'application <span class='highlight application'>--><?php //echo $application->getLibelle(); ?><!--</span>">-->
+<!--                                <span class="icon voir"></span></a>-->
+<!--                        --><?php //endif; ?>
                         <?php if ($canModifier) : ?>
                             <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
                                     href="<?php echo $this->url("element/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"

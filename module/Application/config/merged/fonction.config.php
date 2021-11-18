@@ -54,7 +54,7 @@ return [
                                 'label'    => 'Fonctions',
                                 'route'    => 'fonction',
                                 'resource' => FonctionPrivileges::getResourceId(FonctionPrivileges::FONCTION_AFFICHER),
-                                'order'    => 680,
+                                'order'    => 11680,
                             ],
                         ],
                     ],

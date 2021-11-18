@@ -10,7 +10,6 @@ use Metier\Entity\Db\Domaine;
 use Application\Entity\Db\FicheMetier;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 
-
 $canVoir        = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
 $canHistoriser  = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_HISTORISER));
 $canEditer      = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
@@ -71,7 +70,6 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */?>
                         href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
                         title="Afficher la fiche métier"
-                        class="ajax-modal"
                     >
                         <span class="icon voir"></span></a>
                 <?php endif; ?>

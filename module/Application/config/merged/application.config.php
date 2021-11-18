@@ -138,11 +138,20 @@ return [
                 'pages' => [
                     'ressource' => [
                         'pages' => [
-                            'application' => [
+                            [
+                                'order' => 200,
+                                'label' => 'Élement de fiches',
+                                'route' => 'application',
+                                'resource' => PrivilegeController::getResourceId(ApplicationController::class, 'index') ,
+                                'dropdown-header' => true,
+
+                            ],
+                            [
                                 'label' => 'Applications',
                                 'route' => 'application',
                                 'resource' => ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER),
-                                'order' => 200,
+                                'order' => 210,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],
