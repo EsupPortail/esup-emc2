@@ -18,7 +18,7 @@ $this->headTitle('Affichage de la fiche métier #' . $fiche->getId(). " : " . $l
 ?>
 
 <?php
-    echo $this->ficheMetier($fiche, null, null, [
+    echo $this->ficheMetier($fiche, [
         'mode' => 'affichage',
         'competences' => $competences,
         'applications' => $applications,

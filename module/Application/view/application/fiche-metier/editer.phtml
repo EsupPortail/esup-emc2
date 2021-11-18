@@ -15,7 +15,7 @@ use Application\Entity\Db\ParcoursDeFormation;
 $libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
 $this->headTitle('Modification de la fiche métier #' . $fiche->getId(). " : " . $libelle);
 
-echo $this->ficheMetier($fiche, null, null, [
+echo $this->ficheMetier($fiche, [
     'mode' => 'edition-fiche-metier',
     'competences' => $competences,
     'applications' => $applications,

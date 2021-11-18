@@ -83,7 +83,7 @@ $agent = $fiche->getFichePoste()->getAgent();
         <?php
             $options['sans-titre'] = true;
             $options['activite-liste'] = $fiche->getActivites();
-            echo $this->ficheMetier($fiche->getFicheType(), $fiche->getFichePoste(), $fiche, $options);
+            echo $this->ficheMetier($fiche, $options);
         ?>
     </div>
 </div>

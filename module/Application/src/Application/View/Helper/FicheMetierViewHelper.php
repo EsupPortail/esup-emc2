@@ -13,18 +13,16 @@ namespace Application\View\Helper;
 class FicheMetierViewHelper extends AbstractHelper
 {
     /**
-     * @param FicheMetier $fichemetier
-     * @param FichePoste $ficheposte
-     * @param FicheTypeExterne $ficheexterne
+     * @param FicheMetier|FicheTypeExterne $fichemetier
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($fichemetier, $ficheposte = null, $ficheexterne = null, $options = [])
+    public function __invoke($fichemetier, array $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('fiche-metier', ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte, 'ficheexterne' => $ficheexterne, 'options' => $options]);
+        return $view->partial('fiche-metier', ['fichemetier' => $fichemetier, 'options' => $options]);
     }
 }
