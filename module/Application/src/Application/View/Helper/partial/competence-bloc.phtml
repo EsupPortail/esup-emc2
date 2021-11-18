@@ -60,6 +60,7 @@ $canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'vali
 
 $displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
 $displayValidation  = CompetenceBlocViewHelper::isDisplayed($options,'validation');
+$displayRaison      = CompetenceBlocViewHelper::isDisplayed($options,'raison');
 
 //var_dump([
 //        'actions' => $options['actions'],
@@ -149,7 +150,9 @@ ksort($groupes);
                 <tr>
                     <td class="libelle">
                         <?php echo $competence->getLibelle(); ?>
-                        <?php echo $this->raisons($element['raison']); ?>
+                        <?php if ($displayRaison) : ?>
+                            <?php echo $this->raisons($element['raison']); ?>
+                        <?php endif; ?>
                     </td>
                     <td class="niveau">
                         <?php if ($entite instanceof CompetenceElement) : ?>

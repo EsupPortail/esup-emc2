@@ -3,7 +3,6 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
@@ -17,7 +16,7 @@ class ActiviteViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($activite, $mode = 'affichage', $options = [])
+    public function __invoke($activite, string $mode = 'affichage', array $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

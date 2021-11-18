@@ -46,7 +46,7 @@ class Metier implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -55,7 +55,7 @@ class Metier implements HistoriqueAwareInterface {
      * @param bool $inclusif
      * @return string
      */
-    public function getLibelle(bool $inclusif = true) : string
+    public function getLibelle(bool $inclusif = true) : ?string
     {
         if ($inclusif === false) return $this->libelle;
         if ($this->libelleFeminin !== null AND $this->libelleMasculin !== null) {

@@ -1,6 +1,7 @@
 <?php
 
 $navigationHelper = $this->navigation('navigation');
+$env = getenv('APPLICATION_ENV') ?: 'production';
 
 ?>
 
@@ -49,6 +50,8 @@ $navigationHelper = $this->navigation('navigation');
             </button>
 
             <?= $this->appLink($this->appInfos()->nom);?>
+            <br/>
+            <?php echo $env; ?>
         </div>
 
         <div class="navbar-collapse bs-navbar-collapse collapse">
