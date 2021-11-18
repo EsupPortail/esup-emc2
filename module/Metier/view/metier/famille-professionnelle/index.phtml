@@ -6,19 +6,21 @@
  */
 
 use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Provider\Privilege\FamilleprofessionnellePrivileges;
 
-$canAjouter        = $droits["ajouter"];
-$canEditer         = $droits["editer"];
-$canHistoriser     = $droits["historiser"];
-$canEffacer        = $droits["effacer"];
+$canAfficher       = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AFFICHER));
+$canAjouter        = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AJOUTER));
+$canEditer         = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_MODIFIER));
+$canHistoriser     = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_HISTORISER));
+$canEffacer        = $this->isAllowed(FamilleprofessionnellePrivileges::getResourceId(FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_SUPPRIMER));
 
 ?>
 
 <div class="row">
     <div class="col-md-8">
-        <h2>
+        <h1 class="page-header">
             Familles professionnelles
-        </h2>
+        </h1>
     </div>
     <div class="pull-right">
         <br/>
@@ -30,19 +32,19 @@ $canEffacer        = $droits["effacer"];
                 data-event="modification"
             >
                 <span class="icon ajouter"></span>
-                Ajouter une famille professionnelle
+                Ajouter une famille
             </a>
         <?php endif;?>
     </div>
     <br/>
 </div>
 <br/>
-<table id="familles" class="datatable table table-condensed">
+<table id="familles" class="datatable table table-condensed table-hover">
     <thead>
     <tr>
         <th> Libelle </th>
         <th> #domaines </th>
-        <th class="cell-action"> Action </th>
+        <th style="min-width: 10rem;"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -91,12 +93,6 @@ $canEffacer        = $droits["effacer"];
 
 <script>
     $(document).ready(function() {
-        $('#familles').DataTable( {
-            sorting: false,
-            paging: false,
-            language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
+        $('#familles').DataTable();
     } );
 </script>

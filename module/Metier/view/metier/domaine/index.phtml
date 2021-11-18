@@ -3,25 +3,35 @@
 /**
  * @see \Metier\Controller\DomaineController::indexAction()
  * @var Domaine[] $domaines
- * @var boolean[] $droits
+ *
+ * @var FamilleProfessionnelle[] $familles
+ * @var string[] $types
+ *
+ * @var string $famille
+ * @var string $type
+ * @var string $historise
  */
 
 use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\FamilleProfessionnelle;
+use Metier\Provider\Privilege\DomainePrivileges;
 
-$canAjouter        = $droits["ajouter"];
-$canEditer         = $droits["editer"];
-$canHistoriser     = $droits["historiser"];
-$canEffacer        = $droits["effacer"];
+$canAafficher      = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_AFFICHER));
+$canAjouter        = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_AJOUTER));
+$canEditer         = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_MODIFIER));;
+$canHistoriser     = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_HISTORISER));
+$canEffacer        = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_SUPPRIMER));
 
+$this->headTitle('Liste des domaines')
 ?>
 
 <div class="row">
-    <div class="col-md-8">
-        <h2>
-            Domaines
-        </h2>
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Liste des domaines
+        </h1>
     </div>
-    <div class="pull-right"><br/>
+    <div class="pull-right">
         <?php if ($canAjouter) : ?>
             <a
                 <?php /** @see \Metier\Controller\DomaineController::ajouterAction() */ ?>
@@ -35,15 +45,17 @@ $canEffacer        = $droits["effacer"];
         <?php endif;?>
     </div>
 </div>
-<br/>
-<table id="domaines" class="datatable table table-condensed">
+
+<?php echo $this->partial('partial/filtre', ['familles' => $familles, 'types' => $types, 'famille' => $famille, 'type' => $type, 'historise' => $historise]); ?>
+
+<table id="domaines" class="datatable table table-condensed table-hover">
     <thead>
     <tr>
         <th> Libelle </th>
-        <th> Type de fonction </th>
+        <th> Type </th>
         <th> Famille professionnelle </th>
         <th> #metier </th>
-        <th class="cell-action"> Action </th>
+        <th style="min-width: 10rem;"> Action </th>
     </tr>
     </thead>
     <tbody>

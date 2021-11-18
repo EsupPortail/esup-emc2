@@ -101,41 +101,45 @@ return [
                         'pages' => [
                             [
                                 'order' => 600,
-                                'label' => 'Métiers, Domaines, ...',
+                                'label' => 'Gestion des métiers',
                                 'route' => 'metier',
                                 'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
                                 'dropdown-header' => true,
-
                             ],
                             [
                                 'order' => 610,
                                 'label' => 'Métiers',
                                 'route' => 'metier',
                                 'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
+                                'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 620,
                                 'label' => 'Domaines',
                                 'route' => 'domaine',
                                 'resource' => PrivilegeController::getResourceId(DomaineController::class, 'index') ,
+                                'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 630,
                                 'label' => 'Familles professionnelles',
                                 'route' => 'famille-professionnelle',
                                 'resource' => PrivilegeController::getResourceId(FamilleProfessionnelleController::class, 'index') ,
+                                'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 640,
                                 'label' => 'Référentiels métiers',
                                 'route' => 'metier/referentiel',
                                 'resource' => PrivilegeController::getResourceId(ReferentielController::class, 'index') ,
+                                'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 650,
                                 'label' => 'Cartographie',
                                 'route' => 'metier/cartographie',
                                 'resource' => PrivilegeController::getResourceId(MetierController::class, 'cartographie') ,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

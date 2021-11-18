@@ -18,6 +18,7 @@ use Metier\Entity\Db\Metier;
         <th> Agent </th>
         <th> Grade </th>
         <th> Affectation </th>
+        <th> Quotité </th>
     </tr>
     </thead>
     <tbody>
@@ -53,6 +54,14 @@ use Metier\Entity\Db\Metier;
                 &rightarrow;
                 <?php echo (isset($item['s_fin']))?DateTime::createFromFormat('Y-m-d H:i:s',$item['s_fin'])->format('d/m/Y'):"---"; ?>
             </small>
+        </td>
+        <td>
+            <?php if ($item['principale'] == "1") : ?>
+                <span class="icon ok" style="color: darkgreen;"></span>
+            <?php else : ?>
+                <span class="icon ko" style="color: darkred;"></span>
+            <?php endif; ?>
+            <?php echo $item['quotite']; ?>%
         </td>
     </tr>
     <?php endforeach; ?>

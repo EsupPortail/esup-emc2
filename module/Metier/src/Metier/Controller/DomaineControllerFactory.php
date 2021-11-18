@@ -5,6 +5,7 @@ namespace Metier\Controller;
 use Metier\Form\Domaine\DomaineForm;
 use Metier\Service\Domaine\DomaineService;
 use Interop\Container\ContainerInterface;
+use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 
 class DomaineControllerFactory {
 
@@ -16,8 +17,10 @@ class DomaineControllerFactory {
     {
         /**
          * @var DomaineService $domaineService
+         * @var FamilleProfessionnelleService $familleProfestionnelService
          */
         $domaineService = $container->get(DomaineService::class);
+        $familleProfestionnelService = $container->get(FamilleProfessionnelleService::class);
 
         /**
          * @var DomaineForm $domaineForm
@@ -26,6 +29,7 @@ class DomaineControllerFactory {
 
         $controller = new DomaineController();
         $controller->setDomaineService($domaineService);
+        $controller->setFamilleProfessionnelleService($familleProfestionnelService);
         $controller->setDomaineForm($domaineForm);
         return $controller;
     }
