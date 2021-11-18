@@ -97,11 +97,7 @@ if ($options['popup']) $options['actions']['afficher'] = false;
 </div>
 
 <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
-<?php if (!isset($options['competences'])) : ?>
-    <div class="alert alert-danger">
-        Le dictionnaire des compétences n'est pas fourni.
-    </div>
-<?php else : ?>
+<?php if (isset($options['competences'])) : ?>
     <?php $dictionnaireCompetence = $options['competences']; ?>
     <div class="panel panel-info">
         <div class="panel-heading">
@@ -152,11 +148,7 @@ if ($options['popup']) $options['actions']['afficher'] = false;
 <?php endif; ?>
 
 <!-- APPLICATION -------------------------------------------------------------------------------------------------->
-<?php if (!isset($options['applications'])) : ?>
-    <div class="alert alert-danger">
-        Le dictionnaire des applications n'est pas fourni.
-    </div>
-<?php else : ?>
+<?php if (isset($options['applications'])) : ?>
     <?php $dictionnaireApplication = $options['applications']; ?>
     <div class="panel panel-info">
         <div class="panel-heading">
@@ -207,11 +199,7 @@ if ($options['popup']) $options['actions']['afficher'] = false;
 <?php endif; ?>
 
 <!-- FORMATION ---------------------------------------------------------------------------------------------------->
-<?php if (!isset($options['parcours'])) : ?>
-    <div class="alert alert-danger">
-        Le parcours de formation n'est pas fourni.
-    </div>
-<?php else : ?>
+<?php if (isset($options['parcours'])) : ?>
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2>
