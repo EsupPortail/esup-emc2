@@ -61,6 +61,9 @@ span.icon.information:before {
     content: "\f621";
 }
 
+span.icon.users:before {
+    content:"\f0c0";
+}
 span.icon.ajouter-user:before {
     content: "\f234";
 }

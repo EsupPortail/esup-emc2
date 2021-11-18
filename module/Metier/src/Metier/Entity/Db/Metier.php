@@ -285,4 +285,16 @@ class Metier implements HistoriqueAwareInterface {
         if ($agent->isFemme() AND $this->libelleFeminin !== null) return $this->getLibelleFeminin();
         return $this->getLibelle();
     }
+
+    /**
+     * @param Domaine $domaine
+     * @return bool
+     */
+    public function hasDomaine(Domaine $domaine) : bool
+    {
+        foreach ($this->domaines as $domaine_) {
+            if ($domaine_ === $domaine) return true;
+        }
+        return false;
+    }
 }

@@ -14,6 +14,14 @@ class FamilleProfessionnelleController extends AbstractActionController {
     use FamilleProfessionnelleServiceAwareTrait;
     use ModifierLibelleFormAwareTrait;
 
+    public function indexAction() : ViewModel
+    {
+        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
+
+        return new ViewModel([
+            'familles' => $familles,
+        ]);
+    }
 
     public function ajouterAction()
     {

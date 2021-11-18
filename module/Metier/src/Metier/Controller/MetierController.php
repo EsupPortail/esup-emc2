@@ -28,17 +28,25 @@ class MetierController extends AbstractActionController {
     use MetierFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
 
-    public function indexAction() {
-        $familles = $this->getFamilleProfessionnelleService()->getFamillesProfessionnelles();
-        $domaines = $this->getDomaineService()->getDomaines();
+    public function indexAction() : ViewModel {
+        $domaine = $this->params()->fromQuery('domaine');
+        $domaine_ = null;
+        if ($domaine AND $domaine !== ' ') $domaine_ = $this->getDomaineService()->getDomaine($domaine);
+
+        $historise = $this->params()->fromQuery('historise');
+
         $metiers = $this->getMetierService()->getMetiers();
-        $referentiels = $this->getReferentielService()->getReferentiels();
+        $domaines = $this->getDomaineService()->getDomaines();
+
+        if ($domaine_ !== null) $metiers = array_filter($metiers, function (Metier $m) use ($domaine_) { return $m->hasDomaine($domaine_); });
+        if ($historise !== null) $metiers = array_filter($metiers, function (Metier $m) use ($historise) { if ($historise === '1') return $m->estHistorise(); else return $m->estNonHistorise(); });
 
         return new ViewModel([
             'metiers' => $metiers,
-            'familles' => $familles,
             'domaines' => $domaines,
-            'referentiels' => $referentiels,
+
+            'domaine' => $domaine,
+            'historise' => $historise,
         ]);
     }
 
@@ -216,5 +224,18 @@ class MetierController extends AbstractActionController {
         }
 
         return $this->redirect()->toRoute('metier');
+    }
+
+    public function listerAgentsAction()
+    {
+        $metier = $this->getMetierService()->getRequestedMetier($this);
+        $array = $this->getMetierService()->getInfosAgentsByMetier($metier);
+
+        $vm =  new ViewModel([
+            'title' => 'Liste des agents ayants une fiche de poste avec un lien au métiers ['.$metier->getLibelle().']',
+            'metier' => $metier,
+            'array' => $array,
+        ]);
+        return $vm;
     }
 }

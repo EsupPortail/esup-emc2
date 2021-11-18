@@ -1,129 +1,199 @@
 <?php
 
 /**
- * @see \Application\Controller\MetierController::indexAction()
- * @var FamilleProfessionnelle[] $familles
+ * @see \Metier\Controller\MetierController::indexAction()
  * @var Domaine[] $domaines
  * @var Metier[] $metiers
- * @var Referentiel[] $referentiels
+ *
+ * @var string $domaine
+ * @var string $historise
  */
 
 use Metier\Entity\Db\Domaine;
-use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
-use Metier\Entity\Db\Referentiel;
 use Metier\Provider\Privilege\MetierPrivileges;
 
-$this->headTitle('Métiers, familles professionnelles et domaines');
+$this->headTitle('Liste des métiers');
 
 $canCarto          = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_CARTOGRAPHIE));
 
-$droits = [
-    "ajouter"       => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AJOUTER)),
-    "editer"        => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER)),
-    "historiser"    => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER)),
-    "effacer"       => $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_SUPPRIMER)),
-];
+$canAfficher = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AFFICHER));
+$canAjouter = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_AJOUTER));
+$canEditer = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER));
+$canHistoriser = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER));
+$canEffacer = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_SUPPRIMER));
+
 ?>
 
-<h1 class="page-header">
-    Métiers, familles professionnelles et domaines
-</h1>
-
-<?php if ($canCarto) : ?>
-    <a
-            <?php /** @see \Metier\Controller\MetierController::cartographieAction() */?>
-            href="<?php echo $this->url('metier/cartographie', [], [], true); ?>"
-            class="btn btn-primary action"
-        >
-            Aller vers la cartographie
-    </a>
-<?php endif; ?>
-
-<br/>
-<br/>
-
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-
-        <li>
-            <a href="#famille" aria-controls="famille" role="tab" data-toggle="tabz">
-                Familles professionnelles &nbsp;
-                <span class="badge">
-                    <?php echo count($familles); ?>
-                </span>
-            </a>
-        </li>
-
-        <li>
-            <a href="#domaine" aria-controls="domaine" role="tab" data-toggle="tabz">
-                Domaines &nbsp;
-                <span class="badge">
-                    <?php echo count($domaines); ?>
-                </span>
-            </a>
-        </li>
-
-        <li>
-            <a href="#metier" aria-controls="metier" role="tab" data-toggle="tabz" >
-                Métiers &nbsp;
-                <span class="badge">
-                    <?php echo count($metiers); ?>
-                </span>
-            </a>
-        </li>
-
-        <li>
-            <a href="#referentiel" aria-controls="referentiel" role="tab" data-toggle="tabz" >
-                Référentiels métiers &nbsp;
-                <span class="badge">
-                    <?php echo count($referentiels); ?>
-                </span>
-            </a>
-        </li>
-    </ul>
-
-    <div class="main-with-tab">
-
-        <div class="tab-content">
-
-            <!-- FAMILLE ---------------------------------------------------------------------------------------------->
-            <div id="famille" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/listing-famille.phtml', ['familles' => $familles, 'droits' => $droits]); ?>
-            </div>
-
-            <!-- DOMAINE ---------------------------------------------------------------------------------------------->
-            <div id="domaine" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/listing-domaine.phtml', ['domaines' => $domaines, 'droits' => $droits]); ?>
-            </div>
-
-            <!-- METIER ----------------------------------------------------------------------------------------------->
-            <div id="metier" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/listing-metier.phtml', ['metiers' => $metiers, 'droits' => $droits]); ?>
-            </div>
-            <!-- REFERENTIEL ----------------------------------------------------------------------------------------------->
-            <div id="referentiel" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/listing-referentiel.phtml', ['referentiels' => $referentiels, 'droits' => $droits]); ?>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Liste des métiers
+        </h1>
     </div>
-
+    <div class="pull-right">
+        <?php if ($canAjouter) : ?>
+            <a  <?php /** @see \Metier\Controller\MetierController::ajouterAction() */ ?>
+                    href="<?php echo $this->url('metier/ajouter', [], [], true);?>"
+                    class="btn btn-primary action ajax-modal"
+                    data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter un métier
+            </a>
+        <?php endif;?>
+    </div>
 </div>
 
+<?php echo $this->partial('partial/filtre', ['domaines' => $domaines, 'domaine' => $domaine, 'historise' => $historise]); ?>
+
+<table id="metiers" class="datatable table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th> Libelle </th>
+        <th> Domaines </th>
+        <th> Références </th>
+        <th> Catégorie </th>
+        <th> Niveaux </th>
+        <th class="cell-action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($metiers as $metier): ?>
+        <tr <?php if ($metier->estHistorise()) echo ' class="historise" '; ?>>
+            <td>
+                <span title='<?php echo $metier->generateTooltip(); ?>'
+                      data-toggle='tooltip' data-html='true'
+                >
+                    <?php echo $metier->getLibelle(); ?>
+                </span>
+            </td>
+            <td>
+                <ul>
+                    <?php foreach ($metier->getDomaines() as $domaine) : ?>
+                        <li>
+                            <?php echo $domaine; ?>
+                            <?php echo $this->typefonction($domaine); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </td>
+            <td>
+                <?php $references =  $metier->getReferences(); ?>
+                <?php if (empty($references)) : ?>
+                    Aucune
+                <?php else: ?>
+                <?php foreach ($references as $reference) : ?>
+                <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
+                    <?php echo $reference->getCode(); ?>
+                </a>
+                <?php if ($canEditer) : ?>
+                <a  <?php /** @see \Metier\Controller\ReferenceController::modifierAction() */ ?>
+                        href="<?php echo $this->url('metier/reference/modifier', ['reference' => $reference->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                >
+                    <span class="icon editer" title="Modifier la référence"></span></a>
+                <a href="">
+                    <a  <?php /** @see \Metier\Controller\ReferenceController::supprimerAction() */ ?>
+                            href="<?php echo $this->url('metier/reference/supprimer', ['reference' => $reference->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire" title="Supprimer la référence"></span></a>
+                    <?php endif; ?>
+                    <br/>
+                    <?php endforeach ?>
+                    <?php endif; ?>
+            </td>
+            <td>
+                <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
+            </td>
+            <td>
+                <?php echo $this->niveauEnveloppe($metier->getNiveaux()) ?>
+                <?php if ($canEditer) : ?>
+                    <?php if ($metier->getNiveaux()) : ?>
+                        <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                        <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon editer"></span></a>
+                    <?php else : ?>
+                        <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                        <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon ajouter"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Metier\Controller\MetierController::listerAgentsAction() */ ?>
+                            href="<?php echo $this->url('metier/lister-agents', ['metier' => $metier->getId()], [], true); ?>"
+                            class="ajax-modal"
+                    >
+                        <span class="icon users" title="Afficher la liste des agents liées"></span></a>
+                <?php endif; ?>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see \Metier\Controller\MetierController::modifierAction() */ ?>
+                            href="<?php echo $this->url('metier/modifier', ['metier' => $metier->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon editer" title="Modifier le métier"></span></a>
+                <?php endif; ?>
+                <?php if ($canEditer) : ?>
+                    <a
+                        <?php /** @see \Metier\Controller\ReferenceController::ajouterAction() */ ?>
+                            href="<?php echo $this->url('metier/reference/ajouter', ['metier' => $metier->getId()], [], true); ?>"
+                            class="ajax-modal"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter" title="ajouter une référence"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($metier->estNonHistorise()) : ?>
+                        <a  <?php /** @see \Metier\Controller\MetierController::historiserAction() */ ?>
+                                href="<?php echo $this->url('metier/historiser', ['metier' => $metier->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser le métier"></span></a>
+                    <?php else : ?>
+                        <a  <?php /** @see \Application\Controller\MetierController::restaurerAction() */ ?>
+                                href="<?php echo $this->url('metier/restaurer', ['metier' => $metier->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer le métier"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canEffacer) : ?>
+                    <a  <?php /** @see \Metier\Controller\MetierController::supprimerAction() */ ?>
+                            href="<?php echo $this->url('metier/supprimer', ['metier' => $metier->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"  title="Supprimer l'application"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<br/>
+
+<script>
+    $(document).ready(function() {
+        $('#metiers').DataTable( {
+            // sorting: false,
+            // paging: false,
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+</script>
 
 <script>
     $(function() {
-        let hash = $(location).attr('hash');
-        let name = hash.substr(1);
-        if (name === undefined || name === "") name = "metier";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
-        });
-
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

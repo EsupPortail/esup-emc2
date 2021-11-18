@@ -77,8 +77,12 @@ return [
                         'type'  => Literal::class,
                         'options' => [
                             'route' => '/referentiel',
+                            'defaults' => [
+                                'controller' => ReferentielController::class,
+                                'action'     => 'index',
+                            ],
                         ],
-                        'may_terminate'=> false,
+                        'may_terminate'=> true,
                         'child_routes' => [
                             'ajouter' => [
                                 'type'  => Literal::class,

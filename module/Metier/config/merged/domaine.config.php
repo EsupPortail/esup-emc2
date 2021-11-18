@@ -22,6 +22,15 @@ return [
                 [
                     'controller' => DomaineController::class,
                     'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        DomainePrivileges::DOMAINE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => DomaineController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -68,9 +77,10 @@ return [
                     'route'    => '/domaine',
                     'defaults' => [
                         'controller' => DomaineController::class,
+                        'action' => 'index',
                     ],
                 ],
-                'may_terminate' => false,
+                'may_terminate' => true,
                 'child_routes' => [
 
                     /** DOMAINE ***************************************************************************************/

@@ -3,6 +3,8 @@
 namespace Metier\Service\Metier;
 
 use Application\Service\Niveau\NiveauService;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Metier\Entity\Db\Metier;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -255,5 +257,51 @@ class MetierService {
         }
 
         return implode(" ", $split_inclusif);
+    }
+
+    /**
+     * @param Metier $metier
+     * @return array
+     */
+    public function getInfosAgentsByMetier(Metier $metier) : array
+    {
+        $params = ["metier" => $metier->getId()];
+        $sql = <<<EOS
+select m.id, m.libelle_default,
+       f.id, fp.id, fte.principale, fte.quotite,
+       a.c_individu, a.prenom, a.nom_usage, 
+       g.id as g_id, g.lib_court, ag.d_debut as g_debut, ag.d_fin as g_fin,
+       s.id as s_id, s.libelle_court, aa.date_debut as s_debut, aa.date_fin as s_fin
+from metier m
+left join metier_domaine md on m.id = md.metier_id
+left join domaine d on md.domaine_id = d.id
+left join fichemetier f on m.id = f.metier_id
+left join fiche_type_externe fte on f.id = fte.fiche_type
+left join fiche_poste fp on fte.fiche_poste = fp.id
+left join agent a on fp.agent = a.c_individu
+left join agent_grade ag on a.c_individu=ag.agent_id
+left join grade g on ag.grade_id = g.id
+left join agent_affectation aa on a.c_individu = aa.agent_id
+left join structure s on aa.structure_id = s.id
+where m.id = :metier
+and ag.deleted_on IS NULL
+and ag.d_debut < current_date and (ag.d_fin IS NULL OR ag.d_fin > current_date)
+and aa.deleted_on IS NULL
+and aa.date_debut < current_date and (aa.date_fin IS NULL OR aa.date_fin > current_date)
+order by a.nom_usage, a.prenom
+EOS;
+
+            $tmp = null;
+            try {
+                $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
+                try {
+                    $tmp = $res->fetchAllAssociative();
+                } catch (DRV_Exception $e) {
+                    throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+                }
+            } catch (DBA_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+            }
+            return $tmp;
     }
 }

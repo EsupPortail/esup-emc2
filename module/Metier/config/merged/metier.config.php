@@ -3,8 +3,11 @@
 namespace Metier;
 
 use Application\View\Helper\TypeFonctionViewHelper;
+use Metier\Controller\DomaineController;
+use Metier\Controller\FamilleProfessionnelleController;
 use Metier\Controller\MetierController;
 use Metier\Controller\MetierControllerFactory;
+use Metier\Controller\ReferentielController;
 use Metier\Form\Metier\MetierForm;
 use Metier\Form\Metier\MetierFormFactory;
 use Metier\Form\Metier\MetierHydrator;
@@ -77,6 +80,15 @@ return [
                         MetierPrivileges::METIER_CARTOGRAPHIE,
                     ],
                 ],
+                [
+                    'controller' => MetierController::class,
+                    'action' => [
+                        'lister-agents',
+                    ],
+                    'privileges' => [
+                        MetierPrivileges::METIER_AFFICHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -89,14 +101,41 @@ return [
                         'pages' => [
                             [
                                 'order' => 600,
-                                'label' => 'Familles, domaines et métiers',
+                                'label' => 'Métiers, Domaines, ...',
                                 'route' => 'metier',
                                 'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
-                                'pages' => [
-                                    [
-                                        'route' => 'ressource-rh/cartographie',
-                                    ],
-                                 ],
+                                'dropdown-header' => true,
+
+                            ],
+                            [
+                                'order' => 610,
+                                'label' => 'Métiers',
+                                'route' => 'metier',
+                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
+                            ],
+                            [
+                                'order' => 620,
+                                'label' => 'Domaines',
+                                'route' => 'domaine',
+                                'resource' => PrivilegeController::getResourceId(DomaineController::class, 'index') ,
+                            ],
+                            [
+                                'order' => 630,
+                                'label' => 'Familles professionnelles',
+                                'route' => 'famille-professionnelle',
+                                'resource' => PrivilegeController::getResourceId(FamilleProfessionnelleController::class, 'index') ,
+                            ],
+                            [
+                                'order' => 640,
+                                'label' => 'Référentiels métiers',
+                                'route' => 'metier/referentiel',
+                                'resource' => PrivilegeController::getResourceId(ReferentielController::class, 'index') ,
+                            ],
+                            [
+                                'order' => 650,
+                                'label' => 'Cartographie',
+                                'route' => 'metier/cartographie',
+                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'cartographie') ,
                             ],
                         ],
                     ],
@@ -188,6 +227,16 @@ return [
                             'defaults' => [
                                 'controller' => MetierController::class,
                                 'action'     => 'modifier-niveaux',
+                            ],
+                        ],
+                    ],
+                    'lister-agents' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/lister-agents/:metier',
+                            'defaults' => [
+                                'controller' => MetierController::class,
+                                'action'     => 'lister-agents',
                             ],
                         ],
                     ],

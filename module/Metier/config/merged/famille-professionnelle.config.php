@@ -18,6 +18,15 @@ return [
                 [
                     'controller' => FamilleProfessionnelleController::class,
                     'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AFFICHER
+                    ],
+                ],
+                [
+                    'controller' => FamilleProfessionnelleController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -64,9 +73,10 @@ return [
                     'route'    => '/famille-professionnelle',
                     'defaults' => [
                         'controller' => FamilleProfessionnelleController::class,
+                        'action' => 'index',
                     ],
                 ],
-                'may_terminate' => false,
+                'may_terminate' => true,
                 'child_routes' => [
                     'ajouter' => [
                         'type'  => Literal::class,

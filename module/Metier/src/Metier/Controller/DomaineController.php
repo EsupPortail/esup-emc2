@@ -13,6 +13,15 @@ class DomaineController extends AbstractActionController {
     use DomaineServiceAwareTrait;
     use DomaineFormAwareTrait;
 
+    public function indexAction() : ViewModel
+    {
+        $domaines = $this->getDomaineService()->getDomaines();
+
+        return new ViewModel([
+            'domaines' => $domaines,
+        ]);
+    }
+
     public function ajouterAction()
     {
         /** @var Domaine $domaine */

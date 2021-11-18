@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @see \Metier\Controller\MetierController::listerAgentsAction()
+ * @var Metier $metier
+ * @var array $array
+ */
+
+use Metier\Entity\Db\Metier;
+
+?>
+
+#Agent: <?php echo count($array); ?>
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th> Agent </th>
+        <th> Grade </th>
+        <th> Affectation </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($array as $item) : ?>
+    <tr>
+        <td>
+            <strong>
+            <?php echo $item['prenom']; ?>
+            <?php echo $item['nom_usage']; ?>
+            </strong>
+            <small>
+            <?php echo $item['c_individu']; ?>
+            </small>
+        </td>
+        <td>
+            <strong>
+            <?php echo $item['lib_court']; ?>
+            </strong>
+            <small>
+                <?php echo $item['g_id']; ?>:
+                <?php echo (isset($item['g_debut']))?DateTime::createFromFormat('Y-m-d H:i:s',$item['g_debut'])->format('d/m/Y'):"---"; ?>
+                &rightarrow;
+                <?php echo (isset($item['g_fin']))?DateTime::createFromFormat('Y-m-d H:i:s',$item['g_fin'])->format('d/m/Y'):"---"; ?>
+            </small>
+        </td>
+        <td>
+            <strong>
+            <?php echo $item['libelle_court']; ?>
+            </strong>
+            <small>
+                <?php echo $item['s_id']; ?>:
+                <?php echo (isset($item['s_debut']))?DateTime::createFromFormat('Y-m-d H:i:s',$item['s_debut'])->format('d/m/Y'):"---"; ?>
+                &rightarrow;
+                <?php echo (isset($item['s_fin']))?DateTime::createFromFormat('Y-m-d H:i:s',$item['s_fin'])->format('d/m/Y'):"---"; ?>
+            </small>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
