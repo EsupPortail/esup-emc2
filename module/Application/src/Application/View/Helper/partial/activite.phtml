@@ -9,7 +9,6 @@ use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Formation\Entity\Db\FormationElement;
 
 /**
@@ -23,7 +22,6 @@ use Formation\Entity\Db\FormationElement;
  * Récupéré du tableau d'options
  * @var FichePoste $ficheposte
  * @var FicheMetier $fichemetier
- * @var FicheposteActiviteDescriptionRetiree[] $retirees
  */
 
 $canModifier = true;
@@ -68,7 +66,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                 <div class="pull-right">
                     <?php /** @see \Application\Controller\FichePosteController::selectionnerDescriptionsRetireesAction() */?>
                     <a href="<?php echo $this->url('fiche-poste/selectionner-descriptions-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId(), 'activite' => $activite->getId()], [], true); ?>"
-                       class="btn btn-primary ajax-modal">
+                       class="btn btn-primary ajax-modal" data-event="modification">
                         Sélectionner des descriptions
                     </a>
                 </div>

@@ -35,8 +35,12 @@ use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
+
+/** @method FlashMessenger flashMessenger() */
 
 class FicheMetierController extends AbstractActionController
 {
@@ -67,37 +71,9 @@ class FicheMetierController extends AbstractActionController
 
     use ConfigurationServiceAwareTrait;
 
-    public function indexNAction()
-    {
-        $fromQueries  = $this->params()->fromQuery();
-        $etatId       = $fromQueries['etat'];
-        $domaineId    = $fromQueries['domaine'];
-        $expertise    = $fromQueries['expertise'];
+    /** CRUD **********************************************************************************************************/
 
-        $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
-        $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetier::TYPE_FICHEMETIER);
-        $etats = $this->getEtatService()->getEtatsByType($type);
-        $domaines = $this->getDomaineService()->getDomaines();
-
-        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
-        $dictionnaires = [];
-        foreach ($fichesMetiers as $fiche) {
-            $metier = $fiche->getMetier();
-            $dictionnaires[$metier->getId()]['metier'] = $metier;
-            $dictionnaires[$metier->getId()]['fiches'][] = $fiche;
-        }
-        usort($dictionnaires, function($a, $b) { return $a['metier']->getLibelle() > $b['metier']->getLibelle(); });
-
-        return new ViewModel([
-            'params' => $params,
-            'domaines' => $domaines,
-            'etats' => $etats,
-
-            'dictionnaires' => $dictionnaires,
-        ]);
-    }
-
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $fromQueries  = $this->params()->fromQuery();
         $etatId       = $fromQueries['etat'];
@@ -111,8 +87,6 @@ class FicheMetierController extends AbstractActionController
         $domaines = $this->getDomaineService()->getDomaines();
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
-//        $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersForIndex();
-
 
         return new ViewModel([
             'params' => $params,
@@ -122,7 +96,7 @@ class FicheMetierController extends AbstractActionController
         ]);
     }
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
@@ -130,7 +104,6 @@ class FicheMetierController extends AbstractActionController
         $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche, true);
-        $popup = ($this->params()->fromQuery('popup') === 'true');
 
         return new ViewModel([
             'title' => "Visualisation d'une fiche métier",
@@ -138,12 +111,11 @@ class FicheMetierController extends AbstractActionController
             'competences' => $competences,
             'applications' => $applications,
             'parcours' => $parcours,
-            'popup' => $popup,
             'missions' => $missions,
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         /** @var FicheMetier $fiche */
         $fiche = new FicheMetier();
@@ -180,7 +152,7 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function dupliquerAction()
+    public function dupliquerAction() : Response
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -191,7 +163,7 @@ class FicheMetierController extends AbstractActionController
         exit();
     }
 
-    public function editerAction()
+    public function editerAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);
         if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
@@ -226,32 +198,21 @@ class FicheMetierController extends AbstractActionController
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
-//    public function exporterToutesAction()
-//    {
-//        $fiches = $this->getFicheMetierService()->getFichesMetiers();
-//
-//        $exporter = new FicheMetierPdfExporter($this->renderer, 'A4');
-//        $exporter->setVars([]);
-//        $filemane = "EMC2" . $this->getDateTime()->format('YmdHis') . "_fiches_metiers.pdf";
-//        $exporter->exportAll($fiches, $filemane);
-//        exit;
-//    }
-
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $this->getFicheMetierService()->historise($fiche);
         return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
         $this->getFicheMetierService()->restore($fiche);
         return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
     }
 
-    public function detruireAction()
+    public function detruireAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -277,18 +238,9 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterAvecMetierAction()
-    {
-        $metier = $this->getMetierService()->getRequestedMetier($this);
-        $fiche = new FicheMetier();
-        $fiche->setMetier($metier);
-        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetier::ETAT_REDACTION));
-        $this->getFicheMetierService()->create($fiche);
+    /** Action lier à l'édition d'une fiche métier ********************************************************************/
 
-        return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
-    }
-
-    public function editerLibelleAction()
+    public function editerLibelleAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
@@ -312,7 +264,7 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterNouvelleActiviteAction()
+    public function ajouterNouvelleActiviteAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
@@ -344,7 +296,7 @@ class FicheMetierController extends AbstractActionController
 
     }
 
-    public function ajouterActiviteExistanteAction()
+    public function ajouterActiviteExistanteAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
@@ -382,7 +334,7 @@ class FicheMetierController extends AbstractActionController
         ]);
     }
 
-    public function retirerActiviteAction()
+    public function retirerActiviteAction() : Response
     {
         $coupleId = $this->params()->fromRoute('id');
         $couple = $this->getActiviteService()->getFicheMetierTypeActivite($coupleId);
@@ -392,7 +344,7 @@ class FicheMetierController extends AbstractActionController
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
 
-    public function deplacerActiviteAction()
+    public function deplacerActiviteAction() : Response
     {
         $direction = $this->params()->fromRoute('direction');
         $coupleId = $this->params()->fromRoute('id');

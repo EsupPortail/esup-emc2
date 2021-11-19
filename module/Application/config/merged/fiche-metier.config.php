@@ -31,7 +31,6 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'index',
-                        'index-n',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_INDEX,
@@ -57,7 +56,6 @@ return [
                         'ajouter',
                         'dupliquer',
 //                        'ajouter-terminer',
-                        'ajouter-avec-metier',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AJOUTER,
@@ -144,7 +142,7 @@ return [
                     'route'    => '/fiche-metier',
                     'defaults' => [
                         'controller' => FicheMetierController::class,
-                        'action'     => 'index-n',
+                        'action'     => 'index',
                     ],
                 ],
             ],
@@ -237,17 +235,6 @@ return [
 //                        ],
 //                        'may_terminate' => true,
 //                    ],
-                    'ajouter-avec-metier' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-avec-metier/:metier',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'ajouter-avec-metier',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [

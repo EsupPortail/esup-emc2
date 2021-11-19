@@ -709,6 +709,7 @@ class FichePosteController extends AbstractActionController {
                     $this->getActivitesDescriptionsRetireesService()->create($item);
                 }
             }
+            exit();
 //            return $this->redirect()->toRoute('fiche-poste/selectionner-applications-conservees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId()], [], true);
         }
 
