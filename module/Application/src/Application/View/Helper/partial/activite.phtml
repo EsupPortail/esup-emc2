@@ -53,10 +53,29 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
 
 <div>
 
+<!--    <div class="alert-warning">-->
+<!--        Mode : --><?php //echo $mode; ?>
+<!--    </div>-->
+
     <!-- TITRE -------------------------------------------------------------------------------------------------------->
     <?php if ($mode !== 'modifier-activite') : ?>
         <div class="titre-bloc">
-            <h3><?php echo $activite->getLibelle(); ?></h3>
+            <?php if ($mode === "edition-fiche-poste") : ?>
+            <div class="row">
+                <div class="col-md-9">
+                    <h3> <?php echo $activite->getLibelle(); ?> </h3>
+                </div>
+                <div class="pull-right">
+                    <?php /** @see \Application\Controller\FichePosteController::selectionnerDescriptionsRetireesAction() */?>
+                    <a href="<?php echo $this->url('fiche-poste/selectionner-descriptions-retirees', ['fiche-poste' => $ficheposte->getId(), 'fiche-metier' => $fichemetier->getId(), 'activite' => $activite->getId()], [], true); ?>"
+                       class="btn btn-primary ajax-modal">
+                        Sélectionner des descriptions
+                    </a>
+                </div>
+            </div>
+            <?php else : ?>
+                <h3><?php echo $activite->getLibelle(); ?></h3>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 
@@ -125,6 +144,13 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
     <?php
         $descriptions = $activite->getDescriptions();
         usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre() > $b->getOrdre();});
+
+        if ($ficheposte !== null) {
+            $removed = array_map(function ($a) { return $a->getDescription(); } , $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $activite));
+            $descriptions = array_filter($descriptions, function (ActiviteDescription $d) use ($removed){
+                return (array_search($d, $removed) === false);
+            });
+        }
     ?>
     <ul>
         <?php foreach ($descriptions as $description) : ?>

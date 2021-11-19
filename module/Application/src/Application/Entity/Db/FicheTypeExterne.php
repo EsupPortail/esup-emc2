@@ -13,6 +13,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class FicheTypeExterne {
 
+    const ACTIVITE_SEPARATOR = ";";
+
+
     /** @var integer */
     private $id;
     /** @var FichePoste */

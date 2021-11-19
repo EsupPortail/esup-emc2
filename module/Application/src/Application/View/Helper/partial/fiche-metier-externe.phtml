@@ -8,7 +8,12 @@
 use Application\Entity\Db\FicheTypeExterne;
 
 $fichemetier = $fiche->getFicheType();
-$agent = $fiche->getFichePoste()->getAgent();
+$ficheposte = $fiche->getFichePoste();
+
+$agent = $ficheposte->getAgent();
+
+$activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->getActivites());
+
 ?>
 
 <div class="panel panel-info">
@@ -80,10 +85,21 @@ $agent = $fiche->getFichePoste()->getAgent();
         </div>
     </div>
     <div class="panel-body">
+        <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
+            <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
+            <a href="<?php echo $this->url("fiche-poste/selectionner-activite", ["fiche-poste" => $ficheposte->getId(), "fiche-type-externe" => $fiche->getId()], [], true); ?>"
+               class="ajax-modal btn btn-primary" data-event="modification"
+            >
+                Sélectionner des activités
+            </a>
+        <?php endif; ?>
         <?php
-            $options['sans-titre'] = true;
-            $options['activite-liste'] = $fiche->getActivites();
-            echo $this->ficheMetier($fiche, $options);
+
+            foreach ($fichemetier->getActivites() as $activite) {
+                if (array_search("".$activite->getActivite()->getId(), $activitesConservees) !== false) {
+                    echo $this->activite($activite, $options['mode'], ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte]);
+                }
+            }
         ?>
     </div>
 </div>

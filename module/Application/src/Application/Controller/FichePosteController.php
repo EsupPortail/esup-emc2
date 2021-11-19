@@ -580,7 +580,6 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-
     /**
      * @param FichePoste $fiche
      * @param array $data

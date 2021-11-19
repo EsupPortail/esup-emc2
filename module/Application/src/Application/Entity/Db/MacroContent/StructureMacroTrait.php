@@ -21,7 +21,7 @@ trait StructureMacroTrait {
         if ($structure->getRepriseResumeMere()) {
             $texte .= $structure->getParent()->toStringDescription();
         }
-        $texte .= $structure->toStringDenomination();
+        $texte .= "<h3>".$structure->toStringDenomination()."</h3>";
         $texte .= $structure->getDescription();
         return $texte;
     }

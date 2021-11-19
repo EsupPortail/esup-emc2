@@ -202,6 +202,22 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return $this->descriptionsRetirees;
     }
 
+    /**
+     * @param FicheMetier $fichemetier
+     * @param Activite $activite
+     * @return array
+     */
+    public function getDescriptionsRetireesByFicheMetierAndActivite(FicheMetier $fichemetier, Activite $activite) : array{
+        $result = [];
+        /** @var FicheposteActiviteDescriptionRetiree $descriptionsRetiree */
+        foreach ($this->getDescriptionsRetirees() as $descriptionsRetiree) {
+            if ($descriptionsRetiree->getFicheMetier() === $fichemetier AND $descriptionsRetiree->getActivite() === $activite) {
+                $result[] = $descriptionsRetiree;
+            }
+        }
+        return $result;
+    }
+
     /** @param FicheposteActiviteDescriptionRetiree $description */
     public function addDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description) {
         $this->descriptionsRetirees->add($description);

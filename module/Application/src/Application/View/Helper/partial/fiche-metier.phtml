@@ -2,20 +2,13 @@
 
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheTypeExterne;
 
 /**
  * @see \Application\View\Helper\FicheMetierViewHelper
- * @var FicheMetier|FicheTypeExterne $fichemetier
+ * @var FicheMetier $fiche
  * @var array $options
  */
 
-$fiche = $fichemetier;
-$remove = false;
-if ($fichemetier instanceof FicheTypeExterne) {
-    $remove = true;
-    $fiche = $fichemetier->getFicheType();
-}
 
 $activites = $fiche->getActivites();
 
@@ -67,15 +60,13 @@ if ($options['popup']) $options['actions']['afficher'] = false;
 <?php ///** FICHE || ACTIVITES / MISSIONS PRINCIPALES *****************************************************************/?>
 
 
-<?php if (!$remove) : ?>
-    <div class="panel panel-info">
+<div class="panel panel-info">
     <div class="panel-heading">
         <h2>
             Missions principales
         </h2>
     </div>
     <div class="panel-body" style="color:rgb(80,80,80);">
-<?php endif; ?>
         <div class="row">
             <?php if ($mode === 'edition-fiche-metier') : ?>
                 <?php /** @see FicheMetierController::ajouterNouvelleActiviteAction() */ ?>
@@ -100,10 +91,8 @@ if ($options['popup']) $options['actions']['afficher'] = false;
             <?php echo $this->activite($activite, $options['mode'], ['fichemetier' => $fiche]); ?>
         <?php endforeach; ?>
 
-<?php if (!$remove) : ?>
-        </div>
     </div>
-<?php endif; ?>
+</div>
 
 <!-- COMPETENCES -------------------------------------------------------------------------------------------------->
 <?php if (isset($options['competences'])) : ?>
