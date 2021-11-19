@@ -6,6 +6,7 @@ use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
@@ -29,6 +30,7 @@ class FormationInstanceInscritControllerFactory
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var MailService $mailService
+         * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          * @var UserService $userService
          */
@@ -38,6 +40,7 @@ class FormationInstanceInscritControllerFactory
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $mailService = $container->get(MailService::class);
+        $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
 
@@ -53,6 +56,7 @@ class FormationInstanceInscritControllerFactory
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setMailService($mailService);
+        $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
         $controller->setUserService($userService);
         $controller->setSelectionAgentForm($selectionAgentForm);

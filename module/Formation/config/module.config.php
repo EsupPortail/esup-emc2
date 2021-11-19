@@ -4,6 +4,8 @@ namespace Formation;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Formation\Service\Notification\NotificationService;
+use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
 use Formation\Service\Url\UrlServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -41,6 +43,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
         ],
     ],

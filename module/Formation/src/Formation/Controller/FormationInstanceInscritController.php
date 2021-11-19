@@ -8,6 +8,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\Notification\NotificationServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -28,6 +29,7 @@ class FormationInstanceInscritController extends AbstractActionController
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use MailServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use UserServiceAwareTrait;
     use SelectionAgentFormAwareTrait;
@@ -171,17 +173,7 @@ class FormationInstanceInscritController extends AbstractActionController
         $this->getFormationInstanceInscritService()->create($inscrit);
         $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
 
-        $vars = [
-            'agent' => $agent,
-            'instance' => $instance,
-            'UrlService' => $this->getFormationInstanceService()->getUrlService(),
-        ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_DEMANDE_AGENT", $vars);
-
-        $email = $this->getParametreService()->getParametreByCode('FORMATION','EMAIL')->getValeur();
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        $this->getNotificationService()->triggerInscriptionAgent($agent, $instance);
 
         return $this->redirect()->toRoute('liste-formations-instances', [], ['fragment' => 'instances'], true);
     }
@@ -222,33 +214,14 @@ class FormationInstanceInscritController extends AbstractActionController
             if ($data["reponse"] === "oui") {
                 $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_RESPONSABLE));
 
-                $urlService = $this->getFormationInstanceService()->getUrlService();
-                $urlService->setVariables(['instance' => $instance,]);
-
-                $vars = [
-                    'agent' => $agent,
-                    'instance' => $instance,
-                    'UrlService' => $urlService,
-                ];
-                $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_RESPONSABLE_VALIDATION", $vars);
-                $mail = $this->getMailService()->sendMail($emailCCC .",".$emailAgent, $rendu->getSujet(), $rendu->getCorps());
-                $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-                $this->getMailService()->update($mail);
+                $this->getNotificationService()->triggerResponsableValidation($inscrit);
             }
             if ($data["reponse"] === "non") {
                 $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_REFUS_INSCRIPTION));
                 $inscrit->setComplement($data["complement"]);
                 $this->getFormationInstanceInscritService()->update($inscrit);
 
-                $vars = [
-                    'agent' => $agent,
-                    'instance' => $instance,
-                    'inscrit' => $inscrit,
-                ];
-                $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_RESPONSABLE_REFUS", $vars);
-                $mail = $this->getMailService()->sendMail($emailCCC .",".$emailAgent, $rendu->getSujet(), $rendu->getCorps());
-                $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-                $this->getMailService()->update($mail);
+                $this->getNotificationService()->triggerResponsableRefus($inscrit);
             }
             $this->getFormationInstanceInscritService()->update($inscrit);
             exit();
@@ -280,11 +253,7 @@ class FormationInstanceInscritController extends AbstractActionController
             if ($data["reponse"] === "oui") {
                 $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_INSCRIPTION));
 
-                $vars = ['agent' => $agent, 'instance' => $instance, 'UrlService' => $this->getFormationInstanceService()->getUrlService()];
-                $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_DRH_VALIDATION", $vars);
-                $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-                $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-                $this->getMailService()->update($mail);
+                $this->getNotificationService()->triggerDrhValidation($inscrit);
 
                 if ($inscrit->getListe() === null AND !$instance->isListePrincipaleComplete()) { $inscrit->setListe('principale'); }
                 if ($inscrit->getListe() === null AND !$instance->isListeComplementaireComplete()) { $inscrit->setListe('complementaire'); }
@@ -294,11 +263,7 @@ class FormationInstanceInscritController extends AbstractActionController
                 $inscrit->setComplement($data["complement"]);
                 $this->getFormationInstanceInscritService()->update($inscrit);
 
-                $vars = ['agent' => $agent, 'instance' => $instance, 'inscrit' => $inscrit];
-                $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_DRH_REFUS", $vars);
-                $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-                $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-                $this->getMailService()->update($mail);
+                $this->getNotificationService()->triggerDrhRefus($inscrit);
             }
             $this->getFormationInstanceInscritService()->update($inscrit);
             exit();
