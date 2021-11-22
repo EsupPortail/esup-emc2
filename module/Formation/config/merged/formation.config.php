@@ -66,6 +66,13 @@ return [
                 [
                     'controller' => FormationController::class,
                     'action' => [
+                        'rechercher-formation',
+                    ],
+                    'roles' => [],
+                ],
+                [
+                    'controller' => FormationController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -114,11 +121,11 @@ return [
                 'pages' => [
                     'ressource' => [
                         'pages' => [
-                            'formation' => [
+                            'formation_' => [
                                 'label'    => 'Formations',
                                 'route'    => 'formation',
-                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_ACCES),
-                                'order'    => 230,
+                                'resource' => PrivilegeController::getResourceId(FormationController::class, 'index') ,
+                                'order'    => 310,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -218,6 +225,17 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                    ],
+                    'rechercher-formation' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-formation',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'rechercher-formation',
                             ],
                         ],
                     ],

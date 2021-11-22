@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @var string $source
+ * @var string $historise
+ * @var array $groupes [id => libelle ]
+ * @var string $groupe
+ */
+
+use Application\Entity\Db\Interfaces\HasSourceInterface;
+
+?>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="icon filtrer"></span>
+        Filtrage des groupes de formation
+    </div>
+    <div class="panel-body">
+        <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
+            <div class="col-md-3">
+                <label for="groupe">Groupe de formation : </label>
+                <select id="groupe" name="groupe" class="selectpicker" data-live-search="true">
+                    <option value=""> Tous les groupes </option>
+                    <?php foreach ($groupes as $id => $libelle) : ?>
+                    <option value="<?php echo $id; ?>"> <?php echo $libelle['label']; ?> </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="source">Source : </label>
+                <select id="source" name="source" class="selectpicker">
+                    <option value=""> Toutes les sources </option>
+                    <option value="<?php echo HasSourceInterface::SOURCE_EMC2; ?>"> <?php echo HasSourceInterface::SOURCE_EMC2; ?> </option>
+                    <option value="<?php echo HasSourceInterface::SOURCE_LAGAF; ?>"> <?php echo HasSourceInterface::SOURCE_LAGAF; ?> </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="historise">Historisé : </label>
+                <select id="historise" name="historise" class="selectpicker">
+                    <option value=""> Peu importe </option>
+                    <option value="1"> Historisé </option>
+                    <option value="0"> Non historisé </option>
+                </select>
+            </div>
+            <!-- BOUTON -->
+            <div class="col-md-3">
+                <div class="pull-right">
+                    <button class="btn btn-primary action" id="clear">
+                        <span class="icon effacer"></span>
+                    </button>
+
+                    <button class="btn btn-primary action" id="filter">
+                        <span class="icon filtrer"></span>
+                        Filtrer
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let source = <?php echo '"' . $source . '"'; ?>;
+    let historise = <?php echo '"' . $historise . '"'; ?>;
+    let groupe = <?php echo '"' . (int) $groupe . '"'; ?>;
+    // console.log("source=" + source);
+    // console.log("historise=" + historise);
+    // console.log("groupe=" + groupe);
+
+    $("form#filtre").submit(function(e){
+        e.preventDefault();
+    });
+
+    $('button#clear').click(function() {
+        window.location.href = '?';
+    });
+
+    $('button#filter').click(function() {
+        let sourceId = $('select#source option:selected').val();
+        console.log( "source=" + sourceId);
+        let historiseId = $('select#historise option:selected').val();
+        console.log( "historise=" + historiseId);
+        let groupeId = $('select#groupe option:selected').val();
+        console.log( "groupe=" + groupeId);
+
+        let query = "";
+        query += "&source=" + sourceId;
+        query += "&historise=" + historiseId;
+        query += "&groupe=" + groupeId;
+        window.location.href = 'formation?'+ query ;
+    });
+
+    $('select#source option[value=' + source + ']').prop('selected', true);
+    $('select#historise option[value=' + historise + ']').prop('selected', true);
+    $('select#groupe option[value=' + groupe + ']').prop('selected', true);
+
+</script>

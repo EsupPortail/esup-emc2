@@ -4,16 +4,14 @@
  * @see FormationController::indexAction()
  *
  * @var Formation[] $formations
- * @var FormationGroupe[] $groupes
- * @var FormationInstance[] $instances
- * @var EtatService $etatService (deplacer dans workflow stuff)
+ * @var array $groupes
+ * @var string $groupe
+ * @var string $historise
+ * @var string $source
  */
 
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationGroupe;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Privilege\FormationPrivileges;
-use UnicaenEtat\Service\Etat\EtatService;
 
 $canAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 $canAjouter = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AJOUTER));
@@ -21,86 +19,111 @@ $canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivil
 $canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_HISTORISER));
 $canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_SUPPRIMER));
 
-$this->headTitle("Index des actions de formation");
+$this->headTitle("Actions de formation");
 
-$droits = [
-    'afficher' => $canAfficher,
-    'ajouter' => $canAjouter,
-    'editer' => $canEditer,
-    'historiser' => $canHistoriser,
-    'detruire' => $canDetruire,
-];
 ?>
 
-<h1 class="page-header">
-    Index des actions de formation
-</h1>
-
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-        <li>
-            <a href="#instance" aria-controls="instance" role="tab" data-toggle="tabz">
-                Sessions en cours
-                <span class="badge">
-                    <?php echo count($instances); ?>
-                </span>
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="page-header">
+            Actions de formation
+        </h2>
+    </div>
+    <div class="pull-right">
+        <br>
+        <?php if ($canAjouter) : ?>
+            <a
+                <?php /** @see FormationController::ajouterAction() */ ?>
+                href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
+                class="btn btn-primary action ajax-modal"
+                data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter une action
             </a>
-        </li>
-        <li>
-            <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz">
-                Actions de formation &nbsp;
-                <span class="badge">
-                    <?php echo count($formations); ?>
-                </span>
-            </a>
-        </li>
-        <li>
-            <a href="#groupe" aria-controls="groupe" role="tab" data-toggle="tabz">
-                Groupes de formations &nbsp;
-                <span class="badge">
-                    <?php echo count($groupes); ?>
-                </span>
-            </a>
-        </li>
-        <li class="pull-right">
-            <a href="#workflow" aria-controls="workflow" role="tab" data-toggle="tabz"  style="margin-right: 1rem;">
-                Workflow
-            </a>
-        </li>
-    </ul>
-
-    <div class="main-with-tab">
-
-        <div class="tab-content">
-            <div id="instance" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-instance', ['instances' => $instances, 'droits' => $droits], [], true); ?>
-            </div>
-            <div id="groupe" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-groupe', ['groupes' => $groupes, 'droits' => $droits], [], true); ?>
-            </div>
-            <div id="formation" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-formation', ['formations' => $formations, 'droits' => $droits], [], true); ?>
-            </div>
-
-            <div id="workflow" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('workflow', ['etatService' => $etatService], [], true); ?>
-            </div>
-        </div>
+        <?php endif; ?>
     </div>
 </div>
 
+<?php echo $this->partial('partial/filtre', ['groupes' => $groupes, 'groupe' => $groupe, 'historise' => $historise, 'source' => $source], [], true); ?>
+
+<table class="datatable table-condensed" id="formations" style="width:100%;">
+    <thead>
+        <tr>
+            <th class="col-md-6 nosort"> Libellé </th>
+            <th class="col-md-3 nosort" style="min-width:10rem;"> Groupe </th>
+            <th class="col-md-2 nosort" style="min-width:10rem;"> Source </th>
+            <th class="col-md-1 nosort" style="min-width:8rem;"> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach($formations as $formation) : ?>
+        <tr>
+            <td> <?php echo $formation->getLibelle(); ?> </td>
+            <td> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Sans groupe ..."; ?> </td>
+            <td>
+                <span class="badge source <?php echo $formation->getSource(); ?>">
+                    <?php echo $formation->getSource(); ?>  <?php echo ($formation->getIdSource())?:$formation->getId(); ?>
+                </span>
+            </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see FormationController::editerAction() */ ?>
+                        href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
+                    >
+                        <span class="icon voir" title="Afficher la formation"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($formation->estNonHistorise()) : ?>
+                        <a
+                            <?php /** @see FormationController::historiserAction() */ ?>
+                            href="<?php echo $this->url('formation/historiser', ['formation' => $formation->getId()], [], true); ?>"
+                        >
+                            <span class="icon historiser" title="Historiser la formation"></span></a>
+                    <?php else : ?>
+                        <a
+                            <?php /** @see FormationController::restaurerAction() */ ?>
+                            href="<?php echo $this->url('formation/restaurer', ['formation' => $formation->getId()], [], true); ?>"
+                        >
+                            <span class="icon restaurer" title="Restaurer la formation"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruire) : ?>
+                    <a
+                        <?php /** @see FormationController::detruireAction() */ ?>
+                        href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire" title="Supprimer la formation"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+        let table = $('#formations').DataTable({
+            "pageLength": 25,
+            "sorting": false,
+            "columnDefs": [
+                {"targets": ['nosort'], "orderable": false},
+            ],
+            "language": {
+                "search": "Filtre : _INPUT_",
+                'infoFiltered': "<small class=\"text-highlight\">(_MAX_ &eacute;l&eacute;ments au total)</small>",
+                'emptyTable': "Aucune donnée disponible",
+                'zeroRecords': "Aucun enregistrement trouvé",
+            },
+        } );
+    } );
+</script>
+
+
+
 <script>
     $(function () {
-        let hash = $(location).attr('hash');
-        let name = hash.substr(1);
-        if (name === undefined || name === "") name = "instance";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav-tabs a').click(function () {
-            $(this).tab('show');
-        });
-
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

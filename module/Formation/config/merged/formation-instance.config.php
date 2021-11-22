@@ -25,6 +25,15 @@ return [
                 [
                     'controller' => FormationInstanceController::class,
                     'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
                         'afficher',
                     ],
                     'privileges' => [
@@ -35,6 +44,7 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'ajouter',
+                        'ajouter-avec-formulaire',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_AJOUTER,
@@ -97,6 +107,26 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'session_' => [
+                                'label'    => 'Session en cours',
+                                'route'    => 'formation-instance',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
+                                'order'    => 330,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router' => [
         'routes' => [
             'formation-instance' => [
@@ -105,10 +135,21 @@ return [
                     'route'    => '/formation-instance',
                     'defaults' => [
                         'controller' => FormationInstanceController::class,
+                        'action' => 'index',
                     ],
                 ],
-                'may_terminate' => false,
+                'may_terminate' => true,
                 'child_routes' => [
+                    'ajouter-avec-formulaire' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter-avec-formulaire',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'ajouter-avec-formulaire',
+                            ],
+                        ],
+                    ],
                     'ajouter' => [
                         'type'  => Segment::class,
                         'options' => [

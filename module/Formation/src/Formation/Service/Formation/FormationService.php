@@ -6,6 +6,7 @@ use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationGroupe;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -90,6 +91,22 @@ class FormationService
     public function getFormations(string $champ = 'libelle', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
+            ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param FormationGroupe $groupe
+     * @param string $champ
+     * @param string $ordre
+     * @return Formation[]
+     */
+    public function getFormationsByGroupe(FormationGroupe $groupe, string $champ = 'libelle', string $ordre = 'ASC') : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formation.groupe = :groupe')
+            ->setParameter('groupe', $groupe)
             ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -234,4 +251,41 @@ class FormationService
         $this->update($formation);
         return $formation;
     }
+
+    /**
+     * @param string $texte
+     * @return Formation[]
+     */
+    public function findFormationByTerm(string $texte) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(CONCAT(formation.libelle, ' ', groupe.libelle)) like :search OR LOWER(CONCAT(groupe.libelle, ' ', formation.libelle)) like :search")
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    /**
+     * @param Formation[] $formations
+     * @return array
+     */
+    public function formatFormationtJSON(array $formations) : array
+    {
+        $result = [];
+        /** @var Formation[] $formations */
+        foreach ($formations as $formation) {
+            $groupe = $formation->getGroupe();
+            $result[] = array(
+                'id' => $formation->getId(),
+                'label' => $formation->getLibelle(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . ($groupe !== null)?$groupe->getLibelle():"Sans groupe" . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
 }

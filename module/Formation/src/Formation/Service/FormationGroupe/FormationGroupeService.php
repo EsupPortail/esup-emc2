@@ -123,10 +123,10 @@ class FormationGroupeService
     }
 
     /**
-     * @param integer $id
+     * @param int|null $id
      * @return FormationGroupe|null
      */
-    public function getFormationGroupe(int $id) : ?FormationGroupe
+    public function getFormationGroupe(?int $id) : ?FormationGroupe
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('groupe.id = :id')

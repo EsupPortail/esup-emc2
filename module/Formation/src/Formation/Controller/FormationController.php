@@ -16,6 +16,7 @@ use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class FormationController extends AbstractActionController
@@ -31,16 +32,32 @@ class FormationController extends AbstractActionController
     use CompetenceElementFormAwareTrait;
     use CompetenceElementServiceAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
-        $formations = $this->getFormationService()->getFormations();
-        $groupes = $this->getFormationGroupeService()->getFormationsGroupes('libelle');
-        $instances = $this->getFormationInstanceService()->getFormationInstanceEnCours();
+        $groupe = $this->params()->fromQuery('groupe');
+        $groupe_ = ($groupe !== null AND $groupe !== "")?$this->getFormationGroupeService()->getFormationGroupe((int) $groupe):null;
+        $source = $this->params()->fromQuery('source');
+        $historise = $this->params()->fromQuery('historise');
+
+        if ($groupe_ !== null) {
+            $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
+        } else {
+            $formations = $this->getFormationService()->getFormations();
+        }
+
+        if ($source !== null AND $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) { return $a->getSource() === $source; });
+        if ($historise !== null AND $historise !== "") $formations = array_filter($formations, function (Formation $a) use ($historise) {
+            if ($historise === "1") return $a->estHistorise();
+            if ($historise === "0") return $a->estNonHistorise();
+            return true;
+        });
 
         return new ViewModel([
             'formations' => $formations,
-            'groupes' => $groupes,
-            'instances' => $instances,
+            'groupes' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
+            'groupe' => $groupe,
+            'source' => $source,
+            'historise' => $historise,
         ]);
     }
 
@@ -241,5 +258,15 @@ class FormationController extends AbstractActionController
             return $vm;
         }
         exit();
+    }
+
+    public function rechercherFormationAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $formations = $this->getFormationService()->findFormationByTerm($term);
+            $result = $this->getFormationService()->formatFormationtJSON($formations);
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

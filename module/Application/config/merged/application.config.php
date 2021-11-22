@@ -140,7 +140,7 @@ return [
                         'pages' => [
                             [
                                 'order' => 200,
-                                'label' => 'Élement de fiches',
+                                'label' => 'Élements de fiche',
                                 'route' => 'application',
                                 'resource' => PrivilegeController::getResourceId(ApplicationController::class, 'index') ,
                                 'dropdown-header' => true,
@@ -150,7 +150,7 @@ return [
                                 'label' => 'Applications',
                                 'route' => 'application',
                                 'resource' => ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER),
-                                'order' => 210,
+                                'order' => 220,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

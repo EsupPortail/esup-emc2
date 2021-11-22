@@ -22,6 +22,15 @@ return [
                 [
                     'controller' => FormationGroupeController::class,
                     'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        FormationgroupePrivileges::FORMATIONGROUPE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => FormationGroupeController::class,
+                    'action' => [
                         'afficher-groupe',
                     ],
                     'privileges' => [
@@ -70,6 +79,26 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'groupe_' => [
+                                'label'    => 'Groupes de formation',
+                                'route'    => 'formation-groupe',
+                                'resource' => PrivilegeController::getResourceId(FormationGroupeController::class, 'index') ,
+                                'order'    => 320,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'router' => [
         'routes' => [
             'formation-groupe' => [
@@ -78,9 +107,10 @@ return [
                     'route'    => '/formation-groupe',
                     'defaults' => [
                         'controller' => FormationGroupeController::class,
+                        'action' => 'index',
                     ],
                 ],
-                'may_terminate' => false,
+                'may_terminate' => true,
                 'child_routes' => [
                     'update-ordre-groupe' => [
                         'type'  => Segment::class,

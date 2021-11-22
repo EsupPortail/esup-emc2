@@ -25,9 +25,6 @@ class Formation implements HistoriqueAwareInterface,
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
-    const SOURCE_EMC2 = 'EMC2';
-    const SOURCE_LAGAF = 'LAGAF';
-
     /** @var integer */
     private $id;
     /** @var string */

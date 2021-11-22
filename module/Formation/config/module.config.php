@@ -4,6 +4,7 @@ namespace Formation;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
@@ -37,6 +38,27 @@ return [
         'cache' => [
             'apc' => [
                 'namespace' => 'PREECOG__Formation__' . __NAMESPACE__,
+            ],
+        ],
+    ],
+
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            'formation' => [
+                                'label'    => 'Gestion des formations',
+                                'route'    => 'formation',
+                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_ACCES),
+                                'order'    => 300,
+                                'dropdown-header' => true,
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

@@ -2,10 +2,12 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Form\FormationGroupe\FormationGroupeFormAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -14,7 +16,27 @@ class FormationGroupeController extends AbstractActionController
     use FormationGroupeServiceAwareTrait;
     use FormationGroupeFormAwareTrait;
 
-    public function afficherGroupeAction()
+    public function indexAction() : ViewModel
+    {
+        $source = $this->params()->fromQuery('source');
+        $historise = $this->params()->fromQuery('historise');
+
+        $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
+        if ($source !== null) $groupes = array_filter($groupes, function (FormationGroupe $a) use ($source) { return $a->getSource() === $source; });
+        if ($historise !== null) $groupes = array_filter($groupes, function (FormationGroupe $a) use ($historise) {
+            if ($historise === "1") return $a->estHistorise();
+            if ($historise === "0") return $a->estNonHistorise();
+            return true;
+        });
+
+        return new ViewModel([
+            'groupes' => $groupes,
+            'source' => $source,
+            'historise' => $historise,
+        ]);
+    }
+
+    public function afficherGroupeAction() : ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 
@@ -24,7 +46,7 @@ class FormationGroupeController extends AbstractActionController
         ]);
     }
 
-    public function ajouterGroupeAction()
+    public function ajouterGroupeAction() : ViewModel
     {
         $groupe = new FormationGroupe();
         $form = $this->getFormationGroupeForm();
@@ -38,6 +60,8 @@ class FormationGroupeController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFormationGroupeService()->create($groupe);
+                $groupe->setSource(HasSourceInterface::SOURCE_EMC2);
+                $this->getFormationGroupeService()->update($groupe);
             }
         }
 
@@ -50,7 +74,7 @@ class FormationGroupeController extends AbstractActionController
         return $vm;
     }
 
-    public function editerGroupeAction()
+    public function editerGroupeAction() : ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $form = $this->getFormationGroupeForm();
@@ -76,21 +100,21 @@ class FormationGroupeController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserGroupeAction()
+    public function historiserGroupeAction() : Response
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->historise($groupe);
         return $this->redirect()->toRoute('formation', [], ['fragment' => 'groupe'], true);
     }
 
-    public function restaurerGroupeAction()
+    public function restaurerGroupeAction() : Response
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->restore($groupe);
         return $this->redirect()->toRoute('formation', [], ['fragment' => 'groupe'], true);
     }
 
-    public function detruireGroupeAction()
+    public function detruireGroupeAction() : ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 

@@ -65,7 +65,8 @@ return [
                                 'label'    => 'Parcours de formation',
                                 'route'    => 'parcours-de-formation',
                                 'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
-                                'order'    => 1150,
+                                'order'    => 340,
+                                'icon' => 'fas fa-angle-right',
                                 'pages' => [
                                     'modifier-parcours-de-foamtion' => [
                                         'label'    => 'Parcours de formation',

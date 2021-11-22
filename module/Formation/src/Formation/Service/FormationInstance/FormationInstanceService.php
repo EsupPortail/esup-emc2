@@ -195,6 +195,26 @@ class FormationInstanceService
         return $result;
     }
 
+    /** FACADE  *******************************************************************************************************/
+
+    public function createNouvelleInstance(Formation $formation) : FormationInstance
+    {
+        $instance = new FormationInstance();
+        $instance->setType(FormationInstance::TYPE_INTERNE);
+        $instance->setAutoInscription(true);
+        $instance->setNbPlacePrincipale(0);
+        $instance->setNbPlaceComplementaire(0);
+        $instance->setFormation($formation);
+        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_CREATION_EN_COURS));
+
+        $this->create($instance);
+        $instance->setSource("EMC2");
+        $instance->setIdSource(($formation->getIdSource())?(($formation->getIdSource())."-".$instance->getId()):($formation->getId()."-".$instance->getId()));
+        $this->update($instance);
+
+        return $instance;
+    }
+
     /** Fonctions associées aux états de l'instance *******************************************************************/
 
     /**

@@ -1,27 +1,30 @@
 <?php
 
+use Formation\Entity\Db\FormationGroupe;
+use Formation\Provider\Privilege\FormationgroupePrivileges;
+
 /**
+ * @see \Formation\Controller\FormationGroupeController::indexAction()
  * @var FormationGroupe[] $groupes
- * @var boolean[] $droits
+ * @var string $historise
+ * @var string $source
  */
 
-$canAfficher = $droits['afficher'];
-$canAjouter = $droits['ajouter'];
-$canEditer = $droits['editer'];
-$canHistoriser = $droits['historiser'];
-$canDetruire = $droits['detruire'];
-
-use Formation\Entity\Db\FormationGroupe;
+$canAfficher        = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AFFICHER));
+$canAjouter         = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AJOUTER));
+$canEditer          = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_MODIFIER));
+$canHistoriser      = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_HISTORISER));
+$canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_SUPPRIMER));
 
 ?>
 
 <div class="row">
     <div class="col-md-8">
-        <h2>
+        <h2 class="page-header">
             Groupes des formations
         </h2>
     </div>
-    <div class="col-md-4">
+    <div class="pull-right">
         <?php if ($canAjouter) : ?>
             <br/>
             <a
@@ -36,9 +39,9 @@ use Formation\Entity\Db\FormationGroupe;
     </div>
 </div>
 
-<br/>
+<?php echo $this->partial('partial/filtre',['historise' => $historise, 'source' => $source], [], true); ?>
 
-<table class="datatable table table-condensed" id="groupes">
+<table class="datatable table table-condensed table-hover" id="groupes">
     <thead>
     <tr>
         <th> Libellé </th>
@@ -52,7 +55,7 @@ use Formation\Entity\Db\FormationGroupe;
         <tr id="<?php echo $groupe->getId(); ?>"  class="<?php if ($groupe->estHistorise()) echo "historise"; ?>">
             <td> <?php echo $groupe->getLibelle(); ?> </td>
             <td> <?php echo count($groupe->getFormations()); ?> </td>
-            <td> <span class="badge source" id="<?php echo $groupe->getSource(); ?>"><?php echo $groupe->getSource(); ?></span> </td>
+            <td> <span class="badge source <?php echo $groupe->getSource(); ?>" id="<?php echo $groupe->getSource(); ?>"><?php echo $groupe->getSource(); ?></span> </td>
             <td>
                 <?php if ($canAfficher) : ?>
                     <a  <?php /** @see FormationGroupeController::afficherGroupeAction() */ ?>
@@ -110,34 +113,3 @@ use Formation\Entity\Db\FormationGroupe;
     <?php endforeach; ?>
     </tbody>
 </table>
-
-<script>
-    $(function() {
-        //if (<?php //echo "'".$mode."'"; ?>// === 'modifier-activite') {
-            $('table#groupes tbody').sortable({
-                update: function( event, ui ) {
-                    let ordre = "";
-                    $('table#groupes tbody tr').each(function () {
-                        if (ordre !== "") ordre += "_";
-                        ordre += $(this)[0].id ;
-                    });
-                    <?php /** @see FormationGroupeController::updateOrdreGroupeAction() */ ?>
-                    let url = '../formation-groupe/update-ordre-groupe/' + ordre;
-                   $.ajax({
-                       type: "POST",
-                       url: url,
-                       beforeSend:
-                           function () {
-                               $( "table#groupes tbody" ).sortable( "option", "disabled", true );
-                           },
-                       success:
-                           function () {
-                               $( "table#groupes tbody" ).sortable( "option", "disabled", false );
-                           }
-                   });
-                }
-            });
-            $('table#groupes tbody').disableSelection();
-        // }
-    });
-</script>
